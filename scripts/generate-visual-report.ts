@@ -4,6 +4,7 @@ import path from 'path';
 const resultsDir = path.join(process.cwd(), 'test-results');
 const focusProofDir = path.join(resultsDir, 'focus-proof');
 const reportFile = path.join(resultsDir, 'index.html');
+const a11ySummaryFile = path.join(resultsDir, 'a11y-reports', 'summary.json');
 
 function generateGallery() {
   console.log('🚀 Gerando galeria de auditoria visual premium com Traces...');
@@ -17,7 +18,16 @@ function generateGallery() {
   const traceFiles = fs.readdirSync(focusProofDir).filter(f => f.endsWith('.zip'));
   
   // Data for JSON audit report
-  const auditData: any[] = [];
+    const auditData: any[] = [];
+  let a11yData: any[] = [];
+
+  if (fs.existsSync(a11ySummaryFile)) {
+    try {
+      a11yData = JSON.parse(fs.readFileSync(a11ySummaryFile, 'utf-8'));
+    } catch (e) {
+      console.error('Failed to parse a11y summary file');
+    }
+  }
 
   // Grouping logic
   const groups: Record<string, string[]> = {};
@@ -84,6 +94,31 @@ function generateGallery() {
                 Gerado em ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}
             </div>
         </header>
+
+        <!-- A11y Summary Section -->
+        <section class="space-y-8">
+            <div class="flex items-center gap-6">
+                <h2 class="text-sm font-black uppercase tracking-[0.5em] text-purple-500/60 whitespace-nowrap">Acessibilidade & Contraste</h2>
+                <div class="h-px flex-1 bg-white/5"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                ${a11yData.length > 0 ? a11yData.map(item => `
+                    <div class="card p-4 border ${item.violations > 0 ? 'border-red-500/20' : 'border-green-500/20'}">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[9px] font-black uppercase tracking-widest ${item.theme === 'dark' ? 'text-blue-400' : 'text-yellow-400'}">${item.theme}</span>
+                            <span class="text-[10px] font-bold ${item.violations > 0 ? 'text-red-400' : 'text-green-400'}">${item.violations > 0 ? `❌ ${item.violations} Violações` : '✅ WCAG OK'}</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white/90 truncate">${item.name || item.component || item.route}</h4>
+                        <p class="text-[9px] opacity-40 mt-1">${item.route}</p>
+                    </div>
+                `).join('') : `
+                    <div class="col-span-full py-12 text-center opacity-20 text-[10px] font-bold uppercase tracking-widest border border-dashed border-white/10 rounded-xl">
+                        Aguardando resultados de acessibilidade...
+                    </div>
+                `}
+            </div>
+        </section>
 
         ${Object.entries(groups).map(([group, images]) => `
             <section class="space-y-8">
