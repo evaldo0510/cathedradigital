@@ -177,38 +177,45 @@
     text-wrap: balance;
   }
 
-  h1 { 
+  /* Utility Heading Classes for Design System */
+  .heading-hero { 
     @apply font-black;
     font-size: clamp(2.5rem, 8vw, 5rem);
     line-height: 1;
     letter-spacing: -0.04em;
   }
   
-  h2 { 
+  .heading-section-label { 
     @apply font-bold uppercase tracking-[0.3em] opacity-40;
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     line-height: 1.2;
   }
   
-  h3 { 
+  .heading-card { 
     @apply font-bold;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
   }
 
-  h4 {
+  .heading-item {
     @apply font-bold;
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-size: clamp(1.15rem, 2.5vw, 1.5rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
   }
 
-  p { 
+  .text-premium-body { 
     @apply max-w-[65ch] text-muted-foreground/60;
     font-size: clamp(0.9rem, 1vw, 1rem);
     line-height: 1.7;
   }
+
+  h1 { @apply heading-hero; }
+  h2 { @apply heading-section-label; }
+  h3 { @apply heading-card; }
+  h4 { @apply heading-item; }
+  p { @apply text-premium-body; }
 
   /* Premium small text scale */
   .text-premium-tiny {
