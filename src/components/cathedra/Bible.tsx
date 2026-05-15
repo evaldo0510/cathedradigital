@@ -24,7 +24,7 @@ import { Button   } from './Button';
 import { 
   Card,
   CardContent      
-} from './Card';
+} from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
