@@ -36,33 +36,66 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 222 47% 8%;    /* Deep #0F172A variant */
+    --background: 222 47% 4%;    /* Even deeper blue for better contrast */
     --foreground: 45 42% 96%;    /* Cream White #F8F5EE */
-    --card: 222 47% 10%;
+    --card: 222 47% 6%;
     --card-foreground: 45 42% 96%;
-    --popover: 222 47% 9%;
+    --popover: 222 47% 5%;
     --popover-foreground: 45 42% 96%;
-    --primary: 45 64% 52%;       /* Gold becomes primary in dark */
-    --primary-foreground: 222 47% 8%;
-    --secondary: 222 30% 15%;
-    --secondary-foreground: 45 64% 52%;
-    --muted: 222 30% 12%;
-    --muted-foreground: 45 10% 70%;
-    --accent: 45 64% 52% / 0.08;
-    --accent-foreground: 45 64% 52%;
-    --destructive: 0 84% 60%;
+    --primary: 45 80% 65%;       /* Lighter Gold for WCAG AAA (approx 7.5:1 on deep blue) */
+    --primary-foreground: 222 47% 4%;
+    --secondary: 222 30% 12%;
+    --secondary-foreground: 45 80% 65%;
+    --muted: 222 30% 10%;
+    --muted-foreground: 45 10% 80%;
+    --accent: 45 80% 65% / 0.1;
+    --accent-foreground: 45 80% 65%;
+    --destructive: 0 90% 65%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 20%;
-    --input: 222 47% 20%;
-    --ring: 45 64% 52%;
-    --sidebar-background: 222 47% 7%;
+    --border: 222 47% 18%;
+    --input: 222 47% 18%;
+    --ring: 45 80% 65%;
+    --sidebar-background: 222 47% 3%;
     --sidebar-foreground: 45 42% 96%;
-    --sidebar-primary: 45 64% 52%;
-    --sidebar-primary-foreground: 222 47% 8%;
-    --sidebar-accent: 222 30% 12%;
-    --sidebar-accent-foreground: 45 64% 52%;
-    --sidebar-border: 222 47% 15%;
-    --sidebar-ring: 45 64% 52%;
+    --sidebar-primary: 45 80% 65%;
+    --sidebar-primary-foreground: 222 47% 4%;
+    --sidebar-accent: 222 30% 10%;
+    --sidebar-accent-foreground: 45 80% 65%;
+    --sidebar-border: 222 47% 12%;
+    --sidebar-ring: 45 80% 65%;
+  }
+
+  /* High Contrast Mode - Force pure black/white/yellow for maximum accessibility */
+  .high-contrast {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 0%;
+    --secondary-foreground: 0 0% 100%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 0 0% 0%;
+    --muted-foreground: 0 0% 10%;
+    --shadow-premium: none;
+    --shadow-premium-hover: none;
+  }
+
+  .high-contrast.dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --primary: 60 100% 50%; /* Pure Yellow on Black is very high contrast */
+    --primary-foreground: 0 0% 0%;
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 0%;
+    --border: 0 0% 100%;
+    --input: 0 0% 100%;
+    --ring: 60 100% 50%;
+    --muted-foreground: 0 0% 90%;
   }
 }
 
