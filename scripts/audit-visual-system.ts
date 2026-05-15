@@ -30,7 +30,8 @@ const violations: { file: string; line: number; text: string; type: string }[] =
 
 allFiles.forEach(file => {
   // Skip the components themselves and documentation
-  if (file.includes('CathedraCard.tsx') || file.includes('CathedraButton.tsx') || file.includes('DesignSystemGuide.tsx') || file.includes('src/components/ui/')) return;
+  const relativePath = file.replace(projectRoot, '');
+  if (file.includes('CathedraCard.tsx') || file.includes('CathedraButton.tsx') || file.includes('DesignSystemGuide.tsx') || relativePath.includes('/components/ui/')) return;
   
   const content = readFileSync(file, 'utf8');
   const lines = content.split('\n');
