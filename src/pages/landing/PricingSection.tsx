@@ -69,8 +69,9 @@ const PricingSection = () => {
           {tiers.map((tier) => (
             <HomeCard
               key={tier.name}
-              className={`p-8 relative flex flex-col h-full ${
-                tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
+              padding="md"
+              className={`relative flex flex-col h-full transition-all duration-700 ${
+                tier.popular ? "border-secondary/10 bg-secondary/[0.01]" : ""
               }`}
             >
               {tier.popular && (
