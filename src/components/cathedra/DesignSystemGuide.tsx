@@ -351,7 +351,7 @@ const DesignSystemGuide = () => {
                     <Label htmlFor="error-input-guide" className="text-destructive">Error State</Label>
                     <Input id="error-input-guide" className="border-destructive focus-visible:ring-destructive" defaultValue="valor@incorreto" />
                     <p className="text-[10px] font-black uppercase text-destructive tracking-widest flex items-center gap-1">
-                      <Icons.AlertCircle className="w-3 h-3" /> Formato de e-mail inválido.
+                      <Icons.AlertTriangle className="w-3 h-3" /> Formato de e-mail inválido.
                     </p>
                   </div>
                 </div>
