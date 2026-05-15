@@ -112,7 +112,7 @@ const AuditLogsPage: React.FC = () => {
               <div className="flex flex-col md:flex-row md:items-center p-4 gap-4">
                 <div className="flex items-center gap-3 md:w-1/4">
                   <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center flex-shrink-0">
-                    <CathedraIcon icon={Icons.ShieldAlert} size={IconSizePreset.TINY} variant="muted" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+                    <CathedraIcon icon={Icons.AlertTriangle} size={IconSizePreset.TINY} variant="muted" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-bold truncate">{log.event_type === 'unauthorized_access' ? 'Acesso Não Autorizado' : log.event_type}</p>
