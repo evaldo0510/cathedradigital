@@ -4,6 +4,31 @@ import { BrowserRouter } from 'react-router-dom';
 import HomeMainContent from '../components/cathedra/HomeMainContent';
 import HeroContent from '../pages/landing/hero/HeroContent';
 import { MotionValue } from 'framer-motion';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Mock hooks that use context or external state
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({
+    user: null,
+    profile: null,
+    loading: false
+  })
+}));
+
+vi.mock('@/hooks/useSaints', () => ({
+  useOfficialSaint: () => ({
+    data: { name: 'São Bento', image: '' },
+    isLoading: false
+  })
+}));
+
+vi.mock('@/hooks/useLang', () => ({
+  useLang: () => ({
+    lang: 'pt',
+    setLang: vi.fn(),
+    t: (key: string) => key
+  })
+}));
 
 // Mock MotionValue for testing
 const mockMotionValue = (val: number) => ({
