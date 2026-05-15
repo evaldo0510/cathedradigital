@@ -6,8 +6,9 @@ import {
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
   Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette
+  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
 } from 'lucide-react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -31,6 +32,7 @@ const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
 const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
+const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
 
 interface Stats {
@@ -440,6 +442,10 @@ const AdminDashboard: React.FC = () => {
             <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Palette className="w-3.5 h-3.5" /> Design System
             </TabsTrigger>
+            <TabsTrigger value="regression" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Eye className="w-3.5 h-3.5" /> Regressão Visual
+            </TabsTrigger>
+
             <TabsTrigger value="partners" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Handshake className="w-3.5 h-3.5" /> Parceiros
             </TabsTrigger>
@@ -1068,7 +1074,14 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="regression" className="space-y-6">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-premium" />}>
+            <VisualRegressionDashboard />
+          </Suspense>
+        </TabsContent>
+
         <TabsContent value="construction">
+
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminConstructionTab />
           </Suspense>

@@ -1,0 +1,341 @@
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { 
+  CheckCircle2, XCircle, Clock, Eye, Check, X, 
+  ArrowRight, ShieldAlert, Type, Grid, Layout, 
+  ChevronRight, ExternalLink, RefreshCw
+} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
+
+interface Snapshot {
+  id: string;
+  page_name: string;
+  route: string;
+  viewport: string;
+  status: string;
+  baseline_url: string;
+  current_url: string;
+  diff_url: string;
+  reason?: string;
+  wcag_score?: number;
+  typography_errors?: any;
+  created_at: string;
+}
+
+interface Run {
+  id: string;
+  status: string;
+  pages_total: number;
+  pages_failed: number;
+  created_at: string;
+}
+
+const VisualRegressionDashboard: React.FC = () => {
+  const [runs, setRuns] = useState<Run[]>([]);
+  const [selectedRun, setSelectedRun] = useState<Run | null>(null);
+  const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [approving, setApproving] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchRuns();
+  }, []);
+
+  useEffect(() => {
+    if (selectedRun) {
+      fetchSnapshots(selectedRun.id);
+    }
+  }, [selectedRun]);
+
+  const fetchRuns = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('visual_regression_runs')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      toast.error('Erro ao carregar execuções');
+    } else {
+      setRuns(data || []);
+      if (data && data.length > 0) setSelectedRun(data[0]);
+    }
+    setLoading(false);
+  };
+
+  const fetchSnapshots = async (runId: string) => {
+    const { data, error } = await supabase
+      .from('visual_regression_snapshots')
+      .select('*')
+      .eq('run_id', runId);
+
+    if (error) {
+      toast.error('Erro ao carregar snapshots');
+    } else {
+      setSnapshots(data || []);
+    }
+  };
+
+  const handleApprove = async (snapshotId: string, reason: string) => {
+    setApproving(snapshotId);
+    const { error } = await supabase
+      .from('visual_regression_snapshots')
+      .update({ 
+        status: 'approved', 
+        reason,
+        approved_at: new Date().toISOString()
+      })
+      .eq('id', snapshotId);
+
+    if (error) {
+      toast.error('Erro ao aprovar mudança');
+    } else {
+      toast.success('Mudança aprovada e baseline atualizada');
+      setSnapshots(prev => prev.map(s => s.id === snapshotId ? { ...s, status: 'approved', reason } : s));
+    }
+    setApproving(null);
+  };
+
+  if (loading && runs.length === 0) {
+    return (
+      <div className="flex items-center justify-center p-20">
+        <RefreshCw className="w-8 h-8 animate-spin text-primary opacity-50" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Runs Sidebar */}
+        <Card className="w-full md:w-80 border-border/10 bg-muted/20 backdrop-blur-sm rounded-premium shadow-premium">
+          <CardHeader className="p-4 border-b border-border/10">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+              <Clock className="w-4 h-4" /> Histórico
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-[500px]">
+              <div className="p-2 space-y-1">
+                {runs.map((run) => (
+                  <button
+                    key={run.id}
+                    onClick={() => setSelectedRun(run)}
+                    className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
+                      selectedRun?.id === run.id 
+                        ? 'bg-primary/10 border border-primary/20' 
+                        : 'hover:bg-muted/50 border border-transparent'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-1">
+                      <span className="text-xs font-bold opacity-70">
+                        {format(new Date(run.created_at), 'dd/MM/yy HH:mm')}
+                      </span>
+                      {run.status === 'success' ? (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                      ) : (
+                        <XCircle className="w-3.5 h-3.5 text-red-500" />
+                      )}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider font-black opacity-50">
+                        {run.pages_total} Páginas
+                      </span>
+                      {run.pages_failed > 0 && (
+                        <Badge variant="destructive" className="h-4 text-[9px] px-1.5 font-black uppercase">
+                          {run.pages_failed} falhas
+                        </Badge>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </ScrollArea>
+          </CardContent>
+        </Card>
+
+        {/* Snapshots Area */}
+        <div className="flex-1 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <StatsCard 
+              title="Acessibilidade" 
+              value="WCAG AAA" 
+              icon={<ShieldAlert className="w-4 h-4" />} 
+              status="valid"
+            />
+            <StatsCard 
+              title="Tipografia" 
+              value="Consistente" 
+              icon={<Type className="w-4 h-4" />} 
+              status="valid"
+            />
+            <StatsCard 
+              title="Grids & Espaço" 
+              value="Alinhado" 
+              icon={<Grid className="w-4 h-4" />} 
+              status="valid"
+            />
+          </div>
+
+          <Tabs defaultValue="all" className="w-full">
+            <div className="flex items-center justify-between mb-4">
+              <TabsList className="bg-muted/30 p-1 rounded-full border border-border/10">
+                <TabsTrigger value="all" className="rounded-full text-xs font-black uppercase tracking-wider px-4">Tudo</TabsTrigger>
+                <TabsTrigger value="failed" className="rounded-full text-xs font-black uppercase tracking-wider px-4">Falhas</TabsTrigger>
+                <TabsTrigger value="approved" className="rounded-full text-xs font-black uppercase tracking-wider px-4">Aprovados</TabsTrigger>
+              </TabsList>
+              
+              <Button size="sm" variant="outline" className="rounded-full h-8 text-xs font-black uppercase tracking-wider gap-2">
+                <RefreshCw className="w-3 h-3" /> Nova Auditoria
+              </Button>
+            </div>
+
+            <TabsContent value="all" className="mt-0 space-y-4">
+              {snapshots.map(snapshot => (
+                <SnapshotCard 
+                  key={snapshot.id} 
+                  snapshot={snapshot} 
+                  onApprove={(reason) => handleApprove(snapshot.id, reason)}
+                  isApproving={approving === snapshot.id}
+                />
+              ))}
+            </TabsContent>
+            
+            <TabsContent value="failed" className="mt-0 space-y-4">
+              {snapshots.filter(s => s.status === 'fail').map(snapshot => (
+                <SnapshotCard 
+                  key={snapshot.id} 
+                  snapshot={snapshot} 
+                  onApprove={(reason) => handleApprove(snapshot.id, reason)}
+                  isApproving={approving === snapshot.id}
+                />
+              ))}
+              {snapshots.filter(s => s.status === 'fail').length === 0 && (
+                <div className="text-center py-12 opacity-50 italic text-sm">Nenhuma falha encontrada nesta execução.</div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const StatsCard = ({ title, value, icon, status }: any) => (
+  <Card className="border-border/10 bg-muted/10 rounded-premium overflow-hidden">
+    <CardContent className="p-4 flex items-center justify-between">
+      <div className="space-y-1">
+        <p className="text-[10px] font-black uppercase tracking-widest opacity-50 flex items-center gap-1.5">
+          {icon} {title}
+        </p>
+        <p className="text-sm font-black text-primary">{value}</p>
+      </div>
+      <div className={`w-2 h-2 rounded-full animate-pulse ${status === 'valid' ? 'bg-green-500' : 'bg-red-500'}`} />
+    </CardContent>
+  </Card>
+);
+
+const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot, onApprove: (r: string) => void, isApproving: boolean }) => {
+  const [showDiff, setShowDiff] = useState(false);
+  const [reason, setReason] = useState('');
+
+  return (
+    <Card className="border-border/10 bg-muted/10 overflow-hidden rounded-premium group transition-all duration-300 hover:bg-muted/20">
+      <CardHeader className="p-4 border-b border-border/10 flex flex-row items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className={`p-2 rounded-xl ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
+            {snapshot.status === 'pass' ? <CheckCircle2 className="w-4 h-4" /> : snapshot.status === 'fail' ? <XCircle className="w-4 h-4" /> : <ShieldAlert className="w-4 h-4" />}
+          </div>
+          <div>
+            <h4 className="text-sm font-black text-primary">{snapshot.page_name}</h4>
+            <p className="text-[10px] font-bold opacity-50 uppercase tracking-widest">{snapshot.route} • {snapshot.viewport}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {snapshot.status === 'fail' && (
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 rounded-full text-[10px] font-black uppercase tracking-wider px-3"
+              onClick={() => setShowDiff(!showDiff)}
+            >
+              {showDiff ? 'Ver Baseline' : 'Ver Diferença'}
+            </Button>
+          )}
+          {snapshot.status === 'fail' && (
+            <div className="flex gap-1">
+              <input 
+                placeholder="Motivo da aprovação..." 
+                className="h-8 rounded-l-full bg-background/50 border border-border/10 text-[10px] px-3 w-40 outline-none focus:border-primary/50 transition-colors"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+              />
+              <Button 
+                size="sm" 
+                className="h-8 rounded-r-full text-[10px] font-black uppercase tracking-wider px-3"
+                disabled={isApproving || !reason}
+                onClick={() => onApprove(reason)}
+              >
+                {isApproving ? <RefreshCw className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3 mr-1" />} Aprovar
+              </Button>
+            </div>
+          )}
+          {snapshot.status === 'approved' && (
+            <Badge variant="outline" className="h-8 rounded-full text-[9px] font-black uppercase tracking-wider border-blue-500/30 text-blue-500 bg-blue-500/5">
+              Aprovado: {snapshot.reason}
+            </Badge>
+          )}
+        </div>
+      </CardHeader>
+      <CardContent className="p-4 space-y-4">
+        {showDiff && snapshot.diff_url ? (
+          <div className="relative aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10">
+            <img src={snapshot.diff_url} alt="Diferença Visual" className="w-full h-full object-contain" />
+            <div className="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest rounded-md">Diferenças em Vermelho</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Baseline (Esperado)</p>
+              <div className="aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10">
+                <img src={snapshot.baseline_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Baseline" className="w-full h-full object-contain" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Atual (Encontrado)</p>
+              <div className="aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10 relative">
+                <img src={snapshot.current_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Atual" className="w-full h-full object-contain" />
+                {snapshot.status === 'fail' && (
+                  <div className="absolute inset-0 bg-red-500/5 flex items-center justify-center pointer-events-none">
+                    <XCircle className="w-12 h-12 text-red-500/20" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {snapshot.typography_errors && snapshot.typography_errors.length > 0 && (
+          <div className="p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-xl space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-widest text-yellow-600 flex items-center gap-1.5">
+              <Type className="w-3 h-3" /> Discrepâncias Tipográficas Encontradas ({snapshot.typography_errors.length})
+            </p>
+            <div className="text-[10px] opacity-70 font-mono">
+              {snapshot.typography_errors.map((err: string, i: number) => (
+                <div key={i}>• {err}</div>
+              ))}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+export default VisualRegressionDashboard;

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { runDesignSystemAudit, AuditResult } from '@/lib/design-system-audit';
+import { ShieldAlert, Activity, RefreshCw, Type, Grid } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -157,7 +160,89 @@ const ComponentPlayground = () => {
   );
 };
 
+const RealTimeAudit = () => {
+  const [audit, setAudit] = useState<AuditResult | null>(null);
+  const [isAuditing, setIsAuditing] = useState(false);
+
+  const runAudit = async () => {
+    setIsAuditing(true);
+    // Wait for animations
+    await new Promise(r => setTimeout(r, 1000));
+    const result = await runDesignSystemAudit('Design System Guide');
+    setAudit(result);
+    setIsAuditing(false);
+  };
+
+  return (
+    <div className="bg-card border border-border/10 rounded-premium p-8 space-y-8 shadow-premium">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className={`w-3 h-3 rounded-full ${audit ? (audit.status === 'premium' ? 'bg-green-500' : 'bg-red-500') : 'bg-muted'}`} />
+          <h3 className="text-sm font-black uppercase tracking-widest text-primary">Status do Design System</h3>
+        </div>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="rounded-full h-10 px-6 gap-2"
+          onClick={runAudit}
+          disabled={isAuditing}
+        >
+          {isAuditing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Activity className="w-4 h-4" />}
+          <span className="text-[10px] font-bold uppercase tracking-widest">Executar Auditoria</span>
+        </Button>
+      </div>
+
+      {audit && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-widest opacity-40 flex items-center gap-2">
+              <Type className="w-3.5 h-3.5" /> Tipografia & Tokens
+            </p>
+            {audit.typographyErrors.length === 0 ? (
+              <div className="flex items-center gap-2 text-green-600 bg-green-500/5 p-4 rounded-2xl border border-green-500/10">
+                <Icons.CheckCircle2 className="w-4 h-4" />
+                <span className="text-xs font-bold">Todos os textos usam fontes e pesos validados.</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {audit.typographyErrors.map((err, i) => (
+                  <div key={i} className="flex items-center gap-2 text-destructive bg-destructive/5 p-3 rounded-xl border border-destructive/10">
+                    <Icons.AlertTriangle className="w-4 h-4" />
+                    <span className="text-[10px] font-bold">{err}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-widest opacity-40 flex items-center gap-2">
+              <Grid className="w-3.5 h-3.5" /> Grids & Alinhamento
+            </p>
+            {audit.gridIssues.length === 0 ? (
+              <div className="flex items-center gap-2 text-green-600 bg-green-500/5 p-4 rounded-2xl border border-green-500/10">
+                <Icons.CheckCircle2 className="w-4 h-4" />
+                <span className="text-xs font-bold">Estrutura de grid e espaçamentos consistentes.</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {audit.gridIssues.map((err, i) => (
+                  <div key={i} className="flex items-center gap-2 text-destructive bg-destructive/5 p-3 rounded-xl border border-destructive/10">
+                    <Icons.AlertTriangle className="w-4 h-4" />
+                    <span className="text-[10px] font-bold">{err}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const DesignSystemGuide = () => {
+
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const [isHighContrast, setIsHighContrast] = useState(() => document.documentElement.classList.contains('high-contrast'));
 
@@ -426,6 +511,18 @@ const DesignSystemGuide = () => {
 
           <ComponentPlayground />
         </section>
+
+        {/* Real-time Design Audit */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria em Tempo Real (WCAG & Tokens)</h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <RealTimeAudit />
+        </section>
+
 
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
