@@ -89,7 +89,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   onClick={() => navigate(item.route)}
                   className={cn(
                     "px-5 py-3 h-auto whitespace-nowrap relative group",
-                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-primary/20 hover:text-primary transition-all'
+                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-primary/40 hover:text-primary transition-all'
                   )}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
