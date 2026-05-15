@@ -79,11 +79,11 @@ export default {
       },
       boxShadow: {
         'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.04), 0 0 1px 0 rgba(0, 0, 0, 0.08)',
-        'premium-hover': '0 40px 80px -15px rgba(0, 0, 0, 0.1), 0 0 1px 0 rgba(0, 0, 0, 0.12)',
+        'premium-hover': '0 40px 100px -20px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.1)',
         'premium-active': '0 10px 20px -8px rgba(0, 0, 0, 0.06)',
         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.02)',
         'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.1)',
-        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.01)',
+        'inner-soft': 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.02)',
       },
       keyframes: {
         "accordion-down": {
