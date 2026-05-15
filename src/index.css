@@ -186,7 +186,7 @@
   }
   
   .heading-section-label { 
-    @apply font-bold uppercase tracking-[0.3em] opacity-40;
+    @apply font-bold uppercase tracking-[0.3em] opacity-60;
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     line-height: 1.2;
   }
