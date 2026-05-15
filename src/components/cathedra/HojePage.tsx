@@ -143,22 +143,22 @@ const HojePage: React.FC = () => {
               <Icons.Logo className="w-4 h-4 text-secondary" />
               <span>{greeting}, {profile?.name?.split(' ')[0] || 'fiel'}</span>
             </div>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-medium text-primary leading-[1] tracking-tighter">
+            <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-display font-medium text-primary leading-[0.9] tracking-tighter">
               Aquietai-vos e <br />
-              <span className="text-secondary italic font-serif opacity-80">Sabei que Eu Sou Deus.</span>
+              <span className="text-secondary italic font-serif opacity-60">Sabei que Eu Sou Deus.</span>
             </h1>
           </div>
           
           <div className="flex items-center justify-center gap-12 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-4 px-10 py-5 rounded-full bg-primary/[0.02] border border-primary/10 transition-all hover:bg-primary/[0.04] shadow-soft group">
+              <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
                 <Icons.Zap className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-                <span className="text-premium-tiny font-bold text-primary uppercase tracking-[0.3em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+                <span className="text-premium-tiny font-bold text-primary/40 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-4 px-10 py-5 rounded-full bg-primary/[0.02] border border-primary/10 transition-all hover:bg-primary/[0.04] shadow-soft group">
+            <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
               <Icons.Star className="w-5 h-5 text-secondary group-hover:scale-110 transition-transform" />
-              <span className="text-premium-tiny font-bold text-primary uppercase tracking-[0.3em]">{profile?.xp || 0} XP</span>
+              <span className="text-premium-tiny font-bold text-primary/40 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
