@@ -16,6 +16,12 @@ export default {
       screens: {
         'xs': '420px',
       },
+      letterSpacing: {
+        'tightest': '-0.05em',
+        'tighter': '-0.02em',
+        'widest': '0.3em',
+        'premium': '0.5em',
+      },
       fontFamily: {
         display: ['Cinzel', 'serif'],
         serif: ['Playfair Display', 'serif'],

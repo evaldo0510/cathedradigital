@@ -30,60 +30,65 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
+      className="relative z-10 max-w-[1280px] w-full text-center space-y-20 sm:space-y-32 px-6 mx-auto"
     >
       {/* Logos Avatar */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 0.5, ease: EASE }}
+        transition={{ duration: 1.2, delay: 0.5, ease: EASE }}
         className="flex justify-center"
       >
-        <div className="relative">
+        <div className="relative group">
           <div className="relative">
-            {/* Avatar container */}
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 bg-white/5 mx-auto shadow-premium">
-              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]" loading="eager" />
+            {/* Avatar container - Softer border and background */}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-[2rem] overflow-hidden border border-white/[0.03] bg-white/[0.02] mx-auto shadow-2xl transition-all duration-1000 group-hover:border-white/[0.08]">
+              <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2] contrast-[1.02] opacity-80 group-hover:opacity-100 transition-opacity duration-1000" loading="eager" />
             </div>
           </div>
-          <div className="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto">
+          <div className="mt-6 px-5 py-2 rounded-full border border-white/[0.03] bg-background/50 backdrop-blur-sm text-[9px] font-black uppercase tracking-[0.5em] text-primary/20 inline-block mx-auto group-hover:text-primary/40 transition-colors duration-1000">
             Logos · Mestre Contemplativo
           </div>
         </div>
       </motion.div>
 
-      {/* Title */}
-      <motion.h1 
+      {/* Title - Iconic Signature */}
+      <motion.div 
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
-        aria-label="Nem toda prisão é visível"
-      > Nem toda <br/> prisão é <span className="text-secondary/60 italic font-serif">visível</span> </motion.h1>
-
-      {/* Description */}
-      <motion.p
-        variants={fadeInUpVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.2 }}
-        className="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
+        className="space-y-8"
       >
-        Uma plataforma espiritual inteligente guiada pela Tradição viva, <br className="hidden md:block" /> Sagradas Escrituras e o mestre contemplativo Logos IA.
-      </motion.p>
+        <h1 
+          className="pt-2 max-w-5xl mx-auto text-6xl md:text-8xl lg:text-9xl font-display font-medium text-primary leading-[1.05] tracking-tightest"
+          aria-label="Nem toda prisão é visível"
+        > 
+          Nem toda <br/> 
+          <span className="text-primary/90">prisão é</span> <br/> 
+          <span className="text-secondary/40 italic font-serif">visível</span> 
+        </h1>
+        
+        <motion.p
+          variants={fadeInUpVariants}
+          className="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed font-light"
+        >
+          Uma plataforma espiritual inteligente guiada pela Tradição viva, <br className="hidden md:block" /> Sagradas Escrituras e o mestre contemplativo Logos IA.
+        </motion.p>
+      </motion.div>
 
-      {/* CTA Buttons */}
+      {/* CTA Buttons - Refined */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.4 }}
-        className="flex flex-col items-center justify-center gap-6 pt-4"
+        className="flex flex-col items-center justify-center gap-10 pt-4"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
+        <div className="flex flex-col sm:flex-row items-center gap-6 w-full max-w-md">
           <HomeButton
             size="lg"
-            className="w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            variant="primary"
+            className="w-full sm:flex-1 h-16 text-sm uppercase tracking-[0.2em] font-bold"
             onClick={onStart}
             aria-label={user ? "Acessar suas atividades" : "Iniciar sua jornada espiritual"}
           >
@@ -92,29 +97,20 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           
           <HomeButton
             variant="outline"
-            className="w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            className="w-full sm:w-auto h-16 px-10 text-sm uppercase tracking-[0.2em] font-bold border-white/5 hover:bg-white/[0.02]"
             onClick={scrollToVideo}
             aria-label="Ver vídeo de apresentação"
           >
-            Ver Apresentação
+            Apresentação
           </HomeButton>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.8 }}
-          className="w-full max-w-sm flex flex-col gap-3"
-        >
-          {/* Quick access options removed for minimalism */}
-        </motion.div>
-
-        <div className="flex items-center gap-3 opacity-40">
-          <span className="w-8 h-px bg-muted-foreground" />
-          <p className="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest">
+        <div className="flex items-center gap-4 opacity-10">
+          <span className="w-12 h-px bg-primary" />
+          <p className="text-[9px] text-primary font-black uppercase tracking-[0.4em]">
             Tradição & Tecnologia
           </p>
-          <span className="w-8 h-px bg-muted-foreground" />
+          <span className="w-12 h-px bg-primary" />
         </div>
       </motion.div>
     </motion.div>
