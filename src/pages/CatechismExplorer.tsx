@@ -153,7 +153,7 @@ const CatechismExplorer: React.FC = () => {
                 placeholder="Ex: §142, fé, pecado..." 
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="bg-card border-border/50"
+                className="bg-card border-border/20 rounded-premium-sm"
               />
             </div>
 
