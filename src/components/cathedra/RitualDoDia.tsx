@@ -5,6 +5,7 @@ import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
 import { Card   } from './Card';
+import { CathedraIcon } from './CathedraIcon';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {
@@ -27,7 +28,7 @@ const RitualDoDia: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-4 h-4 text-secondary" strokeWidth={1.5} />
+            <CathedraIcon icon={Sparkles} size="xs" variant="secondary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-secondary/60">
               Ritual do Dia
             </span>
@@ -46,7 +47,7 @@ const RitualDoDia: React.FC = () => {
         {/* Bible Verse */}
         <div className="space-y-4" role="article" aria-label="Versículo do Dia">
           <div className="flex items-center gap-2.5">
-            <BookOpen className="w-4 h-4 text-primary" strokeWidth={1.5} />
+            <CathedraIcon icon={BookOpen} size="xs" variant="primary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
           <blockquote className="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
