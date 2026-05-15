@@ -19,9 +19,10 @@ interface HeroContentProps {
   heroY: MotionValue<number>;
   onStart: () => void;
   onAbout: () => void;
+  user: any;
 }
 
-const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: HeroContentProps) => {
+const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user }: HeroContentProps) => {
   const scrollToVideo = () => {
     document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
   };
