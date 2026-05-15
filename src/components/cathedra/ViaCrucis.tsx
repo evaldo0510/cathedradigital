@@ -13,7 +13,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { Icons } from '../../constants';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 
 const STATIONS = [

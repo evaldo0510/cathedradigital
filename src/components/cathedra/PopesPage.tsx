@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import SacredImage from './SacredImage';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Info, Calendar, Scroll, ChevronRight } from 'lucide-react';
@@ -222,7 +222,7 @@ const PopesPage: React.FC = () => {
                   </div>
                 </div>
 
-                <CardContent className="p-5 flex-1 flex flex-col space-y-4">
+                <CathedraCardContent as CardContent className="p-5 flex-1 flex flex-col space-y-4">
                   <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
                     <Calendar className="w-3 h-3" /> {pope.reign}
                   </div>
@@ -251,7 +251,7 @@ const PopesPage: React.FC = () => {
                       <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}
-                </CardContent>
+                </CathedraCardContent as CardContent>
               </div>
             </Card>
           </motion.div>

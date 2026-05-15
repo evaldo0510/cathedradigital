@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Store } from 'lucide-react';
@@ -7,11 +7,11 @@ import { Store } from 'lucide-react';
 const WalletHistory: React.FC = () => {
   return (
     <Card className="shadow-none border-border/50">
-      <CardHeader>
-        <CardTitle className="text-xl font-serif font-bold">Histórico da Carteira</CardTitle>
-        <CardDescription>Visualize todas as suas movimentações financeiras.</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <CathedraCardHeader as CardHeader>
+        <CathedraCardTitle as CardTitle className="text-xl font-serif font-bold">Histórico da Carteira</CathedraCardTitle as CardTitle>
+        <CathedraCardDescription as CardDescription>Visualize todas as suas movimentações financeiras.</CathedraCardDescription as CardDescription>
+      </CathedraCardHeader as CardHeader>
+      <CathedraCardContent as CardContent>
         <Table>
           <TableHeader>
             <TableRow>
@@ -30,7 +30,7 @@ const WalletHistory: React.FC = () => {
             </TableRow>
           </TableBody>
         </Table>
-      </CardContent>
+      </CathedraCardContent as CardContent>
     </Card>
   );
 };
@@ -38,11 +38,11 @@ const WalletHistory: React.FC = () => {
 const WithdrawalRequests: React.FC = () => {
   return (
     <Card className="shadow-none border-border/50">
-      <CardHeader>
-        <CardTitle className="text-xl font-serif font-bold">Solicitações de Saque</CardTitle>
-        <CardDescription>Acompanhe o status dos seus pedidos de resgate.</CardDescription>
-      </CardHeader>
-      <CardContent>
+      <CathedraCardHeader as CardHeader>
+        <CathedraCardTitle as CardTitle className="text-xl font-serif font-bold">Solicitações de Saque</CathedraCardTitle as CardTitle>
+        <CathedraCardDescription as CardDescription>Acompanhe o status dos seus pedidos de resgate.</CathedraCardDescription as CardDescription>
+      </CathedraCardHeader as CardHeader>
+      <CathedraCardContent as CardContent>
         <Table>
           <TableHeader>
             <TableRow>
@@ -59,7 +59,7 @@ const WithdrawalRequests: React.FC = () => {
             </TableRow>
           </TableBody>
         </Table>
-      </CardContent>
+      </CathedraCardContent as CardContent>
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { 
   Heart, 

@@ -8,8 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame, AlertTriangle } from 'lucide-react';
 import { Icons } from '@/constants';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AppRoute } from '@/types';
@@ -75,7 +75,7 @@ const ThemeContentCard = ({
       transition={{ delay: index * 0.1 }}
     >
       <Card className="border-border/40 bg-card/30 hover:bg-card transition-all duration-300 rounded-premium overflow-hidden group hover:shadow-premium-hover hover:border-primary/20">
-        <CardContent className="p-6 sm:p-8 space-y-4">
+        <CathedraCardContent as CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className={`p-2 rounded-full ${accentColor.replace('text-', 'bg-')}/10`}>
@@ -113,7 +113,7 @@ const ThemeContentCard = ({
               </div>
             </div>
           )}
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
     </motion.div>
   );
@@ -123,7 +123,7 @@ const ContentSkeleton = () => (
   <div className="space-y-4" data-testid="content-skeleton">
     {[1, 2, 3].map((i) => (
       <Card key={i} className="border-border/40 bg-card/20 rounded-premium overflow-hidden">
-        <CardContent className="p-6 sm:p-8 space-y-4">
+        <CathedraCardContent as CardContent className="p-6 sm:p-8 space-y-4">
           <div className="flex items-center gap-2">
             <Skeleton className="w-8 h-8 rounded-full" />
             <Skeleton className="h-3 w-32" />
@@ -133,7 +133,7 @@ const ContentSkeleton = () => (
             <Skeleton className="h-4 w-[90%]" />
             <Skeleton className="h-4 w-[70%]" />
           </div>
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
     ))}
   </div>
@@ -426,7 +426,7 @@ const TemaDetailPage = () => {
             >
               <div className="absolute inset-0 bg-secondary/5 rounded-premium-lg" />
               <Card className="border-secondary/30 bg-card rounded-premium overflow-hidden relative z-10 shadow-premium">
-                <CardContent className="p-8 sm:p-10">
+                <CathedraCardContent as CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
@@ -462,7 +462,7 @@ const TemaDetailPage = () => {
                       </div>
                     </div>
                   )}
-                </CardContent>
+                </CathedraCardContent as CardContent>
               </Card>
             </motion.div>
           )}
@@ -676,7 +676,7 @@ const TemaDetailPage = () => {
           </div>
 
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
-            <CardContent className="p-6 space-y-4">
+            <CathedraCardContent as CardContent className="p-6 space-y-4">
               <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
                 <Quote className="w-5 h-5 text-primary" />
               </div>
@@ -687,7 +687,7 @@ const TemaDetailPage = () => {
                 <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
                 <p className="text-premium-tiny text-muted-foreground/60">Fides et Ratio</p>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </aside>
       </div>

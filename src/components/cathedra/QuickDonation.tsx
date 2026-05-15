@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardFooter as CardFooter, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
@@ -54,14 +54,14 @@ const QuickDonation: React.FC = () => {
 
   return (
     <Card className="border-secondary/20 bg-secondary/5 overflow-hidden transition-all hover:border-secondary/40">
-      <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
+      <CathedraCardHeader as CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-secondary/20 flex items-center justify-center text-secondary">
             <Icons.Heart className="w-5 h-5 fill-current" />
           </div>
           <div>
-            <CardTitle className="text-sm font-bold">Apoie o Cathedra</CardTitle>
-            <CardDescription className="text-premium-tiny">Ajude a manter nossa missão</CardDescription>
+            <CathedraCardTitle as CardTitle className="text-sm font-bold">Apoie o Cathedra</CathedraCardTitle as CardTitle>
+            <CathedraCardDescription as CardDescription className="text-premium-tiny">Ajude a manter nossa missão</CathedraCardDescription as CardDescription>
           </div>
         </div>
         <Button 
@@ -75,7 +75,7 @@ const QuickDonation: React.FC = () => {
           {isExpanded ? <Icons.ChevronUp className="w-4 h-4" /> : <Icons.ChevronDown className="w-4 h-4" />}
         </Button>
 
-      </CardHeader>
+      </CathedraCardHeader as CardHeader>
 
       <AnimatePresence>
         {isExpanded && (
@@ -85,7 +85,7 @@ const QuickDonation: React.FC = () => {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <CardContent className="p-4 pt-0 space-y-4">
+            <CathedraCardContent as CardContent className="p-4 pt-0 space-y-4">
               <div className="grid grid-cols-4 gap-2" role="group" aria-label="Valores sugeridos para doação">
                 {DONATION_PRESETS.map((val) => (
                   <Button
@@ -116,8 +116,8 @@ const QuickDonation: React.FC = () => {
                   />
                 </div>
               </div>
-            </CardContent>
-            <CardFooter className="p-4 pt-0">
+            </CathedraCardContent as CardContent>
+            <CathedraCardFooter as CardFooter className="p-4 pt-0">
               <Button
                 onClick={handleDonate}
                 disabled={loading || !amount}
@@ -125,7 +125,7 @@ const QuickDonation: React.FC = () => {
               >
                 {loading ? 'Processando...' : `Doar agora ${amount ? `R$ ${amount}` : ''}`}
               </Button>
-            </CardFooter>
+            </CathedraCardFooter as CardFooter>
           </motion.div>
         )}
       </AnimatePresence>

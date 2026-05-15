@@ -23,7 +23,7 @@ import confetti from 'canvas-confetti';
 import { CathedraButton as Button } from './CathedraButton';
 import { 
   CathedraCard as Card,
-  CathedraCardContent as CardContent
+  CathedraCathedraCardContent as CardContent as CathedraCardContent as CardContent
 } from './CathedraCard';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
@@ -594,7 +594,7 @@ const Bible: React.FC = () => {
 
           <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
             <Card className="border-border/40 shadow-sm overflow-hidden bg-card">
-              <CardContent className="p-6 md:p-8">
+              <CathedraCardContent as CardContent className="p-6 md:p-8">
                 {isLoading ? (
                   <BibleChapterSkeleton />
                 ) : bibleError ? (
@@ -626,7 +626,7 @@ const Bible: React.FC = () => {
                     })}
                   </div>
                 )}
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             {/* Deep Content Section for famous Bible Chapters */}
@@ -666,13 +666,13 @@ const Bible: React.FC = () => {
                 <Card 
                   className="premium-card-interactive"
                   onClick={() => navigateChapter(1)}>
-                  <CardContent className="p-6 flex items-center justify-between">
+                  <CathedraCardContent as CardContent className="p-6 flex items-center justify-between">
                     <div>
                       <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
-                  </CardContent>
+                  </CathedraCardContent as CardContent>
                 </Card>
               </motion.div>
             )}

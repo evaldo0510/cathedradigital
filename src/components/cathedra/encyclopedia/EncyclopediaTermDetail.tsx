@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Book, Bookmark, Globe, Target, Quote, Brain, Compass, Heart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { FaithTerm } from '../AZFaithPage';
 import BibleVersePopover from '../BibleVersePopover';
 import CatechismPopover from '../CatechismPopover';

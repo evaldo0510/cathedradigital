@@ -3,9 +3,9 @@ import {
   Bell, Zap, Clock, Send, CheckCircle2, AlertTriangle,
   Flame, UserMinus, MessageCircle
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -108,7 +108,7 @@ const AdminCrmAutomations: React.FC = () => {
         </h3>
         {automations.map(auto => (
           <Card key={auto.id}>
-            <CardContent className="py-4 px-5">
+            <CathedraCardContent as CardContent className="py-4 px-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
                   {auto.icon}
@@ -136,20 +136,20 @@ const AdminCrmAutomations: React.FC = () => {
                   </Badge>
                 </div>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         ))}
       </div>
 
       {/* Manual Notification */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-2">
+        <CathedraCardHeader as CardHeader>
+          <CathedraCardTitle as CardTitle className="text-sm flex items-center gap-2">
             <Send className="w-4 h-4 text-primary" /> Enviar Notificação Manual
-          </CardTitle>
-          <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          </CathedraCardTitle as CardTitle>
+          <CathedraCardDescription as CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CathedraCardDescription as CardDescription>
+        </CathedraCardHeader as CardHeader>
+        <CathedraCardContent as CardContent className="space-y-4">
           <div className="flex gap-2">
             {(['all', 'at_risk', 'premium'] as const).map(target => (
               <Button
@@ -177,7 +177,7 @@ const AdminCrmAutomations: React.FC = () => {
           <Button onClick={handleSendManual} disabled={sending} className="gap-2">
             <Send className="w-4 h-4" /> {sending ? 'Enviando...' : 'Enviar Notificação'}
           </Button>
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
     </div>
   );

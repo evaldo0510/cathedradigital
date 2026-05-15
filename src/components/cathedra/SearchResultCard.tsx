@@ -7,7 +7,7 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { RelevanceBadge } from './RelevanceBadge';
 import { cn } from '@/lib/utils';
 
@@ -72,7 +72,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-    <CardContent className="p-3 flex items-center gap-3">
+    <CathedraCardContent as CardContent className="p-3 flex items-center gap-3">
       {icon && (
         <div className="flex-shrink-0 w-8 h-8 rounded-2xl bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
           {icon}
@@ -90,7 +90,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
-    </CardContent>
+    </CathedraCardContent as CardContent>
     </MotionCard>
   );
 });

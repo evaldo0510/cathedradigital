@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
@@ -133,16 +133,16 @@ const AdminSeoTab: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           <Card className="border-border/50 shadow-sm overflow-hidden">
-            <CardHeader className="bg-muted/30 border-b border-border/50">
+            <CathedraCardHeader as CardHeader className="bg-muted/30 border-b border-border/50">
               <div className="flex items-center gap-2 text-primary">
                 <Globe className="w-5 h-5" />
                 <div>
-                  <CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CardTitle>
-                  <CardDescription>Gerencie meta tags, títulos e indexação global.</CardDescription>
+                  <CathedraCardTitle as CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CathedraCardTitle as CardTitle>
+                  <CathedraCardDescription as CardDescription>Gerencie meta tags, títulos e indexação global.</CathedraCardDescription as CardDescription>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
                   <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Título Base do Site (Google Title)</Label>
@@ -254,15 +254,15 @@ const AdminSeoTab: React.FC = () => {
                   <Save className="w-4 h-4 mr-2" /> Salvar Alterações
                 </Button>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg font-serif">Simulação de Google Snippet</CardTitle>
-              <CardDescription>Como seu site aparece nos resultados de busca.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-6">
+            <CathedraCardHeader as CardHeader>
+              <CathedraCardTitle as CardTitle className="text-lg font-serif">Simulação de Google Snippet</CathedraCardTitle as CardTitle>
+              <CathedraCardDescription as CardDescription>Como seu site aparece nos resultados de busca.</CathedraCardDescription as CardDescription>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-6">
               <div className="bg-background border border-border/50 rounded-2xl p-6 shadow-inner space-y-2">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-5 h-5 bg-muted rounded-2xl flex items-center justify-center overflow-hidden">
@@ -279,18 +279,18 @@ const AdminSeoTab: React.FC = () => {
                   {formData.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja e IA teológica.'}
                 </p>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </div>
 
         <div className="space-y-6">
           <Card className="border-border/50 shadow-sm h-fit">
-            <CardHeader className="bg-muted/10 border-b border-border/50">
-              <CardTitle className="text-md font-serif flex items-center gap-2">
+            <CathedraCardHeader as CardHeader className="bg-muted/10 border-b border-border/50">
+              <CathedraCardTitle as CardTitle className="text-md font-serif flex items-center gap-2">
                 <LineChart className="w-4 h-4 text-primary" /> GA4 Debug Status
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-3">
+              </CathedraCardTitle as CardTitle>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-4 space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span>Measurement ID:</span>
                 <Badge variant="outline" className="font-mono">{formData.ga4_measurement_id || 'Não configurado'}</Badge>
@@ -318,16 +318,16 @@ const AdminSeoTab: React.FC = () => {
                   ))}
                 </div>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm h-fit">
-            <CardHeader className="bg-amber-500/5 border-b border-border/50">
-              <CardTitle className="text-md font-serif flex items-center gap-2">
+            <CathedraCardHeader as CardHeader className="bg-amber-500/5 border-b border-border/50">
+              <CathedraCardTitle as CardTitle className="text-md font-serif flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-amber-600" /> Validação NAP & Local SEO
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-4">
+              </CathedraCardTitle as CardTitle>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-4 space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
                   <span>NAP Status</span>
@@ -405,25 +405,25 @@ const AdminSeoTab: React.FC = () => {
                   {domVerified === 'fail' && <AlertCircle className="w-3 h-3" />}
                 </div>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm h-fit">
-            <CardHeader className="bg-primary/5 border-b border-border/50">
-              <CardTitle className="text-md font-serif flex items-center gap-2">
+            <CathedraCardHeader as CardHeader className="bg-primary/5 border-b border-border/50">
+              <CathedraCardTitle as CardTitle className="text-md font-serif flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-primary" /> IA SEO Insights
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-4">
+              </CathedraCardTitle as CardTitle>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-4 space-y-4">
               <div className="p-3 bg-muted/50 rounded-2xl border border-border/50 text-premium-small leading-relaxed">
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           <Card className="border-border/50 shadow-sm h-fit bg-muted/20">
-            <CardContent className="p-4 space-y-3">
+            <CathedraCardContent as CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
                 <Info className="w-3 h-3" /> Links Úteis
               </div>
@@ -435,7 +435,7 @@ const AdminSeoTab: React.FC = () => {
                   Sitemap XML <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </div>
       </div>

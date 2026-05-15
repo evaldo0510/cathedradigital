@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import React, { useState, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
