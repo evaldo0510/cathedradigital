@@ -179,7 +179,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-display text-primary/80;
+    @apply tracking-tight font-display text-primary/90;
     text-wrap: balance;
   }
 
