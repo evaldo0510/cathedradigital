@@ -111,12 +111,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         animate={{ opacity: 1, scale: 1 }}
         className="relative w-full max-w-2xl bg-card border border-border shadow-2xl rounded-[2rem] p-8 md:p-12"
       >
-        <button 
+        <Button 
           onClick={onClose}
           className="absolute top-6 right-6 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted transition-colors"
         >
           <X className="w-6 h-6" />
-        </button>
+        </Button>
 
         {!showResult ? (
           <div className="space-y-8">
@@ -125,7 +125,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-secondary">
                     <Sparkles className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
                   </div>
                   <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary leading-tight">
                     {steps[currentStep].question}
@@ -134,14 +134,14 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <div className="grid gap-3">
                   {steps[currentStep].options?.map((opt) => (
-                    <button
+                    <Button
                       key={opt.value}
                       onClick={() => handleOptionSelect(opt.value)}
                       className="group flex items-center justify-between p-6 rounded-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
                     >
                       <span className="text-lg font-serif">{opt.label}</span>
                       <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
@@ -156,12 +156,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     <div className={`h-1.5 rounded-full transition-all ${currentStep === steps.length ? 'w-8 bg-secondary' : 'w-2 bg-border'}`} />
                   </div>
                   {currentStep > 0 && (
-                    <button 
+                    <Button 
                       onClick={() => setCurrentStep(currentStep - 1)}
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground font-serif"
                     >
                       <ArrowLeft className="w-4 h-4" /> Voltar
-                    </button>
+                    </Button>
                   )}
                 </div>
               </>
@@ -170,7 +170,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-secondary">
                     <Mail className="w-4 h-4" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">Quase lá</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Quase lá</span>
                   </div>
                   <h2 className="text-3xl font-serif font-bold text-primary">
                     Onde devemos enviar seu roteiro espiritual?
@@ -207,18 +207,18 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-14 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-xl"
+                  className="w-full h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-xl"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
 
-                <button 
+                <Button 
                   type="button"
                   onClick={() => setCurrentStep(steps.length - 1)}
                   className="w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground font-serif"
                 >
                   <ArrowLeft className="w-4 h-4" /> Revisar respostas
-                </button>
+                </Button>
               </form>
             )}
           </div>
@@ -242,7 +242,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20 space-y-3">
                 <div className="flex items-center gap-2 text-secondary">
                   <Book className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">A Palavra de Deus</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest">A Palavra de Deus</span>
                 </div>
                 <p className="text-lg font-serif italic text-primary">
                   "Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos aliviarei." (Mt 11,28)
@@ -252,7 +252,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                 <div className="flex items-center gap-2 text-primary">
                   <Cross className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Catecismo</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest">Catecismo</span>
                 </div>
                 <p className="text-sm font-serif text-muted-foreground">
                   "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes." (§2559)
@@ -262,7 +262,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <div className="p-6 rounded-2xl bg-muted/30 border border-border space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="w-4 h-4" />
-                  <span className="text-[10px] font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
                 </div>
                 <p className="text-sm font-serif italic leading-relaxed">
                   Percebo que você busca paz em meio ao cansaço. Saiba que o silêncio não é ausência, mas a plenitude da presença divina que restaura as forças.
@@ -273,7 +273,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             <div className="flex flex-col sm:flex-row gap-3">
               <Button 
                 asChild
-                className="flex-1 h-14 rounded-full text-[10px] font-black uppercase tracking-[0.1em]"
+                className="flex-1 h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
               >
                 <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
                   Aprofundar via WhatsApp
@@ -282,7 +282,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <Button 
                 variant="outline"
                 onClick={onClose}
-                className="h-14 rounded-full text-[10px] font-black uppercase tracking-[0.1em] px-8"
+                className="h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em] px-8"
               >
                 Concluir
               </Button>

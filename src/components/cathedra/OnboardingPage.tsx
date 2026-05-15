@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -273,12 +274,12 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
 
-          <button
+          <Button
             onClick={handleGoToJourney}
             className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             Começar Minha Jornada <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </motion.div>
       </div>
     );
@@ -304,7 +305,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -318,7 +319,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {question.options.map((opt) => (
-                  <button
+                  <Button
                     key={opt.value}
                     onClick={() => handleDiagAnswer(opt.value)}
                     className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
@@ -327,7 +328,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                       {opt.icon}
                     </div>
                     <span className="font-bold text-foreground">{opt.label}</span>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </motion.div>
@@ -360,7 +361,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
               <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
-              <p className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-premium-tiny lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
               <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
             </div>
           </motion.div>
@@ -368,7 +369,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
         <div className="flex justify-center gap-2">
           {SLIDES.map((_, i) => (
-            <button
+            <Button
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`w-2.5 h-2.5 rounded-full transition-all ${
@@ -381,22 +382,22 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ChevronLeft className="w-4 h-4" /> Voltar
-            </button>
+            </Button>
           ) : (
-            <button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pular
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
             onClick={handleSlideNext}
-            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

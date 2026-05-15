@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React from 'react';
 import { Icons } from '@/constants';
 import { useNavigate } from 'react-router-dom';
@@ -27,16 +28,16 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
       <div className="bg-card border border-border p-6 rounded-2xl max-w-sm w-full space-y-4 shadow-sm">
         
         {!isLoggedIn ? (
-          <button onClick={onLogin} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+          <Button onClick={onLogin} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
             Fazer Login
-          </button>
+          </Button>
         ) : (
-          <button
+          <Button
             onClick={() => navigate(AppRoute.UPGRADE)}
-            className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all"
+            className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all"
           >
             Assinar PRO
-          </button>
+          </Button>
         )}
       </div>
     </div>

@@ -76,12 +76,12 @@ const LogosChat = () => {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold font-serif text-primary">Logos IA</h3>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <X className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
 
             {/* Messages */}
@@ -128,12 +128,12 @@ const LogosChat = () => {
                   placeholder="Peça uma oração ou reflexão..."
                   className="w-full pl-4 pr-12 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
                 />
-                <button
+                <Button
                   onClick={handleSend}
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
                 >
                   <Send className="w-4 h-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>
@@ -144,7 +144,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-lg font-black uppercase tracking-widest text-[10px] min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-lg font-black uppercase tracking-widest text-premium-tiny min-w-0"
       >
         <Sparkles className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>

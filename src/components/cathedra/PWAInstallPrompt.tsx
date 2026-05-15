@@ -67,12 +67,12 @@ export const PWAInstallPrompt = () => {
 
   return (
     <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:bottom-8 md:w-80 bg-background border border-primary/20 p-4 rounded-2xl shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <button 
+      <Button 
         onClick={handleDismiss}
         className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
       >
         <X className="h-4 w-4" />
-      </button>
+      </Button>
       <div className="flex items-start gap-4">
         <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
           <Download className="h-6 w-6 text-primary" />

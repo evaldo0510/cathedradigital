@@ -119,9 +119,9 @@ const AdminCrmAutomations: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right hidden sm:block">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
+                    <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
                     {auto.edgeFunction && (
-                      <p className="text-[10px] font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
+                      <p className="text-premium-tiny font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
                     )}
                   </div>
                   <Badge className={auto.status === 'active'

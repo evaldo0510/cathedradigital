@@ -27,7 +27,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
+                      <span className="text-premium-tiny bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
                         <User className="w-2.5 h-2.5" />
                         {t.profiles.name}
                       </span>

@@ -173,12 +173,12 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
               <TrendingUp className="w-5 h-5 text-primary mx-auto mb-1" />
               <p className="text-2xl font-black text-primary">{bestScore}%</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Melhor</p>
+              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Melhor</p>
             </div>
             <div className="bg-accent/50 border border-border rounded-2xl p-4 text-center">
               <Brain className="w-5 h-5 text-foreground/60 mx-auto mb-1" />
               <p className="text-2xl font-black text-foreground">{avgScore}%</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Média</p>
+              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Média</p>
             </div>
           </div>
         )}
@@ -228,7 +228,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <p className="text-muted-foreground text-sm">
             Você acertou <span className="font-bold text-primary">{score}</span> de <span className="font-bold">{total}</span> ({pct}%)
           </p>
-          {user && <p className="text-[10px] text-muted-foreground mt-1">✓ Resultado salvo</p>}
+          {user && <p className="text-premium-tiny text-muted-foreground mt-1">✓ Resultado salvo</p>}
         </div>
 
         <div className="relative w-32 h-32 mx-auto">
@@ -296,7 +296,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           className="space-y-5"
         >
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2.5 py-1 rounded-full">
               {question.category}
             </span>
             <h3 className="text-lg font-bold text-foreground leading-snug">
@@ -315,7 +315,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                 else classes = 'opacity-50 border-border text-muted-foreground';
               }
               return (
-                <button
+                <Button
                   key={idx}
                   onClick={() => handleSelect(idx)}
                   disabled={answered}
@@ -327,7 +327,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                     {answered && isCorrect ? <Check className="w-4 h-4" /> : answered && isSelected ? <X className="w-4 h-4" /> : String.fromCharCode(65 + idx)}
                   </span>
                   <span className="line-clamp-3">{opt}</span>
-                </button>
+                </Button>
 
               );
             })}
@@ -340,7 +340,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
               className="space-y-4"
             >
               <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">
                   <Sparkles className="w-3 h-3 inline mr-1" />
                   {selected === question.correctIndex ? 'Correto!' : `A resposta certa era sobre "${question.term}"`}
                 </p>

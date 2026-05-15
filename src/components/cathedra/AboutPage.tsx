@@ -7,7 +7,7 @@ const AboutPage: React.FC = () => (
     <div className="text-center space-y-4">
       <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-2xl border border-primary/20">
         <Icons.Cross className="w-4 h-4 text-primary" />
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
+        <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>
       <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Sobre a Cathedra Digital</h1>
       <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
@@ -97,7 +97,7 @@ const AboutPage: React.FC = () => (
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-inherit">
+              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground group-hover:text-inherit">
                 {social.label}
               </span>
             </a>
@@ -164,7 +164,7 @@ const AboutPage: React.FC = () => (
 
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
             {['Espiritualidade', 'Reflexão', 'Tecnologia', 'Tradição'].map(tag => (
-              <span key={tag} className="px-4 py-1.5 bg-background border border-border rounded-full text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              <span key={tag} className="px-4 py-1.5 bg-background border border-border rounded-full text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
                 {tag}
               </span>
             ))}

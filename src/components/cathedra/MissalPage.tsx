@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { ChevronDown } from 'lucide-react';
@@ -81,54 +82,54 @@ const MissalPage: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
       </div>
 
       <div className="flex justify-center gap-2 flex-wrap">
-        <button onClick={() => setShowLatin(!showLatin)}
+        <Button onClick={() => setShowLatin(!showLatin)}
           className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
-        </button>
-        <button onClick={() => setShowRubrics(!showRubrics)}
+        </Button>
+        <Button onClick={() => setShowRubrics(!showRubrics)}
           className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
-        </button>
+        </Button>
       </div>
 
       {/* Quick navigation */}
       <div className="flex flex-wrap gap-2 justify-center">
         {MISSAL_SECTIONS.map(section => (
-          <button
+          <Button
             key={section.id}
             onClick={() => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
             {section.title}
-          </button>
+          </Button>
         ))}
       </div>
 
       <div className="space-y-4">
         {MISSAL_SECTIONS.map(section => (
           <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-2xl overflow-hidden">
-            <button
+            <Button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
+                {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
               </div>
               <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
-            </button>
+            </Button>
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">

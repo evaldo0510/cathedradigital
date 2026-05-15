@@ -89,7 +89,7 @@ const UpgradePage: React.FC = () => {
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-2xl text-primary">
             <Crown className="w-4 h-4" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Cathedra PRO</span>
+            <span className="text-premium-tiny font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
         </motion.div>
 

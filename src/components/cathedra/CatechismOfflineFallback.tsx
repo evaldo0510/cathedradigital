@@ -154,7 +154,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
 
       {downloading && (
         <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
@@ -212,7 +212,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       </div>
 
       <div className="pt-4 border-t border-border/40">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>

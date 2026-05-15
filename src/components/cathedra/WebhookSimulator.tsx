@@ -84,7 +84,7 @@ const WebhookSimulator: React.FC = () => {
       <CardContent className="p-8 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione um usuário" />
@@ -100,7 +100,7 @@ const WebhookSimulator: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o status" />
@@ -117,7 +117,7 @@ const WebhookSimulator: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-6 items-end">
           <div className="flex-1 space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o tipo" />

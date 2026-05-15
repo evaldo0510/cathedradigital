@@ -57,7 +57,7 @@ const ViaCrucis: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {STATIONS.map((s, i) => (
-            <button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
+            <Button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
               className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                 <Cross className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
@@ -69,7 +69,7 @@ const ViaCrucis: React.FC = () => {
                   <p className="text-premium-tiny text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
                 </div>
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       </motion.div>

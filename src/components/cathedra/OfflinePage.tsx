@@ -46,12 +46,12 @@ const OfflinePage: React.FC = () => {
         
         {stats && stats.total > 0 && (
           <div className="flex flex-col items-center gap-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-1000">
-            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/5 px-4 py-2 rounded-2xl border border-primary/10">
+            <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/5 px-4 py-2 rounded-2xl border border-primary/10">
               <Icons.Library className="w-3 h-3" />
               {stats.total} textos salvos offline
             </div>
             {stats.lastSync && (
-              <span className="text-[9px] text-muted-foreground font-medium italic">
+              <span className="text-premium-tiny text-muted-foreground font-medium italic">
                 Sincronizado {formatDistanceToNow(parseInt(stats.lastSync), { addSuffix: true, locale: ptBR })}
               </span>
             )}
@@ -91,12 +91,12 @@ const OfflinePage: React.FC = () => {
       </div>
 
       <div className="pt-8">
-        <button 
+        <Button 
           onClick={() => navigate('/cache-manager')}
           className="text-xs font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors flex items-center gap-2"
         >
           <Icons.Settings className="w-3 h-3" /> Gerenciar Cache Local
-        </button>
+        </Button>
       </div>
     </div>
   );

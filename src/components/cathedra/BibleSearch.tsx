@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useCallback } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,13 +55,13 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             autoFocus
           />
         </div>
-        <button onClick={doSearch} disabled={loading || query.trim().length < 2}
+        <Button onClick={doSearch} disabled={loading || query.trim().length < 2}
           className="px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-bold disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
           {loading ? '...' : 'Buscar'}
-        </button>
-        <button onClick={onClose} className="p-2 rounded-full bg-card border border-border hover:bg-muted transition-all">
+        </Button>
+        <Button onClick={onClose} className="p-2 rounded-full bg-card border border-border hover:bg-muted transition-all">
           <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
-        </button>
+        </Button>
       </div>
 
       {loading && (
@@ -77,14 +78,14 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       {!loading && results.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
+          <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {results.map((r, i) => (
-              <button key={i} onClick={() => goToVerse(r)}
+              <Button key={i} onClick={() => goToVerse(r)}
                 className="w-full text-left p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-[9px] text-muted-foreground">— {r.bookName}</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
+                  <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
                 </div>
                 <p className="text-sm text-foreground/80 font-serif line-clamp-2"
                   dangerouslySetInnerHTML={{
@@ -94,7 +95,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     ),
                   }}
                 />
-              </button>
+              </Button>
             ))}
           </div>
         </div>

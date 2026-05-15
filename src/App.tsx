@@ -468,7 +468,7 @@ const AppLayout: React.FC = () => {
             <div className="h-1 w-full bg-muted rounded-2xl overflow-hidden">
               <div className="h-full bg-primary/40 animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">
               Cathedra Digital
             </p>
           </div>

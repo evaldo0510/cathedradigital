@@ -85,7 +85,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
+            className="text-premium-tiny md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
           >
             Digital Sanctuarium
           </motion.p>

@@ -51,7 +51,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
           >
             {/* Term Header */}
             <div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-[9px] uppercase tracking-[0.15em] font-black mb-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-premium-tiny uppercase tracking-[0.15em] font-black mb-2">
                 {selectedTerm.category || 'Conceito'}
               </Badge>
               <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -61,7 +61,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Definition */}
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Definição</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Definição</p>
               <p className="text-foreground/90 leading-relaxed text-base font-medium italic">
                 {selectedTerm.definition}
               </p>
@@ -72,7 +72,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <div className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Book className="w-4 h-4 text-blue-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {(selectedTerm.bibleVerses || [selectedTerm.reference!]).flatMap((v, vIdx) => {
@@ -109,7 +109,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <div className="bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Bookmark className="w-4 h-4 text-amber-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedTerm.catechismReferences.flatMap((r, rIdx) => {
@@ -140,7 +140,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-emerald-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedTerm.magisteriumReferences.map((m, idx) => {
@@ -163,7 +163,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Target className="w-4 h-4 text-primary" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
                 </div>
                 <p className="text-foreground/80 leading-relaxed text-sm font-medium">
                   {selectedTerm.practicalApplication}
@@ -176,7 +176,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <div className="bg-muted/30 rounded-2xl p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Quote className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
                 </div>
                 <p className="text-foreground/70 leading-relaxed text-sm italic font-serif">
                   {selectedTerm.deepInterpretation}

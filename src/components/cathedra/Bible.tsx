@@ -487,15 +487,15 @@ const Bible: React.FC = () => {
         <BackToThemeBanner />
         {/* Back to Dashboard */}
         {fromDashboard && (
-          <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
             <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </button>
+          </Button>
         )}
         {/* Header */}
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
+          </Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
             <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
@@ -516,14 +516,14 @@ const Bible: React.FC = () => {
                 Destacado: {selectedBook.name} {selectedChapter}:{highlightedVerse}
               </span>
             </div>
-            <button
+            <Button
               onClick={() => setHighlightedVerse(null)}
               aria-label="Limpar destaque"
               className="text-xs font-bold text-primary/70 hover:text-primary transition-colors flex items-center gap-1 shrink-0"
             >
               Limpar
               <Icons.X className="w-3 h-3" />
-            </button>
+            </Button>
           </motion.div>
         )}
 
@@ -539,32 +539,32 @@ const Bible: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
+            <Button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
               className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               ← Anterior
-            </button>
-            <button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
+            </Button>
+            <Button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
               className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
               Próximo →
-            </button>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             {/* Font size */}
             <div className="flex items-center bg-card border border-border rounded-2xl overflow-hidden">
               {FONT_SIZES.map((f, i) => (
-                <button key={f.label} onClick={() => setFontSizeIdx(i)}
+                <Button key={f.label} onClick={() => setFontSizeIdx(i)}
                   className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
                   {f.label}
-                </button>
+                </Button>
               ))}
             </div>
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
-              <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+              <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
                 title="Catecismo & Documentos">
                 <Icons.Cross className="w-4 h-4" />
                 <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
-              </button>
+              </Button>
             )}
             <ShareButton 
               title={selectedBook.name} 
@@ -664,7 +664,7 @@ const Bible: React.FC = () => {
                   onClick={() => navigateChapter(1)}>
                   <CardContent className="p-6 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
@@ -697,9 +697,9 @@ const Bible: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
+          </Button>
           <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
         </div>
 
@@ -708,7 +708,7 @@ const Bible: React.FC = () => {
             const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
             const hasCicRef = !!BIBLE_TO_CIC[`${selectedBook.abbr}:${ch}`];
             return (
-              <button 
+              <Button 
                 key={ch} 
                 onClick={() => selectChapter(ch)}
                 className={`aspect-square flex items-center justify-center rounded-full border text-xs sm:text-sm font-bold transition-all relative
@@ -721,7 +721,7 @@ const Bible: React.FC = () => {
                 {hasCicRef && (
                   <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-secondary" title="Referência no Catecismo" />
                 )}
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -745,7 +745,7 @@ const Bible: React.FC = () => {
         </div>
         
         <div className="w-full md:w-auto flex flex-col gap-2">
-           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">
+           <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
              <span>Progresso Geral</span>
              <span>{overallProgress}%</span>
            </div>
@@ -755,7 +755,7 @@ const Bible: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-          <button
+          <Button
             key={t}
             onClick={() => setTestament(t)}
             className={`px-6 py-4 rounded-full font-bold transition-all border-2 text-sm
@@ -764,7 +764,7 @@ const Bible: React.FC = () => {
                 : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
           >
             {t}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -796,7 +796,7 @@ const Bible: React.FC = () => {
                 {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
-                    <button
+                    <Button
                       key={book.abbr}
                       onClick={() => selectBook(book)}
                       className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-full border transition-all relative overflow-hidden group aspect-square
@@ -810,10 +810,10 @@ const Bible: React.FC = () => {
                         </div>
                       )}
                       <span className="text-sm sm:text-base font-bold font-serif leading-none">{book.abbr}</span>
-                      <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
+                      <span className="text-[7px] sm:text-premium-tiny font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
                         {book.name}
                       </span>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>

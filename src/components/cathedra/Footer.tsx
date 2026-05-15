@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -175,7 +176,7 @@ const Footer: React.FC = React.memo(() => {
                <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
                <div>
                  <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                 <p className="text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
                </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
@@ -197,7 +198,7 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🏛️</span> Santa Sé
             </h4>
             <ul className="flex flex-col gap-4">
@@ -213,7 +214,7 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🇧🇷</span> CNBB
             </h4>
             <ul className="flex flex-col gap-4">
@@ -230,7 +231,7 @@ const Footer: React.FC = React.memo(() => {
 
           <div className="flex flex-col gap-8">
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
@@ -248,7 +249,7 @@ const Footer: React.FC = React.memo(() => {
               )}
             </div>
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                 {lang === 'pt' 
                   ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
@@ -263,7 +264,7 @@ const Footer: React.FC = React.memo(() => {
                   required
                   className="w-full bg-foreground/5 border border-foreground/10 rounded-full pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
-                <button 
+                <Button 
                   type="submit" 
                   disabled={isSubmitting}
                   className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
@@ -273,7 +274,7 @@ const Footer: React.FC = React.memo(() => {
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
-                </button>
+                </Button>
               </form>
             </div>
           </div>
@@ -281,17 +282,17 @@ const Footer: React.FC = React.memo(() => {
 
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
+            <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <button 
+              <Button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
                 className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
               >
                 Evaldo.os
-              </button>
+              </Button>
             </p>
           </div>
           <div className="flex items-center gap-8">
@@ -305,13 +306,13 @@ const Footer: React.FC = React.memo(() => {
 
               ].map((item, index, array) => (
                 <React.Fragment key={item.label}>
-                  <button 
+                  <Button 
                     onClick={() => navigate(item.route)} 
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
                     aria-label={item.label}
                   >
                     {item.label}
-                  </button>
+                  </Button>
 
                   {index < array.length - 1 && (
                     <span className="mx-3 text-muted-foreground/20 font-light select-none">|</span>
@@ -319,13 +320,13 @@ const Footer: React.FC = React.memo(() => {
                 </React.Fragment>
               ))}
             </nav>
-            <button 
+            <Button 
               onClick={scrollToTop} 
               className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
               <Icons.ArrowDown className="w-4 h-4 rotate-180" />
-            </button>
+            </Button>
 
           </div>
         </div>

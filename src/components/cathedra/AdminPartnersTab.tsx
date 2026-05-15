@@ -188,7 +188,7 @@ const AdminPartnersTab: React.FC = () => {
           <TabsTrigger value="pending" className="gap-2">
             Solicitações
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-[10px] font-bold">
+              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-premium-tiny font-bold">
                 {pendingCount}
               </span>
             )}

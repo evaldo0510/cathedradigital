@@ -74,10 +74,10 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
     }
   };
   return (
-    <button onClick={handleCopy} className="mt-2 inline-flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-primary transition-colors">
+    <Button onClick={handleCopy} className="mt-2 inline-flex items-center gap-1.5 text-premium-tiny text-muted-foreground hover:text-primary transition-colors">
       {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
       {copied ? 'Copiado' : 'Copiar'}
-    </button>
+    </Button>
   );
 };
 
@@ -344,14 +344,14 @@ const StudyMode: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
-            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest"
+            className="rounded-full h-12 px-8 font-black uppercase text-premium-tiny tracking-widest"
             onClick={() => navigate(AppRoute.CATECHISM)}
           >
             Explorar Catecismo
           </Button>
           <Button 
             variant="outline"
-            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary"
+            className="rounded-full h-12 px-8 font-black uppercase text-premium-tiny tracking-widest border-primary/20 text-primary"
             onClick={() => navigate(AppRoute.TRANSPARENCY)}
           >
             Saiba Mais
@@ -366,8 +366,8 @@ const StudyMode: React.FC = () => {
           { label: 'Fidelidade', desc: 'Fiel ao Magistério Vivo.' }
         ].map(item => (
           <div key={item.label} className="space-y-1">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">{item.label}</h4>
-            <p className="text-[10px] text-muted-foreground">{item.desc}</p>
+            <h4 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{item.label}</h4>
+            <p className="text-premium-tiny text-muted-foreground">{item.desc}</p>
           </div>
         ))}
       </div>

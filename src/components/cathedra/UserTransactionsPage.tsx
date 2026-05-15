@@ -296,7 +296,7 @@ const UserTransactionsPage: React.FC = () => {
           variant="outline" 
           size="sm" 
           onClick={handleExportPDF}
-          className="gap-2 font-bold uppercase text-[10px] tracking-widest rounded-full"
+          className="gap-2 font-bold uppercase text-premium-tiny tracking-widest rounded-full"
         >
           <Icons.Download className="w-4 h-4" /> Exportar PDF
         </Button>
@@ -373,7 +373,7 @@ const UserTransactionsPage: React.FC = () => {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{tx.description || (tx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-premium-tiny text-muted-foreground">
                           {format(new Date(tx.created_at), "dd 'de' MMMM 'de' yyyy, HH:mm", { locale: ptBR })}
                         </p>
                       </div>
@@ -384,32 +384,32 @@ const UserTransactionsPage: React.FC = () => {
                         <p className="text-lg font-black text-foreground">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
                         </p>
-                        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">Valor</p>
+                        <p className="text-premium-tiny text-muted-foreground uppercase font-bold tracking-tighter">Valor</p>
                       </div>
                       <div className="flex flex-col items-end gap-1">
                         {getStatusBadge(tx.status)}
                         {tx.payment_id && (
-                          <p className="text-[8px] font-mono text-muted-foreground">ID: {tx.payment_id}</p>
+                          <p className="text-premium-tiny font-mono text-muted-foreground">ID: {tx.payment_id}</p>
                         )}
                       </div>
                     </div>
                   </div>
                   
                   <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
-                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-premium-tiny font-bold text-muted-foreground uppercase tracking-widest">
                       {tx.status === 'approved' ? 'Comprovante disponível' : 'Histórico da transação'}
                     </span>
                     <div className="flex gap-2">
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-6 text-[9px] font-bold uppercase gap-1.5" 
+                        className="h-6 text-premium-tiny font-bold uppercase gap-1.5" 
                         onClick={() => setSelectedTx(tx)}
                       >
                         <Icons.Info className="w-3 h-3" /> Detalhes
                       </Button>
                       {tx.status === 'approved' && (
-                        <Button variant="ghost" size="sm" className="h-6 text-[9px] font-bold uppercase gap-1.5" onClick={() => window.print()}>
+                        <Button variant="ghost" size="sm" className="h-6 text-premium-tiny font-bold uppercase gap-1.5" onClick={() => window.print()}>
                           <Icons.Download className="w-3 h-3" /> Imprimir
                         </Button>
                       )}
@@ -433,7 +433,7 @@ const UserTransactionsPage: React.FC = () => {
                 variant="ghost" 
                 size="sm" 
                 onClick={() => fetchTransactions(page)}
-                className="h-8 text-[10px] uppercase font-bold text-destructive hover:bg-destructive/10"
+                className="h-8 text-premium-tiny uppercase font-bold text-destructive hover:bg-destructive/10"
               >
                 Tentar novamente
               </Button>
@@ -451,7 +451,7 @@ const UserTransactionsPage: React.FC = () => {
                   setPage(nextPage);
                   fetchTransactions(nextPage);
                 }}
-                className="text-[10px] uppercase font-bold text-muted-foreground hover:text-primary"
+                className="text-premium-tiny uppercase font-bold text-muted-foreground hover:text-primary"
               >
                 Carregar mais
               </Button>
@@ -490,11 +490,11 @@ const UserTransactionsPage: React.FC = () => {
             <div className="space-y-6 pt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Status</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Status</p>
                   {getStatusBadge(selectedTx.status)}
                 </div>
                 <div className="space-y-1 text-right">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Valor</p>
                   <p className="text-xl font-black text-foreground">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)}
                   </p>
@@ -503,20 +503,20 @@ const UserTransactionsPage: React.FC = () => {
 
               <div className="space-y-3 bg-muted/30 p-4 rounded-2xl border border-border/50">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Descrição</span>
+                  <span className="text-premium-tiny font-bold text-muted-foreground uppercase">Descrição</span>
                   <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-bold text-muted-foreground uppercase">Data</span>
+                  <span className="text-premium-tiny font-bold text-muted-foreground uppercase">Data</span>
                   <span className="text-xs font-medium text-foreground">
                     {format(new Date(selectedTx.created_at), "dd/MM/yyyy, HH:mm", { locale: ptBR })}
                   </span>
                 </div>
                 {selectedTx.payment_id && (
                   <div className="flex justify-between items-center group">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase">ID Pagamento</span>
+                    <span className="text-premium-tiny font-bold text-muted-foreground uppercase">ID Pagamento</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-foreground">{selectedTx.payment_id}</span>
+                      <span className="text-premium-tiny font-mono text-foreground">{selectedTx.payment_id}</span>
                       <Button 
                         variant="ghost" 
                         size="icon" 
@@ -531,8 +531,8 @@ const UserTransactionsPage: React.FC = () => {
                 )}
                 {selectedTx.coupon_code && (
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase">Cupom</span>
-                    <Badge variant="outline" className="text-[9px] font-mono">{selectedTx.coupon_code}</Badge>
+                    <span className="text-premium-tiny font-bold text-muted-foreground uppercase">Cupom</span>
+                    <Badge variant="outline" className="text-premium-tiny font-mono">{selectedTx.coupon_code}</Badge>
                   </div>
                 )}
               </div>
@@ -542,14 +542,14 @@ const UserTransactionsPage: React.FC = () => {
                   <div className="p-4 rounded-2xl bg-green-500/5 border border-green-500/10 flex items-center gap-3">
                     <Icons.CheckCircle className="w-5 h-5 text-green-500" />
                     <div>
-                      <p className="text-[10px] font-black uppercase text-green-600">Aprovado</p>
-                      <p className="text-[10px] text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                      <p className="text-premium-tiny font-black uppercase text-green-600">Aprovado</p>
+                      <p className="text-premium-tiny text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
                     </div>
                   </div>
                   
                   <Button 
                     variant="link" 
-                    className="w-full text-[10px] font-bold uppercase tracking-widest text-primary gap-2 h-auto p-0"
+                    className="w-full text-premium-tiny font-bold uppercase tracking-widest text-primary gap-2 h-auto p-0"
                     onClick={() => window.print()}
                   >
                     <Icons.ExternalLink className="w-3 h-3" /> Ver Comprovante
@@ -559,7 +559,7 @@ const UserTransactionsPage: React.FC = () => {
 
               {selectedTx.error_message && (
                 <div className="p-4 rounded-2xl bg-destructive/5 border border-destructive/10">
-                  <p className="text-[10px] font-black uppercase text-destructive mb-1">Motivo do Problema</p>
+                  <p className="text-premium-tiny font-black uppercase text-destructive mb-1">Motivo do Problema</p>
                   <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
                 </div>
               )}
@@ -567,7 +567,7 @@ const UserTransactionsPage: React.FC = () => {
               <div className="flex gap-3">
                 <DialogClose asChild>
                   <Button 
-                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest" 
+                    className="flex-1 rounded-full font-bold uppercase text-premium-tiny tracking-widest" 
                     autoFocus
                   >
                     Fechar
@@ -576,7 +576,7 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
-                    className="flex-1 rounded-full font-bold uppercase text-[10px] tracking-widest gap-2"
+                    className="flex-1 rounded-full font-bold uppercase text-premium-tiny tracking-widest gap-2"
                     onClick={() => window.print()}
                   >
                     <Icons.Download className="w-3 h-3" /> Imprimir

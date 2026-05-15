@@ -37,7 +37,7 @@ const ProShowcase: React.FC = () => {
         <div className="text-center space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-secondary/20 border border-secondary/30">
             <Crown className="w-3.5 h-3.5 text-secondary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-xl md:text-2xl font-black text-foreground leading-tight">
             Desbloqueie a experiência <br className="hidden md:block" />
@@ -62,7 +62,7 @@ const ProShowcase: React.FC = () => {
               >
                 <Icon className="w-4 h-4 text-secondary" />
                 <p className="text-xs font-bold text-foreground leading-tight">{b.label}</p>
-                <p className="text-[10px] text-muted-foreground leading-snug">{b.desc}</p>
+                <p className="text-premium-tiny text-muted-foreground leading-snug">{b.desc}</p>
               </motion.div>
             );
           })}
@@ -77,7 +77,7 @@ const ProShowcase: React.FC = () => {
             <Crown className="w-4 h-4" /> Conheça o PRO
             <ArrowRight className="w-4 h-4" />
           </Button>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-premium-tiny text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser
           </p>
         </div>

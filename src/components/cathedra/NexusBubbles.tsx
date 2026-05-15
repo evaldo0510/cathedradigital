@@ -151,22 +151,22 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {getTagIcon(tag.emoji, "w-6 h-6")}
             </div>
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{tag.category}</span>
+              <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{tag.category}</span>
               <h4 className="text-sm font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
             </div>
           </div>
-          <button 
+          <Button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
             className="w-10 h-10 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-primary/20 group"
             title="Estudo Completo"
           >
             <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-          </button>
+          </Button>
         </div>
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
           {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-2xl bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-60">
+          <div className="p-2 rounded-2xl bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
             <div className="flex gap-2">
               <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
               <span>Source: {metrics.source || 'pending'}</span>
@@ -184,19 +184,19 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 </div>
               </div>
               <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
-              <p className="text-[10px] text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
+              <p className="text-premium-tiny text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
           ) : status === 'error' && content.length === 0 ? (
             <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-              <p className="text-[10px] text-muted-foreground italic">{errorDetails}</p>
-              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-full text-[10px] uppercase font-black tracking-widest">Tentar Novamente</Button>
+              <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
+              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
             </div>
           ) : (
             <>
               {status === 'error' && content.length > 0 && (
-                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-2xl text-[9px] font-bold flex items-center gap-2 mb-2">
+                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-2xl text-premium-tiny font-bold flex items-center gap-2 mb-2">
                   <Info className="w-3 h-3" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
                 </div>
               )}
@@ -209,9 +209,9 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-2xl  -mr-6 -mt-6" />
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-3.5 h-3.5 text-secondary" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
                   </div>
-                  <p className="text-[12px] text-foreground/90 leading-relaxed italic font-serif">
+                  <p className="text-premium-small text-foreground/90 leading-relaxed italic font-serif">
                     "{logosInsight}"
                   </p>
                 </motion.div>
@@ -230,7 +230,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
                     return (
                       <div key={category.id} className="space-y-3">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
+                        <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/50 flex items-center gap-2">
                           <div className="h-[1px] w-4 bg-border/40" />
                           <div className="flex items-center gap-1.5 text-primary/60">
                             {category.icon}
@@ -258,12 +258,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 className="space-y-1.5 group/content p-2 rounded-full hover:bg-primary/5 transition-colors cursor-pointer"
                                 onClick={() => link && navigate(link)}
                               >
-                                <p className="text-[11px] leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
+                                <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
                                   {c.content_text}
                                 </p>
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-[10px] font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
+                                    <span className="text-premium-tiny font-bold text-primary flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-primary/5">
                                       {reference}
                                       {link && <ExternalLink className="w-2.5 h-2.5" />}
                                     </span>
@@ -310,7 +310,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
-                    <p className="text-[10px] text-muted-foreground/60 italic max-w-[200px] mx-auto">
+                    <p className="text-premium-tiny text-muted-foreground/60 italic max-w-[200px] mx-auto">
                       Ainda estamos tecendo as conexões para "{tag.label}". Tente outro tema ou explore o A-Z.
                     </p>
                   </div>
@@ -318,7 +318,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     size="sm" 
                     variant="outline" 
                     onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)} 
-                    className="h-8 rounded-full text-[9px] uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
+                    className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest border-primary/20 hover:bg-primary/5 transition-all"
                   >
                     Navegação A-Z
                   </Button>
@@ -332,7 +332,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           <Button 
             variant="ghost" 
             size="sm" 
-            className="w-full rounded-full text-[10px] font-black uppercase tracking-widest h-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
+            className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-9 hover:bg-primary/10 hover:text-primary transition-all active:scale-95"
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
           >
             Navegação Completa
@@ -433,10 +433,10 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/40 pb-4">
         <div className="flex flex-col text-center sm:text-left">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/70">
+          <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/70">
             Nexus Theologicus
           </span>
-          <span className="text-[10px] text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
+          <span className="text-premium-tiny text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
         </div>
         
         <div className="relative group/search max-w-[140px] md:max-w-[200px]">
@@ -446,40 +446,40 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             placeholder="Buscar tema..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-8 pl-8 pr-8 bg-card border border-border/50 rounded-full text-[10px] focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            className="w-full h-8 pl-8 pr-8 bg-card border border-border/50 rounded-full text-premium-tiny focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
             aria-label="Buscar tema no Nexus"
 
           />
           {searchQuery && (
-            <button 
+            <Button 
               onClick={() => setSearchQuery('')}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
             >
               <X className="w-2.5 h-2.5 text-muted-foreground" />
-            </button>
+            </Button>
           )}
         </div>
       </div>
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-        <button
+        <Button
           onClick={() => setActiveFilter('all')}
           aria-pressed={activeFilter === 'all'}
-          className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
         >
           Todos
-        </button>
+        </Button>
 
         {Object.entries(categories).map(([key, cat]) => (
-          <button
+          <Button
             key={key}
             onClick={() => setActiveFilter(key)}
             aria-pressed={activeFilter === key}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
           >
 
             {cat.icon}
             {cat.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -494,18 +494,18 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               key="filtered"
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase tracking-widest">
                   {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
                 </p>
                 {searchQuery && activeFilter !== 'all' && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-primary/60 font-medium italic">Pesquisando globalmente</span>
-                    <button 
+                    <span className="text-premium-tiny text-primary/60 font-medium italic">Pesquisando globalmente</span>
+                    <Button 
                       onClick={() => setActiveFilter('all')}
-                      className="text-[9px] font-black uppercase tracking-tighter text-primary hover:underline"
+                      className="text-premium-tiny font-black uppercase tracking-tighter text-primary hover:underline"
                     >
                       Limpar Filtro
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -521,7 +521,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                     />
                   </div>
                 )) : (
-                  <p className="text-[10px] text-muted-foreground italic">Nenhum tema encontrado.</p>
+                  <p className="text-premium-tiny text-muted-foreground italic">Nenhum tema encontrado.</p>
                 )}
               </div>
             </motion.div>
@@ -539,7 +539,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                     <div className="w-5 h-5 rounded-2xl bg-secondary/20 flex items-center justify-center">
                       <Heart className="w-3 h-3 text-secondary" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-secondary">
+                    <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary">
                       Sugeridos para sua Jornada
                     </span>
                   </div>
@@ -568,17 +568,17 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
                   return (
                     <motion.div key={key} layout className="space-y-2.5">
-                      <button
+                      <Button
                         onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
                         className="flex items-center gap-1.5 group w-full"
                       >
                         {category.icon}
-                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
+                        <span className="text-premium-tiny font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
                           {category.label}
                         </span>
                         <div className="h-px flex-1 bg-border/40" />
-                        <span className="text-[8px] font-black text-muted-foreground/40">{categoryTags.length} temas</span>
-                      </button>
+                        <span className="text-premium-tiny font-black text-muted-foreground/40">{categoryTags.length} temas</span>
+                      </Button>
                       <div className="flex flex-wrap gap-1.5" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -383,11 +384,11 @@ const CommandCenter: React.FC = () => {
           />
 
           {query && (
-            <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
               <Icons.X className="w-4 h-4" />
-            </button>
+            </Button>
           )}
-          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono font-bold">ESC</kbd>
+          <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-premium-tiny font-mono font-bold">ESC</kbd>
         </div>
 
         {/* Loading indicator */}
@@ -402,7 +403,7 @@ const CommandCenter: React.FC = () => {
         {/* Results */}
         <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-5 py-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
+            <div className="px-5 py-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
@@ -423,12 +424,12 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-5 pt-3 pb-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
+                  <div className="px-5 pt-3 pb-1 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-2" role="presentation">
                     <div className="w-4 h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
-                <button
+                <Button
                   id={`item-${i}`}
                   role="option"
                   aria-selected={i === selectedIndex}
@@ -445,14 +446,14 @@ const CommandCenter: React.FC = () => {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{item.label}</p>
-                    <p className="text-[10px] text-muted-foreground truncate">{item.description}</p>
+                    <p className="text-premium-tiny text-muted-foreground truncate">{item.description}</p>
                   </div>
-                  <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                  <span className={`text-premium-tiny font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                     TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
                   </span>
-                </button>
+                </Button>
               </React.Fragment>
             );
           })}
@@ -462,16 +463,16 @@ const CommandCenter: React.FC = () => {
         {/* Footer */}
         <div className="flex items-center justify-between px-5 py-2.5 border-t border-border bg-muted/30">
           <div className="flex items-center gap-3">
-            <span className="text-[9px] text-muted-foreground">↑↓ navegar</span>
-            <span className="text-[9px] text-muted-foreground">↵ abrir</span>
+            <span className="text-premium-tiny text-muted-foreground">↑↓ navegar</span>
+            <span className="text-premium-tiny text-muted-foreground">↵ abrir</span>
           </div>
           <div className="flex items-center gap-2">
             {hasGlobalResults && (
-              <span className="text-[9px] text-primary font-medium">
+              <span className="text-premium-tiny text-primary font-medium">
                 Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
               </span>
             )}
-            <span className="text-[9px] text-muted-foreground font-mono">⌘K</span>
+            <span className="text-premium-tiny text-muted-foreground font-mono">⌘K</span>
           </div>
         </div>
       </div>

@@ -196,7 +196,7 @@ const BibliotecaPage: React.FC = () => {
         )}
         {filtered.map((group, groupIdx) => (
           <div key={group.category} className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3">
+            <h2 className="text-premium-small font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3">
               <div className="h-px w-6 bg-primary/20" /> {group.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -232,7 +232,7 @@ const BibliotecaPage: React.FC = () => {
                           </div>
                           <div className="space-y-1 text-left flex-1">
                             <h3 className="font-bold text-foreground text-sm tracking-tight">{item.title}</h3>
-                            <p className="text-[10px] leading-relaxed text-muted-foreground line-clamp-2">{item.description}</p>
+                            <p className="text-premium-tiny leading-relaxed text-muted-foreground line-clamp-2">{item.description}</p>
                           </div>
                           <Icons.ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </CardContent>

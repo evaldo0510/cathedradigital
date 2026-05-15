@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useNavigate } from 'react-router-dom';
@@ -199,7 +200,7 @@ const AquinasOpera: React.FC = () => {
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
             <Icons.Brain className="w-4 h-4 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
           <div className="flex justify-center mt-4">
@@ -212,18 +213,18 @@ const AquinasOpera: React.FC = () => {
         </div>
 
         <div className="flex items-center justify-center gap-2 p-1 bg-muted rounded-2xl w-fit mx-auto">
-          <button
+          <Button
             onClick={() => setActiveTab('concepts')}
             className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
           >
             10 Conceitos
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => setActiveTab('suma')}
             className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Suma Teológica
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -248,11 +249,11 @@ const AquinasOpera: React.FC = () => {
                   <h3 className="text-xl font-serif font-bold text-foreground mb-4">{concept.title}</h3>
                   <div className="space-y-4">
                     <div className="p-4 bg-muted/50 rounded-2xl">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Aquino ensina:</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Aquino ensina:</p>
                       <p className="text-sm font-serif italic text-foreground/80">{concept.aquino}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão P.A.D.H.:</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão P.A.D.H.:</p>
                       <p className="text-lg font-serif font-medium text-foreground">{concept.padh}</p>
                     </div>
                     <div className="pt-4 border-t border-border">
@@ -269,7 +270,7 @@ const AquinasOpera: React.FC = () => {
               <div className="relative z-10 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-background/10 rounded-2xl border border-background/20">
                   <Icons.Star className="w-4 h-4 text-primary" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
                 </div>
                 <div className="space-y-2">
                   <h2 className="text-3xl md:text-5xl font-serif font-bold leading-tight">Clareza Interior com Aquino</h2>
@@ -293,12 +294,12 @@ const AquinasOpera: React.FC = () => {
                     <span>Aplicação prática no cotidiano</span>
                   </div>
                 </div>
-                <button 
+                <Button 
                   onClick={() => navigate(AppRoute.CHECKOUT)}
                   className="w-full md:w-auto px-10 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
                   Garantir acesso ao PRO
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -325,8 +326,8 @@ const AquinasOpera: React.FC = () => {
                 </div>
                 <div className="p-5 bg-primary/5 rounded-2xl border border-primary/20 flex flex-col justify-center items-center text-center">
                   <Icons.Video className="w-6 h-6 text-primary mb-2" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
+                  <p className="text-premium-tiny text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
                 </div>
               </div>
             </div>
@@ -334,13 +335,13 @@ const AquinasOpera: React.FC = () => {
             {/* AI Interaction Button */}
             <div className="text-center space-y-4">
               <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
-              <button
+              <Button
                 onClick={handleStartAquinasChat}
                 className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20"
               >
                 <Icons.Brain className="w-5 h-5" />
                 Interagir com Logos (Modo Aquino)
-              </button>
+              </Button>
             </div>
           </motion.div>
         ) : (
@@ -353,28 +354,28 @@ const AquinasOpera: React.FC = () => {
           >
         {SUMA_DATA.map(section => (
           <div key={section.part} className="bg-card border border-border rounded-2xl overflow-hidden">
-            <button
+            <Button
               onClick={() => setExpandedPart(expandedPart === section.part ? null : section.part)}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{section.part}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{section.part}</span>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
               </div>
               <Icons.ArrowDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedPart === section.part ? 'rotate-180' : ''}`} />
-            </button>
+            </Button>
 
             {expandedPart === section.part && (
               <div className="border-t border-border">
                 {section.questions.map(q => (
                   <div key={`${section.part}-${q.id}`} className="border-b border-border last:border-0">
-                    <button
+                    <Button
                       onClick={() => setExpandedQuestion(expandedQuestion === q.id ? null : q.id)}
                       className="w-full p-4 pl-8 flex items-center justify-between text-left hover:bg-muted/50 transition-all"
                     >
                       <span className="font-bold text-sm text-foreground">{q.title}</span>
                       <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground transition-transform ${expandedQuestion === q.id ? 'rotate-180' : ''}`} />
-                    </button>
+                    </Button>
 
                     {expandedQuestion === q.id && (
                       <div className="px-8 pb-4 space-y-2">
@@ -382,12 +383,12 @@ const AquinasOpera: React.FC = () => {
                           const artKey = `${section.part}-${q.id}-${art.id}`;
                           return (
                             <div key={artKey}>
-                              <button
+                              <Button
                                 onClick={() => setExpandedArticle(expandedArticle === artKey ? null : artKey)}
                                 className="w-full p-3 rounded-full text-left hover:bg-primary/5 transition-all"
                               >
                                 <span className="text-sm font-serif text-foreground/90">{art.title}</span>
-                              </button>
+                              </Button>
                               {expandedArticle === artKey && (
                                 <div className="px-3 pb-4">
                                   <p className="text-base md:text-lg text-foreground/80 font-serif leading-relaxed whitespace-pre-line bg-muted rounded-full p-5">{art.body}</p>

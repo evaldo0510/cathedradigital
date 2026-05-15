@@ -133,7 +133,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
           </motion.div>
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary opacity-80">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-secondary opacity-80">
               Cathedra {t('digital')}
             </p>
             <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
@@ -174,7 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
             <div>
               <p className="text-xs font-bold text-foreground leading-tight">Guia dos Módulos</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">Entenda como navegar e usar a plataforma</p>
+              <p className="text-premium-tiny text-muted-foreground mt-0.5">Entenda como navegar e usar a plataforma</p>
             </div>
           </div>
           <Icons.ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
@@ -194,7 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               className="relative overflow-hidden p-5 cursor-pointer group flex flex-col items-start text-left"
             >
               {door.suggested && (
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-2xl bg-secondary/10 text-secondary text-[8px] font-black uppercase tracking-tighter border border-secondary/20">
+                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-2xl bg-secondary/10 text-secondary text-premium-tiny font-black uppercase tracking-tighter border border-secondary/20">
                   <Icons.Star className="w-2 h-2 fill-current" /> Sugerido
                 </div>
               )}
@@ -203,7 +203,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </div>
               <div className="space-y-1">
                 <h3 className="text-sm font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{door.label}</h3>
-                <p className="text-[10px] text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
+                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-tight opacity-80">{door.description}</p>
               </div>
             </HomeCard>
           ))}
@@ -231,7 +231,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                  <Icons.Flame className="w-6 h-6" />}
               </div>
               <div className="text-left">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{nextUp.subtitle}</p>
                 <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
               </div>
             </div>
@@ -256,19 +256,19 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card space-y-4">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
+          <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary opacity-80">Estatísticas Semanais</h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.chaptersRead}</p>
-              <p className="text-[8px] text-muted-foreground font-medium">{t('bible')}</p>
+              <p className="text-premium-tiny text-muted-foreground font-medium">{t('bible')}</p>
             </div>
             <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-[8px] text-muted-foreground font-medium">CIC</p>
+              <p className="text-premium-tiny text-muted-foreground font-medium">CIC</p>
             </div>
             <div className="p-2 rounded-2xl bg-primary/[0.04]">
               <p className="text-lg font-bold text-foreground">{weeklyStats.journeySteps}</p>
-              <p className="text-[8px] text-muted-foreground font-medium">{t('journeys')}</p>
+              <p className="text-premium-tiny text-muted-foreground font-medium">{t('journeys')}</p>
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <p className="text-sm font-serif italic text-foreground leading-relaxed">
             {dailyQuote.text}
           </p>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary">
+          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">
             — {dailyQuote.author}
           </p>
         </div>

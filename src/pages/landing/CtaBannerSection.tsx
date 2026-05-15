@@ -33,7 +33,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             >
               Iniciar Minha Jornada
             </HomeButton>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
+            <p className="text-premium-tiny text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
               Acesso totalmente gratuito
             </p>
           </div>

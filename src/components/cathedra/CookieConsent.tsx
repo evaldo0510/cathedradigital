@@ -51,13 +51,13 @@ const CookieConsent = () => {
             <div className="flex items-center gap-4">
               <Button 
                 onClick={handleAccept}
-                className="flex-1 rounded-full font-black uppercase tracking-widest text-[10px] h-10"
+                className="flex-1 rounded-full font-black uppercase tracking-widest text-premium-tiny h-10"
               >
                 {t.accept}
               </Button>
-              <button className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">
+              <Button className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline">
                 {t.policy}
-              </button>
+              </Button>
             </div>
           </div>
         </motion.div>

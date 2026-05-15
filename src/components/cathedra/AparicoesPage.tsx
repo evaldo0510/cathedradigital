@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,21 +29,21 @@ const AparicoesPage: React.FC = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Back + Header */}
         <div className="flex items-center gap-4">
-          <button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
+          </Button>
           <div className="flex-1 min-w-0">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-sm text-muted-foreground">{selectedApparition.location}</p>
           </div>
-          <button
+          <Button
             onClick={() => handleToggleFavorite(selectedApparition)}
             className={`p-2 rounded-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
-          </button>
+          </Button>
           <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-md" loading="lazy" />
         </div>
 
@@ -55,7 +56,7 @@ const AparicoesPage: React.FC = () => {
             { label: 'Status', value: selectedApparition.approved ? 'Aprovada pela Igreja' : 'Em análise' },
           ].map(fact => (
             <div key={fact.label} className="p-3 rounded-2xl bg-card border border-border">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
               <p className="text-xs font-semibold text-foreground">{fact.value}</p>
             </div>
           ))}
@@ -69,7 +70,7 @@ const AparicoesPage: React.FC = () => {
             { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-3.5 h-3.5" /> },
             { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-3.5 h-3.5" /> },
           ].map(tab => (
-            <button
+            <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
@@ -78,7 +79,7 @@ const AparicoesPage: React.FC = () => {
             >
               {tab.icon}
               <span className="hidden sm:inline">{tab.label}</span>
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -165,7 +166,7 @@ const AparicoesPage: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Heart className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Aparições Marianas</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Aparições Marianas</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Aparições de Nossa Senhora</h1>
         <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto">
@@ -179,7 +180,7 @@ const AparicoesPage: React.FC = () => {
           <React.Fragment key={a.id}>
             <div className="flex flex-col items-center gap-1">
               <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-sm" loading="lazy" />
-              <span className="text-[9px] font-black text-primary">{a.year}</span>
+              <span className="text-premium-tiny font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (
               <div className="hidden md:block w-6 h-px bg-border" />
@@ -203,17 +204,17 @@ const AparicoesPage: React.FC = () => {
             >
               <div className="relative">
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
-                <button
+                <Button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
                   className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
                   title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                 >
                   <Icons.Heart className={`w-4 h-4 ${isFav ? 'fill-primary' : ''}`} />
-                </button>
+                </Button>
               </div>
               <div className="p-5">
                 <div className="mb-3">
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
+                  <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
                   <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
                     {apparition.title}
                   </h2>
@@ -222,9 +223,9 @@ const AparicoesPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Icons.Users className="w-3.5 h-3.5" />
-                    <span className="text-[10px] font-bold">{apparition.seer.split(',')[0]}</span>
+                    <span className="text-premium-tiny font-bold">{apparition.seer.split(',')[0]}</span>
                   </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
                 </div>
               </div>
             </motion.button>

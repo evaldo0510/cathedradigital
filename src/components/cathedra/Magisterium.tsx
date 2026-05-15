@@ -188,7 +188,7 @@ const Magisterium: React.FC = () => {
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Scroll className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
@@ -242,7 +242,7 @@ const Magisterium: React.FC = () => {
                   <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
                     {item.icon}
                   </div>
-                  <span className="font-black text-[10px] sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
+                  <span className="font-black text-premium-tiny sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
                 </motion.button>
               ))}
             </div>
@@ -312,7 +312,7 @@ const Magisterium: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
+                    <h4 className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {selectedGuidance.relatedDocs.map(docId => {
                         const doc = DOCS_LIST.find(d => d.id === docId);
@@ -321,7 +321,7 @@ const Magisterium: React.FC = () => {
                             <Icons.FileText className="w-5 h-5 text-primary" />
                             <div>
                               <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
-                              <p className="text-[10px] text-muted-foreground">{doc?.type || 'Magistério'} • {doc?.year}</p>
+                              <p className="text-premium-tiny text-muted-foreground">{doc?.type || 'Magistério'} • {doc?.year}</p>
                             </div>
                           </div>
                         );
@@ -348,7 +348,7 @@ const Magisterium: React.FC = () => {
             <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" role="tablist" aria-label="Filtros de temas">
               <Button 
                 variant={selectedTheme === null ? "default" : "outline"} 
-                className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
+                className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
                 onClick={() => setSelectedTheme(null)}
                 role="tab"
                 aria-selected={selectedTheme === null}
@@ -359,7 +359,7 @@ const Magisterium: React.FC = () => {
                 <Button 
                   key={theme}
                   variant={selectedTheme === theme ? "default" : "outline"} 
-                  className="rounded-full h-10 px-4 text-[10px] font-black uppercase tracking-widest flex-shrink-0"
+                  className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
                   onClick={() => setSelectedTheme(theme)}
                   role="tab"
                   aria-selected={selectedTheme === theme}
@@ -386,20 +386,20 @@ const Magisterium: React.FC = () => {
                          doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
                          <Icons.FileText className="w-5 h-5" />}
                       </div>
-                      <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
+                      <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
                         {doc.year}
                       </Badge>
                     </div>
                     
                     <div className="space-y-1 flex-1">
                       <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{doc.author}</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">{doc.author}</p>
                       <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 mt-2">{doc.summary}</p>
                     </div>
 
                     <div className="flex flex-wrap gap-1 pt-2">
                       {doc.theme.map(t => (
-                        <span key={t} className="text-[9px] font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                        <span key={t} className="text-premium-tiny font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">
                           {t}
                         </span>
                       ))}
@@ -407,7 +407,7 @@ const Magisterium: React.FC = () => {
 
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-between group/btn text-[10px] font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
+                      className="w-full justify-between group/btn text-premium-tiny font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
                       onClick={() => navigate(`/magisterium/${doc.id}`)}
                     >
                       Ler Documento

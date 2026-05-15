@@ -323,21 +323,21 @@ const SpiritualQuiz: React.FC = () => {
     return (
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
-          <button 
+          <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
+          <Button 
             onClick={reset} 
-            className="text-[10px] text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
+            className="text-premium-tiny text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
             aria-label="Refazer teste de perfil espiritual"
           >
             Refazer
-          </button>
+          </Button>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="text-3xl">{p.emoji}</span>
           <div className="flex-1 min-w-0">
             <h3 className={`text-base font-bold ${p.color}`}>{p.title}</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {painLabel} · 🔥 {dirLabel}</p>
+            <p className="text-premium-small text-muted-foreground mt-0.5">💔 {painLabel} · 🔥 {dirLabel}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -371,7 +371,7 @@ const SpiritualQuiz: React.FC = () => {
       >
         <div className="text-center space-y-3">
           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
+          <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
           <h2 className={`text-2xl font-black ${p.color}`}>{p.title}</h2>
           <p className="text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto italic font-serif">"{p.message}"</p>
         </div>
@@ -380,11 +380,11 @@ const SpiritualQuiz: React.FC = () => {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
+            <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
             <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
           <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
+            <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
             <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
         </div>
@@ -392,7 +392,7 @@ const SpiritualQuiz: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
+          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-primary/[0.04] border border-primary/10">
               <Sparkles className="w-4 h-4 text-primary shrink-0" />
@@ -441,7 +441,7 @@ const SpiritualQuiz: React.FC = () => {
         </div>
         <div className="flex items-center justify-center gap-1 text-muted-foreground">
           <Clock className="w-3.5 h-3.5" />
-          <span className="text-[11px] font-medium">Leva menos de 2 minutos</span>
+          <span className="text-premium-small font-medium">Leva menos de 2 minutos</span>
         </div>
         <Button
           onClick={() => setPhase('quiz')}
@@ -464,8 +464,8 @@ const SpiritualQuiz: React.FC = () => {
     >
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
-          <p className="text-[10px] font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
+          <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
+          <p className="text-premium-tiny font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
         </div>
         <div className="h-1.5 bg-muted rounded-2xl overflow-hidden">
           <motion.div className="h-full bg-secondary rounded-2xl" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
@@ -503,9 +503,9 @@ const SpiritualQuiz: React.FC = () => {
       </AnimatePresence>
 
       {step > 0 && (
-        <button onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <Button onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-3 h-3" /> Voltar
-        </button>
+        </Button>
       )}
     </motion.div>
   );

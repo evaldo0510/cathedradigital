@@ -259,7 +259,7 @@ const AdminConstructionTab: React.FC = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-8 gap-2 text-[10px] font-black uppercase tracking-widest"
+                      className="w-full h-8 gap-2 text-premium-tiny font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('budget');
@@ -276,7 +276,7 @@ const AdminConstructionTab: React.FC = () => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-8 gap-2 text-[10px] font-black uppercase tracking-widest"
+                      className="w-full h-8 gap-2 text-premium-tiny font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('schedule');
@@ -289,7 +289,7 @@ const AdminConstructionTab: React.FC = () => {
                 </div>
               </CardContent>
               <CardFooter className="bg-muted/10 py-3 flex justify-between">
-                <span className="text-[10px] text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
+                <span className="text-premium-tiny text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
                   <Trash2 className="w-3.5 h-3.5" />
                 </Button>

@@ -119,7 +119,7 @@ const AZFaithPage: React.FC = () => {
         <header className="text-center space-y-6 pt-12 mb-16">
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
+            <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
           <Button
@@ -149,9 +149,9 @@ const AZFaithPage: React.FC = () => {
                 className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
+                <Button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
                   <X className="w-4 h-4 text-muted-foreground" />
-                </button>
+                </Button>
               )}
             </div>
 

@@ -278,7 +278,7 @@ const AdminThemesTab = () => {
                     <span className="text-xl">{theme.emoji || '⛪'}</span>
                     <div className="flex flex-col">
                       <span className="font-bold text-foreground">{theme.name}</span>
-                      <span className="text-[10px] uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
+                      <span className="text-premium-tiny uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -298,7 +298,7 @@ const AdminThemesTab = () => {
                   </div>
                 </div>
                 {theme.description && (
-                  <p className="text-[10px] text-muted-foreground mt-2 line-clamp-1 italic">{theme.description}</p>
+                  <p className="text-premium-tiny text-muted-foreground mt-2 line-clamp-1 italic">{theme.description}</p>
                 )}
               </div>
             ))
@@ -324,7 +324,7 @@ const AdminThemesTab = () => {
                   <span className="text-3xl">{selectedTheme.emoji || '⛪'}</span>
                   <div>
                     <h3 className="text-xl font-bold text-foreground leading-none mb-1">{selectedTheme.name}</h3>
-                    <Badge variant="secondary" className="text-[9px] uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
+                    <Badge variant="secondary" className="text-premium-tiny uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -386,7 +386,7 @@ const AdminThemesTab = () => {
                         <div className="flex items-center gap-2 border-b border-border/50 pb-2">
                           <div className={`p-1.5 rounded-full ${config.color}`}>{config.icon}</div>
                           <span className="text-sm font-bold text-foreground uppercase tracking-widest">{config.label}</span>
-                          <Badge variant="outline" className="text-[10px] ml-auto">{items.length}</Badge>
+                          <Badge variant="outline" className="text-premium-tiny ml-auto">{items.length}</Badge>
                         </div>
                         <div className="grid gap-3">
                           {items.map(item => (
@@ -419,7 +419,7 @@ const AdminThemesTab = () => {
                                   <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-2 mb-2">
-                                        <Badge variant="outline" className="text-[9px] font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
+                                        <Badge variant="outline" className="text-premium-tiny font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
                                         {item.title && <span className="text-xs font-bold text-foreground/80">— {item.title}</span>}
                                       </div>
                                       <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">"{item.text_content}"</p>

@@ -51,7 +51,7 @@ const SecurityAuditPage = () => {
       <header className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-2xl text-red-600 border border-red-500/20">
           <ShieldAlert className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground text-primary">Painel de Segurança & Integridade</h1>
         <p className="text-muted-foreground italic font-serif">Controle de deploys, migrações e proteção de segredos.</p>
@@ -83,7 +83,7 @@ const SecurityAuditPage = () => {
                       <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
                     <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-full">
-                      <Link to={item.link} className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest">
+                      <Link to={item.link} className="flex items-center gap-1.5 text-premium-tiny font-black uppercase tracking-widest">
                         Detalhes <ExternalLink className="w-3 h-3" />
                       </Link>
                     </Button>
@@ -107,7 +107,7 @@ const SecurityAuditPage = () => {
               <Button 
                 variant="destructive" 
                 onClick={handleRollback}
-                className="w-full rounded-full text-[10px] font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
+                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
               >
                 Copiar SQL de Rollback
               </Button>
@@ -125,7 +125,7 @@ const SecurityAuditPage = () => {
               </p>
               <Button 
                 variant="outline" 
-                className="w-full rounded-full text-[10px] font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
+                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
               >
                 Simular Varredura
               </Button>
@@ -141,15 +141,15 @@ const SecurityAuditPage = () => {
             </h3>
             <div className="space-y-4">
               <div className="space-y-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Última Varredura</p>
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Última Varredura</p>
                 <p className="text-xs font-mono bg-muted p-2 rounded-full">2024-05-20 14:30</p>
               </div>
               <div className="space-y-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
                 <p className="text-xs font-bold text-foreground">0 detectadas esta semana</p>
               </div>
             </div>
-            <div className="pt-4 border-t border-border/40 text-[10px] text-muted-foreground italic leading-relaxed">
+            <div className="pt-4 border-t border-border/40 text-premium-tiny text-muted-foreground italic leading-relaxed">
               * O scanner E2E automatizado roda em todas as branches antes do merge para 'main'.
             </div>
           </Card>
@@ -157,7 +157,7 @@ const SecurityAuditPage = () => {
       </div>
 
       <footer className="text-center pt-8">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Segurança v1.2
         </p>
       </footer>

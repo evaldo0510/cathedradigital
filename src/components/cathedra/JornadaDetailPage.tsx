@@ -184,7 +184,7 @@ const JornadaDetailPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
                       {isStepLocked && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-[8px] uppercase font-black px-1.5 py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-1.5 py-0">PRO</Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">

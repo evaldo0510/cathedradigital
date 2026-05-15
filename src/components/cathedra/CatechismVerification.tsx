@@ -209,19 +209,19 @@ const CatechismVerification: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="p-4 bg-muted/30 border-border/50">
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
           <div className="text-2xl font-serif font-bold">{stats.total}</div>
         </Card>
         <Card className="p-4 bg-emerald-500/5 border-emerald-500/20">
-          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
           <div className="text-2xl font-serif font-bold text-emerald-600">{stats.ok}</div>
         </Card>
         <Card className="p-4 bg-destructive/5 border-destructive/20">
-          <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Ausentes</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Ausentes</span>
           <div className="text-2xl font-serif font-bold text-destructive">{stats.missing}</div>
         </Card>
         <Card className="p-4 bg-amber-500/5 border-amber-500/20">
-          <span className="text-[10px] font-black uppercase tracking-widest text-amber-600">Divergentes</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">Divergentes</span>
           <div className="text-2xl font-serif font-bold text-amber-600">{stats.divergent}</div>
         </Card>
       </div>
@@ -229,26 +229,26 @@ const CatechismVerification: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-2xl border border-border">
-            <button 
+            <Button 
               onClick={() => setFilter('all')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={() => setFilter('missing')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-sm' : 'text-muted-foreground hover:text-destructive'}`}
+              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-sm' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={() => setFilter('divergent')} 
-              className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-sm' : 'text-muted-foreground hover:text-amber-600'}`}
+              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-sm' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
-            </button>
+            </Button>
           </div>
-          <span className="text-[10px] font-black uppercase text-muted-foreground">
+          <span className="text-premium-tiny font-black uppercase text-muted-foreground">
             {filteredResults.length} parágrafos exibidos
           </span>
         </div>
@@ -256,7 +256,7 @@ const CatechismVerification: React.FC = () => {
         <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/30 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              <tr className="border-b border-border bg-muted/30 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
                 <th className="px-6 py-4">§ Parágrafo</th>
                 <th className="px-6 py-4">Seção</th>
                 <th className="px-6 py-4">Status</th>
@@ -286,14 +286,14 @@ const CatechismVerification: React.FC = () => {
                     <td className="px-6 py-4 text-xs font-medium text-muted-foreground">{res.section}</td>
                     <td className="px-6 py-4">
                       {res.status === 'ok' ? (
-                        <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-[9px] font-black">OK</Badge>
+                        <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-premium-tiny font-black">OK</Badge>
                       ) : res.status === 'missing' ? (
-                        <Badge variant="destructive" className="uppercase text-[9px] font-black">Ausente</Badge>
+                        <Badge variant="destructive" className="uppercase text-premium-tiny font-black">Ausente</Badge>
                       ) : (
-                        <Badge className="bg-amber-500 text-white border-0 uppercase text-[9px] font-black">Divergente</Badge>
+                        <Badge className="bg-amber-500 text-white border-0 uppercase text-premium-tiny font-black">Divergente</Badge>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-[11px] text-muted-foreground italic">
+                    <td className="px-6 py-4 text-premium-small text-muted-foreground italic">
                       {res.details || 'Conteúdo sincronizado'}
                     </td>
                   </tr>
