@@ -27,7 +27,7 @@
             <div class="flex gap-4">
                 <div class="text-right">
                     <p class="text-[10px] opacity-40 uppercase font-black">Data da Execução</p>
-                    <p class="text-sm font-bold">15/05/2026, 01:59:14</p>
+                    <p class="text-sm font-bold">15/05/2026, 02:01:06</p>
                 </div>
                 <div class="px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-black uppercase tracking-widest">
                     Status: <span class="status-fail">FAILED</span>
@@ -38,7 +38,7 @@
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Total de Testes</p>
-                <p class="text-3xl font-black">27</p>
+                <p class="text-3xl font-black">9</p>
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Sucessos</p>
@@ -46,7 +46,7 @@
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Falhas</p>
-                <p class="text-3xl font-black status-fail">27</p>
+                <p class="text-3xl font-black status-fail">9</p>
             </div>
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Taxa de Sucesso</p>
@@ -61,7 +61,7 @@
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit / on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
                         </div>
                         <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
                             FAILED
@@ -70,15 +70,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-kjpL2S --remote-debugging-pipe --no-startup-window
+<launched> pid=55489
+[pid=55489][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-kjpL2S --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55489[22m
+[2m  - [pid=55489][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55489] <gracefully close start>[22m
+[2m  - [pid=55489] <kill>[22m
+[2m  - [pid=55489] <will force kill>[22m
+[2m  - [pid=55489] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55489] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55489] starting temporary directories cleanup[22m
+[2m  - [pid=55489] finished temporary directories cleanup[22m
+[2m  - [pid=55489] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -122,15 +132,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xHT71Q --remote-debugging-pipe --no-startup-window
+<launched> pid=55545
+[pid=55545][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xHT71Q --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55545[22m
+[2m  - [pid=55545][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55545] <gracefully close start>[22m
+[2m  - [pid=55545] <kill>[22m
+[2m  - [pid=55545] <will force kill>[22m
+[2m  - [pid=55545] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55545] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55545] starting temporary directories cleanup[22m
+[2m  - [pid=55545] finished temporary directories cleanup[22m
+[2m  - [pid=55545] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -174,15 +194,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-l1m7TR --remote-debugging-pipe --no-startup-window
+<launched> pid=55602
+[pid=55602][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-l1m7TR --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55602[22m
+[2m  - [pid=55602][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55602] <gracefully close start>[22m
+[2m  - [pid=55602] <kill>[22m
+[2m  - [pid=55602] <will force kill>[22m
+[2m  - [pid=55602] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55602] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55602] starting temporary directories cleanup[22m
+[2m  - [pid=55602] finished temporary directories cleanup[22m
+[2m  - [pid=55602] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -226,951 +256,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
 
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /design-system on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on mobile</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit / on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">4ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Baseline (Esperado)</p>
-                                    <div class="img-container">
-                                        <img src="" alt="Expected" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Atual (Encontrado)</p>
-                                    <div class="img-container border-red-500/20">
-                                        <img src="" alt="Actual" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <p class="text-[10px] opacity-40 uppercase font-black">Diferença (Diff)</p>
-                                    <div class="img-container border-red-500/50">
-                                        <img src="" alt="Diff" class="w-full h-auto" onerror="this.src='https://placehold.co/600x400/111/444?text=N/A'">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-blue-400 mb-1">Ação Sugerida</p>
-                                <p class="text-sm opacity-80">Se as mudanças forem desejadas, execute <code class="bg-black/50 px-2 py-0.5 rounded text-blue-300">npx playwright test --update-snapshots</code> para atualizar as baselines.</p>
-                            </div>
-                        </div>
-                    
-                </div>
-            
-                <div class="premium-card overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-bold text-lg">Audit /catechism on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
-                        </div>
-                        <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
-                            FAILED
-                        </div>
-                    </div>
-                    
-                    
-                        <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-VYd6wl --remote-debugging-pipe --no-startup-window
+<launched> pid=55657
+[pid=55657][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-VYd6wl --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55657[22m
+[2m  - [pid=55657][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55657] <gracefully close start>[22m
+[2m  - [pid=55657] <kill>[22m
+[2m  - [pid=55657] <will force kill>[22m
+[2m  - [pid=55657] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55657] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55657] starting temporary directories cleanup[22m
+[2m  - [pid=55657] finished temporary directories cleanup[22m
+[2m  - [pid=55657] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -1214,15 +318,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-7mHlAM --remote-debugging-pipe --no-startup-window
+<launched> pid=55713
+[pid=55713][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-7mHlAM --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55713[22m
+[2m  - [pid=55713][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55713] <gracefully close start>[22m
+[2m  - [pid=55713] <kill>[22m
+[2m  - [pid=55713] <will force kill>[22m
+[2m  - [pid=55713] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55713] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55713] starting temporary directories cleanup[22m
+[2m  - [pid=55713] finished temporary directories cleanup[22m
+[2m  - [pid=55713] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -1257,7 +371,7 @@
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit /catechism on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
                         </div>
                         <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
                             FAILED
@@ -1266,15 +380,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-EheZ92 --remote-debugging-pipe --no-startup-window
+<launched> pid=55772
+[pid=55772][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-EheZ92 --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55772[22m
+[2m  - [pid=55772][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55772] <gracefully close start>[22m
+[2m  - [pid=55772] <kill>[22m
+[2m  - [pid=55772] <will force kill>[22m
+[2m  - [pid=55772] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55772] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55772] starting temporary directories cleanup[22m
+[2m  - [pid=55772] finished temporary directories cleanup[22m
+[2m  - [pid=55772] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -1309,7 +433,7 @@
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit /design-system on desktop</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">3ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
                         </div>
                         <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
                             FAILED
@@ -1318,15 +442,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-XyhHMH --remote-debugging-pipe --no-startup-window
+<launched> pid=55829
+[pid=55829][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-XyhHMH --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55829[22m
+[2m  - [pid=55829][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55829] <gracefully close start>[22m
+[2m  - [pid=55829] <kill>[22m
+[2m  - [pid=55829] <will force kill>[22m
+[2m  - [pid=55829] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55829] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55829] starting temporary directories cleanup[22m
+[2m  - [pid=55829] finished temporary directories cleanup[22m
+[2m  - [pid=55829] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -1370,15 +504,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-ZQ0Ltm --remote-debugging-pipe --no-startup-window
+<launched> pid=55888
+[pid=55888][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-ZQ0Ltm --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55888[22m
+[2m  - [pid=55888][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55888] <gracefully close start>[22m
+[2m  - [pid=55888] <kill>[22m
+[2m  - [pid=55888] <will force kill>[22m
+[2m  - [pid=55888] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55888] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55888] starting temporary directories cleanup[22m
+[2m  - [pid=55888] finished temporary directories cleanup[22m
+[2m  - [pid=55888] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
@@ -1413,7 +557,7 @@
                     <div class="p-6 border-b border-white/5 flex items-center justify-between">
                         <div>
                             <h3 class="font-bold text-lg">Audit /design-system on tablet</h3>
-                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">2ms de execução</p>
+                            <p class="text-[10px] opacity-40 uppercase font-black tracking-widest">7ms de execução</p>
                         </div>
                         <div class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-red-500/10 text-red-500">
                             FAILED
@@ -1422,15 +566,25 @@
                     
                     
                         <div class="p-6 space-y-6">
-                            <pre>Error: browserType.launch: Executable doesn't exist at /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell
-╔════════════════════════════════════════════════════════════╗
-║ Looks like Playwright was just installed or updated.       ║
-║ Please run the following command to download new browsers: ║
-║                                                            ║
-║     npx playwright install                                 ║
-║                                                            ║
-║ <3 Playwright Team                                         ║
-╚════════════════════════════════════════════════════════════╝</pre>
+                            <pre>Error: browserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+<launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rzxHrg --remote-debugging-pipe --no-startup-window
+<launched> pid=55945
+[pid=55945][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory
+Call log:
+[2m  - <launching> /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,BoundaryEventDispatchTracksNodeRemoval,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument,OptimizationHints --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rzxHrg --remote-debugging-pipe --no-startup-window[22m
+[2m  - <launched> pid=55945[22m
+[2m  - [pid=55945][err] /chromium_headless_shell-1217/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libglib-2.0.so.0: cannot open shared object file: No such file or directory[22m
+[2m  - [pid=55945] <gracefully close start>[22m
+[2m  - [pid=55945] <kill>[22m
+[2m  - [pid=55945] <will force kill>[22m
+[2m  - [pid=55945] exception while trying to kill process: Error: kill ESRCH[22m
+[2m  - [pid=55945] <process did exit: exitCode=127, signal=null>[22m
+[2m  - [pid=55945] starting temporary directories cleanup[22m
+[2m  - [pid=55945] finished temporary directories cleanup[22m
+[2m  - [pid=55945] <gracefully close end>[22m
+</pre>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="space-y-2">
