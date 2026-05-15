@@ -40,7 +40,8 @@ const DailyRoutineSection = () => {
           {dayFlow.map((step) => (
             <HomeCard
               key={step.title}
-              className="p-8 flex flex-col space-y-8"
+              padding="md"
+              className="flex flex-col space-y-8 h-full transition-all duration-700"
             >
               <div className="flex justify-between items-center">
                 <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary">
