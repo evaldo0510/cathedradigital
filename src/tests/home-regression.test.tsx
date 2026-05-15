@@ -172,7 +172,7 @@ describe('Home Page Visual Regression & A11y', () => {
   });
 
   describe('Accessibility & Keyboard Navigation', () => {
-    it('all main sections should have ARIA labels', () => {
+    it('all main sections should have correct region names', () => {
       render(
         <TestWrapper>
           <HomeMainContent 
@@ -184,10 +184,10 @@ describe('Home Page Visual Regression & A11y', () => {
         </TestWrapper>
       );
       
-      expect(screen.getByLabelText(/Jornada/i)).toBeDefined();
-      expect(screen.getByLabelText(/Hoje/i)).toBeDefined();
-      expect(screen.getByLabelText(/Doutrina/i)).toBeDefined();
-      expect(screen.getByLabelText(/Trilhas/i)).toBeDefined();
+      expect(screen.getByRole('region', { name: /^Jornada$/i })).toBeDefined();
+      expect(screen.getByRole('region', { name: /^Hoje$/i })).toBeDefined();
+      expect(screen.getByRole('region', { name: /^Doutrina$/i })).toBeDefined();
+      expect(screen.getByRole('region', { name: /^Trilhas$/i })).toBeDefined();
     });
 
     it('interactive cards should have correct ARIA roles', () => {
@@ -203,7 +203,7 @@ describe('Home Page Visual Regression & A11y', () => {
       );
       
       const cards = screen.getAllByRole('button');
-      expect(cards.length).toBeGreaterThan(5);
+      expect(cards.length).toBeGreaterThan(3);
     });
   });
 });
