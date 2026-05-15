@@ -108,7 +108,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               navigate(AppRoute.ONBOARDING);
             }}
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>
-            <Icons.Compass />
+            <Icons.Compass className="w-4 h-4" />
           </Button>
 
           <Button
