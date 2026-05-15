@@ -193,7 +193,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </div>
           )}
 
-          {user && user.role === 'admin' && (
+          {canUserAccess(user?.role, AppRoute.ADMIN) && (
             <Button 
               variant="secondary"
               size="sm"
