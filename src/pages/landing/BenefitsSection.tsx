@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/cathedra/CathedraButton";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { fadeUp, buttonHover } from "./animations";
 
