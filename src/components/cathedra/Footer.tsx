@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-
+import { useAuth } from '@/hooks/useAuth';
+import { canUserAccess } from '@/utils/auth-utils';
 import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [
