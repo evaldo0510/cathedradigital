@@ -20,7 +20,7 @@ const ComponentPlayground = () => {
   const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-8 md:p-12 rounded-[3rem] bg-card border border-border/20 space-y-10 shadow-premium transition-colors">
+    <div className="p-8 md:p-12 rounded-premium bg-card border border-border/20 space-y-10 shadow-premium transition-colors">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div className="flex flex-wrap gap-3">
           {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
