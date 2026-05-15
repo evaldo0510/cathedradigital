@@ -89,7 +89,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               </div>
               <div>
                 <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
-                <p className="mt-3 text-sm text-primary/50 leading-relaxed font-serif italic">
+                <p className="mt-3 text-sm text-primary/40 leading-relaxed font-serif italic max-w-sm">
                   "O Catecismo apresenta fielmente o ensinamento da Tradição viva na Igreja."
                 </p>
               </div>
