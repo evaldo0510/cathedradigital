@@ -45,7 +45,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
     <div className="relative inline-flex">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
           notes.length > 0
             ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
@@ -92,7 +92,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
               <button
                 onClick={handleSave}
                 disabled={!newNote.trim()}
-                className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
+                className="px-3 py-1 rounded-full text-premium-tiny font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
               >
                 Salvar
               </button>
@@ -114,27 +114,27 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
                       className="w-full px-2 py-1 rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none"
                     />
                     <div className="flex gap-2">
-                      <button onClick={() => handleUpdate(note.id)} className="text-[10px] font-bold text-primary">Salvar</button>
-                      <button onClick={() => setEditingId(null)} className="text-[10px] text-muted-foreground">Cancelar</button>
+                      <button onClick={() => handleUpdate(note.id)} className="text-premium-tiny font-bold text-primary">Salvar</button>
+                      <button onClick={() => setEditingId(null)} className="text-premium-tiny text-muted-foreground">Cancelar</button>
                     </div>
                   </div>
                 ) : (
                   <>
                     <p className="text-sm text-foreground leading-relaxed">{note.note_text}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] text-muted-foreground">
+                      <span className="text-premium-tiny text-muted-foreground">
                         {new Date(note.created_at).toLocaleDateString('pt-BR')}
                       </span>
                       <div className="flex gap-2">
                         <button
                           onClick={() => { setEditingId(note.id); setEditText(note.note_text); }}
-                          className="text-[10px] text-muted-foreground hover:text-foreground"
+                          className="text-premium-tiny text-muted-foreground hover:text-foreground"
                         >
                           Editar
                         </button>
                         <button
                           onClick={() => deleteNote(note.id)}
-                          className="text-[10px] text-destructive hover:underline"
+                          className="text-premium-tiny text-destructive hover:underline"
                         >
                           Excluir
                         </button>

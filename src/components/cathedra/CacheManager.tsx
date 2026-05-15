@@ -194,13 +194,13 @@ const CacheManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Database className="w-3 h-3" /> Status do Cache
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
-            <p className="text-[10px] text-muted-foreground mt-1">
+            <p className="text-premium-tiny text-muted-foreground mt-1">
               Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
             </p>
           </CardContent>
@@ -208,15 +208,15 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Share2 className="w-3 h-3" /> Portabilidade
             </CardDescription>
           </CardHeader>
           <CardContent className="flex gap-2">
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-[10px] font-black uppercase" onClick={handleExport}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-premium-tiny font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-[10px] font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-premium-tiny font-black uppercase" onClick={() => fileInputRef.current?.click()}>
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
@@ -225,7 +225,7 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-2">
-            <CardDescription className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Download className="w-3 h-3" /> Pré-carregar
             </CardDescription>
           </CardHeader>
@@ -237,13 +237,13 @@ const CacheManager: React.FC = () => {
                 onChange={(e) => setPreloadCount(parseInt(e.target.value))}
                 className="h-8 w-16 text-xs rounded-full"
               />
-              <span className="text-[10px] font-bold text-muted-foreground uppercase">unid.</span>
+              <span className="text-premium-tiny font-bold text-muted-foreground uppercase">unid.</span>
             </div>
             <div className="flex gap-2">
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-premium-tiny font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
                 Catecismo
               </Button>
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-[9px] font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-premium-tiny font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
                 Bíblia
               </Button>
             </div>
@@ -253,7 +253,7 @@ const CacheManager: React.FC = () => {
 
       {preloading && (
         <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
             <span>Pré-carregando conteúdo...</span>
             <span>{progress}%</span>
           </div>
@@ -266,7 +266,7 @@ const CacheManager: React.FC = () => {
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+            className={`px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
               filter === f 
                 ? 'bg-primary text-primary-foreground shadow-md' 
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted'
@@ -312,7 +312,7 @@ const CacheManager: React.FC = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
-                          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-medium">
+                          <div className="flex items-center gap-2 text-premium-tiny text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>
                             <span className="w-1 h-1 rounded-full bg-border" />
                             <span>Salvo {formatDistanceToNow(item.cachedAt, { addSuffix: true, locale: ptBR })}</span>

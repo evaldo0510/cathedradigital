@@ -145,24 +145,24 @@ const AdminSeoTab: React.FC = () => {
             <CardContent className="p-6 space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Título Base do Site (Google Title)</Label>
+                  <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Título Base do Site (Google Title)</Label>
                   <Input 
                     value={formData.site_title || ''} 
                     onChange={e => setFormData({...formData, site_title: e.target.value})}
                     placeholder="Ex: Cathedra Digital — Bíblia e Tradição"
                   />
-                  <p className="text-[10px] text-muted-foreground italic">Recomendado: 50-60 caracteres.</p>
+                  <p className="text-premium-tiny text-muted-foreground italic">Recomendado: 50-60 caracteres.</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Meta Description Global</Label>
+                  <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Meta Description Global</Label>
                   <Textarea 
                     value={formData.site_description || ''} 
                     onChange={e => setFormData({...formData, site_description: e.target.value})}
                     placeholder="Descrição que aparecerá no Google..."
                     rows={3}
                   />
-                  <p className="text-[10px] text-muted-foreground italic">Recomendado: 150-160 caracteres.</p>
+                  <p className="text-premium-tiny text-muted-foreground italic">Recomendado: 150-160 caracteres.</p>
                 </div>
 
                 <div className="space-y-4 pt-6 border-t border-border/50">
@@ -171,7 +171,7 @@ const AdminSeoTab: React.FC = () => {
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Nome do Negócio</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Nome do Negócio</Label>
                       <Input 
                         value={formData.business_name || ''} 
                         onChange={e => setFormData({...formData, business_name: e.target.value})}
@@ -179,7 +179,7 @@ const AdminSeoTab: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Email de Contato</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Email de Contato</Label>
                       <Input 
                         value={formData.business_email || ''} 
                         onChange={e => setFormData({...formData, business_email: e.target.value})}
@@ -187,7 +187,7 @@ const AdminSeoTab: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Endereço Físico</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Endereço Físico</Label>
                       <Input 
                         value={formData.business_address || ''} 
                         onChange={e => setFormData({...formData, business_address: e.target.value})}
@@ -195,7 +195,7 @@ const AdminSeoTab: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Horário de Funcionamento</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Horário de Funcionamento</Label>
                       <Input 
                         value={formData.opening_hours || ''} 
                         onChange={e => setFormData({...formData, opening_hours: e.target.value})}
@@ -203,7 +203,7 @@ const AdminSeoTab: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">WhatsApp / Telefone</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">WhatsApp / Telefone</Label>
                       <Input 
                         value={formData.business_whatsapp || ''} 
                         onChange={e => setFormData({...formData, business_whatsapp: e.target.value})}
@@ -211,7 +211,7 @@ const AdminSeoTab: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest opacity-70">Google Maps URL</Label>
+                      <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70">Google Maps URL</Label>
                       <Input 
                         value={formData.google_maps_url || ''} 
                         onChange={e => setFormData({...formData, google_maps_url: e.target.value})}
@@ -223,7 +223,7 @@ const AdminSeoTab: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6 border-t border-border/50">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
+                    <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
                       <Search className="w-3 h-3" /> GSC Verification Code
                     </Label>
                     <Input 
@@ -233,7 +233,7 @@ const AdminSeoTab: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
+                    <Label className="text-premium-tiny font-black uppercase tracking-widest opacity-70 flex items-center gap-1">
                       <LineChart className="w-3 h-3" /> GA4 Measurement ID
                     </Label>
                     <Input 
@@ -268,7 +268,7 @@ const AdminSeoTab: React.FC = () => {
                   <div className="w-5 h-5 bg-muted rounded-2xl flex items-center justify-center overflow-hidden">
                     <Globe className="w-3 h-3 text-muted-foreground" />
                   </div>
-                  <div className="text-[12px] text-[#202124]">
+                  <div className="text-premium-small text-[#202124]">
                     cathedradigital.lovable.app
                   </div>
                 </div>
@@ -308,10 +308,10 @@ const AdminSeoTab: React.FC = () => {
                 )}
               </div>
               <div className="pt-2 space-y-2 border-t border-border/50">
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Rastreamento Ativo:</p>
                 <div className="grid grid-cols-2 gap-2">
                   {['Page Views', 'Clicks', 'Submits', 'Session'].map(ev => (
-                    <div key={ev} className="flex items-center gap-1.5 text-[10px] font-medium">
+                    <div key={ev} className="flex items-center gap-1.5 text-premium-tiny font-medium">
                       <div className={`w-1.5 h-1.5 rounded-full ${(window as any).gtag ? 'bg-emerald-500' : 'bg-muted'}`} />
                       {ev}
                     </div>
@@ -329,7 +329,7 @@ const AdminSeoTab: React.FC = () => {
             </CardHeader>
             <CardContent className="p-4 space-y-4">
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest opacity-60">
+                <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
                   <span>NAP Status</span>
                   {formData.business_name && formData.business_address && (formData.business_phone || formData.business_whatsapp) && formData.opening_hours ? (
                     <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Válido</span>
@@ -338,32 +338,32 @@ const AdminSeoTab: React.FC = () => {
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                  <Badge variant={formData.business_name ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Name: {formData.business_name ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.business_address ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Address: {formData.business_address ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
-                  <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-[8px] h-5 justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_name ? "secondary" : "outline"} className="text-premium-tiny h-5 justify-start">Name: {formData.business_name ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_address ? "secondary" : "outline"} className="text-premium-tiny h-5 justify-start">Address: {formData.business_address ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.business_phone || formData.business_whatsapp ? "secondary" : "outline"} className="text-premium-tiny h-5 justify-start">Phone: {formData.business_phone || formData.business_whatsapp ? 'OK' : 'Missing'}</Badge>
+                  <Badge variant={formData.opening_hours ? "secondary" : "outline"} className="text-premium-tiny h-5 justify-start">Hours: {formData.opening_hours ? 'OK' : 'Missing'}</Badge>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
                   <div className="flex gap-2">
                     <button 
                       onClick={() => setJsonMode(jsonMode === 'pretty' ? 'minified' : 'pretty')}
-                      className="text-[9px] font-bold uppercase underline text-primary"
+                      className="text-premium-tiny font-bold uppercase underline text-primary"
                     >
                       {jsonMode === 'pretty' ? 'Minificar' : 'Pretty Print'}
                     </button>
                     <button 
                       onClick={handleCopyJSONLD}
-                      className="flex items-center gap-1 text-[9px] font-bold uppercase text-primary hover:bg-primary/5 p-1 rounded"
+                      className="flex items-center gap-1 text-premium-tiny font-bold uppercase text-primary hover:bg-primary/5 p-1 rounded"
                     >
                       <Copy className="w-2.5 h-2.5" /> Copiar
                     </button>
                   </div>
                 </div>
-                <div className="bg-black/90 text-amber-400 p-3 rounded-2xl text-[9px] font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                <div className="bg-black/90 text-amber-400 p-3 rounded-2xl text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
                   <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -382,12 +382,12 @@ const AdminSeoTab: React.FC = () => {
 
               <div className="pt-2 border-t border-border/50">
                 <div className="flex items-center justify-between mb-2">
-                   <p className="text-[10px] font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
+                   <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">DOM Verification:</p>
                    <Button 
                     variant="ghost" 
                     size="sm" 
                     onClick={verifyDOM}
-                    className="h-6 text-[9px] uppercase font-black"
+                    className="h-6 text-premium-tiny uppercase font-black"
                    >
                      <Eye className="w-3 h-3 mr-1" /> Verificar no Site
                    </Button>
@@ -397,7 +397,7 @@ const AdminSeoTab: React.FC = () => {
                   domVerified === 'fail' ? 'bg-destructive/5 border-destructive/20 text-destructive' : 
                   'bg-muted/30 border-border/50 text-muted-foreground'
                 }`}>
-                  <span className="text-[10px] font-bold">
+                  <span className="text-premium-tiny font-bold">
                     {domVerified === 'pending' ? 'Aguardando verificação...' : 
                      domVerified === 'ok' ? 'JSON-LD Ativo no DOM' : 'JSON-LD Ausente ou Inválido'}
                   </span>
@@ -415,7 +415,7 @@ const AdminSeoTab: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <div className="p-3 bg-muted/50 rounded-2xl border border-border/50 text-[11px] leading-relaxed">
+              <div className="p-3 bg-muted/50 rounded-2xl border border-border/50 text-premium-small leading-relaxed">
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>
@@ -424,7 +424,7 @@ const AdminSeoTab: React.FC = () => {
 
           <Card className="border-border/50 shadow-sm h-fit bg-muted/20">
             <CardContent className="p-4 space-y-3">
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
+              <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
                 <Info className="w-3 h-3" /> Links Úteis
               </div>
               <div className="space-y-2">

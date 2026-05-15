@@ -154,7 +154,7 @@ const CheckoutPage: React.FC = () => {
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Zap className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
           Eleve sua experiência <br />
@@ -182,7 +182,7 @@ const CheckoutPage: React.FC = () => {
               >
                 {p.label}
                 {p.badge && selectedPlan === p.id && (
-                  <Badge className="ml-2 bg-primary/15 text-primary border-primary/30 text-[10px]">{p.badge}</Badge>
+                  <Badge className="ml-2 bg-primary/15 text-primary border-primary/30 text-premium-tiny">{p.badge}</Badge>
                 )}
               </button>
             ))}

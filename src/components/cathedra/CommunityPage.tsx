@@ -291,9 +291,9 @@ const CommunityPage: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-bold text-foreground">{selectedPost.author_name}</p>
-              <p className="text-[10px] text-muted-foreground">{timeAgo(selectedPost.created_at)}</p>
+              <p className="text-premium-tiny text-muted-foreground">{timeAgo(selectedPost.created_at)}</p>
             </div>
-            <span className="ml-auto text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-full">
+            <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded-full">
               {CATEGORIES.find(c => c.id === selectedPost.category)?.label || selectedPost.category}
             </span>
           </div>
@@ -321,7 +321,7 @@ const CommunityPage: React.FC = () => {
                   {(r.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-bold text-foreground">{r.author_name}</span>
-                <span className="text-[10px] text-muted-foreground">{timeAgo(r.created_at)}</span>
+                <span className="text-premium-tiny text-muted-foreground">{timeAgo(r.created_at)}</span>
               </div>
               <p className="text-sm text-foreground/80 whitespace-pre-wrap">{r.content}</p>
             </div>
@@ -364,18 +364,18 @@ const CommunityPage: React.FC = () => {
             <div className="text-center space-y-4 pt-4 mb-10">
               <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner mb-2">
                 <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
-                <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
+                <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
               <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
               <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
+              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
             </div>
           </>
         )}
 
         <div className="flex gap-2 justify-center mb-10" role="tablist" aria-label="Abas da comunidade">
           <button 
-            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('forum')}
@@ -384,7 +384,7 @@ const CommunityPage: React.FC = () => {
             <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
           </button>
           <button 
-            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('ranking')}
@@ -419,19 +419,19 @@ const CommunityPage: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-bold text-foreground">{post.author_name}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
+                        <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
                       </div>
-                      <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">
+                      <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">
                         {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                       </Badge>
                     </div>
                     <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2">{post.title}</h3>
                     <p className="text-sm text-muted-foreground line-clamp-2 italic mb-4">{post.content}</p>
                     <div className="flex items-center gap-4 pt-4 border-t border-border/40">
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
+                      <div className="flex items-center gap-1.5 text-premium-tiny font-bold text-muted-foreground">
                         <Icons.Heart className="w-3.5 h-3.5" /> {post.likes_count}
                       </div>
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground">
+                      <div className="flex items-center gap-1.5 text-premium-tiny font-bold text-muted-foreground">
                         <Icons.MessageSquare className="w-3.5 h-3.5" /> {post.replies_count || 0}
                       </div>
                     </div>
@@ -451,11 +451,11 @@ const CommunityPage: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold text-foreground truncate">{entry.name}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
+                      <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-black text-primary">{entry.score}</p>
-                      <p className="text-[8px] font-black uppercase text-muted-foreground">Pontos</p>
+                      <p className="text-premium-tiny font-black uppercase text-muted-foreground">Pontos</p>
                     </div>
                   </div>
                 ))}
@@ -467,22 +467,22 @@ const CommunityPage: React.FC = () => {
 
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Comunhão de Santos</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Comunhão de Santos</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             Participar da comunidade é viver a comunhão cristã. Compartilhe suas graças e edifique seus irmãos.
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-4">Líderes de Engajamento</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-4">Líderes de Engajamento</h3>
           <div className="space-y-4">
             {leaderboard.slice(0, 3).map((entry, i) => (
               <div key={entry.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-2xl bg-muted flex items-center justify-center font-black text-[10px]">
+                <div className="w-8 h-8 rounded-2xl bg-muted flex items-center justify-center font-black text-premium-tiny">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-[10px] font-bold text-foreground truncate">{entry.name}</p>
-                  <p className="text-[8px] text-muted-foreground uppercase font-medium">{entry.levelName}</p>
+                  <p className="text-premium-tiny font-bold text-foreground truncate">{entry.name}</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase font-medium">{entry.levelName}</p>
                 </div>
               </div>
             ))}

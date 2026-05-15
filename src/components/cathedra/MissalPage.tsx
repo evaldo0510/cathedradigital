@@ -81,7 +81,7 @@ const MissalPage: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
@@ -107,7 +107,7 @@ const MissalPage: React.FC = () => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
@@ -125,7 +125,7 @@ const MissalPage: React.FC = () => {
             >
               <div>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
+                {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
               </div>
               <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </button>

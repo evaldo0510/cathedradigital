@@ -242,7 +242,7 @@ const LitaniesPage: React.FC = () => {
             <ArrowLeft className="w-6 h-6 text-foreground" />
           </button>
           <div className="space-y-1">
-            <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
+            <span className={`inline-flex px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
@@ -284,7 +284,7 @@ const LitaniesPage: React.FC = () => {
       <div className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Heart className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
@@ -310,14 +310,14 @@ const LitaniesPage: React.FC = () => {
               <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
             </div>
             <div className="relative z-10 space-y-4">
-              <span className={`inline-block font-serif px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+              <span className={`inline-block font-serif px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
               <div className="space-y-1">
                 <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
                 {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary pt-2">
+              <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary pt-2">
                 Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
               </div>
             </div>

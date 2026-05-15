@@ -175,7 +175,7 @@ const Footer: React.FC = React.memo(() => {
                <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
                <div>
                  <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                 <p className="text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
                </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
@@ -197,7 +197,7 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🏛️</span> Santa Sé
             </h4>
             <ul className="flex flex-col gap-4">
@@ -213,7 +213,7 @@ const Footer: React.FC = React.memo(() => {
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🇧🇷</span> CNBB
             </h4>
             <ul className="flex flex-col gap-4">
@@ -230,7 +230,7 @@ const Footer: React.FC = React.memo(() => {
 
           <div className="flex flex-col gap-8">
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
@@ -248,7 +248,7 @@ const Footer: React.FC = React.memo(() => {
               )}
             </div>
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                 {lang === 'pt' 
                   ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
@@ -281,10 +281,10 @@ const Footer: React.FC = React.memo(() => {
 
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
+            <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
               <button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
@@ -307,7 +307,7 @@ const Footer: React.FC = React.memo(() => {
                 <React.Fragment key={item.label}>
                   <button 
                     onClick={() => navigate(item.route)} 
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
                     aria-label={item.label}
                   >
                     {item.label}

@@ -401,8 +401,8 @@ const AdminJourneysTab: React.FC = () => {
                 <div>
                   <h3 className="font-bold flex items-center gap-2">
                     {journey.title}
-                    {journey.is_premium && <Badge variant="secondary" className="text-[10px] bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
-                    {!journey.is_active && <Badge variant="outline" className="text-[10px]">Inativa</Badge>}
+                    {journey.is_premium && <Badge variant="secondary" className="text-premium-tiny bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
+                    {!journey.is_active && <Badge variant="outline" className="text-premium-tiny">Inativa</Badge>}
                   </h3>
                   <p className="text-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
                 </div>
@@ -443,7 +443,7 @@ const AdminJourneysTab: React.FC = () => {
                     {steps.map(step => (
                       <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border text-sm group">
                         <div className="flex items-center gap-3">
-                          <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-[10px]">{step.step_order}</span>
+                          <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-premium-tiny">{step.step_order}</span>
                           <div>
                             <p className="font-medium">{step.title}</p>
                             <p className="text-xs text-muted-foreground">{step.step_type}</p>
@@ -555,7 +555,7 @@ const AdminJourneysTab: React.FC = () => {
                      onChange={e => setStepContentString(e.target.value)} 
                    />
                    <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="sm" className="h-7 text-[9px] uppercase tracking-tighter" onClick={() => {
+                     <Button variant="outline" size="sm" className="h-7 text-premium-tiny uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
@@ -566,7 +566,7 @@ const AdminJourneysTab: React.FC = () => {
                      }}>Formatar</Button>
                    </div>
                 </div>
-                <p className="text-[10px] text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+                <p className="text-premium-tiny text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
               </div>
             </div>
           )}

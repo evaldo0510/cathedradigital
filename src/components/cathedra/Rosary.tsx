@@ -134,7 +134,7 @@ const Rosary: React.FC = () => {
         <motion.div className="text-center space-y-4 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
             <Heart className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
           <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">Reze os 20 mistérios com meditações profundas e guia passo a passo para sua jornada de fé.</p>
@@ -151,7 +151,7 @@ const Rosary: React.FC = () => {
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-6 transition-transform group-hover:scale-110 ${val.color}`}>
                   <val.icon className="w-7 h-7" />
                 </div>
-                <span className="text-[10px] font-black text-primary/60 uppercase tracking-[0.2em]">{val.day}</span>
+                <span className="text-premium-tiny font-black text-primary/60 uppercase tracking-[0.2em]">{val.day}</span>
                 <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{val.name}</h2>
                 <div className="mt-6 space-y-2">
                   {val.mysteries.map((m, i) => (
@@ -203,12 +203,12 @@ const Rosary: React.FC = () => {
               <ArrowLeft className="w-6 h-6 text-foreground" />
             </button>
             <div className="space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">{set.day}</span>
+              <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">{set.day}</span>
               <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{set.name}</h1>
             </div>
           </div>
           <button onClick={() => { setIsPraying(true); setCurrentMystery(0); setStep('intro'); }}
-            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95">
+            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95">
             Iniciar Oração
           </button>
         </div>
@@ -225,7 +225,7 @@ const Rosary: React.FC = () => {
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
-                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
+                      <p className="text-premium-tiny text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
                     </div>
                     <p className="text-base text-muted-foreground leading-relaxed font-serif italic">"{m.meditation}"</p>
                   </div>
@@ -257,7 +257,7 @@ const Rosary: React.FC = () => {
               <p className="text-sm font-serif italic opacity-90 leading-relaxed">
                 "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
               </p>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-60">— São João Paulo II</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">— São João Paulo II</p>
             </div>
           </div>
         </div>
@@ -279,7 +279,7 @@ const Rosary: React.FC = () => {
           
           {intention && (
             <div className="mx-auto p-5 bg-secondary/5 border border-secondary/10 rounded-2xl text-center max-w-sm animate-in fade-in slide-in-from-top-2 duration-700">
-              <p className="text-[10px] font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
               <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
             </div>
           )}
@@ -295,7 +295,7 @@ const Rosary: React.FC = () => {
             ))}
           </div>
           <p className="text-xs text-secondary/40 text-center font-serif italic max-w-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          <button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             Iniciar 1º Mistério
           </button>
         </div>
@@ -306,7 +306,7 @@ const Rosary: React.FC = () => {
       return (
         <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
           <div className="text-center space-y-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-secondary/50">{currentMystery + 1}º Mistério</span>
+            <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/50">{currentMystery + 1}º Mistério</span>
             <h3 className="text-3xl font-serif font-bold text-secondary leading-tight">{mystery.title}</h3>
             <p className="text-sm text-secondary/60 font-bold tracking-wide">{mystery.scripture}</p>
           </div>
@@ -323,7 +323,7 @@ const Rosary: React.FC = () => {
               size="sm"
             />
           </div>
-          <button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          <button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             Rezar a Dezena
           </button>
         </div>
@@ -334,7 +334,7 @@ const Rosary: React.FC = () => {
       return (
         <div className="space-y-10 animate-in fade-in duration-500">
           <div className="text-center">
-            <p className="text-[10px] font-black uppercase tracking-widest text-secondary/30 mb-6">{currentMystery + 1}º Mistério — Dezena</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/30 mb-6">{currentMystery + 1}º Mistério — Dezena</p>
             
             {/* Bead Counter */}
             <div className="flex flex-col items-center gap-6 py-4">
@@ -351,7 +351,7 @@ const Rosary: React.FC = () => {
                   />
                 ))}
               </div>
-              <p className="text-secondary/40 text-[10px] font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
+              <p className="text-secondary/40 text-premium-tiny font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
             </div>
           </div>
 
@@ -378,7 +378,7 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
             {currentMystery < 4 ? `Próximo Mistério` : 'Concluir Rosário'}
           </button>
         </div>
@@ -390,7 +390,7 @@ const Rosary: React.FC = () => {
       <div className="space-y-10 animate-in fade-in zoom-in-95 duration-700">
         <div className="text-center space-y-2">
           <h3 className="text-2xl font-serif font-bold text-secondary">Oração Final</h3>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary/50">Salve Rainha</p>
+          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/50">Salve Rainha</p>
         </div>
         <div className="bg-white/[0.04] rounded-2xl p-8 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
           <div className="flex items-center justify-between mb-2">
@@ -410,7 +410,7 @@ const Rosary: React.FC = () => {
           </div>
         </div>
         <button onClick={() => { setIsPraying(false); setSelectedSet(null); }}
-          className="w-full py-4 bg-secondary text-primary rounded-full font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
+          className="w-full py-4 bg-secondary text-primary rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
           <Icons.Cross className="w-4 h-4 inline mr-2" /> Amém — Finalizar
         </button>
       </div>
@@ -424,7 +424,7 @@ const Rosary: React.FC = () => {
         <button onClick={() => { setIsPraying(false); }} className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
           <ArrowLeft className="w-5 h-5 text-secondary/70" />
         </button>
-        <span className="text-[10px] font-black uppercase tracking-widest text-secondary/40">{set.name}</span>
+        <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/40">{set.name}</span>
         <div className="w-11" />
       </div>
 

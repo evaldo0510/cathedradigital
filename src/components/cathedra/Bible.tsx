@@ -664,7 +664,7 @@ const Bible: React.FC = () => {
                   onClick={() => navigateChapter(1)}>
                   <CardContent className="p-6 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
@@ -745,7 +745,7 @@ const Bible: React.FC = () => {
         </div>
         
         <div className="w-full md:w-auto flex flex-col gap-2">
-           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">
+           <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
              <span>Progresso Geral</span>
              <span>{overallProgress}%</span>
            </div>
@@ -810,7 +810,7 @@ const Bible: React.FC = () => {
                         </div>
                       )}
                       <span className="text-sm sm:text-base font-bold font-serif leading-none">{book.abbr}</span>
-                      <span className="text-[7px] sm:text-[9px] font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
+                      <span className="text-[7px] sm:text-premium-tiny font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
                         {book.name}
                       </span>
                     </button>

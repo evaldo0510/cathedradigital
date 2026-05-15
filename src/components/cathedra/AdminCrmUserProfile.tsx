@@ -105,7 +105,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
                 <h2 className="text-xl font-bold">{user.name || 'Sem nome'}</h2>
                 {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-1"><Crown className="w-3 h-3" /> PRO</Badge>}
                 {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-1"><Shield className="w-3 h-3" /> Admin</Badge>}
-                <Badge variant="outline" className={`${statusColor} border-current/30 text-[10px]`}>{statusLabel}</Badge>
+                <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-tiny`}>{statusLabel}</Badge>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {user.email}</span>
@@ -135,7 +135,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               {stat.icon}
               <div>
                 <p className="text-lg font-bold leading-tight">{stat.value}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
@@ -175,7 +175,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
                 {journeyProgress.slice(0, 10).map((jp: any) => (
                   <div key={jp.id} className="flex justify-between items-center py-1.5 border-b border-border/30 last:border-0 text-sm">
                     <span className="truncate">{(jp.journeys as any)?.title ?? jp.journey_id.slice(0, 8)}</span>
-                    <span className="text-[10px] text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-premium-tiny text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
                   </div>
                 ))}
               </div>
@@ -197,7 +197,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               <div key={entry.id} className="p-3 rounded-2xl bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
-                  {entry.mood && <Badge variant="secondary" className="text-[10px]">{entry.mood}</Badge>}
+                  {entry.mood && <Badge variant="secondary" className="text-premium-tiny">{entry.mood}</Badge>}
                 </div>
                 <p className="text-sm line-clamp-2">{entry.content}</p>
               </div>

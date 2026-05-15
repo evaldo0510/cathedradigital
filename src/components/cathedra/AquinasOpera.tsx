@@ -199,7 +199,7 @@ const AquinasOpera: React.FC = () => {
         <div className="space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
             <Icons.Brain className="w-4 h-4 text-primary" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Motor de Autoridade</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">S. Tomás de Aquino</h1>
           <div className="flex justify-center mt-4">
@@ -248,11 +248,11 @@ const AquinasOpera: React.FC = () => {
                   <h3 className="text-xl font-serif font-bold text-foreground mb-4">{concept.title}</h3>
                   <div className="space-y-4">
                     <div className="p-4 bg-muted/50 rounded-2xl">
-                      <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Aquino ensina:</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Aquino ensina:</p>
                       <p className="text-sm font-serif italic text-foreground/80">{concept.aquino}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão P.A.D.H.:</p>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-1">Reflexão P.A.D.H.:</p>
                       <p className="text-lg font-serif font-medium text-foreground">{concept.padh}</p>
                     </div>
                     <div className="pt-4 border-t border-border">
@@ -269,7 +269,7 @@ const AquinasOpera: React.FC = () => {
               <div className="relative z-10 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-background/10 rounded-2xl border border-background/20">
                   <Icons.Star className="w-4 h-4 text-primary" />
-                  <span className="text-[9px] font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Conteúdo Premium</span>
                 </div>
                 <div className="space-y-2">
                   <h2 className="text-3xl md:text-5xl font-serif font-bold leading-tight">Clareza Interior com Aquino</h2>
@@ -325,8 +325,8 @@ const AquinasOpera: React.FC = () => {
                 </div>
                 <div className="p-5 bg-primary/5 rounded-2xl border border-primary/20 flex flex-col justify-center items-center text-center">
                   <Icons.Video className="w-6 h-6 text-primary mb-2" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
-                  <p className="text-[10px] text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">30 Dias de Trilha</p>
+                  <p className="text-premium-tiny text-muted-foreground mt-1">Gere 2 vídeos/dia</p>
                 </div>
               </div>
             </div>
@@ -358,7 +358,7 @@ const AquinasOpera: React.FC = () => {
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary">{section.part}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{section.part}</span>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
               </div>
               <Icons.ArrowDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedPart === section.part ? 'rotate-180' : ''}`} />

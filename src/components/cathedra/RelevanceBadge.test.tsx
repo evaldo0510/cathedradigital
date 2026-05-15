@@ -41,14 +41,14 @@ describe('<RelevanceBadge />', () => {
   it('applies the "sm" size variant by default', () => {
     render(<RelevanceBadge score={0.5} />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-[9px]');
+    expect(badge.className).toContain('text-premium-tiny');
     expect(badge.className).toContain('px-2');
   });
 
   it('applies the "xs" size variant when requested', () => {
     render(<RelevanceBadge score={0.5} size="xs" />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-[8px]');
+    expect(badge.className).toContain('text-premium-tiny');
     expect(badge.className).toContain('px-1.5');
   });
 

@@ -50,7 +50,7 @@ const DiagnosticsPage: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl text-primary">
           <Icons.Zap className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Painel de Controle</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
@@ -116,7 +116,7 @@ const DiagnosticsPage: React.FC = () => {
           ].map((service, i) => (
             <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
-              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+              <span className={`text-premium-tiny font-black uppercase tracking-widest px-3 py-1 rounded-full ${
                 service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
@@ -125,10 +125,10 @@ const DiagnosticsPage: React.FC = () => {
           ))}
         </div>
         <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-[10px]">
+          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-premium-tiny">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>
-          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-red-500/5 hover:text-red-600">
+          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-premium-tiny hover:bg-red-500/5 hover:text-red-600">
             <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>

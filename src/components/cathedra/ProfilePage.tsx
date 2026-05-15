@@ -263,12 +263,12 @@ const ProfilePage: React.FC = () => {
       <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
             <p className="text-lg font-black text-foreground">{levelName}</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-black text-primary">{totalXp}</p>
-            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+            <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
         <div className="relative h-3 bg-muted rounded-2xl overflow-hidden">
@@ -277,7 +277,7 @@ const ProfilePage: React.FC = () => {
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
           />
         </div>
-        <div className="flex justify-between text-[9px] text-muted-foreground">
+        <div className="flex justify-between text-premium-tiny text-muted-foreground">
           <span>{levelName}</span>
           <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
         </div>
@@ -288,7 +288,7 @@ const ProfilePage: React.FC = () => {
           <div key={s.label} className="bg-card border border-border rounded-2xl p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
+            <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
           </div>
         ))}
       </div>
@@ -296,7 +296,7 @@ const ProfilePage: React.FC = () => {
       <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
-          <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
+          <span className="text-premium-tiny font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {badges.map(b => (
@@ -312,8 +312,8 @@ const ProfilePage: React.FC = () => {
               <div className="flex justify-center mb-1 text-primary">
                 {b.icon}
               </div>
-              <p className="text-[9px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-              <p className="text-[8px] text-muted-foreground mt-0.5">{b.description}</p>
+              <p className="text-premium-tiny font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
+              <p className="text-premium-tiny text-muted-foreground mt-0.5">{b.description}</p>
               {b.unlocked && (
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-2xl flex items-center justify-center">
                   <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
@@ -334,7 +334,7 @@ const ProfilePage: React.FC = () => {
           </p>
           <Button 
             variant="outline" 
-            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
+            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-premium-tiny focus-visible:ring-4 focus-visible:ring-secondary outline-none"
             onClick={() => navigate('/transactions/my')}
           >
             <Icons.History className="w-4 h-4" />
@@ -356,7 +356,7 @@ const ProfilePage: React.FC = () => {
                 <Icons.Bell className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">Push Notifications</p>
               </div>
-              <p className="text-[10px] text-muted-foreground">Lembretes diários de oração.</p>
+              <p className="text-premium-tiny text-muted-foreground">Lembretes diários de oração.</p>
             </div>
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
@@ -366,9 +366,9 @@ const ProfilePage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-2xl bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
+                <div className="px-1.5 py-0.5 rounded-2xl bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
               </div>
-              <p className="text-[10px] text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
+              <p className="text-premium-tiny text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
             <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
           </div>
@@ -379,7 +379,7 @@ const ProfilePage: React.FC = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="space-y-2 pt-2"
             >
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
                 <input
@@ -407,7 +407,7 @@ const ProfilePage: React.FC = () => {
             </div>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-[9px] font-black uppercase tracking-widest border border-secondary/30">
+                <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
                 </div>
               </div>
@@ -415,7 +415,7 @@ const ProfilePage: React.FC = () => {
               <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
                 Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
               </p>
-              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-10 px-6">
+              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-premium-tiny uppercase tracking-widest h-10 px-6">
                 Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             </CardContent>
@@ -452,7 +452,7 @@ const ProfilePage: React.FC = () => {
             <Icons.Church className="w-4 h-4 text-primary" />
             <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
           </div>
-          <p className="text-[10px] text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
+          <p className="text-premium-tiny text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Estado */}
@@ -518,7 +518,7 @@ const ProfilePage: React.FC = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </button>

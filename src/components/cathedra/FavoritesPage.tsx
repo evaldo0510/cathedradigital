@@ -16,7 +16,7 @@ const FavoritesPage: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Heart className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Favoritos</h1>
         <p className="text-muted-foreground font-serif italic">Seus versículos, orações e estudos salvos.</p>
@@ -50,8 +50,8 @@ const FavoritesPage: React.FC = () => {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
-                    <span className="text-[9px] text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
+                    <span className="text-premium-tiny text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
                   </div>
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>

@@ -136,7 +136,7 @@ const HojePage: React.FC = () => {
           className="text-center space-y-8"
         >
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#0F172A]/40">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/40">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
             <h1 className="text-4xl md:text-5xl font-serif text-[#0F172A] leading-tight">
@@ -149,12 +149,12 @@ const HojePage: React.FC = () => {
              {(profile?.streak || 0) > 0 && (
               <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
                 <Icons.Zap className="w-4 h-4 text-[#0F172A]" />
-                <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+                <span className="text-premium-tiny font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
             <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-[#0F172A]/5 border border-[#0F172A]/10">
               <Icons.Star className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.xp || 0} XP</span>
+              <span className="text-premium-tiny font-bold text-[#0F172A] uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
@@ -162,7 +162,7 @@ const HojePage: React.FC = () => {
         {/* CONTINUE JORNADA */}
         {nextUp && (
           <section className="space-y-6">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
               <div className="h-px w-8 bg-[#0F172A]/10" /> Continue sua Jornada
             </h2>
             
@@ -177,14 +177,14 @@ const HojePage: React.FC = () => {
                   <Icons.Flame className="w-7 h-7" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F172A]/40 mb-1.5">{nextUp.subtitle}</p>
+                  <p className="text-premium-tiny font-bold uppercase tracking-widest text-[#0F172A]/40 mb-1.5">{nextUp.subtitle}</p>
                   <h3 className="text-xl font-bold text-[#0F172A]">{nextUp.label}</h3>
                   {activeJourney && (
                     <div className="mt-4 flex items-center gap-4 w-48">
                       <div className="flex-1 h-1 bg-[#0F172A]/5 rounded-2xl overflow-hidden">
                         <div className="h-full bg-[#D4AF37] transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
                       </div>
-                      <span className="text-[10px] font-bold text-[#0F172A]/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                      <span className="text-premium-tiny font-bold text-[#0F172A]/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
                     </div>
                   )}
                 </div>
@@ -196,7 +196,7 @@ const HojePage: React.FC = () => {
 
         {/* RITUAL DO DIA */}
         <section className="space-y-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
             <div className="h-px w-8 bg-[#0F172A]/10" /> Ritual do Dia
           </h2>
           <RitualDoDia />
@@ -204,7 +204,7 @@ const HojePage: React.FC = () => {
 
         {/* TEMAS PRINCIPAIS */}
         <section className="space-y-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
             <div className="h-px w-8 bg-[#0F172A]/10" /> Temas Principais
           </h2>
           <HomeMainDoors t={t} />
@@ -212,7 +212,7 @@ const HojePage: React.FC = () => {
 
         {/* CATECISMO */}
         <section className="space-y-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
             <div className="h-px w-8 bg-[#0F172A]/10" /> Catecismo
           </h2>
           <motion.div 
@@ -236,7 +236,7 @@ const HojePage: React.FC = () => {
 
         {/* TRILHAS */}
         <section className="space-y-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
             <div className="h-px w-8 bg-[#0F172A]/10" /> Trilhas de Formação
           </h2>
           <motion.div 

@@ -27,7 +27,7 @@ const OfflineModeToggle: React.FC = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 'auto', opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="text-[10px] font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
+            className="text-premium-tiny font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
           >
             Offline
           </motion.span>

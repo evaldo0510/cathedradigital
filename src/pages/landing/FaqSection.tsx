@@ -15,7 +15,7 @@ const FaqSection = () => (
   <section className="w-full section-spacing relative overflow-hidden">
     <div className="app-container max-w-4xl space-y-20 relative z-10">
       <div className="text-center space-y-6">
-        <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 italic">Dúvidas</span>
+        <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">Dúvidas</span>
         <h2 className="font-display font-bold text-foreground">Perguntas Frequentes</h2>
       </div>
 

@@ -148,11 +148,11 @@ const Certamen: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
+            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
               <RotateCcw className="w-4 h-4" />
               Tentar Novamente
             </button>
-            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
               <Share2 className="w-4 h-4" />
               Compartilhar Resultado
             </button>
@@ -169,7 +169,7 @@ const Certamen: React.FC = () => {
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Star className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Quiz da Fé</h1>
         <p className="text-muted-foreground font-serif italic">Teste seus conhecimentos teológicos e compartilhe com sua comunidade.</p>
@@ -197,7 +197,7 @@ const Certamen: React.FC = () => {
       </div>
 
       <div className="bg-card border border-border rounded-2xl p-8 space-y-6 shadow-sm">
-        <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
+        <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
         <div className="space-y-3">
@@ -231,7 +231,7 @@ const Certamen: React.FC = () => {
             
             <button 
               onClick={nextQuestion}
-              className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
+              className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
             >
               {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
               <Icons.ArrowRight className="w-4 h-4" />

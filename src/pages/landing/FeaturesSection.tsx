@@ -76,7 +76,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
           <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
           <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>

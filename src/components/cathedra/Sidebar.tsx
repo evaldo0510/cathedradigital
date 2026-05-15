@@ -117,7 +117,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div>
             <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
-            <p className="text-[9px] font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
+            <p className="text-premium-tiny font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
               <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
               Digital Sanctuarium
             </p>
@@ -127,7 +127,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
-              <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 mb-4 px-4">{section.label}</h3>
+              <h3 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/50 mb-4 px-4">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
@@ -145,11 +145,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       <span className="opacity-70">{item.icon}</span>
                       <span className="tracking-tight">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                        <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full">
+                        <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full">
                           {cacheCount}
                         </span>
                       )}
-                      {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
+                      {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
                       {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary" />}
                     </button>
                   </li>
@@ -171,7 +171,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
                 {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
-                <span className="text-[10px] font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
 
@@ -186,7 +186,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               >
 
                 {isSpeaking ? <Icons.Message className="animate-pulse" /> : <Icons.Volume2 />}
-                <span className="text-[10px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </Button>
             </div>
 
@@ -197,7 +197,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-[8px] font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-2 py-1 text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -224,7 +224,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </div>
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
-                <p className="text-[8px] uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                <p className="text-premium-tiny uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
                 {!user.isPremium && (
                   <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
@@ -243,7 +243,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </button>
             </div>
           ) : (
-            <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+            <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
             </button>
           )}

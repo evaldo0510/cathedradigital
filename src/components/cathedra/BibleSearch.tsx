@@ -77,14 +77,14 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       {!loading && results.length > 0 && (
         <div className="space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
+          <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {results.map((r, i) => (
               <button key={i} onClick={() => goToVerse(r)}
                 className="w-full text-left p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-[9px] text-muted-foreground">— {r.bookName}</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
+                  <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
                 </div>
                 <p className="text-sm text-foreground/80 font-serif line-clamp-2"
                   dangerouslySetInnerHTML={{

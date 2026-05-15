@@ -61,7 +61,7 @@ const QuickDonation: React.FC = () => {
           </div>
           <div>
             <CardTitle className="text-sm font-bold">Apoie o Cathedra</CardTitle>
-            <CardDescription className="text-[10px]">Ajude a manter nossa missão</CardDescription>
+            <CardDescription className="text-premium-tiny">Ajude a manter nossa missão</CardDescription>
           </div>
         </div>
         <Button 
@@ -94,7 +94,7 @@ const QuickDonation: React.FC = () => {
                     size="sm"
                     onClick={() => setAmount(val)}
                     aria-pressed={amount === val}
-                    className={`text-[10px] font-bold h-8 focus-visible:ring-2 focus-visible:ring-secondary outline-none ${amount === val ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' : 'border-secondary/30 text-secondary'}`}
+                    className={`text-premium-tiny font-bold h-8 focus-visible:ring-2 focus-visible:ring-secondary outline-none ${amount === val ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90' : 'border-secondary/30 text-secondary'}`}
                   >
                     R$ {val}
                   </Button>
@@ -103,16 +103,16 @@ const QuickDonation: React.FC = () => {
 
               
               <div className="flex gap-2 items-center">
-                <span className="text-[10px] font-bold text-muted-foreground whitespace-nowrap">Outro:</span>
+                <span className="text-premium-tiny font-bold text-muted-foreground whitespace-nowrap">Outro:</span>
                 <div className="relative flex-1">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-muted-foreground">R$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-premium-tiny font-bold text-muted-foreground">R$</span>
                   <Input
                     type="number"
                     min={1}
                     value={amount || ''}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                     placeholder="0,00"
-                    className="h-8 pl-8 text-[10px] font-bold bg-background border-secondary/20"
+                    className="h-8 pl-8 text-premium-tiny font-bold bg-background border-secondary/20"
                   />
                 </div>
               </div>
@@ -121,7 +121,7 @@ const QuickDonation: React.FC = () => {
               <Button
                 onClick={handleDonate}
                 disabled={loading || !amount}
-                className="w-full h-9 rounded-full text-[10px] font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all"
+                className="w-full h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all"
               >
                 {loading ? 'Processando...' : `Doar agora ${amount ? `R$ ${amount}` : ''}`}
               </Button>

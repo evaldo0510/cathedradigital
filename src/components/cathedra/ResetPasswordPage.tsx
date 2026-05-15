@@ -84,7 +84,7 @@ const ResetPasswordPage: React.FC = () => {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nova Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nova Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
@@ -92,7 +92,7 @@ const ResetPasswordPage: React.FC = () => {
               />
             </div>
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Confirmar Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Confirmar Senha</label>
               <input
                 type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required minLength={6}
                 placeholder="Repita a nova senha"
@@ -100,7 +100,7 @@ const ResetPasswordPage: React.FC = () => {
               />
             </div>
             <button type="submit" disabled={loading}
-              className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
+              className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
               {loading ? 'Aguarde...' : 'Atualizar Senha'}
             </button>
           </form>

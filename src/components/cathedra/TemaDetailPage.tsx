@@ -81,13 +81,13 @@ const ThemeContentCard = ({
               <div className={`p-2 rounded-full ${accentColor.replace('text-', 'bg-')}/10`}>
                 <Icon className={`w-4 h-4 ${accentColor}`} />
               </div>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
+              <span className={`text-premium-tiny font-black uppercase tracking-widest ${accentColor}`}>{content.reference}</span>
             </div>
             <Button 
               variant="ghost" 
               size="sm"
               onClick={onAction}
-              className={`h-9 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
+              className={`h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary gap-1.5 px-4 transition-all duration-300`}
             >
               {buttonText} <ExternalLink className="w-3.5 h-3.5" />
             </Button>
@@ -98,7 +98,7 @@ const ThemeContentCard = ({
           
           {otherTags.length > 0 && (
             <div className="pt-4 border-t border-border/10">
-              <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 mb-2">Conexões relacionadas:</p>
               <div className="flex flex-wrap gap-2">
                 {otherTags.map((tag, idx) => (
                   <BubbleTag
@@ -359,7 +359,7 @@ const TemaDetailPage = () => {
         path={`/temas/${slug}`}
       />
 
-      <nav className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
+      <nav className="flex items-center gap-3 text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
         <button 
           onClick={() => navigate(AppRoute.HOME)}
           className="hover:text-primary transition-colors flex items-center gap-1"
@@ -392,9 +392,9 @@ const TemaDetailPage = () => {
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
                 <div className="w-1 h-1 rounded-2xl bg-primary/30" />
-                <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
+                <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
             </div>
@@ -433,11 +433,11 @@ const TemaDetailPage = () => {
                         <Sparkles className="w-6 h-6 text-secondary" />
                       </div>
                       <div>
-                        <p className="text-[11px] font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
+                        <p className="text-premium-small font-black uppercase tracking-[0.3em] text-secondary">Logos Theologicus</p>
                         <p className="text-sm text-muted-foreground font-medium">Sentido & Aplicação</p>
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-3">IA Ativa</Badge>
+                    <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-3">IA Ativa</Badge>
                   </div>
                   {loadingLogos && !logosInsight ? (
                     <div className="space-y-4">
@@ -454,7 +454,7 @@ const TemaDetailPage = () => {
                       <div className="pt-6 border-t border-secondary/10 flex items-start gap-3 opacity-80">
                         <Icons.CheckCircle className="w-5 h-5 text-secondary shrink-0 mt-1" />
                         <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-1">Aplicação Prática</p>
+                          <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary mb-1">Aplicação Prática</p>
                           <p className="text-sm text-muted-foreground italic leading-relaxed">
                             "Busque viver este mistério hoje através de um ato de caridade ou de um momento de silêncio contemplativo."
                           </p>
@@ -473,10 +473,10 @@ const TemaDetailPage = () => {
         <div className="md:col-span-2 space-y-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="w-full bg-muted/40 p-1 rounded-full border border-border/40 grid grid-cols-4">
-              <TabsTrigger value="bible" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
-              <TabsTrigger value="tradition" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
-              <TabsTrigger value="magisterium" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
-              <TabsTrigger value="journeys" className="rounded-full text-[10px] font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
+              <TabsTrigger value="bible" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Escrituras</TabsTrigger>
+              <TabsTrigger value="tradition" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Tradição</TabsTrigger>
+              <TabsTrigger value="magisterium" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Magistério</TabsTrigger>
+              <TabsTrigger value="journeys" className="rounded-full text-premium-tiny font-black uppercase tracking-widest py-2.5">Jornadas</TabsTrigger>
             </TabsList>
 
             {contentError ? (
@@ -531,7 +531,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setBibleLimit(prev => prev + 5)}
-                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais escrituras ({bibleVerses.length - bibleLimit})
                       </Button>
@@ -571,7 +571,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setTraditionLimit(prev => prev + 5)}
-                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais Tradição ({catechism.length - traditionLimit})
                       </Button>
@@ -608,7 +608,7 @@ const TemaDetailPage = () => {
                       <Button 
                         variant="ghost" 
                         onClick={() => setMagisteriumLimit(prev => prev + 5)}
-                        className="rounded-full text-[10px] font-black uppercase tracking-widest gap-2"
+                        className="rounded-full text-premium-tiny font-black uppercase tracking-widest gap-2"
                       >
                         Carregar mais Magistério ({magisterium.length - magisteriumLimit})
                       </Button>
@@ -668,7 +668,7 @@ const TemaDetailPage = () => {
                   />
                 ))
               ) : (
-                <p className="text-[10px] text-muted-foreground italic leading-relaxed">
+                <p className="text-premium-tiny text-muted-foreground italic leading-relaxed">
                   Estamos tecendo novas conexões para este tema.
                 </p>
               )}
@@ -684,8 +684,8 @@ const TemaDetailPage = () => {
                 "A fé e a razão são como as duas asas com as quais o espírito humano se eleva à contemplação da verdade."
               </p>
               <div className="pt-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
-                <p className="text-[9px] text-muted-foreground/60">Fides et Ratio</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">S. João Paulo II</p>
+                <p className="text-premium-tiny text-muted-foreground/60">Fides et Ratio</p>
               </div>
             </CardContent>
           </Card>

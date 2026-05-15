@@ -137,7 +137,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         ) : (
           <Headphones className="w-4 h-4" />
         )}
-        {showTitle && <span className="text-[10px] font-black uppercase tracking-widest">{title}</span>}
+        {showTitle && <span className="text-premium-tiny font-black uppercase tracking-widest">{title}</span>}
       </Button>
       
       {isPlaying && (

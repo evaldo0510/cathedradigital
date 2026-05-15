@@ -41,7 +41,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           <ArrowLeft className="w-6 h-6 text-foreground" />
         </Button>
         <div className="flex-1 space-y-1">
-          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+          <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">
             <Feather className="w-3 h-3" />
             Lectio Divina
           </div>
@@ -85,7 +85,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
               }`}
             >
               <step.icon className={`w-4 h-4 ${step.id === currentStep ? 'text-white' : i <= stepIndex ? 'text-primary' : ''}`} />
-              <span className="text-[10px] font-black uppercase tracking-widest">{step.latin}</span>
+              <span className="text-premium-tiny font-black uppercase tracking-widest">{step.latin}</span>
             </button>
           ))}
         </div>
@@ -134,7 +134,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 justify-center opacity-40">
                     <Book className="w-4 h-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
+                    <p className="text-premium-tiny font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
                   </div>
                   <div className="font-serif leading-relaxed text-xl text-foreground/90 text-center">
                     {bibleText.map((v, i) => (
@@ -154,12 +154,12 @@ const LectioStep: React.FC<LectioStepProps> = ({
             
             <div className="space-y-8">
               <div className="text-center space-y-3">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
+                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
                 <p className="text-lg md:text-xl font-serif font-bold text-primary italic leading-relaxed">"{activeStep.prompt}"</p>
               </div>
 
               <div className="space-y-4 group">
-                <div className="flex items-center gap-2 justify-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
+                <div className="flex items-center gap-2 justify-center text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 transition-colors group-focus-within:text-primary">
                   <PenTool className="w-3 h-3" /> Sua Reflexão
                 </div>
                 <textarea

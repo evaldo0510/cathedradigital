@@ -705,14 +705,14 @@ const AdminDashboard: React.FC = () => {
                 <div className="mt-2 grid grid-cols-2 gap-4 w-full">
                   <div className="text-center p-2 rounded-2xl bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Assinantes</div>
+                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Assinantes</div>
                   </div>
                   <div className="text-center p-2 rounded-2xl bg-muted/20 border border-border/10">
                     <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Gratuitos</div>
+                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Gratuitos</div>
                   </div>
                 </div>
-                <p className="text-[8px] text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
+                <p className="text-premium-tiny text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
               </CardContent>
             </Card>
           </div>
@@ -741,7 +741,7 @@ const AdminDashboard: React.FC = () => {
                       </div>
                       <p className="text-premium-small leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
                       {entry.mood && (
-                        <Badge variant="outline" className="text-[8px] font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
+                        <Badge variant="outline" className="text-premium-tiny font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
                           {entry.mood}
                         </Badge>
                       )}

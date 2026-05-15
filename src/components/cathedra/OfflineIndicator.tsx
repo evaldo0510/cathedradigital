@@ -54,7 +54,7 @@ const OfflineIndicator: React.FC = () => {
           {title}
         </span>
       </div>
-      <span className="text-[10px] opacity-80 font-medium">
+      <span className="text-premium-tiny opacity-80 font-medium">
         {sub}
       </span>
     </div>

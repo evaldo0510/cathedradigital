@@ -61,7 +61,7 @@ const PoenitentiaPage: React.FC = () => {
       <div className="text-center space-y-4 pt-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
@@ -78,7 +78,7 @@ const PoenitentiaPage: React.FC = () => {
                 : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-lg'
             }`}
           >
-            <div className={`text-[10px] font-black opacity-40 uppercase tracking-widest mb-2 ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
+            <div className={`text-premium-tiny font-black opacity-40 uppercase tracking-widest mb-2 ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
             <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
             {activeStep === i && (
               <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -102,7 +102,7 @@ const PoenitentiaPage: React.FC = () => {
 
           {CONFESSION_STEPS[activeStep].items && (
             <div className="space-y-6 pt-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Exame de Consciência</h3>
+              <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Exame de Consciência</h3>
               <div className="grid gap-3">
                 {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
                   <div key={i} className="flex gap-5 p-5 rounded-2xl bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-md transition-all">
@@ -146,7 +146,7 @@ const PoenitentiaPage: React.FC = () => {
           <div className="flex justify-center pt-8">
             <button 
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
-              className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
+              className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
             >
               {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-4 h-4" />
             </button>

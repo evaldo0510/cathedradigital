@@ -39,7 +39,7 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
         <div className="w-6 h-6 rounded-2xl bg-primary/10 flex items-center justify-center">
           <Icons.Cross className="w-3 h-3 text-primary" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
+        <span className="text-premium-tiny font-black uppercase tracking-[0.15em] text-primary">
           Nexus Theologicus
         </span>
       </div>

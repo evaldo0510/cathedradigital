@@ -33,27 +33,27 @@ const DesignSystemGuide = () => {
               <p className="text-sm text-muted-foreground">Standardized button styles for different semantic purposes.</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Primary (Default)</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Primary (Default)</p>
                   <Button className="w-full">Primary Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Secondary</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Secondary</p>
                   <Button variant="secondary" className="w-full">Secondary Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Outline</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Outline</p>
                   <Button variant="outline" className="w-full">Outline Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ghost</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Ghost</p>
                   <Button variant="ghost" className="w-full">Ghost Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Destructive</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Destructive</p>
                   <Button variant="destructive" className="w-full">Destructive Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Link</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Link</p>
                   <Button variant="link" className="w-full">Link Action</Button>
                 </div>
               </div>
@@ -64,19 +64,19 @@ const DesignSystemGuide = () => {
               <h3 className="text-xl font-bold text-primary">Sizes</h3>
               <div className="flex flex-col md:flex-row items-end gap-12">
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Small (sm)</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Small (sm)</p>
                   <Button size="sm">Small Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Default</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Default</p>
                   <Button>Default Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Large (lg)</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Large (lg)</p>
                   <Button size="lg">Large Action</Button>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
                   <div className="flex gap-4">
                     <Button size="icon"><Icons.Plus /></Button>
                     <Button size="icon" variant="outline"><Icons.Search /></Button>
@@ -91,7 +91,7 @@ const DesignSystemGuide = () => {
               <h3 className="text-xl font-bold text-primary">States</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Loading State</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Loading State</p>
                   <div className="flex flex-col gap-4">
                     <Button isLoading>Loading Primary</Button>
                     <Button variant="outline" isLoading>Loading Outline</Button>
@@ -99,7 +99,7 @@ const DesignSystemGuide = () => {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Disabled State</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Disabled State</p>
                   <div className="flex flex-col gap-4">
                     <Button disabled>Disabled Primary</Button>
                     <Button variant="outline" disabled>Disabled Outline</Button>
@@ -107,8 +107,8 @@ const DesignSystemGuide = () => {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Acessibilidade</p>
-                  <div className="p-4 bg-muted/30 rounded-2xl border border-border/40 text-[11px] space-y-2">
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Acessibilidade</p>
+                  <div className="p-4 bg-muted/30 rounded-2xl border border-border/40 text-premium-small space-y-2">
                     <p>• <strong>aria-busy:</strong> Automático quando isLoading=true</p>
                     <p>• <strong>aria-disabled:</strong> Automático quando isLoading ou disabled</p>
                     <p>• <strong>Focus:</strong> Ring de alta visibilidade no teclado</p>

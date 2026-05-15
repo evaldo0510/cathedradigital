@@ -304,7 +304,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -360,7 +360,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
               <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
-              <p className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-premium-tiny lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
               <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
             </div>
           </motion.div>
@@ -392,7 +392,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
           <button
             onClick={handleSlideNext}
-            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-4 h-4" />

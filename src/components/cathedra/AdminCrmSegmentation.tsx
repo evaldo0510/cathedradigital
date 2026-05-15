@@ -79,11 +79,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const getStatusBadge = (u: UserProfile) => {
     const status = u.depth_level || 'Inativo';
     switch (status) {
-      case 'Profundo': return <Badge variant="default" className="text-[10px]">Profundo</Badge>;
-      case 'Engajado': return <Badge variant="secondary" className="text-[10px]">Engajado</Badge>;
-      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-[10px]">Ativo</Badge>;
-      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-[10px]">Novo</Badge>;
-      default: return <Badge variant="destructive" className="text-[10px]">Inativo</Badge>;
+      case 'Profundo': return <Badge variant="default" className="text-premium-tiny">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="text-premium-tiny">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-premium-tiny">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-premium-tiny">Novo</Badge>;
+      default: return <Badge variant="destructive" className="text-premium-tiny">Inativo</Badge>;
     }
   };
 
@@ -126,7 +126,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
           >
             <div className={`flex items-center gap-1.5 ${s.color}`}>
               {s.icon}
-              <span className="text-[10px] font-black uppercase tracking-wider">{s.label}</span>
+              <span className="text-premium-tiny font-black uppercase tracking-wider">{s.label}</span>
             </div>
             <p className="text-xl font-bold mt-1">{segmentedUsers[s.key].length}</p>
           </button>
@@ -181,12 +181,12 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                         <div className="min-w-0">
                           <p className="font-medium text-sm truncate">{u.name || '—'}</p>
-                          <p className="text-[11px] text-muted-foreground truncate">{u.email}</p>
+                          <p className="text-premium-small text-muted-foreground truncate">{u.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="p-3 text-center">
-                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-[10px]">
+                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-premium-tiny">
                         {u.is_premium ? 'PRO' : 'Free'}
                       </Badge>
                     </td>
@@ -195,7 +195,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-3 text-center hidden lg:table-cell">
-                      <span className="text-[10px] text-muted-foreground truncate max-w-[150px] block mx-auto">
+                      <span className="text-premium-tiny text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>

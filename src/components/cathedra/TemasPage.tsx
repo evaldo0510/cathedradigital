@@ -157,7 +157,7 @@ const TemasPage = () => {
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full sm:rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full sm:rounded-full text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
                       ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -200,11 +200,11 @@ const TemasPage = () => {
                     <div className="px-6 pt-6 flex items-center justify-between">
                       <div className="flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/5 border border-primary/10">
                         <Sparkles className="w-3 h-3 text-primary/40" />
-                        <span className="text-[10px] font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
+                        <span className="text-premium-tiny font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
                       <button 
                         onClick={() => setActiveCategory('all')}
-                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
+                        className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
                       >
                         Limpar Filtro
                       </button>
@@ -220,7 +220,7 @@ const TemasPage = () => {
                             isSuggested={suggestedSlugs.has(tag.slug)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            className="px-4 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-widest"
+                            className="px-4 py-2.5 text-premium-tiny sm:text-premium-small uppercase tracking-widest"
                             profileId={profileId as ProfileId}
                           />
                         </div>
@@ -229,7 +229,7 @@ const TemasPage = () => {
                   </div>
                   <div className="flex items-center justify-center gap-3 px-8 pb-6 pt-2">
                     <div className="flex items-center gap-2 bg-muted/20 px-4 py-1.5 rounded-2xl border border-border/20">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                      <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
                       <div className="w-1 h-1 rounded-2xl bg-primary/30" />
@@ -262,14 +262,14 @@ const TemasPage = () => {
 
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Conexões Nexus</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Conexões Nexus</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             O Nexus utiliza inteligência teológica para conectar temas da Escritura, Magistério e Tradição. Clique em uma bolha para iniciar o mergulho.
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Dica de Estudo</h3>
-          <p className="text-[10px] text-muted-foreground leading-relaxed">
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-3">Dica de Estudo</h3>
+          <p className="text-premium-tiny text-muted-foreground leading-relaxed">
             Use as setas do teclado para navegar rapidamente entre os temas e "Home" para voltar ao início.
           </p>
         </div>

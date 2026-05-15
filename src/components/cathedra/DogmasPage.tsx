@@ -323,7 +323,7 @@ const DogmasPage: React.FC = () => {
       <div className="flex gap-2 justify-center flex-wrap">
         {CATEGORIES.map(cat => (
           <button key={cat} onClick={() => setCategory(cat)}
-            className={`px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+            className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
@@ -335,11 +335,11 @@ const DogmasPage: React.FC = () => {
       <div className="flex justify-center gap-6 text-center">
         <div>
           <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Dogmas</p>
+          <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Dogmas</p>
         </div>
         <div>
           <p className="text-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Categorias</p>
+          <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Categorias</p>
         </div>
       </div>
 
@@ -355,12 +355,12 @@ const DogmasPage: React.FC = () => {
               <span className="text-2xl font-serif font-bold text-primary/30 shrink-0 w-8">{dogma.id}</span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
                     {dogma.category}
                   </span>
-                  <span className="text-[10px] text-muted-foreground">{dogma.year}</span>
+                  <span className="text-premium-tiny text-muted-foreground">{dogma.year}</span>
                   {dogma.refs.length > 0 && (
-                    <Badge variant="outline" className="text-[9px] gap-1 px-1.5 py-0">
+                    <Badge variant="outline" className="text-premium-tiny gap-1 px-1.5 py-0">
                       <Icons.ExternalLink className="w-2.5 h-2.5" /> {dogma.refs.length} fontes
                     </Badge>
                   )}
@@ -376,7 +376,7 @@ const DogmasPage: React.FC = () => {
               <div className="px-6 pb-6 pl-[4.5rem] space-y-4 border-t border-border pt-4">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Fonte:</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Fonte:</span>
                   <span className="text-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
                 </div>
 
@@ -401,7 +401,7 @@ const DogmasPage: React.FC = () => {
                 {/* Cross-references */}
                 {dogma.refs.length > 0 && (
                   <div className="space-y-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Aprofundar nas fontes:</span>
                     <div className="flex flex-wrap gap-2">
                       {dogma.refs.map((ref, i) => {
                         if (ref.type === 'bible') {

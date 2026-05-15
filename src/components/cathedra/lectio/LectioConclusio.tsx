@@ -65,14 +65,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-card border border-border">
           <Clock className="w-5 h-5 text-primary/60" />
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
         <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-card border border-border">
           <PenTool className="w-5 h-5 text-primary/60" />
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
             <p className="font-mono text-xl font-bold text-foreground">{notesWritten.length}/{STEPS.length}</p>
           </div>
         </div>
@@ -86,7 +86,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <h3 className="text-center text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
+          <h3 className="text-center text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
           <div className="space-y-6">
             {notesWritten.map(step => (
               <div key={step.id} className="space-y-2">
@@ -140,7 +140,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         />
         <button
           onClick={onRestart}
-          className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-border text-[10px] font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-sm"
+          className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-sm"
         >
           <RotateCcw className="w-4 h-4" /> Nova Lectio
         </button>

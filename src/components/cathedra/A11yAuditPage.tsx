@@ -54,7 +54,7 @@ const A11yAuditPage = () => {
       <header className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl text-primary border border-primary/20">
           <ShieldCheck className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Quality Assurance</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
         <p className="text-muted-foreground italic font-serif">Validação manual e automatizada para NVDA e VoiceOver.</p>
@@ -71,7 +71,7 @@ const A11yAuditPage = () => {
           <CardContent className="p-6 space-y-6">
             {sections.map(section => (
               <div key={section.title} className="space-y-3">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-1">
+                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-1">
                   {section.title}
                 </h3>
                 <div className="space-y-2">
@@ -102,7 +102,7 @@ const A11yAuditPage = () => {
                 <Key className="w-5 h-5 text-secondary" />
                 Auditoria Técnica
               </div>
-              <Button size="sm" onClick={performAudit} className="rounded-full h-8 text-[10px] font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
+              <Button size="sm" onClick={performAudit} className="rounded-full h-8 text-premium-tiny font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
             </CardTitle>
@@ -144,7 +144,7 @@ const A11yAuditPage = () => {
       </div>
 
       <footer className="text-center pt-8">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Acessibilidade v2.0
         </p>
       </footer>

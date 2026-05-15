@@ -117,7 +117,7 @@ const ModulesGuidePage: React.FC = () => {
       <header className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Feather className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
           Entenda os Módulos

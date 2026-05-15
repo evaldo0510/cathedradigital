@@ -23,7 +23,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       >
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Feather className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto leading-relaxed">
@@ -50,7 +50,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <Heart className={`w-7 h-7 ${selectedPassage === dailyPassage.ref ? 'text-white' : 'text-primary'}`} />
         </div>
         <div className="text-left flex-1">
-          <p className={`text-[10px] font-black uppercase tracking-[0.2em] ${
+          <p className={`text-premium-tiny font-black uppercase tracking-[0.2em] ${
             selectedPassage === dailyPassage.ref ? 'text-white/70' : 'text-primary/60'
           }`}>Lectio do Dia</p>
           <p className={`font-serif font-bold text-lg ${
@@ -79,7 +79,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               <step.icon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
               <p className="font-serif font-bold text-sm text-foreground">{step.title}</p>
             </div>
           </div>
@@ -128,7 +128,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <button
             disabled={!selectedPassage.trim()}
             onClick={onStart}
-            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
+            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
           >
             Iniciar Lectio Divina
           </button>

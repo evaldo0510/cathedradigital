@@ -95,7 +95,7 @@ const PricingPage: React.FC = () => {
         {/* Pro */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={1}>
           <Card className="h-full rounded-2xl border-primary/30 bg-card shadow-xl ring-2 ring-primary/10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
+            <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
               Recomendado
             </div>
             <CardHeader className="text-center pb-2 space-y-4">

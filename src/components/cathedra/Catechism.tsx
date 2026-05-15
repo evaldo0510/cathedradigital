@@ -68,7 +68,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
         </div>
         <button 
           onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
+          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
         </button>
@@ -94,7 +94,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            </div>
         ) : (
           <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
-            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
+            <p className="text-premium-tiny uppercase font-black tracking-widest opacity-60">Alternativa:</p>
             <a 
               href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
               target="_blank" 
@@ -382,7 +382,7 @@ const Catechism: React.FC = () => {
             aria-label="Voltar para o Sumário"
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
-            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
+            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
           </button>
 
           <button 
@@ -391,11 +391,11 @@ const Catechism: React.FC = () => {
             title="Explorar por Temas"
           >
             <Icons.Search className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
+            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
           </button>
 
           <div className="flex-1 min-w-0">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
@@ -468,7 +468,7 @@ const Catechism: React.FC = () => {
 
         {/* Quick nav - Anchor links to jump between paragraphs */}
         <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
-          <span className="w-full text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
+          <span className="w-full text-center text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
           {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
             <button key={p} 
               onClick={() => jumpToParagraph(p)}
@@ -495,7 +495,7 @@ const Catechism: React.FC = () => {
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </button>
           <div>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-3xl font-serif font-bold text-foreground">{selectedPart.title}</h1>
           </div>
         </div>
@@ -504,7 +504,7 @@ const Catechism: React.FC = () => {
           {selectedPart.sections.map(sec => (
             <button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
               className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
+              <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
               <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
               <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
             </button>
@@ -532,12 +532,12 @@ const Catechism: React.FC = () => {
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
         <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
         <div className="max-w-xs mx-auto pt-4">
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
+          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-2">
             <span>Seu Progresso</span>
             <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
           </div>
@@ -555,7 +555,7 @@ const Catechism: React.FC = () => {
         <div className="flex justify-center">
           <button 
             onClick={() => navigate('/catechism/integrity')}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-premium-tiny font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
           >
             <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
           </button>
@@ -575,7 +575,7 @@ const Catechism: React.FC = () => {
                 <Icons.Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Continuar Formação</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">Continuar Formação</p>
                 <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
               </div>
             </div>
@@ -605,12 +605,12 @@ const Catechism: React.FC = () => {
         {CIC_SECTIONS.map(part => (
           <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
             className="text-left p-5 md:p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{part.part}</span>
+            <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
             <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>
             <div className="flex flex-wrap gap-1 mt-4">
               {part.sections.map(s => (
-                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-[10px] font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
+                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
               ))}
             </div>
           </button>

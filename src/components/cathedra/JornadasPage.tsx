@@ -236,7 +236,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       >
         <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner mb-2">
           <Icons.Journeys className="w-4 h-4 text-primary" />
-          <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Itinerarium Mentis</span>
+          <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Itinerarium Mentis</span>
         </div>
         <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Jornadas</h1>
         <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">
@@ -254,17 +254,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         >
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-foreground">{stats.total}</p>
-            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-muted-foreground">Jornadas</p>
+            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Jornadas</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-primary">{stats.started}</p>
-            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-muted-foreground">Iniciadas</p>
+            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Iniciadas</p>
           </div>
           <div className="w-px h-8 bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-emerald-500">{stats.completed}</p>
-            <p className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest text-muted-foreground">Concluídas</p>
+            <p className="text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Concluídas</p>
           </div>
         </motion.div>
       )}
@@ -278,7 +278,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/60">
+            <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary/60">
               <Icons.Flame className="w-3 h-3" /> Continuar Jornada
             </div>
             {activeJourneys.slice(0, 1).map(journey => {
@@ -316,14 +316,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
                           </svg>
-                          <span className="absolute inset-0 flex items-center justify-center text-[10px] sm:text-xs font-black text-primary">{pct}%</span>
+                          <span className="absolute inset-0 flex items-center justify-center text-premium-tiny sm:text-xs font-black text-primary">{pct}%</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-between">
-                        <p className="text-[10px] text-muted-foreground font-medium">{done} de {total} etapas</p>
+                        <p className="text-premium-tiny text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
                           size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-[8px] sm:text-[9px] uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-lg shadow-primary/20 group"
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-premium-tiny sm:text-premium-tiny uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-lg shadow-primary/20 group"
                         >
                           Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
@@ -406,7 +406,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
           <button
             onClick={() => setFilterDifficulty('all')}
-            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
             aria-pressed={filterDifficulty === 'all'}
@@ -418,7 +418,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
-              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 filterDifficulty === diff ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
               aria-pressed={filterDifficulty === diff}
@@ -435,7 +435,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {searchQuery.trim().length >= 2 && fuzzySearch.results && fuzzySearch.results.length > 0 && (
         <AnimatePresence mode="popLayout">
         <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+          <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           {fuzzySearch.results.map((j, i) => (
             <SearchResultCard
               key={j.id}
@@ -508,7 +508,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                         {isComplete && (
-                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-2xl text-[9px] font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-2xl text-premium-tiny font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
                             <Icons.Check className="w-3 h-3" /> Concluída
                           </div>
                         )}
@@ -536,7 +536,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
                           )}
                           {journey.is_premium && (
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[9px] px-2">
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-premium-tiny px-2">
                               <Icons.Sparkles className="w-3 h-3 mr-0.5" /> PRO
                             </Badge>
                           )}
@@ -553,12 +553,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       {journey.tags && journey.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {journey.tags.slice(0, 3).map((tag: string) => (
-                            <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            <span key={tag} className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
                               {tag}
                             </span>
                           ))}
                           {journey.tags.length > 3 && (
-                            <span className="text-[9px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            <span className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
                               +{journey.tags.length - 3}
                             </span>
                           )}
@@ -566,11 +566,11 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       )}
 
                       {/* Meta */}
-                      <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-2 sm:gap-3 text-premium-tiny sm:text-xs text-muted-foreground flex-wrap">
                         <span className="flex items-center gap-1">
                           <Icons.Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days}d
                         </span>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
                         <span className="flex items-center gap-1">
@@ -584,7 +584,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           <div className="relative">
                             <Progress value={progressPercent} className="h-2" />
                           </div>
-                          <div className="flex justify-between text-[10px] text-muted-foreground">
+                          <div className="flex justify-between text-premium-tiny text-muted-foreground">
                             <span className="font-medium">
                               {hasStarted 
                                 ? `${completedSteps}/${totalSteps} etapas concluídas` 
@@ -640,17 +640,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-primary mb-3">Sua Formação</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Sua Formação</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-3">Mais Populares</h3>
           <div className="space-y-3">
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">1. O Caminho da Perfeição</div>
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">2. Catecismo Explicado</div>
-            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-[10px] font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">1. O Caminho da Perfeição</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">2. Catecismo Explicado</div>
+            <div className="p-3 rounded-2xl bg-muted/20 border border-border/40 text-premium-tiny font-bold text-foreground">3. Mistérios Gloriosos</div>
           </div>
         </div>
       </aside>

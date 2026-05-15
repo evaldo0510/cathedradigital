@@ -89,7 +89,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="text-[10px] font-black uppercase tracking-widest">Voltar para Início</span>
+        <span className="text-premium-tiny font-black uppercase tracking-widest">Voltar para Início</span>
       </Button>
 
       <div className="text-center space-y-4">
@@ -115,7 +115,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
@@ -124,7 +124,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             </div>
           )}
           <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
+            <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
@@ -133,7 +133,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           </div>
           {mode !== 'forgot' && (
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
@@ -148,7 +148,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
         <div className="relative flex items-center gap-4 my-2">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ou</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">ou</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 

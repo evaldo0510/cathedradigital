@@ -154,7 +154,7 @@ const MagisteriumViewer: React.FC = () => {
           </Button>
           <div className="min-w-0">
             <h1 className="text-sm font-black uppercase tracking-widest text-primary truncate">{content.title}</h1>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-tighter">Magistério da Igreja</p>
+            <p className="text-premium-tiny text-muted-foreground uppercase tracking-tighter">Magistério da Igreja</p>
           </div>
         </div>
         

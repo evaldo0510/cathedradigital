@@ -51,7 +51,7 @@ class AppErrorBoundary extends Component<Props, State> {
                 } catch (e) {}
                 window.location.href = '/';
               }}
-              className="px-8 py-3 bg-muted text-primary rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              className="px-8 py-3 bg-muted text-primary rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Limpar Dados e Reiniciar
             </button>

@@ -119,7 +119,7 @@ const AZFaithPage: React.FC = () => {
         <header className="text-center space-y-6 pt-12 mb-16">
           <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-2xl border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
+            <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
           <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
           <Button

@@ -183,7 +183,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary border border-primary/20"
           >
             <CalendarIcon className="w-3 h-3" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Sanctorum Pro</span>
           </motion.div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground">Santos</h1>
           <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
@@ -196,7 +196,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
             {viewModes.map((mode, idx) => (
               <button
                 key={mode}
-                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
@@ -232,7 +232,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <h2 className="text-2xl font-serif font-bold text-foreground">
                       {format(selectedDate, "dd 'de' MMMM", { locale: ptBR })}
                     </h2>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mt-1">
+                    <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mt-1">
                       {format(selectedDate, "EEEE", { locale: ptBR })}
                     </p>
                   </div>
@@ -259,7 +259,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
                       aria-pressed={isSameDay(date, selectedDate)}
                     >
-                      <span className="text-[9px] font-black uppercase tracking-tighter mb-1">
+                      <span className="text-premium-tiny font-black uppercase tracking-tighter mb-1">
                         {format(date, "EEE", { locale: ptBR }).replace('.', '')}
                       </span>
                       <span className="text-lg font-serif font-bold">{format(date, "dd")}</span>
@@ -288,7 +288,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                           <div className="absolute bottom-6 left-6 right-6 text-white">
-                            <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-full mb-2 inline-block">
+                            <span className="text-premium-tiny font-black uppercase tracking-widest bg-primary px-2 py-1 rounded-full mb-2 inline-block">
                               {CATEGORY_LABELS[saint.category] || saint.category}
                             </span>
                             <h3 className="text-2xl font-serif font-bold">{saint.name}</h3>
@@ -305,15 +305,15 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
+                              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
                               <div className="flex flex-wrap gap-1">
                                 {saint.virtues?.slice(0, 1).map(v => (
-                                  <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase rounded-full">{v}</span>
+                                  <span key={v} className="px-2 py-1 bg-primary/10 text-primary text-premium-tiny font-black uppercase rounded-full">{v}</span>
                                 ))}
                               </div>
                             </div>
                             <div className="space-y-1 text-right">
-                              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
+                              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Padroeiro(a)</span>
                               <p className="text-xs font-bold text-foreground truncate">{saint.patronOf?.[0] || '—'}</p>
                             </div>
                           </div>
@@ -321,7 +321,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           <div className="flex flex-col gap-3">
                             <button
                               onClick={() => handleOpenSaint(saint, false)}
-                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                             >
                               <BookOpen className="w-4 h-4" />
                               Conhecer História
@@ -329,7 +329,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                             <button
                               onClick={() => handleOpenSaint(saint, true)}
-                              className="w-full py-4 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
+                              className="w-full py-4 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
                             >
                               <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                               Refletir com Logos
@@ -444,7 +444,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
               tabIndex={0}
             >
               <div className="text-center space-y-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
+                <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
                 <p className="text-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
               </div>
 
@@ -527,7 +527,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-6 flex items-center gap-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-full ">
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-white/90 bg-primary/80 px-2 py-0.5 rounded-full ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
@@ -540,7 +540,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
       <div className="flex-1 p-6 space-y-4">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
+            <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
               <div className="p-1 bg-primary/5 rounded-2xl text-primary" title="Possui obras escritas">
                 <BookOpen className="w-3 h-3" />
@@ -555,7 +555,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
         
         <div className="flex flex-wrap gap-1 mt-auto">
           {saint.virtues?.slice(0, 2).map(v => (
-            <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-[8px] font-black uppercase rounded-full border border-primary/10">{v}</span>
+            <span key={v} className="px-2 py-0.5 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full border border-primary/10">{v}</span>
           ))}
         </div>
       </div>

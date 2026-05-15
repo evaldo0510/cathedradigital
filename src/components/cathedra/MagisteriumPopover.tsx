@@ -89,7 +89,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
               if (onNavigate) onNavigate(documentName);
               else navigate(`/magisterium/${documentName}`);
             }}
-            className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
+            className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 shrink-0 ml-2"
           >
             Abrir completo
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />

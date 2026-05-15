@@ -106,7 +106,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
+          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
           <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
@@ -146,7 +146,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
+          <p className="text-premium-tiny font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
           <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
         </div>
       </div>
@@ -162,16 +162,16 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         <div className="flex items-center justify-between pt-6 border-t border-border/40">
           <div className="flex gap-2">
             {saint.virtues?.slice(0, 2).map((v: string) => (
-              <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-full tracking-wider">{v}</span>
+              <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">{v}</span>
             )) || (
-              <span className="px-3 py-1 bg-primary/5 text-primary text-[10px] font-black uppercase rounded-full tracking-wider">Fé</span>
+              <span className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">Fé</span>
             )}
           </div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
               <Sparkles className="w-5 h-5" />
             </div>
-            <span className="text-[11px] font-black uppercase tracking-widest text-primary">Conhecer</span>
+            <span className="text-premium-small font-black uppercase tracking-widest text-primary">Conhecer</span>
           </div>
         </div>
       </div>
