@@ -298,7 +298,7 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-[#0F172A]/10" />
           </div>
 
-          <InputPlayground />
+          <ComponentPlayground />
         </section>
 
         {/* Iconografia Section */}
