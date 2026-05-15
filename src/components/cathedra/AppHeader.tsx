@@ -116,7 +116,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}>
-            <Icons.Search />
+            <Icons.Search className="w-4 h-4" />
           </Button>
 
           {user && (
