@@ -23,7 +23,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
     <div className="content-section">
       <div className="premium-grid-2">
         {/* CONTINUE JORNADA */}
-        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-jornada">
+        <section className="space-y-12 max-w-xl mx-auto lg:mx-0 w-full" aria-labelledby="section-jornada">
           <div className="section-divider-header">
             <h2 id="section-jornada" className="heading-section-label whitespace-nowrap">
               Jornada
