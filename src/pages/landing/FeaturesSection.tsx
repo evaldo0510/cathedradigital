@@ -40,8 +40,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
   return (
     <Card
       variant="interactive"
-      padding="lg"
-      className="flex flex-col items-center text-center space-y-6 group w-full"
+      padding="md"
+      className="flex flex-col items-center text-center space-y-6 group w-full transition-all duration-700 h-full"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
