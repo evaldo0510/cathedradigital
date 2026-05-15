@@ -19,6 +19,10 @@ vi.mock('@/hooks/useSaints', () => ({
   useOfficialSaint: () => ({
     data: { name: 'São Bento', image: '' },
     isLoading: false
+  }),
+  useSaintsToday: () => ({
+    data: [{ name: 'São Bento', image: '' }],
+    isLoading: false
   })
 }));
 
