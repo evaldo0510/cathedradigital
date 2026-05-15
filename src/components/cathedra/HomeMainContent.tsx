@@ -51,7 +51,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 </p>
               </div>
             </div>
-            <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="w-full">
+            <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="w-full" aria-label={user ? 'Continuar sua jornada' : 'Começar nova jornada'}>
               {user ? 'Continuar' : 'Começar'}
             </HomeButton>
           </HomeCard>
