@@ -34,13 +34,27 @@ const audit = () => {
     'src/pages/Index.tsx',
     'src/components/cathedra/HojePage.tsx',
     'src/components/cathedra/SpiritualJournalPage.tsx',
+  const getFiles = (dir: string): string[] => {
+    const subdirs = fs.readdirSync(dir);
+    const files = subdirs.map((subdir) => {
+      const res = path.resolve(dir, subdir);
+      return fs.statSync(res).isDirectory() ? getFiles(res) : res;
+    });
+    return Array.prototype.concat(...files);
+  };
+
+  const filesToScan = [
+    'src/pages/Index.tsx',
+    'src/components/cathedra/HojePage.tsx',
+    'src/components/cathedra/SpiritualJournalPage.tsx',
     'src/pages/CatechismExplorer.tsx',
-    ...fs.readdirSync('src/pages/landing').map(f => `src/pages/landing/${f}`),
+    ...getFiles('src/pages/landing'),
   ];
 
   filesToScan.forEach(file => {
-    if (!fs.existsSync(file)) return;
+    if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) return;
     const content = fs.readFileSync(file, 'utf-8');
+
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
