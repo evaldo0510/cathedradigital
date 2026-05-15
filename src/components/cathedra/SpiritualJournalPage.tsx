@@ -150,12 +150,12 @@ const SpiritualJournalPage = () => {
 
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap uppercase">
+        <div className="flex items-center gap-12">
+          <div className="h-px flex-1 bg-border/30" />
+          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
             Memória da Alma
           </h2>
-          <div className="h-px flex-1 bg-border/40" />
+          <div className="h-px flex-1 bg-border/30" />
         </div>
 
         {isFetching ? (
