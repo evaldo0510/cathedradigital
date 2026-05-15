@@ -20,7 +20,7 @@ const ComponentPlayground = () => {
   const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-4 md:p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
+    <div className="p-4 md:p-8 rounded-[2.5rem] bg-card border border-border/40 space-y-8 shadow-premium transition-colors">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex flex-wrap gap-2">
           {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
@@ -37,7 +37,7 @@ const ComponentPlayground = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
-          <TabsList className="bg-[#0F172A]/5 rounded-full p-1 h-12">
+          <TabsList className="bg-primary/5 rounded-full p-1 h-12">
             <TabsTrigger value="inputs" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Inputs</TabsTrigger>
             <TabsTrigger value="selects" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Selects</TabsTrigger>
             <TabsTrigger value="others" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Outros</TabsTrigger>
@@ -45,7 +45,7 @@ const ComponentPlayground = () => {
         </Tabs>
       </div>
 
-      <div className="pt-8 border-t border-[#0F172A]/5 min-h-[300px]">
+      <div className="pt-8 border-t border-border/40 min-h-[300px]">
         <AnimatePresence mode="wait">
           {activeTab === 'inputs' && (
             <motion.div 
@@ -57,7 +57,7 @@ const ComponentPlayground = () => {
             >
               <div className="space-y-3">
                 <Label 
-                  className={`font-serif text-lg ${state === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
+                  className={`font-serif text-lg ${state === 'error' ? 'text-destructive' : 'text-foreground'}`}
                   aria-disabled={state === 'disabled'}
                 >
                   Nome do Fiel
@@ -65,7 +65,7 @@ const ComponentPlayground = () => {
                 <div className="relative">
                   <Input 
                     disabled={state === 'disabled'}
-                    className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
+                    className={`rounded-2xl border-border/40 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
                     placeholder={state === 'loading' ? 'Processando...' : 'Digite seu nome completo...'}
                   />
                   {state === 'loading' && (
@@ -90,12 +90,12 @@ const ComponentPlayground = () => {
               className="space-y-6"
             >
               <div className="space-y-3">
-                <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={state === 'disabled'}>Tema de Oração</Label>
+                <Label className="font-serif text-lg text-foreground" aria-disabled={state === 'disabled'}>Tema de Oração</Label>
                 <Select disabled={state === 'disabled'}>
-                  <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive' : ''}`}>
+                  <SelectTrigger className={`rounded-2xl border-border/40 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive' : ''}`}>
                     <SelectValue placeholder="Escolha um tema" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-[#0F172A]/10">
+                  <SelectContent className="rounded-2xl border-border/40">
                     <SelectItem value="1">Liturgia Diária</SelectItem>
                     <SelectItem value="2">Catecismo da Igreja</SelectItem>
                     <SelectItem value="3">Vidas dos Santos</SelectItem>
@@ -119,14 +119,14 @@ const ComponentPlayground = () => {
               className="space-y-8"
             >
               <div className="flex items-center space-x-3">
-                <Checkbox id="terms" disabled={state === 'disabled'} className="rounded-md border-[#0F172A]/20" />
+                <Checkbox id="terms" disabled={state === 'disabled'} className="rounded-md border-border/40" />
                 <Label htmlFor="terms" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Aceito os termos de uso e privacidade
                 </Label>
               </div>
               
               <div className="flex items-center space-x-3">
-                <Checkbox id="newsletter" disabled={state === 'disabled'} defaultChecked className="rounded-md border-[#0F172A]/20" />
+                <Checkbox id="newsletter" disabled={state === 'disabled'} defaultChecked className="rounded-md border-border/40" />
                 <Label htmlFor="newsletter" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Desejo receber notificações diárias de oração
                 </Label>
