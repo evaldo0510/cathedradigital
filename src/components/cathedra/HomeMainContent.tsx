@@ -21,7 +21,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
   return (
     <div className="w-full space-y-24 md:space-y-40">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-12 lg:gap-24 items-start">
         {/* CONTINUE JORNADA */}
         <section className="space-y-8">
           <div className="flex items-center gap-6">
