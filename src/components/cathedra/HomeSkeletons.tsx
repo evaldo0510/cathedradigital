@@ -1,12 +1,12 @@
 import { Icons } from "@/constants";
 
 export const SectionSkeleton = () => (
-  <div className="w-full py-12 animate-in fade-in duration-500">
-    <div className="max-w-7xl mx-auto px-4 space-y-8">
-      <div className="h-8 w-48 bg-muted/20 rounded-2xl animate-pulse" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div className="w-full py-16 animate-in fade-in duration-1000">
+    <div className="space-y-12">
+      <div className="h-4 w-40 bg-muted/30 rounded-full animate-pulse mx-auto opacity-40" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-64 bg-muted/10 rounded-2xl border border-border/50 animate-pulse" />
+          <div key={i} className="h-80 bg-muted/10 rounded-premium border border-border/10 animate-pulse" />
         ))}
       </div>
     </div>
@@ -28,15 +28,16 @@ export const RitualSkeleton = () => (
 );
 
 export const HeroSkeleton = () => (
-  <div className="w-full min-h-[80vh] flex flex-col items-center justify-center p-6 space-y-8 animate-in fade-in duration-700">
-    <div className="h-12 w-12 bg-muted/20 rounded-2xl animate-bounce" />
-    <div className="space-y-4 items-center flex flex-col">
-      <div className="h-12 w-64 md:w-96 bg-muted/20 rounded-2xl" />
-      <div className="h-6 w-48 md:w-64 bg-muted/10 rounded-2xl" />
+  <div className="w-full min-h-[60vh] flex flex-col items-center justify-center p-6 space-y-12 animate-in fade-in duration-1000">
+    <div className="h-20 w-20 bg-muted/20 rounded-premium-sm animate-pulse" />
+    <div className="space-y-6 items-center flex flex-col w-full">
+      <div className="h-14 w-full max-w-2xl bg-muted/20 rounded-full animate-pulse" />
+      <div className="h-14 w-3/4 max-w-xl bg-muted/20 rounded-full animate-pulse opacity-60" />
+      <div className="h-6 w-48 bg-muted/10 rounded-full animate-pulse opacity-40" />
     </div>
-    <div className="flex gap-4">
-      <div className="h-14 w-40 bg-muted/20 rounded-2xl" />
-      <div className="h-14 w-40 bg-muted/10 rounded-2xl" />
+    <div className="flex gap-6">
+      <div className="h-16 w-48 bg-muted/20 rounded-full animate-pulse" />
+      <div className="h-16 w-48 bg-muted/10 rounded-full animate-pulse opacity-60" />
     </div>
   </div>
 );

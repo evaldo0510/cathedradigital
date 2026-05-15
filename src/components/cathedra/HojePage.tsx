@@ -144,8 +144,8 @@ const HojePage: React.FC = () => {
               <span>{greeting}, {profile?.name?.split(' ')[0] || 'fiel'}</span>
             </div>
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-medium text-primary leading-[1] tracking-tighter">
-              Sua jornada <br />
-              <span className="text-secondary italic font-serif opacity-90">pelo Silêncio.</span>
+              Aquietai-vos e <br />
+              <span className="text-secondary italic font-serif opacity-80">Sabei que Eu Sou Deus.</span>
             </h1>
           </div>
           
@@ -169,7 +169,7 @@ const HojePage: React.FC = () => {
             {nextUp && (
               <section className="space-y-12">
                 <div className="flex items-center gap-8">
-                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
                     Memória da Jornada
                   </h2>
                   <div className="h-px flex-1 bg-border/30" />
@@ -213,7 +213,7 @@ const HojePage: React.FC = () => {
             {/* RITUAL DO DIA */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
                   Ritual do Dia
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -226,7 +226,7 @@ const HojePage: React.FC = () => {
             {/* TEMAS PRINCIPAIS */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
                   Explorar
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -239,7 +239,7 @@ const HojePage: React.FC = () => {
             {/* CATECISMO CARD */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
                   Doutrina
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -255,7 +255,7 @@ const HojePage: React.FC = () => {
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
-                  <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
+                  <p className="text-sm text-primary/40 leading-relaxed max-w-[200px] mx-auto font-serif italic">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
               </Card>
             </section>
