@@ -1,0 +1,1047 @@
+{
+  "timestamp": "2026-05-15T02:43:19.774Z",
+  "total_violations": 167,
+  "violations_by_file": {
+    "src/pages/Index.tsx": [
+      {
+        "file": "src/pages/Index.tsx",
+        "line": 48,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-xl"
+      },
+      {
+        "file": "src/pages/Index.tsx",
+        "line": 48,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      }
+    ],
+    "src/components/cathedra/HojePage.tsx": [
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 149,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 151,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 156,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 163,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 163,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 168,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 179,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 179,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 179,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 181,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 182,
+        "pattern": "Borda não padrão",
+        "match": "rounded-3xl"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 189,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 212,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 225,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 231,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 238,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 248,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/HojePage.tsx",
+        "line": 250,
+        "pattern": "Borda não padrão",
+        "match": "rounded-3xl"
+      }
+    ],
+    "src/components/cathedra/SpiritualJournalPage.tsx": [
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 112,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 117,
+        "pattern": "Borda não padrão",
+        "match": "rounded-3xl"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 117,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 117,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 135,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-inner"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 135,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 135,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 153,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 168,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 174,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 174,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 177,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+        "line": 178,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      }
+    ],
+    "src/pages/CatechismExplorer.tsx": [
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 120,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 120,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 127,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 132,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 135,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 135,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 147,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 159,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 163,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 168,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 172,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 181,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 199,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 203,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 204,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 227,
+        "pattern": "Card não padronizado",
+        "match": "<Card"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 228,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 231,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 237,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 240,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 255,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 259,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 269,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 270,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/CatechismExplorer.tsx",
+        "line": 281,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      }
+    ],
+    "src/pages/landing/hero/HeroContent.tsx": [
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 44,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-2xl"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 44,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 48,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 79,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 81,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 105,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/pages/landing/hero/HeroContent.tsx",
+        "line": 110,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      }
+    ],
+    "src/pages/landing/hero/HeroScrollIndicator.tsx": [
+      {
+        "file": "src/pages/landing/hero/HeroScrollIndicator.tsx",
+        "line": 9,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      }
+    ],
+    "src/pages/landing/AboutCreatorSection.tsx": [
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 14,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 14,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 17,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 17,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 25,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 25,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 26,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 39,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 39,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 56,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 57,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 59,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/AboutCreatorSection.tsx",
+        "line": 65,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      }
+    ],
+    "src/pages/landing/AcolhimentoSection.tsx": [
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 16,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 16,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 26,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 52,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-sm"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 52,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-xl"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 52,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/AcolhimentoSection.tsx",
+        "line": 54,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      }
+    ],
+    "src/pages/landing/BenefitsSection.tsx": [
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 46,
+        "pattern": "Padding irregular",
+        "match": "p-0"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 50,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 61,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 64,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 64,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 65,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 83,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-lg"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 93,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/BenefitsSection.tsx",
+        "line": 93,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      }
+    ],
+    "src/pages/landing/CommunitySection.tsx": [
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 35,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 35,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 44,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 72,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 82,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-sm"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 82,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-xl"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 82,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 85,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 105,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 109,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/CommunitySection.tsx",
+        "line": 117,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      }
+    ],
+    "src/pages/landing/CtaBannerSection.tsx": [
+      {
+        "file": "src/pages/landing/CtaBannerSection.tsx",
+        "line": 28,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      }
+    ],
+    "src/pages/landing/DailyRoutineSection.tsx": [
+      {
+        "file": "src/pages/landing/DailyRoutineSection.tsx",
+        "line": 39,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/DailyRoutineSection.tsx",
+        "line": 39,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/DailyRoutineSection.tsx",
+        "line": 43,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/DailyRoutineSection.tsx",
+        "line": 46,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/DailyRoutineSection.tsx",
+        "line": 63,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      }
+    ],
+    "src/pages/landing/FaqSection.tsx": [
+      {
+        "file": "src/pages/landing/FaqSection.tsx",
+        "line": 24,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-sm"
+      },
+      {
+        "file": "src/pages/landing/FaqSection.tsx",
+        "line": 24,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-md"
+      },
+      {
+        "file": "src/pages/landing/FaqSection.tsx",
+        "line": 24,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/FaqSection.tsx",
+        "line": 24,
+        "pattern": "Padding irregular",
+        "match": "p-0"
+      }
+    ],
+    "src/pages/landing/FeaturesSection.tsx": [
+      {
+        "file": "src/pages/landing/FeaturesSection.tsx",
+        "line": 43,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/FeaturesSection.tsx",
+        "line": 55,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/FeaturesSection.tsx",
+        "line": 84,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/FeaturesSection.tsx",
+        "line": 84,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      }
+    ],
+    "src/pages/landing/HowItWorksSection.tsx": [
+      {
+        "file": "src/pages/landing/HowItWorksSection.tsx",
+        "line": 42,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/HowItWorksSection.tsx",
+        "line": 42,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/HowItWorksSection.tsx",
+        "line": 44,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/HowItWorksSection.tsx",
+        "line": 76,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      }
+    ],
+    "src/pages/landing/InstitutionalVideoSection.tsx": [
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 209,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 209,
+        "pattern": "Padding irregular",
+        "match": "p-0"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 210,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 214,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 230,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 254,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 255,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-lg"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 290,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-lg"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 292,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 321,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 321,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 321,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 326,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 348,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 348,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 359,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 363,
+        "pattern": "Padding irregular",
+        "match": "p-0"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 363,
+        "pattern": "Padding irregular",
+        "match": "p-6"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 364,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 365,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 365,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 386,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 388,
+        "pattern": "Padding irregular",
+        "match": "p-2"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 395,
+        "pattern": "Botão não padronizado",
+        "match": "<Button"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 398,
+        "pattern": "Sombra não padrão",
+        "match": "shadow-lg"
+      },
+      {
+        "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+        "line": 398,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      }
+    ],
+    "src/pages/landing/PricingSection.tsx": [
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 68,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 68,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 72,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 77,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 77,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 84,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 91,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/PricingSection.tsx",
+        "line": 102,
+        "pattern": "Padding irregular",
+        "match": "p-3"
+      }
+    ],
+    "src/pages/landing/StatsSection.tsx": [
+      {
+        "file": "src/pages/landing/StatsSection.tsx",
+        "line": 127,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/StatsSection.tsx",
+        "line": 127,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/StatsSection.tsx",
+        "line": 128,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      },
+      {
+        "file": "src/pages/landing/StatsSection.tsx",
+        "line": 143,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      }
+    ],
+    "src/pages/landing/TestimonialsSection.tsx": [
+      {
+        "file": "src/pages/landing/TestimonialsSection.tsx",
+        "line": 25,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/TestimonialsSection.tsx",
+        "line": 25,
+        "pattern": "Padding irregular",
+        "match": "p-1"
+      },
+      {
+        "file": "src/pages/landing/TestimonialsSection.tsx",
+        "line": 29,
+        "pattern": "Padding irregular",
+        "match": "p-8"
+      },
+      {
+        "file": "src/pages/landing/TestimonialsSection.tsx",
+        "line": 36,
+        "pattern": "Padding irregular",
+        "match": "p-4"
+      },
+      {
+        "file": "src/pages/landing/TestimonialsSection.tsx",
+        "line": 37,
+        "pattern": "Borda não padrão",
+        "match": "rounded-2xl"
+      }
+    ]
+  },
+  "status": "pendente"
+}
