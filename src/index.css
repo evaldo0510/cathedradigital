@@ -343,7 +343,15 @@
   }
 
   .premium-header {
-    @apply text-center space-y-10 mb-24 md:mb-40 max-w-4xl mx-auto;
+    @apply text-center space-y-10 mb-20 md:mb-32 max-w-4xl mx-auto;
+  }
+
+  .section-divider-header {
+    @apply flex items-center gap-6 mb-12 md:mb-16;
+  }
+
+  .divider-line {
+    @apply h-px flex-1 bg-primary/[0.08];
   }
   
   .premium-tag {
