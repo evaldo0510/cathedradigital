@@ -173,6 +173,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+          A11Y_MAX_CRITICAL_ERRORS: 5
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
