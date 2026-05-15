@@ -60,7 +60,7 @@ const Index = () => {
 
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
 
-      <main id="main-content" className="w-full flex flex-col items-center outline-none pt-24 md:pt-32 pb-32 md:pb-48" tabIndex={-1}>
+      <main id="main-content" className="w-full max-w-[1280px] mx-auto flex flex-col items-center outline-none pt-12 md:pt-24 pb-24 md:pb-32 px-6" tabIndex={-1}>
         <Suspense fallback={<SectionSkeleton />}>
           <HomeMainContent 
             user={user} 
