@@ -62,14 +62,15 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           > 
             Nem toda <br/> 
             <span className="text-primary/70">prisão é</span> <br/> 
-            <span className="text-secondary/20 italic font-serif font-light">visível</span> 
+            <span className="text-secondary/60 italic font-serif font-light">visível</span> 
           </h1>
           
           <motion.p
-            className="max-w-lg mx-auto font-serif text-base sm:text-lg md:text-xl text-primary/30 italic leading-relaxed font-light px-6 sm:px-0"
+            className="max-w-lg mx-auto font-serif text-base sm:text-lg md:text-xl text-primary/60 italic leading-relaxed font-light px-6 sm:px-0"
           >
             Uma plataforma de direção espiritual guiada <br className="hidden sm:block" /> pela Tradição e Inteligência Contemplativa.
           </motion.p>
+
         </motion.div>
 
         {/* CTA - Refined Focus */}
