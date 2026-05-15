@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             
             <HomeCard padding="md" className="space-y-6" onClick={() => onNavigate(AppRoute.BIBLE)}>
               <div className="flex items-center justify-between">
-                <h4 className="text-lg font-bold text-primary tracking-tight">Estudo Bíblico</h4>
+                <h4 className="heading-item">Estudo Bíblico</h4>
                 <Icons.BookOpen className="w-4 h-4 text-primary/20" aria-hidden="true" />
               </div>
               <p className="text-sm text-primary/40 leading-relaxed">Aprofunde seu conhecimento das Escrituras através de planos guiados.</p>
