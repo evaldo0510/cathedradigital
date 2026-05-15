@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
+import { CathedraCard } from './CathedraCard';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { Card, CardContent } from '@/components/ui/card';
@@ -112,7 +113,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <Card className="border-primary/20">
+      <CathedraCard className="border-primary/20">
         <CardContent className="p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>
@@ -124,7 +125,7 @@ const JornadaDetailPage: React.FC = () => {
             <span className="capitalize">{journey.difficulty}</span>
           </div>
         </CardContent>
-      </Card>
+      </CathedraCard>
 
       {/* Description */}
       {journey.description && (
@@ -134,7 +135,7 @@ const JornadaDetailPage: React.FC = () => {
       {/* Completion Banner */}
       {isJourneyComplete && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <Card className="border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
+          <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
             <CardContent className="p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
                 <Award className="w-6 h-6 text-primary" />
@@ -166,7 +167,7 @@ const JornadaDetailPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className={`transition-all ${isNext ? 'border-primary/40 shadow-sm' : ''} ${isCompleted ? 'bg-primary/5' : ''} ${isStepLocked ? 'opacity-60' : ''}`}>
+              <Card className={`premium-card-interactive transition-all ${isNext ? 'border-primary/40' : ''} ${isCompleted ? 'bg-primary/5 shadow-soft' : ''} ${isStepLocked ? 'opacity-60 grayscale' : ''}`}>
                 <CardContent className="p-4 flex items-center gap-4">
                   {/* Step number / status */}
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${

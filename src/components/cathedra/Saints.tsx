@@ -277,7 +277,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       key={saint.id}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="group relative bg-card border border-border rounded-[2.5rem] overflow-hidden hover:border-primary/30 transition-all shadow-xl"
+                      className="premium-card overflow-hidden group relative transition-all"
                     >
                       <div className="flex flex-col md:flex-row h-full">
                         <div className="w-full md:w-1/3 h-64 md:h-auto relative">
@@ -321,7 +321,8 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           <div className="flex flex-col gap-3">
                             <Button
                               onClick={() => handleOpenSaint(saint, false)}
-                              className="w-full py-4 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                              variant="secondary"
+                              className="w-full"
                             >
                               <BookOpen className="w-4 h-4" />
                               Conhecer História
@@ -329,7 +330,8 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                             <Button
                               onClick={() => handleOpenSaint(saint, true)}
-                              className="w-full py-4 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 group"
+                              variant="primary"
+                              className="w-full"
                             >
                               <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
                               Refletir com Logos

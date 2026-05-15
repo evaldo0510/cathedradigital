@@ -411,7 +411,7 @@ const CommunityPage: React.FC = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {posts.map(post => (
-                <Card key={post.id} className="cursor-pointer hover:border-primary/40 transition-all rounded-[2rem] bg-card border-border/50 group" onClick={() => openPost(post)}>
+                <Card key={post.id} className="premium-card-interactive" onClick={() => openPost(post)}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center font-black text-sm text-primary">

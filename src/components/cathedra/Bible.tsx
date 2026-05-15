@@ -660,7 +660,8 @@ const Bible: React.FC = () => {
             {/* Next Chapter Card */}
             {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Card className="border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all"
+                <Card 
+                  className="premium-card-interactive"
                   onClick={() => navigateChapter(1)}>
                   <CardContent className="p-6 flex items-center justify-between">
                     <div>
@@ -676,7 +677,7 @@ const Bible: React.FC = () => {
             {/* If end of book */}
             {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-                <Card className="border-secondary/40 bg-secondary/5 text-center p-8">
+                <Card className="premium-card border-secondary/40 bg-secondary/5 text-center p-8">
                   <div className="flex flex-col items-center gap-4">
                     <Icons.CheckCircle2 className="w-12 h-12 text-primary" />
                     <h2 className="text-xl font-bold font-serif">Livro Concluído!</h2>
@@ -713,8 +714,8 @@ const Bible: React.FC = () => {
                 onClick={() => selectChapter(ch)}
                 className={`aspect-square flex items-center justify-center rounded-full border text-xs sm:text-sm font-bold transition-all relative
                   ${isRead 
-                    ? 'bg-primary/10 border-primary/30 text-primary' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05]'}`}
+                    ? 'bg-primary/10 border-primary/30 text-primary shadow-soft' 
+                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] hover:shadow-soft'}`}
               >
                 {ch}
                 {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}

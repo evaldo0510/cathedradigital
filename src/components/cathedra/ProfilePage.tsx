@@ -260,7 +260,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-3">
+      <div className="premium-card p-8 space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
@@ -293,7 +293,7 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+      <div className="premium-card p-8 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
           <span className="text-premium-tiny font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
@@ -324,7 +324,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+      <div className="premium-card p-8 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
@@ -344,7 +344,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+      <div className="premium-card p-8 space-y-8">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>

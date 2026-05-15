@@ -251,7 +251,7 @@ const LitaniesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02]">
+        <div className="premium-card p-8 md:p-16 space-y-10">
           {/* Opening */}
           {litany.opening && (
             <div className="text-center pb-8 border-b border-border/50">

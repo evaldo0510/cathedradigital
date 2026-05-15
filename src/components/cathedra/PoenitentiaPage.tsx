@@ -90,7 +90,7 @@ const PoenitentiaPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
+      <div className="premium-card p-8 md:p-16 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
           <Icons.Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>
@@ -156,7 +156,7 @@ const PoenitentiaPage: React.FC = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
+        <div className="premium-card p-10 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-6 h-6" />
@@ -167,7 +167,7 @@ const PoenitentiaPage: React.FC = () => {
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
           </p>
         </div>
-        <div className="bg-card border border-border rounded-[2.5rem] p-10 space-y-6 shadow-sm">
+        <div className="premium-card p-10 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-6 h-6" />
