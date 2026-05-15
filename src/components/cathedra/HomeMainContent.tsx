@@ -111,7 +111,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <div className="grid grid-cols-1 gap-8">
             <HomeCard padding="md" className="space-y-6" onClick={() => onNavigate(AppRoute.TEMAS)}>
               <div className="flex items-center justify-between">
-                <h4 className="text-lg font-bold text-primary tracking-tight">Temas da Fé</h4>
+                <h4 className="heading-item">Temas da Fé</h4>
                 <Icons.Star className="w-4 h-4 text-primary/20" aria-hidden="true" />
               </div>
               <p className="text-sm text-primary/40 leading-relaxed">Aprofunde-se em tópicos específicos da doutrina e espiritualidade.</p>
