@@ -1,44 +1,80 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type ReadingMode = 'normal' | 'night' | 'sepia';
+export type ReadingTheme = 'normal' | 'night' | 'sepia' | 'paper';
 
-const STORAGE_KEY = 'cathedra_reading_mode';
+export interface ReadingPreferences {
+  theme: ReadingTheme;
+  fontSize: number; // in pixels
+  lineHeight: number; // multiplier
+  maxWidth: number; // in pixels or ch
+  sepiaIntensity: number; // 0 to 100
+  fontFamily: 'serif' | 'sans' | 'monastery';
+}
+
+const STORAGE_KEY = 'cathedra_reading_prefs';
+
+const DEFAULT_PREFS: ReadingPreferences = {
+  theme: 'normal',
+  fontSize: 18,
+  lineHeight: 1.8,
+  maxWidth: 65,
+  sepiaIntensity: 100,
+  fontFamily: 'monastery'
+};
 
 export function useReadingMode() {
-  const [mode, setMode] = useState<ReadingMode>(() => {
+  const [prefs, setPrefs] = useState<ReadingPreferences>(() => {
     try {
-      return (localStorage.getItem(STORAGE_KEY) as ReadingMode) || 'normal';
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? { ...DEFAULT_PREFS, ...JSON.parse(stored) } : DEFAULT_PREFS;
     } catch {
-      return 'normal';
+      return DEFAULT_PREFS;
     }
   });
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('reading-night', 'reading-sepia');
     
-    if (mode === 'night') {
-      root.classList.add('reading-night');
-    } else if (mode === 'sepia') {
-      root.classList.add('reading-sepia');
+    // Theme classes
+    root.classList.remove('reading-night', 'reading-sepia', 'reading-paper');
+    if (prefs.theme !== 'normal') {
+      root.classList.add(`reading-${prefs.theme}`);
     }
     
+    // CSS Variables
+    root.style.setProperty('--reader-font-size', `${prefs.fontSize}px`);
+    root.style.setProperty('--reader-line-height', `${prefs.lineHeight}`);
+    root.style.setProperty('--reader-max-width', `${prefs.maxWidth}ch`);
+    root.style.setProperty('--reader-sepia-intensity', `${prefs.sepiaIntensity}%`);
+    
+    const fontMap = {
+      serif: "'Playfair Display', serif",
+      sans: "'Inter', sans-serif",
+      monastery: "'EB Garamond', serif"
+    };
+    root.style.setProperty('--reader-font-family', fontMap[prefs.fontFamily]);
+
     try {
-      localStorage.setItem(STORAGE_KEY, mode);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
     } catch {}
-  }, [mode]);
+  }, [prefs]);
 
-  const toggle = useCallback(() => {
-    setMode(prev => {
-      if (prev === 'normal') return 'sepia';
-      if (prev === 'sepia') return 'night';
-      return 'normal';
-    });
+  const updatePrefs = useCallback((newPrefs: Partial<ReadingPreferences>) => {
+    setPrefs(prev => ({ ...prev, ...newPrefs }));
   }, []);
 
-  const setReadingMode = useCallback((newMode: ReadingMode) => {
-    setMode(newMode);
-  }, []);
+  const toggleTheme = useCallback(() => {
+    const themes: ReadingTheme[] = ['normal', 'sepia', 'paper', 'night'];
+    const nextIdx = (themes.indexOf(prefs.theme) + 1) % themes.length;
+    updatePrefs({ theme: themes[nextIdx] });
+  }, [prefs.theme, updatePrefs]);
 
-  return { mode, toggle, setReadingMode, isNight: mode === 'night', isSepia: mode === 'sepia' };
+  return { 
+    prefs, 
+    updatePrefs, 
+    toggleTheme, 
+    mode: prefs.theme,
+    isNight: prefs.theme === 'night', 
+    isSepia: prefs.theme === 'sepia' 
+  };
 }
