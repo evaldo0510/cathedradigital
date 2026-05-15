@@ -27,7 +27,7 @@ const RitualDoDia: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Sparkles className="w-5 h-5 text-secondary/40" strokeWidth={1} />
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/30">
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/20">
             Ritual do Dia
           </span>
         </div>
@@ -45,9 +45,9 @@ const RitualDoDia: React.FC = () => {
       <div className="space-y-12" role="article" aria-label="Versículo do Dia">
         <div className="flex items-center gap-4">
           <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1} />
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/20">Verbum Domini</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/10">Verbum Domini</span>
         </div>
-        <blockquote className="text-4xl md:text-5xl font-serif italic text-primary leading-[1.2] pl-12 border-l border-secondary/20">
+        <blockquote className="text-4xl md:text-5xl font-serif italic text-primary/70 leading-[1.2] pl-12 border-l border-secondary/10">
           "{verse.text}"
         </blockquote>
         <p className="text-premium-tiny font-bold text-secondary uppercase tracking-[0.3em] pl-12 opacity-40">— {verse.ref}</p>
@@ -59,7 +59,7 @@ const RitualDoDia: React.FC = () => {
            <Icons.PenLine className="w-3.5 h-3.5 text-muted-foreground/20" strokeWidth={1} />
            <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-muted-foreground/20">Meditatio</span>
         </div>
-        <p className="text-2xl text-primary/50 leading-relaxed font-serif italic pl-12 border-l border-border/10">
+        <p className="text-2xl text-primary/40 leading-relaxed font-serif italic pl-12 border-l border-border/10">
           {reflection}
         </p>
       </div>

@@ -115,9 +115,15 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.5; /* Thinner for premium minimalist feel */
+    stroke-width: 1.25; /* Even thinner for premium minimalist feel */
     stroke-linecap: round;
     stroke-linejoin: round;
+    opacity: 0.6;
+    transition: all 0.5s ease;
+  }
+  
+  *:hover > svg.lucide {
+    opacity: 1;
   }
 
   /* Professional hover state for icons within interactive elements */
@@ -173,7 +179,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-display text-primary;
+    @apply tracking-tight font-display text-primary/80;
     text-wrap: balance;
   }
 
@@ -204,7 +210,7 @@
   }
 
   p { 
-    @apply max-w-[65ch] text-muted-foreground;
+    @apply max-w-[65ch] text-primary/40;
     font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     line-height: 1.65;
   }
@@ -299,7 +305,7 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/20 rounded-premium shadow-premium transition-all duration-1000 relative overflow-hidden;
+    @apply bg-card border border-border/5 rounded-premium shadow-premium transition-all duration-1000 relative overflow-hidden;
   }
   
   .premium-card-interactive {
@@ -334,7 +340,7 @@
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-8 py-3 bg-primary/[0.01] border border-border/10 rounded-full text-[9px] font-bold uppercase tracking-[0.5em] text-foreground/20 transition-all hover:bg-primary/[0.02] hover:text-foreground/40;
+    @apply inline-flex items-center gap-3 px-8 py-3 bg-primary/[0.01] border border-border/5 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] text-foreground/10 transition-all hover:bg-primary/[0.02] hover:text-foreground/30;
   }
 
   /* Global Button Standard - Premium Spiritual - More refined */
@@ -343,11 +349,11 @@
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover hover:-translate-y-1 hover:brightness-110 active:translate-y-0;
+    @apply btn-premium bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
+    @apply btn-premium bg-secondary/80 text-secondary-foreground hover:bg-secondary hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-outline {
