@@ -9,6 +9,33 @@ const HOME_SECTIONS = [
   { name: 'Trilhas', selector: 'section[aria-labelledby="section-trilhas"]' },
 ];
 
+const NAVIGATION_TARGETS = [
+  { 
+    name: 'Jornada', 
+    selector: 'section[aria-labelledby="section-jornada"] .group', 
+    expectedPath: AppRoute.JORNADAS,
+    expectedHeading: /Jornadas|Formação/
+  },
+  { 
+    name: 'Catecismo', 
+    selector: 'section[aria-labelledby="section-doutrina"] .group', 
+    expectedPath: AppRoute.CATECHISM,
+    expectedHeading: /Catecismo|CIC/
+  },
+  { 
+    name: 'Temas', 
+    selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Temas")', 
+    expectedPath: AppRoute.TEMAS,
+    expectedHeading: /Temas|Trilhas/
+  },
+  { 
+    name: 'Bíblia', 
+    selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Bíblico")', 
+    expectedPath: AppRoute.BIBLE,
+    expectedHeading: /Bíblia|Palavra/
+  }
+];
+
 test.describe('Home Page Premium Audit', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -34,84 +61,74 @@ test.describe('Home Page Premium Audit', () => {
     expect(cls).toBeLessThan(0.1);
   });
 
-  const runNavigationTests = (isLoggedIn: boolean) => {
-    const state = isLoggedIn ? 'logged-in' : 'logged-out';
+  // Parameterized tests for Keyboard and Click navigation
+  for (const isLoggedIn of [false, true]) {
+    const stateLabel = isLoggedIn ? 'Logged-in' : 'Logged-out';
 
-    test(`${state} - Keyboard & Click Navigation on all CTAs`, async ({ page }) => {
-      if (isLoggedIn) {
-        await page.addInitScript(() => {
-          const session = {
-            access_token: 'fake-token',
-            token_type: 'bearer',
-            expires_in: 3600,
-            user: {
-              id: 'test-user',
-              email: 'test@example.com',
-              user_metadata: { name: 'Test' },
-              role: 'authenticated'
-            }
-          };
-          window.localStorage.setItem('sb-gpwrpmoniglarqwfyryp-auth-token', JSON.stringify(session));
-        });
-        await page.reload();
-      }
-
-      await page.waitForLoadState('networkidle');
-
-      const ctas = [
-        { name: 'Jornada Card', selector: 'section[aria-labelledby="section-jornada"] .group', expectedPath: AppRoute.JORNADAS },
-        { name: 'Catecismo Card', selector: 'section[aria-labelledby="section-doutrina"] .group', expectedPath: AppRoute.CATECHISM },
-        { name: 'Temas Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Temas")', expectedPath: AppRoute.TEMAS },
-        { name: 'Bíblia Card', selector: 'section[aria-labelledby="section-trilhas"] .group:has-text("Bíblico")', expectedPath: AppRoute.BIBLE }
-      ];
-
-      for (const cta of ctas) {
-        const locator = page.locator(cta.selector).first();
-        if (await locator.isVisible()) {
-          // Verify ARIA and alt text
-          const altText = await locator.locator('img').first().getAttribute('alt');
-          const ariaLabel = await locator.getAttribute('aria-label');
-          const accessibleName = await locator.innerText();
-          expect(altText || ariaLabel || accessibleName, `${cta.name} should have accessible content`).toBeTruthy();
-
-          // 1. Test Click
-          await locator.click();
-          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
-          await page.goBack();
-          await page.waitForLoadState('networkidle');
-
-          // 2. Test Enter Key
-          await locator.focus();
-          // Verify focus visible
-          const isFocusVisible = await locator.evaluate(el => {
-            const style = window.getComputedStyle(el);
-            return style.outlineStyle !== 'none' || style.boxShadow !== 'none' || style.borderWidth !== '0px';
+    test.describe(`${stateLabel} Context`, () => {
+      test.beforeEach(async ({ page }) => {
+        if (isLoggedIn) {
+          await page.addInitScript(() => {
+            const session = {
+              access_token: 'fake-token',
+              token_type: 'bearer',
+              expires_in: 3600,
+              user: {
+                id: 'test-user',
+                email: 'test@example.com',
+                user_metadata: { name: 'Test' },
+                role: 'authenticated'
+              }
+            };
+            window.localStorage.setItem('sb-gpwrpmoniglarqwfyryp-auth-token', JSON.stringify(session));
           });
-          expect(isFocusVisible, `${cta.name} focus should be visible`).toBe(true);
-
-          await page.keyboard.press('Enter');
-          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
-          await page.goBack();
-          await page.waitForLoadState('networkidle');
-
-          // 3. Test Space Key
-          await locator.focus();
-          await page.keyboard.press(' ');
-          await expect(page).toHaveURL(new RegExp(`${cta.expectedPath}`));
-          await page.goBack();
+          await page.reload();
           await page.waitForLoadState('networkidle');
         }
+      });
+
+      for (const target of NAVIGATION_TARGETS) {
+        test(`Navigate to ${target.name} via Click`, async ({ page }) => {
+          const locator = page.locator(target.selector).first();
+          await expect(locator).toBeVisible();
+          await locator.click();
+          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
+          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
+        });
+
+        test(`Navigate to ${target.name} via Keyboard (Enter/Space) and verify Focus`, async ({ page }) => {
+          const locator = page.locator(target.selector).first();
+          await expect(locator).toBeVisible();
+
+          // verify focus visible after Tab navigation simulation
+          await page.keyboard.press('Tab'); // Initial focus
+          await locator.focus(); // Targeted focus for the test
+          
+          const isFocusVisible = await locator.evaluate(el => {
+            const style = window.getComputedStyle(el);
+            return style.outlineStyle !== 'none' || 
+                   style.boxShadow !== 'none' || 
+                   (style.borderWidth !== '0px' && style.borderColor !== 'transparent');
+          });
+          expect(isFocusVisible, `Focus should be visible on ${target.name}`).toBe(true);
+
+          // Test Enter
+          await page.keyboard.press('Enter');
+          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
+          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
+          
+          await page.goBack();
+          await page.waitForLoadState('networkidle');
+
+          // Test Space
+          await locator.focus();
+          await page.keyboard.press(' ');
+          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
+          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
+        });
       }
     });
-  };
-
-  test.describe('Logged-out Navigation', () => {
-    runNavigationTests(false);
-  });
-
-  test.describe('Logged-in Navigation', () => {
-    runNavigationTests(true);
-  });
+  }
 
   test('Visual Regression - Themes & Sections', async ({ page }) => {
     await page.waitForLoadState('networkidle');
