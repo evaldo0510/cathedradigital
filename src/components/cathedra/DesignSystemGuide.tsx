@@ -29,7 +29,7 @@ const ComponentPlayground = () => {
               variant={state === s ? 'primary' : 'outline'} 
               size="sm" 
               onClick={() => setState(s)}
-              className="rounded-full px-6 capitalize h-11 text-[10px] font-bold tracking-widest border-border/30"
+              className="rounded-full px-6 capitalize h-11 text-[10px] font-bold tracking-widest border-border/30 hover:shadow-premium"
             >
               {s === 'default' ? 'Padrão' : s === 'error' ? 'Erro' : s === 'disabled' ? 'Desativado' : 'Carregando'}
             </Button>
@@ -214,7 +214,7 @@ const DesignSystemGuide = () => {
             className="inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/20 rounded-full"
           >
             <Icons.ShieldCheck className="w-4 h-4 text-secondary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design System v2.5</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design System v2.7</span>
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -423,7 +423,7 @@ const DesignSystemGuide = () => {
 
         <footer className="pt-24 pb-12 text-center border-t border-border/10">
           <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-foreground/20">
-            Cathedra Digital • Design Protocol v2.6.0
+            Cathedra Digital • Design Protocol v2.7.0
           </p>
         </footer>
       </div>
