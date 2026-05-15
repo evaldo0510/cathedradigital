@@ -231,8 +231,14 @@ test.describe('Home Page Premium Audit', () => {
             });
 
             await page.locator(':focus').screenshot({ 
-              path: `test-results/focus-proof/${fileNameBase}__tab-${i}.png` 
+              path: `test-results/focus-proof/${fileNameBase}__tab-${i}${trapDetected ? '-trap' : ''}.png` 
             });
+
+            if (trapDetected) {
+              const htmlContent = await page.content();
+              fs.writeFileSync(`test-results/focus-proof/${fileNameBase}__tab-${i}-trap-context.html`, htmlContent);
+              break;
+            }
 
             // Clean up highlight
             await page.evaluate(() => {
