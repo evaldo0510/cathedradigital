@@ -71,7 +71,7 @@ const LandingHeader = () => {
         >
           <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <h1 className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
+            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
         </div>
 
@@ -83,7 +83,7 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => handleNavClick(link.href)}
-              className="h-auto py-1 px-2 text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
+              className="h-auto py-1 px-2 text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
               type="button"
             >
               {link.name}
@@ -96,7 +96,7 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+              className="flex items-center gap-2 text-premium-tiny font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
               aria-label="Mudar idioma"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
@@ -137,7 +137,7 @@ const LandingHeader = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:flex text-[11px] font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+            className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
             aria-label="Ir para página de login"
             type="button"
           >
@@ -178,20 +178,14 @@ const LandingHeader = () => {
           >
             <div className="app-container py-8 flex flex-col gap-6">
               {navLinks.map((link) => (
-                <button
+                <Button
                   key={link.name}
+                  variant="ghost"
                   onClick={() => handleNavClick(link.href)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleNavClick(link.href);
-                    }
-                  }}
-                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors outline-none focus:text-primary"
-                  type="button"
+                  className="text-lg font-serif font-bold text-left text-foreground hover:text-primary transition-colors outline-none focus:text-primary justify-start h-auto px-0"
                 >
                   {link.name}
-                </button>
+                </Button>
               ))}
               <hr className="border-border/10" />
               <HomeButton
