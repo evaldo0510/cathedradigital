@@ -1,6 +1,4 @@
 import { motion, MotionValue } from "framer-motion";
-import { ChevronRight } from "lucide-react";
-import logosAvatar from "@/assets/logos-avatar.png";
 import { HomeButton } from "@/components/cathedra/HomeButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
