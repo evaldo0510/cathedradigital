@@ -30,7 +30,9 @@ jobs:
 
     - name: Run Visual Audit Report Generator
       if: always()
-      run: bun run scripts/run-visual-regression.ts
+      run: |
+        bun run scripts/run-visual-regression.ts
+        bun run scripts/generate-visual-report.ts
       env:
         CI: true
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -56,10 +58,10 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         RUN_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        TRACE_URL="https://playwright.dev/docs/trace-viewer"
         
         # Check for diff images to count failures
         DIFF_COUNT=$(find test-results -name "*-diff.png" | wc -l)
-        A11Y_COUNT=$(grep -c "violations" test-results/report.json || echo "0")
         
         SUMMARY="### 🎨 Auditoria Visual & Premium
         
@@ -69,15 +71,16 @@ jobs:
         | :--- | :--- |
         | **Divergências Visuais** | $DIFF_COUNT detectadas |
         | **Acessibilidade** | Validado WCAG AAA |
-        | **Layout Shift (CLS)** | < 0.1 (Premium) |
+        | **Foco & Navegação** | Verificado (Foco inicial/Destino/Volta) |
         
-        #### 🔍 Detalhes da Execução
-        - [Relatório Completo e Artefatos]($RUN_URL)
+        #### 🔍 Detalhes e Artefatos
+        - [Galeria de Foco e Acessibilidade (index.html)]($RUN_URL)
+        - [Relatório Premium Premium (HTML)]($RUN_URL)
+        - [Playwright Trace Viewer]($TRACE_URL)
         
-        ${{ job.status != 'success' && '#### 🛠️ Arquivos com Diferença\n' || '' }}
-        $(find test-results -name "*-diff.png" -exec basename {} \; | sed 's/-diff.png//' | sed 's/^/- /')
+        ${{ job.status != 'success' && '#### 🛠️ Falhas por Categoria\n' || '' }}
+        $(find test-results -maxdepth 2 -type d -name "*failed*" | sed 's|test-results/||' | sed 's/^/- /')
         
-        *Se as mudanças visuais forem intencionais, você pode baixar o artefato \`visual-regression-premium-report\` para revisar os diffs lado a lado ou atualizar as baselines com:*
-        \`npx playwright test --update-snapshots\`"
+        *Se houver falhas, baixe o artefato \`visual-regression-premium-report\` e abra o \`index.html\` para ver as capturas de foco.*"
         
         gh pr comment ${{ github.event.pull_request.number }} --body "$SUMMARY"

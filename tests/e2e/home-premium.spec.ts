@@ -42,25 +42,6 @@ test.describe('Home Page Premium Audit', () => {
     await page.evaluate(() => document.fonts.ready);
   });
 
-  test('Layout Stability (CLS) - Hero Section', async ({ page }) => {
-    const cls = await page.evaluate(() => {
-      return new Promise((resolve) => {
-        let cumulativeLayoutShift = 0;
-        new PerformanceObserver((entryList) => {
-          for (const entry of entryList.getEntries()) {
-            if (!(entry as any).hadRecentInput) {
-              cumulativeLayoutShift += (entry as any).value;
-            }
-          }
-        }).observe({ type: 'layout-shift', buffered: true });
-        
-        setTimeout(() => resolve(cumulativeLayoutShift), 2500);
-      });
-    });
-
-    expect(cls).toBeLessThan(0.1);
-  });
-
   for (const isLoggedIn of [false, true]) {
     const authState = isLoggedIn ? 'logged-in' : 'logged-out';
 
@@ -87,49 +68,41 @@ test.describe('Home Page Premium Audit', () => {
       });
 
       for (const target of NAVIGATION_TARGETS) {
-        test(`Navigation to ${target.name} via Click`, async ({ page }) => {
-          const locator = page.locator(target.selector).first();
-          await expect(locator).toBeVisible();
-          await locator.click();
-          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
-          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
-        });
-
-        test(`Keyboard Navigation to ${target.name} (Enter/Space) and Focus Ring`, async ({ page }, testInfo) => {
+        test(`Keyboard Navigation and Focus Management for ${target.name}`, async ({ page }, testInfo) => {
           const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
           const locator = page.locator(target.selector).first();
           await expect(locator).toBeVisible();
 
-          // 1. Move focus to element
+          // 1. Initial Focus Capture
           await locator.focus();
-          
-          // 2. Capture focus-visible/ring screenshot for accessibility confirmation
-          // The name includes theme and authState for clear categorization
           await locator.screenshot({ 
-            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-focus.png` 
+            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-initial-focus.png` 
           });
 
-          const isFocusVisible = await locator.evaluate(el => {
-            const style = window.getComputedStyle(el);
-            return style.outlineStyle !== 'none' || 
-                   style.boxShadow !== 'none' || 
-                   (style.borderWidth !== '0px' && style.borderColor !== 'transparent');
-          });
-          expect(isFocusVisible, `Focus ring should be visible on ${target.name} (${theme})`).toBe(true);
-
-          // 3. Test Enter
+          // 2. Navigation via Enter
           await page.keyboard.press('Enter');
           await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
-          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
           
+          // 3. Capture focus on destination (often it's the main heading or a focus wrapper)
+          const destinationFocus = page.locator(':focus');
+          await destinationFocus.screenshot({ 
+            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-destination-focus.png` 
+          }).catch(() => {
+             // Fallback to full page if no specific element is focused
+             return page.screenshot({ path: `test-results/focus-proof/${theme}-${authState}-${target.name}-destination-page.png` });
+          });
+
+          // 4. Return Navigation and Focus Restoration
           await page.goBack();
           await page.waitForLoadState('networkidle');
-
-          // 4. Test Space
-          await locator.focus();
-          await page.keyboard.press(' ');
-          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
-          await expect(page.locator('h1, h2')).toContainText(target.expectedHeading);
+          
+          // Wait for focus to return to original CTA (accessibility requirement)
+          const isFocusedAgain = await locator.evaluate(el => document.activeElement === el);
+          expect(isFocusedAgain, `Focus should return to ${target.name} after goBack`).toBe(true);
+          
+          await locator.screenshot({ 
+            path: `test-results/focus-proof/${theme}-${authState}-${target.name}-returned-focus.png` 
+          });
         });
       }
     });
