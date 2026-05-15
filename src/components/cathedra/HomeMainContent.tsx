@@ -28,7 +28,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-jornada">
               Jornada
             </h2>
-            <div className="h-px flex-1 bg-white/5" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           
           <HomeCard
