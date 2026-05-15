@@ -6,6 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import { useAuth } from "@/hooks/useAuth";
 import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
