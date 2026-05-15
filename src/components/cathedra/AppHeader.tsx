@@ -5,6 +5,7 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { Button } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
@@ -66,7 +67,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               onClick={() => navigate(-1)}
               className="h-10 sm:h-12 px-4 sm:px-6"
             >
-              <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+              <CathedraIcon icon={Icons.ChevronLeft} size={IconSizePreset.TINY} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
             </Button>
           )}
@@ -112,7 +113,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             }}
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>
-            <Icons.Compass className="w-5 h-5" />
+            <CathedraIcon icon={Icons.Compass} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
           </Button>
 
           <Button
@@ -121,7 +122,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onClick={onToggleDark}
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full flex lg:hidden"
             aria-label="Alternar tema">
-            {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
+            {isDark ? <CathedraIcon icon={Icons.Sun} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Moon} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
           </Button>
 
           <Button
@@ -133,7 +134,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               isHighContrast && 'ring-2 ring-primary ring-offset-1'
             )}
             aria-label="Configurações de Acessibilidade">
-            <Icons.ShieldCheck className="w-5 h-5" />
+            <CathedraIcon icon={Icons.ShieldCheck} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
           </Button>
 
           <Button
@@ -143,7 +144,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             aria-label={t('search') || "Buscar"}
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
           >
-            <Icons.Search className="w-5 h-5" />
+            <CathedraIcon icon={Icons.Search} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
           </Button>
 
           {user && (
@@ -154,7 +155,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               className="relative w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
               aria-expanded={showNotifs}>
-              <Icons.Message className="w-5 h-5" />
+              <CathedraIcon icon={Icons.Message} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
                   {unreadCount}
