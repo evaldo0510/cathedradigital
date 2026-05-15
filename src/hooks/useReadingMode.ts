@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type ReadingMode = 'normal' | 'night';
+type ReadingMode = 'normal' | 'night' | 'sepia';
 
 const STORAGE_KEY = 'cathedra_reading_mode';
 
@@ -15,19 +15,30 @@ export function useReadingMode() {
 
   useEffect(() => {
     const root = document.documentElement;
+    root.classList.remove('reading-night', 'reading-sepia');
+    
     if (mode === 'night') {
       root.classList.add('reading-night');
-    } else {
-      root.classList.remove('reading-night');
+    } else if (mode === 'sepia') {
+      root.classList.add('reading-sepia');
     }
+    
     try {
       localStorage.setItem(STORAGE_KEY, mode);
     } catch {}
   }, [mode]);
 
   const toggle = useCallback(() => {
-    setMode(prev => (prev === 'normal' ? 'night' : 'normal'));
+    setMode(prev => {
+      if (prev === 'normal') return 'sepia';
+      if (prev === 'sepia') return 'night';
+      return 'normal';
+    });
   }, []);
 
-  return { mode, toggle, isNight: mode === 'night' };
+  const setReadingMode = useCallback((newMode: ReadingMode) => {
+    setMode(newMode);
+  }, []);
+
+  return { mode, toggle, setReadingMode, isNight: mode === 'night', isSepia: mode === 'sepia' };
 }
