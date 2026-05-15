@@ -26,8 +26,8 @@ const TestimonialsSection = () => {
           {testimonials.slice(0, 3).map((t) => (
             <Card
               key={t.name}
-              padding="lg"
-              className="space-y-8 flex flex-col"
+              padding="md"
+              className="space-y-8 flex flex-col transition-all duration-700 h-full"
             >
               <Quote className="w-6 h-6 text-secondary/20" />
               <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
