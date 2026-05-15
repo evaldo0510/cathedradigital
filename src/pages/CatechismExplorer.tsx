@@ -254,7 +254,7 @@ const CatechismExplorer: React.FC = () => {
                 ))}
 
                 {filteredParagraphs.length === 0 && (
-                  <Card padding="xl" variant="outline" className="text-center border-2 border-dashed">
+                  <Card padding="xl" variant="outline" className="text-center border border-dashed border-border/60">
                     <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
                     <h3 className="font-bold">Nenhum parágrafo encontrado</h3>
                     <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
