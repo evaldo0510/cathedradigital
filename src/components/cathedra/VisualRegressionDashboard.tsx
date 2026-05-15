@@ -84,20 +84,31 @@ const VisualRegressionDashboard: React.FC = () => {
 
   const handleApprove = async (snapshotId: string, reason: string) => {
     setApproving(snapshotId);
+    
+    // In a real system, we'd trigger a backend action to update the file
+    // For now, we update the status and record the approval in Supabase
     const { error } = await supabase
       .from('visual_regression_snapshots')
       .update({ 
         status: 'approved', 
         reason,
-        approved_at: new Date().toISOString()
+        approved_at: new Date().toISOString(),
+        // We simulate updating the baseline by pointing the baseline_url to the current_url
+        // this would normally be handled by the test runner --update-snapshots
+        baseline_url: snapshots.find(s => s.id === snapshotId)?.current_url
       })
       .eq('id', snapshotId);
 
     if (error) {
       toast.error('Erro ao aprovar mudança');
     } else {
-      toast.success('Mudança aprovada e baseline atualizada');
-      setSnapshots(prev => prev.map(s => s.id === snapshotId ? { ...s, status: 'approved', reason } : s));
+      toast.success('Mudança aprovada e baseline atualizada no sistema');
+      setSnapshots(prev => prev.map(s => s.id === snapshotId ? { 
+        ...s, 
+        status: 'approved', 
+        reason, 
+        baseline_url: s.current_url 
+      } : s));
     }
     setApproving(null);
   };
