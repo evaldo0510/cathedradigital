@@ -40,76 +40,79 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     return () => window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
   }, []);
   
-  const sections = [
-    ...(user?.role === 'admin' ? [{
-      label: t('admin'),
-      items: [
-        { label: t('admin'), path: AppRoute.ADMIN, icon: Icons.ShieldCheck },
-        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: Icons.ShieldCheck },
-        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: Icons.ShieldCheck },
+  const sections = useMemo(() => {
+    const rawSections = [
+      {
+        label: t('admin'),
+        items: [
+          { label: t('admin'), path: AppRoute.ADMIN, icon: Icons.ShieldCheck },
+          { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: Icons.ShieldCheck },
+          { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: Icons.ShieldCheck },
+          { label: 'Auditoria A11y', path: AppRoute.A11Y_AUDIT, icon: Icons.ShieldCheck },
+          { label: 'Auditoria de Segurança', path: AppRoute.SECURITY_AUDIT, icon: Icons.ShieldCheck },
+          { label: 'Transações', path: AppRoute.TRANSACTIONS, icon: Icons.DollarSign },
+        ]
+      },
+      {
+        label: 'Navegação',
+        items: [
+          { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
+          { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
+          { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
+          { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
+          { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
+          { label: t('community'), path: AppRoute.COMMUNITY, icon: Icons.Users },
+          { label: t('profile'), path: AppRoute.PROFILE, icon: Icons.User },
+          { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: Icons.PenLine },
+        ]
+      },
+      {
+        label: 'Devocionário',
+        items: [
+          { label: t('bible'), path: AppRoute.BIBLE, icon: Icons.Bible },
+          { label: t('catechism'), path: AppRoute.CATECHISM, icon: Icons.Catechism },
+          { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: Icons.Search },
+          { label: t('liturgy'), path: AppRoute.LITURGIA, icon: Icons.Liturgy },
+          { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: Icons.Heart },
+          { label: t('prayers'), path: AppRoute.ORACAO, icon: Icons.Volume2 },
+          { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: Icons.Cross },
+          { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: Icons.Flame },
+          { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: Icons.Lectio },
+          { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: Icons.Clock },
+          { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: Icons.MessageCircle },
+        ]
+      },
+      {
+        label: 'Formação',
+        items: [
+          { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: Icons.Trophy, pro: false },
+          { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: Icons.ScrollText },
+          { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: Icons.Library },
+          { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: Icons.ScrollText },
+          { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: Icons.Heart },
+          { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
+          { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
+          { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
+        ]
+      },
+      {
+        label: t('digital'),
+        items: [
+          { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: Icons.Creator },
+          { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: Icons.Handshake },
+          { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: Icons.HelpCircle },
+          { label: t('transparency') || 'Transparência', path: AppRoute.TRANSPARENCY, icon: Icons.Info },
+          { label: 'Status da Rede', path: AppRoute.OFFLINE, icon: Icons.Globe },
+          { label: 'Gerenciar Cache', path: AppRoute.CACHE_MANAGER, icon: Icons.Database },
+        ]
+      }
+    ];
 
-      ]
-    }] : []),
-    {
-      label: 'Navegação',
-      items: [
-        { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
-        { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
-        { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
-        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
-        { label: t('community'), path: AppRoute.COMMUNITY, icon: Icons.Users },
-        { label: t('profile'), path: AppRoute.PROFILE, icon: Icons.User },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: Icons.PenLine },
-      ]
-    },
-    {
-      label: 'Devocionário',
-      items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: Icons.Bible },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: Icons.Catechism },
-        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: Icons.Search },
-        { label: t('liturgy'), path: AppRoute.LITURGIA, icon: Icons.Liturgy },
-        { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: Icons.Heart },
-        { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
-        { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: Icons.Cross },
-        { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: Icons.Flame },
-        { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: Icons.Lectio },
-        { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: Icons.Clock },
-        { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: Icons.MessageCircle },
-      ]
-    },
-    {
-      label: 'Formação',
-      items: [
-        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: Icons.Trophy, pro: false },
-        { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: Icons.ScrollText },
-        { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: Icons.Library },
-        { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: Icons.ScrollText },
-        { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: Icons.Heart },
-        { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
-        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
-        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
-      ]
-    },
-    {
-      label: t('digital'),
-      items: [
-        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: Icons.Creator },
-        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: Icons.Handshake },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: Icons.HelpCircle },
-        { 
-          label: 'Redefinir Onboarding', 
-          path: AppRoute.ONBOARDING, 
-          icon: Icons.Compass,
-          onClick: () => {
-            localStorage.removeItem('cathedra_onboarding_done');
-          }
-        },
-        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: Icons.Library },
-      ]
-    }
-  ];
+    return rawSections.map(section => ({
+      ...section,
+      items: section.items.filter(item => canUserAccess(user?.role, item.path))
+    })).filter(section => section.items.length > 0);
+  }, [t, user?.role]);
 
   const handleNav = (item: string | { path: string; onClick?: () => void }) => {
     const path = typeof item === 'string' ? item : item.path;
