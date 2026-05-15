@@ -6,6 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import { useAuth } from "@/hooks/useAuth";
 import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
@@ -14,6 +15,7 @@ const LandingHeader = () => {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const navigate = useNavigate();
   const { lang, setLang } = useLang();
+  const { user } = useAuth();
 
   const languages: { code: Language; label: string; flag: string }[] = [
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
@@ -133,25 +135,38 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
-            aria-label="Ir para página de login"
-            type="button"
-          >
-            Entrar
-          </Button>
-          
-          <HomeButton
-            variant="ghost"
-            size="sm"
-            className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
-            onClick={() => navigate(AppRoute.LOGIN)}
-          >
-            Começar <ChevronRight className="w-4 h-4 ml-1" />
-          </HomeButton>
+          {!user ? (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(AppRoute.LOGIN)}
+                className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+                aria-label="Ir para página de login"
+                type="button"
+              >
+                Entrar
+              </Button>
+              
+              <HomeButton
+                variant="ghost"
+                size="sm"
+                className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+                onClick={() => navigate(AppRoute.LOGIN)}
+              >
+                Começar <ChevronRight className="w-4 h-4 ml-1" />
+              </HomeButton>
+            </>
+          ) : (
+            <HomeButton
+              variant="ghost"
+              size="sm"
+              className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+              onClick={() => navigate(AppRoute.HOJE)}
+            >
+              Ir ao Painel <ChevronRight className="w-4 h-4 ml-1" />
+            </HomeButton>
+          )}
 
           {/* Mobile Menu Toggle */}
           <Button

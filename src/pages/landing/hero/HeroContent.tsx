@@ -45,7 +45,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
               <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]" loading="eager" />
             </div>
           </div>
-          <div className="mt-4 px-4 py-1 rounded-2xl border border-border/5 bg-background text-premium-tiny font-bold uppercase tracking-[0.3em] inline-block mx-auto">
+          <div className="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto">
             Logos · Mestre Contemplativo
           </div>
         </div>
@@ -56,7 +56,8 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1] tracking-tighter"
+        className="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
+        aria-label="Nem toda prisão é visível"
       > Nem toda <br/> prisão é <span className="text-secondary/60 italic font-serif">visível</span> </motion.h1>
 
       {/* Description */}
@@ -65,7 +66,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-xl mx-auto font-serif text-2xl text-foreground/40 italic leading-relaxed"
+        className="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
       >
         Uma plataforma espiritual inteligente guiada pela Tradição viva, <br className="hidden md:block" /> Sagradas Escrituras e o mestre contemplativo Logos IA.
       </motion.p>
@@ -81,7 +82,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm">
           <HomeButton
             size="lg"
-            className="w-full"
+            className="w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={onStart}
             aria-label="Iniciar sua jornada espiritual"
           >
@@ -90,7 +91,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
           
           <HomeButton
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={scrollToVideo}
             aria-label="Ver vídeo de apresentação"
           >
