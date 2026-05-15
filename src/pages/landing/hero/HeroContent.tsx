@@ -85,9 +85,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
             size="lg"
             className="w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={onStart}
-            aria-label="Iniciar sua jornada espiritual"
+            aria-label={user ? "Acessar suas atividades" : "Iniciar sua jornada espiritual"}
           >
-            Iniciar Jornada
+            {user ? 'Ver Atividades' : 'Iniciar Jornada'}
           </HomeButton>
           
           <HomeButton
