@@ -300,11 +300,12 @@
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
     background: rgba(255, 255, 255, 0.04);
-    @apply border border-white/5 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden backdrop-blur-sm;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    @apply rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden backdrop-blur-sm;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1.5 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:-translate-y-1 active:scale-[0.99] transition-all duration-300;
   }
 
   /* Specific Card Sizes for Desktop */
