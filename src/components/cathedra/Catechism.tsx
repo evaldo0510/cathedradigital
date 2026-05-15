@@ -205,6 +205,16 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
+            <button 
+              onClick={() => toggleBookmark(p)}
+              className={cn(
+                "p-2 rounded-full transition-all hover:bg-primary/5",
+                bookmarks.includes(`p_${p}`) ? "text-primary" : "text-primary/20"
+              )}
+              title="Marcar Parágrafo"
+            >
+              <Bookmark className={cn("w-3.5 h-3.5", bookmarks.includes(`p_${p}`) && "fill-current")} />
+            </button>
             <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-3.5 h-3.5 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
