@@ -142,26 +142,26 @@ const SpiritualJournalPage = () => {
 
       {/* History */}
       <section className="space-y-8">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-8">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">Reflexões Anteriores</h2>
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">Memória da Alma</h2>
           <div className="h-px flex-1 bg-border/40" />
         </div>
 
         {isFetching ? (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-muted/20 animate-pulse rounded-[2rem] border border-border/20" />
+              <div key={i} className="h-40 bg-muted/20 animate-pulse rounded-premium border border-border/20" />
             ))}
           </div>
         ) : entries.length > 0 ? (
-          <div className="grid gap-6">
+          <div className="grid gap-8">
             {entries.map((entry) => (
               <motion.div
                 key={entry.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-8 rounded-[2.5rem] border border-border/40 shadow-premium space-y-4 relative overflow-hidden"
+                className="bg-card p-10 rounded-premium border border-border/40 shadow-premium space-y-6 relative overflow-hidden group hover:border-primary/20 transition-all duration-500"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
