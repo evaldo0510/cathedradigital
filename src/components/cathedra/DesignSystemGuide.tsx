@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CathedraCard } from '@/components/cathedra/CathedraCard';
-import { CathedraButton } from '@/components/cathedra/CathedraButton';
+import { CathedraCard   } from '@/components/cathedra/Card';
+import { CathedraButton   } from '@/components/cathedra/Button';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 
@@ -36,31 +36,31 @@ const DesignSystemGuide: React.FC = () => {
         <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">CathedraButton</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Button</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <CathedraCard padding="lg" className="space-y-8">
+            <Card padding="lg" className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Variantes</h3>
               <div className="flex flex-wrap gap-4">
-                <CathedraButton variant="primary">Principal</CathedraButton>
-                <CathedraButton variant="secondary">Secundário</CathedraButton>
-                <CathedraButton variant="outline">Contorno</CathedraButton>
-                <CathedraButton variant="ghost">Fantasma</CathedraButton>
+                <Button variant="primary">Principal</Button>
+                <Button variant="secondary">Secundário</Button>
+                <Button variant="outline">Contorno</Button>
+                <Button variant="ghost">Fantasma</Button>
               </div>
               <p className="text-sm text-muted-foreground italic">Use 'primary' para ações principais da página e 'secondary' para destaques de cor ouro.</p>
-            </CathedraCard>
+            </Card>
 
-            <CathedraCard padding="lg" className="space-y-8">
+            <Card padding="lg" className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Tamanhos</h3>
               <div className="flex flex-col gap-4 items-start">
-                <CathedraButton size="sm">Pequeno (sm)</CathedraButton>
-                <CathedraButton size="md">Médio (md)</CathedraButton>
-                <CathedraButton size="lg">Grande (lg)</CathedraButton>
-                <CathedraButton size="xl">Extra Grande (xl)</CathedraButton>
+                <Button size="sm">Pequeno (sm)</Button>
+                <Button size="md">Médio (md)</Button>
+                <Button size="lg">Grande (lg)</Button>
+                <Button size="xl">Extra Grande (xl)</Button>
               </div>
-            </CathedraCard>
+            </Card>
           </div>
         </section>
 
@@ -68,7 +68,7 @@ const DesignSystemGuide: React.FC = () => {
         <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">CathedraCard</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Card</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
@@ -76,29 +76,29 @@ const DesignSystemGuide: React.FC = () => {
             <div className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Variantes de Estilo</h3>
               <div className="space-y-6">
-                <CathedraCard variant="default" className="text-center">
+                <Card variant="default" className="text-center">
                   <p className="text-sm font-bold uppercase tracking-widest text-primary/40 mb-2">Default</p>
                   <p className="font-serif italic">Base sólida para conteúdos de leitura.</p>
-                </CathedraCard>
+                </Card>
                 
-                <CathedraCard variant="interactive" className="text-center">
+                <Card variant="interactive" className="text-center">
                   <p className="text-sm font-bold uppercase tracking-widest text-secondary mb-2">Interactive</p>
                   <p className="font-serif italic">Feedback visual de hover e escala para cards clicáveis.</p>
-                </CathedraCard>
+                </Card>
 
-                <CathedraCard variant="glass" className="text-center">
+                <Card variant="glass" className="text-center">
                   <p className="text-sm font-bold uppercase tracking-widest text-primary/40 mb-2">Glass</p>
                   <p className="font-serif italic">Efeito de desfoque para sobreposições e modais.</p>
-                </CathedraCard>
+                </Card>
               </div>
             </div>
 
             <div className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Sistema de Padding</h3>
               <div className="grid grid-cols-1 gap-4">
-                <CathedraCard padding="sm" className="bg-muted/10 border-dashed">Padding SM (Compacto)</CathedraCard>
-                <CathedraCard padding="md" className="bg-muted/10 border-dashed">Padding MD (Padrão)</CathedraCard>
-                <CathedraCard padding="lg" className="bg-muted/10 border-dashed">Padding LG (Espaçoso)</CathedraCard>
+                <Card padding="sm" className="bg-muted/10 border-dashed">Padding SM (Compacto)</Card>
+                <Card padding="md" className="bg-muted/10 border-dashed">Padding MD (Padrão)</Card>
+                <Card padding="lg" className="bg-muted/10 border-dashed">Padding LG (Espaçoso)</Card>
               </div>
             </div>
           </div>
@@ -112,15 +112,15 @@ const DesignSystemGuide: React.FC = () => {
             <div className="h-px flex-1 bg-border/40" />
           </div>
 
-          <CathedraCard padding="lg" className="bg-secondary/5 border-secondary/20">
+          <Card padding="lg" className="bg-secondary/5 border-secondary/20">
             <ul className="space-y-4 font-serif">
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Cards:</strong> Todos os containers devem usar <code>CathedraCard</code> ou classes <code>rounded-premium shadow-premium</code>.</p>
+                <p><strong>Cards:</strong> Todos os containers devem usar <code>Card</code> ou classes <code>rounded-premium shadow-premium</code>.</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>CathedraButton</code> (ou <code>HomeButton</code> que é o alias compatível).</p>
+                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>Button</code> (ou <code>HomeButton</code> que é o alias compatível).</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
@@ -131,7 +131,7 @@ const DesignSystemGuide: React.FC = () => {
                 <p><strong>Sombras:</strong> Nunca usar <code>shadow-md/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
               </li>
             </ul>
-          </CathedraCard>
+          </Card>
         </section>
       </div>
     </div>

@@ -1,11 +1,10 @@
 import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
-import { HomeCard } from './HomeCard';
+import { CathedraCard   } from './Card';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {
@@ -20,14 +19,11 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <HomeCard
-      as={motion.div}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+    <Card
+      padding="lg"
       className="relative overflow-hidden"
     >
-      <div className="relative z-10 p-8 md:p-12 space-y-8">
+      <div className="space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -79,7 +75,7 @@ const RitualDoDia: React.FC = () => {
           />
         </div>
       </div>
-    </HomeCard>
+    </Card>
   );
 };
 

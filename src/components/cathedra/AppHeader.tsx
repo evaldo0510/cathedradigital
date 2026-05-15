@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { CathedraButton   } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';
@@ -66,7 +67,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               className="h-10 sm:h-12 px-4 sm:px-6"
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
             </Button>
           )}
 
@@ -83,17 +84,17 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               ].map(item => (
                 <Button 
                   key={item.route} 
-                  variant="ghost"
+                  variant={pathname === item.route ? 'primary' : 'ghost'}
                   size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`px-5 py-3 h-auto text-[10px] font-bold uppercase tracking-[0.35em] transition-all whitespace-nowrap relative group shadow-none border-none ${
-                    pathname === item.route ? 'text-primary bg-primary/[0.04] rounded-full' : 'text-muted-foreground/50 hover:text-primary'
-                  }`}
+                  className={cn(
+                    "px-5 py-3 h-auto whitespace-nowrap relative group",
+                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-muted-foreground/50 hover:text-primary'
+                  )}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </Button>
 
               ))}
@@ -104,55 +105,58 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
             }}
-            className="w-10 h-10 sm:w-12 sm:h-12"
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>
             <Icons.Compass className="w-5 h-5" />
           </Button>
 
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={onToggleDark}
-            className="w-10 h-10 sm:w-12 sm:h-12 flex lg:hidden"
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full flex lg:hidden"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
           </Button>
 
           <Button
-            variant={isHighContrast ? "default" : "outline"}
-            size="icon"
+            variant={isHighContrast ? "primary" : "outline"}
+            size="sm"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
-            className={`w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex ${isHighContrast ? 'ring-2 ring-primary ring-offset-1' : ''}`}
+            className={cn(
+              "w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full hidden sm:flex",
+              isHighContrast && 'ring-2 ring-primary ring-offset-1'
+            )}
             aria-label="Configurações de Acessibilidade">
             <Icons.ShieldCheck className="w-5 h-5" />
           </Button>
 
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}
-            className="w-10 h-10 sm:w-12 sm:h-12"
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
           >
             <Icons.Search className="w-5 h-5" />
           </Button>
 
           {user && (
             <Button
-              variant={showNotifs ? "default" : "outline"}
-              size="icon"
+              variant={showNotifs ? "primary" : "outline"}
+              size="sm"
               onClick={() => setShowNotifs(!showNotifs)}
-              className="relative w-10 h-10 sm:w-12 sm:h-12"
+              className="relative w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
               aria-expanded={showNotifs}>
               <Icons.Message className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-premium-tiny font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
                   {unreadCount}
                 </span>
               )}
@@ -163,7 +167,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
-                <Button variant="ghost" size="xs" onClick={markAllRead} className="h-auto p-1 text-premium-tiny font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>
+                <Button variant="ghost" size="sm" onClick={markAllRead} className="h-auto p-1 text-[9px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>
               </div>
               <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
                 {notifications.length > 0 ? (
@@ -242,10 +246,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
 
           <Button
-            variant={isSpeaking ? "default" : "outline"}
-            size="icon"
+            variant={isSpeaking ? "primary" : "outline"}
+            size="sm"
             onClick={onToggleSpeak}
-            className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
+            className={cn(
+              "hidden sm:flex lg:hidden w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full",
+              isSpeaking && 'animate-pulse'
+            )}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
@@ -253,9 +260,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
           <Button
             variant="outline"
-            size="icon"
+            size="sm"
             onClick={onToggleDark}
-            className="hidden lg:flex"
+            className="hidden lg:flex w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
           </Button>

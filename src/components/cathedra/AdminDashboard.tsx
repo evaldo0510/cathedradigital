@@ -9,12 +9,12 @@ import {
   MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
 } from 'lucide-react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraCard    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));

@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { CathedraCard   } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [
@@ -38,9 +38,10 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <HomeCard
-      as="button"
-      className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
+    <Card
+      variant="interactive"
+      padding="lg"
+      className="flex flex-col items-center text-center space-y-6 group w-full"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -52,14 +53,14 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       role="button"
       tabIndex={0}
     >
-      <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
         <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </HomeCard>
+    </Card>
   );
 };
 FeatureCard.displayName = 'FeatureCard';

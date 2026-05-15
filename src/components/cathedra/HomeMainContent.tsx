@@ -33,7 +33,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          className="p-10 md:p-14 lg:p-16 flex flex-col md:flex-row items-center justify-between gap-12 group"
+          padding="lg"
+          className="flex flex-col md:flex-row items-center justify-between gap-12 group"
         >
           <div className="flex items-center gap-10 text-center md:text-left flex-col md:flex-row">
             <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-inner">
@@ -94,7 +95,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          className="p-12 md:p-20 lg:p-24 text-center space-y-12 group"
+          padding="xl"
+          className="text-center space-y-12 group"
         >
           <div className="w-24 h-24 rounded-3xl bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-12 h-12" />
@@ -121,7 +123,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <div className="h-px flex-1 bg-border/30" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          <HomeCard className="p-10 md:p-12 space-y-8 h-full">
+          <HomeCard padding="md" className="space-y-8 h-full">
             <div className="w-12 h-12 rounded-2xl bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
               <Icons.Star className="w-6 h-6" />
             </div>
@@ -134,7 +136,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </HomeButton>
           </HomeCard>
           
-          <HomeCard className="p-10 md:p-12 space-y-8 h-full">
+          <HomeCard padding="md" className="space-y-8 h-full">
             <div className="w-12 h-12 rounded-2xl bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-6 h-6" />
             </div>

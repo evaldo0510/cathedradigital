@@ -2,9 +2,9 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-interface CathedraCardProps extends HTMLMotionProps<"div"> {
-  variant?: 'default' | 'interactive' | 'outline' | 'glass';
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+export interface CathedraCardProps extends HTMLMotionProps<"div"> {
+  variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated';
+  padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
 }
 
@@ -12,10 +12,12 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
     const paddingMap = {
       none: '',
-      sm: 'p-4 sm:p-6',
-      md: 'p-6 sm:p-8',
-      lg: 'p-8 sm:p-12',
-      xl: 'p-10 sm:p-16 lg:p-20',
+      xs: 'p-3 md:p-4',
+      sm: 'p-4 md:p-6',
+      md: 'p-6 md:p-8 lg:p-10',
+      lg: 'p-8 md:p-12 lg:p-16',
+      xl: 'p-12 md:p-16 lg:p-24',
+      '2xl': 'p-16 md:p-24 lg:p-32',
     };
 
     const variantStyles = {
@@ -23,6 +25,8 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
       interactive: 'premium-card-interactive',
       outline: 'bg-transparent border border-border/60 rounded-premium',
       glass: 'bg-background/40 backdrop-blur-xl border border-white/10 rounded-premium shadow-premium',
+      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.02]',
+      elevated: 'premium-card shadow-premium-hover',
     };
 
     return (
@@ -47,4 +51,31 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
 CathedraCard.displayName = "CathedraCard";
 
-export { CathedraCard };
+const CathedraCardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)} {...props} />
+);
+
+const CathedraCardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  <h3 className={cn("text-2xl font-display font-bold leading-none tracking-tight text-primary", className)} {...props} />
+);
+
+const CathedraCardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+  <p className={cn("text-sm text-muted-foreground font-medium", className)} {...props} />
+);
+
+const CathedraCardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("p-0", className)} {...props} />
+);
+
+const CathedraCardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
+);
+
+export { 
+  CathedraCard, 
+  Cathedra  
+  Cathedra  
+  Cathedra  
+  Cathedra  
+  CathedraCardContent 
+};

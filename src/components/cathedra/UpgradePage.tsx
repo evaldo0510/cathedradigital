@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Crown, Sparkles, Target, Library, Compass, ArrowRight, Zap, FlaskConical } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';

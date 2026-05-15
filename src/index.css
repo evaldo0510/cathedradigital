@@ -254,18 +254,18 @@
 
   /* Desktop two-column layout: main content + optional side panel */
   .desktop-layout {
-    @apply w-full;
+    @apply w-full grid grid-cols-1 gap-12 md:gap-16 lg:gap-20;
   }
   @screen lg {
     .desktop-layout {
-      @apply grid gap-10;
-      grid-template-columns: 1fr 320px;
+      grid-template-columns: 1fr 340px;
+      @apply gap-20;
     }
   }
   @screen xl {
     .desktop-layout {
-      grid-template-columns: 1fr 360px;
-      @apply gap-12;
+      grid-template-columns: 1fr 400px;
+      @apply gap-24;
     }
   }
 
@@ -435,5 +435,19 @@
   to {
     transform: scale(1);
     opacity: 0;
+  }
+
+  /* Compatibility layer for remaining non-standard components */
+  .rounded-2xl {
+    @apply rounded-premium-sm;
+  }
+  .rounded-3xl {
+    @apply rounded-premium;
+  }
+  .shadow-xl, .shadow-2xl {
+    @apply shadow-premium;
+  }
+  .shadow-md {
+    @apply shadow-soft;
   }
 }

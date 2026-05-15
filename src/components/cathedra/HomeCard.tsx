@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CathedraCard } from "./CathedraCard";
+import { CathedraCard   } from "@/components/cathedra/Card";
 import { cn } from "@/lib/utils";
 
 interface HomeCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,7 +15,7 @@ const HomeCard = React.forwardRef<
   const isClickable = props.onClick || href || Component === "button" || Component === "a";
   
   return (
-    <CathedraCard
+    <Card
       ref={ref}
       variant={isClickable ? 'interactive' : 'default'}
       padding="none"

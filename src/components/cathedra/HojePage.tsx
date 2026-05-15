@@ -9,6 +9,8 @@ import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
+import { CathedraCard   } from './Card';
+import { CathedraButton   } from './Button';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -124,7 +126,7 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
+    <div className="flex flex-col items-center w-full min-h-screen bg-background section-spacing">
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
@@ -140,7 +142,7 @@ const HojePage: React.FC = () => {
             <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-display text-primary leading-[1.05] tracking-tight">
+            <h1 className="text-5xl md:text-7xl lg:text-9xl font-display text-primary leading-[1.05] tracking-tight">
               Sua jornada espiritual <br />
               <span className="text-secondary italic font-serif">guiada pela Sabedoria.</span>
             </h1>
@@ -160,8 +162,8 @@ const HojePage: React.FC = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-          <div className="lg:col-span-8 stack-spacing">
+        <div className="desktop-layout">
+          <div className="desktop-main stack-spacing">
             {/* CONTINUE JORNADA */}
             {nextUp && (
               <section className="space-y-12">
@@ -172,11 +174,11 @@ const HojePage: React.FC = () => {
                   <div className="h-px flex-1 bg-border/30" />
                 </div>
                 
-                <motion.div 
-                  whileHover={{ y: -8 }}
-                  whileTap={{ scale: 0.995 }}
+                <Card 
+                  variant="interactive"
+                  padding="lg"
                   onClick={() => navigate(nextUp.route)}
-                  className="premium-card-interactive p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 group"
+                  className="flex flex-col md:flex-row items-center justify-between gap-12 group"
                 >
                   <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
                     <div className="w-24 h-24 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
@@ -203,7 +205,7 @@ const HojePage: React.FC = () => {
                   <div className="w-14 h-14 rounded-full border border-border/40 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all shadow-soft">
                     <Icons.ChevronRight className="w-7 h-7" />
                   </div>
-                </motion.div>
+                </Card>
               </section>
             )}
 
@@ -219,7 +221,7 @@ const HojePage: React.FC = () => {
             </section>
           </div>
 
-          <aside className="lg:col-span-4 stack-spacing">
+          <aside className="desktop-aside stack-spacing">
             {/* TEMAS PRINCIPAIS */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
@@ -241,11 +243,11 @@ const HojePage: React.FC = () => {
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
               </div>
-              <motion.div 
-                whileHover={{ y: -8 }}
-                whileTap={{ scale: 0.995 }}
+              <Card 
+                variant="interactive"
+                padding="lg"
                 onClick={() => navigate(AppRoute.CATECHISM)}
-                className="premium-card-interactive p-12 text-center space-y-8"
+                className="text-center space-y-8"
               >
                 <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
@@ -254,7 +256,7 @@ const HojePage: React.FC = () => {
                   <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
                   <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
-              </motion.div>
+              </Card>
             </section>
           </aside>
         </div>

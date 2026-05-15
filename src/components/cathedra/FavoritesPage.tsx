@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';

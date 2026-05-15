@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from "@/components/cathedra/Button";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
