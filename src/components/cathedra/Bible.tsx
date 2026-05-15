@@ -678,9 +678,19 @@ const Bible: React.FC = () => {
                             id={`v${v.number}`}
                             onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
                             className={cn(
-                              "inline transition-all duration-500 cursor-pointer rounded-lg px-1",
+                              "inline transition-all duration-500 cursor-pointer rounded-lg px-1 relative group/verse",
                               highlightedVerse === v.number ? 'bg-primary/10 shadow-[0_0_20px_rgba(0,0,0,0.05)]' : 'hover:bg-primary/5'
                             )}>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); toggleBookmark(v.number); }}
+                              className={cn(
+                                "absolute -left-6 top-1/2 -translate-y-1/2 opacity-0 group-hover/verse:opacity-100 transition-opacity p-1 hover:text-primary",
+                                bookmarks.includes(`${selectedBook?.abbr}_${selectedChapter}_${v.number}`) ? "opacity-100 text-primary" : "text-primary/20"
+                              )}
+                              title="Marcar Versículo"
+                            >
+                              <Bookmark className={cn("w-3.5 h-3.5", bookmarks.includes(`${selectedBook?.abbr}_${selectedChapter}_${v.number}`) && "fill-current")} />
+                            </button>
                             <sup className="text-[0.6em] font-display font-black text-primary/30 mr-2 select-none">{v.number}</sup>
                             {v.text}{' '}
                             {relatedP && (
