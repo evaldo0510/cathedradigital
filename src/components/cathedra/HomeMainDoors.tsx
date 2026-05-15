@@ -45,12 +45,12 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   ];
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8", className)}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ y: -8 }}
+          whileTap={{ scale: 0.995 }}
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -61,14 +61,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-10 md:p-14 rounded-premium border border-border/20 bg-card flex flex-col items-center text-center gap-8 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/10 hover:bg-primary/[0.01]"
+          className="p-10 md:p-14 rounded-premium border border-border/40 bg-card flex flex-col items-center text-center gap-10 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/20 hover:bg-primary/[0.01]"
         >
-          <div className="w-16 h-16 rounded-3xl bg-muted/10 flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-110 transition-all duration-700 border border-border/30">
-            <door.icon className="w-8 h-8" strokeWidth={1.25} />
+          <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-110 transition-all duration-700 border border-border/30">
+            <door.icon className="w-10 h-10" strokeWidth={1.25} />
           </div>
-          <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-[0.3em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
-            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-50 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
+          <div className="space-y-4">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
+            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
           </div>
         </motion.div>
       ))}
