@@ -547,35 +547,32 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                       {/* Description */}
                       {journey.description && (
-                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{journey.description}</p>
+                        <p className="text-base text-primary/60 leading-relaxed line-clamp-2 font-serif italic">{journey.description}</p>
                       )}
 
                       {/* Tags */}
                       {journey.tags && journey.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2 pt-2">
                           {journey.tags.slice(0, 3).map((tag: string) => (
-                            <span key={tag} className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                            <span key={tag} className="text-premium-tiny px-4 py-1 rounded-full bg-primary/[0.01] border border-border/30 text-muted-foreground font-bold uppercase tracking-widest opacity-60">
                               {tag}
                             </span>
                           ))}
-                          {journey.tags.length > 3 && (
-                            <span className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
-                              +{journey.tags.length - 3}
-                            </span>
-                          )}
                         </div>
                       )}
 
                       {/* Meta */}
-                      <div className="flex items-center gap-2 sm:gap-3 text-premium-tiny sm:text-xs text-muted-foreground flex-wrap">
-                        <span className="flex items-center gap-1">
+                      <div className="flex items-center gap-6 text-premium-tiny font-bold uppercase tracking-widest text-primary/30 flex-wrap pt-4">
+                        <span className="flex items-center gap-2">
                           <Icons.Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days}d
                         </span>
-                        <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
-                          {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
+                        <div className="w-1.5 h-1.5 rounded-full bg-border/40" />
+                        <span className="flex items-center gap-2">
+                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Icons.Layout className="w-3.5 h-3.5" /> {totalSteps} etapas
+                        <div className="w-1.5 h-1.5 rounded-full bg-border/40" />
+                        <span className="flex items-center gap-2">
+                          <Icons.LayoutGrid className="w-3.5 h-3.5" /> {totalSteps} etapas
                         </span>
                       </div>
 
