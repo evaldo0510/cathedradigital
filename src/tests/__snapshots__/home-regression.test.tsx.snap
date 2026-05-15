@@ -4,11 +4,12 @@ exports[`Home Page Visual Regression & A11y > Logged In State > should match sna
 <DocumentFragment>
   <div
     class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
-    style="transform: translateY([object Object]);"
   >
     <div
+      animate="[object Object]"
       class="flex justify-center"
-      style="opacity: 0; transform: scale(0.5);"
+      initial="[object Object]"
+      transition="[object Object]"
     >
       <div
         class="relative"
@@ -35,9 +36,11 @@ exports[`Home Page Visual Regression & A11y > Logged In State > should match sna
       </div>
     </div>
     <h1
+      animate="visible"
       aria-label="Nem toda prisão é visível"
       class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      variants="[object Object]"
     >
        Nem toda 
       <br />
@@ -50,8 +53,11 @@ exports[`Home Page Visual Regression & A11y > Logged In State > should match sna
        
     </h1>
     <p
+      animate="visible"
       class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
     >
       Uma plataforma espiritual inteligente guiada pela Tradição viva, 
       <br
@@ -60,8 +66,11 @@ exports[`Home Page Visual Regression & A11y > Logged In State > should match sna
        Sagradas Escrituras e o mestre contemplativo Logos IA.
     </p>
     <div
+      animate="visible"
       class="flex flex-col items-center justify-center gap-6 pt-4"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
     >
       <div
         class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
@@ -69,21 +78,23 @@ exports[`Home Page Visual Regression & A11y > Logged In State > should match sna
         <button
           aria-label="Acessar suas atividades"
           class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          tabindex="0"
+          whiletap="[object Object]"
         >
           Ver Atividades
         </button>
         <button
           aria-label="Ver vídeo de apresentação"
           class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          tabindex="0"
+          whiletap="[object Object]"
         >
           Ver Apresentação
         </button>
       </div>
       <div
+        animate="[object Object]"
         class="w-full max-w-sm flex flex-col gap-3"
-        style="opacity: 0;"
+        initial="[object Object]"
+        transition="[object Object]"
       />
       <div
         class="flex items-center gap-3 opacity-40"
@@ -711,11 +722,12 @@ exports[`Home Page Visual Regression & A11y > Logged Out State > should match sn
 <DocumentFragment>
   <div
     class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
-    style="transform: translateY([object Object]);"
   >
     <div
+      animate="[object Object]"
       class="flex justify-center"
-      style="opacity: 0; transform: scale(0.5);"
+      initial="[object Object]"
+      transition="[object Object]"
     >
       <div
         class="relative"
@@ -742,9 +754,11 @@ exports[`Home Page Visual Regression & A11y > Logged Out State > should match sn
       </div>
     </div>
     <h1
+      animate="visible"
       aria-label="Nem toda prisão é visível"
       class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      variants="[object Object]"
     >
        Nem toda 
       <br />
@@ -757,8 +771,11 @@ exports[`Home Page Visual Regression & A11y > Logged Out State > should match sn
        
     </h1>
     <p
+      animate="visible"
       class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
     >
       Uma plataforma espiritual inteligente guiada pela Tradição viva, 
       <br
@@ -767,8 +784,11 @@ exports[`Home Page Visual Regression & A11y > Logged Out State > should match sn
        Sagradas Escrituras e o mestre contemplativo Logos IA.
     </p>
     <div
+      animate="visible"
       class="flex flex-col items-center justify-center gap-6 pt-4"
-      style="opacity: 0; transform: translateY(20px);"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
     >
       <div
         class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
@@ -776,21 +796,23 @@ exports[`Home Page Visual Regression & A11y > Logged Out State > should match sn
         <button
           aria-label="Iniciar sua jornada espiritual"
           class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          tabindex="0"
+          whiletap="[object Object]"
         >
           Iniciar Jornada
         </button>
         <button
           aria-label="Ver vídeo de apresentação"
           class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          tabindex="0"
+          whiletap="[object Object]"
         >
           Ver Apresentação
         </button>
       </div>
       <div
+        animate="[object Object]"
         class="w-full max-w-sm flex flex-col gap-3"
-        style="opacity: 0;"
+        initial="[object Object]"
+        transition="[object Object]"
       />
       <div
         class="flex items-center gap-3 opacity-40"
