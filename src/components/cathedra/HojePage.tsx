@@ -229,7 +229,7 @@ const HojePage: React.FC = () => {
                 <div className="h-px flex-1 bg-border/40" />
               </div>
               <div className="grid grid-cols-1 gap-6">
-                <HomeMainDoors t={t} variant="sidebar" />
+                <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-1" />
               </div>
             </section>
 
