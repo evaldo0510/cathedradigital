@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { 
   Search, X, BookOpen, Brain
 } from 'lucide-react';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import AZFaithQuiz from './AZFaithQuiz';
 import { useGlossary } from '@/hooks/useGlossary';
 import AlphabetBar from './encyclopedia/AlphabetBar';

@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { CathedraCard } from "@/components/cathedra/CathedraCard";
+import { CathedraCard as Card } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -24,7 +24,7 @@ const TestimonialsSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.slice(0, 3).map((t) => (
-            <CathedraCard
+            <Card
               key={t.name}
               padding="lg"
               className="space-y-8 flex flex-col"
@@ -43,7 +43,7 @@ const TestimonialsSection = () => {
                   <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
-            </CathedraCard>
+            </Card>
           ))}
         </div>
       </div>

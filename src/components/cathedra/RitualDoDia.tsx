@@ -4,7 +4,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
-import { CathedraCard } from './CathedraCard';
+import { CathedraCard as Card } from './Card';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {
@@ -19,7 +19,7 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <CathedraCard
+    <Card
       padding="lg"
       className="relative overflow-hidden"
     >
@@ -75,7 +75,7 @@ const RitualDoDia: React.FC = () => {
           />
         </div>
       </div>
-    </CathedraCard>
+    </Card>
   );
 };
 

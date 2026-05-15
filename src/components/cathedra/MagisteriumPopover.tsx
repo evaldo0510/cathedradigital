@@ -1,9 +1,9 @@
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import {
   HoverCard,
-  HoverCathedraCardContent as CardContent,
+  HoverCardContent  ,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Icons } from '../../constants';
@@ -73,7 +73,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
           {label}
         </Button>
       </HoverCardTrigger>
-      <HoverCathedraCardContent as CardContent
+      <HoverCardContent  
         side="top"
         align="start"
         className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-emerald-200 dark:border-emerald-800"
@@ -113,7 +113,7 @@ const MagisteriumPopover: React.FC<MagisteriumPopoverProps> = ({
             <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
-      </HoverCathedraCardContent as CardContent>
+      </HoverCardContent  >
     </HoverCard>
   );
 };

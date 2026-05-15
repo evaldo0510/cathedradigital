@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useLang } from '@/hooks/useLang';
 

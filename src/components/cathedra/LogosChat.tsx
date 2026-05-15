@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Book, Sparkles } from 'lucide-react';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Message {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CathedraButton as Button } from '@/components/ui/button';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardFooter as CardFooter, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
+import { Button   } from '@/components/ui/button';
+import { CathedraCard as Card  , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';

@@ -7,7 +7,7 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { CathedraCard as Card  , CardContent   } from '@/components/ui/card';
 import { RelevanceBadge } from './RelevanceBadge';
 import { cn } from '@/lib/utils';
 

@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader } from '@/components/ui/card';
+import { CathedraCard as Card  , CardContent  , CardHeader   } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RechartsCharts = lazy(() => import('./AdminChartsRecharts'));

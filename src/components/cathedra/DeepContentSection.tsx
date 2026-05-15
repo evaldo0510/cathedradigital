@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { DeepContent, AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Lock } from 'lucide-react';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';

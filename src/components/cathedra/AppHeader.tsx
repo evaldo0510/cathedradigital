@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
-import { CathedraButton } from './CathedraButton';
+import { CathedraButton as Button } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';
@@ -60,7 +60,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
           
           {!isDashboard && (
-            <CathedraButton
+            <Button
               variant="outline"
               size="sm"
               onClick={() => navigate(-1)}
@@ -68,7 +68,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             >
               <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
               <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
-            </CathedraButton>
+            </Button>
           )}
 
           {isDashboard && (
@@ -82,7 +82,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
               ].map(item => (
-                <CathedraButton 
+                <Button 
                   key={item.route} 
                   variant={pathname === item.route ? 'primary' : 'ghost'}
                   size="sm"
@@ -95,7 +95,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
-                </CathedraButton>
+                </Button>
 
               ))}
             </nav>
@@ -103,7 +103,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
-          <CathedraButton
+          <Button
             variant="outline"
             size="sm"
             onClick={() => {
@@ -113,18 +113,18 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>
             <Icons.Compass className="w-5 h-5" />
-          </CathedraButton>
+          </Button>
 
-          <CathedraButton
+          <Button
             variant="outline"
             size="sm"
             onClick={onToggleDark}
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full flex lg:hidden"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
-          </CathedraButton>
+          </Button>
 
-          <CathedraButton
+          <Button
             variant={isHighContrast ? "primary" : "outline"}
             size="sm"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
@@ -134,9 +134,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             )}
             aria-label="Configurações de Acessibilidade">
             <Icons.ShieldCheck className="w-5 h-5" />
-          </CathedraButton>
+          </Button>
 
-          <CathedraButton
+          <Button
             variant="outline"
             size="sm"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
@@ -144,10 +144,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
           >
             <Icons.Search className="w-5 h-5" />
-          </CathedraButton>
+          </Button>
 
           {user && (
-            <CathedraButton
+            <Button
               variant={showNotifs ? "primary" : "outline"}
               size="sm"
               onClick={() => setShowNotifs(!showNotifs)}
@@ -160,14 +160,14 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   {unreadCount}
                 </span>
               )}
-            </CathedraButton>
+            </Button>
           )}
           
           {showNotifs && user && (
             <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
-                <CathedraButton variant="ghost" size="sm" onClick={markAllRead} className="h-auto p-1 text-[9px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</CathedraButton>
+                <Button variant="ghost" size="sm" onClick={markAllRead} className="h-auto p-1 text-[9px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>
               </div>
               <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
                 {notifications.length > 0 ? (
@@ -192,7 +192,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {user && user.role === 'admin' && (
-            <CathedraButton 
+            <Button 
               variant="secondary"
               size="sm"
               onClick={() => navigate(AppRoute.ADMIN)} 
@@ -200,18 +200,18 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             >
               <Icons.Star className="w-4 h-4" />
               <span>{t('admin')}</span>
-            </CathedraButton>
+            </Button>
           )}
 
           {user ? (
-            <CathedraButton 
+            <Button 
               variant="ghost" 
               size="sm"
               onClick={onSignOut} 
               className="hidden sm:block lg:hidden h-10 text-muted-foreground hover:text-primary transition-all shadow-none"
             >
               {t('exit_session')}
-            </CathedraButton>
+            </Button>
           ) : (
             <div className="flex items-center gap-2">
               <div className="hidden md:block">
@@ -220,12 +220,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   text="Google"
                 />
               </div>
-              <CathedraButton 
+              <Button 
                 onClick={() => navigate(AppRoute.LOGIN)} 
                 className="h-10 px-4 sm:px-6 shadow-lg active:scale-95"
               >
                 {t('enter')}
-              </CathedraButton>
+              </Button>
             </div>
           )}
 
@@ -245,7 +245,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </select>
           </div>
 
-          <CathedraButton
+          <Button
             variant={isSpeaking ? "primary" : "outline"}
             size="sm"
             onClick={onToggleSpeak}
@@ -256,16 +256,16 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
             {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
-          </CathedraButton>
+          </Button>
 
-          <CathedraButton
+          <Button
             variant="outline"
             size="sm"
             onClick={onToggleDark}
             className="hidden lg:flex w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             aria-label="Alternar tema">
             {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
-          </CathedraButton>
+          </Button>
 
 
         </div>

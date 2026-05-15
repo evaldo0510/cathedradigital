@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-interface CathedraCardProps extends HTMLMotionProps<"div"> {
+export interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated';
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
@@ -51,31 +51,31 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
 CathedraCard.displayName = "CathedraCard";
 
-const CathedraCardHeader as CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)} {...props} />
 );
 
-const CathedraCardTitle as CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+const CathedraCardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h3 className={cn("text-2xl font-display font-bold leading-none tracking-tight text-primary", className)} {...props} />
 );
 
-const CathedraCardDescription as CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+const CathedraCardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
   <p className={cn("text-sm text-muted-foreground font-medium", className)} {...props} />
 );
 
-const CathedraCardContent as CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("p-0", className)} {...props} />
 );
 
-const CathedraCardFooter as CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CathedraCardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
 );
 
 export { 
   CathedraCard, 
-  CathedraCardHeader as CardHeader, 
-  CathedraCardFooter as CardFooter, 
-  CathedraCardTitle as CardTitle, 
-  CathedraCardDescription as CardDescription, 
-  CathedraCardContent as CardContent 
+  CathedraCardHeader, 
+  CathedraCardFooter, 
+  CathedraCardTitle, 
+  CathedraCardDescription, 
+  CathedraCardContent 
 };

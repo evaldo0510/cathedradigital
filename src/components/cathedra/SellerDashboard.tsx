@@ -1,5 +1,5 @@
 import React from 'react';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
+import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Store } from 'lucide-react';

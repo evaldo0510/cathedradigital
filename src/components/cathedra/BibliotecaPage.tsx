@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
 import { ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { CathedraCard as Card  , CardContent   } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 

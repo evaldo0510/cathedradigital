@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { CathedraButton as Button } from '@/components/ui/button';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
+import { Button   } from '@/components/ui/button';
+import { CathedraCard as Card  , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { 
   getAllFromStore, 
   deleteFromStore, 

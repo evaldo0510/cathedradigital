@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, Lock, Clock, BookOpen, Hand, PenLine, HelpCircle, ChevronRight, Sparkles, Award, PartyPopper } from 'lucide-react';
-import { CathedraCard } from './CathedraCard';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card } from './Card';
+import { Button   } from '@/components/ui/button';
 import { Icons } from '../../constants';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { CathedraCard as Card  , CardContent   } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
@@ -113,7 +113,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <CathedraCard className="border-primary/20">
+      <Card className="border-primary/20">
         <CardContent className="p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>
@@ -125,7 +125,7 @@ const JornadaDetailPage: React.FC = () => {
             <span className="capitalize">{journey.difficulty}</span>
           </div>
         </CardContent>
-      </CathedraCard>
+      </Card>
 
       {/* Description */}
       {journey.description && (

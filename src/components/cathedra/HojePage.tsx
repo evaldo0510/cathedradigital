@@ -9,8 +9,8 @@ import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
-import { CathedraCard } from './CathedraCard';
-import { CathedraButton } from './CathedraButton';
+import { CathedraCard as Card } from './Card';
+import { CathedraButton as Button } from './Button';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -174,7 +174,7 @@ const HojePage: React.FC = () => {
                   <div className="h-px flex-1 bg-border/30" />
                 </div>
                 
-                <CathedraCard 
+                <Card 
                   variant="interactive"
                   padding="lg"
                   onClick={() => navigate(nextUp.route)}
@@ -205,7 +205,7 @@ const HojePage: React.FC = () => {
                   <div className="w-14 h-14 rounded-full border border-border/40 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all shadow-soft">
                     <Icons.ChevronRight className="w-7 h-7" />
                   </div>
-                </CathedraCard>
+                </Card>
               </section>
             )}
 
@@ -243,7 +243,7 @@ const HojePage: React.FC = () => {
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
               </div>
-              <CathedraCard 
+              <Card 
                 variant="interactive"
                 padding="lg"
                 onClick={() => navigate(AppRoute.CATECHISM)}
@@ -256,7 +256,7 @@ const HojePage: React.FC = () => {
                   <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
                   <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
-              </CathedraCard>
+              </Card>
             </section>
           </aside>
         </div>

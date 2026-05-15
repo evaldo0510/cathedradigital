@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
-import { CathedraButton } from "@/components/cathedra/CathedraButton";
-import { CathedraCard } from "@/components/cathedra/CathedraCard";
+import { CathedraButton as Button } from "@/components/cathedra/CathedraButton";
+import { CathedraCard as Card } from "@/components/cathedra/Card";
 import { fadeUp, buttonHover } from "./animations";
 
 const registerBenefits = [
@@ -61,7 +61,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
             {registerBenefits.map((benefit, i) => (
-              <CathedraCard 
+              <Card 
                 key={benefit.title} 
                 variant="interactive" 
                 padding="sm" 
@@ -74,14 +74,14 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
                   <h3 className="font-bold text-lg">{benefit.title}</h3>
                   <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
                 </div>
-              </CathedraCard>
+              </Card>
             ))}
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <CathedraButton size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <Button size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
               Criar Conta Gratuitamente
-            </CathedraButton>
+            </Button>
           </motion.div>
         </div>
 

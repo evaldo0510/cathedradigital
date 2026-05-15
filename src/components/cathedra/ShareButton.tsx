@@ -1,7 +1,7 @@
 import React from 'react';
 import { Share2 } from 'lucide-react';
 import { useShare } from '@/hooks/useShare';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 
 interface ShareButtonProps {
   title: string;

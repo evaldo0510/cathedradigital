@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card  , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Button   } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const DiagnosticsPage: React.FC = () => {

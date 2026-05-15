@@ -20,11 +20,11 @@ import { Progress } from '@/components/ui/progress';
 import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { CathedraButton as Button } from './CathedraButton';
+import { Button   } from './Button';
 import { 
   Card,
-  CathedraCardContent as CardContent as CathedraCardContent as CardContent
-} from './CathedraCard';
+  CardContent   as CardContent  
+} from './Card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';

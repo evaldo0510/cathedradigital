@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import SEOHead from '@/components/SEOHead';

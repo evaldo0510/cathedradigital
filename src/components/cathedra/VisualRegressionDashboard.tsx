@@ -5,8 +5,8 @@ import {
   ArrowRight, ShieldAlert, Type, Grid, Layout, 
   ChevronRight, ExternalLink, RefreshCw
 } from 'lucide-react';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card  , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Button   } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

@@ -2,14 +2,14 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-interface CathedraButtonProps extends HTMLMotionProps<"button"> {
+interface ButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'default';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   icon?: React.ReactNode;
 }
 
-const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
     const sizeMap = {
       sm: 'px-6 py-2.5 text-[10px] sm:text-[11px]',
@@ -51,6 +51,6 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   }
 );
 
-CathedraButton.displayName = "CathedraButton";
+Button.displayName = "Button";
 
-export { CathedraButton };
+export { Button };

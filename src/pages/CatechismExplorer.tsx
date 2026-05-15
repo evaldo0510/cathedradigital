@@ -5,8 +5,8 @@ import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { Icons } from '@/constants';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { CathedraCard } from '@/components/cathedra/CathedraCard';
-import { CathedraButton } from '@/components/cathedra/CathedraButton';
+import { CathedraCard as Card } from '@/components/cathedra/Card';
+import { CathedraButton as Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -133,7 +133,7 @@ const CatechismExplorer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <CathedraCard padding="sm" variant="outline" className="space-y-2">
+          <Card padding="sm" variant="outline" className="space-y-2">
             <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
               <span className="text-foreground">{allParagraphs.length}</span>
@@ -142,7 +142,7 @@ const CatechismExplorer: React.FC = () => {
               <span>Filtrados</span>
               <span className="font-black">{filteredParagraphs.length}</span>
             </div>
-          </CathedraCard>
+          </Card>
 
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary font-bold uppercase text-premium-tiny tracking-widest">
@@ -166,7 +166,7 @@ const CatechismExplorer: React.FC = () => {
                   const currentCount = dynamicTagCounts[tag] || 0;
                   const isSelected = selectedTags.includes(tag);
                   return (
-                    <CathedraButton
+                    <Button
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       disabled={currentCount === 0 && !isSelected}
@@ -186,7 +186,7 @@ const CatechismExplorer: React.FC = () => {
                           <span className="text-[9px] opacity-40">/ {totalCount}</span>
                         )}
                       </div>
-                    </CathedraButton>
+                    </Button>
                   );
                 })}
               </div>
@@ -201,7 +201,7 @@ const CatechismExplorer: React.FC = () => {
               {filteredParagraphs.length} resultados encontrados
             </div>
             <div className="flex items-center gap-2">
-              <CathedraButton 
+              <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={toggleSort}
@@ -209,7 +209,7 @@ const CatechismExplorer: React.FC = () => {
               >
                 <Icons.ArrowDown className={`w-3 h-3 mr-2 transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
                 {sortBy === 'number-asc' ? 'Crescente' : 'Decrescente'}
-              </CathedraButton>
+              </Button>
             </div>
           </div>
 
@@ -224,7 +224,7 @@ const CatechismExplorer: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <CathedraCard 
+                  <Card 
                     variant="interactive"
                     padding="sm"
                     onClick={() => navigate(`/catechism?p=${p.paragraph}`)}
@@ -248,19 +248,19 @@ const CatechismExplorer: React.FC = () => {
                       </div>
                       <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all self-center" />
                     </div>
-                  </CathedraCard>
+                  </Card>
                 </motion.div>
               ))}
 
               {filteredParagraphs.length === 0 && (
-                <CathedraCard padding="xl" variant="outline" className="text-center border-2 border-dashed">
+                <Card padding="xl" variant="outline" className="text-center border-2 border-dashed">
                   <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
                   <h3 className="font-bold">Nenhum parágrafo encontrado</h3>
                   <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
-                  <CathedraButton variant="ghost" onClick={clearAll} className="mt-4">
+                  <Button variant="ghost" onClick={clearAll} className="mt-4">
                     Limpar tudo
-                  </CathedraButton>
-                </CathedraCard>
+                  </Button>
+                </Card>
               )}
             </div>
           </AnimatePresence>
@@ -268,25 +268,25 @@ const CatechismExplorer: React.FC = () => {
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 pt-8">
-              <CathedraButton 
+              <Button 
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
               >
                 Anterior
-              </CathedraButton>
+              </Button>
               <div className="text-premium-small font-bold px-4">
                 Página {currentPage} de {totalPages}
               </div>
-              <CathedraButton 
+              <Button 
                 variant="outline" 
                 size="sm" 
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
               >
                 Próxima
-              </CathedraButton>
+              </Button>
             </div>
           )}
         </div>
