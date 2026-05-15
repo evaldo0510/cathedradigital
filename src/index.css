@@ -42,7 +42,7 @@
     --card-foreground: 45 42% 96%;
     --popover: 222 47% 5%;
     --popover-foreground: 45 42% 96%;
-    --primary: 45 80% 65%;       /* Lighter Gold for WCAG AAA (approx 7.5:1 on deep blue) */
+    --primary: 45 80% 70%;
     --primary-foreground: 222 47% 4%;
     --secondary: 222 30% 12%;
     --secondary-foreground: 45 80% 65%;
