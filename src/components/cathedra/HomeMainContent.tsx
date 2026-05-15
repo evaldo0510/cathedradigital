@@ -131,36 +131,36 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </HomeCard>
       </section>
 
-      {/* 5. LOGOS IA */}
+      {/* 5. LOGOS */}
       <section className="space-y-12" aria-labelledby="section-logos">
         <div className="section-divider-header">
           <h2 id="section-logos" className="heading-section-label whitespace-nowrap">
-            Logos IA
+            Logos
           </h2>
           <div className="divider-line" />
         </div>
         
         <HomeCard 
           padding="lg"
-          className="group transition-all duration-1000 border-secondary/20 bg-secondary/[0.01]"
+          className="group transition-all duration-1000 border-primary/5 bg-primary/[0.01]"
           onClick={() => {
             const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
             if (chatBtn) chatBtn.click();
           }}
         >
           <div className="flex flex-col md:flex-row gap-12 items-center text-center md:text-left">
-            <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-primary-foreground shadow-gold group-hover:scale-110 transition-all duration-700 shrink-0">
-              <Icons.Sparkles className="w-10 h-10" aria-hidden="true" />
+            <div className="w-20 h-20 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-all duration-700 shrink-0">
+              <Icons.Compass className="w-10 h-10" aria-hidden="true" />
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="heading-card">Assistente Contemplativo</h3>
-                <p className="mt-4 text-base text-primary/50 leading-relaxed max-w-xl">
-                  Tire dúvidas sobre a fé, peça reflexões ou auxílio para sua oração com nossa inteligência espiritual.
+                <h3 className="heading-card">Mestre Contemplativo</h3>
+                <p className="mt-4 text-base text-primary/40 leading-relaxed max-w-xl font-serif italic">
+                  "O Verbo se fez carne e habitou entre nós." — Diálogos teológicos para iluminar sua caminhada de fé.
                 </p>
               </div>
-              <HomeButton variant="secondary" className="w-full md:w-auto px-12" aria-label="Conversar com Logos IA">
-                Iniciar Conversa
+              <HomeButton variant="outline" className="w-full md:w-auto px-12" aria-label="Dialogar com Logos">
+                Dialogar
               </HomeButton>
             </div>
           </div>
