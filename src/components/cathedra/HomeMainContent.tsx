@@ -21,14 +21,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
   return (
     <div className="content-section">
-      <div className="premium-grid-2">
+      <div className="premium-grid-2 px-4 sm:px-6 lg:px-8">
         {/* CONTINUE JORNADA */}
-        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-jornada">
-          <div className="flex items-center gap-6">
+        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-jornada">
+          <div className="section-divider-header">
             <h2 id="section-jornada" className="heading-section-label whitespace-nowrap">
               Jornada
             </h2>
-            <div className="h-px flex-1 bg-white/[0.08]" />
+            <div className="divider-line" />
           </div>
           
           <HomeCard
