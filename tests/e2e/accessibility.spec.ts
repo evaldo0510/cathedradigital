@@ -122,6 +122,19 @@ test.describe('Global Accessibility & Contrast Audit', () => {
       <body>
         <h1>Accessibility Audit Summary</h1>
         <p>Threshold: Max ${MAX_CRITICAL_ERRORS} critical errors allowed.</p>
+        
+        <section>
+          <h2>Hero Visuals across Breakpoints</h2>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            ${['mobile', 'sm', 'md', 'lg'].flatMap(v => ['light', 'dark'].map(t => `
+              <div class="card">
+                <h4>Hero - ${t.toUpperCase()} - ${v.toUpperCase()}</h4>
+                <img src="hero-visuals/hero-${t}-${v}.png" alt="Hero ${t} ${v}">
+              </div>
+            `)).join('')}
+          </div>
+        </section>
+
         ${a11ySummary.map(s => {
           const imageFile = s.component 
             ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
