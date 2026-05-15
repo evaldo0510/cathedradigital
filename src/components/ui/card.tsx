@@ -22,11 +22,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 
     const variantStyles = {
       default: 'premium-card',
-      interactive: 'premium-card-interactive',
-      outline: 'bg-transparent border border-border/60 rounded-premium hover:border-primary/20 transition-all duration-300',
-      glass: 'bg-background/40 backdrop-blur-xl border border-white/10 rounded-premium shadow-premium',
-      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.02] transition-colors duration-300',
-      elevated: 'premium-card shadow-premium-hover border-primary/5',
+      interactive: 'premium-card-interactive group',
+      outline: 'bg-transparent border border-border/60 rounded-premium hover:border-primary/20 hover:bg-primary/[0.01] transition-all duration-700',
+      glass: 'bg-background/40 backdrop-blur-2xl border border-white/10 rounded-premium shadow-premium',
+      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.03] transition-colors duration-500',
+      elevated: 'premium-card shadow-premium-hover border-primary/5 bg-card/80',
     };
 
     return (
