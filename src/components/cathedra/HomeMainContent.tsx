@@ -6,7 +6,7 @@ import { Icons } from '@/constants';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
 import RitualDoDia from './RitualDoDia';
-import HomeMainDoors from './HomeMainDoors';
+// HomeMainDoors removed for minimalism
 import { SectionSkeleton } from './HomeSkeletons';
 
 interface HomeMainContentProps {
