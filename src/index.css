@@ -254,18 +254,18 @@
 
   /* Desktop two-column layout: main content + optional side panel */
   .desktop-layout {
-    @apply w-full grid grid-cols-1 gap-12 md:gap-16 lg:gap-20;
+    @apply w-full grid grid-cols-1 gap-14 md:gap-20 lg:gap-24;
   }
   @screen lg {
     .desktop-layout {
-      grid-template-columns: 1fr 340px;
-      @apply gap-20;
+      grid-template-columns: 1fr 360px;
+      @apply gap-24;
     }
   }
   @screen xl {
     .desktop-layout {
-      grid-template-columns: 1fr 400px;
-      @apply gap-24;
+      grid-template-columns: 1fr 420px;
+      @apply gap-32;
     }
   }
 
