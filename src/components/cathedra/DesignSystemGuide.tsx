@@ -159,12 +159,14 @@ const ComponentPlayground = () => {
 
 const DesignSystemGuide = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
+  const [isHighContrast, setIsHighContrast] = useState(() => document.documentElement.classList.contains('high-contrast'));
 
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
           setIsDarkMode(document.documentElement.classList.contains('dark'));
+          setIsHighContrast(document.documentElement.classList.contains('high-contrast'));
         }
       });
     });
@@ -174,14 +176,13 @@ const DesignSystemGuide = () => {
   }, []);
 
   const toggleMode = () => {
-    const newMode = !isDarkMode;
-    // Dispatch event to sync with App.tsx state if necessary, 
-    // though App.tsx should handle class changes
-    if (newMode) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-    
-    // Save to localStorage for persistence consistency
-    localStorage.setItem('cathedra_dark', newMode ? 'true' : 'false');
+    if (isDarkMode) document.documentElement.classList.remove('dark');
+    else document.documentElement.classList.add('dark');
+  };
+
+  const toggleHighContrast = () => {
+    if (isHighContrast) document.documentElement.classList.remove('high-contrast');
+    else document.documentElement.classList.add('high-contrast');
   };
 
   return (
@@ -189,7 +190,15 @@ const DesignSystemGuide = () => {
       <div className="max-w-5xl mx-auto space-y-24">
         {/* Header */}
         <header className="space-y-8 text-center py-10 md:py-20">
-          <div className="flex justify-end mb-12">
+          <div className="flex flex-wrap justify-center md:justify-end gap-4 mb-12">
+            <Button 
+              onClick={toggleHighContrast} 
+              variant={isHighContrast ? "default" : "outline"}
+              className="rounded-full gap-3 border-border/20 px-6 h-12"
+            >
+              <Icons.ShieldCheck className={`w-5 h-5 ${isHighContrast ? 'text-primary-foreground' : 'text-primary'}`} />
+              <span className="text-[10px] font-bold uppercase tracking-widest">{isHighContrast ? 'Desativar Alto Contraste' : 'Ativar Alto Contraste'}</span>
+            </Button>
             <Button 
               onClick={toggleMode} 
               variant="outline" 
