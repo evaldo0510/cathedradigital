@@ -108,25 +108,25 @@ const SpiritualJournalPage = () => {
               <button
                 key={m.id}
                 onClick={() => setMood(m.id)}
-                className={`flex flex-col items-center gap-2 p-4 rounded-3xl border transition-all ${
+                className={`flex flex-col items-center gap-3 p-5 rounded-premium-sm border transition-all duration-500 ${
                   mood === m.id 
-                    ? 'bg-primary border-primary text-primary-foreground shadow-lg scale-110' 
-                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-gold scale-105' 
+                    : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
                 }`}
               >
-                <m.icon className="w-6 h-6" />
+                <m.icon className="w-7 h-7" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">{m.label}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-            className="min-h-[200px] rounded-[2rem] border-border/40 p-8 font-serif text-lg leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
+            className="min-h-[250px] rounded-premium border-border/40 p-10 font-serif text-xl leading-relaxed focus-visible:ring-primary/20 bg-muted/20"
           />
           <div className="flex justify-center">
             <Button 
