@@ -233,9 +233,9 @@ const DesignSystemGuide = () => {
                 <div className="space-y-4">
                   <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Icon Only</p>
                   <div className="flex gap-4">
-                    <Button size="icon"><Icons.Plus /></Button>
-                    <Button size="icon" variant="outline"><Icons.Search /></Button>
-                    <Button size="icon" variant="ghost"><Icons.Menu /></Button>
+                    <Button size="icon"><Icons.Plus className="w-4 h-4" /></Button>
+                    <Button size="icon" variant="outline"><Icons.Search className="w-4 h-4" /></Button>
+                    <Button size="icon" variant="ghost"><Icons.Menu className="w-4 h-4" /></Button>
                   </div>
                 </div>
               </div>
