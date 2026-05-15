@@ -169,7 +169,7 @@ const HojePage: React.FC = () => {
             {nextUp && (
               <section className="space-y-12">
                 <div className="flex items-center gap-8">
-                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
                     Memória da Jornada
                   </h2>
                   <div className="h-px flex-1 bg-border/30" />
