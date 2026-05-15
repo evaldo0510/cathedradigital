@@ -44,7 +44,7 @@ const AparicoesPage: React.FC = () => {
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
           </Button>
-          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-md" loading="lazy" />
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-soft" loading="lazy" />
         </div>
 
         {/* Quick facts */}
@@ -55,7 +55,7 @@ const AparicoesPage: React.FC = () => {
             { label: 'Festa Litúrgica', value: selectedApparition.liturgicalFeast },
             { label: 'Status', value: selectedApparition.approved ? 'Aprovada pela Igreja' : 'Em análise' },
           ].map(fact => (
-            <div key={fact.label} className="p-3 rounded-2xl bg-card border border-border">
+            <div key={fact.label} className="p-3 rounded-premium-sm bg-card border border-border">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
               <p className="text-xs font-semibold text-foreground">{fact.value}</p>
             </div>
@@ -63,7 +63,7 @@ const AparicoesPage: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-muted rounded-2xl">
+        <div className="flex gap-1 p-1 bg-muted rounded-premium-sm">
           {[
             { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
             { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
@@ -164,7 +164,7 @@ const AparicoesPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Heart className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Aparições Marianas</span>
         </div>
@@ -234,7 +234,7 @@ const AparicoesPage: React.FC = () => {
       </div>
 
       {/* Catechism reference */}
-      <div className="bg-card border border-border rounded-2xl p-6 text-center space-y-3">
+      <div className="bg-card border border-border rounded-premium-sm p-6 text-center space-y-3">
         <Icons.Cross className="w-6 h-6 text-primary mx-auto" />
         <h3 className="font-serif font-bold text-foreground">Fundamentação no Catecismo</h3>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">

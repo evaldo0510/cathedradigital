@@ -42,7 +42,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
         <div className="relative group">
           <div className="relative">
             {/* Avatar container - Softer border and background */}
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-[2rem] overflow-hidden border border-white/[0.03] bg-white/[0.02] mx-auto shadow-2xl transition-all duration-1000 group-hover:border-white/[0.08]">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-[2rem] overflow-hidden border border-white/[0.03] bg-white/[0.02] mx-auto shadow-premium transition-all duration-1000 group-hover:border-white/[0.08]">
               <img src={logosAvatar} alt="Logos — Mestre Contemplativo" className="w-full h-full object-cover grayscale-[0.2] contrast-[1.02] opacity-80 group-hover:opacity-100 transition-opacity duration-1000" loading="eager" />
             </div>
           </div>
@@ -97,7 +97,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           
           <HomeButton
             variant="outline"
-            className="w-full sm:w-auto h-16 px-10 text-sm uppercase tracking-[0.2em] font-bold border-white/5 hover:bg-white/[0.02]"
+            className="w-full sm:w-auto h-16 px-10 text-sm uppercase tracking-[0.2em] font-bold border-white/[0.05] hover:bg-white/[0.02]"
             onClick={scrollToVideo}
             aria-label="Ver vídeo de apresentação"
           >

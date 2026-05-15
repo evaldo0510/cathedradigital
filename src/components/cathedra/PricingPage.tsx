@@ -56,9 +56,9 @@ const PricingPage: React.FC = () => {
       <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-16">
         {/* Free */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
-          <Card className="h-full rounded-2xl border-border/50 bg-card shadow-lg">
+          <Card className="h-full rounded-premium-sm border-border/50 bg-card shadow-lg">
             <CardHeader className="text-center pb-2 space-y-4">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center">
+              <div className="w-14 h-14 mx-auto rounded-premium-sm bg-muted flex items-center justify-center">
                 <Zap className="w-7 h-7 text-muted-foreground" />
               </div>
               <CardTitle className="text-2xl font-serif">Peregrino</CardTitle>
@@ -94,12 +94,12 @@ const PricingPage: React.FC = () => {
 
         {/* Pro */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={1}>
-          <Card className="h-full rounded-2xl border-primary/30 bg-card shadow-xl ring-2 ring-primary/10 relative overflow-hidden">
+          <Card className="h-full rounded-premium-sm border-primary/30 bg-card shadow-premium ring-2 ring-primary/10 relative overflow-hidden">
             <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
               Recomendado
             </div>
             <CardHeader className="text-center pb-2 space-y-4">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center">
+              <div className="w-14 h-14 mx-auto rounded-premium-sm bg-primary/10 flex items-center justify-center">
                 <Sparkles className="w-7 h-7 text-primary" />
               </div>
               <CardTitle className="text-2xl font-serif">Cathedra PRO</CardTitle>
@@ -136,7 +136,7 @@ const PricingPage: React.FC = () => {
       {/* Comparison table */}
       <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-display font-bold text-center mb-8">Comparativo Detalhado</h2>
-        <div className="rounded-2xl border border-border/50 overflow-hidden bg-card shadow-sm">
+        <div className="rounded-premium-sm border border-border/50 overflow-hidden bg-card shadow-sm">
           <div className="grid grid-cols-3 bg-muted/30 px-6 py-4 border-b border-border/30">
             <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Recurso</span>
             <span className="text-xs font-black uppercase tracking-widest text-center text-muted-foreground">Grátis</span>
@@ -157,7 +157,7 @@ const PricingPage: React.FC = () => {
       </motion.div>
 
       {/* Mission note */}
-      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-2xl mx-auto mt-16 text-center space-y-4 p-8 rounded-2xl bg-primary/5 border border-primary/10">
+      <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="max-w-2xl mx-auto mt-16 text-center space-y-4 p-8 rounded-premium-sm bg-primary/5 border border-primary/10">
         <Crown className="w-8 h-8 text-primary mx-auto" />
         <p className="text-muted-foreground leading-relaxed italic font-serif">
           "Parte de cada assinatura PRO é destinada a projetos de evangelização e formação católica. Ao assinar, você também contribui para levar a fé a mais pessoas."

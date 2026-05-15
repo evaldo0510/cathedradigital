@@ -22,7 +22,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({ stats, t }) => {
     return (
       <div className="grid grid-cols-3 gap-3">
         {[1, 2, 3].map(i => (
-          <div key={i} className="p-3 rounded-2xl bg-muted/20 border border-border/50 animate-pulse h-20" />
+          <div key={i} className="p-3 rounded-premium-sm bg-muted/20 border border-border/50 animate-pulse h-20" />
         ))}
       </div>
     );

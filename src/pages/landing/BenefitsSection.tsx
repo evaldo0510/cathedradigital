@@ -65,7 +65,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
                 key={benefit.title} 
                 variant="interactive" 
                 padding="sm" 
-                className="bg-white/5 border-white/10"
+                className="bg-white/[0.05] border-white/[0.08]"
               >
                 <div className="space-y-3">
                   <div className="w-8 h-8 rounded-premium-sm bg-primary/20 flex items-center justify-center">

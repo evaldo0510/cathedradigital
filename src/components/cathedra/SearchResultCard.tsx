@@ -74,7 +74,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
     >
     <CardContent className="p-3 flex items-center gap-3">
       {icon && (
-        <div className="flex-shrink-0 w-7 h-7 rounded-2xl bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+        <div className="flex-shrink-0 w-7 h-7 rounded-premium-sm bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
           <div className="scale-75 flex items-center justify-center">{icon}</div>
         </div>
       )}

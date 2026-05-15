@@ -394,9 +394,9 @@ const CommandCenter: React.FC = () => {
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-2xl" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium-sm" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-2xl" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-premium-sm" />
           </div>
         )}
 

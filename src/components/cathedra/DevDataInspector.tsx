@@ -38,7 +38,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
     <div className="fixed bottom-24 right-6 z-[9999]">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-2xl hover:scale-105 transition-all border border-white/20"
+        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-premium hover:scale-105 transition-all border border-white/20"
       >
         <Icons.Activity className="w-4 h-4" />
         <span className="text-premium-tiny font-black uppercase tracking-widest">Dev Inspector</span>
@@ -50,7 +50,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-full shadow-2xl overflow-hidden "
+            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-full shadow-premium overflow-hidden "
           >
             <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
               <h4 className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-2">
@@ -67,7 +67,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
                 {fields.map((field) => {
                   const status = getStatus(field.name.toLowerCase(), field.value);
                   return (
-                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-2xl bg-muted/20 border border-border/50">
+                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-premium-sm bg-muted/20 border border-border/50">
                       <div className="flex items-center justify-between">
                         <span className="text-premium-tiny font-bold text-muted-foreground uppercase">{field.name}</span>
                         <span className={`text-premium-tiny font-black uppercase px-1.5 py-0.5 rounded ${status.color}`}>

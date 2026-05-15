@@ -52,7 +52,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             title={`Lectio Divina — ${selectedPassage}`}
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
-          <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-card border border-border shadow-sm">
+          <div className="flex items-center gap-3 px-5 py-3 rounded-premium-sm bg-card border border-border shadow-sm">
             <Timer className="w-4 h-4 text-primary/60" />
             <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>
@@ -99,7 +99,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.4 }}
-          className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] relative overflow-hidden"
+          className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-premium shadow-black/[0.02] relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
             <activeStep.icon className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
@@ -107,7 +107,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
 
           <div className="relative text-center space-y-4">
             <motion.div 
-              className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto shadow-xl border-4 border-background ${activeStep.color}`}
+              className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mx-auto shadow-premium border-4 border-background ${activeStep.color}`}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', stiffness: 300, delay: 0.2 }}
@@ -196,7 +196,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
         ) : (
           <Button
             onClick={() => onStepChange('conclusio')}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-xl shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-premium shadow-primary/20"
           >
             <CheckCircle2 className="w-4 h-4" /> Concluir
           </Button>

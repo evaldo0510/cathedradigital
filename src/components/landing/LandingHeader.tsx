@@ -111,7 +111,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-xl overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button

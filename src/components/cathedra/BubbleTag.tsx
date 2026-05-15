@@ -156,7 +156,7 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
           ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
           : isSuggested
             ? 'border-secondary/50 bg-secondary/10 hover:border-secondary/80 hover:bg-secondary/20 text-secondary hover:scale-105'
-            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-md text-foreground/80 hover:scale-105 hover:text-foreground'
+            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-soft text-foreground/80 hover:scale-105 hover:text-foreground'
         }
         ${className}
       `}

@@ -327,7 +327,7 @@ const StudyMode: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-12">
-      <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+      <div className="w-24 h-24 rounded-premium-sm bg-primary/10 flex items-center justify-center border border-primary/20">
         <Shield className="w-12 h-12 text-primary" />
       </div>
       

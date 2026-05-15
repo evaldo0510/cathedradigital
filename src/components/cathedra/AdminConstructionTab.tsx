@@ -221,13 +221,13 @@ const AdminConstructionTab: React.FC = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-48 rounded-2xl bg-muted/40 animate-pulse border border-border" />
+            <div key={i} className="h-48 rounded-premium-sm bg-muted/40 animate-pulse border border-border" />
           ))}
         </div>
       ) : filteredProjects.length === 0 ? (
         <Card className="border-dashed border-2 py-12">
           <CardContent className="flex flex-col items-center text-center space-y-4">
-            <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
+            <div className="w-16 h-16 rounded-premium-sm bg-muted flex items-center justify-center">
               <Building2 className="w-8 h-8 text-muted-foreground" />
             </div>
             <div className="space-y-1">
@@ -252,7 +252,7 @@ const AdminConstructionTab: React.FC = () => {
               </CardHeader>
               <CardContent className="pb-3 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 rounded-2xl bg-muted/50 border space-y-1">
+                  <div className="p-3 rounded-premium-sm bg-muted/50 border space-y-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <DollarSign className="w-3 h-3" /> Orçamento
                     </div>
@@ -269,7 +269,7 @@ const AdminConstructionTab: React.FC = () => {
                       <Upload className="w-3 h-3" /> Subir Planilha
                     </Button>
                   </div>
-                  <div className="p-3 rounded-2xl bg-muted/50 border space-y-1">
+                  <div className="p-3 rounded-premium-sm bg-muted/50 border space-y-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <Calendar className="w-3 h-3" /> Cronograma
                     </div>
@@ -343,8 +343,8 @@ const AdminConstructionTab: React.FC = () => {
               {uploadType === 'budget' ? ' "Item", "Previsto", "Real"' : ' "Tarefa", "Início Previsto", "Fim Previsto", "Progresso"'}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-2xl gap-4 bg-muted/5">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-premium-sm gap-4 bg-muted/5">
+            <div className="w-12 h-12 rounded-premium-sm bg-primary/10 flex items-center justify-center">
               <FileSpreadsheet className="w-6 h-6 text-primary" />
             </div>
             <div className="text-center px-4">
@@ -365,7 +365,7 @@ const AdminConstructionTab: React.FC = () => {
               />
             </div>
           </div>
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3 flex gap-3">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium-sm p-3 flex gap-3">
             <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
             <div className="text-xs text-amber-800">
               <p className="font-bold">Atenção!</p>

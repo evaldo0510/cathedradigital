@@ -51,7 +51,7 @@ const IconsDesignSystem: React.FC = () => {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {Object.entries(IconSizePreset).map(([name, size]) => (
-              <div key={name} className="flex flex-col items-center gap-4 p-4 border border-primary/5 rounded-2xl bg-primary/[0.01]">
+              <div key={name} className="flex flex-col items-center gap-4 p-4 border border-primary/5 rounded-premium-sm bg-primary/[0.01]">
                 <CathedraIcon icon={Icons.Star} size={size as IconSize} variant="primary" />
                 <div className="text-center">
                   <p className="text-xs font-bold text-primary/80">{name}</p>

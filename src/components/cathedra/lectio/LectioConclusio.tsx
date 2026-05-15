@@ -63,14 +63,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-card border border-border">
+        <div className="flex items-center gap-3 px-6 py-4 rounded-premium-sm bg-card border border-border">
           <Clock className="w-5 h-5 text-primary/60" />
           <div>
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-card border border-border">
+        <div className="flex items-center gap-3 px-6 py-4 rounded-premium-sm bg-card border border-border">
           <PenTool className="w-5 h-5 text-primary/60" />
           <div>
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
@@ -82,7 +82,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
       {/* Reflections summary */}
       {notesWritten.length > 0 && (
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl shadow-black/[0.02]"
+          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-premium shadow-black/[0.02]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
