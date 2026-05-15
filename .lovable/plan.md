@@ -1,31 +1,22 @@
-Audit and standardize all icon-only buttons to use `size="icon"`, ensure consistent SVG sizing, improve accessibility (aria-busy, aria-disabled), and expand the Design System documentation for the `Button` component.
-
-### Step 1: Standardize Icon Buttons in `AppHeader.tsx` and `LiturgiaPage.tsx`
-- Remove manual `className="w-4 h-4"` from icons inside `Button size="icon"` to let the standard `[&_svg]:size-5` from `buttonVariants` control the size.
-- Replace plain `<button>` elements used for pagination in `LiturgiaPage.tsx` with `Button size="icon"`.
-- Ensure all icon-only buttons have `aria-label` or `title` for accessibility.
-
-### Step 2: Refactor `Sidebar.tsx`
-- Replace manual `<button>` elements for theme toggle and audio toggle with the standard `Button` component.
-- Ensure consistent styling and accessibility attributes.
-
-### Step 3: Expand Design System Documentation
-- Update `src/components/cathedra/DesignSystemGuide.tsx` to include:
-    - A dedicated section for the `Button` component.
-    - Examples of all variants: `default`, `primary`, `outline`, `destructive`, `ghost`, `secondary`, `link`.
-    - Examples of all sizes: `sm`, `default`, `lg`, `icon`.
-    - Demonstration of `isLoading` and `disabled` states across different variants.
-    - Usage guidelines for icon-only buttons.
-
-### Step 4: Accessibility and E2E Testing
-- Create `src/components/ui/button-a11y.test.tsx` using Vitest and React Testing Library.
-- Implement tests to:
-    - Verify keyboard navigation (Tab/Shift+Tab) between buttons.
-    - Check for `aria-busy` and `aria-disabled` during loading states.
-    - Ensure `disabled` buttons are correctly skipped or handled in focus management.
-    - Validate that icons within `size="icon"` buttons maintain consistent dimensions.
+### Goals
+1. **Audit & Replace `<button>` Tags**: Migrate raw HTML `<button>` elements to the standardized `Button` or `HomeButton` components across the entire site.
+2. **Standardize Typography**: Remove hardcoded `text-[...]` classes and replace them with the fluid typographic scale (`text-premium-tiny`, `text-premium-small`, `text-premium-base`) to ensure legibility across all breakpoints.
+3. **Consistency for Icon Buttons**: Ensure all icon-only buttons use `size="icon"`, have consistent alignment, and inherit icon sizing from the `Button` component.
+4. **Accessibility Reinforcement**: Add `aria-label` to all icon buttons and ensure `aria-busy`/`aria-disabled` are correctly managed via the `Button` component.
+5. **Design System Documentation**: Update the guide to include the fluid typography scale and real-world button examples.
 
 ### Technical Details
-- Use `screen.getByRole('button')` and `fireEvent` / `userEvent` for interaction tests.
-- Leverage the existing `buttonVariants` in `src/components/ui/button.tsx` which already includes accessibility logic, but ensure it is used everywhere.
-- Audit for any leftover `text-[...]` classes on buttons and replace with standardized typography variants.
+- **Component Migration**: Use `import { Button } from "@/components/ui/button"` or `HomeButton`.
+- **Icon Sizing**: Remove manual `w-4 h-4` or `size={16}` from icons inside `Button size="icon"` as the component defines `[&_svg]:size-5`.
+- **Typography Scale**:
+  - `text-[9px]/text-[10px]` -> `text-premium-tiny`
+  - `text-[11px]/text-[12px]` -> `text-premium-small`
+  - `text-[14px]/text-[16px]` -> `text-premium-base`
+- **Focus States**: Ensure `focus-visible` rings are consistent.
+
+### Files to be Modified (Phased Approach)
+- **Phase 1: Navigation & Header**: `AppHeader.tsx`, `LandingHeader.tsx`.
+- **Phase 2: Core Features**: `Rosary.tsx`, `JornadaStepPage.tsx`, `LiturgiaPage.tsx`.
+- **Phase 3: Admin & Dashboard**: `AdminDashboard.tsx`, `AdminJourneysTab.tsx`.
+- **Phase 4: Misc Components**: `CookieConsent.tsx`, `FeedbackWidget.tsx`, `Certamen.tsx`.
+- **Phase 5: Documentation**: `DesignSystemGuide.tsx`.
