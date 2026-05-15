@@ -129,7 +129,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Logo className="w-20 h-20 text-primary" variant="blue" />
+              <Icons.Logo className="w-16 h-16 text-primary" variant="blue" />
             </div>
           </motion.div>
           <div className="space-y-6">
@@ -147,12 +147,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
             {streak > 0 && (
               <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-soft transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
-                <Icons.Zap className="w-5 h-5 text-secondary" />
+                <Icons.Zap className="w-4 h-4 text-secondary" />
                 <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
             <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-soft transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
-              <Icons.Star className="w-5 h-5 text-primary" />
+              <Icons.Star className="w-4 h-4 text-primary" />
               <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
@@ -170,7 +170,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         >
           <div className="flex items-center gap-5">
             <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
-              <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
+              <Icons.HelpCircle className="w-5 h-5" strokeWidth={1.5} />
             </div>
             <div>
               <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
@@ -199,7 +199,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 </div>
               )}
               <div className={`w-14 h-14 rounded-3xl bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
-                <door.icon className="w-7 h-7" strokeWidth={1.25} />
+                <door.icon className="w-6 h-6" strokeWidth={1.25} />
               </div>
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
@@ -228,9 +228,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           >
             <div className="flex items-center gap-6">
               <div className="w-16 h-16 rounded-[2rem] bg-primary/[0.03] flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/20">
-                {nextUp.type === 'bible' ? <Icons.Bible className="w-8 h-8" strokeWidth={1.25} /> : 
-                 nextUp.type === 'catechism' ? <Icons.Cross className="w-8 h-8" strokeWidth={1.25} /> : 
-                 <Icons.Flame className="w-8 h-8" strokeWidth={1.25} />}
+                {nextUp.type === 'bible' ? <Icons.Bible className="w-6 h-6" strokeWidth={1.25} /> : 
+                 nextUp.type === 'catechism' ? <Icons.Cross className="w-6 h-6" strokeWidth={1.25} /> : 
+                 <Icons.Flame className="w-6 h-6" strokeWidth={1.25} />}
               </div>
               <div className="text-left space-y-1">
                 <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary/60">{nextUp.subtitle}</p>
@@ -238,7 +238,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </div>
             </div>
             <div className="w-12 h-12 rounded-full border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-soft">
-              <Icons.ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+              <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </HomeCard>
         </FadeUp>
