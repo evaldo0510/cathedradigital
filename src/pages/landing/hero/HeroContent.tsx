@@ -29,7 +29,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-4xl lg:max-w-7xl text-center space-y-16 sm:space-y-24 px-4"
+      className="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
     >
       {/* Logos Avatar */}
       <motion.div
