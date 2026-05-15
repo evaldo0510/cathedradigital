@@ -516,23 +516,23 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       </div>
                     )}
 
-                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 relative">
+                    <CardContent className="p-6 md:p-10 space-y-4 md:space-y-6 relative">
                       {/* Title row */}
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-6">
                         <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
-                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full sm:rounded-2xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
-                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
+                            <div className="flex items-center gap-4 flex-wrap mb-2">
+                              <div className="w-10 h-10 rounded-2xl bg-primary/[0.01] border border-border/20 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
+                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5" />}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h2 className="text-sm sm:text-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
+                              <h2 className="text-xl md:text-2xl font-bold font-display text-primary tracking-tight truncate">{journey.title}</h2>
                               {journey.subtitle && (
-                                <p className="text-xs text-muted-foreground font-serif italic truncate">{journey.subtitle}</p>
+                                <p className="text-sm text-muted-foreground font-serif italic truncate opacity-60">{journey.subtitle}</p>
                               )}
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex items-center gap-3 flex-shrink-0 pt-2">
                           {searchQuery.trim().length >= 2 && (
                             <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
                           )}
