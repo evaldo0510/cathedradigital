@@ -57,7 +57,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
-        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <h3 className="text-xl font-serif font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
     </Card>
