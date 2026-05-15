@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from 'axe-core/playwright';
+import { injectAxe, checkA11y } from '@axe-core/playwright';
 import fs from 'fs';
 import path from 'path';
 
