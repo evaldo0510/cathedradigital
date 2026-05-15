@@ -39,15 +39,26 @@ const NAVIGATION_TARGETS = [
 ];
 
 test.describe('Home Page Premium Audit', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }, testInfo) => {
+    // Start tracing for every test in this suite to link in the gallery
+    await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+    
     await page.goto('/');
     await page.evaluate(() => document.fonts.ready);
     
-    // Ensure reporting directory exists
     const reportDir = 'test-results/focus-proof';
     if (!fs.existsSync(reportDir)) {
       fs.mkdirSync(reportDir, { recursive: true });
     }
+  });
+
+  test.afterEach(async ({ context }, testInfo) => {
+    const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+    const authState = testInfo.title.includes('logged-in') ? 'logged-in' : 'logged-out';
+    const safeTitle = testInfo.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const tracePath = path.join(process.cwd(), `test-results/focus-proof/${theme}__${authState}__${safeTitle}__trace.zip`);
+    
+    await context.tracing.stop({ path: tracePath });
   });
 
   for (const isLoggedIn of [false, true]) {
