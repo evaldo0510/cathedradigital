@@ -1,18 +1,12 @@
 {
-  "timestamp": "2026-05-15T02:58:14.308913",
-  "total_violations": 680,
+  "timestamp": "2026-05-15T02:58:59.736444",
+  "total_violations": 679,
   "violations": [
     {
       "file": "src/pages/Index.tsx",
       "line": 48,
       "pattern": "Legacy Shadow",
       "match": "shadow-xl"
-    },
-    {
-      "file": "src/pages/CatechismExplorer.tsx",
-      "line": 257,
-      "pattern": "Non-standard Border",
-      "match": "border-2"
     },
     {
       "file": "src/pages/landing/AboutCreatorSection.tsx",
