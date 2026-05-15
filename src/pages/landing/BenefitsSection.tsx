@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/cathedra/CathedraButton";
+import { Card   } from "@/components/cathedra/Card";
 import { fadeUp, buttonHover } from "./animations";
 
 const registerBenefits = [
@@ -59,20 +59,20 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
             {registerBenefits.map((benefit, i) => (
               <Card 
                 key={benefit.title} 
                 variant="interactive" 
-                padding="md" 
-                className="bg-white/[0.03] border-white/5 group"
+                padding="sm" 
+                className="bg-white/5 border-white/10"
               >
-                <div className="space-y-4">
-                  <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-white/5 transition-colors group-hover:bg-primary/20">
+                <div className="space-y-3">
+                  <div className="w-8 h-8 rounded-premium-sm bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </div>
-                  <h3 className="font-bold text-lg tracking-tight">{benefit.title}</h3>
-                  <p className="text-sm opacity-40 leading-relaxed font-serif italic">{benefit.description}</p>
+                  <h3 className="font-bold text-lg">{benefit.title}</h3>
+                  <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
                 </div>
               </Card>
             ))}

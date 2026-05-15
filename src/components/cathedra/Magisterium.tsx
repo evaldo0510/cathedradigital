@@ -12,7 +12,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card    , CardContent   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button   } from '@/components/ui/button';
 import AudioButton from './AudioButton';

@@ -1,5 +1,5 @@
 import { Church, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { HomeButton } from "@/components/cathedra/HomeButton";
 import { HomeCard } from "@/components/cathedra/HomeCard";
 
 interface CtaBannerSectionProps {
@@ -26,13 +26,13 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             </p>
           </div>
           <div className="flex flex-col items-center gap-6">
-            <Button 
+            <HomeButton 
               size="lg" 
               onClick={onStart}
               aria-label="Iniciar minha jornada agora"
             >
               Iniciar Minha Jornada
-            </Button>
+            </HomeButton>
             <p className="text-premium-tiny text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
               Acesso totalmente gratuito
             </p>

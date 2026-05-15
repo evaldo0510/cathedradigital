@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { normalizeText, cn } from '@/lib/utils';
+import { normalizeText } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card    , CardContent   } from '@/components/ui/card';
 import { Button   } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -482,17 +482,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    variant="interactive"
-                    padding="none"
-                    className={cn(
-                      "overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none",
+                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
                       isComplete 
-                        ? "border-emerald-500/20 shadow-lg shadow-emerald-500/5" 
+                        ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
                         : hasStarted 
-                          ? "border-primary/20"
-                          : "border-border/30"
-                    )}
+                          ? 'border-primary/20'
+                          : 'border-border hover:border-primary/30'
+                    }`}
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
                     aria-label={`Jornada ${journey.title}. ${isComplete ? 'Concluída' : hasStarted ? `${Math.round(progressPercent)}% concluída` : 'Não iniciada'}`}
                   >
 
@@ -516,23 +516,23 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       </div>
                     )}
 
-                    <CardContent className="p-6 md:p-10 space-y-4 md:space-y-6 relative">
+                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 relative">
                       {/* Title row */}
-                      <div className="flex items-start justify-between gap-6">
+                      <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-4 flex-wrap mb-2">
-                              <div className="w-10 h-10 rounded-2xl bg-primary/[0.01] border border-border/20 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
-                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-5 h-5" />}
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap mb-1">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full sm:rounded-2xl bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-4 h-4" />}
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h2 className="text-xl md:text-2xl font-bold font-display text-primary tracking-tight truncate">{journey.title}</h2>
+                              <h2 className="text-sm sm:text-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
                               {journey.subtitle && (
-                                <p className="text-sm text-muted-foreground font-serif italic truncate opacity-60">{journey.subtitle}</p>
+                                <p className="text-xs text-muted-foreground font-serif italic truncate">{journey.subtitle}</p>
                               )}
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 flex-shrink-0 pt-2">
+                        <div className="flex items-center gap-2 flex-shrink-0">
                           {searchQuery.trim().length >= 2 && (
                             <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
                           )}
@@ -547,32 +547,35 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                       {/* Description */}
                       {journey.description && (
-                        <p className="text-base text-primary/60 leading-relaxed line-clamp-2 font-serif italic">{journey.description}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{journey.description}</p>
                       )}
 
                       {/* Tags */}
                       {journey.tags && journey.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 pt-2">
+                        <div className="flex flex-wrap gap-1">
                           {journey.tags.slice(0, 3).map((tag: string) => (
-                            <span key={tag} className="text-premium-tiny px-4 py-1 rounded-full bg-primary/[0.01] border border-border/30 text-muted-foreground font-bold uppercase tracking-widest opacity-60">
+                            <span key={tag} className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
                               {tag}
                             </span>
                           ))}
+                          {journey.tags.length > 3 && (
+                            <span className="text-premium-tiny px-2 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                              +{journey.tags.length - 3}
+                            </span>
+                          )}
                         </div>
                       )}
 
                       {/* Meta */}
-                      <div className="flex items-center gap-6 text-premium-tiny font-bold uppercase tracking-widest text-primary/30 flex-wrap pt-4">
-                        <span className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 sm:gap-3 text-premium-tiny sm:text-xs text-muted-foreground flex-wrap">
+                        <span className="flex items-center gap-1">
                           <Icons.Clock className="w-3.5 h-3.5" /> ~{journey.estimated_days}d
                         </span>
-                        <div className="w-1.5 h-1.5 rounded-full bg-border/40" />
-                        <span className="flex items-center gap-2">
-                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
+                        <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
+                          {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
-                        <div className="w-1.5 h-1.5 rounded-full bg-border/40" />
-                        <span className="flex items-center gap-2">
-                          <Icons.LayoutGrid className="w-3.5 h-3.5" /> {totalSteps} etapas
+                        <span className="flex items-center gap-1">
+                          <Icons.Layout className="w-3.5 h-3.5" /> {totalSteps} etapas
                         </span>
                       </div>
 

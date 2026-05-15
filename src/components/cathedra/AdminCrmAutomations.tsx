@@ -3,7 +3,7 @@ import {
   Bell, Zap, Clock, Send, CheckCircle2, AlertTriangle,
   Flame, UserMinus, MessageCircle
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button   } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';

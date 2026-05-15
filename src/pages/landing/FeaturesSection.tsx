@@ -2,8 +2,8 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
-import { Card } from "@/components/ui/card";
-
+import { Card   } from "@/components/cathedra/Card";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [
   { 
@@ -41,15 +41,24 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
     <Card
       variant="interactive"
       padding="lg"
-      className="flex flex-col items-center text-center space-y-8 group w-full border-none"
+      className="flex flex-col items-center text-center space-y-6 group w-full"
       onClick={() => onNavigate(feature.route)}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onNavigate(feature.route);
+        }
+      }}
+      aria-label={`Explorar ${feature.title}`}
+      role="button"
+      tabIndex={0}
     >
-      <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-1000 border border-border/20 shadow-inner-soft" aria-hidden="true">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-10 h-10", strokeWidth: 1 })}
+      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
-      <div className="space-y-4 w-full px-4">
-        <h3 className="text-xl font-display font-bold text-center tracking-tight text-primary/80 group-hover:text-primary transition-colors">{feature.title}</h3>
-        <p className="text-base text-muted-foreground leading-relaxed text-center font-serif italic opacity-60 group-hover:opacity-100 transition-opacity">{feature.description}</p>
+      <div className="space-y-2 w-full">
+        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
     </Card>
   );

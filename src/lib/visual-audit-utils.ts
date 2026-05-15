@@ -2,7 +2,7 @@ import { type Config } from "tailwindcss";
 
 /**
  * Checks if a class list contains non-standard visual tokens (shadows, borders, radius, padding)
- * that should be handled by Card/CathedraButton components.
+ * that should be handled by CathedraCard/CathedraButton components.
  */
 export function checkVisualStandard(className: string): string[] {
   const violations: string[] = [];

@@ -78,12 +78,12 @@ export default {
         'full': '9999px',
       },
       boxShadow: {
-        'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.02), 0 0 1px 0 rgba(0, 0, 0, 0.04)',
-        'premium-hover': '0 40px 100px -20px rgba(0, 0, 0, 0.04), 0 0 1px 0 rgba(0, 0, 0, 0.06)',
-        'premium-active': '0 10px 20px -8px rgba(0, 0, 0, 0.03)',
-        'soft': '0 4px 15px -2px rgba(0, 0, 0, 0.01)',
+        'premium': '0 10px 40px -10px rgba(0, 0, 0, 0.03), 0 0 1px 0 rgba(0, 0, 0, 0.05)',
+        'premium-hover': '0 30px 60px -15px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.1)',
+        'premium-active': '0 5px 15px -5px rgba(0, 0, 0, 0.05)',
+        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.02)',
         'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.1)',
-        'inner-soft': 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.02)',
+        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.01)',
       },
       keyframes: {
         "accordion-down": {

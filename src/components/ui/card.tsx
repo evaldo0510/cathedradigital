@@ -1,55 +1,20 @@
 import * as React from "react"
+
 import { cn } from "@/lib/utils"
-import { motion, HTMLMotionProps } from "framer-motion"
 
-export interface CardProps extends HTMLMotionProps<"div"> {
-  variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated' | 'silent';
-  padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-  hover?: boolean;
-}
-
-const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
-    const paddingMap = {
-      none: '',
-      xs: 'p-3 md:p-4',
-      sm: 'p-4 md:p-6',
-      md: 'p-6 md:p-8 lg:p-10',
-      lg: 'p-8 md:p-12 lg:p-16',
-      xl: 'p-12 md:p-16 lg:p-24',
-      '2xl': 'p-16 md:p-24 lg:p-32',
-      '3xl': 'p-20 md:p-32 lg:p-48',
-    };
-
-    const variantStyles = {
-      default: 'premium-card',
-      interactive: 'premium-card-interactive group',
-      outline: 'bg-transparent border border-border/20 rounded-premium hover:border-primary/5 hover:bg-primary/[0.01] transition-all duration-700',
-      glass: 'bg-background/40 backdrop-blur-3xl border border-white/5 rounded-premium shadow-premium',
-      ghost: 'bg-transparent border border-transparent rounded-premium hover:bg-primary/[0.02] transition-colors duration-500',
-      elevated: 'premium-card shadow-premium-hover border-primary/5 bg-card/80',
-      silent: 'bg-primary/[0.01] border border-border/10 rounded-premium opacity-60 hover:opacity-100 transition-opacity duration-700',
-    };
-
-    return (
-      <motion.div
-        ref={ref as any}
-        className={cn(
-          variantStyles[variant],
-          paddingMap[padding],
-          hover && !variant.includes('interactive') && 'hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500',
-          className
-        )}
-        initial={props.initial || { opacity: 0, y: 15 }}
-        animate={props.animate || { opacity: 1, y: 0 }}
-        transition={props.transition || { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        {...props}
-      >
-        {children}
-      </motion.div>
-    );
-  }
-);
+const Card = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "rounded-[2rem] border border-border/40 bg-card text-card-foreground shadow-premium transition-all duration-500 hover:shadow-premium-hover hover:border-primary/10",
+      className
+    )}
+    {...props}
+  />
+))
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -58,7 +23,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
 ))
@@ -71,7 +36,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-display font-bold leading-none tracking-tight text-primary/90",
+      "text-2xl font-display font-bold leading-none tracking-tight",
       className
     )}
     {...props}
@@ -95,7 +60,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-0", className)} {...props} />
+  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -105,10 +70,10 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-0 mt-6", className)}
+    className={cn("flex items-center p-6 pt-0", className)}
     {...props}
   />
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, Card as CathedraCard, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, Card as default }
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

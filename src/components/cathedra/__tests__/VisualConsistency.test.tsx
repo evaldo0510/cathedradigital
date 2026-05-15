@@ -18,9 +18,9 @@ describe('Visual Consistency - Design System', () => {
     expect(card.className).toContain('premium-card');
   });
 
-  it('HomeCard interactive state should apply the interactive variant', () => {
+  it('HomeCard interactive state should apply the hover scale token', () => {
     render(<HomeCard onClick={() => {}} data-testid="test-card">Test Content</HomeCard>);
     const card = screen.getByTestId('test-card');
-    expect(card.className).toContain('premium-card-interactive');
+    expect(card.className).toContain('hover:-translate-y-1');
   });
 });

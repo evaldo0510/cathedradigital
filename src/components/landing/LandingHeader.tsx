@@ -6,6 +6,7 @@ import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -143,14 +144,14 @@ const LandingHeader = () => {
             Entrar
           </Button>
           
-          <Button
+          <HomeButton
             variant="ghost"
             size="sm"
             className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <ChevronRight className="w-4 h-4 ml-1" />
-          </Button>
+          </HomeButton>
 
           {/* Mobile Menu Toggle */}
           <Button
@@ -187,12 +188,12 @@ const LandingHeader = () => {
                 </Button>
               ))}
               <hr className="border-border/10" />
-              <Button
+              <HomeButton
                 className="w-full"
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
                 Iniciar Agora
-              </Button>
+              </HomeButton>
             </div>
           </motion.div>
         )}

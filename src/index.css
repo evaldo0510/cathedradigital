@@ -109,21 +109,15 @@
   }
 
   *:focus-visible {
-    @apply outline-none ring-1 ring-primary/20 ring-offset-4 ring-offset-background transition-all duration-500;
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow;
   }
 
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.25; /* Even thinner for premium minimalist feel */
+    stroke-width: 1.5; /* Thinner for premium minimalist feel */
     stroke-linecap: round;
     stroke-linejoin: round;
-    opacity: 0.6;
-    transition: all 0.5s ease;
-  }
-  
-  *:hover > svg.lucide {
-    opacity: 1;
   }
 
   /* Professional hover state for icons within interactive elements */
@@ -179,7 +173,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-display text-primary/90;
+    @apply tracking-tight font-display text-primary;
     text-wrap: balance;
   }
 
@@ -210,24 +204,24 @@
   }
 
   p { 
-    @apply max-w-[65ch] text-primary/65;
+    @apply max-w-[65ch] text-muted-foreground;
     font-size: clamp(0.95rem, 1.1vw, 1.05rem);
     line-height: 1.65;
   }
 
-  /* Premium small text scale - Optimized for legibility */
+  /* Premium small text scale */
   .text-premium-tiny {
-    @apply font-bold uppercase tracking-[0.2em] text-primary/30;
+    @apply font-bold uppercase tracking-[0.2em] text-muted-foreground/50;
     font-size: clamp(0.6rem, 0.7vw, 0.75rem);
   }
 
   .text-premium-small {
-    @apply font-medium text-primary/50;
+    @apply font-medium text-muted-foreground/70;
     font-size: clamp(0.75rem, 0.9vw, 0.875rem);
   }
 
   .text-premium-base {
-    @apply text-primary/60;
+    @apply text-muted-foreground/80;
     font-size: clamp(0.875rem, 1vw, 1rem);
   }
 
@@ -260,18 +254,18 @@
 
   /* Desktop two-column layout: main content + optional side panel */
   .desktop-layout {
-    @apply w-full grid grid-cols-1 gap-14 md:gap-20 lg:gap-24;
+    @apply w-full grid grid-cols-1 gap-12 md:gap-16 lg:gap-20;
   }
   @screen lg {
     .desktop-layout {
-      grid-template-columns: 1fr 360px;
-      @apply gap-24;
+      grid-template-columns: 1fr 340px;
+      @apply gap-20;
     }
   }
   @screen xl {
     .desktop-layout {
-      grid-template-columns: 1fr 420px;
-      @apply gap-40;
+      grid-template-columns: 1fr 400px;
+      @apply gap-24;
     }
   }
 
@@ -305,16 +299,16 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/5 rounded-premium shadow-premium transition-all duration-1000 relative overflow-hidden;
+    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-0.5 active:scale-[0.995] active:shadow-premium-active active:translate-y-0 transition-all duration-700 ease-out;
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1.5 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
   }
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-20;
+    @apply premium-card p-10 sm:p-14 lg:p-16;
   }
 
   /* Standard card shadow and radius */
@@ -322,46 +316,42 @@
     @apply premium-card;
   }
 
-  /* Section Spacing - Refined Vertical Rhythm - Compact but Breathable */
+  /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-20 sm:py-32 md:py-40 lg:py-56;
+    @apply py-24 sm:py-32 md:py-40 lg:py-64;
   }
 
   .stack-spacing {
-    @apply space-y-16 md:space-y-24 lg:space-y-32;
+    @apply space-y-10 md:space-y-14 lg:space-y-20;
   }
   
   .premium-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14 lg:gap-20;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16;
   }
 
   .premium-header {
-    @apply text-center space-y-12 mb-32 md:mb-56 max-w-5xl mx-auto;
+    @apply text-center space-y-8 mb-20 md:mb-32 max-w-4xl mx-auto;
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-8 py-3 bg-primary/[0.01] border border-border/5 rounded-full text-[9px] font-bold uppercase tracking-[0.4em] text-foreground/10 transition-all hover:bg-primary/[0.02] hover:text-foreground/30;
+    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/30 rounded-full text-[10px] font-bold uppercase tracking-[0.45em] text-foreground/40 transition-all hover:bg-primary/[0.06] hover:text-foreground/60;
   }
 
-  /* Global Button Standard - Premium Spiritual - More refined interaction */
+  /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-12 py-5 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-5 shadow-soft active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply relative overflow-hidden px-10 py-5 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 flex items-center justify-center gap-4 shadow-soft active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-premium-hover hover:-translate-y-0.5 active:translate-y-0;
+    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover hover:-translate-y-1 hover:brightness-110 active:translate-y-0;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary/80 text-secondary-foreground hover:bg-secondary hover:shadow-premium-hover hover:-translate-y-0.5 active:translate-y-0;
+    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-border/20 text-primary/60 hover:text-primary hover:border-primary/10 hover:bg-primary/[0.005] hover:-translate-y-0.5 active:translate-y-0 shadow-none hover:shadow-soft;
-  }
-
-  .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-bold uppercase tracking-widest text-[10px];
+    @apply btn-premium bg-transparent border border-border/60 text-primary hover:border-primary/30 hover:bg-primary/[0.02] hover:-translate-y-1 active:translate-y-0 shadow-none hover:shadow-soft;
   }
 }
 
@@ -379,19 +369,6 @@
   
   .responsive-gap {
     @apply gap-4 md:gap-6 lg:gap-8;
-  }
-
-  /* Spiritual Depth and Silence Utilities */
-  .axial-flow {
-    @apply flex flex-col items-center text-center max-w-4xl mx-auto;
-  }
-
-  .spiritual-depth {
-    @apply relative after:absolute after:inset-0 after:bg-gradient-to-t after:from-background after:to-transparent after:h-24 after:bottom-0 after:pointer-events-none;
-  }
-
-  .text-silence {
-    @apply text-muted-foreground/40 font-serif italic tracking-wide leading-relaxed;
   }
 }
 
@@ -459,18 +436,18 @@
     transform: scale(1);
     opacity: 0;
   }
-}
 
-/* Compatibility layer for remaining non-standard components */
-.rounded-2xl {
-  @apply rounded-premium-sm;
-}
-.rounded-3xl {
-  @apply rounded-premium;
-}
-.shadow-xl, .shadow-2xl {
-  @apply shadow-premium;
-}
-.shadow-md {
-  @apply shadow-soft;
+  /* Compatibility layer for remaining non-standard components */
+  .rounded-2xl {
+    @apply rounded-premium-sm;
+  }
+  .rounded-3xl {
+    @apply rounded-premium;
+  }
+  .shadow-xl, .shadow-2xl {
+    @apply shadow-premium;
+  }
+  .shadow-md {
+    @apply shadow-soft;
+  }
 }

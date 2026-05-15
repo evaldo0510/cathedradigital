@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Check, X, ChevronRight, Sparkles, Crown, Zap } from 'lucide-react';
 import { Button   } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';

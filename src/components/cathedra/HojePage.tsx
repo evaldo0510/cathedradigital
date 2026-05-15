@@ -9,8 +9,8 @@ import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card   } from './Card';
+import { Button } from './Button';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -135,30 +135,29 @@ const HojePage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: 30 }} 
           animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center space-y-12 max-w-6xl mx-auto py-8"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center space-y-16 max-w-5xl mx-auto"
         >
           <div className="space-y-8">
-            <div className="premium-tag mx-auto">
-              <Icons.Logo className="w-4 h-4 text-secondary" />
-              <span>{greeting}, {profile?.name?.split(' ')[0] || 'fiel'}</span>
-            </div>
-            <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-display font-medium text-primary leading-[0.9] tracking-tighter">
-              Aquietai-vos e <br />
-              <span className="text-secondary italic font-serif opacity-60">Sabei que Eu Sou Deus.</span>
+            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30">
+              {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
+            </p>
+            <h1 className="text-5xl md:text-7xl lg:text-9xl font-display text-primary leading-[1.05] tracking-tight">
+              Sua jornada espiritual <br />
+              <span className="text-secondary italic font-serif">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
-          <div className="flex items-center justify-center gap-12 flex-wrap">
+          <div className="flex items-center justify-center gap-8 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
-                <Icons.Zap className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-                <span className="text-premium-tiny font-bold text-primary/60 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              <div className="flex items-center gap-3 px-8 py-3.5 rounded-premium-sm bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+                <Icons.Zap className="w-4 h-4 text-primary" />
+                <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
-              <Icons.Star className="w-5 h-5 text-secondary group-hover:scale-110 transition-transform" />
-              <span className="text-premium-tiny font-bold text-primary/60 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-3 px-8 py-3.5 rounded-premium-sm bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+              <Icons.Star className="w-4 h-4 text-secondary" />
+              <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
@@ -169,7 +168,7 @@ const HojePage: React.FC = () => {
             {nextUp && (
               <section className="space-y-12">
                 <div className="flex items-center gap-8">
-                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
+                  <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                     Memória da Jornada
                   </h2>
                   <div className="h-px flex-1 bg-border/30" />
@@ -182,7 +181,7 @@ const HojePage: React.FC = () => {
                   className="flex flex-col md:flex-row items-center justify-between gap-12 group"
                 >
                   <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
-                    <div className="w-24 h-24 rounded-full bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                    <div className="w-24 h-24 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
                       <Icons.Flame className="w-12 h-12" />
                     </div>
                     <div>
@@ -213,7 +212,7 @@ const HojePage: React.FC = () => {
             {/* RITUAL DO DIA */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Ritual do Dia
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -226,7 +225,7 @@ const HojePage: React.FC = () => {
             {/* TEMAS PRINCIPAIS */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Explorar
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -239,7 +238,7 @@ const HojePage: React.FC = () => {
             {/* CATECISMO CARD */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/20 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
                   Doutrina
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -250,12 +249,12 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(AppRoute.CATECHISM)}
                 className="text-center space-y-8"
               >
-                <div className="w-20 h-20 rounded-full bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
                   <h3 className="text-2xl font-bold text-primary tracking-tight">Catecismo</h3>
-                  <p className="text-sm text-primary/40 leading-relaxed max-w-[200px] mx-auto font-serif italic">A sabedoria milenar da Igreja em suas mãos.</p>
+                  <p className="text-base text-primary/40 leading-relaxed max-w-[200px] mx-auto">A sabedoria milenar da Igreja em suas mãos.</p>
                 </div>
               </Card>
             </section>
@@ -263,7 +262,7 @@ const HojePage: React.FC = () => {
         </div>
 
         {/* FOOTER QUOTE */}
-        <div className="pt-20 text-center opacity-10 hover:opacity-20 transition-opacity duration-1000">
+        <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
           <p className="text-premium-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>

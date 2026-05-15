@@ -1,5 +1,5 @@
 import { Check, Sparkles, Zap, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { HomeButton } from "@/components/cathedra/HomeButton";
 import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const PricingSection = () => {
@@ -108,13 +108,13 @@ const PricingSection = () => {
               </div>
 
               <div className="mt-8">
-                <Button 
+                <HomeButton 
                   variant={tier.popular ? "primary" : "outline"}
                   className="w-full"
                   aria-label={`Assinar o plano ${tier.name}`}
                 >
                   {tier.button}
-                </Button>
+                </HomeButton>
               </div>
             </HomeCard>
           ))}
