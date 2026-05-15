@@ -47,8 +47,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border/40 bg-background/80 backdrop-blur-xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="max-w-[1400px] mx-auto px-6 sm:px-12 lg:px-16 py-4 sm:py-6 flex items-center justify-between min-h-[64px] sm:min-h-[80px]">
+    <header className="border-b border-border/30 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+      <div className="max-w-[1440px] mx-auto px-8 sm:px-12 lg:px-20 py-6 sm:py-8 flex items-center justify-between min-h-[80px] sm:min-h-[100px]">
         <div className="flex items-center gap-4 sm:gap-12 min-w-0">
           <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
             <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
@@ -71,7 +71,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {isDashboard && (
-            <nav className="hidden 2xl:flex items-center gap-5 border-l border-border pl-6 ml-2 min-w-0">
+            <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
                 { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
@@ -86,8 +86,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`px-4 py-2 h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all whitespace-nowrap relative group shadow-none border-none ${
-                    pathname === item.route ? 'text-primary bg-primary/[0.03]' : 'text-muted-foreground/60 hover:text-primary'
+                  className={`px-5 py-3 h-auto text-[10px] font-bold uppercase tracking-[0.35em] transition-all whitespace-nowrap relative group shadow-none border-none ${
+                    pathname === item.route ? 'text-primary bg-primary/[0.04] rounded-full' : 'text-muted-foreground/50 hover:text-primary'
                   }`}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
