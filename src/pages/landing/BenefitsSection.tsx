@@ -64,15 +64,17 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
               <Card 
                 key={benefit.title} 
                 variant="interactive" 
-                padding="sm" 
-                className="bg-white/[0.05] border-white/[0.08]"
+                padding="md"
+                className="transition-all duration-700 h-full"
               >
-                <div className="space-y-3">
-                  <div className="w-8 h-8 rounded-premium-sm bg-primary/20 flex items-center justify-center">
+                <div className="space-y-4">
+                  <div className="w-10 h-10 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {benefit.icon}
                   </div>
-                  <h3 className="font-bold text-lg">{benefit.title}</h3>
-                  <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
+                  <div className="space-y-2">
+                    <h3 className="font-bold font-serif text-lg">{benefit.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{benefit.description}</p>
+                  </div>
                 </div>
               </Card>
             ))}

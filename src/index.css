@@ -458,14 +458,14 @@
     transform: scale(1);
     opacity: 0;
   }
-
-  /* Compatibility layer for legacy components during migration */
-  .rounded-2xl { @apply rounded-premium-sm; }
-  .rounded-3xl { @apply rounded-premium; }
-  .shadow-xl, .shadow-2xl { @apply shadow-premium; }
-  .shadow-md { @apply shadow-soft; }
-  
-  /* Layout Grid Standardization */
-  .premium-grid-2 { @apply grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 lg:gap-32 items-start; }
-  .premium-grid-3 { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 lg:gap-32; }
 }
+
+/* Compatibility layer for legacy components during migration */
+.rounded-2xl { @apply rounded-premium-sm; }
+.rounded-3xl { @apply rounded-premium; }
+.shadow-xl, .shadow-2xl { @apply shadow-premium; }
+.shadow-md { @apply shadow-soft; }
+
+/* Layout Grid Standardization */
+.premium-grid-2 { @apply grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 lg:gap-32 items-start; }
+.premium-grid-3 { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-24 lg:gap-32; }

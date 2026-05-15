@@ -34,10 +34,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <HomeCard
             onClick={() => onNavigate(AppRoute.JORNADAS)}
             padding="md"
-            className="flex flex-col justify-between gap-12 group min-h-[400px]"
+            className="flex flex-col justify-between gap-12 group min-h-[400px] transition-all duration-700"
           >
             <div className="space-y-10">
-              <div className="w-14 h-14 rounded-premium-sm bg-white/[0.03] border border-white/[0.05] flex items-center justify-center text-primary/80 group-hover:bg-white/[0.05] transition-all duration-700 shadow-premium-subtle">
+              <div className="w-14 h-14 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary/80 group-hover:bg-primary/10 transition-all duration-700">
                 <Icons.Flame className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
@@ -81,10 +81,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           <HomeCard 
             onClick={() => onNavigate(AppRoute.CATECHISM)}
             padding="md"
-            className="flex flex-col justify-between gap-12 group min-h-[400px]"
+            className="flex flex-col justify-between gap-12 group min-h-[400px] transition-all duration-700"
           >
             <div className="space-y-10">
-              <div className="w-14 h-14 rounded-premium-sm bg-white/[0.03] border border-white/[0.05] flex items-center justify-center text-primary/80 group-hover:bg-white/[0.05] transition-all duration-700 shadow-premium-subtle">
+              <div className="w-14 h-14 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary/80 group-hover:bg-primary/10 transition-all duration-700">
                 <Icons.Catechism className="w-6 h-6" aria-hidden="true" />
               </div>
               <div>
@@ -109,7 +109,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="divider-line" />
           </div>
           <div className="grid grid-cols-1 gap-10">
-            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center" onClick={() => onNavigate(AppRoute.TEMAS)}>
+            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center transition-all duration-700" onClick={() => onNavigate(AppRoute.TEMAS)}>
               <div className="flex items-center justify-between">
                 <h4 className="heading-item">Temas da Fé</h4>
                 <Icons.Star className="w-5 h-5 text-primary/20" aria-hidden="true" />
@@ -120,7 +120,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               </HomeButton>
             </HomeCard>
             
-            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center" onClick={() => onNavigate(AppRoute.BIBLE)}>
+            <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center transition-all duration-700" onClick={() => onNavigate(AppRoute.BIBLE)}>
               <div className="flex items-center justify-between">
                 <h4 className="heading-item">Estudo Bíblico</h4>
                 <Icons.BookOpen className="w-5 h-5 text-primary/20" aria-hidden="true" />

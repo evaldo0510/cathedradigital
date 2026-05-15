@@ -40,8 +40,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
   return (
     <Card
       variant="interactive"
-      padding="lg"
-      className="flex flex-col items-center text-center space-y-6 group w-full"
+      padding="md"
+      className="flex flex-col items-center text-center space-y-6 group w-full transition-all duration-700 h-full"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -53,11 +53,11 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       role="button"
       tabIndex={0}
     >
-      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
-        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <h3 className="text-xl font-serif font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
     </Card>
