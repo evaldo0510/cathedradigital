@@ -21,7 +21,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
   return (
     <div className="content-section">
-      <div className="premium-grid items-start">
+      <div className="premium-grid-2">
         {/* CONTINUE JORNADA */}
         <section className="space-y-8" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
