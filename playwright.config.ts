@@ -33,8 +33,8 @@ export default defineConfig({
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:8080',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on', // Always capture trace for deep inspection
-    screenshot: 'on', // Always capture screenshot
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
     video: 'on-first-retry',
   },
 
