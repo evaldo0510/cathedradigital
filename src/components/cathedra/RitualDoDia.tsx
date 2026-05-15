@@ -59,7 +59,7 @@ const RitualDoDia: React.FC = () => {
            <Icons.PenLine className="w-3.5 h-3.5 text-muted-foreground/20" strokeWidth={1} />
            <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-muted-foreground/20">Meditatio</span>
         </div>
-        <p className="text-2xl text-primary/50 leading-relaxed font-serif italic pl-12 border-l border-border/10">
+        <p className="text-2xl text-primary/40 leading-relaxed font-serif italic pl-12 border-l border-border/10">
           {reflection}
         </p>
       </div>
