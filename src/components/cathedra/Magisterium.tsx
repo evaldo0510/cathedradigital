@@ -188,7 +188,7 @@ const Magisterium: React.FC = () => {
 
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
-          <Icons.Scroll className="w-4 h-4 text-primary" />
+          <CathedraIcon icon={Icons.Scroll} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
@@ -241,7 +241,7 @@ const Magisterium: React.FC = () => {
 
                 >
                   <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
-                    {item.icon}
+                    <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant={selectedGuidance.id === item.id ? "primary" : "default"} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
                   </div>
                   <span className="font-black text-premium-tiny sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
                 </motion.button>
