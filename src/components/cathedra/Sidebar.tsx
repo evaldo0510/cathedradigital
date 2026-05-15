@@ -8,6 +8,7 @@ import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { canUserAccess } from '@/utils/auth-utils';
 
 interface SidebarProps {
   onClose?: () => void;
