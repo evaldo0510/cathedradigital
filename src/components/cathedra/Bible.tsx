@@ -648,7 +648,7 @@ const Bible: React.FC = () => {
             </div>
 
             <div className="reader-container">
-              {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+              {(crossRefs.length > 0 || docsRefs.length > 0) && (
                 <div className="mb-10">
                   <CrossReferencePanel 
                     type="bible"
