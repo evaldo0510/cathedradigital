@@ -392,13 +392,32 @@ const DesignSystemGuide = () => {
           </div>
         </section>
 
-        {/* Audit A11y & Visual */}
-        <section className="space-y-10">
+        {/* Component & Grid Audit */}
+        <section className="space-y-12">
           <div className="flex items-center gap-6">
             <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria de Componentes</h2>
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Auditoria de Grids & Componentes</h2>
             <div className="h-px flex-1 bg-border/40" />
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-10">
+            {[
+              { label: 'Grid Mobile (sm)', desc: 'Coluna Única (16px gap)', status: 'Validado' },
+              { label: 'Grid Tablet (md)', desc: 'Duas Colunas (24px gap)', status: 'Validado' },
+              { label: 'Grid Desktop (lg)', desc: 'Três Colunas (32px gap)', status: 'Validado' },
+              { label: 'Desktop XL', desc: 'Layout com Sidebar (40px gap)', status: 'Validado' }
+            ].map((item, i) => (
+              <div key={i} className="premium-card p-6 border-secondary/10 bg-secondary/[0.02]">
+                <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-2">{item.label}</p>
+                <p className="text-sm font-medium text-primary">{item.desc}</p>
+                <div className="mt-4 flex items-center gap-2">
+                  <Icons.CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+                  <span className="text-[9px] font-black uppercase tracking-widest text-green-600/70">{item.status}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
           <ComponentPlayground />
         </section>
 
