@@ -28,6 +28,8 @@ import {
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
+import LibrarySidebar from './LibrarySidebar';
+import { cn } from '@/lib/utils';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
