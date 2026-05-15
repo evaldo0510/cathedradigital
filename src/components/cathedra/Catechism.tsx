@@ -26,6 +26,7 @@ import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
+import LibrarySidebar from './LibrarySidebar';
 
 
 
