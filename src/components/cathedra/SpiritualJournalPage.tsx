@@ -90,17 +90,17 @@ const SpiritualJournalPage = () => {
     <div className="max-w-4xl mx-auto space-y-12 pb-24">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full">
+      <header className="premium-header">
+        <div className="premium-tag">
           <Icons.PenLine className="w-4 h-4 text-secondary" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-secondary/60">Diarium Spirituale</span>
+          <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-primary">Diário Espiritual</h1>
-        <p className="text-lg text-primary/60 italic font-serif">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
+        <h1 className="text-4xl md:text-7xl font-serif font-bold text-primary">Diário Espiritual</h1>
+        <p className="text-xl text-primary/60 italic font-serif mx-auto">"Examina, ó minha alma, o que fizeste hoje diante de Deus."</p>
       </header>
 
       {/* Entry Form */}
-      <section className="bg-card border border-border/40 rounded-[3rem] p-8 md:p-12 shadow-premium space-y-10">
+      <section className="desktop-card space-y-12">
         <div className="space-y-6">
           <h3 className="text-xl font-serif font-bold text-primary text-center">Como está sua alma hoje?</h3>
           <div className="flex flex-wrap justify-center gap-4">
