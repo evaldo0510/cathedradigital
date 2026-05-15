@@ -8,8 +8,8 @@ import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface JournalEntry {
   id: string;
@@ -63,7 +63,7 @@ const SpiritualJournalPage = () => {
     setIsLoading(true);
     const today = new Date().toISOString().split('T')[0];
     
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('spiritual_journal')
       .upsert({
         user_id: user.id,
@@ -71,9 +71,7 @@ const SpiritualJournalPage = () => {
         mood,
         entry_date: today,
         updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
+      });
 
     if (error) {
       toast.error('Erro ao salvar reflexão');
@@ -87,69 +85,69 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
+    <div className="app-container section-spacing stack-spacing">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-8 max-w-3xl mx-auto">
+      <header className="premium-header">
         <div className="premium-tag mx-auto">
           <Icons.PenLine className="w-4 h-4 text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+        <h1 className="font-display font-medium text-primary tracking-tighter">
           Diário Espiritual
         </h1>
-        <p className="text-lg md:text-xl text-primary/60 italic font-serif leading-relaxed">
+        <p className="text-xl text-primary/60 italic font-serif leading-relaxed mx-auto max-w-2xl">
           "Examina, ó minha alma, o que fizeste hoje diante de Deus."
         </p>
       </header>
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <HomeCard padding="lg" className="space-y-16">
-          <div className="space-y-8">
-            <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
-            <div className="flex flex-wrap justify-center gap-8">
+        <Card padding="lg" className="space-y-20">
+          <div className="space-y-12">
+            <h3 className="text-2xl font-serif italic text-primary/70 text-center">Como está sua alma hoje?</h3>
+            <div className="flex flex-wrap justify-center gap-8 md:gap-12">
               {MOODS.map((m) => (
                 <button
                   key={m.id}
                   onClick={() => setMood(m.id)}
-                  className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${
+                  className={`flex flex-col items-center gap-5 p-8 rounded-premium-sm border transition-all duration-700 ${
                     mood === m.id 
                       ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
-                      : 'bg-primary/[0.02] border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-primary/[0.05]'
+                      : 'bg-primary/[0.01] border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-primary/[0.03]'
                   }`}
                 >
-                  <m.icon className="w-8 h-8" />
-                  <span className="text-premium-tiny font-bold uppercase tracking-widest">{m.label}</span>
+                  <m.icon className="w-10 h-10" strokeWidth={1} />
+                  <span className="text-premium-tiny font-bold uppercase tracking-[0.3em]">{m.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-12">
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-              className="min-h-[300px] rounded-premium border-border/20 p-8 md:p-12 font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+              className="min-h-[400px] rounded-premium border-none p-12 font-serif text-2xl md:text-3xl leading-relaxed focus-visible:ring-primary/5 bg-primary/[0.01] shadow-inner-soft resize-none placeholder:italic placeholder:opacity-30"
             />
             <div className="flex justify-center">
               <Button 
                 onClick={saveEntry}
                 disabled={isLoading || !content.trim()}
                 variant="primary"
-                className="px-16 h-14"
+                className="px-20 h-16 rounded-full text-xs font-bold uppercase tracking-[0.3em]"
               >
                 {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
               </Button>
             </div>
           </div>
-        </HomeCard>
+        </Card>
       </section>
 
       {/* History */}
-      <section className="space-y-12 max-w-4xl mx-auto w-full">
-        <div className="flex items-center gap-12">
+      <section className="space-y-16 max-w-4xl mx-auto w-full">
+        <div className="flex items-center gap-14">
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
             Memória da Alma
@@ -158,44 +156,46 @@ const SpiritualJournalPage = () => {
         </div>
 
         {isFetching ? (
-          <div className="space-y-10">
+          <div className="space-y-12">
             {[1, 2].map((i) => (
-              <div key={i} className="h-48 bg-muted/10 animate-pulse rounded-premium border border-border/10" />
+              <div key={i} className="h-64 bg-muted/10 animate-pulse rounded-premium border border-border/10" />
             ))}
           </div>
         ) : entries.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-            {entries.map((entry) => (
+          <div className="space-y-14">
+            {entries.map((entry, idx) => (
               <motion.div
                 key={entry.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-secondary flex items-center justify-center">
-                      {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
+                <Card variant="interactive" padding="lg" className="space-y-10 relative overflow-hidden group">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 rounded-2xl bg-primary/[0.02] border border-border/40 text-secondary flex items-center justify-center shadow-inner-soft group-hover:scale-105 transition-transform duration-700">
+                        {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-8 h-8", strokeWidth: 1.25 }) || <Icons.Sun className="w-8 h-8" strokeWidth={1.25} />}
+                      </div>
+                      <div>
+                        <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/30 mb-1">Registro de Graça</p>
+                        <span className="text-lg font-serif font-bold text-primary opacity-80">
+                          {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
-                      <span className="text-sm font-serif font-bold text-primary">
-                        {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
-                      </span>
-                    </div>
+                    <Icons.Quote className="w-16 h-16 text-primary/5 absolute right-10 top-10" strokeWidth={1} />
                   </div>
-                  <Icons.Quote className="w-10 h-10 text-primary/5" />
-                </div>
-                <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
-                  "{entry.content}"
-                </p>
+                  <p className="text-2xl md:text-3xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-10 border-l-2 border-secondary/20">
+                    "{entry.content}"
+                  </p>
+                </Card>
               </motion.div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
-            <Icons.PenLine className="w-16 h-16 mx-auto mb-6 stroke-1" />
-            <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
+          <div className="text-center py-48 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+            <Icons.PenLine className="w-24 h-24 mx-auto mb-10 stroke-[0.5]" />
+            <p className="font-serif italic text-2xl">Nenhuma reflexão guardada ainda.</p>
           </div>
         )}
       </section>

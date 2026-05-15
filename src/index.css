@@ -254,18 +254,18 @@
 
   /* Desktop two-column layout: main content + optional side panel */
   .desktop-layout {
-    @apply w-full grid grid-cols-1 gap-12 md:gap-16 lg:gap-20;
+    @apply w-full grid grid-cols-1 gap-14 md:gap-20 lg:gap-24;
   }
   @screen lg {
     .desktop-layout {
-      grid-template-columns: 1fr 340px;
-      @apply gap-20;
+      grid-template-columns: 1fr 360px;
+      @apply gap-24;
     }
   }
   @screen xl {
     .desktop-layout {
-      grid-template-columns: 1fr 400px;
-      @apply gap-24;
+      grid-template-columns: 1fr 420px;
+      @apply gap-32;
     }
   }
 
@@ -299,16 +299,16 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden;
+    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-700 relative overflow-hidden;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1.5 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
   }
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-16;
+    @apply premium-card p-8 sm:p-12 lg:p-14;
   }
 
   /* Standard card shadow and radius */
@@ -322,7 +322,7 @@
   }
 
   .stack-spacing {
-    @apply space-y-10 md:space-y-14 lg:space-y-20;
+    @apply space-y-14 md:space-y-20 lg:space-y-32;
   }
   
   .premium-grid {
@@ -334,7 +334,7 @@
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/30 rounded-full text-[10px] font-bold uppercase tracking-[0.45em] text-foreground/40 transition-all hover:bg-primary/[0.06] hover:text-foreground/60;
+    @apply inline-flex items-center gap-3 px-8 py-2.5 bg-primary/[0.01] border border-border/20 rounded-full text-[10px] font-bold uppercase tracking-[0.5em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
   }
 
   /* Global Button Standard - Premium Spiritual */
@@ -352,6 +352,10 @@
 
   .btn-premium-outline {
     @apply btn-premium bg-transparent border border-border/60 text-primary hover:border-primary/30 hover:bg-primary/[0.02] hover:-translate-y-1 active:translate-y-0 shadow-none hover:shadow-soft;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 font-bold uppercase tracking-widest text-[10px];
   }
 }
 
@@ -436,18 +440,18 @@
     transform: scale(1);
     opacity: 0;
   }
+}
 
-  /* Compatibility layer for remaining non-standard components */
-  .rounded-2xl {
-    @apply rounded-premium-sm;
-  }
-  .rounded-3xl {
-    @apply rounded-premium;
-  }
-  .shadow-xl, .shadow-2xl {
-    @apply shadow-premium;
-  }
-  .shadow-md {
-    @apply shadow-soft;
-  }
+/* Compatibility layer for remaining non-standard components */
+.rounded-2xl {
+  @apply rounded-premium-sm;
+}
+.rounded-3xl {
+  @apply rounded-premium;
+}
+.shadow-xl, .shadow-2xl {
+  @apply shadow-premium;
+}
+.shadow-md {
+  @apply shadow-soft;
 }
