@@ -442,6 +442,7 @@
   --card-foreground: 25 30% 20%;
   --primary: 25 40% 40%;
   --border: 25 30% 20% / 0.1;
+  background-image: radial-gradient(circle at 50% 50%, rgba(67, 52, 34, 0.02) 0%, transparent 100%);
 }
 
 .reading-night body,
