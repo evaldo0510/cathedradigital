@@ -60,6 +60,7 @@ export const CathedraIcon: React.FC<CathedraIconProps> = ({
       <Icon 
         className={cn(sizeMap[size], variantStyles[variant], className)} 
         strokeWidth={strokeWidth}
+        aria-hidden="true"
       />
     </div>
   );
