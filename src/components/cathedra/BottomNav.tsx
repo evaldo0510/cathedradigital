@@ -61,7 +61,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
       <CathedraIcon 
-        icon={(icon as React.ReactElement).type} 
+        icon={(icon as React.ReactElement).type as any} 
         size={IconSizePreset.NAV} 
         variant={isActive ? 'primary' : 'muted'} 
         containerClassName="bg-transparent border-none p-0 w-auto h-auto"
