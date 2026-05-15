@@ -7,9 +7,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { HomeCard } from './HomeCard';
+import { HomeButton } from './HomeButton';
 
 interface JournalEntry {
   id: string;
