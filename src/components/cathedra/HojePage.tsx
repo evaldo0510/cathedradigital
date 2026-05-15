@@ -263,7 +263,7 @@ const HojePage: React.FC = () => {
 
         {/* FOOTER QUOTE */}
         <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
-          <p className="text-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
+          <p className="text-premium-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>
         </div>
