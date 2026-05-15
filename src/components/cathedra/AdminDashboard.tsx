@@ -6,7 +6,7 @@ import {
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
   Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe
+  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -436,6 +436,9 @@ const AdminDashboard: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <DollarSign className="w-3.5 h-3.5" /> Financeiro
+            </TabsTrigger>
+            <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Palette className="w-3.5 h-3.5" /> Design System
             </TabsTrigger>
             <TabsTrigger value="partners" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Handshake className="w-3.5 h-3.5" /> Parceiros

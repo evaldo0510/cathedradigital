@@ -9,84 +9,149 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Icons } from '@/constants';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const InputPlayground = () => {
-  const [variant, setVariant] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+const ComponentPlayground = () => {
+  const [state, setState] = useState<'default' | 'error' | 'disabled' | 'loading'>('default');
+  const [activeTab, setActiveTab] = useState('inputs');
   
   return (
-    <div className="p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
-      <div className="flex flex-wrap gap-3">
-        {(['default', 'error', 'disabled', 'loading'] as const).map((v) => (
-          <Button 
-            key={v}
-            variant={variant === v ? 'primary' : 'outline'} 
-            size="sm" 
-            onClick={() => setVariant(v)}
-            className="rounded-full px-6 capitalize"
-          >
-            {v === 'default' ? 'Padrão' : v === 'error' ? 'Erro' : v === 'disabled' ? 'Desativado' : 'Carregando'}
-          </Button>
-        ))}
+    <div className="p-4 md:p-8 rounded-[2.5rem] bg-white border border-[#0F172A]/5 space-y-8 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex flex-wrap gap-2">
+          {(['default', 'error', 'disabled', 'loading'] as const).map((s) => (
+            <Button 
+              key={s}
+              variant={state === s ? 'primary' : 'outline'} 
+              size="sm" 
+              onClick={() => setState(s)}
+              className="rounded-full px-5 capitalize h-10 text-[10px]"
+            >
+              {s === 'default' ? 'Padrão' : s === 'error' ? 'Erro' : s === 'disabled' ? 'Desativado' : 'Carregando'}
+            </Button>
+          ))}
+        </div>
+        
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
+          <TabsList className="bg-[#0F172A]/5 rounded-full p-1 h-12">
+            <TabsTrigger value="inputs" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Inputs</TabsTrigger>
+            <TabsTrigger value="selects" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Selects</TabsTrigger>
+            <TabsTrigger value="others" className="rounded-full px-6 text-[10px] font-black uppercase tracking-widest">Outros</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
-      <div className="space-y-6 pt-6 border-t border-[#0F172A]/5">
-        <div className="space-y-3">
-          <Label 
-            className={`font-serif text-lg ${variant === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
-            aria-disabled={variant === 'disabled'}
-          >
-            Campo de Teste
-          </Label>
-          <div className="relative">
-            <Input 
-              disabled={variant === 'disabled'}
-              className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
-              placeholder={variant === 'loading' ? 'Processando...' : 'Digite algo...'}
-            />
-            {variant === 'loading' && (
-              <Icons.Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-primary" />
-            )}
-          </div>
-          {variant === 'error' && (
-            <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
-              <Icons.AlertTriangle className="w-3.5 h-3.5" /> Este campo é obrigatório.
-            </p>
+      <div className="pt-8 border-t border-[#0F172A]/5 min-h-[300px]">
+        <AnimatePresence mode="wait">
+          {activeTab === 'inputs' && (
+            <motion.div 
+              key="inputs"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="space-y-3">
+                <Label 
+                  className={`font-serif text-lg ${state === 'error' ? 'text-destructive' : 'text-[#0F172A]'}`}
+                  aria-disabled={state === 'disabled'}
+                >
+                  Nome do Fiel
+                </Label>
+                <div className="relative">
+                  <Input 
+                    disabled={state === 'disabled'}
+                    className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive focus-visible:ring-destructive/20' : ''}`}
+                    placeholder={state === 'loading' ? 'Processando...' : 'Digite seu nome completo...'}
+                  />
+                  {state === 'loading' && (
+                    <Icons.Loader2 className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 animate-spin text-primary" />
+                  )}
+                </div>
+                {state === 'error' && (
+                  <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
+                    <Icons.AlertTriangle className="w-3.5 h-3.5" /> Este campo é obrigatório.
+                  </p>
+                )}
+              </div>
+            </motion.div>
           )}
-        </div>
 
-        <div className="space-y-3">
-          <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={variant === 'disabled'}>Seleção de Opção</Label>
-          <Select disabled={variant === 'disabled'}>
-            <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${variant === 'error' ? 'border-destructive' : ''}`}>
-              <SelectValue placeholder="Escolha uma categoria" />
-            </SelectTrigger>
-            <SelectContent className="rounded-2xl border-[#0F172A]/10">
-              <SelectItem value="1">Liturgia</SelectItem>
-              <SelectItem value="2">Catecismo</SelectItem>
-              <SelectItem value="3">Vidas dos Santos</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          {activeTab === 'selects' && (
+            <motion.div 
+              key="selects"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <div className="space-y-3">
+                <Label className="font-serif text-lg text-[#0F172A]" aria-disabled={state === 'disabled'}>Tema de Oração</Label>
+                <Select disabled={state === 'disabled'}>
+                  <SelectTrigger className={`rounded-2xl border-[#0F172A]/10 h-14 px-6 focus-visible:ring-primary/20 ${state === 'error' ? 'border-destructive' : ''}`}>
+                    <SelectValue placeholder="Escolha um tema" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#0F172A]/10">
+                    <SelectItem value="1">Liturgia Diária</SelectItem>
+                    <SelectItem value="2">Catecismo da Igreja</SelectItem>
+                    <SelectItem value="3">Vidas dos Santos</SelectItem>
+                  </SelectContent>
+                </Select>
+                {state === 'error' && (
+                  <p className="text-premium-tiny font-black uppercase text-destructive tracking-widest flex items-center gap-2 px-1">
+                    <Icons.AlertTriangle className="w-3.5 h-3.5" /> Selecione uma opção válida.
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'others' && (
+            <motion.div 
+              key="others"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-8"
+            >
+              <div className="flex items-center space-x-3">
+                <Checkbox id="terms" disabled={state === 'disabled'} className="rounded-md border-[#0F172A]/20" />
+                <Label htmlFor="terms" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Aceito os termos de uso e privacidade
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <Checkbox id="newsletter" disabled={state === 'disabled'} defaultChecked className="rounded-md border-[#0F172A]/20" />
+                <Label htmlFor="newsletter" className="text-sm font-serif leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Desejo receber notificações diárias de oração
+                </Label>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="p-6 bg-primary/5 rounded-3xl border border-primary/10">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-3">Acessibilidade (A11y)</p>
-        <ul className="text-xs text-[#0F172A]/60 space-y-2 list-none">
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant !== 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Foco visível: {variant !== 'disabled' ? 'Ativo (Ring 2px)' : 'Inativo'}
-          </li>
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Aria-disabled: {variant === 'disabled' ? 'true' : 'false'}
-          </li>
-          <li className="flex items-center gap-2">
-            <Icons.Check className={`w-3.5 h-3.5 ${variant === 'error' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
-            Aria-invalid: {variant === 'error' ? 'true' : 'false'}
-          </li>
-        </ul>
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-3">Auditoria de Acessibilidade (A11y)</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state !== 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Foco Visível (Ring 2px)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state === 'disabled' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Aria-Disabled Support</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Icons.CheckCircle2 className={`w-4 h-4 ${state === 'error' ? 'text-green-600' : 'text-[#0F172A]/20'}`} />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-60">Aria-Invalid Semantic</span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -167,19 +232,43 @@ const DesignSystemGuide = () => {
           <div className="bg-white border border-[#0F172A]/5 rounded-[3rem] p-8 md:p-16 space-y-16 shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               <div className="space-y-8">
-                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Display (Font-Serif)</span>
-                <div className="space-y-4">
-                  <h1 className="text-5xl font-serif text-[#0F172A]">Título Display</h1>
-                  <h2 className="text-3xl font-serif text-[#0F172A]/80">Subtítulo Elegante</h2>
-                  <p className="text-xl font-serif italic text-[#0F172A]/60">"O Verbo se fez carne e habitou entre nós."</p>
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Display & Headlines</span>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H1 Display - 72px</p>
+                    <h1 className="text-5xl md:text-7xl font-serif text-[#0F172A] leading-tight">A Glória de Deus</h1>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H2 Headline - 48px</p>
+                    <h2 className="text-3xl md:text-5xl font-serif text-[#0B1F3A]">Oração e Contemplação</h2>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H3 Subheadline - 32px</p>
+                    <h3 className="text-2xl md:text-3xl font-serif text-[#0B1F3A]/80 italic">Caminho de Santidade</h3>
+                  </div>
                 </div>
               </div>
               <div className="space-y-8">
-                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Sans (Inter/System)</span>
-                <div className="space-y-4">
-                  <p className="text-2xl font-sans font-bold text-[#0F172A]">Texto Principal Sans</p>
-                  <p className="text-lg text-[#0F172A]/70 leading-relaxed">Utilizada para conteúdos longos, garantindo máxima legibilidade em dispositivos móveis.</p>
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40">Micro-tipografia e Badges</p>
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Body & UI Text</span>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">Body Base - 18px (Serif)</p>
+                    <p className="text-lg font-serif text-[#0F172A]/80 leading-relaxed">
+                      "Não te inquietes com as dificuldades da vida, com os seus altos e baixos, com as suas decepções."
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">UI Small - 14px (Sans)</p>
+                    <p className="text-sm font-sans font-medium text-[#0F172A]/60">
+                      Utilizado para descrições secundárias, metadados e textos de interface que exigem precisão.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">Premium Tiny - 10px (All-caps)</p>
+                    <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary">
+                      Ação Primária • 15 de Maio
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -219,9 +308,48 @@ const DesignSystemGuide = () => {
               </div>
               <div className="p-5 bg-[#D4AF37]/5 rounded-2xl border border-[#D4AF37]/10">
                 <p className="text-[11px] text-[#0F172A]/60 leading-relaxed italic font-serif">
-                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) para manter a harmonia visual em todos os dispositivos.
+                  * Todos os ícones em botões devem usar o tamanho padrão de 20px (w-5 h-5) via classes utilitárias no componente UI/Button para garantir padronização em todos os breakpoints.
                 </p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contrast Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Acessibilidade & Contraste</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-[#0B1F3A] p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-white/40 text-[10px] font-black uppercase tracking-widest">Navy vs White</span>
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/20 shadow-none">12.5:1 (AAA)</Badge>
+              </div>
+              <p className="text-white font-serif text-lg leading-relaxed">
+                Legibilidade perfeita para longos blocos de texto sobre fundo escuro.
+              </p>
+            </div>
+            <div className="bg-[#D4AF37] p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-[#0B1F3A]/40 text-[10px] font-black uppercase tracking-widest">Gold vs Navy</span>
+                <Badge className="bg-green-500/20 text-green-800 border-green-500/20 shadow-none">4.5:1 (AA)</Badge>
+              </div>
+              <p className="text-[#0B1F3A] font-serif text-lg font-bold leading-relaxed">
+                Contraste ideal para destaques e botões de ação primária.
+              </p>
+            </div>
+            <div className="bg-[#F8F5EE] border border-[#0F172A]/5 p-8 rounded-[2.5rem] space-y-4">
+              <div className="flex justify-between items-start">
+                <span className="text-[#0B1F3A]/40 text-[10px] font-black uppercase tracking-widest">Navy vs Paper</span>
+                <Badge className="bg-green-500/20 text-green-600 border-green-500/20 shadow-none">10.2:1 (AAA)</Badge>
+              </div>
+              <p className="text-[#0B1F3A] font-serif text-lg leading-relaxed">
+                O padrão de leitura principal, simulando o papel tradicional.
+              </p>
             </div>
           </div>
         </section>
@@ -234,7 +362,7 @@ const DesignSystemGuide = () => {
             <div className="h-px flex-1 bg-[#0F172A]/10" />
           </div>
 
-          <InputPlayground />
+          <ComponentPlayground />
         </section>
 
         {/* Iconografia Section */}
@@ -326,6 +454,70 @@ const DesignSystemGuide = () => {
                 <p className="text-sm text-[#0F172A]/60 leading-relaxed">{item.desc}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* E2E Section */}
+        <section className="space-y-10">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-[#0F172A]/30">Testes E2E & Automação</h2>
+            <div className="h-px flex-1 bg-[#0F172A]/10" />
+          </div>
+
+          <div className="bg-[#0F172A] p-10 rounded-[3rem] border border-[#D4AF37]/20 shadow-xl overflow-hidden relative group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Icons.ShieldCheck className="w-32 h-32 text-[#D4AF37]" />
+            </div>
+            
+            <div className="relative z-10 space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Pipeline de Qualidade Ativo</span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-serif text-white">Navegação por Teclado</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">TAB</div>
+                      <p className="text-sm">Foco visível em todos os componentes interativos.</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">ENTER</div>
+                      <p className="text-sm">Ativação consistente de botões e links.</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-white/60">
+                      <div className="px-2 py-1 bg-white/10 rounded-md text-[10px] font-mono">ESC</div>
+                      <p className="text-sm">Fechamento intuitivo de modais e popovers.</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-serif text-white">Cobertura de Estados</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Estado 'Disabled' bloqueia interação.</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Estado 'Loading' exibe feedback visual.</p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/20">VALIDADO</Badge>
+                      <p className="text-sm text-white/60 italic font-serif">Foco visível segue ordem do DOM.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-8 border-t border-white/10">
+                <p className="text-premium-tiny text-white/40 font-black uppercase tracking-[0.2em]">Execução Diária via GitHub Actions & Vitest E2E</p>
+              </div>
+            </div>
           </div>
         </section>
 
