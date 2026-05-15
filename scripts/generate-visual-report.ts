@@ -4,7 +4,7 @@ import path from 'path';
 const resultsDir = path.join(process.cwd(), 'test-results');
 const focusProofDir = path.join(resultsDir, 'focus-proof');
 const reportFile = path.join(resultsDir, 'index.html');
-const a11ySummaryFile = path.join(resultsDir, 'a11y-reports', 'summary.json');
+const a11ySummaryFile = path.join(process.cwd(), 'public', 'a11y-reports', 'summary.json');
 
 function generateGallery() {
   console.log('🚀 Gerando galeria de auditoria visual premium com Traces...');
