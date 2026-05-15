@@ -44,9 +44,10 @@ function auditFiles(dir: string) {
 
     const content = fs.readFileSync(fullPath, 'utf-8');
     
-    // Check for legacy classes
+    // Check for legacy classes with word boundaries
     for (const legacy of LEGACY_CLASSES) {
-      if (content.includes(legacy)) {
+      const regex = new RegExp(`\\b${legacy.replace(/\//g, '\\/')}\\b`);
+      if (regex.test(content)) {
         console.error(`❌ Legacy Class [${legacy}] encontrada em: ${fullPath}`);
         fail = true;
       }
