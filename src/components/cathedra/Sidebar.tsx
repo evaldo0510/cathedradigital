@@ -113,13 +113,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-[288px] bg-card border-r border-border/40 flex flex-col p-6 overflow-hidden">
-        <div className="mb-4 px-2 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
-          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
-          <div>
-            <h1 className="text-lg font-black tracking-[0.2em] text-foreground leading-none uppercase font-serif">CATHEDRA</h1>
-            <p className="text-premium-tiny font-black uppercase text-primary/70 tracking-[0.3em] mt-1.5 flex items-center gap-1.5">
-              <span className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+      <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
+        <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
+          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
+          <div className="space-y-1">
+            <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
+            <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
               Digital Sanctuarium
             </p>
           </div>
@@ -128,7 +127,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
-              <h3 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/50 mb-4 px-4">{section.label}</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/30 mb-5 px-4">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
@@ -138,10 +137,10 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-full text-sm font-semibold transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none h-auto min-h-[48px]
+                      className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
                         ${currentPath === item.path
-                          ? 'bg-foreground text-background shadow-lg hover:bg-foreground/90'
-                          : 'text-muted-foreground hover:bg-muted hover:text-foreground'}`}
+                          ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
+                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
                       <span className="opacity-70 flex-shrink-0">{item.icon}</span>
                       <span className="tracking-tight truncate">{item.label}</span>
@@ -214,18 +213,18 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           {user ? (
             <div 
               onClick={() => handleNav(AppRoute.PROFILE)} 
-              className="w-full flex items-center gap-3 p-3 bg-muted rounded-full hover:border-primary border border-transparent transition-all cursor-pointer"
+              className="w-full flex items-center gap-4 p-4 bg-muted/30 rounded-full hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
             >
-              <div className="w-10 h-10 rounded-2xl bg-foreground flex items-center justify-center text-background font-black shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
                 {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-full" />
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-2xl" />
                 ) : (
                   user.name.charAt(0).toUpperCase()
                 )}
               </div>
               <div className="flex-1 min-w-0 text-left">
-                <p className="text-xs font-bold truncate text-foreground">{user.name}</p>
-                <p className="text-premium-tiny uppercase text-primary font-black tracking-widest">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
+                <p className="text-[10px] uppercase text-secondary font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
                 {!user.isPremium && (
                   <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
