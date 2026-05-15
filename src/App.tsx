@@ -17,6 +17,7 @@ import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
 import { initGA4AutoTracking } from './lib/analytics';
 
 import PageTransition from './components/PageTransition';
@@ -176,6 +177,7 @@ const AppLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
   const [isHighContrast, setIsHighContrast] = useState(() => readStoredValue('cathedra_high_contrast') === 'true');
+  const [showA11ySettings, setShowA11ySettings] = useState(false);
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -280,6 +282,12 @@ const AppLayout: React.FC = () => {
     window.addEventListener('change-lang' as any, handleLangChange);
     return () => window.removeEventListener('change-lang' as any, handleLangChange);
   }, [lang]);
+
+  useEffect(() => {
+    const handleOpenA11y = () => setShowA11ySettings(true);
+    window.addEventListener('open-a11y-settings', handleOpenA11y);
+    return () => window.removeEventListener('open-a11y-settings', handleOpenA11y);
+  }, []);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
   
@@ -693,6 +701,16 @@ const AppLayout: React.FC = () => {
             <OfflineIndicator />
             <PWAInstallPrompt />
           </>
+        )}
+        {!isChromeless && (
+          <A11ySettingsPanel 
+            isOpen={showA11ySettings} 
+            onClose={() => setShowA11ySettings(false)}
+            isDark={isDark}
+            onToggleDark={() => setIsDark(!isDark)}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+          />
         )}
       </div>
       </Suspense>

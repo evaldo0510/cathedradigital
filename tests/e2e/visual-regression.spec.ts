@@ -13,6 +13,7 @@ const ROUTES = [
   '/biblioteca',
   '/design-system',
   '/admin',
+  '/diario', // Critical route: Spiritual Journal
 ];
 
 const VIEWPORTS = [

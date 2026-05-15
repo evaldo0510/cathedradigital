@@ -126,9 +126,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           <Button
             variant={isHighContrast ? "default" : "outline"}
             size="icon"
-            onClick={onToggleHighContrast}
+            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
             className={`w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex ${isHighContrast ? 'ring-2 ring-primary ring-offset-1' : ''}`}
-            aria-label="Alternar alto contraste">
+            aria-label="Configurações de Acessibilidade">
             <Icons.ShieldCheck className="w-5 h-5" />
           </Button>
 
