@@ -150,12 +150,12 @@ const HojePage: React.FC = () => {
           
           <div className="flex items-center justify-center gap-8 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+              <div className="flex items-center gap-3 px-8 py-3.5 rounded-premium-sm bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
                 <Icons.Zap className="w-4 h-4 text-primary" />
                 <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
+            <div className="flex items-center gap-3 px-8 py-3.5 rounded-premium-sm bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
               <Icons.Star className="w-4 h-4 text-secondary" />
               <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
@@ -181,7 +181,7 @@ const HojePage: React.FC = () => {
                   className="flex flex-col md:flex-row items-center justify-between gap-12 group"
                 >
                   <div className="flex items-center gap-10 flex-col md:flex-row text-center md:text-left">
-                    <div className="w-24 h-24 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                    <div className="w-24 h-24 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
                       <Icons.Flame className="w-12 h-12" />
                     </div>
                     <div>
@@ -249,7 +249,7 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(AppRoute.CATECHISM)}
                 className="text-center space-y-8"
               >
-                <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
@@ -263,7 +263,7 @@ const HojePage: React.FC = () => {
 
         {/* FOOTER QUOTE */}
         <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
-          <p className="text-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
+          <p className="text-premium-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>
         </div>

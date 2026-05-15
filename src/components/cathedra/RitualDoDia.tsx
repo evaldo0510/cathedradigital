@@ -28,11 +28,11 @@ const RitualDoDia: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Sparkles className="w-5 h-5 text-secondary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60">
+            <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-secondary/60">
               Ritual do Dia
             </span>
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+          <span className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40">
             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </span>
         </div>
@@ -47,12 +47,12 @@ const RitualDoDia: React.FC = () => {
         <div className="space-y-4" role="article" aria-label="Versículo do Dia">
           <div className="flex items-center gap-2.5">
             <BookOpen className="w-4 h-4 text-primary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
+            <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
           <blockquote className="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
-          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
+          <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
         </div>
 
         {/* Divider */}
@@ -60,7 +60,7 @@ const RitualDoDia: React.FC = () => {
 
         {/* Reflection */}
         <div className="space-y-3" role="article" aria-label="Reflexão">
-          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
           <p className="text-base text-foreground/70 leading-relaxed font-reader">
             {reflection}
           </p>

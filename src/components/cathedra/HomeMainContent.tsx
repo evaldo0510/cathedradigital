@@ -36,8 +36,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           padding="lg"
           className="flex flex-col md:flex-row items-center justify-between gap-12 group"
         >
-          <div className="flex items-center gap-10 text-center md:text-left flex-col md:flex-row">
-            <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-inner">
+          <div className="flex items-center gap-12 text-center md:text-left flex-col md:flex-row">
+            <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-inner">
               <Icons.Flame className="w-10 h-10" />
             </div>
             <div>
@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           padding="xl"
           className="text-center space-y-12 group"
         >
-          <div className="w-24 h-24 rounded-3xl bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+          <div className="w-24 h-24 rounded-premium-sm bg-secondary/[0.02] border border-secondary/20 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
             <Icons.Catechism className="w-12 h-12" />
           </div>
           <div className="space-y-6">
@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
       {/* TRILHAS */}
       <section className="space-y-12">
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-12">
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
             Trilhas de Formação
@@ -124,7 +124,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <HomeCard padding="md" className="space-y-8 h-full">
-            <div className="w-12 h-12 rounded-2xl bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
+            <div className="w-12 h-12 rounded-premium-sm bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
               <Icons.Star className="w-6 h-6" />
             </div>
             <div className="space-y-3">
@@ -137,7 +137,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </HomeCard>
           
           <HomeCard padding="md" className="space-y-8 h-full">
-            <div className="w-12 h-12 rounded-2xl bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
+            <div className="w-12 h-12 rounded-premium-sm bg-secondary/[0.03] border border-secondary/20 flex items-center justify-center text-secondary">
               <Icons.BookOpen className="w-6 h-6" />
             </div>
             <div className="space-y-3">

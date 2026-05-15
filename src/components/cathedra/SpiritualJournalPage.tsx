@@ -109,7 +109,7 @@ const SpiritualJournalPage = () => {
         <HomeCard padding="lg" className="space-y-16">
           <div className="space-y-8">
             <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-8">
               {MOODS.map((m) => (
                 <button
                   key={m.id}
@@ -117,11 +117,11 @@ const SpiritualJournalPage = () => {
                   className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${
                     mood === m.id 
                       ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
-                      : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
+                      : 'bg-primary/[0.02] border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-primary/[0.05]'
                   }`}
                 >
                   <m.icon className="w-8 h-8" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{m.label}</span>
+                  <span className="text-premium-tiny font-bold uppercase tracking-widest">{m.label}</span>
                 </button>
               ))}
             </div>
@@ -150,12 +150,12 @@ const SpiritualJournalPage = () => {
 
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap uppercase">
+        <div className="flex items-center gap-12">
+          <div className="h-px flex-1 bg-border/30" />
+          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
             Memória da Alma
           </h2>
-          <div className="h-px flex-1 bg-border/40" />
+          <div className="h-px flex-1 bg-border/30" />
         </div>
 
         {isFetching ? (
@@ -179,7 +179,7 @@ const SpiritualJournalPage = () => {
                       {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
+                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
                       <span className="text-sm font-serif font-bold text-primary">
                         {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
                       </span>
