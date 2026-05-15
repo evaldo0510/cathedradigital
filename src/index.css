@@ -36,9 +36,9 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 222 47% 4%;    /* Even deeper blue for better contrast */
-    --foreground: 45 42% 96%;    /* Cream White #F8F5EE */
-    --card: 222 47% 6%;
+    --background: 222 47% 4%;
+    --foreground: 45 42% 96%;
+    --card: 222 47% 5%;
     --card-foreground: 45 42% 96%;
     --popover: 222 47% 5%;
     --popover-foreground: 45 42% 96%;
