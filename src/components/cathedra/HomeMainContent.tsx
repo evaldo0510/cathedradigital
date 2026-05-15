@@ -94,7 +94,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 </p>
               </div>
             </div>
-            <HomeButton variant="outline" className="w-full">
+            <HomeButton variant="outline" className="w-full" aria-label="Explorar o Catecismo">
               Explorar Doutrina
             </HomeButton>
           </HomeCard>
