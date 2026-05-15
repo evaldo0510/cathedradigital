@@ -595,7 +595,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path="/curso-pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path="/pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
-                  <Route path={AppRoute.DASHBOARD} element={<Navigate to={AppRoute.HOJE} replace />} />
+                  <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
