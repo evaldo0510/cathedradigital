@@ -58,7 +58,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* RITUAL DO DIA */}
-        <section className="space-y-12 max-w-2xl mx-auto lg:mx-0 w-full" aria-labelledby="section-hoje">
+        <section className="space-y-12 max-w-xl mx-auto lg:mx-0 w-full" aria-labelledby="section-hoje">
           <div className="section-divider-header">
             <h2 id="section-hoje" className="heading-section-label whitespace-nowrap">
               Hoje
