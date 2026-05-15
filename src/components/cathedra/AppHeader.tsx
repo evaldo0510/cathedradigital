@@ -199,7 +199,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               onClick={() => navigate(AppRoute.ADMIN)} 
               className="hidden sm:flex lg:hidden h-10 px-4 items-center gap-2 rounded-full border border-secondary/30"
             >
-              <Icons.Star className="w-4 h-4" />
+              <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="secondary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               <span>{t('admin')}</span>
             </Button>
           )}
@@ -256,7 +256,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             )}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
             aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
-            {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
+            {isSpeaking ? <CathedraIcon icon={Icons.Stop} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Volume2} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
           </Button>
 
           <Button
@@ -265,7 +265,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onClick={onToggleDark}
             className="hidden lg:flex w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
             aria-label="Alternar tema">
-            {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
+            {isDark ? <CathedraIcon icon={Icons.Sun} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Moon} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
           </Button>
 
 
