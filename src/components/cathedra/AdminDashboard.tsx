@@ -925,16 +925,16 @@ const AdminDashboard: React.FC = () => {
                             <Button
                               onClick={() => handleTogglePremium(u.id, u.is_premium)}
                               title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors`}
+                              variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary"
                             >
-                              <Crown className="w-3.5 h-3.5" />
+                              <Crown />
                             </Button>
                             <Button
                               onClick={() => handleToggleRole(u.id, u.role)}
                               title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors`}
+                              variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                             >
-                              <UserCog className="w-3.5 h-3.5" />
+                              <UserCog />
                             </Button>
                           </div>
                         </td>
