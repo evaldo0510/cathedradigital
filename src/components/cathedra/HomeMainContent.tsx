@@ -124,7 +124,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <HomeCard padding="md" className="space-y-8 h-full">
-            <div className="w-12 h-12 rounded-2xl bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
+            <div className="w-12 h-12 rounded-premium-sm bg-primary/[0.03] border border-border/40 flex items-center justify-center text-primary">
               <Icons.Star className="w-6 h-6" />
             </div>
             <div className="space-y-3">
