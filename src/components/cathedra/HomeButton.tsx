@@ -5,7 +5,7 @@ import { type ButtonProps } from "@/components/ui/button";
 export interface HomeButtonProps extends ButtonProps {}
 
 const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
-  ({ variant, size, ...props }, ref) => {
+  ({ variant, size, children, className, ...props }, ref) => {
     // Map existing Shadcn variants to Cathedra variants
     const vMap: Record<string, any> = {
       default: 'primary',
@@ -21,13 +21,23 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
       icon: 'sm',
     };
 
+    // Filter props to avoid motion conflicts
+    const filteredProps = { ...props };
+    delete (filteredProps as any).onAnimationStart;
+    delete (filteredProps as any).onDrag;
+    delete (filteredProps as any).onDragEnd;
+    delete (filteredProps as any).onDragStart;
+
     return (
       <CathedraButton
         ref={ref}
         variant={vMap[variant as string] || 'primary'}
         size={sMap[size as string] || 'md'}
-        {...props}
-      />
+        className={className}
+        {...(filteredProps as any)}
+      >
+        {children}
+      </CathedraButton>
     );
   }
 );
