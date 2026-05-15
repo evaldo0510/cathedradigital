@@ -482,17 +482,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
+                    variant="interactive"
+                    padding="none"
+                    className={cn(
+                      "overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none",
                       isComplete 
-                        ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
+                        ? "border-emerald-500/20 shadow-lg shadow-emerald-500/5" 
                         : hasStarted 
-                          ? 'border-primary/20'
-                          : 'border-border hover:border-primary/30'
-                    }`}
+                          ? "border-primary/20"
+                          : "border-border/30"
+                    )}
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === 'Enter' && navigate(`/jornadas/${journey.id}`)}
                     aria-label={`Jornada ${journey.title}. ${isComplete ? 'Concluída' : hasStarted ? `${Math.round(progressPercent)}% concluída` : 'Não iniciada'}`}
                   >
 
