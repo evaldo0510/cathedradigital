@@ -343,7 +343,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   ))
                 ) : (
                   <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
-                    <Icons.Star className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                    <Icons.Star className="w-10 h-10 text-muted-foreground/30 mx-auto" />
                     <div className="space-y-2">
                       <p className="text-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
                       <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
