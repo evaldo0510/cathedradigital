@@ -162,9 +162,17 @@ const DesignSystemGuide = () => {
 
               <div className="space-y-4">
                 <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Semantic Styles</p>
-                <div className="space-y-4">
-                  <p className="text-lg font-serif italic text-primary">Serif Italic for quotes and reflections: "O Verbo se fez carne."</p>
-                  <p className="text-sm font-mono bg-muted p-2 rounded w-fit">Mono text for codes or technical labels</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4 p-6 rounded-2xl bg-primary/5 border border-primary/10">
+                    <span className="text-premium-tiny text-primary font-black uppercase tracking-widest">Serif Italic (Contemplative)</span>
+                    <p className="text-xl font-serif italic text-primary leading-relaxed">"O Verbo se fez carne e habitou entre nós, e vimos sua glória."</p>
+                  </div>
+                  <div className="space-y-4 p-6 rounded-2xl bg-secondary/5 border border-secondary/10">
+                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Technical Mono (Code/Metadata)</span>
+                    <div className="text-sm font-mono bg-muted/50 p-4 rounded-xl border border-border/20 whitespace-pre-wrap">
+                      {`{\n  "version": "1.0.0",\n  "status": "synchronized"\n}`}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -357,7 +365,35 @@ const DesignSystemGuide = () => {
                 </div>
               </div>
 
-              <div className="space-y-8">
+              <div className="space-y-12">
+                <div className="space-y-6">
+                  <Label className="text-lg">Textarea & Checkbox</Label>
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="guide-textarea">Comentários ou Reflexões</Label>
+                      <textarea 
+                        id="guide-textarea"
+                        className="flex min-h-[120px] w-full rounded-[2rem] border border-input bg-background px-6 py-4 text-premium-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+                        placeholder="Escreva seus pensamentos aqui..."
+                      />
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="peer h-5 w-5 shrink-0 rounded-md border border-primary ring-offset-background flex items-center justify-center bg-primary text-primary-foreground">
+                          <Icons.Check className="h-4 w-4" />
+                        </div>
+                        <Label className="font-bold">Notificações Diárias</Label>
+                      </div>
+                      <div className="flex items-center space-x-3 opacity-50 cursor-not-allowed">
+                        <div className="peer h-5 w-5 shrink-0 rounded-md border border-border ring-offset-background bg-muted" />
+                        <Label className="text-muted-foreground">Opção Desabilitada</Label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-8 md:col-span-2">
                 <h3 className="text-xl font-bold text-primary">Interactive Playground</h3>
                 <InputPlayground />
               </div>
