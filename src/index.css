@@ -330,11 +330,11 @@
   }
 
   .premium-header {
-    @apply text-center space-y-8 mb-20 md:mb-32 max-w-4xl mx-auto;
+    @apply text-center space-y-10 mb-28 md:mb-48 max-w-5xl mx-auto;
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-8 py-2.5 bg-primary/[0.01] border border-border/20 rounded-full text-[10px] font-bold uppercase tracking-[0.5em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
+    @apply inline-flex items-center gap-3 px-8 py-3 bg-primary/[0.01] border border-border/20 rounded-full text-[10px] font-bold uppercase tracking-[0.6em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
   }
 
   /* Global Button Standard - Premium Spiritual */
