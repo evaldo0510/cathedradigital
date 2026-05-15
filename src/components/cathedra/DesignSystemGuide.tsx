@@ -231,19 +231,43 @@ const DesignSystemGuide = () => {
           <div className="bg-white border border-[#0F172A]/5 rounded-[3rem] p-8 md:p-16 space-y-16 shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
               <div className="space-y-8">
-                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Display (Font-Serif)</span>
-                <div className="space-y-4">
-                  <h1 className="text-5xl font-serif text-[#0F172A]">Título Display</h1>
-                  <h2 className="text-3xl font-serif text-[#0F172A]/80">Subtítulo Elegante</h2>
-                  <p className="text-xl font-serif italic text-[#0F172A]/60">"O Verbo se fez carne e habitou entre nós."</p>
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Display & Headlines</span>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H1 Display - 72px</p>
+                    <h1 className="text-5xl md:text-7xl font-serif text-[#0F172A] leading-tight">A Glória de Deus</h1>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H2 Headline - 48px</p>
+                    <h2 className="text-3xl md:text-5xl font-serif text-[#0B1F3A]">Oração e Contemplação</h2>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">H3 Subheadline - 32px</p>
+                    <h3 className="text-2xl md:text-3xl font-serif text-[#0B1F3A]/80 italic">Caminho de Santidade</h3>
+                  </div>
                 </div>
               </div>
               <div className="space-y-8">
-                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Sans (Inter/System)</span>
-                <div className="space-y-4">
-                  <p className="text-2xl font-sans font-bold text-[#0F172A]">Texto Principal Sans</p>
-                  <p className="text-lg text-[#0F172A]/70 leading-relaxed">Utilizada para conteúdos longos, garantindo máxima legibilidade em dispositivos móveis.</p>
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40">Micro-tipografia e Badges</p>
+                <span className="text-premium-tiny text-[#D4AF37] font-black uppercase tracking-widest">Body & UI Text</span>
+                <div className="space-y-6">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">Body Base - 18px (Serif)</p>
+                    <p className="text-lg font-serif text-[#0F172A]/80 leading-relaxed">
+                      "Não te inquietes com as dificuldades da vida, com os seus altos e baixos, com as suas decepções."
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">UI Small - 14px (Sans)</p>
+                    <p className="text-sm font-sans font-medium text-[#0F172A]/60">
+                      Utilizado para descrições secundárias, metadados e textos de interface que exigem precisão.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#0F172A]/30">Premium Tiny - 10px (All-caps)</p>
+                    <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary">
+                      Ação Primária • 15 de Maio
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
