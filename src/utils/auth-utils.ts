@@ -49,7 +49,8 @@ export const logUnauthorizedAccess = async (userId: string | undefined, path: st
       metadata: { 
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        platform: navigator.platform
+        platform: navigator.platform,
+        referrer: document.referrer || 'direct'
       }
     }]);
   } catch (err) {
