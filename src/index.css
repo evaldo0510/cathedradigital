@@ -343,11 +343,11 @@
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover hover:-translate-y-1 hover:brightness-110 active:translate-y-0;
+    @apply btn-premium bg-primary/90 text-primary-foreground hover:bg-primary hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
+    @apply btn-premium bg-secondary/80 text-secondary-foreground hover:bg-secondary hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-outline {
