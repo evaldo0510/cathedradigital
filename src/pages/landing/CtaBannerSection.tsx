@@ -1,5 +1,5 @@
 import { Church, ChevronRight } from "lucide-react";
-import { Button } from "@/components/cathedra/Button";
+import { Button } from "@/components/ui/button";
 import { HomeCard } from "@/components/cathedra/HomeCard";
 
 interface CtaBannerSectionProps {
