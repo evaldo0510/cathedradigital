@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardFooter as CardFooter } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -201,7 +201,7 @@ const AdminPartnersTab: React.FC = () => {
         <TabsContent value={activeTab} className="mt-0">
           {filteredPartners.length === 0 ? (
             <Card className="border-dashed border-2 py-12">
-              <CardContent className="flex flex-col items-center text-center space-y-4">
+              <CathedraCardContent as CardContent className="flex flex-col items-center text-center space-y-4">
                 <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
                   <Building2 className="w-8 h-8 text-muted-foreground" />
                 </div>
@@ -209,13 +209,13 @@ const AdminPartnersTab: React.FC = () => {
                   <p className="font-semibold">Nenhum parceiro nesta categoria</p>
                   <p className="text-sm text-muted-foreground">Use a busca ou mude o filtro para encontrar parceiros.</p>
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {filteredPartners.map((partner) => (
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
-                  <CardHeader className="flex flex-row items-start justify-between pb-3">
+                  <CathedraCardHeader as CardHeader className="flex flex-row items-start justify-between pb-3">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center overflow-hidden border p-1 shadow-sm">
                         {partner.logo_url ? (
@@ -225,10 +225,10 @@ const AdminPartnersTab: React.FC = () => {
                         )}
                       </div>
                       <div>
-                        <CardTitle className="text-lg flex items-center gap-2">
+                        <CathedraCardTitle as CardTitle className="text-lg flex items-center gap-2">
                           {partner.name}
                           {getStatusBadge(partner.status)}
-                        </CardTitle>
+                        </CathedraCardTitle as CardTitle>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-1">
                           <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> {partner.contact_email}</span>
                           <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
@@ -262,15 +262,15 @@ const AdminPartnersTab: React.FC = () => {
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </CardHeader>
+                  </CathedraCardHeader as CardHeader>
                   
-                  <CardContent className="pb-4">
+                  <CathedraCardContent as CardContent className="pb-4">
                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
                       "{partner.description || "Nenhuma descrição fornecida."}"
                     </p>
-                  </CardContent>
+                  </CathedraCardContent as CardContent>
                   
-                  <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-2 py-3 bg-muted/5">
+                  <CathedraCardFooter as CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-2 py-3 bg-muted/5">
                     <div className="flex items-center gap-2">
                       {partner.website_url && (
                         <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
@@ -315,7 +315,7 @@ const AdminPartnersTab: React.FC = () => {
                         </Button>
                       )}
                     </div>
-                  </CardFooter>
+                  </CathedraCardFooter as CardFooter>
                 </Card>
               ))}
             </div>

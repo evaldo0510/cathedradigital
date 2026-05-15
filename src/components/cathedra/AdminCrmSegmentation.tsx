@@ -3,9 +3,9 @@ import {
   Users, Crown, AlertTriangle, Flame, UserCheck, Clock, Star,
   Filter, ChevronDown, ChevronUp, Eye, Download, Search
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
@@ -135,11 +135,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
 
       {/* User List */}
       <Card>
-        <CardHeader className="pb-3">
+        <CathedraCardHeader as CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm">
+            <CathedraCardTitle as CardTitle className="text-sm">
               {segments.find(s => s.key === segment)?.label} — {filtered.length} usuário{filtered.length !== 1 ? 's' : ''}
-            </CardTitle>
+            </CathedraCardTitle as CardTitle>
             <div className="flex items-center gap-2">
               <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportCsv} disabled={filtered.length === 0}>
                 <Download className="w-3.5 h-3.5" /> CSV
@@ -156,8 +156,8 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             </Select>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
+        </CathedraCardHeader as CardHeader>
+        <CathedraCardContent as CardContent className="p-0">
           <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-card z-10">
@@ -215,7 +215,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               </tbody>
             </table>
           </div>
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
     </div>
   );

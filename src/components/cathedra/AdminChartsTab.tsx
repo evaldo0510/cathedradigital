@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
 const RechartsCharts = lazy(() => import('./AdminChartsRecharts'));
@@ -14,13 +14,13 @@ interface AdminChartsTabProps {
 const ChartSkeleton = React.forwardRef<HTMLDivElement, any>((props, ref) => (
   <div ref={ref}>
     <Card>
-      <CardHeader>
+      <CathedraCardHeader as CardHeader>
         <Skeleton className="h-5 w-40" />
         <Skeleton className="h-4 w-56 mt-1" />
-      </CardHeader>
-      <CardContent className="h-[300px] flex items-center justify-center">
+      </CathedraCardHeader as CardHeader>
+      <CathedraCardContent as CardContent className="h-[300px] flex items-center justify-center">
         <Skeleton className="h-full w-full rounded" />
-      </CardContent>
+      </CathedraCardContent as CardContent>
     </Card>
   </div>
 ));

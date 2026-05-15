@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { normalizeText } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -309,13 +309,13 @@ const AdminThemesTab = () => {
         <div className="lg:col-span-8">
           {!selectedTheme ? (
             <Card className="border-dashed h-[400px] flex items-center justify-center">
-              <CardContent className="flex flex-col items-center justify-center text-center">
+              <CathedraCardContent as CardContent className="flex flex-col items-center justify-center text-center">
                 <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-4">
                   <Tag className="w-8 h-8 text-muted-foreground/30" />
                 </div>
                 <h3 className="font-bold text-lg mb-1">Nenhum tema selecionado</h3>
                 <p className="text-muted-foreground text-sm max-w-[250px]">Selecione um tema à esquerda para gerenciar seus conteúdos conectados.</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           ) : (
             <div className="space-y-4 animate-in fade-in duration-300">
@@ -391,7 +391,7 @@ const AdminThemesTab = () => {
                         <div className="grid gap-3">
                           {items.map(item => (
                             <Card key={item.id} className="bg-card hover:bg-card transition-colors border-border/40 shadow-none">
-                              <CardContent className="p-4">
+                              <CathedraCardContent as CardContent className="p-4">
                                 {editingContent?.id === item.id ? (
                                   <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-4">
@@ -436,7 +436,7 @@ const AdminThemesTab = () => {
                                     </div>
                                   </div>
                                 )}
-                              </CardContent>
+                              </CathedraCardContent as CardContent>
                             </Card>
                           ))}
                         </div>
@@ -448,10 +448,10 @@ const AdminThemesTab = () => {
 
               {!loadingContents && contents?.length === 0 && (
                 <Card className="border-dashed py-12">
-                  <CardContent className="flex flex-col items-center justify-center text-center opacity-50">
+                  <CathedraCardContent as CardContent className="flex flex-col items-center justify-center text-center opacity-50">
                     <FileText className="w-10 h-10 mb-2" />
                     <p className="text-sm font-medium">Nenhum conteúdo vinculado a este tema.</p>
-                  </CardContent>
+                  </CathedraCardContent as CardContent>
                 </Card>
               )}
             </div>

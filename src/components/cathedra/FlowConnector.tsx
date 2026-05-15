@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { RouteRecommendation } from '@/lib/smartRouter';
 
 interface FlowConnectorProps {
@@ -49,14 +49,14 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({
                 className="cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all group"
                 onClick={() => navigate(rec.route)}
               >
-                <CardContent className="p-4 flex items-center gap-3">
+                <CathedraCardContent as CardContent className="p-4 flex items-center gap-3">
                   <Icon className="w-6 h-6 text-primary" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">{rec.label}</p>
                     <p className="text-xs text-muted-foreground">{rec.reason}</p>
                   </div>
                   <Icons.ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-                </CardContent>
+                </CathedraCardContent as CardContent>
               </Card>
             </motion.div>
           );

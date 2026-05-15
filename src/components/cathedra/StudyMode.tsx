@@ -11,7 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles, BookOpen, ArrowRight, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import { callColloquium } from '@/services/aiService';

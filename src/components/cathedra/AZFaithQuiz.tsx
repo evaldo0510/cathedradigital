@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Trophy, RotateCcw, Sparkles, ArrowRight, BookOpen, Brain, TrendingUp, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';

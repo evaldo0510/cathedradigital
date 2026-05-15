@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Award, ArrowRight, BookOpen, Quote, ChevronRight, Sparkles, ArrowLeft, Share2, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -241,7 +241,7 @@ const JornadaCompletePage: React.FC = () => {
       >
         <div ref={certificateRef}>
           <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-            <CardContent className="p-8 text-center space-y-6">
+            <CathedraCardContent as CardContent className="p-8 text-center space-y-6">
               <div className="w-20 h-20 mx-auto rounded-2xl bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
                 <Award className="w-10 h-10 text-primary" />
               </div>
@@ -262,7 +262,7 @@ const JornadaCompletePage: React.FC = () => {
                 <span>CATHEDRA — Digital Sanctuarium</span>
                 <Sparkles className="w-3 h-3 text-primary" />
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </div>
 
@@ -289,7 +289,7 @@ const JornadaCompletePage: React.FC = () => {
           transition={{ delay: 0.3 }}
         >
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
-            <CardContent className="p-6 space-y-4">
+            <CathedraCardContent as CardContent className="p-6 space-y-4">
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                 <Star className="w-5 h-5 text-primary" /> Recompensas
               </h2>
@@ -315,7 +315,7 @@ const JornadaCompletePage: React.FC = () => {
                   </div>
                 );
               })}
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </motion.div>
       )}
@@ -341,13 +341,13 @@ const JornadaCompletePage: React.FC = () => {
                 transition={{ delay: 0.5 + i * 0.1 }}
               >
                 <Card className="border-border/50">
-                  <CardContent className="p-4 space-y-2">
+                  <CathedraCardContent as CardContent className="p-4 space-y-2">
                     <p className="text-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
                     <div className="flex gap-2">
                       <Quote className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                       <p className="text-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
                     </div>
-                  </CardContent>
+                  </CathedraCardContent as CardContent>
                 </Card>
               </motion.div>
             ))}
@@ -369,7 +369,7 @@ const JornadaCompletePage: React.FC = () => {
             className="border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
             onClick={() => navigate(`/jornadas/${nextJourney.id}`)}
           >
-            <CardContent className="p-5 flex items-center gap-4">
+            <CathedraCardContent as CardContent className="p-5 flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <ArrowRight className="w-6 h-6 text-primary" />
               </div>
@@ -380,7 +380,7 @@ const JornadaCompletePage: React.FC = () => {
                 )}
               </div>
               <ChevronRight className="w-5 h-5 text-muted-foreground" />
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </motion.div>
       )}

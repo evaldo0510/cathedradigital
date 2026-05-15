@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardFooter as CardFooter } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -148,7 +148,7 @@ const PartnersPage: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="h-full hover:shadow-xl transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
-                  <CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
+                  <CathedraCardHeader as CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
                     {partner.logo_url ? (
                       <img 
                         src={partner.logo_url} 
@@ -160,16 +160,16 @@ const PartnersPage: React.FC = () => {
                         <Icons.Trophy className="w-8 h-8" />
                       </div>
                     )}
-                  </CardHeader>
-                  <CardContent className="p-6 space-y-3">
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                  </CathedraCardHeader as CardHeader>
+                  <CathedraCardContent as CardContent className="p-6 space-y-3">
+                    <CathedraCardTitle as CardTitle className="text-xl group-hover:text-primary transition-colors">
                       {partner.name}
-                    </CardTitle>
-                    <CardDescription className="text-sm line-clamp-3 leading-relaxed">
+                    </CathedraCardTitle as CardTitle>
+                    <CathedraCardDescription as CardDescription className="text-sm line-clamp-3 leading-relaxed">
                       {partner.description || "Sem descrição disponível."}
-                    </CardDescription>
-                  </CardContent>
-                  <CardFooter className="p-6 pt-0 mt-auto">
+                    </CathedraCardDescription as CardDescription>
+                  </CathedraCardContent as CardContent>
+                  <CathedraCardFooter as CardFooter className="p-6 pt-0 mt-auto">
                     {partner.website_url && (
                       <Button 
                         variant="ghost" 
@@ -182,7 +182,7 @@ const PartnersPage: React.FC = () => {
                         </a>
                       </Button>
                     )}
-                  </CardFooter>
+                  </CathedraCardFooter as CardFooter>
                 </Card>
               </motion.div>
             ))}

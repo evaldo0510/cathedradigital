@@ -12,9 +12,9 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
@@ -379,7 +379,7 @@ const Magisterium: React.FC = () => {
                 transition={{ delay: idx * 0.05 }}
               >
                 <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
-                  <CardContent className="p-6 flex flex-col h-full space-y-4">
+                  <CathedraCardContent as CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
@@ -413,7 +413,7 @@ const Magisterium: React.FC = () => {
                       Ler Documento
                       <Icons.ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
-                  </CardContent>
+                  </CathedraCardContent as CardContent>
                 </Card>
               </motion.div>
             ))}

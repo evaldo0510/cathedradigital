@@ -2,8 +2,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Check, X, ChevronRight, Sparkles, Crown, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
@@ -57,18 +57,18 @@ const PricingPage: React.FC = () => {
         {/* Free */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}>
           <Card className="h-full rounded-2xl border-border/50 bg-card shadow-lg">
-            <CardHeader className="text-center pb-2 space-y-4">
+            <CathedraCardHeader as CardHeader className="text-center pb-2 space-y-4">
               <div className="w-14 h-14 mx-auto rounded-2xl bg-muted flex items-center justify-center">
                 <Zap className="w-7 h-7 text-muted-foreground" />
               </div>
-              <CardTitle className="text-2xl font-serif">Peregrino</CardTitle>
+              <CathedraCardTitle as CardTitle className="text-2xl font-serif">Peregrino</CathedraCardTitle as CardTitle>
               <div>
                 <span className="text-5xl font-display font-bold">R$ 0</span>
                 <span className="text-muted-foreground ml-1">/sempre</span>
               </div>
               <p className="text-sm text-muted-foreground">Acesso essencial à fé católica</p>
-            </CardHeader>
-            <CardContent className="space-y-6">
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="space-y-6">
               <ul className="space-y-3">
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-3 text-sm">
@@ -88,7 +88,7 @@ const PricingPage: React.FC = () => {
               >
                 {user ? 'Ir ao Dashboard' : 'Criar Conta Grátis'}
               </Button>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </motion.div>
 
@@ -98,11 +98,11 @@ const PricingPage: React.FC = () => {
             <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-widest px-4 py-1.5 rounded-bl-2xl">
               Recomendado
             </div>
-            <CardHeader className="text-center pb-2 space-y-4">
+            <CathedraCardHeader as CardHeader className="text-center pb-2 space-y-4">
               <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center">
                 <Sparkles className="w-7 h-7 text-primary" />
               </div>
-              <CardTitle className="text-2xl font-serif">Cathedra PRO</CardTitle>
+              <CathedraCardTitle as CardTitle className="text-2xl font-serif">Cathedra PRO</CathedraCardTitle as CardTitle>
               <div>
                 <span className="text-5xl font-display font-bold text-primary">R$ 15</span>
                 <span className="text-xl font-bold text-primary">,92</span>
@@ -111,8 +111,8 @@ const PricingPage: React.FC = () => {
               <p className="text-sm text-muted-foreground">
                 R$ 191,04/ano · <span className="text-primary font-bold">Economize 20%</span>
               </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="space-y-6">
               <ul className="space-y-3">
                 {FREE_VS_PRO.map((item) => (
                   <li key={item.feature} className="flex items-center gap-3 text-sm">
@@ -128,7 +128,7 @@ const PricingPage: React.FC = () => {
                 {isPremium ? 'Você já é PRO ✓' : 'Assinar Agora'}
                 {!isPremium && <ChevronRight className="w-4 h-4 ml-1" />}
               </Button>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </motion.div>
       </div>

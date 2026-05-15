@@ -5,9 +5,9 @@ import {
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
   ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import {
@@ -392,11 +392,11 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             transition={{ duration: 0.45, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <Card className="h-full">
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{kpi.title}</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{kpi.title}</CathedraCardTitle as CardTitle>
                 {kpi.icon}
-              </CardHeader>
-              <CardContent>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-baseline gap-2">
@@ -407,7 +407,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                   </div>
                   {kpi.spark}
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </motion.div>
         ))}
@@ -416,11 +416,11 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Distribuição de Streaks</CardTitle>
-            <CardDescription>Frequência de dias consecutivos</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[260px]">
+          <CathedraCardHeader as CardHeader>
+            <CathedraCardTitle as CardTitle className="text-sm">Distribuição de Streaks</CathedraCardTitle as CardTitle>
+            <CathedraCardDescription as CardDescription>Frequência de dias consecutivos</CathedraCardDescription as CardDescription>
+          </CathedraCardHeader as CardHeader>
+          <CathedraCardContent as CardContent className="h-[260px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.streakBuckets}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.15)" />
@@ -430,15 +430,15 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} barSize={32} name="Usuários" />
               </BarChart>
             </ResponsiveContainer>
-          </CardContent>
+          </CathedraCardContent as CardContent>
         </Card>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="text-sm">Saúde da Base</CardTitle>
-            <CardDescription>Ativos vs Em Risco vs Inativos</CardDescription>
-          </CardHeader>
-          <CardContent className="h-[260px] flex items-center justify-center">
+          <CathedraCardHeader as CardHeader>
+            <CathedraCardTitle as CardTitle className="text-sm">Saúde da Base</CathedraCardTitle as CardTitle>
+            <CathedraCardDescription as CardDescription>Ativos vs Em Risco vs Inativos</CathedraCardDescription as CardDescription>
+          </CathedraCardHeader as CardHeader>
+          <CathedraCardContent as CardContent className="h-[260px] flex items-center justify-center">
             {metrics.statusPie.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -453,17 +453,17 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
             ) : (
               <p className="text-muted-foreground text-sm">Sem dados suficientes.</p>
             )}
-          </CardContent>
+          </CathedraCardContent as CardContent>
         </Card>
       </div>
 
       {/* Conversion Funnel */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Funil de Conversão</CardTitle>
-          <CardDescription>Cadastro → Ativo → PRO</CardDescription>
-        </CardHeader>
-        <CardContent className="h-[280px]">
+        <CathedraCardHeader as CardHeader>
+          <CathedraCardTitle as CardTitle className="text-sm">Funil de Conversão</CathedraCardTitle as CardTitle>
+          <CathedraCardDescription as CardDescription>Cadastro → Ativo → PRO</CathedraCardDescription as CardDescription>
+        </CathedraCardHeader as CardHeader>
+        <CathedraCardContent as CardContent className="h-[280px]">
           {filteredUsers.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={metrics.funnelData} layout="vertical" barCategoryGap="20%">
@@ -481,16 +481,16 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           ) : (
             <p className="text-muted-foreground text-sm text-center pt-20">Sem dados suficientes.</p>
           )}
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
 
       {/* MRR Chart */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">Receita Mensal Recorrente (MRR)</CardTitle>
-          <CardDescription>Evolução mensal da receita aprovada</CardDescription>
-        </CardHeader>
-        <CardContent className="h-[280px]">
+        <CathedraCardHeader as CardHeader>
+          <CathedraCardTitle as CardTitle className="text-sm">Receita Mensal Recorrente (MRR)</CathedraCardTitle as CardTitle>
+          <CathedraCardDescription as CardDescription>Evolução mensal da receita aprovada</CathedraCardDescription as CardDescription>
+        </CathedraCardHeader as CardHeader>
+        <CathedraCardContent as CardContent className="h-[280px]">
           {mrrData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={mrrData}>
@@ -510,18 +510,18 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           ) : (
             <p className="text-muted-foreground text-sm text-center pt-20">Sem transações aprovadas.</p>
           )}
-        </CardContent>
+        </CathedraCardContent as CardContent>
       </Card>
 
       {metrics.atRisk.length > 0 && (
         <Card className="border-secondary/30 bg-secondary/5">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2 text-secondary">
+          <CathedraCardHeader as CardHeader className="pb-3">
+            <CathedraCardTitle as CardTitle className="text-sm flex items-center gap-2 text-secondary">
               <AlertTriangle className="w-4 h-4" /> Usuários em Risco ({metrics.atRisk.length})
-            </CardTitle>
-            <CardDescription>Não acessam há 4-14 dias. Considere enviar notificação de reengajamento.</CardDescription>
-          </CardHeader>
-          <CardContent>
+            </CathedraCardTitle as CardTitle>
+            <CathedraCardDescription as CardDescription>Não acessam há 4-14 dias. Considere enviar notificação de reengajamento.</CathedraCardDescription as CardDescription>
+          </CathedraCardHeader as CardHeader>
+          <CathedraCardContent as CardContent>
             <div className="flex flex-wrap gap-2">
               {metrics.atRisk.slice(0, 12).map(u => (
                 <Badge key={u.id} variant="outline" className="gap-1.5 border-secondary/30 text-amber-700">
@@ -532,7 +532,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 <Badge variant="secondary">+{metrics.atRisk.length - 12} mais</Badge>
               )}
             </div>
-          </CardContent>
+          </CathedraCardContent as CardContent>
         </Card>
       )}
     </div>

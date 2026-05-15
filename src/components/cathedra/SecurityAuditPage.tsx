@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
 import { CheckCircle, XCircle, ShieldAlert, FileCode, RotateCcw, AlertTriangle, Search, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
@@ -61,13 +61,13 @@ const SecurityAuditPage = () => {
         {/* Main Checklist */}
         <div className="md:col-span-2 space-y-6">
           <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-xl overflow-hidden">
-            <CardHeader className="bg-muted/30 border-b border-border/40 p-6">
-              <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
+            <CathedraCardHeader as CardHeader className="bg-muted/30 border-b border-border/40 p-6">
+              <CathedraCardTitle as CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary" />
                 Status de Integridade
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
+              </CathedraCardTitle as CardTitle>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="p-0">
               <div className="divide-y divide-border/40">
                 {checklist.map(item => (
                   <div key={item.id} className="p-6 flex items-start justify-between hover:bg-muted/10 transition-colors group">
@@ -90,7 +90,7 @@ const SecurityAuditPage = () => {
                   </div>
                 ))}
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

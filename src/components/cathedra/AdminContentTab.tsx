@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardFooter as CardFooter } from '@/components/ui/card';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
@@ -169,7 +169,7 @@ const AdminContentTab: React.FC = () => {
           ) : (
             filteredPosts.map((post) => (
               <Card key={post.id} className="overflow-hidden shadow-none border-border/40">
-                <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3">
+                <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3">
                   <div className="flex items-center gap-2">
                     <User className="w-3.5 h-3.5 text-muted-foreground" />
                     <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
@@ -179,12 +179,12 @@ const AdminContentTab: React.FC = () => {
                   <div className="scale-90 origin-right">
                     {getStatusBadge(post.status)}
                   </div>
-                </CardHeader>
-                <CardContent className="px-3 pb-2 pt-1">
+                </CathedraCardHeader as CardHeader>
+                <CathedraCardContent as CardContent className="px-3 pb-2 pt-1">
                   {post.title && <h3 className="text-sm font-bold mb-0.5">{post.title}</h3>}
                   <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
-                </CardContent>
-                <CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
+                </CathedraCardContent as CardContent>
+                <CathedraCardFooter as CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
                   <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-premium-tiny font-bold uppercase tracking-widest px-2">
                     <Trash2 className="w-3 h-3 mr-1" /> Excluir
                   </Button>
@@ -203,7 +203,7 @@ const AdminContentTab: React.FC = () => {
                       Voltar para Pendente
                     </Button>
                   )}
-                </CardFooter>
+                </CathedraCardFooter as CardFooter>
               </Card>
             ))
           )}

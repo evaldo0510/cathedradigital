@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, BookOpen, Brain, Sparkles, Headphones, Globe, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 

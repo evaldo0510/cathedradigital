@@ -9,12 +9,12 @@ import {
   MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
 } from 'lucide-react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
@@ -496,193 +496,193 @@ const AdminDashboard: React.FC = () => {
           {/* Stats Overview */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Total Usuários</CathedraCardTitle as CardTitle>
                 <Users className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Ativos</CathedraCardTitle as CardTitle>
                 <UserCheck className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Usuários PRO</CathedraCardTitle as CardTitle>
                 <Crown className="h-3.5 w-3.5 text-secondary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Retenção</CathedraCardTitle as CardTitle>
                 <TrendingUp className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Receita</CathedraCardTitle as CardTitle>
                 <DollarSign className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.totalRevenue || 0)}
                 </div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Aprovada</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="bg-amber-500/5 border-amber-500/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CathedraCardTitle as CardTitle>
                 <Clock className="h-3.5 w-3.5 text-amber-500" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-amber-500 tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.pendingRevenue || 0)}
                 </div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em espera</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="bg-destructive/5 border-destructive/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-destructive opacity-80">Doação</CathedraCardTitle as CardTitle>
                 <Heart className="h-3.5 w-3.5 text-destructive" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-destructive tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">50% Social</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CathedraCardTitle as CardTitle>
                 <Wallet className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Operação</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Card className="bg-secondary/5 border-secondary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CathedraCardTitle as CardTitle>
                 <Heart className="h-3.5 w-3.5 text-secondary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Impacto Espiritual</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CathedraCardTitle as CardTitle>
                 <MapIcon className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Jornadas Totais</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CathedraCardTitle as CardTitle>
                 <Activity className="h-3.5 w-3.5 text-primary" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Sucesso de Retenção</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
 
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Hoje</CathedraCardTitle as CardTitle>
                 <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.activeToday}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Visitantes</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Inativos</CathedraCardTitle as CardTitle>
                 <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">{'>'} 48h sem acesso</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Instalações</CathedraCardTitle as CardTitle>
                 <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">PWA Total</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
-              <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
+              <CathedraCardHeader as CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">No Flow</CathedraCardTitle as CardTitle>
                 <Target className="h-3.5 w-3.5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="px-3 pb-3">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
                 <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em andamento</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
 
           {/* CRM Segment Summary */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Card className="border-border/40 shadow-none bg-card ">
-              <CardHeader className="pb-2 pt-3 px-3">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1">
+              <CathedraCardHeader as CardHeader className="pb-2 pt-3 px-3">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CathedraCardTitle as CardTitle>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3 pt-1">
                 <div className="space-y-2.5">
                   {[
                     { label: 'Profundos (Mestres)', count: users.filter(u => u.depth_level === 'Profundo').length, color: 'bg-primary' },
@@ -704,17 +704,17 @@ const AdminDashboard: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card className="border-border/40 shadow-none bg-card ">
-              <CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
+              <CathedraCardHeader as CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversão PRO</CathedraCardTitle as CardTitle>
                 <div className="text-xl font-black text-primary tabular-nums">
                   {users.length > 0 ? ((users.filter(u => u.is_premium).length / users.length) * 100).toFixed(1) : 0}%
                 </div>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3 pt-1">
                 <div className="mt-2 grid grid-cols-2 gap-4 w-full">
                   <div className="text-center p-2 rounded-2xl bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
@@ -726,7 +726,7 @@ const AdminDashboard: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-premium-tiny text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
 
@@ -739,12 +739,12 @@ const AdminDashboard: React.FC = () => {
             </div>
             
             <Card className="border-border/40 shadow-none bg-card ">
-              <CardHeader className="pb-3 pt-3 px-3">
-                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-2">
+              <CathedraCardHeader as CardHeader className="pb-3 pt-3 px-3">
+                <CathedraCardTitle as CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-2">
                   <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="px-3 pb-3 pt-1 space-y-3">
+                </CathedraCardTitle as CardTitle>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="px-3 pb-3 pt-1 space-y-3">
                 {recentJournal.length > 0 ? (
                   recentJournal.map((entry) => (
                     <div key={entry.id} className="p-2.5 rounded-2xl bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
@@ -765,7 +765,7 @@ const AdminDashboard: React.FC = () => {
                     Nenhuma reflexão recente.
                   </div>
                 )}
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
         </TabsContent>
@@ -836,25 +836,25 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="security" className="space-y-4 outline-none">
           <Suspense fallback={
             <Card className="border-primary/20 bg-primary/5 animate-pulse">
-              <CardHeader>
+              <CathedraCardHeader as CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-primary/10 rounded-2xl">
                     <Shield className="w-5 h-5 text-primary animate-spin" />
                   </div>
                   <div>
-                    <CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CardTitle>
-                    <CardDescription className="text-premium-tiny font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
+                    <CathedraCardTitle as CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CathedraCardTitle as CardTitle>
+                    <CathedraCardDescription as CardDescription className="text-premium-tiny font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CathedraCardDescription as CardDescription>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent className="space-y-4">
                 <Skeleton className="h-12 w-full rounded-full bg-primary/10" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Skeleton className="h-32 w-full rounded-full bg-primary/5" />
                   <Skeleton className="h-32 w-full rounded-full bg-primary/5" />
                 </div>
                 <Skeleton className="h-48 w-full rounded-full bg-primary/5" />
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           }>
             <SecurityAuditPage key={securityResetKey} />
@@ -879,7 +879,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <Card>
-            <CardContent className="p-0">
+            <CathedraCardContent as CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -959,16 +959,16 @@ const AdminDashboard: React.FC = () => {
                   </tbody>
                 </table>
               </div>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
 
           {/* Manual Control */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-sm"><Crown className="w-4 h-4 text-primary" /> Controle Manual de Acesso</CardTitle>
-              <CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <CathedraCardHeader as CardHeader>
+              <CathedraCardTitle as CardTitle className="flex items-center gap-2 text-sm"><Crown className="w-4 h-4 text-primary" /> Controle Manual de Acesso</CathedraCardTitle as CardTitle>
+              <CathedraCardDescription as CardDescription>Libere ou remova o acesso PRO de um usuário pelo email.</CathedraCardDescription as CardDescription>
+            </CathedraCardHeader as CardHeader>
+            <CathedraCardContent as CardContent className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 <Input
                   type="email"
@@ -1000,7 +1000,7 @@ const AdminDashboard: React.FC = () => {
               <p className="text-xs text-muted-foreground">
                 O usuário precisa estar cadastrado na plataforma. A alteração tem efeito imediato.
               </p>
-            </CardContent>
+            </CathedraCardContent as CardContent>
           </Card>
         </TabsContent>
 
@@ -1008,11 +1008,11 @@ const AdminDashboard: React.FC = () => {
         <TabsContent value="geography" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Distribuição por Estado</CardTitle>
-                <CardDescription>Estados com mais usuários ativos.</CardDescription>
-              </CardHeader>
-              <CardContent>
+              <CathedraCardHeader as CardHeader>
+                <CathedraCardTitle as CardTitle className="text-lg">Distribuição por Estado</CathedraCardTitle as CardTitle>
+                <CathedraCardDescription as CardDescription>Estados com mais usuários ativos.</CathedraCardDescription as CardDescription>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent>
                 <div className="space-y-4">
                   {stats?.statesStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
@@ -1028,15 +1028,15 @@ const AdminDashboard: React.FC = () => {
                     ))
                   )}
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Distribuição por Diocese</CardTitle>
-                <CardDescription>Principais dioceses da comunidade.</CardDescription>
-              </CardHeader>
-              <CardContent>
+              <CathedraCardHeader as CardHeader>
+                <CathedraCardTitle as CardTitle className="text-lg">Distribuição por Diocese</CathedraCardTitle as CardTitle>
+                <CathedraCardDescription as CardDescription>Principais dioceses da comunidade.</CathedraCardDescription as CardDescription>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent>
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                   {stats?.diocesesStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
@@ -1049,15 +1049,15 @@ const AdminDashboard: React.FC = () => {
                     ))
                   )}
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Movimentos & Pastorais</CardTitle>
-                <CardDescription>Engajamento por grupo eclesial.</CardDescription>
-              </CardHeader>
-              <CardContent>
+              <CathedraCardHeader as CardHeader>
+                <CathedraCardTitle as CardTitle className="text-lg">Movimentos & Pastorais</CathedraCardTitle as CardTitle>
+                <CathedraCardDescription as CardDescription>Engajamento por grupo eclesial.</CathedraCardDescription as CardDescription>
+              </CathedraCardHeader as CardHeader>
+              <CathedraCardContent as CardContent>
                 <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                   {stats?.movementsStats.length === 0 ? (
                     <p className="text-sm text-muted-foreground">Nenhum dado disponível.</p>
@@ -1070,7 +1070,7 @@ const AdminDashboard: React.FC = () => {
                     ))
                   )}
                 </div>
-              </CardContent>
+              </CathedraCardContent as CardContent>
             </Card>
           </div>
         </TabsContent>

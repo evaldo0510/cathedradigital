@@ -5,7 +5,7 @@ import { lovable } from '@/integrations/lovable/index';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CathedraButton as Button } from '@/components/ui/button';
 
 interface AuthProps {
   onSuccess: () => void;
