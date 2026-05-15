@@ -125,11 +125,11 @@ function generateGallery() {
         </footer>
     </div>
     <script>
-        // Adjust viewer links to be relative to current origin if viewed locally
-        document.querySelectorAll('.btn-viewer').forEach(link => {
-            if (link.href.includes('window.location.origin')) {
-                link.href = link.href.replace('window.location.origin', window.location.origin);
-            }
+        // Adjust viewer links to include the full URL to the trace file
+        document.querySelectorAll('.btn-trace-viewer').forEach(link => {
+            const tracePath = link.getAttribute('data-trace');
+            const fullTraceUrl = window.location.origin + window.location.pathname.replace('index.html', '') + tracePath;
+            link.href = 'https://trace.playwright.dev/?trace=' + encodeURIComponent(fullTraceUrl);
         });
     </script>
 </body>
