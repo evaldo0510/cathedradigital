@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { runA11yAudit } from '@/lib/a11y-audit';
 import { Button   } from '@/components/ui/button';
-import { CathedraCard    , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
 import { CheckCircle, XCircle, AlertTriangle, ShieldCheck, Search, Tag, Key } from 'lucide-react';
 import { Icons } from '@/constants';
 

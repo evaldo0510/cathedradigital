@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { CathedraCard    , CardContent   } from '@/components/ui/card';
+import { Card    , CardContent   } from '@/components/ui/card';
 import { RouteRecommendation } from '@/lib/smartRouter';
 
 interface FlowConnectorProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CathedraCard   } from './Card';
-import { CathedraButton   } from './Button';
+import { Card   } from './Card';
+import { Button } from './Button';
 import { 
   ShieldAlert, CheckCircle2, XCircle, Clock, 
   ChevronRight, FileText, AlertTriangle, ExternalLink,

@@ -2,13 +2,13 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
 
-export interface CathedraCardProps extends HTMLMotionProps<"div"> {
+export interface CardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass' | 'ghost' | 'elevated';
   padding?: 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
 }
 
-const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
     const paddingMap = {
       none: '',
@@ -49,33 +49,26 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   }
 );
 
-CathedraCard.displayName = "CathedraCard";
+Card.displayName = "Card";
 
-const CathedraCardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)} {...props} />
 );
 
-const CathedraCardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+const CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
   <h3 className={cn("text-2xl font-display font-bold leading-none tracking-tight text-primary", className)} {...props} />
 );
 
-const CathedraCardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+const CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
   <p className={cn("text-sm text-muted-foreground font-medium", className)} {...props} />
 );
 
-const CathedraCardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("p-0", className)} {...props} />
 );
 
-const CathedraCardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+const CardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
 );
 
-export { 
-  CathedraCard, 
-  Cathedra  
-  Cathedra  
-  Cathedra  
-  Cathedra  
-  CathedraCardContent 
-};
+export { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent };

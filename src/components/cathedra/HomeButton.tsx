@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CathedraButton   } from "@/components/cathedra/CathedraButton";
+import { Button } from "@/components/cathedra/CathedraButton";
 import { type ButtonProps } from "@/components/cathedra/Button";
 
 export interface HomeButtonProps extends ButtonProps {}

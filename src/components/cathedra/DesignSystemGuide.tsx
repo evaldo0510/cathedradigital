@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CathedraCard   } from '@/components/cathedra/Card';
-import { CathedraButton   } from '@/components/cathedra/Button';
+import { Card   } from '@/components/cathedra/Card';
+import { Button } from '@/components/cathedra/Button';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 
