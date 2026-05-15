@@ -124,149 +124,151 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-6 md:pt-16 pb-32">
+    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-12 md:pt-24 pb-48">
       <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
-      <div className="w-full max-w-[640px] px-6 space-y-20">
+      <div className="app-container space-y-24 md:space-y-40 lg:space-y-56">
         {/* HERO SECTION */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
-          className="text-center space-y-8"
+          className="text-center space-y-12 max-w-4xl mx-auto"
         >
-          <div className="space-y-4">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/40">
+          <div className="space-y-6">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.5em] text-primary/40">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-4xl md:text-5xl font-serif text-primary leading-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display text-primary leading-[1.1]">
               Sua jornada espiritual <br />
-              <span className="text-secondary italic">guiada pela Sabedoria.</span>
+              <span className="text-secondary italic font-serif">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
-          <div className="flex items-center justify-center gap-4 flex-wrap">
+          <div className="flex items-center justify-center gap-6 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10">
+              <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/10">
                 <Icons.Zap className="w-4 h-4 text-primary" />
-                <span className="text-premium-tiny font-bold text-primary uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+                <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-primary/5 border border-primary/10">
+            <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/10">
               <Icons.Star className="w-4 h-4 text-secondary" />
-              <span className="text-premium-tiny font-bold text-primary uppercase tracking-wider">{profile?.xp || 0} XP</span>
+              <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
 
-        {/* CONTINUE JORNADA */}
-        {nextUp && (
-          <section className="space-y-6">
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-foreground/30 flex items-center gap-4">
-              <div className="h-px w-8 bg-border" /> Continue sua Jornada
-            </h2>
-            
-            <motion.div 
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={() => navigate(nextUp.route)}
-              className="p-8 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex items-center justify-between shadow-premium"
-            >
-              <div className="flex items-center gap-6">
-                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary">
-                  <Icons.Flame className="w-7 h-7" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+          <div className="lg:col-span-8 space-y-24 md:space-y-40">
+            {/* CONTINUE JORNADA */}
+            {nextUp && (
+              <section className="space-y-10">
+                <div className="flex items-center gap-6">
+                  <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+                    Memória da Jornada
+                  </h2>
+                  <div className="h-px flex-1 bg-border/40" />
                 </div>
-                <div>
-                  <p className="text-premium-tiny font-bold uppercase tracking-widest text-foreground/40 mb-1.5">{nextUp.subtitle}</p>
-                  <h3 className="text-xl font-bold text-primary">{nextUp.label}</h3>
-                  {activeJourney && (
-                    <div className="mt-4 flex items-center gap-4 w-48">
-                      <div className="flex-1 h-1 bg-primary/5 rounded-2xl overflow-hidden">
-                        <div className="h-full bg-secondary transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
-                      </div>
-                      <span className="text-premium-tiny font-bold text-foreground/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                
+                <motion.div 
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => navigate(nextUp.route)}
+                  className="p-10 md:p-14 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-secondary/30 transition-all flex flex-col md:flex-row items-center justify-between gap-10 shadow-premium group"
+                >
+                  <div className="flex items-center gap-8 flex-col md:flex-row text-center md:text-left">
+                    <div className="w-20 h-20 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                      <Icons.Flame className="w-10 h-10" />
                     </div>
-                  )}
+                    <div>
+                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-3">{nextUp.subtitle}</p>
+                      <h3 className="text-2xl md:text-3xl font-bold text-primary">{nextUp.label}</h3>
+                      {activeJourney && (
+                        <div className="mt-6 flex items-center gap-4 w-full md:w-64">
+                          <div className="flex-1 h-1.5 bg-primary/5 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }}
+                              transition={{ duration: 1.5, ease: "easeOut" }}
+                              className="h-full bg-secondary" 
+                            />
+                          </div>
+                          <span className="text-premium-tiny font-bold text-primary/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-full border border-border/30 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                    <Icons.ChevronRight className="w-6 h-6" />
+                  </div>
+                </motion.div>
+              </section>
+            )}
+
+            {/* RITUAL DO DIA */}
+            <section className="space-y-10">
+              <div className="flex items-center gap-6">
+                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+                  Ritual do Dia
+                </h2>
+                <div className="h-px flex-1 bg-border/40" />
+              </div>
+              <RitualDoDia />
+            </section>
+          </div>
+
+          {/* SIDEBAR CONTENT - For Desktop Refinement */}
+          <aside className="lg:col-span-4 space-y-24">
+            {/* TEMAS PRINCIPAIS */}
+            <section className="space-y-10">
+              <div className="flex items-center gap-6">
+                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+                  Explorar
+                </h2>
+                <div className="h-px flex-1 bg-border/40" />
+              </div>
+              <div className="grid grid-cols-1 gap-6">
+                <HomeMainDoors t={t} variant="sidebar" />
+              </div>
+            </section>
+
+            {/* CATECISMO CARD */}
+            <section className="space-y-10">
+              <div className="flex items-center gap-6">
+                <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">
+                  Doutrina
+                </h2>
+                <div className="h-px flex-1 bg-border/40" />
+              </div>
+              <motion.div 
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => navigate(AppRoute.CATECHISM)}
+                className="p-10 rounded-premium border border-border/40 bg-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 transition-all shadow-premium group text-center space-y-6"
+              >
+                <div className="w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                  <Icons.Catechism className="w-8 h-8" />
                 </div>
-              </div>
-              <Icons.ChevronRight className="w-6 h-6 text-foreground/20" />
-            </motion.div>
-          </section>
-        )}
-
-        {/* RITUAL DO DIA */}
-        <section className="space-y-6">
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-foreground/30 flex items-center gap-4">
-            <div className="h-px w-8 bg-border" /> Ritual do Dia
-          </h2>
-          <RitualDoDia />
-        </section>
-
-        {/* TEMAS PRINCIPAIS */}
-        <section className="space-y-6">
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
-            <div className="h-px w-8 bg-[#0F172A]/10" /> Temas Principais
-          </h2>
-          <HomeMainDoors t={t} />
-        </section>
-
-        {/* CATECISMO */}
-        <section className="space-y-6">
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
-            <div className="h-px w-8 bg-[#0F172A]/10" /> Catecismo
-          </h2>
-          <motion.div 
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            onClick={() => navigate(AppRoute.CATECHISM)}
-            className="p-10 premium-card-interactive group"
-          >
-            <div className="flex items-center gap-8">
-              <div className="w-20 h-20 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
-                <Icons.Catechism className="w-10 h-10" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold text-[#0F172A]">Catecismo da Igreja</h3>
-                <p className="text-base text-[#0F172A]/60 mt-2">Explore a doutrina católica em profundidade e clareza.</p>
-              </div>
-              <Icons.ChevronRight className="w-8 h-8 text-[#0F172A]/20" />
-            </div>
-          </motion.div>
-        </section>
-
-        {/* TRILHAS */}
-        <section className="space-y-6">
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
-            <div className="h-px w-8 bg-[#0F172A]/10" /> Trilhas de Formação
-          </h2>
-          <motion.div 
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            onClick={() => navigate(AppRoute.JORNADAS)} 
-            className="p-8 premium-card-interactive group"
-          >
-            <div className="flex items-center gap-6">
-              <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
-                <Icons.Route className="w-7 h-7" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-[#0F172A]">Explorar todas as Trilhas</h3>
-                <p className="text-sm text-[#0F172A]/60 mt-1">Descubra novos caminhos para sua vida espiritual.</p>
-              </div>
-            </div>
-            <Icons.ChevronRight className="w-6 h-6 text-[#0F172A]/20" />
-          </motion.div>
-        </section>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-primary">Catecismo</h3>
+                  <p className="text-sm text-primary/50 leading-relaxed">A sabedoria milenar da Igreja em suas mãos.</p>
+                </div>
+              </motion.div>
+            </section>
+          </aside>
+        </div>
 
         {/* FOOTER QUOTE */}
-        <div className="pt-20 text-center">
-          <p className="text-sm text-[#0F172A]/40 font-serif italic max-w-sm mx-auto leading-relaxed">
+        <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
+          <p className="text-base text-primary font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>
         </div>
       </div>
     </div>
   );
+};
 };
 
 export default HojePage;
