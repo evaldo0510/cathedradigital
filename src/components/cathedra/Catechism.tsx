@@ -474,14 +474,22 @@ const Catechism: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                {(crossRefs.length > 0 || docsRefs.length > 0) && (
-                  <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                    className={`p-3 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                    title="Catecismo & Documentos">
-                    <Icons.Cross className="w-4 h-4" />
-                  </Button>
-                )}
                 <AudioButton />
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button className="xl:hidden p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group">
+                      <Menu className="w-5 h-5 text-foreground group-hover:text-primary" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="p-0 w-80 reading-sepia">
+                    <LibrarySidebar 
+                      title={selectedPart.title}
+                      subtitle={selectedPart.part}
+                      items={sidebarItems}
+                      className="flex border-none shadow-none"
+                    />
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
 
