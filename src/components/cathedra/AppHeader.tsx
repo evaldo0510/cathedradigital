@@ -127,7 +127,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               variant={showNotifs ? "default" : "outline"}
               size="icon"
               onClick={() => setShowNotifs(!showNotifs)}
-              className="relative"
+              className="relative w-10 h-10 sm:w-12 sm:h-12"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
               aria-expanded={showNotifs}>
               <Icons.Message className="w-5 h-5" />
