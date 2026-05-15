@@ -23,7 +23,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
     <div className="content-section">
       <div className="premium-grid-2">
         {/* CONTINUE JORNADA */}
-        <section className="space-y-10 lg:max-w-xl" aria-labelledby="section-jornada">
+        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-jornada">
           <div className="flex items-center gap-6">
             <h2 id="section-jornada" className="heading-section-label whitespace-nowrap">
               Jornada
@@ -58,7 +58,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* RITUAL DO DIA */}
-        <section className="space-y-10 lg:max-w-xl" aria-labelledby="section-hoje">
+        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-hoje">
           <div className="flex items-center gap-6">
             <h2 id="section-hoje" className="heading-section-label whitespace-nowrap">
               Hoje
@@ -71,7 +71,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* CATECISMO */}
-        <section className="space-y-10 lg:max-w-xl" aria-labelledby="section-doutrina">
+        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-doutrina">
           <div className="flex items-center gap-6">
             <h2 id="section-doutrina" className="heading-section-label whitespace-nowrap">
               Doutrina
@@ -101,7 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </section>
 
         {/* TRILHAS */}
-        <section className="space-y-10 lg:max-w-xl" aria-labelledby="section-trilhas">
+        <section className="space-y-10 lg:max-w-xl mx-auto w-full" aria-labelledby="section-trilhas">
           <div className="flex items-center gap-6">
             <h2 id="section-trilhas" className="heading-section-label whitespace-nowrap">
               Trilhas
