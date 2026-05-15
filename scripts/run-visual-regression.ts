@@ -36,6 +36,24 @@ async function runVisualTests() {
   }
   // Continue anyway to generate report from any available data
 
+  // Generate A11y and Contrast report details
+  const a11yDetails: any[] = [];
+  const testResultsDir = path.join(process.cwd(), 'test-results');
+  if (fs.existsSync(testResultsDir)) {
+    const files = fs.readdirSync(testResultsDir);
+    files.forEach(file => {
+      if (file.startsWith('a11y-') && file.endsWith('.json')) {
+        const data = JSON.parse(fs.readFileSync(path.join(testResultsDir, file), 'utf8'));
+        a11yDetails.push({
+          file,
+          violations: data.violations,
+          passes: data.passes?.length || 0,
+          incomplete: data.incomplete?.length || 0
+        });
+      }
+    });
+  }
+
   // Parse the playwright json report
   const playwrightReportPath = path.join(process.cwd(), 'test-results', 'report.json');
   if (fs.existsSync(playwrightReportPath)) {
@@ -144,6 +162,38 @@ async function runVisualTests() {
             <div class="premium-card p-6 text-center">
                 <p class="text-[10px] opacity-40 uppercase font-black mb-1">Taxa de Sucesso</p>
                 <p class="text-3xl font-black text-blue-400">${Math.round((results.summary.passed / results.summary.total) * 100) || 0}%</p>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <h2 class="text-xl font-premium font-black">Validação WCAG AAA & Acessibilidade</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                ${a11yDetails.map(audit => `
+                    <div class="premium-card p-6 border-l-4 ${audit.violations.length > 0 ? 'border-red-500' : 'border-emerald-500'}">
+                        <h3 class="font-bold text-sm mb-4 truncate">${audit.file.replace('a11y-', '').replace('.json', '')}</h3>
+                        <div class="flex gap-4 mb-4">
+                            <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
+                                <p class="text-[10px] opacity-40 font-black">Falhas</p>
+                                <p class="text-lg font-black ${audit.violations.length > 0 ? 'text-red-500' : 'text-emerald-500'}">${audit.violations.length}</p>
+                            </div>
+                            <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
+                                <p class="text-[10px] opacity-40 font-black">Passaram</p>
+                                <p class="text-lg font-black">${audit.passes}</p>
+                            </div>
+                        </div>
+                        ${audit.violations.length > 0 ? `
+                            <ul class="space-y-2">
+                                ${audit.violations.map((v: any) => `
+                                    <li class="p-3 bg-red-500/5 border border-red-500/10 rounded-xl text-xs">
+                                        <p class="font-black text-red-400 mb-1 uppercase tracking-widest">${v.id}</p>
+                                        <p class="opacity-70">${v.help}</p>
+                                        <p class="text-[10px] opacity-40 mt-1">Impacto: ${v.impact}</p>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        ` : '<p class="text-xs text-emerald-500/60 flex items-center gap-2"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Conforme WCAG AAA</p>'}
+                    </div>
+                `).join('')}
             </div>
         </section>
 
