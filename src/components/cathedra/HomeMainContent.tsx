@@ -41,7 +41,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Flame className="w-5 h-5" aria-hidden="true" />
               </div>
               <div>
-                <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">
+                <h3 className="heading-card">
                   {user ? 'Retomar Jornada' : 'Inicie sua Caminhada'}
                 </h3>
                 <p className="mt-4 text-sm text-primary/40 leading-relaxed max-w-sm">
