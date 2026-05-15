@@ -511,6 +511,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -543,6 +545,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -560,6 +564,8 @@ const AppLayout: React.FC = () => {
                   user={appUser}
                   isDark={isDark}
                   onToggleDark={() => setIsDark(!isDark)}
+                  isHighContrast={isHighContrast}
+                  onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                   lang={lang}
                   onChangeLang={(l) => window.dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   isSpeaking={isSpeaking}
