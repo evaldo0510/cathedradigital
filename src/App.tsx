@@ -46,7 +46,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-// Dashboard component removed in favor of HojePage
+const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
