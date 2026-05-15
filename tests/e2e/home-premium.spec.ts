@@ -76,53 +76,66 @@ test.describe('Home Page Premium Audit', () => {
       });
 
       for (const target of NAVIGATION_TARGETS) {
-        test(`Keyboard Navigation and Focus Management for ${target.name}`, async ({ page }, testInfo) => {
-          const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
-          const locator = page.locator(target.selector).first();
-          await expect(locator).toBeVisible();
-
-          const fileNameBase = `${theme}__${authState}__${target.name}`;
-
-          // 1. Initial Focus Capture
-          await locator.focus();
-          await locator.screenshot({ 
-            path: `test-results/focus-proof/${fileNameBase}__initial-focus.png` 
-          });
-
-          // 2. Navigation via Enter
-          await page.keyboard.press('Enter');
-          await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
+        for (const keyToPress of ['Enter', ' ']) {
+          const keyName = keyToPress === ' ' ? 'Space' : 'Enter';
           
-          // 3. Capture focus on destination (often it's the main heading or a focus wrapper)
-          // We wait for any element to be focused and ensure it's not the body
-          await page.waitForFunction(() => document.activeElement && document.activeElement !== document.body);
-          const destinationFocus = page.locator(':focus');
-          
-          try {
-            await destinationFocus.scrollIntoViewIfNeeded();
-            await destinationFocus.screenshot({ 
-              path: `test-results/focus-proof/${fileNameBase}__destination-focus.png` 
+          test(`Keyboard Navigation (${keyName}) and Focus Management for ${target.name}`, async ({ page }, testInfo) => {
+            const theme = testInfo.project.name.includes('dark') ? 'dark' : 'light';
+            const locator = page.locator(target.selector).first();
+            await expect(locator).toBeVisible();
+
+            const fileNameBase = `${theme}__${authState}__${target.name}__${keyName}`;
+
+            // 1. Initial Focus Capture
+            await locator.focus();
+            await locator.screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__initial-focus.png` 
             });
-          } catch (e) {
-            // If specific focus capture fails, we mark it as a page capture but keep it categorized
-            await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-page-fallback.png` });
-          }
 
-          // Save HTML state for debugging context
-          const htmlContent = await page.content();
-          fs.writeFileSync(`test-results/focus-proof/${fileNameBase}__context.html`, htmlContent);
+            // 2. Navigation via Key
+            await page.keyboard.press(keyToPress);
+            await expect(page).toHaveURL(new RegExp(`${target.expectedPath}`));
+            
+            // 3. Capture focus on destination
+            // We wait for any element to be focused and ensure it's not the body
+            await page.waitForFunction(() => document.activeElement && document.activeElement !== document.body);
+            
+            // Use evaluate to get the actual element or a clear fallback
+            const hasFocus = await page.evaluate(() => {
+              const el = document.activeElement;
+              return el && el !== document.body;
+            });
 
-          // 4. Return Navigation and Focus Restoration
-          await page.goBack();
-          await page.waitForLoadState('networkidle');
-          
-          // Wait for focus to return to original CTA (accessibility requirement)
-          await expect(locator).toBeFocused();
-          
-          await locator.screenshot({ 
-            path: `test-results/focus-proof/${fileNameBase}__returned-focus.png` 
+            if (hasFocus) {
+              const destinationFocus = page.locator(':focus');
+              try {
+                await destinationFocus.scrollIntoViewIfNeeded();
+                await destinationFocus.screenshot({ 
+                  path: `test-results/focus-proof/${fileNameBase}__destination-focus.png` 
+                });
+              } catch (e) {
+                await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-page-fallback.png` });
+              }
+            } else {
+              await page.screenshot({ path: `test-results/focus-proof/${fileNameBase}__destination-none.png` });
+            }
+
+            // Save HTML state for debugging context
+            const htmlContent = await page.content();
+            fs.writeFileSync(`test-results/focus-proof/${fileNameBase}__context.html`, htmlContent);
+
+            // 4. Return Navigation and Focus Restoration
+            await page.goBack();
+            await page.waitForLoadState('networkidle');
+            
+            // Wait for focus to return to original CTA (accessibility requirement)
+            await expect(locator).toBeFocused();
+            
+            await locator.screenshot({ 
+              path: `test-results/focus-proof/${fileNameBase}__returned-focus.png` 
+            });
           });
-        });
+        }
       }
     });
   }
