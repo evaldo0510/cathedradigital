@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-05-15T02:57:29.028807",
-  "total_violations": 687,
+  "timestamp": "2026-05-15T02:58:14.308913",
+  "total_violations": 680,
   "violations": [
     {
       "file": "src/pages/Index.tsx",
@@ -1205,30 +1205,6 @@
     {
       "file": "src/components/cathedra/GuidedJourney.tsx",
       "line": 262,
-      "pattern": "Legacy Radius",
-      "match": "radius-2xl"
-    },
-    {
-      "file": "src/components/cathedra/HomeMainContent.tsx",
-      "line": 40,
-      "pattern": "Legacy Radius",
-      "match": "radius-3xl"
-    },
-    {
-      "file": "src/components/cathedra/HomeMainContent.tsx",
-      "line": 101,
-      "pattern": "Legacy Radius",
-      "match": "radius-3xl"
-    },
-    {
-      "file": "src/components/cathedra/HomeMainContent.tsx",
-      "line": 127,
-      "pattern": "Legacy Radius",
-      "match": "radius-2xl"
-    },
-    {
-      "file": "src/components/cathedra/HomeMainContent.tsx",
-      "line": 140,
       "pattern": "Legacy Radius",
       "match": "radius-2xl"
     },
@@ -3165,12 +3141,6 @@
       "match": "radius-2xl"
     },
     {
-      "file": "src/components/cathedra/HomeMainDoors.tsx",
-      "line": 66,
-      "pattern": "Legacy Radius",
-      "match": "radius-3xl"
-    },
-    {
       "file": "src/components/cathedra/JornadaCompletePage.tsx",
       "line": 178,
       "pattern": "Legacy Radius",
@@ -3961,18 +3931,6 @@
       "line": 225,
       "pattern": "Legacy Shadow",
       "match": "shadow-lg"
-    },
-    {
-      "file": "src/components/cathedra/HojePage.tsx",
-      "line": 184,
-      "pattern": "Legacy Radius",
-      "match": "radius-3xl"
-    },
-    {
-      "file": "src/components/cathedra/HojePage.tsx",
-      "line": 252,
-      "pattern": "Legacy Radius",
-      "match": "radius-3xl"
     },
     {
       "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
