@@ -263,7 +263,7 @@ const CacheManager: React.FC = () => {
 
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {(['all', 'bible', 'catechism', 'liturgy'] as const).map(f => (
-          <button
+          <Button
             key={f}
             onClick={() => setFilter(f)}
             className={`px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
@@ -273,7 +273,7 @@ const CacheManager: React.FC = () => {
             }`}
           >
             {f === 'all' ? 'Todos os Itens' : getStoreLabel(f)}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -319,13 +319,13 @@ const CacheManager: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <button 
+                      <Button 
                         onClick={() => handleDelete(item.store, item.key)}
                         className="p-2.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
                         title="Remover do cache"
                       >
                         <Icons.X className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </CardContent>
                   </Card>
                 </motion.div>

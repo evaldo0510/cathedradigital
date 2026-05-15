@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -58,9 +59,9 @@ const ResetPasswordPage: React.FC = () => {
         {/* Logo removed */}
         <h1 className="text-2xl font-serif font-bold text-foreground">Link inválido</h1>
         <p className="text-muted-foreground">Este link de redefinição de senha é inválido ou já expirou.</p>
-        <button onClick={() => navigate(AppRoute.LOGIN)} className="text-primary hover:underline font-medium">
+        <Button onClick={() => navigate(AppRoute.LOGIN)} className="text-primary hover:underline font-medium">
           Voltar ao login
-        </button>
+        </Button>
       </div>
     );
   }
@@ -99,10 +100,10 @@ const ResetPasswordPage: React.FC = () => {
                 className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
-            <button type="submit" disabled={loading}
+            <Button type="submit" disabled={loading}
               className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
               {loading ? 'Aguarde...' : 'Atualizar Senha'}
-            </button>
+            </Button>
           </form>
         )}
       </div>

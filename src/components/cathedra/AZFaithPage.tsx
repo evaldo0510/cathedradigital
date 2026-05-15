@@ -149,9 +149,9 @@ const AZFaithPage: React.FC = () => {
                 className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
+                <Button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
                   <X className="w-4 h-4 text-muted-foreground" />
-                </button>
+                </Button>
               )}
             </div>
 

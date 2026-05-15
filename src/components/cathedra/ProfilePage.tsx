@@ -237,7 +237,7 @@ const ProfilePage: React.FC = () => {
             {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
             <AvatarFallback className="text-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
           </Avatar>
-          <button
+          <Button
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
             className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center focus-visible:opacity-100 outline-none focus-visible:ring-4 focus-visible:ring-primary"
@@ -248,7 +248,7 @@ const ProfilePage: React.FC = () => {
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}
-          </button>
+          </Button>
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
         </div>
 
@@ -515,13 +515,13 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        <button
+        <Button
           onClick={handleSave}
           disabled={saving}
           className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
-        </button>
+        </Button>
       </div>
     </div>
   );

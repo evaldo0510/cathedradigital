@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { Icons } from '../../constants';
 
@@ -100,9 +101,9 @@ const HORAS: HoraInfo[] = [
 const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, onBack }) => (
   <div className="max-w-3xl mx-auto space-y-6">
     <div className="flex items-center gap-4">
-      <button onClick={onBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+      <Button onClick={onBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
         <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-      </button>
+      </Button>
       <div>
         <span className="text-premium-tiny font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
         <h1 className="text-2xl font-display font-bold text-foreground">{hora.title}</h1>
@@ -200,17 +201,17 @@ const BreviaryPage: React.FC = () => {
 
       <div className="text-center">
         <p className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground mb-3">Hora sugerida agora</p>
-        <button
+        <Button
           onClick={() => setSelectedHora(suggestedHora as Hora)}
           className="px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
         >
           {HORAS.find(h => h.id === suggestedHora)?.icon} Rezar {HORAS.find(h => h.id === suggestedHora)?.title}
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {HORAS.map(h => (
-          <button
+          <Button
             key={h.id}
             onClick={() => setSelectedHora(h.id)}
             className={`text-left p-5 rounded-full border transition-all group space-y-1.5 ${
@@ -231,7 +232,7 @@ const BreviaryPage: React.FC = () => {
                 Hora atual
               </span>
             )}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

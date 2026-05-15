@@ -349,18 +349,18 @@ const AdminSeoTab: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <p className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Schema Preview:</p>
                   <div className="flex gap-2">
-                    <button 
+                    <Button 
                       onClick={() => setJsonMode(jsonMode === 'pretty' ? 'minified' : 'pretty')}
                       className="text-premium-tiny font-bold uppercase underline text-primary"
                     >
                       {jsonMode === 'pretty' ? 'Minificar' : 'Pretty Print'}
-                    </button>
-                    <button 
+                    </Button>
+                    <Button 
                       onClick={handleCopyJSONLD}
                       className="flex items-center gap-1 text-premium-tiny font-bold uppercase text-primary hover:bg-primary/5 p-1 rounded"
                     >
                       <Copy className="w-2.5 h-2.5" /> Copiar
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className="bg-black/90 text-amber-400 p-3 rounded-2xl text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">

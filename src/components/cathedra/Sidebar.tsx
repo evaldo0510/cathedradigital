@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
@@ -131,7 +132,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
-                    <button
+                    <Button
                       onClick={() => handleNav(item.path)}
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
@@ -151,7 +152,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       )}
                       {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded">PRO</span>}
                       {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary" />}
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
@@ -192,7 +193,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
             <div className="flex flex-wrap gap-1 mt-1">
               {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (
-                <button
+                <Button
                   key={l}
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
@@ -204,7 +205,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   }`}
                 >
                   {l}
-                </button>
+                </Button>
 
               ))}
             </div>
@@ -234,18 +235,18 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   </div>
                 )}
               </div>
-              <button 
+              <Button 
                 onClick={(e) => { e.stopPropagation(); onSignOut?.(); }}
                 className="p-2 text-muted-foreground hover:text-destructive transition-colors"
                 title={t('exit_session')}
               >
                 <Icons.LogOut className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
           ) : (
-            <button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
-            </button>
+            </Button>
           )}
         </div>
       </aside>

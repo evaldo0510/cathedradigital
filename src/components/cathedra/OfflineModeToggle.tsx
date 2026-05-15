@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React from 'react';
 import { Icons } from '@/constants';
 import { useOfflineMode } from '@/hooks/useOfflineMode';
@@ -7,7 +8,7 @@ const OfflineModeToggle: React.FC = () => {
   const { isOfflineMode, toggle } = useOfflineMode();
 
   return (
-    <button
+    <Button
       onClick={toggle}
       className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-lg hover:shadow-xl transition-all group flex items-center gap-2 ${
         isOfflineMode 
@@ -33,7 +34,7 @@ const OfflineModeToggle: React.FC = () => {
           </motion.span>
         )}
       </AnimatePresence>
-    </button>
+    </Button>
   );
 };
 

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
@@ -250,7 +251,7 @@ const InstitutionalVideoSection = () => {
             custom={3}
             className="relative group"
           >
-            <button 
+            <Button 
               className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
               aria-label="Abrir vídeo de apresentação da Catedra Digital"
@@ -311,7 +312,7 @@ const InstitutionalVideoSection = () => {
                   className="h-full bg-primary/60"
                 />
               </div>
-            </button>
+            </Button>
 
             {/* Floating Badge / Sound Control */}
             <motion.div
@@ -382,23 +383,23 @@ const InstitutionalVideoSection = () => {
                     </select>
                   </div>
                   
-                  <button 
+                  <Button 
                     onClick={toggleMute}
                     className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
                     aria-label={isMuted ? "Ativar som" : "Desativar som"}
                   >
                     {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
-                  </button>
+                  </Button>
                 </div>
 
-                <button 
+                <Button 
                   ref={closeBtnRef}
                   onClick={handleClose}
                   className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
                   <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
-                </button>
+                </Button>
               </div>
 
               <video

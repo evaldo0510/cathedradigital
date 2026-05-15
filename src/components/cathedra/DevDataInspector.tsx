@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '@/constants';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -35,13 +36,13 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
 
   return (
     <div className="fixed bottom-24 right-6 z-[9999]">
-      <button
+      <Button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-2xl hover:scale-105 transition-all border border-white/20"
       >
         <Icons.Activity className="w-4 h-4" />
         <span className="text-premium-tiny font-black uppercase tracking-widest">Dev Inspector</span>
-      </button>
+      </Button>
 
       <AnimatePresence>
         {isOpen && (
@@ -56,9 +57,9 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
                 <Icons.Activity className="w-3 h-3" />
                 Dados em Tempo Real
               </h4>
-              <button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
+              <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                 <Icons.X className="w-4 h-4" />
-              </button>
+              </Button>
             </div>
             
             <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">

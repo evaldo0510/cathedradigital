@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React from 'react';
 
 interface AlphabetBarProps {
@@ -19,7 +20,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
         const has = letterStatus[letter];
         const isActive = selectedLetter === letter;
         return (
-          <button
+          <Button
             key={letter}
             onClick={() => has && onLetterClick(letter)}
             disabled={!has}
@@ -34,7 +35,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
               }`}
           >
             {letter}
-          </button>
+          </Button>
 
         );
       })}

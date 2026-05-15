@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';
@@ -138,12 +139,12 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
           title={`Lectio Divina — ${selectedPassage}`}
           text={`Completei a Lectio Divina sobre ${selectedPassage}. ${formatTime(seconds)} de oração.`}
         />
-        <button
+        <Button
           onClick={onRestart}
           className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-sm"
         >
           <RotateCcw className="w-4 h-4" /> Nova Lectio
-        </button>
+        </Button>
       </div>
     </div>
   );

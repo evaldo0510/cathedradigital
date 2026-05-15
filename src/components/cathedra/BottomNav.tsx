@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
@@ -46,7 +47,7 @@ interface BottomNavItemProps {
 }
 
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
-  <button 
+  <Button 
     onClick={(e) => { onRipple(e); onClick(); }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
@@ -73,7 +74,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
     {isActive && (
       <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-2xl" />
     )}
-  </button>
+  </Button>
 );
 
 interface BottomNavProps {

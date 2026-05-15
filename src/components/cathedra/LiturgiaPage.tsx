@@ -202,7 +202,7 @@ const LiturgiaPage: React.FC = () => {
               { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
               { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
             ].map((tab, idx) => (
-              <button
+              <Button
                 key={tab.id}
                 {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   activeTab === tab.id ? 'bg-background shadow-xl text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
@@ -211,7 +211,7 @@ const LiturgiaPage: React.FC = () => {
                 onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
               >
                 {tab.icon} {tab.label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>

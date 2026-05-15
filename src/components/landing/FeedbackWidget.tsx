@@ -70,9 +70,9 @@ const FeedbackWidget = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
-                  <button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
+                  <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                     <X className="w-5 h-5" />
-                  </button>
+                  </Button>
                 </div>
                 
                 <p className="text-xs text-muted-foreground font-serif italic mb-4">
@@ -81,14 +81,14 @@ const FeedbackWidget = () => {
 
                 <div className="flex gap-2 justify-center py-2">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <button
+                    <Button
                       key={star}
                       type="button"
                       onClick={() => setRating(star)}
                       className={`transition-all ${rating >= star ? 'text-secondary scale-110' : 'text-muted-foreground/30'}`}
                     >
                       <Star className="w-6 h-6 fill-current" />
-                    </button>
+                    </Button>
                   ))}
                 </div>
 

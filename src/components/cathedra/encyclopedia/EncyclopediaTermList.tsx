@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { FaithTerm } from '../AZFaithPage';
@@ -21,7 +22,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
       {terms.map(t => {
         const isActive = selectedTerm?.term === t.term;
         return (
-          <button
+          <Button
             key={t.term}
             onClick={() => onTermClick(t)}
             aria-pressed={isActive}
@@ -34,7 +35,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
 
             <span className="font-semibold text-sm truncate">{t.term}</span>
             <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isActive ? 'text-primary rotate-90' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
-          </button>
+          </Button>
         );
       })}
     </div>

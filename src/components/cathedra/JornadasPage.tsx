@@ -404,7 +404,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             ))}
           </div>
         <div className="flex flex-wrap gap-1.5 sm:gap-2">
-          <button
+          <Button
             onClick={() => setFilterDifficulty('all')}
             className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-md' : 'bg-muted text-muted-foreground hover:bg-muted/80'
@@ -412,10 +412,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             aria-pressed={filterDifficulty === 'all'}
           >
             Todos os níveis
-          </button>
+          </Button>
 
           {difficulties.map(diff => (
-            <button
+            <Button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
               className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-premium-tiny sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
@@ -424,7 +424,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               aria-pressed={filterDifficulty === diff}
             >
               {DIFFICULTY_LABELS[diff] || diff}
-            </button>
+            </Button>
           ))}
 
         </div>

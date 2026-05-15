@@ -173,7 +173,7 @@ const CheckoutPage: React.FC = () => {
           {/* Plan selector */}
           <div className="flex gap-2 p-1 bg-muted rounded-2xl">
             {PLANS.map(p => (
-              <button
+              <Button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
                 className={`flex-1 py-3 px-4 rounded-full text-sm font-bold transition-all ${
@@ -184,7 +184,7 @@ const CheckoutPage: React.FC = () => {
                 {p.badge && selectedPlan === p.id && (
                   <Badge className="ml-2 bg-primary/15 text-primary border-primary/30 text-premium-tiny">{p.badge}</Badge>
                 )}
-              </button>
+              </Button>
             ))}
           </div>
 
@@ -221,9 +221,9 @@ const CheckoutPage: React.FC = () => {
                   <Badge className="bg-primary/15 text-primary border-primary/30 text-xs">
                     Cupom {appliedCoupon.code} · -{appliedCoupon.discount_percent}%
                   </Badge>
-                  <button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-xs text-muted-foreground hover:text-destructive">
+                  <Button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-xs text-muted-foreground hover:text-destructive">
                     Remover
-                  </button>
+                  </Button>
                 </div>
               )}
             </CardHeader>
@@ -325,7 +325,7 @@ const CheckoutPage: React.FC = () => {
           <CardContent className="px-8 pb-2 space-y-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {DONATION_PRESETS.map(val => (
-                <button
+                <Button
                   key={val}
                   onClick={() => setDonationAmount(val)}
                   className={`px-5 py-2.5 rounded-full text-sm font-bold border transition-all ${
@@ -335,7 +335,7 @@ const CheckoutPage: React.FC = () => {
                   }`}
                 >
                   R$ {val}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="flex gap-3 items-center">

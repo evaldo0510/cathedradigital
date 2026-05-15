@@ -187,12 +187,12 @@ const GlossaryPage: React.FC = () => {
       {!loading && terms.length > 0 && (
         <div className="flex gap-2 justify-center flex-wrap">
           {categories.map(cat => (
-            <button key={cat} onClick={() => setCategory(cat)}
+            <Button key={cat} onClick={() => setCategory(cat)}
               className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -251,7 +251,7 @@ const GlossaryPage: React.FC = () => {
                 className={`bg-card border rounded-full overflow-hidden transition-all ${
                   isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'
                 }`}>
-                <button
+                <Button
                   onClick={() => setExpandedId(isExpanded ? null : term.id)}
                   className="w-full text-left p-6 flex items-start gap-4"
                 >
@@ -274,7 +274,7 @@ const GlossaryPage: React.FC = () => {
                     )}
                   </div>
                   <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </button>
+                </Button>
 
                 {isExpanded && (
                   <div className="px-6 pb-6 space-y-4 border-t border-border pt-4">
@@ -327,13 +327,13 @@ const GlossaryPage: React.FC = () => {
 
                         {/* CTA */}
                         {enrichment.relatedRoute && (
-                          <button
+                          <Button
                             onClick={() => navigate(enrichment.relatedRoute!)}
                             className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
                           >
                             <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}
-                          </button>
+                          </Button>
                         )}
                       </>
                     )}

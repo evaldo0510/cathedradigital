@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -25,10 +26,10 @@ const FavoritesPage: React.FC = () => {
       {favorites.length > 0 && (
         <div className="flex flex-wrap gap-2 justify-center">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)}
+            <Button key={t} onClick={() => setFilter(t)}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
               {typeLabels[t] || t}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -56,9 +57,9 @@ const FavoritesPage: React.FC = () => {
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
                 </div>
-                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                <Button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
                   <Icons.Cross className="w-4 h-4 text-destructive" />
-                </button>
+                </Button>
               </div>
             </div>
           ))}

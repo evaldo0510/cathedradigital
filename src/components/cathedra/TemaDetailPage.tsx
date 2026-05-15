@@ -360,26 +360,26 @@ const TemaDetailPage = () => {
       />
 
       <nav className="flex items-center gap-3 text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/50 mb-8 overflow-x-auto whitespace-nowrap pb-2 scrollbar-none">
-        <button 
+        <Button 
           onClick={() => navigate(AppRoute.HOME)}
           className="hover:text-primary transition-colors flex items-center gap-1"
         >
           <ChevronLeft className="w-3 h-3" /> Início
-        </button>
+        </Button>
         <span className="opacity-30">/</span>
-        <button 
+        <Button 
           onClick={() => navigate(AppRoute.TEMAS)}
           className="hover:text-primary transition-colors"
         >
           Temas
-        </button>
+        </Button>
         <span className="opacity-30">/</span>
-        <button 
+        <Button 
           onClick={() => navigate(`${AppRoute.TEMAS}?category=${selectedTag?.category}`)}
           className="hover:text-primary transition-colors"
         >
           {selectedTag?.category}
-        </button>
+        </Button>
         <span className="opacity-30">/</span>
         <span className="text-primary/80">{selectedTag?.label}</span>
       </nav>

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { ChevronDown } from 'lucide-react';
@@ -88,20 +89,20 @@ const MissalPage: React.FC = () => {
       </div>
 
       <div className="flex justify-center gap-2 flex-wrap">
-        <button onClick={() => setShowLatin(!showLatin)}
+        <Button onClick={() => setShowLatin(!showLatin)}
           className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
-        </button>
-        <button onClick={() => setShowRubrics(!showRubrics)}
+        </Button>
+        <Button onClick={() => setShowRubrics(!showRubrics)}
           className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
-        </button>
+        </Button>
       </div>
 
       {/* Quick navigation */}
       <div className="flex flex-wrap gap-2 justify-center">
         {MISSAL_SECTIONS.map(section => (
-          <button
+          <Button
             key={section.id}
             onClick={() => {
               setExpandedSection(section.id);
@@ -112,14 +113,14 @@ const MissalPage: React.FC = () => {
             }`}
           >
             {section.title}
-          </button>
+          </Button>
         ))}
       </div>
 
       <div className="space-y-4">
         {MISSAL_SECTIONS.map(section => (
           <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-2xl overflow-hidden">
-            <button
+            <Button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
               className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
@@ -128,7 +129,7 @@ const MissalPage: React.FC = () => {
                 {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
               </div>
               <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
-            </button>
+            </Button>
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">

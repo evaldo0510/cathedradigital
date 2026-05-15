@@ -74,10 +74,10 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
     }
   };
   return (
-    <button onClick={handleCopy} className="mt-2 inline-flex items-center gap-1.5 text-premium-tiny text-muted-foreground hover:text-primary transition-colors">
+    <Button onClick={handleCopy} className="mt-2 inline-flex items-center gap-1.5 text-premium-tiny text-muted-foreground hover:text-primary transition-colors">
       {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
       {copied ? 'Copiado' : 'Copiar'}
-    </button>
+    </Button>
   );
 };
 

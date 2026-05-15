@@ -111,12 +111,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
         animate={{ opacity: 1, scale: 1 }}
         className="relative w-full max-w-2xl bg-card border border-border shadow-2xl rounded-[2rem] p-8 md:p-12"
       >
-        <button 
+        <Button 
           onClick={onClose}
           className="absolute top-6 right-6 text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted transition-colors"
         >
           <X className="w-6 h-6" />
-        </button>
+        </Button>
 
         {!showResult ? (
           <div className="space-y-8">
@@ -134,14 +134,14 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
                 <div className="grid gap-3">
                   {steps[currentStep].options?.map((opt) => (
-                    <button
+                    <Button
                       key={opt.value}
                       onClick={() => handleOptionSelect(opt.value)}
                       className="group flex items-center justify-between p-6 rounded-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
                     >
                       <span className="text-lg font-serif">{opt.label}</span>
                       <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
-                    </button>
+                    </Button>
                   ))}
                 </div>
 
@@ -156,12 +156,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                     <div className={`h-1.5 rounded-full transition-all ${currentStep === steps.length ? 'w-8 bg-secondary' : 'w-2 bg-border'}`} />
                   </div>
                   {currentStep > 0 && (
-                    <button 
+                    <Button 
                       onClick={() => setCurrentStep(currentStep - 1)}
                       className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground font-serif"
                     >
                       <ArrowLeft className="w-4 h-4" /> Voltar
-                    </button>
+                    </Button>
                   )}
                 </div>
               </>
@@ -212,13 +212,13 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
 
-                <button 
+                <Button 
                   type="button"
                   onClick={() => setCurrentStep(steps.length - 1)}
                   className="w-full flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground font-serif"
                 >
                   <ArrowLeft className="w-4 h-4" /> Revisar respostas
-                </button>
+                </Button>
               </form>
             )}
           </div>

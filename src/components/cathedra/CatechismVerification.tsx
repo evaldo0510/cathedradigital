@@ -229,24 +229,24 @@ const CatechismVerification: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-2xl border border-border">
-            <button 
+            <Button 
               onClick={() => setFilter('all')} 
               className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={() => setFilter('missing')} 
               className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-sm' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
-            </button>
-            <button 
+            </Button>
+            <Button 
               onClick={() => setFilter('divergent')} 
               className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-sm' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
-            </button>
+            </Button>
           </div>
           <span className="text-premium-tiny font-black uppercase text-muted-foreground">
             {filteredResults.length} parágrafos exibidos

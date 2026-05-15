@@ -76,7 +76,7 @@ const A11yAuditPage = () => {
                 </h3>
                 <div className="space-y-2">
                   {section.items.map(item => (
-                    <button
+                    <Button
                       key={item.id}
                       onClick={() => toggleCheck(item.id)}
                       className="w-full flex items-center justify-between p-3 rounded-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
@@ -87,7 +87,7 @@ const A11yAuditPage = () => {
                       ) : (
                         <div className="w-5 h-5 rounded-2xl border-2 border-border/60" />
                       )}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>

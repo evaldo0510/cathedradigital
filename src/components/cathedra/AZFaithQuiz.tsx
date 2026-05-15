@@ -315,7 +315,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                 else classes = 'opacity-50 border-border text-muted-foreground';
               }
               return (
-                <button
+                <Button
                   key={idx}
                   onClick={() => handleSelect(idx)}
                   disabled={answered}
@@ -327,7 +327,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                     {answered && isCorrect ? <Check className="w-4 h-4" /> : answered && isSelected ? <X className="w-4 h-4" /> : String.fromCharCode(65 + idx)}
                   </span>
                   <span className="line-clamp-3">{opt}</span>
-                </button>
+                </Button>
 
               );
             })}

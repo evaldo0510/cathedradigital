@@ -55,9 +55,9 @@ const CookieConsent = () => {
               >
                 {t.accept}
               </Button>
-              <button className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline">
+              <Button className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline">
                 {t.policy}
-              </button>
+              </Button>
             </div>
           </div>
         </motion.div>

@@ -91,12 +91,12 @@ const OfflinePage: React.FC = () => {
       </div>
 
       <div className="pt-8">
-        <button 
+        <Button 
           onClick={() => navigate('/cache-manager')}
           className="text-xs font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors flex items-center gap-2"
         >
           <Icons.Settings className="w-3 h-3" /> Gerenciar Cache Local
-        </button>
+        </Button>
       </div>
     </div>
   );

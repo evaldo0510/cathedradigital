@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Feather, Heart, Clock, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -109,7 +110,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
           <div className="flex flex-wrap gap-2 justify-center">
             {SUGGESTED_PASSAGES.map(p => (
-              <button
+              <Button
                 key={p.ref}
                 onClick={() => onPassageChange(p.ref)}
                 className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
@@ -119,19 +120,19 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
                 }`}
               >
                 {p.ref}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
 
         <div className="text-center">
-          <button
+          <Button
             disabled={!selectedPassage.trim()}
             onClick={onStart}
             className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
           >
             Iniciar Lectio Divina
-          </button>
+          </Button>
         </div>
       </motion.div>
     </div>

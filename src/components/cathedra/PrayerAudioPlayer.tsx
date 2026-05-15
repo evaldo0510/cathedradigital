@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
 
@@ -103,7 +104,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
         <div className="flex items-center gap-2">
           <span className={`text-premium-tiny font-bold ${mutedClass}`}>Vel:</span>
           {[0.7, 0.85, 1.0].map(r => (
-            <button
+            <Button
               key={r}
               onClick={() => setRate(r)}
               className={`w-6 h-6 rounded-full text-premium-tiny font-bold transition-all ${
@@ -113,7 +114,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
               }`}
             >
               {r === 0.7 ? '−' : r === 1.0 ? '+' : '•'}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -137,7 +138,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
         </p>
       )}
 
-      <button
+      <Button
         onClick={togglePlay}
         className={`w-full py-3 rounded-full border font-bold text-sm transition-all flex items-center justify-center gap-2 ${btnClass}`}
       >
@@ -152,7 +153,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
             Ouvir Orações
           </>
         )}
-      </button>
+      </Button>
 
       <p className={`text-premium-tiny text-center ${mutedClass} italic`}>
         Funciona em segundo plano • Síntese de voz nativa

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { motion } from 'framer-motion';
@@ -66,12 +67,12 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            <Icons.Cross className="w-4 h-4" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
-        <button 
+        <Button 
           onClick={() => window.location.reload()}
           className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
-        </button>
+        </Button>
       </div>
     );
   }
@@ -115,12 +116,12 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
       <div className="reader-text py-4 space-y-3">
         <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
             <Icons.Loader className="w-3 h-3" /> Tentar carregar
-          </button>
+          </Button>
           <a 
             href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
             target="_blank" 
@@ -199,9 +200,9 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
-            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
+            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
-            </button>
+            </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
           </div>
         </div>
@@ -371,28 +372,28 @@ const Catechism: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-6">
         <BackToThemeBanner />
         {fromDashboard && (
-          <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </button>
+          </Button>
         )}
         <div className="flex items-center gap-4">
-          <button 
+          <Button 
             onClick={goBack} 
             className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             aria-label="Voltar para o Sumário"
           >
             <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
             <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
-          </button>
+          </Button>
 
-          <button 
+          <Button 
             onClick={goToExplorer} 
             className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             title="Explorar por Temas"
           >
             <Icons.Search className="w-4 h-4 text-primary" />
             <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
-          </button>
+          </Button>
 
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
@@ -400,17 +401,17 @@ const Catechism: React.FC = () => {
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
           {(crossRefs.length > 0 || docsRefs.length > 0) && (
-            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
+            <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
               className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
               title="Catecismo & Documentos">
               <Icons.Cross className="w-4 h-4" />
-            </button>
+            </Button>
           )}
         </div>
 
         {/* Section navigator */}
         <div className="flex items-center gap-3 justify-center">
-          <button 
+          <Button 
             disabled={selectedSection.id <= 1} 
             onClick={() => {
               const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
@@ -424,12 +425,12 @@ const Catechism: React.FC = () => {
             aria-label="Seção anterior"
           >
             <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
-          </button>
+          </Button>
 
           <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-2xl text-xs font-black uppercase tracking-widest text-primary">
             Lendo Seção {selectedSection.id}
           </div>
-          <button 
+          <Button 
             disabled={selectedSection.id >= 10} 
             onClick={() => {
               const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
@@ -443,7 +444,7 @@ const Catechism: React.FC = () => {
             aria-label="Próxima seção"
           >
             Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
-          </button>
+          </Button>
 
         </div>
 
@@ -470,7 +471,7 @@ const Catechism: React.FC = () => {
         <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
           <span className="w-full text-center text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
           {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-            <button key={p} 
+            <Button key={p} 
               onClick={() => jumpToParagraph(p)}
               className={`w-10 h-10 rounded-full text-xs font-bold transition-all relative ${
                 currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
@@ -479,7 +480,7 @@ const Catechism: React.FC = () => {
               }`}>
               {p}
               {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -491,9 +492,9 @@ const Catechism: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
-          </button>
+          </Button>
           <div>
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-3xl font-serif font-bold text-foreground">{selectedPart.title}</h1>
@@ -502,12 +503,12 @@ const Catechism: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {selectedPart.sections.map(sec => (
-            <button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+            <Button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
               className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
               <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
               <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
               <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -553,12 +554,12 @@ const Catechism: React.FC = () => {
       
       {user?.role === 'admin' && (
         <div className="flex justify-center">
-          <button 
+          <Button 
             onClick={() => navigate('/catechism/integrity')}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-premium-tiny font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
           >
             <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
-          </button>
+          </Button>
         </div>
       )}
 
@@ -594,16 +595,16 @@ const Catechism: React.FC = () => {
             placeholder="Buscar por número do parágrafo (ex: 1324)..."
             className="w-full pl-11 pr-20 py-3 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
-          <button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-bold">
+          <Button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-bold">
             Ir
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Parts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {CIC_SECTIONS.map(part => (
-          <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
+          <Button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
             className="text-left p-5 md:p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
             <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
@@ -613,7 +614,7 @@ const Catechism: React.FC = () => {
                 <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
               ))}
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </motion.div>

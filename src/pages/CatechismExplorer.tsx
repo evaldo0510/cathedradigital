@@ -165,7 +165,7 @@ const CatechismExplorer: React.FC = () => {
                   const currentCount = dynamicTagCounts[tag] || 0;
                   const isSelected = selectedTags.includes(tag);
                   return (
-                    <button
+                    <Button
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       disabled={currentCount === 0 && !isSelected}
@@ -186,7 +186,7 @@ const CatechismExplorer: React.FC = () => {
                           <span className="text-premium-tiny opacity-40">/ {totalCount}</span>
                         )}
                       </div>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>

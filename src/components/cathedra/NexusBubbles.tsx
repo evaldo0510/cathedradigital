@@ -155,13 +155,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               <h4 className="text-sm font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
             </div>
           </div>
-          <button 
+          <Button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
             className="w-10 h-10 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-primary/20 group"
             title="Estudo Completo"
           >
             <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-          </button>
+          </Button>
         </div>
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
@@ -451,26 +451,26 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
           />
           {searchQuery && (
-            <button 
+            <Button 
               onClick={() => setSearchQuery('')}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
             >
               <X className="w-2.5 h-2.5 text-muted-foreground" />
-            </button>
+            </Button>
           )}
         </div>
       </div>
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-        <button
+        <Button
           onClick={() => setActiveFilter('all')}
           aria-pressed={activeFilter === 'all'}
           className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
         >
           Todos
-        </button>
+        </Button>
 
         {Object.entries(categories).map(([key, cat]) => (
-          <button
+          <Button
             key={key}
             onClick={() => setActiveFilter(key)}
             aria-pressed={activeFilter === key}
@@ -479,7 +479,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
             {cat.icon}
             {cat.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -500,12 +500,12 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 {searchQuery && activeFilter !== 'all' && (
                   <div className="flex items-center gap-2">
                     <span className="text-premium-tiny text-primary/60 font-medium italic">Pesquisando globalmente</span>
-                    <button 
+                    <Button 
                       onClick={() => setActiveFilter('all')}
                       className="text-premium-tiny font-black uppercase tracking-tighter text-primary hover:underline"
                     >
                       Limpar Filtro
-                    </button>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -568,7 +568,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
                   return (
                     <motion.div key={key} layout className="space-y-2.5">
-                      <button
+                      <Button
                         onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
                         className="flex items-center gap-1.5 group w-full"
                       >
@@ -578,7 +578,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                         </span>
                         <div className="h-px flex-1 bg-border/40" />
                         <span className="text-premium-tiny font-black text-muted-foreground/40">{categoryTags.length} temas</span>
-                      </button>
+                      </Button>
                       <div className="flex flex-wrap gap-1.5" role="list">
                         {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
                           <div key={tag.slug} role="listitem">

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -28,21 +29,21 @@ const AparicoesPage: React.FC = () => {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Back + Header */}
         <div className="flex items-center gap-4">
-          <button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </button>
+          </Button>
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-sm text-muted-foreground">{selectedApparition.location}</p>
           </div>
-          <button
+          <Button
             onClick={() => handleToggleFavorite(selectedApparition)}
             className={`p-2 rounded-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
-          </button>
+          </Button>
           <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-md" loading="lazy" />
         </div>
 
@@ -69,7 +70,7 @@ const AparicoesPage: React.FC = () => {
             { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-3.5 h-3.5" /> },
             { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-3.5 h-3.5" /> },
           ].map(tab => (
-            <button
+            <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
@@ -78,7 +79,7 @@ const AparicoesPage: React.FC = () => {
             >
               {tab.icon}
               <span className="hidden sm:inline">{tab.label}</span>
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -203,13 +204,13 @@ const AparicoesPage: React.FC = () => {
             >
               <div className="relative">
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
-                <button
+                <Button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
                   className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
                   title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                 >
                   <Icons.Heart className={`w-4 h-4 ${isFav ? 'fill-primary' : ''}`} />
-                </button>
+                </Button>
               </div>
               <div className="p-5">
                 <div className="mb-3">

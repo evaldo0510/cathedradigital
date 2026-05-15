@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -383,9 +384,9 @@ const CommandCenter: React.FC = () => {
           />
 
           {query && (
-            <button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
               <Icons.X className="w-4 h-4" />
-            </button>
+            </Button>
           )}
           <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 rounded bg-muted text-muted-foreground text-premium-tiny font-mono font-bold">ESC</kbd>
         </div>
@@ -428,7 +429,7 @@ const CommandCenter: React.FC = () => {
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
-                <button
+                <Button
                   id={`item-${i}`}
                   role="option"
                   aria-selected={i === selectedIndex}
@@ -452,7 +453,7 @@ const CommandCenter: React.FC = () => {
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
                   </span>
-                </button>
+                </Button>
               </React.Fragment>
             );
           })}

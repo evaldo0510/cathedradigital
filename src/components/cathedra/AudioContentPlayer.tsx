@@ -141,13 +141,13 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
       </Button>
       
       {isPlaying && (
-        <button 
+        <Button 
           onClick={resetAudio}
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
           title="Reiniciar"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-        </button>
+        </Button>
       )}
     </div>
   );

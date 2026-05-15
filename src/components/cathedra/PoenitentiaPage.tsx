@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 
@@ -69,7 +70,7 @@ const PoenitentiaPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-2">
         {CONFESSION_STEPS.map((step, i) => (
-          <button
+          <Button
             key={i}
             onClick={() => setActiveStep(i)}
             className={`p-6 rounded-[2rem] border text-left transition-all relative overflow-hidden group ${
@@ -85,7 +86,7 @@ const PoenitentiaPage: React.FC = () => {
                 <Icons.CheckCircle2 className="w-12 h-12" />
               </div>
             )}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -144,12 +145,12 @@ const PoenitentiaPage: React.FC = () => {
           )}
 
           <div className="flex justify-center pt-8">
-            <button 
+            <Button 
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
               className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-3"
             >
               {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

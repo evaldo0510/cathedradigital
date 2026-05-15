@@ -88,12 +88,12 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
-      <button 
+      <Button 
         onClick={onClose} 
         className="absolute top-6 right-6 p-3 bg-foreground/10 hover:bg-foreground/20 rounded-full  text-foreground transition-all z-20"
       >
         <Icons.X className="w-5 h-5" />
-      </button>
+      </Button>
 
       {/* Image Sidebar */}
       <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden flex-shrink-0">

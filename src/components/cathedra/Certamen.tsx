@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -148,14 +149,14 @@ const Certamen: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
+            <Button onClick={restart} className="px-8 py-4 bg-secondary text-secondary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-2">
               <RotateCcw className="w-4 h-4" />
               Tentar Novamente
-            </button>
-            <button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            </Button>
+            <Button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
               <Share2 className="w-4 h-4" />
               Compartilhar Resultado
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -177,10 +178,10 @@ const Certamen: React.FC = () => {
 
       <div className="flex flex-wrap gap-2 justify-center">
         {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => { setCategory(cat); restart(); }}
+          <Button key={cat} onClick={() => { setCategory(cat); restart(); }}
             className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-md scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
             {cat}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -209,11 +210,11 @@ const Certamen: React.FC = () => {
               else cls = 'opacity-50 bg-muted border-border';
             }
             return (
-              <button key={idx} onClick={() => handleAnswer(idx)}
+              <Button key={idx} onClick={() => handleAnswer(idx)}
                 className={`w-full text-left p-4 rounded-full border font-bold text-sm transition-all flex items-center gap-4 ${cls}`}>
                 <span className="w-8 h-8 rounded-full bg-background flex items-center justify-center text-muted-foreground text-xs">{String.fromCharCode(65 + idx)}</span>
                 <span className="flex-1">{opt}</span>
-              </button>
+              </Button>
             );
           })}
         </div>
@@ -229,13 +230,13 @@ const Certamen: React.FC = () => {
             </p>
             <p className="text-sm text-muted-foreground font-serif leading-relaxed italic">{question.explanation}</p>
             
-            <button 
+            <Button 
               onClick={nextQuestion}
               className="w-full mt-4 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2"
             >
               {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
               <Icons.ArrowRight className="w-4 h-4" />
-            </button>
+            </Button>
           </motion.div>
         )}
       </div>

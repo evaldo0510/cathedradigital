@@ -198,7 +198,7 @@ const JornadaStepPage: React.FC = () => {
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="text-center space-y-4">
           <p className="text-muted-foreground">Etapa não encontrada.</p>
-          <button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</button>
+          <Button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</Button>
         </div>
       </div>,
       document.body
@@ -214,12 +214,12 @@ const JornadaStepPage: React.FC = () => {
       {/* Immersive Header */}
       <div className="flex-shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-border/50">
         <div className="flex items-center gap-3 max-w-2xl mx-auto">
-          <button
+          <Button
             onClick={() => navigate(`/jornadas/${journeyId}`)}
             className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
           >
             <X className="w-4 h-4 text-foreground" />
-          </button>
+          </Button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
@@ -300,7 +300,7 @@ const JornadaStepPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.05 }}
               >
-                <button
+                <Button
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
                     isExpanded
@@ -324,7 +324,7 @@ const JornadaStepPage: React.FC = () => {
                     </div>
                   </div>
                   <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                </button>
+                </Button>
 
                 <AnimatePresence>
                   {isExpanded && (
@@ -409,7 +409,7 @@ const JornadaStepPage: React.FC = () => {
       <div className="flex-shrink-0 border-t border-border/50 bg-background  px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="max-w-2xl mx-auto">
           {!completed ? (
-            <button
+            <Button
               onClick={completeStep}
               disabled={saving}
               className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
@@ -425,24 +425,24 @@ const JornadaStepPage: React.FC = () => {
                   Concluir Etapa
                 </>
               )}
-            </button>
+            </Button>
           ) : (
             <div className="flex gap-3">
-              <button
+              <Button
                 onClick={() => navigate(`/jornadas/${journeyId}`)}
                 className="flex-1 h-14 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] hover:bg-secondary/80 transition-all flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Voltar à Jornada
-              </button>
+              </Button>
               {nextStep && (
-                <button
+                <Button
                   onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
                   className="flex-1 h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                 >
                   Próxima Etapa
                   <Icons.ChevronRight className="w-4 h-4" />
-                </button>
+                </Button>
               )}
             </div>
           )}

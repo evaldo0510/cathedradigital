@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { 
   Heart, 
@@ -238,9 +239,9 @@ const LitaniesPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
             <ArrowLeft className="w-6 h-6 text-foreground" />
-          </button>
+          </Button>
           <div className="space-y-1">
             <span className={`inline-flex px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
@@ -304,7 +305,7 @@ const LitaniesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map(l => (
-          <button key={l.id} onClick={() => setSelectedId(l.id)}
+          <Button key={l.id} onClick={() => setSelectedId(l.id)}
             className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
               <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
@@ -321,7 +322,7 @@ const LitaniesPage: React.FC = () => {
                 Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>

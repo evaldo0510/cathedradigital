@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
@@ -314,40 +315,40 @@ const CatechismDebug: React.FC = () => {
           <p className="text-sm text-muted-foreground">Monitore o estado da geração automática via IA</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button 
+          <Button 
             onClick={loadData}
             disabled={loading}
             className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
             title="Atualizar"
           >
             <Icons.RotateCcw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={reprocessAllErrors}
             disabled={isReprocessing || stats.pending === 0}
             className="px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
           >
             <Icons.Zap className="w-3 h-3" /> Reprocessar Erros
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={reprocessIncomplete}
             disabled={isReprocessing}
             className="px-4 py-2 rounded-full bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2 shadow-sm"
           >
             <Icons.PenTool className="w-3 h-3" /> Reparar Incompletos
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={() => window.location.href = '/catechism/integrity'}
             className="px-4 py-2 rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 shadow-sm"
           >
             <Icons.Activity className="w-3 h-3" /> Painel de Integridade
-          </button>
-          <button 
+          </Button>
+          <Button 
             onClick={clearInvalidCache}
             className="px-4 py-2 rounded-full bg-destructive/10 text-destructive text-xs font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-2"
           >
             <Icons.Trash2 className="w-3 h-3" /> Limpar Inválidos
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -374,48 +375,48 @@ const CatechismDebug: React.FC = () => {
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
-              <button 
+              <Button 
                 onClick={() => setView('cache')}
                 className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Cache
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={() => setView('logs')}
                 className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Logs
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={() => setView('integrity')}
                 className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Integridade
-              </button>
+              </Button>
             </div>
             {view === 'cache' && (
               <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
-                <button onClick={() => setFilter('all')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</button>
-                <button onClick={() => setFilter('generated')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</button>
-                <button onClick={() => setFilter('error')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</button>
+                <Button onClick={() => setFilter('all')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
+                <Button onClick={() => setFilter('generated')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
+                <Button onClick={() => setFilter('error')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
               </div>
             )}
             {view === 'integrity' && (
               <div className="flex items-center gap-2">
-                <button 
+                <Button 
                   onClick={exportIntegrityToCSV}
                   className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
                 >
                   <Icons.FileText className="w-3 h-3" />
-                </button>
-                <button 
+                </Button>
+                <Button 
                   onClick={exportIntegrityToPDF}
                   className="p-2 rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
                   title="Exportar PDF"
                 >
                   <Icons.Download className="w-3 h-3" />
-                </button>
+                </Button>
               </div>
             )}
           </div>
@@ -434,20 +435,20 @@ const CatechismDebug: React.FC = () => {
                   onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))}
                   className="bg-background border border-border rounded px-2 py-1 text-premium-tiny"
                 />
-                <button 
+                <Button 
                   onClick={exportLogsToCSV}
                   className="p-2 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
                 >
                   <Icons.FileText className="w-3 h-3" />
-                </button>
-                <button 
+                </Button>
+                <Button 
                   onClick={exportLogsToPDF}
                   className="p-2 rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
                   title="Exportar PDF"
                 >
                   <Icons.Download className="w-3 h-3" />
-                </button>
+                </Button>
               </div>
             )}
             <span className="text-premium-tiny text-muted-foreground uppercase font-black">
@@ -503,7 +504,7 @@ const CatechismDebug: React.FC = () => {
                         </p>
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button 
+                        <Button 
                           disabled={isReprocessing}
                           onClick={async () => {
                             const { data } = await supabase.functions.invoke('catechism-text', {
@@ -519,7 +520,7 @@ const CatechismDebug: React.FC = () => {
                           className="p-2 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
                         >
                           <Icons.RotateCcw className="w-3.5 h-3.5" />
-                        </button>
+                        </Button>
                       </td>
                     </tr>
                   ))

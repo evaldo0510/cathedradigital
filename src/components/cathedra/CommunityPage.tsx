@@ -276,13 +276,13 @@ const CommunityPage: React.FC = () => {
   if (selectedPost) {
     return (
       <div className="max-w-3xl mx-auto space-y-6 py-10 px-4">
-        <button 
+        <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-2 py-1"
           aria-label="Voltar para a lista de discussões"
         >
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
-        </button>
+        </Button>
 
         <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
           <div className="flex items-center gap-3">
@@ -300,7 +300,7 @@ const CommunityPage: React.FC = () => {
           <h2 className="text-xl font-serif font-bold text-foreground">{selectedPost.title}</h2>
           <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{selectedPost.content}</p>
           <div className="flex items-center gap-4 pt-2 border-t border-border">
-            <button 
+            <Button 
               onClick={() => toggleLike(selectedPost)} 
               className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-2 py-1"
               aria-label={selectedPost.user_liked ? "Remover curtida" : "Curtir discussão"}
@@ -308,7 +308,7 @@ const CommunityPage: React.FC = () => {
             >
               <Icons.Heart className={`w-4 h-4 ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
               {selectedPost.likes_count}
-            </button>
+            </Button>
             <span className="text-sm text-muted-foreground">{replies.length} respostas</span>
           </div>
         </div>
@@ -337,15 +337,15 @@ const CommunityPage: React.FC = () => {
               rows={3}
               className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
-            <button onClick={submitReply} disabled={submitting || !replyContent.trim()}
+            <Button onClick={submitReply} disabled={submitting || !replyContent.trim()}
               className="px-4 py-2 rounded-full bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
               {submitting ? 'Enviando...' : 'Responder'}
-            </button>
+            </Button>
           </div>
         ) : (
-          <button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-3 bg-foreground text-background rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
+          <Button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-3 bg-foreground text-background rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
             Faça login para responder
-          </button>
+          </Button>
         )}
       </div>
     );
@@ -374,7 +374,7 @@ const CommunityPage: React.FC = () => {
         )}
 
         <div className="flex gap-2 justify-center mb-10" role="tablist" aria-label="Abas da comunidade">
-          <button 
+          <Button 
             {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
@@ -382,8 +382,8 @@ const CommunityPage: React.FC = () => {
             onKeyDown={(e) => handleTabKeyDown(e, 0, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
           >
             <Icons.Message className="w-3.5 h-3.5 inline mr-1.5" />Fórum
-          </button>
-          <button 
+          </Button>
+          <Button 
             {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
@@ -391,7 +391,7 @@ const CommunityPage: React.FC = () => {
             onKeyDown={(e) => handleTabKeyDown(e, 1, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
           >
             <Icons.Star className="w-3.5 h-3.5 inline mr-1.5" />Ranking
-          </button>
+          </Button>
         </div>
 
         {tab === 'forum' ? (

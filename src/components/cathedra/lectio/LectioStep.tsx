@@ -63,7 +63,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
       <div className="px-2 space-y-6">
         <div className="flex gap-2">
           {STEPS.map((step, i) => (
-            <button
+            <Button
               key={step.id}
               onClick={() => onStepChange(step.id)}
               className={`flex-1 h-2 rounded-full transition-all duration-500 ${
@@ -75,7 +75,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
 
         <div className="flex overflow-x-auto pb-2 gap-4 scrollbar-hide md:justify-between no-scrollbar">
           {STEPS.map((step, i) => (
-            <button
+            <Button
               key={step.id}
               onClick={() => onStepChange(step.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all whitespace-nowrap border ${
@@ -86,7 +86,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             >
               <step.icon className={`w-4 h-4 ${step.id === currentStep ? 'text-white' : i <= stepIndex ? 'text-primary' : ''}`} />
               <span className="text-premium-tiny font-black uppercase tracking-widest">{step.latin}</span>
-            </button>
+            </Button>
           ))}
         </div>
       </div>

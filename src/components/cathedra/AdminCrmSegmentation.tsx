@@ -115,7 +115,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
       {/* Segment Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
         {segments.map(s => (
-          <button
+          <Button
             key={s.key}
             onClick={() => setSegment(s.key)}
             className={`p-3 rounded-full border text-left transition-all ${
@@ -129,7 +129,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
               <span className="text-premium-tiny font-black uppercase tracking-wider">{s.label}</span>
             </div>
             <p className="text-xl font-bold mt-1">{segmentedUsers[s.key].length}</p>
-          </button>
+          </Button>
         ))}
       </div>
 

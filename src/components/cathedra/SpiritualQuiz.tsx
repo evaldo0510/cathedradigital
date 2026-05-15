@@ -324,13 +324,13 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
-          <button 
+          <Button 
             onClick={reset} 
             className="text-premium-tiny text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
             aria-label="Refazer teste de perfil espiritual"
           >
             Refazer
-          </button>
+          </Button>
         </div>
 
         <div className="flex items-center gap-3">
@@ -503,9 +503,9 @@ const SpiritualQuiz: React.FC = () => {
       </AnimatePresence>
 
       {step > 0 && (
-        <button onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <Button onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
           <ArrowLeft className="w-3 h-3" /> Voltar
-        </button>
+        </Button>
       )}
     </motion.div>
   );

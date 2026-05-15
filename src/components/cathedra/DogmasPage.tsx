@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -322,12 +323,12 @@ const DogmasPage: React.FC = () => {
       {/* Category tabs */}
       <div className="flex gap-2 justify-center flex-wrap">
         {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setCategory(cat)}
+          <Button key={cat} onClick={() => setCategory(cat)}
             className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -348,7 +349,7 @@ const DogmasPage: React.FC = () => {
         {filtered.map(dogma => (
           <div key={dogma.id}
             className="bg-card border border-border rounded-full overflow-hidden transition-all hover:border-primary/30">
-            <button
+            <Button
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
               className="w-full text-left p-6 flex items-start gap-4"
             >
@@ -371,7 +372,7 @@ const DogmasPage: React.FC = () => {
                 )}
               </div>
               <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} />
-            </button>
+            </Button>
             {expandedId === dogma.id && (
               <div className="px-6 pb-6 pl-[4.5rem] space-y-4 border-t border-border pt-4">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>

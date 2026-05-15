@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { normalizeText } from '@/lib/utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -202,12 +203,12 @@ const TemasPage = () => {
                         <Sparkles className="w-3 h-3 text-primary/40" />
                         <span className="text-premium-tiny font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
-                      <button 
+                      <Button 
                         onClick={() => setActiveCategory('all')}
                         className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
                       >
                         Limpar Filtro
-                      </button>
+                      </Button>
                     </div>
                   )}
                   <div className="relative p-6 sm:p-10">
