@@ -109,14 +109,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="h-px flex-1 bg-border/20" />
           </div>
           <div className="grid grid-cols-1 gap-6">
-            <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+            <HomeCard padding="sm" className="space-y-4" onClick={() => onNavigate(AppRoute.TEMAS)}>
               <div className="flex items-center justify-between">
-                <h4 className="text-base font-bold text-primary">Fundamentos da Fé</h4>
-                <Icons.Star className="w-4 h-4 text-primary/40" />
+                <h4 className="text-base font-bold text-primary">Temas da Fé</h4>
+                <Icons.Star className="w-4 h-4 text-primary/40" aria-hidden="true" />
               </div>
-              <p className="text-xs text-primary/40 leading-relaxed">Para quem inicia sua jornada espiritual.</p>
-              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group" onClick={() => onNavigate(AppRoute.JORNADAS)}>
-                Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" />
+              <p className="text-xs text-primary/40 leading-relaxed">Aprofunde-se em tópicos específicos da doutrina.</p>
+              <HomeButton variant="ghost" className="p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group" onClick={() => onNavigate(AppRoute.TEMAS)} aria-label="Explorar temas da fé">
+                Explorar <Icons.ChevronRight className="ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </HomeButton>
             </HomeCard>
             
