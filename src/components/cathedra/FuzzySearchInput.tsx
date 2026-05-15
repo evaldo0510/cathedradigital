@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 /**
  * FuzzySearchInput — shared search input used by Saints, Glossary,
  * Community and Themes pages.

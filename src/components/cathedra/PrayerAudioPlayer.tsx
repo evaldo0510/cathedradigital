@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
 

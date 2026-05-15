@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';

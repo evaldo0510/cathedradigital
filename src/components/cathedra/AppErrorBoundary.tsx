@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
 

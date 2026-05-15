@@ -17,7 +17,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';

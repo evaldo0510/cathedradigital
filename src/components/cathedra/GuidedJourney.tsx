@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, ArrowLeft, Sparkles, Book, Cross, MessageSquare, Mail, User } from 'lucide-react';
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';

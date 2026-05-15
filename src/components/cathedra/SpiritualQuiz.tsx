@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain, Users, Church } from 'lucide-react';
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';

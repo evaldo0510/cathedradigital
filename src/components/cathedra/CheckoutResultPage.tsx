@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';

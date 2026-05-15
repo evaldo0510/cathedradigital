@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button   } from '@/components/ui/button';
-import { Card    , CardContent   } from '@/components/ui/card';
+import { Button   } from '@/components/cathedra/Button';
+import { Card    , CardContent   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
