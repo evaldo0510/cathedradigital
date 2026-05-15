@@ -25,7 +25,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
             Continue sua Jornada
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -61,7 +61,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
             Ritual do Dia
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -75,7 +75,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
             Temas Principais
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -87,7 +87,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
             Catecismo
           </h2>
           <div className="h-px flex-1 bg-border/40" />
@@ -115,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <div className="flex items-center gap-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/40 whitespace-nowrap">
             Trilhas de Formação
           </h2>
           <div className="h-px flex-1 bg-border/40" />
