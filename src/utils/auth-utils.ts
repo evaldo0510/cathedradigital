@@ -18,6 +18,7 @@ const ADMIN_ROUTES = [
   '/catechism/debug',
   '/security-audit/*',
   '/a11y-audit/*',
+  '/admin/audit-logs',
 ];
 
 export const isRouteProtectedForAdmin = (path: string): boolean => {
@@ -49,7 +50,8 @@ export const logUnauthorizedAccess = async (userId: string | undefined, path: st
       metadata: { 
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        platform: navigator.platform
+        platform: navigator.platform,
+        referrer: document.referrer || 'direct'
       }
     }]);
   } catch (err) {

@@ -110,6 +110,7 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
+const AuditLogsPage = lazy(() => import('./components/cathedra/AuditLogsPage'));
 
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
@@ -122,6 +123,7 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const IconsDesignSystem = lazy(() => import('./components/cathedra/IconsDesignSystem'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -609,6 +611,8 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_AUDIT} element={<PageTransition><AdminGuard><VisualAuditPage /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_REGRESSION} element={<PageTransition><AdminGuard><VisualRegressionDashboard /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.AUDIT_LOGS} element={<PageTransition><AdminGuard><AuditLogsPage /></AdminGuard></PageTransition>} />
+                  <Route path="/design-system/icons" element={<PageTransition><AdminGuard><IconsDesignSystem /></AdminGuard></PageTransition>} />
 
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />

@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-
+import { useAuth } from '@/hooks/useAuth';
+import { canUserAccess } from '@/utils/auth-utils';
 import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [
@@ -122,6 +123,7 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { t, lang } = useLang();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
@@ -295,12 +297,16 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <Button 
-                onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
-              >
-                Evaldo.os
-              </Button>
+              {canUserAccess(profile?.role, AppRoute.ADMIN) ? (
+                <Button 
+                  onClick={() => navigate(AppRoute.ADMIN)} 
+                  className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+                >
+                  Evaldo.os
+                </Button>
+              ) : (
+                <span className="font-black text-primary">Evaldo.os</span>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-8">
