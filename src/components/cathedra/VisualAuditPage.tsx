@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card   } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from './Button';
 import { 
   ShieldAlert, CheckCircle2, XCircle, Clock, 

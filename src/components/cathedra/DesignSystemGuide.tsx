@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card   } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/cathedra/Button';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
