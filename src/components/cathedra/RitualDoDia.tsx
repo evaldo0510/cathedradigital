@@ -47,7 +47,7 @@ const RitualDoDia: React.FC = () => {
           <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1} />
           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/10">Verbum Domini</span>
         </div>
-        <blockquote className="text-4xl md:text-5xl font-serif italic text-primary/70 leading-[1.2] pl-12 border-l border-secondary/10">
+        <blockquote className="text-4xl md:text-5xl font-serif italic text-primary/80 leading-[1.2] pl-12 border-l border-secondary/20">
           "{verse.text}"
         </blockquote>
         <p className="text-premium-tiny font-bold text-secondary uppercase tracking-[0.3em] pl-12 opacity-40">— {verse.ref}</p>
@@ -59,7 +59,7 @@ const RitualDoDia: React.FC = () => {
            <Icons.PenLine className="w-3.5 h-3.5 text-muted-foreground/20" strokeWidth={1} />
            <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-muted-foreground/20">Meditatio</span>
         </div>
-        <p className="text-2xl text-primary/40 leading-relaxed font-serif italic pl-12 border-l border-border/10">
+        <p className="text-2xl text-primary/60 leading-relaxed font-serif italic pl-12 border-l border-border/10">
           {reflection}
         </p>
       </div>
