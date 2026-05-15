@@ -637,8 +637,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           )}
         </motion.div>
       )}
+        </div>
       </div>
-      
       <aside className="desktop-aside space-y-6 hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
           <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-3">Sua Formação</h3>
