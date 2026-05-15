@@ -153,12 +153,12 @@ const HojePage: React.FC = () => {
              {(profile?.streak || 0) > 0 && (
               <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
                 <Icons.Zap className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-                <span className="text-premium-tiny font-bold text-primary/40 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+                <span className="text-premium-tiny font-bold text-primary/60 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
             <div className="flex items-center gap-6 px-12 py-6 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03] shadow-soft group">
               <Icons.Star className="w-5 h-5 text-secondary group-hover:scale-110 transition-transform" />
-              <span className="text-premium-tiny font-bold text-primary/40 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.xp || 0} XP</span>
+              <span className="text-premium-tiny font-bold text-primary/60 group-hover:text-primary uppercase tracking-[0.4em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
