@@ -6,7 +6,7 @@ import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown
 import confetti from 'canvas-confetti';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';

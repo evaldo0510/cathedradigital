@@ -1,4 +1,4 @@
-import { Button   } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { normalizeText } from '@/lib/utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, X, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/cathedra/Button';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 

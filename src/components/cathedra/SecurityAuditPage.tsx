@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button   } from '@/components/ui/button';
-import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/ui/card';
+import { Button   } from '@/components/cathedra/Button';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
 import { CheckCircle, XCircle, ShieldAlert, FileCode, RotateCcw, AlertTriangle, Search, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
