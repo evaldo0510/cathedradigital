@@ -159,7 +159,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             {saint.quotes?.[0] || saint.bio}
           </p>
         </div>
-        <div className="flex items-center justify-between pt-6 border-t border-border/40">
+        <div className="flex items-center justify-between pt-6 border-t border-primary/[0.04]">
           <div className="flex gap-2">
             {saint.virtues?.slice(0, 2).map((v: string) => (
               <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">{v}</span>

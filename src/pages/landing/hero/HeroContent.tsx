@@ -30,7 +30,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-[1280px] w-full text-center space-y-20 sm:space-y-32 px-6 mx-auto"
+      className="relative z-10 w-full max-w-[1280px] mx-auto text-center space-y-24 md:space-y-32 lg:space-y-48 px-6 sm:px-8 lg:px-16"
     >
       {/* Logos Avatar */}
       <motion.div
@@ -105,12 +105,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           </HomeButton>
         </div>
 
-        <div className="flex items-center gap-4 opacity-10">
-          <span className="w-12 h-px bg-primary" />
-          <p className="text-[9px] text-primary font-black uppercase tracking-[0.4em]">
+        <div className="flex items-center justify-center gap-6 opacity-20 w-full max-w-lg mx-auto">
+          <div className="h-px flex-1 bg-primary" />
+          <p className="text-[10px] text-primary font-black uppercase tracking-[0.5em] whitespace-nowrap">
             Tradição & Tecnologia
           </p>
-          <span className="w-12 h-px bg-primary" />
+          <div className="h-px flex-1 bg-primary" />
         </div>
       </motion.div>
     </motion.div>

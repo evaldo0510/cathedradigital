@@ -249,15 +249,15 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-12;
+    @apply w-full max-w-[1280px] mx-auto px-6 sm:px-8 lg:px-16;
   }
 
   .content-section {
-    @apply w-full max-w-[1280px] mx-auto py-16 md:py-24 lg:py-40 space-y-24 md:space-y-32;
+    @apply w-full max-w-[1280px] mx-auto py-16 md:py-24 lg:py-32 xl:py-48;
   }
 
   .responsive-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-16 lg:gap-24;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16 xl:gap-24;
   }
 
   /* Desktop two-column layout: main content + optional side panel */
@@ -343,7 +343,15 @@
   }
 
   .premium-header {
-    @apply text-center space-y-10 mb-24 md:mb-40 max-w-4xl mx-auto;
+    @apply text-center space-y-10 mb-20 md:mb-32 max-w-4xl mx-auto;
+  }
+
+  .section-divider-header {
+    @apply flex items-center gap-6 mb-12 md:mb-16;
+  }
+
+  .divider-line {
+    @apply h-px flex-1 bg-primary/[0.08];
   }
   
   .premium-tag {
