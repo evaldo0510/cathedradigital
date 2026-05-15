@@ -52,7 +52,7 @@ const RitualDoDia: React.FC = () => {
           <blockquote className="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
-          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
+          <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
         </div>
 
         {/* Divider */}
