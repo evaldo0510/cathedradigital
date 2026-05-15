@@ -4,6 +4,7 @@ import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
 import { Card   } from './Card';
+import { CathedraIcon } from './CathedraIcon';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
