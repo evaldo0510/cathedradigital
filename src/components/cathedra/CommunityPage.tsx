@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { CathedraButton as Button } from '@/components/ui/button';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -412,7 +412,7 @@ const CommunityPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
               {posts.map(post => (
                 <Card key={post.id} className="premium-card-interactive" onClick={() => openPost(post)}>
-                  <CathedraCardContent as CardContent className="p-6">
+                  <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-10 h-10 rounded-2xl bg-muted flex items-center justify-center font-black text-sm text-primary">
                         {(post.author_name || 'A').charAt(0).toUpperCase()}
@@ -435,7 +435,7 @@ const CommunityPage: React.FC = () => {
                         <Icons.MessageSquare className="w-3.5 h-3.5" /> {post.replies_count || 0}
                       </div>
                     </div>
-                  </CathedraCardContent as CardContent>
+                  </CardContent>
                 </Card>
               ))}
             </div>

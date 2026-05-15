@@ -3,9 +3,9 @@ import {
   ArrowLeft, Crown, Shield, Flame, Calendar, Mail, Star,
   BookOpen, MessageCircle, Route, Brain, Clock
 } from 'lucide-react';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -95,7 +95,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
 
       {/* Profile Card */}
       <Card>
-        <CathedraCardContent as CardContent className="pt-6">
+        <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row items-start gap-5">
             <div className="w-16 h-16 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
@@ -119,7 +119,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               </Button>
             </div>
           </div>
-        </CathedraCardContent as CardContent>
+        </CardContent>
       </Card>
 
       {/* Stats Grid */}
@@ -131,13 +131,13 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           { icon: <Brain className="w-4 h-4 text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>
-            <CathedraCardContent as CardContent className="pt-4 pb-3 px-4 flex items-center gap-3">
+            <CardContent className="pt-4 pb-3 px-4 flex items-center gap-3">
               {stat.icon}
               <div>
                 <p className="text-lg font-bold leading-tight">{stat.value}</p>
                 <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{stat.label}</p>
               </div>
-            </CathedraCardContent as CardContent>
+            </CardContent>
           </Card>
         ))}
       </div>
@@ -145,10 +145,10 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Diagnosis */}
         <Card>
-          <CathedraCardHeader as CardHeader className="pb-3">
-            <CathedraCardTitle as CardTitle className="text-sm flex items-center gap-2"><Brain className="w-4 h-4 text-primary" /> Diagnóstico Espiritual</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2"><Brain className="w-4 h-4 text-primary" /> Diagnóstico Espiritual</CardTitle>
+          </CardHeader>
+          <CardContent>
             {diagnosis ? (
               <div className="space-y-2 text-sm">
                 {typeof diagnosis === 'object' && Object.entries(diagnosis).map(([key, value]) => (
@@ -161,15 +161,15 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             ) : (
               <p className="text-muted-foreground text-sm py-4 text-center">Nenhum diagnóstico realizado.</p>
             )}
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         {/* Journey Progress */}
         <Card>
-          <CathedraCardHeader as CardHeader className="pb-3">
-            <CathedraCardTitle as CardTitle className="text-sm flex items-center gap-2"><Route className="w-4 h-4 text-primary" /> Jornadas ({journeyProgress.length} etapas)</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2"><Route className="w-4 h-4 text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
+          </CardHeader>
+          <CardContent>
             {journeyProgress.length > 0 ? (
               <div className="space-y-2 max-h-[200px] overflow-y-auto">
                 {journeyProgress.slice(0, 10).map((jp: any) => (
@@ -182,17 +182,17 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             ) : (
               <p className="text-muted-foreground text-sm py-4 text-center">Nenhuma jornada iniciada.</p>
             )}
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       </div>
 
       {/* Journal */}
       {journalEntries.length > 0 && (
         <Card>
-          <CathedraCardHeader as CardHeader className="pb-3">
-            <CathedraCardTitle as CardTitle className="text-sm">Últimas Reflexões do Diário</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="space-y-3">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Últimas Reflexões do Diário</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
             {journalEntries.map((entry: any) => (
               <div key={entry.id} className="p-3 rounded-2xl bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-2 mb-1">
@@ -202,7 +202,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
                 <p className="text-sm line-clamp-2">{entry.content}</p>
               </div>
             ))}
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       )}
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icons } from '../../constants';
-import { CathedraButton as Button } from '@/components/ui/button';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardFooter as CardFooter, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
@@ -190,10 +190,10 @@ const CheckoutPage: React.FC = () => {
 
           {/* Plan card */}
           <Card className="border-2 border-primary shadow-2xl rounded-[2.5rem] overflow-hidden">
-            <CathedraCardHeader as CardHeader className="text-center bg-primary/5 pb-10 pt-12 space-y-4">
-              <CathedraCardTitle as CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
+            <CardHeader className="text-center bg-primary/5 pb-10 pt-12 space-y-4">
+              <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
-              </CathedraCardTitle as CardTitle>
+              </CardTitle>
               <div className="flex flex-col items-center justify-center">
                 {appliedCoupon && (
                   <span className="text-xl text-muted-foreground line-through mb-1">
@@ -210,11 +210,11 @@ const CheckoutPage: React.FC = () => {
                 </span>
               </div>
               {plan.totalLabel && (
-                <CathedraCardDescription as CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-2xl inline-block font-serif">
+                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-2xl inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
-                </CathedraCardDescription as CardDescription>
+                </CardDescription>
               )}
               {appliedCoupon && (
                 <div className="flex items-center justify-center gap-2">
@@ -226,8 +226,8 @@ const CheckoutPage: React.FC = () => {
                   </Button>
                 </div>
               )}
-            </CathedraCardHeader as CardHeader>
-            <CathedraCardContent as CardContent className="p-8 md:p-10 space-y-6">
+            </CardHeader>
+            <CardContent className="p-8 md:p-10 space-y-6">
               {/* Coupon input */}
               {!appliedCoupon && (
                 <div className="flex gap-2">
@@ -256,8 +256,8 @@ const CheckoutPage: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            </CathedraCardContent as CardContent>
-            <CathedraCardFooter as CardFooter className="p-8 md:p-10 pt-0 flex flex-col gap-4">
+            </CardContent>
+            <CardFooter className="p-8 md:p-10 pt-0 flex flex-col gap-4">
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
@@ -269,7 +269,7 @@ const CheckoutPage: React.FC = () => {
                 <Icons.Heart className="w-3.5 h-3.5 text-primary shrink-0" />
                 Parte do valor da sua assinatura é destinada a projetos de evangelização.
               </p>
-            </CathedraCardFooter as CardFooter>
+            </CardFooter>
           </Card>
         </div>
       </div>
@@ -278,7 +278,7 @@ const CheckoutPage: React.FC = () => {
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-serif font-bold text-center mb-8">Gratuito vs PRO</h2>
         <Card className="rounded-2xl overflow-hidden border border-border/50">
-          <CathedraCardContent as CardContent className="p-0">
+          <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
@@ -305,24 +305,24 @@ const CheckoutPage: React.FC = () => {
                 ))}
               </tbody>
             </table>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       </div>
 
       {/* Donation */}
       <div className="max-w-2xl mx-auto">
         <Card className="border border-border/50 rounded-2xl overflow-hidden bg-muted/30">
-          <CathedraCardHeader as CardHeader className="text-center space-y-3 pb-4">
+          <CardHeader className="text-center space-y-3 pb-4">
             <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-7 h-7 text-primary" />
             </div>
-            <CathedraCardTitle as CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CathedraCardTitle as CardTitle>
-            <CathedraCardDescription as CardDescription className="text-sm max-w-md mx-auto">
+            <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
+            <CardDescription className="text-sm max-w-md mx-auto">
               Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
-            </CathedraCardDescription as CardDescription>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="px-8 pb-2 space-y-4">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-8 pb-2 space-y-4">
             <div className="flex flex-wrap gap-2 justify-center">
               {DONATION_PRESETS.map(val => (
                 <Button
@@ -349,8 +349,8 @@ const CheckoutPage: React.FC = () => {
                 className="rounded-full"
               />
             </div>
-          </CathedraCardContent as CardContent>
-          <CathedraCardFooter as CardFooter className="px-8 pb-8 pt-4">
+          </CardContent>
+          <CardFooter className="px-8 pb-8 pt-4">
             <Button
               variant="outline"
               onClick={handleDonation}
@@ -363,7 +363,7 @@ const CheckoutPage: React.FC = () => {
                 </>
               )}
             </Button>
-          </CathedraCardFooter as CardFooter>
+          </CardFooter>
         </Card>
       </div>
 

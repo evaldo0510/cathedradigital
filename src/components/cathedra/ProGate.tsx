@@ -1,4 +1,4 @@
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import React from 'react';
 import { Icons } from '@/constants';
 import { useNavigate } from 'react-router-dom';

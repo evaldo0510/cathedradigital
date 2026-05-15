@@ -1,4 +1,4 @@
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';

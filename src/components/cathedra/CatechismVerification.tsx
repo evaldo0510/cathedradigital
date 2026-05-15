@@ -6,9 +6,9 @@ import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
-import { CathedraCard as Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cacheCatechismParagraph } from '@/lib/offlineCache';
 import {

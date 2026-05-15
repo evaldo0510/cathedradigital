@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 
 const DiagnosticsPage: React.FC = () => {
@@ -59,10 +59,10 @@ const DiagnosticsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Status Cards */}
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CathedraCardHeader as CardHeader className="pb-4">
-            <CathedraCardTitle as CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Supabase Core</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="space-y-4">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Supabase Core</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <div className={`w-3 h-3 rounded-full animate-pulse ${
                 supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-secondary' : 'bg-secondary/50'
@@ -72,33 +72,33 @@ const DiagnosticsPage: React.FC = () => {
               </span>
             </div>
             <p className="text-xs text-muted-foreground italic">Latência média: ~150ms</p>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CathedraCardHeader as CardHeader className="pb-4">
-            <CathedraCardTitle as CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Banco de Dados</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="space-y-4">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Banco de Dados</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <Icons.History className="w-5 h-5 text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.table_count || 0} Tabelas</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Integridade: 100% (Normal)</p>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CathedraCardHeader as CardHeader className="pb-4">
-            <CathedraCardTitle as CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Comunidade</CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="space-y-4">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Comunidade</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <Icons.Message className="w-5 h-5 text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.post_count || 0} Discussões</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Atividade: Alta (Últimas 24h)</p>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       </div>
 

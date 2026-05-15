@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';

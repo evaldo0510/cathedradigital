@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, AreaChart, Area
 } from 'recharts';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Props {
   userGrowth: any[];
@@ -13,11 +13,11 @@ interface Props {
 const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
     <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
-      <CathedraCardHeader as CardHeader className="pb-2 pt-4 px-4">
-        <CathedraCardTitle as CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CathedraCardTitle as CardTitle>
-        <CathedraCardDescription as CardDescription className="text-premium-tiny uppercase tracking-widest opacity-60">Novos registros por mês</CathedraCardDescription as CardDescription>
-      </CathedraCardHeader as CardHeader>
-      <CathedraCardContent as CardContent className="h-[240px] w-full p-2 sm:p-4">
+      <CardHeader className="pb-2 pt-4 px-4">
+        <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
+        <CardDescription className="text-premium-tiny uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
+      </CardHeader>
+      <CardContent className="h-[240px] w-full p-2 sm:p-4">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={userGrowth} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
@@ -60,15 +60,15 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
             />
           </AreaChart>
         </ResponsiveContainer>
-      </CathedraCardContent as CardContent>
+      </CardContent>
     </Card>
 
     <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
-      <CathedraCardHeader as CardHeader className="pb-2 pt-4 px-4">
-        <CathedraCardTitle as CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CathedraCardTitle as CardTitle>
-        <CathedraCardDescription as CardDescription className="text-premium-tiny uppercase tracking-widest opacity-60">Receita semanal acumulada</CathedraCardDescription as CardDescription>
-      </CathedraCardHeader as CardHeader>
-      <CathedraCardContent as CardContent className="h-[240px] w-full p-2 sm:p-4">
+      <CardHeader className="pb-2 pt-4 px-4">
+        <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
+        <CardDescription className="text-premium-tiny uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>
+      </CardHeader>
+      <CardContent className="h-[240px] w-full p-2 sm:p-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={revenueData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.1)" />
@@ -104,7 +104,7 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
             />
           </BarChart>
         </ResponsiveContainer>
-      </CathedraCardContent as CardContent>
+      </CardContent>
     </Card>
   </div>
 );

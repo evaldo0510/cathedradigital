@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
 import { ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 
@@ -226,7 +226,7 @@ const BibliotecaPage: React.FC = () => {
                       className="cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-premium"
                     >
                       <Card className="premium-card-interactive h-full overflow-hidden">
-                        <CathedraCardContent as CardContent className="p-5 flex items-center gap-5 h-full">
+                        <CardContent className="p-5 flex items-center gap-5 h-full">
                           <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${item.color} transition-transform group-hover:scale-110 duration-300`}>
                             {item.icon}
                           </div>
@@ -235,7 +235,7 @@ const BibliotecaPage: React.FC = () => {
                             <p className="text-premium-tiny leading-relaxed text-muted-foreground line-clamp-2">{item.description}</p>
                           </div>
                           <Icons.ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                        </CathedraCardContent as CardContent>
+                        </CardContent>
                       </Card>
                     </div>
                   </motion.div>

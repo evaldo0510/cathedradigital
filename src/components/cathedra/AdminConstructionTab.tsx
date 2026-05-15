@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardFooter as CardFooter } from '@/components/ui/card';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -226,7 +226,7 @@ const AdminConstructionTab: React.FC = () => {
         </div>
       ) : filteredProjects.length === 0 ? (
         <Card className="border-dashed border-2 py-12">
-          <CathedraCardContent as CardContent className="flex flex-col items-center text-center space-y-4">
+          <CardContent className="flex flex-col items-center text-center space-y-4">
             <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
               <Building2 className="w-8 h-8 text-muted-foreground" />
             </div>
@@ -235,22 +235,22 @@ const AdminConstructionTab: React.FC = () => {
               <p className="text-sm text-muted-foreground">Comece criando uma nova obra paroquial.</p>
             </div>
             <Button onClick={() => setIsAddProjectDialogOpen(true)}>Criar Primeira Obra</Button>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredProjects.map((project) => (
             <Card key={project.id} className="overflow-hidden group hover:border-primary/50 transition-all">
-              <CathedraCardHeader as CardHeader className="pb-3 flex flex-row items-start justify-between">
+              <CardHeader className="pb-3 flex flex-row items-start justify-between">
                 <div>
-                  <CathedraCardTitle as CardTitle className="text-lg">{project.name}</CathedraCardTitle as CardTitle>
-                  <CathedraCardDescription as CardDescription className="line-clamp-1">{project.description || 'Sem descrição'}</CathedraCardDescription as CardDescription>
+                  <CardTitle className="text-lg">{project.name}</CardTitle>
+                  <CardDescription className="line-clamp-1">{project.description || 'Sem descrição'}</CardDescription>
                 </div>
                 <Badge variant={project.status === 'concluida' ? 'default' : 'secondary'}>
                   {project.status === 'concluida' ? 'Concluída' : 'Em Andamento'}
                 </Badge>
-              </CathedraCardHeader as CardHeader>
-              <CathedraCardContent as CardContent className="pb-3 space-y-4">
+              </CardHeader>
+              <CardContent className="pb-3 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-3 rounded-2xl bg-muted/50 border space-y-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -287,13 +287,13 @@ const AdminConstructionTab: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-              </CathedraCardContent as CardContent>
-              <CathedraCardFooter as CardFooter className="bg-muted/10 py-3 flex justify-between">
+              </CardContent>
+              <CardFooter className="bg-muted/10 py-3 flex justify-between">
                 <span className="text-premium-tiny text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
                   <Trash2 className="w-3.5 h-3.5" />
                 </Button>
-              </CathedraCardFooter as CardFooter>
+              </CardFooter>
             </Card>
           ))}
         </div>

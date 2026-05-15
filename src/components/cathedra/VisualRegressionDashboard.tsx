@@ -5,8 +5,8 @@ import {
   ArrowRight, ShieldAlert, Type, Grid, Layout, 
   ChevronRight, ExternalLink, RefreshCw
 } from 'lucide-react';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardDescription as CardDescription, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle } from '@/components/ui/card';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -126,12 +126,12 @@ const VisualRegressionDashboard: React.FC = () => {
       <div className="flex flex-col md:flex-row gap-6">
         {/* Runs Sidebar */}
         <Card className="w-full md:w-80 border-border/10 bg-muted/20 backdrop-blur-sm rounded-premium shadow-premium">
-          <CathedraCardHeader as CardHeader className="p-4 border-b border-border/10">
-            <CathedraCardTitle as CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+          <CardHeader className="p-4 border-b border-border/10">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
               <Clock className="w-4 h-4" /> Histórico
-            </CathedraCardTitle as CardTitle>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="p-0">
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
             <ScrollArea className="h-[500px]">
               <div className="p-2 space-y-1">
                 {runs.map((run) => (
@@ -168,7 +168,7 @@ const VisualRegressionDashboard: React.FC = () => {
                 ))}
               </div>
             </ScrollArea>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         {/* Snapshots Area */}
@@ -240,7 +240,7 @@ const VisualRegressionDashboard: React.FC = () => {
 
 const StatsCard = ({ title, value, icon, status }: any) => (
   <Card className="border-border/10 bg-muted/10 rounded-premium overflow-hidden">
-    <CathedraCardContent as CardContent className="p-4 flex items-center justify-between">
+    <CardContent className="p-4 flex items-center justify-between">
       <div className="space-y-1">
         <p className="text-[10px] font-black uppercase tracking-widest opacity-50 flex items-center gap-1.5">
           {icon} {title}
@@ -248,7 +248,7 @@ const StatsCard = ({ title, value, icon, status }: any) => (
         <p className="text-sm font-black text-primary">{value}</p>
       </div>
       <div className={`w-2 h-2 rounded-full animate-pulse ${status === 'valid' ? 'bg-green-500' : 'bg-red-500'}`} />
-    </CathedraCardContent as CardContent>
+    </CardContent>
   </Card>
 );
 
@@ -258,7 +258,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
 
   return (
     <Card className="border-border/10 bg-muted/10 overflow-hidden rounded-premium group transition-all duration-300 hover:bg-muted/20">
-      <CathedraCardHeader as CardHeader className="p-4 border-b border-border/10 flex flex-row items-center justify-between">
+      <CardHeader className="p-4 border-b border-border/10 flex flex-row items-center justify-between">
         <div className="flex items-center gap-3">
           <div className={`p-2 rounded-xl ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
             {snapshot.status === 'pass' ? <CheckCircle2 className="w-4 h-4" /> : snapshot.status === 'fail' ? <XCircle className="w-4 h-4" /> : <ShieldAlert className="w-4 h-4" />}
@@ -314,8 +314,8 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
             </Badge>
           )}
         </div>
-      </CathedraCardHeader as CardHeader>
-      <CathedraCardContent as CardContent className="p-4 space-y-4">
+      </CardHeader>
+      <CardContent className="p-4 space-y-4">
         {showDiff && snapshot.diff_url ? (
           <div className="relative aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10">
             <img src={snapshot.diff_url} alt="Diferença Visual" className="w-full h-full object-contain" />
@@ -355,7 +355,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
             </div>
           </div>
         )}
-      </CathedraCardContent as CardContent>
+      </CardContent>
     </Card>
   );
 };

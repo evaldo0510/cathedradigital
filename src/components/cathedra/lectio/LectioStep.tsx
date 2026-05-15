@@ -5,7 +5,7 @@ import {
   Feather, PenTool, Book, CheckCircle2 
 } from 'lucide-react';
 import { STEPS, Step } from './constants';
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import ShareButton from '../ShareButton';
 
 interface LectioStepProps {

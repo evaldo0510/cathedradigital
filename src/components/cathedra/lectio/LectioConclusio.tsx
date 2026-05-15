@@ -1,4 +1,4 @@
-import { CathedraButton as Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import React, { useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Clock, PenTool, Heart, RotateCcw, Calendar } from 'lucide-react';

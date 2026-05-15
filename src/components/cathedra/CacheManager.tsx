@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { CathedraButton as Button } from '@/components/ui/button';
-import { CathedraCard as Card, CathedraCardContent as CardContent, CathedraCardHeader as CardHeader, CathedraCardTitle as CardTitle, CathedraCardDescription as CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
   getAllFromStore, 
   deleteFromStore, 
@@ -193,26 +193,26 @@ const CacheManager: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CathedraCardHeader as CardHeader className="pb-2">
-            <CathedraCardDescription as CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Database className="w-3 h-3" /> Status do Cache
-            </CathedraCardDescription as CardDescription>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
             <p className="text-premium-tiny text-muted-foreground mt-1">
               Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
             </p>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CathedraCardHeader as CardHeader className="pb-2">
-            <CathedraCardDescription as CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Share2 className="w-3 h-3" /> Portabilidade
-            </CathedraCardDescription as CardDescription>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="flex gap-2">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-2">
             <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-premium-tiny font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
@@ -220,16 +220,16 @@ const CacheManager: React.FC = () => {
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CathedraCardHeader as CardHeader className="pb-2">
-            <CathedraCardDescription as CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
+          <CardHeader className="pb-2">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
               <Icons.Download className="w-3 h-3" /> Pré-carregar
-            </CathedraCardDescription as CardDescription>
-          </CathedraCardHeader as CardHeader>
-          <CathedraCardContent as CardContent className="space-y-3">
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
             <div className="flex items-center gap-2">
               <Input 
                 type="number" 
@@ -247,7 +247,7 @@ const CacheManager: React.FC = () => {
                 Bíblia
               </Button>
             </div>
-          </CathedraCardContent as CardContent>
+          </CardContent>
         </Card>
       </div>
 
@@ -284,13 +284,13 @@ const CacheManager: React.FC = () => {
           ))
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
-            <CathedraCardContent as CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
+            <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
               <div className="p-4 rounded-2xl bg-background border border-border shadow-inner">
                 <Icons.Library className="w-8 h-8 text-muted-foreground/40" />
               </div>
               <p className="text-muted-foreground font-medium italic">Nenhum texto encontrado neste filtro.</p>
               <Button variant="outline" className="rounded-full" onClick={() => window.history.back()}>Voltar</Button>
-            </CathedraCardContent as CardContent>
+            </CardContent>
           </Card>
         ) : (
           <div className="space-y-3">
@@ -305,7 +305,7 @@ const CacheManager: React.FC = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <Card className="rounded-2xl border-border/40 shadow-sm overflow-hidden group hover:shadow-md transition-all">
-                    <CathedraCardContent as CardContent className="p-5 flex items-center justify-between gap-4">
+                    <CardContent className="p-5 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
                           {getStoreIcon(item.store)}
@@ -326,7 +326,7 @@ const CacheManager: React.FC = () => {
                       >
                         <Icons.X className="w-4 h-4" />
                       </Button>
-                    </CathedraCardContent as CardContent>
+                    </CardContent>
                   </Card>
                 </motion.div>
               ))}

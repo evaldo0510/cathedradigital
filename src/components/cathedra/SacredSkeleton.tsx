@@ -1,5 +1,5 @@
 import React from 'react';
-import { CathedraCard as Card, CathedraCardContent as CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 /**
  * Standardized skeleton styles:
