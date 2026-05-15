@@ -125,11 +125,55 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const [fontSizeIdx, setFontSizeIdx] = useState(1);
-  const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
+  const { prefs } = useReadingMode();
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_bible_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
+
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cathedra_bible_bookmarks', JSON.stringify(bookmarks));
+    } catch {}
+  }, [bookmarks]);
+
+  // Persist session position
+  useEffect(() => {
+    if (selectedBook && selectedChapter > 0) {
+      localStorage.setItem('cathedra_last_bible_pos', JSON.stringify({
+        book: selectedBook.abbr,
+        chapter: selectedChapter
+      }));
+    }
+  }, [selectedBook, selectedChapter]);
+
+  const toggleBookmark = (v: number) => {
+    const key = `${selectedBook?.abbr}_${selectedChapter}_${v}`;
+    setBookmarks(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    toast.success(bookmarks.includes(key) ? 'Marcador removido' : 'Marcador adicionado');
+  };
+
+  const resumeLastRead = () => {
+    try {
+      const stored = localStorage.getItem('cathedra_last_bible_pos');
+      if (stored) {
+        const { book, chapter } = JSON.parse(stored);
+        const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+        const found = allBooksList.find(b => b.abbr === book);
+        if (found) {
+          setSelectedBook(found);
+          setSelectedChapter(chapter);
+          setViewMode('reading');
+        }
+      }
+    } catch {}
+  };
 
   // Track chapters read
   const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
