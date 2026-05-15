@@ -144,8 +144,8 @@ const HojePage: React.FC = () => {
               <span>{greeting}, {profile?.name?.split(' ')[0] || 'fiel'}</span>
             </div>
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-medium text-primary leading-[1] tracking-tighter">
-              Sua jornada <br />
-              <span className="text-secondary italic font-serif opacity-90">pelo Silêncio.</span>
+              Aquietai-vos e <br />
+              <span className="text-secondary italic font-serif opacity-80">Sabei que Eu Sou Deus.</span>
             </h1>
           </div>
           
