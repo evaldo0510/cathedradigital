@@ -1070,9 +1070,9 @@ const AdminDashboard: React.FC = () => {
             <AdminConstructionTab />
           </Suspense>
         </TabsContent>
-        <TabsContent value="tests">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
-            <WebhookSimulator />
+        <TabsContent value="design">
+          <Suspense fallback={<Skeleton className="h-[600px] rounded-[2rem]" />}>
+            <DesignSystemGuide />
           </Suspense>
         </TabsContent>
       </Tabs>
