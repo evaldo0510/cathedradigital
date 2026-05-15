@@ -144,23 +144,23 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[420px] p-0 rounded-[2.5rem] border-primary/20 overflow-hidden shadow-2xl z-[100]  bg-card">
-        <div className="bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-6 border-b border-border/40 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/50 dark:bg-black/20 flex items-center justify-center shadow-inner text-primary border border-primary/10">
-              {getTagIcon(tag.emoji, "w-6 h-6")}
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-2xl z-[100] bg-card/95 backdrop-blur-xl">
+        <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-8 border-b border-border/20 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
+              {getTagIcon(tag.emoji, "w-7 h-7")}
             </div>
             <div>
-              <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{tag.category}</span>
-              <h4 className="text-sm font-black uppercase tracking-widest text-primary leading-tight">{tag.label}</h4>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">{tag.category}</span>
+              <h4 className="text-lg font-display font-medium text-primary leading-tight mt-1">{tag.label}</h4>
             </div>
           </div>
           <Button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-10 h-10 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-lg shadow-primary/20 group"
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/10 group border-none"
             title="Estudo Completo"
           >
-            <ExternalLink className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+            <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
           </Button>
         </div>
         
