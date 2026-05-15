@@ -19,28 +19,28 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: t('bible_sub') || 'A Palavra de Deus',
       icon: Icons.Bible,
       route: AppRoute.BIBLE,
-      color: 'bg-primary/5 text-primary',
+      color: 'bg-primary/[0.03] text-primary',
     },
     {
       label: t('catechism'),
       description: t('catechism_sub') || 'A Doutrina da Fé',
       icon: Icons.Catechism,
       route: AppRoute.CATECHISM,
-      color: 'bg-accent/5 text-accent',
+      color: 'bg-primary/[0.03] text-secondary',
     },
     {
       label: t('liturgy'),
       description: t('liturgy_sub') || 'Oração da Igreja',
       icon: Icons.Liturgy,
       route: AppRoute.LITURGIA,
-      color: 'bg-primary/5 text-primary',
+      color: 'bg-primary/[0.03] text-primary',
     },
     {
       label: t('journeys'),
       description: t('journeys_sub') || 'Trilhas de Formação',
       icon: Icons.Journeys,
       route: AppRoute.JORNADAS,
-      color: 'bg-accent/5 text-accent',
+      color: 'bg-primary/[0.03] text-secondary',
     },
   ];
 
