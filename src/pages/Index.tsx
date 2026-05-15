@@ -18,7 +18,7 @@ const Index = () => {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
   const { t } = useContext(LangContext);
-  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
+  
 
   useEffect(() => {
     if (!loading && user) {
