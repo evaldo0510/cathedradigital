@@ -22,7 +22,14 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Run Visual Audit & Generate Premium Report
+    - name: Run Playwright Tests (All Browsers & Themes)
+      run: npx playwright test tests/e2e/home-premium.spec.ts
+      env:
+        CI: true
+        PLAYWRIGHT_TEST_BASE_URL: http://localhost:8080
+
+    - name: Run Visual Audit Report Generator
+      if: always()
       run: bun run scripts/run-visual-regression.ts
       env:
         CI: true
@@ -31,10 +38,12 @@ jobs:
 
     - name: Upload Visual Audit Artifacts
       if: always()
+      uses: actions/upload-artifact@v4
       with:
         name: visual-regression-premium-report
         path: |
           public/visual-regression-report.html
           public/visual-regression/
           test-results/
+          tests/e2e/*.spec.ts-snapshots/
         retention-days: 30
