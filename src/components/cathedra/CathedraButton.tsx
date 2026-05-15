@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
 
 interface CathedraButtonProps extends HTMLMotionProps<"button"> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'default';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   icon?: React.ReactNode;
@@ -20,6 +20,7 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
 
     const variantStyles = {
       primary: 'btn-premium-primary',
+      default: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
       ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 py-4 font-bold uppercase tracking-[0.2em] text-[10px]',
