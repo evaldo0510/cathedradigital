@@ -28,7 +28,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-jornada" className="heading-section-label whitespace-nowrap">
               Jornada
             </h2>
-            <div className="h-px w-full bg-white/[0.08]" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           
           <HomeCard
@@ -63,7 +63,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-hoje" className="heading-section-label whitespace-nowrap">
               Hoje
             </h2>
-            <div className="h-px w-full bg-white/[0.08]" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           <div className="pt-2">
             <RitualDoDia />
@@ -76,7 +76,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-doutrina" className="heading-section-label whitespace-nowrap">
               Doutrina
             </h2>
-            <div className="h-px w-full bg-white/[0.08]" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           <HomeCard 
             onClick={() => onNavigate(AppRoute.CATECHISM)}
@@ -106,7 +106,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <h2 id="section-trilhas" className="heading-section-label whitespace-nowrap">
               Trilhas
             </h2>
-            <div className="h-px w-full bg-white/[0.08]" />
+            <div className="h-px flex-1 bg-white/[0.08]" />
           </div>
           <div className="grid grid-cols-1 gap-10">
             <HomeCard padding="md" className="space-y-8 min-h-[190px] flex flex-col justify-center" onClick={() => onNavigate(AppRoute.TEMAS)}>
