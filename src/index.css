@@ -436,18 +436,18 @@
     transform: scale(1);
     opacity: 0;
   }
+}
 
-  /* Compatibility layer for remaining non-standard components */
-  .rounded-2xl {
-    @apply rounded-premium-sm;
-  }
-  .rounded-3xl {
-    @apply rounded-premium;
-  }
-  .shadow-xl, .shadow-2xl {
-    @apply shadow-premium;
-  }
-  .shadow-md {
-    @apply shadow-soft;
-  }
+/* Compatibility layer for remaining non-standard components */
+.rounded-2xl {
+  @apply rounded-premium-sm;
+}
+.rounded-3xl {
+  @apply rounded-premium;
+}
+.shadow-xl, .shadow-2xl {
+  @apply shadow-premium;
+}
+.shadow-md {
+  @apply shadow-soft;
 }
