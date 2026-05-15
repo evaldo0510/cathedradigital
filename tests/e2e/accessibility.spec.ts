@@ -122,23 +122,32 @@ test.describe('Global Accessibility & Contrast Audit', () => {
       <body>
         <h1>Accessibility Audit Summary</h1>
         <p>Threshold: Max ${MAX_CRITICAL_ERRORS} critical errors allowed.</p>
-        ${a11ySummary.map(s => `
-          <div class="card">
-            <h3>
-              ${s.name || s.component} 
-              <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
-            </h3>
-            <p>Route: ${s.route || 'N/A'}</p>
-            <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
-              Violations: ${s.violations} (${s.criticalCount} critical)
-            </p>
-            <details>
-              <summary>View Details</summary>
-              <pre>${JSON.stringify(s.details, null, 2)}</pre>
-            </details>
-            <img src="contrast-${s.name}-${s.theme}.png" alt="Contrast check for ${s.name}">
-          </div>
-        `).join('')}
+        ${a11ySummary.map(s => {
+          const imageFile = s.component 
+            ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
+            : `contrast-${s.name}-${s.theme}.png`;
+          
+          return `
+            <div class="card">
+              <h3>
+                ${s.name || s.component} 
+                <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
+              </h3>
+              <p>Context: ${s.route || s.component || 'N/A'}</p>
+              <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
+                Violations: ${s.violations} (${s.criticalCount} critical)
+              </p>
+              <details>
+                <summary>View Details</summary>
+                <pre>${JSON.stringify(s.details, null, 2)}</pre>
+              </details>
+              <div style="margin-top: 15px;">
+                <strong>Contrast Preview:</strong><br>
+                <img src="${imageFile}" alt="Contrast check for ${s.name || s.component}">
+              </div>
+            </div>
+          `;
+        }).join('')}
       </body>
       </html>
     `;
