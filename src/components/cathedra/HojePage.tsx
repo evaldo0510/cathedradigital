@@ -249,7 +249,7 @@ const HojePage: React.FC = () => {
                 onClick={() => navigate(AppRoute.CATECHISM)}
                 className="text-center space-y-8"
               >
-                <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+                <div className="w-20 h-20 rounded-premium-sm bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
                   <Icons.Catechism className="w-10 h-10" />
                 </div>
                 <div className="space-y-4">
