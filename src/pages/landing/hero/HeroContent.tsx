@@ -91,7 +91,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
           
           <HomeButton
             variant="outline"
-            className="w-full sm:w-auto"
+            className="w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             onClick={scrollToVideo}
             aria-label="Ver vídeo de apresentação"
           >
