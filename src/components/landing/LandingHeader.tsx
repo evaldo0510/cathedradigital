@@ -15,6 +15,7 @@ const LandingHeader = () => {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const navigate = useNavigate();
   const { lang, setLang } = useLang();
+  const { user } = useAuth();
 
   const languages: { code: Language; label: string; flag: string }[] = [
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
