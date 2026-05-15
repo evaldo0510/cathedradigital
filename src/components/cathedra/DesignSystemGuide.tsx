@@ -36,40 +36,48 @@ const DesignSystemGuide = () => {
           </div>
 
           <div className="space-y-12 bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12">
-            <div className="grid gap-12">
-              <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Display Titles (H1, H2, H3)</p>
-                <div className="space-y-6">
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 1 (H1)</span>
-                    <h1 className="mt-1">O Verbo se fez carne</h1>
+            <div className="grid gap-16">
+              <div className="space-y-6">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Font Families & Weights</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Display (Cinzel/Serif)</span>
+                    <h1 className="text-4xl font-display font-black leading-tight">Font Display Black</h1>
+                    <h2 className="text-3xl font-display font-bold leading-tight">Font Display Bold</h2>
                   </div>
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 2 (H2)</span>
-                    <h2>A Beleza da Tradição</h2>
-                  </div>
-                  <div>
-                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Heading 3 (H3)</span>
-                    <h3>Oração e Contemplação</h3>
+                  <div className="space-y-4">
+                    <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Sans (Inter)</span>
+                    <p className="text-xl font-sans font-black">Font Sans Black</p>
+                    <p className="text-xl font-sans font-bold">Font Sans Bold</p>
+                    <p className="text-xl font-sans font-medium">Font Sans Medium</p>
+                    <p className="text-xl font-sans font-normal">Font Sans Normal</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Premium Small Scale</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Premium Scale (Fluid)</p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Base</span>
-                    <p className="text-premium-base text-foreground mt-2">Standard text size for primary content and large labels.</p>
+                    <p className="text-premium-base text-foreground mt-2">Standard text size (16-18px) for primary content and large labels.</p>
                   </div>
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Small</span>
-                    <p className="text-premium-small text-muted-foreground mt-2">Secondary text for metadata, descriptions and small buttons.</p>
+                    <p className="text-premium-small text-muted-foreground mt-2">Secondary text (13-14px) for metadata, descriptions and small buttons.</p>
                   </div>
                   <div className="p-6 rounded-2xl bg-muted/20 border border-border/40">
                     <span className="text-premium-tiny text-secondary font-black uppercase tracking-widest">Premium Tiny</span>
-                    <p className="text-premium-tiny text-muted-foreground mt-2">Sub-labels, badges, and micro-typography (9-11px scale).</p>
+                    <p className="text-premium-tiny text-muted-foreground mt-2">Sub-labels, badges, and micro-typography (10-11px scale).</p>
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Semantic Styles</p>
+                <div className="space-y-4">
+                  <p className="text-lg font-serif italic text-primary">Serif Italic for quotes and reflections: "O Verbo se fez carne."</p>
+                  <p className="text-sm font-mono bg-muted p-2 rounded w-fit">Mono text for codes or technical labels</p>
                 </div>
               </div>
             </div>
