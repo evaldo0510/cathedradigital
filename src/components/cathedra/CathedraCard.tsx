@@ -51,4 +51,31 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
 CathedraCard.displayName = "CathedraCard";
 
-export { CathedraCard };
+const CathedraCardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex flex-col space-y-1.5 p-0 mb-6", className)} {...props} />
+);
+
+const CathedraCardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+  <h3 className={cn("text-2xl font-display font-bold leading-none tracking-tight text-primary", className)} {...props} />
+);
+
+const CathedraCardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
+  <p className={cn("text-sm text-muted-foreground font-medium", className)} {...props} />
+);
+
+const CathedraCardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("p-0", className)} {...props} />
+);
+
+const CathedraCardFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn("flex items-center p-0 mt-6", className)} {...props} />
+);
+
+export { 
+  CathedraCard, 
+  CathedraCardHeader, 
+  CathedraCardFooter, 
+  CathedraCardTitle, 
+  CathedraCardDescription, 
+  CathedraCardContent 
+};
