@@ -315,7 +315,7 @@
   
   .premium-card-interactive {
     @apply premium-card cursor-pointer active:scale-[0.99];
-    @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
+    @apply hover:bg-white/[0.06] hover:border-white/[0.15] hover:shadow-premium-hover;
     @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   }
 
