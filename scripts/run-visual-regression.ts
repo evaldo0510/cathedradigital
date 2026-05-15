@@ -34,8 +34,7 @@ async function runVisualTests() {
     console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
     results.status = 'failed';
   }
-    // Continue anyway to generate report from any available data
-  }
+  // Continue anyway to generate report from any available data
 
   // Parse the playwright json report
   const playwrightReportPath = path.join(process.cwd(), 'test-results', 'report.json');
