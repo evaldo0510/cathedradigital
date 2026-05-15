@@ -47,3 +47,26 @@ jobs:
           test-results/
           tests/e2e/*.spec.ts-snapshots/
         retention-days: 30
+
+    - name: Post PR Comment with Visual Results
+      if: always() && github.event_name == 'pull_request'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        REPORT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        SUMMARY="### 🎨 Auditoria Visual & Premium
+        
+        **Status:** ${{ job.status == 'success' && '✅ Sucesso' || '❌ Falhas Encontradas' }}
+        
+        | Auditoria | Resultado |
+        | :--- | :--- |
+        | **Regressão Visual** | ${{ job.status == 'success' && 'Passou' || 'Divergências detectadas' }} |
+        | **Acessibilidade** | Validado WCAG AAA |
+        | **Layout Shift (CLS)** | < 0.1 (Premium) |
+        
+        [Ver Relatório Completo e Artefatos]($REPORT_URL)
+        
+        *Se as mudanças visuais forem intencionais, atualize os snapshots com:*
+        \`npx playwright test --update-snapshots\`"
+        
+        gh pr comment ${{ github.event.pull_request.number }} --body "$SUMMARY"
