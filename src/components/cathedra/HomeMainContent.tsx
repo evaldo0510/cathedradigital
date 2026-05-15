@@ -44,7 +44,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <h3 className="text-xl md:text-2xl font-bold text-primary tracking-tight">
                   {user ? 'Retomar Jornada' : 'Inicie sua Caminhada'}
                 </h3>
-                <p className="mt-3 text-sm text-primary/50 leading-relaxed">
+                <p className="mt-3 text-sm text-primary/40 leading-relaxed max-w-sm">
                   {user 
                     ? 'Continue de onde parou em suas trilhas de formação.' 
                     : 'Descubra trilhas personalizadas para sua vida espiritual.'}
