@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { HomeButton } from "@/components/cathedra/HomeButton";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
 const registerBenefits = [
@@ -73,9 +73,9 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <Button size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <HomeButton size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
               Criar Conta Gratuitamente
-            </Button>
+            </HomeButton>
           </motion.div>
         </div>
 
