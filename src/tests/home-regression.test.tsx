@@ -40,6 +40,8 @@ vi.mock('framer-motion', async () => {
       h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
       p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
       section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+      button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+      span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
     },
     useScroll: () => ({ scrollYProgress: { get: () => 0 } }),
     useTransform: () => ({ get: () => 0 }),
