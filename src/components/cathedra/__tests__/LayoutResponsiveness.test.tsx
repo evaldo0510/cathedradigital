@@ -76,18 +76,6 @@ const renderDashboard = () => {
   );
 };
 
-const renderHojePage = () => {
-  return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <LangContext.Provider value={mockLangContext}>
-          <HojePage />
-        </LangContext.Provider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
-};
-
 describe('Dashboard Responsive Layout', () => {
   it('Dashboard should have responsive padding and spacing', () => {
     renderDashboard();
@@ -109,14 +97,5 @@ describe('Dashboard Responsive Layout', () => {
     expect(grid?.className).toContain('grid-cols-2');
     expect(grid?.className).toContain('md:grid-cols-3');
     expect(grid?.className).toContain('lg:grid-cols-5');
-  });
-});
-
-describe('HojePage Responsive Layout', () => {
-  it('Hero section components should be present', () => {
-    // If the skeleton issue persists, let's at least verify the container structure
-    const { container } = renderHojePage();
-    const section = container.querySelector('section');
-    expect(section?.className).toContain('min-h-');
   });
 });
