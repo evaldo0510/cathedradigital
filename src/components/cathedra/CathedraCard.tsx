@@ -34,7 +34,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref as any}
         className={cn(
           variantStyles[variant],
-          paddingMap[padding],
+          padding !== 'md' && paddingMap[padding],
           hover && !variant.includes('interactive') && 'hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500',
           className
         )}
