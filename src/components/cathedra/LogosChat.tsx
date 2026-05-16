@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll, Download, Target, Feather, Shield, Heart, Eye } from 'lucide-react';
+import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll, Download, Target, Feather, Shield, Heart, Eye, ArrowDown, Lock } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { callColloquium } from '@/services/aiService';
@@ -30,7 +30,8 @@ const TheologicalAwareText: React.FC<{
   isContemplative?: boolean;
   onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
   showDetails?: boolean;
-}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true }) => {
+  isMobile?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true, isMobile }) => {
   const processedText = useMemo(() => {
     if (showDetails) return text;
     // Simple logic to hide "extra" sections: split by double newline and filter out sections starting with ## or ---
@@ -51,7 +52,7 @@ const TheologicalAwareText: React.FC<{
   const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
   if (segments.length === 1 && segments[0].type === 'text') return <>{processedText}</>;
   return (
-    <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide")}>
+    <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide", isMobile && !isContemplative && "leading-relaxed")}>
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return (
@@ -91,6 +92,7 @@ const LogosChat = () => {
   const [tone, setTone] = useState<LogosTone>('contemplative');
   const [isContemplative, setIsContemplative] = useState(false);
   const [showExtraDetails, setShowExtraDetails] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(true);
   const [hasRitualPassed, setHasRitualPassed] = useState(false);
   const [intention, setInputIntention] = useState('');
   const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
@@ -105,13 +107,16 @@ const LogosChat = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (autoScroll && scrollRef.current) {
       const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
       if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollHeight,
+          behavior: 'smooth'
+        });
       }
     }
-  }, [messages, isLoading, hasRitualPassed, isOpen]);
+  }, [messages, isLoading, hasRitualPassed, isOpen, autoScroll]);
 
   const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
@@ -305,6 +310,18 @@ const LogosChat = () => {
                   <Button 
                     variant="ghost" 
                     size="icon" 
+                    onClick={() => setAutoScroll(!autoScroll)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      autoScroll ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title={autoScroll ? "Pausar Auto-scroll" : "Manter Auto-scroll"}
+                  >
+                    {autoScroll ? <ArrowDown className="w-4 h-4 animate-bounce" /> : <Lock className="w-4 h-4" />}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
                     onClick={() => setShowExtraDetails(!showExtraDetails)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
@@ -327,7 +344,7 @@ const LogosChat = () => {
 
               {/* Messages - Pure Typographic Flow */}
               <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10" ref={scrollRef}>
-                <div className={cn("space-y-12 sm:y-20 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-24 sm:space-y-32 scale-[1.02]")}>
+                <div className={cn("space-y-10 sm:space-y-16 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-20 sm:space-y-28 scale-[1.01]")}>
                   {!hasRitualPassed && (
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
@@ -374,8 +391,8 @@ const LogosChat = () => {
                       <div
                         className={`font-serif leading-relaxed ${
                           msg.role === 'user'
-                            ? 'text-xl text-primary/50 italic text-right mb-4'
-                            : 'text-2xl text-primary border-l-4 border-secondary/10 pl-10 py-2 mb-12'
+                            ? 'text-lg sm:text-xl text-primary/50 italic text-right mb-2'
+                            : 'text-xl sm:text-2xl text-primary border-l-[3px] border-secondary/10 pl-6 sm:pl-10 py-1 mb-8'
                         }`}
                       >
                         <TheologicalAwareText 
@@ -385,6 +402,7 @@ const LogosChat = () => {
                           isContemplative={isContemplative}
                           onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                           showDetails={showExtraDetails}
+                          isMobile={window.innerWidth < 640}
                         />
                         {msg.role === 'assistant' && msg.content.includes('\n') && (
                           <div className="mt-4 flex gap-1 items-center opacity-20 hover:opacity-100 transition-opacity">
