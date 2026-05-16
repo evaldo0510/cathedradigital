@@ -81,7 +81,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           <HomeButton
             size="lg"
             variant="primary"
-            className="w-full sm:w-auto sm:min-w-[320px] h-16 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-black shadow-premium hover:shadow-premium-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background outline-none transition-all duration-1000"
+            className="w-full sm:w-auto sm:min-w-[320px] h-14 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-bold border border-primary/5 hover:bg-primary/[0.02] focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-2 focus-visible:ring-offset-background outline-none transition-all duration-1000"
             onClick={onStart}
             aria-label={user ? "Acessar Interior" : "Iniciar Caminhada Espiritual"}
           >
