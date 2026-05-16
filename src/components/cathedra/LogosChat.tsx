@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll } from 'lucide-react';
+import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll, Download, Target, Feather, Shield, Heart } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { callColloquium } from '@/services/aiService';
@@ -8,6 +8,11 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { useNavigate } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
+import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
 
 interface Message {
   id: string;
