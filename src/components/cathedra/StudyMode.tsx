@@ -452,6 +452,14 @@ const StudyMode: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Reference Modal */}
+      <ReferenceModal
+        isOpen={refModal.isOpen}
+        onClose={() => setRefModal(prev => ({ ...prev, isOpen: false }))}
+        initialType={refModal.type}
+        initialParams={refModal.params}
+      />
     </div>
   );
 };
