@@ -242,7 +242,9 @@ const HojePage: React.FC = () => {
             variant="interactive"
             padding="none"
             onClick={openLogosChat}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openLogosChat()}
             className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
+            aria-label="Abrir conversa com o Logos"
           >
             <div className="flex items-center justify-between gap-8">
               <div className="flex items-center gap-8">
