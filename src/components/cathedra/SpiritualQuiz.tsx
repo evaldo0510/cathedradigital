@@ -567,11 +567,11 @@ const SpiritualQuiz: React.FC = () => {
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão para o Caminho</p>
               <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5 space-y-8">
                 {p.deepReflection}
-                {p.mainQuote && <QuietQuote quote={p.mainQuote} className="mt-6 border-t border-primary/5 pt-6" />}
+                {p.mainQuote && <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="mt-6 border-t border-primary/5 pt-6" />}
               </div>
               {p.catechismRef && (
                 <div className="pt-4">
-                   <QuietQuote quote={p.catechismRef} />
+                   <QuietQuote quote={p.catechismRef} onOpen={handleOpenReference} />
                 </div>
               )}
             </div>
