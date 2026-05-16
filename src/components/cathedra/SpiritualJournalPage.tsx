@@ -263,15 +263,27 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
-          <div className="w-full relative max-w-md mx-auto">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
-            <input 
-              type="text" 
-              placeholder="Buscar reflexões..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
-            />
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-2xl mx-auto">
+            <div className="relative flex-1 w-full">
+              <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+              <input 
+                type="text" 
+                placeholder="Buscar reflexões..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
+              />
+            </div>
+            
+            <button
+              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+              className="h-14 px-8 rounded-full bg-primary/[0.02] border border-primary/5 text-primary/40 hover:text-primary hover:border-primary/20 transition-all flex items-center gap-3 whitespace-nowrap"
+            >
+              <Icons.ArrowUpDown className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigas'}
+              </span>
+            </button>
           </div>
 
           <div className="flex items-center gap-12 w-full">
