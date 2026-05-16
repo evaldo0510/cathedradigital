@@ -175,7 +175,7 @@ const LogosChat = () => {
       const chatHistory = messages.map(m => ({ role: m.role, content: m.content }));
       chatHistory.push({ role: 'user', content: userMessage.content });
 
-      const response = await callColloquium(chatHistory, 'contemplative');
+      const response = await callColloquium(chatHistory, tone);
 
       if (response.content) {
         const assistantMessage: Message = {
@@ -185,6 +185,21 @@ const LogosChat = () => {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, assistantMessage]);
+        
+        // Auto-save to spiritual journal if user is logged in
+        if (user) {
+          await supabase.from('user_history').insert({
+            user_id: user.id,
+            title: 'Reflexão com Logos',
+            route: '/logos',
+            metadata: { 
+              reflection: assistantMessage.content,
+              prompt: userMessage.content,
+              tone,
+              timestamp: new Date().toISOString()
+            }
+          });
+        }
       } else if (response.error) {
         setMessages((prev) => [...prev, {
           id: Date.now().toString(),
