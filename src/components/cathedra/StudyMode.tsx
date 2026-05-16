@@ -322,18 +322,18 @@ const StudyMode: React.FC = () => {
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     {msg.role === 'assistant' && (
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                          <Compass className="w-4 h-4 text-primary" />
+                      <div className="flex items-center gap-4 mb-8">
+                        <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                          <Compass className="w-5 h-5 text-primary" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Reflexão do Logos</span>
+                        <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
                       </div>
                     )}
                     
-                    <div className={`max-w-2xl font-monastery leading-relaxed ${
+                    <div className={`max-w-2xl font-serif leading-relaxed ${
                       msg.role === 'user' 
-                        ? 'text-xl text-primary/70 italic text-right' 
-                        : 'text-2xl text-primary border-l-2 border-primary/5 pl-8 py-2'
+                        ? 'text-xl text-primary/60 italic text-right' 
+                        : 'text-2xl text-primary border-l-4 border-secondary/20 pl-10 py-4 mb-16'
                     }`}>
                       <TheologicalAwareText 
                         text={msg.content} 
