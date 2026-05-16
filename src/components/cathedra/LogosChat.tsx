@@ -459,6 +459,13 @@ const LogosChat = () => {
           <Compass className="relative z-10 w-6 h-6 group-hover:rotate-12 transition-transform duration-1000" />
         </motion.button>
       )}
+      {/* Reference Modal */}
+      <ReferenceModal
+        isOpen={refModal.isOpen}
+        onClose={() => setRefModal(prev => ({ ...prev, isOpen: false }))}
+        initialType={refModal.type}
+        initialParams={refModal.params}
+      />
     </div>
   );
 };
