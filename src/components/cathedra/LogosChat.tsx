@@ -390,8 +390,8 @@ const LogosChat = () => {
                       <div
                         className={`font-serif leading-relaxed ${
                           msg.role === 'user'
-                            ? 'text-xl text-primary/50 italic text-right mb-4'
-                            : 'text-2xl text-primary border-l-4 border-secondary/10 pl-10 py-2 mb-12'
+                            ? 'text-lg sm:text-xl text-primary/50 italic text-right mb-2'
+                            : 'text-xl sm:text-2xl text-primary border-l-[3px] border-secondary/10 pl-6 sm:pl-10 py-1 mb-8'
                         }`}
                       >
                         <TheologicalAwareText 
