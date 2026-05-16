@@ -44,10 +44,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Flame className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">
+                <h3 className="heading-card">
                   {user ? 'Continuar Caminhada' : 'Inicie sua Jornada'}
                 </h3>
-                <p className="text-sm text-primary/40 mt-1 text-premium-body">
+                <p className="text-sm text-primary/40 mt-1">
                   {user 
                     ? 'Retome sua formação espiritual de onde parou.' 
                     : 'Descubra uma trilha personalizada para sua alma.'}
