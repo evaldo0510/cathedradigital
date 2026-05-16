@@ -34,9 +34,11 @@ const SpiritualJournalPage = () => {
   const [mood, setMood] = useState('peace');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [reflections, setReflections] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'journal' | 'reflections'>('journal');
+  const [logosReflections, setLogosReflections] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'journal' | 'reflections' | 'logos'>('journal');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [filterTrail, setFilterTrail] = useState<string | null>(null);
 
   const fetchEntries = async () => {
     if (!user) return;
