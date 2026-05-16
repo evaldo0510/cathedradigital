@@ -197,18 +197,18 @@ const LogosChat = () => {
         };
         setMessages((prev) => [...prev, assistantMessage]);
         
-        // Auto-save to spiritual journal if user is logged in
+        // Auto-save to spiritual journal as a dedicated reflection
         if (user) {
-          await supabase.from('user_history').insert({
+          await supabase.from('user_notes').insert({
             user_id: user.id,
-            title: 'Reflexão com Logos',
-            route: '/logos',
-            metadata: { 
+            content_type: 'logos_reflection',
+            content_id: `logos_${Date.now()}`,
+            note_text: JSON.stringify({
               reflection: assistantMessage.content,
               prompt: userMessage.content,
               tone,
               timestamp: new Date().toISOString()
-            }
+            })
           });
         }
       } else if (response.error) {
