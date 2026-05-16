@@ -256,11 +256,11 @@ const StudyMode: React.FC = () => {
     <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-background">
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar: History */}
-        <aside className={`w-80 border-r border-border/10 bg-background/50 backdrop-blur-md hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
-          <div className="p-6 border-b border-border/10 flex items-center justify-between">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Histórico de Diálogos</h2>
-            <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full">
-              <Plus className="w-4 h-4" />
+        <aside className={`w-80 border-r border-primary/5 bg-background/50 backdrop-blur-xl hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
+          <div className="p-8 border-b border-primary/5 flex items-center justify-between">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+            <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full hover:bg-primary/5">
+              <Plus className="w-5 h-5" />
             </Button>
           </div>
           <ScrollArea className="flex-1">
