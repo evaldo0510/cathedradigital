@@ -70,10 +70,24 @@ const SpiritualJournalPage = () => {
       if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
       if (reflectionsRes.data) setReflections(reflectionsRes.data);
       if (logosRes.data) {
-        setLogosReflections(logosRes.data.map(r => ({
-          ...r,
-          parsed: JSON.parse(r.note_text)
-        })));
+        setLogosReflections(logosRes.data.map(r => {
+          let parsedMetadata = r.metadata;
+          if (!parsedMetadata && r.note_text.startsWith('{')) {
+            try {
+              const fullData = JSON.parse(r.note_text);
+              parsedMetadata = {
+                prompt: fullData.prompt,
+                tone: fullData.tone,
+                timestamp: fullData.timestamp
+              };
+              // Note: r.note_text might need to be cleaned up if it was a full JSON string
+              if (fullData.reflection) r.note_text = fullData.reflection;
+            } catch (e) {
+              console.error('Failed to parse legacy reflection:', e);
+            }
+          }
+          return { ...r, parsed: parsedMetadata };
+        }));
       }
     } catch (error) {
       console.error('Error fetching journal entries:', error);
