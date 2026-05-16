@@ -196,7 +196,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
               >
                 <Icons.ShieldCheck className="w-5 h-5" />
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
               </Button>
             </div>
 
