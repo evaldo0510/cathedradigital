@@ -706,7 +706,7 @@ const Bible: React.FC = () => {
                 </div>
               )}
 
-              <Card className="border-none shadow-none bg-transparent">
+              <Card className="border-none shadow-none bg-transparent p-0">
                 <CardContent className="p-0">
                   {isLoading ? (
                     <BibleChapterSkeleton />
