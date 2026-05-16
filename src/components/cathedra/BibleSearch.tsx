@@ -59,7 +59,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           className="px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-bold disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
           {loading ? '...' : 'Buscar'}
         </Button>
-        <Button onClick={onClose} className="p-2 rounded-full bg-card border border-border hover:bg-muted transition-all">
+        <Button onClick={onClose} className="p-2 rounded-full bg-card border border-primary/10 hover:bg-muted transition-all">
           <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
         </Button>
       </div>
