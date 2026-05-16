@@ -361,29 +361,52 @@ const LogosChat = () => {
               </ScrollArea>
 
               {/* Input Area - Integrated Journal Feel */}
-              <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
-                <div className="relative group">
-                  <textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSend();
-                      }
-                    }}
-                    placeholder="Abra seu coração..."
-                    className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
-                    rows={1}
-                  />
-                  <button
-                    onClick={handleSend}
-                    disabled={!input.trim() || isLoading}
-                    className="absolute right-0 bottom-6 p-3 text-primary/20 hover:text-secondary disabled:opacity-0 transition-all duration-700 hover:scale-110"
-                  >
-                    <ChevronRight className="w-8 h-8" />
-                  </button>
+              {hasRitualPassed && (
+                <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
+                  {/* Tone Selector */}
+                  <div className="flex items-center justify-center gap-6 mb-8 opacity-40 hover:opacity-100 transition-opacity">
+                    {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setTone(t)}
+                        className={cn(
+                          "text-[9px] font-black uppercase tracking-[0.3em] transition-all pb-1 border-b-2",
+                          tone === t ? "text-primary border-secondary" : "text-primary/20 border-transparent"
+                        )}
+                      >
+                        {t === 'contemplative' && <Target className="w-3 h-3 mb-1 mx-auto" />}
+                        {t === 'poetic' && <Feather className="w-3 h-3 mb-1 mx-auto" />}
+                        {t === 'doctrinal' && <Shield className="w-3 h-3 mb-1 mx-auto" />}
+                        {t === 'brief' && <Quote className="w-3 h-3 mb-1 mx-auto" />}
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="relative group">
+                    <textarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSend();
+                        }
+                      }}
+                      placeholder="Abra seu coração..."
+                      className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
+                      rows={1}
+                    />
+                    <button
+                      onClick={handleSend}
+                      disabled={!input.trim() || isLoading}
+                      className="absolute right-0 bottom-6 p-3 text-primary/20 hover:text-secondary disabled:opacity-0 transition-all duration-700 hover:scale-110"
+                    >
+                      <ChevronRight className="w-8 h-8" />
+                    </button>
+                  </div>
                 </div>
+              )}
                 <div className="mt-8 flex justify-between items-center opacity-[0.03]">
                   <div className="flex gap-6">
                     <Scroll className="w-3.5 h-3.5" />
