@@ -140,7 +140,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           </div>
         </button>
 
-        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
+        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar overscroll-contain">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
               <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/30 mb-4 px-3">{section.label}</h3>

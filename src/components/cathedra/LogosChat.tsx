@@ -335,7 +335,8 @@ const LogosChat = () => {
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsOpen(false)}
-                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
+                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+                    aria-label="Fechar Logos"
                   >
                     <X className="w-6 h-6" />
                   </Button>
@@ -343,7 +344,7 @@ const LogosChat = () => {
               </div>
 
               {/* Messages - Pure Typographic Flow */}
-              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10" ref={scrollRef}>
+              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10 overscroll-contain" ref={scrollRef}>
                 <div className={cn("space-y-10 sm:space-y-16 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-20 sm:space-y-28 scale-[1.01]")}>
                   {!hasRitualPassed && (
                     <motion.div 
@@ -442,15 +443,17 @@ const LogosChat = () => {
                       <button
                         key={t}
                         onClick={() => setTone(t)}
+                        aria-label={`Mudar tom para ${t}`}
+                        aria-pressed={tone === t}
                         className={cn(
-                          "text-[9px] font-black uppercase tracking-[0.3em] transition-all pb-1 border-b-2",
+                          "text-[9px] font-black uppercase tracking-[0.3em] transition-all pb-1 border-b-2 focus-visible:ring-1 focus-visible:ring-primary outline-none",
                           tone === t ? "text-primary border-secondary" : "text-primary/20 border-transparent"
                         )}
                       >
-                        {t === 'contemplative' && <Target className="w-3 h-3 mb-1 mx-auto" />}
-                        {t === 'poetic' && <Feather className="w-3 h-3 mb-1 mx-auto" />}
-                        {t === 'doctrinal' && <Shield className="w-3 h-3 mb-1 mx-auto" />}
-                        {t === 'brief' && <Quote className="w-3 h-3 mb-1 mx-auto" />}
+                        {t === 'contemplative' && <Target className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'poetic' && <Feather className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'doctrinal' && <Shield className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'brief' && <Quote className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
                         {t}
                       </button>
                     ))}
@@ -501,7 +504,9 @@ const LogosChat = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5"
+          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+          aria-label="Abrir Logos"
+          aria-haspopup="true"
         >
           <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
           <Compass className="relative z-10 w-6 h-6 group-hover:rotate-12 transition-transform duration-1000" />
