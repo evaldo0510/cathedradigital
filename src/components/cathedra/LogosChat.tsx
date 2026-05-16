@@ -378,6 +378,7 @@ const LogosChat = () => {
                           onNavigateCatechism={handleNavigateToCatechism}
                           isContemplative={isContemplative}
                           onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
+                          showDetails={showExtraDetails}
                         />
                       </div>
                       
