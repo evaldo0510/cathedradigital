@@ -217,16 +217,17 @@ const SpiritualQuiz: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!user || !existing) return;
+    const activeId = existing || result;
+    if (!user || !activeId) return;
     supabase
       .from('trail_progress')
       .select('step_index')
       .eq('user_id', user.id)
-      .eq('trail_id', existing)
+      .eq('trail_id', activeId)
       .then(({ data }) => {
         if (data) setCompletedSteps(data.map(d => d.step_index));
       });
-  }, [user, existing]);
+  }, [user, existing, result]);
 
   const toggleStep = async (index: number) => {
     if (!user || !existing) return;
