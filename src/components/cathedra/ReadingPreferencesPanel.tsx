@@ -4,8 +4,9 @@ import { Icons } from '@/constants';
 import { useReadingMode, ReadingTheme } from '@/hooks/useReadingMode';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Type, Maximize2, Settings2, Sliders, Sun, Moon, Palette } from 'lucide-react';
+import { X, Type, Maximize2, Settings2, Sliders, Sun, Moon, Palette, Shield, Wind } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 
 const ReadingPreferencesPanel: React.FC = () => {
   const { prefs, updatePrefs, toggleTheme } = useReadingMode();
