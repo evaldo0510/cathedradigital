@@ -222,7 +222,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-2 py-1 text-[9px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
