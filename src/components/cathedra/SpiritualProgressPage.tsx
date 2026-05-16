@@ -149,7 +149,7 @@ const SpiritualProgressPage: React.FC = () => {
           ['Passos da Trilha (Mês)', `${completedDays.length}`],
         ],
         theme: 'striped',
-        headStyles: { fillStyle: 'fill', fillColor: [43, 64, 46] }
+        headStyles: { fillColor: [43, 64, 46] }
       });
 
       // Reflections
