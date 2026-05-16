@@ -192,6 +192,14 @@ const SpiritualJournalPage = () => {
               Diário
             </button>
             <button 
+              onClick={() => setActiveTab('reflections')}
+              className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                activeTab === 'reflections' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
+              }`}
+            >
+              Reflexões
+            </button>
+            <button 
               onClick={() => setActiveTab('logos')}
               className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeTab === 'logos' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
