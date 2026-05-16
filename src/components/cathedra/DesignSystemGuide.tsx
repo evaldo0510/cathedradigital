@@ -1,139 +1,154 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card   } from '@/components/cathedra/Card';
-import { Button } from '@/components/cathedra/Button';
 import { Icons } from '@/constants';
+import { Button } from '@/components/cathedra/Button';
+import { HomeCard as Card } from '@/components/cathedra/HomeCard';
 import SEOHead from '@/components/SEOHead';
+import { CathedraIcon, IconSizePreset } from '@/components/cathedra/CathedraIcon';
 
 const DesignSystemGuide: React.FC = () => {
   return (
-    <div className="min-h-screen bg-background py-16 md:py-24 px-6 transition-colors duration-300">
-      <SEOHead title="Guia do Design System - Cathedra" description="Documentação interna dos componentes premium do Cathedra Digital." path="/design-system" />
+    <div className="app-container py-12 md:py-24 space-y-24">
+      <SEOHead title="Design System - Cathedra" description="Documentação visual e técnica do Cathedra Digital." path="/design-system" />
       
-      <div className="max-w-5xl mx-auto space-y-24">
-        {/* Header */}
-        <header className="space-y-8 text-center py-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/20 rounded-full"
-          >
-            <Icons.ShieldCheck className="w-4 h-4 text-secondary" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40">Design Protocol v3.0</span>
-          </motion.div>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-6xl md:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tight"
-          >
-            Cathedra <br />
-            <span className="text-secondary/70 italic font-serif">Componentes Premium</span>
-          </motion.h1>
-        </header>
+      <header className="space-y-6 max-w-3xl">
+        <div className="premium-tag">
+          <Icons.ShieldCheck className="w-3.5 h-3.5" />
+          <span>Systema Designandi</span>
+        </div>
+        <h1 className="text-5xl md:text-7xl font-display font-bold text-primary tracking-tight">Design System</h1>
+        <p className="text-xl text-primary/60 italic font-serif leading-relaxed">
+          "A ordem é a disposição das coisas iguais e desiguais, dando a cada uma o seu lugar." — Santo Agostinho
+        </p>
+      </header>
 
-        {/* Buttons Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Button</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <Card padding="lg" className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Variantes</h3>
-              <div className="flex flex-wrap gap-4">
-                <Button variant="primary">Principal</Button>
-                <Button variant="secondary">Secundário</Button>
-                <Button variant="outline">Contorno</Button>
-                <Button variant="ghost">Fantasma</Button>
-              </div>
-              <p className="text-sm text-muted-foreground italic">Use 'primary' para ações principais da página e 'secondary' para destaques de cor ouro.</p>
-            </Card>
-
-            <Card padding="lg" className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Tamanhos</h3>
-              <div className="flex flex-col gap-4 items-start">
-                <Button size="sm">Pequeno (sm)</Button>
-                <Button size="md">Médio (md)</Button>
-                <Button size="lg">Grande (lg)</Button>
-                <Button size="xl">Extra Grande (xl)</Button>
-              </div>
-            </Card>
-          </div>
-        </section>
-
-        {/* Cards Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Card</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Variantes de Estilo</h3>
-              <div className="space-y-6">
-                <Card variant="default" className="text-center">
-                  <p className="text-sm font-bold uppercase tracking-widest text-primary/40 mb-2">Default</p>
-                  <p className="font-serif italic">Base sólida para conteúdos de leitura.</p>
-                </Card>
-                
-                <Card variant="interactive" className="text-center">
-                  <p className="text-sm font-bold uppercase tracking-widest text-secondary mb-2">Interactive</p>
-                  <p className="font-serif italic">Feedback visual de hover e escala para cards clicáveis.</p>
-                </Card>
-
-                <Card variant="glass" className="text-center">
-                  <p className="text-sm font-bold uppercase tracking-widest text-primary/40 mb-2">Glass</p>
-                  <p className="font-serif italic">Efeito de desfoque para sobreposições e modais.</p>
-                </Card>
+      {/* 1. TOKENS DE CORES */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">01. Colores (Cores)</h2>
+          <div className="h-px flex-1 bg-primary/5" />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { label: 'Primary', class: 'bg-primary', text: 'text-primary-foreground', hex: '#0F172A' },
+            { label: 'Secondary', class: 'bg-secondary', text: 'text-secondary-foreground', hex: '#D4AF37' },
+            { label: 'Background', class: 'bg-background border border-border/10', text: 'text-foreground', hex: '#F8F5EE' },
+            { label: 'Muted', class: 'bg-muted', text: 'text-muted-foreground', hex: '#E5E1D6' },
+          ].map((color) => (
+            <div key={color.label} className="space-y-3">
+              <div className={`h-24 rounded-premium ${color.class}`} />
+              <div>
+                <p className="text-sm font-bold text-primary">{color.label}</p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">{color.hex}</p>
               </div>
             </div>
+          ))}
+        </div>
+      </section>
 
-            <div className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Sistema de Padding</h3>
-              <div className="grid grid-cols-1 gap-4">
-                <Card padding="sm" className="bg-muted/10 border-dashed">Padding SM (Compacto)</Card>
-                <Card padding="md" className="bg-muted/10 border-dashed">Padding MD (Padrão)</Card>
-                <Card padding="lg" className="bg-muted/10 border-dashed">Padding LG (Espaçoso)</Card>
+      {/* 2. TIPOGRAFIA */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">02. Typographia (Tipografia)</h2>
+          <div className="h-px flex-1 bg-primary/5" />
+        </div>
+        <div className="space-y-10">
+          <div className="space-y-4">
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">Display (Cinzel)</span>
+            <h1 className="text-4xl md:text-6xl font-display">Títulos de Glória</h1>
+          </div>
+          <div className="space-y-4">
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">Serif (Playfair Display)</span>
+            <p className="text-2xl md:text-4xl font-serif italic text-primary/80">"A beleza salvará o mundo."</p>
+          </div>
+          <div className="space-y-4">
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">Body (Inter)</span>
+            <p className="text-base text-primary/60 leading-relaxed max-w-2xl">
+              O texto base do Cathedra é focado em legibilidade e clareza, utilizando fontes sans-serif modernas para interfaces e fontes serifadas clássicas para conteúdos de leitura profunda.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. BOTÕES */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">03. Bullones (Botões)</h2>
+          <div className="h-px flex-1 bg-primary/5" />
+        </div>
+        <div className="flex flex-wrap gap-8 items-center">
+          <div className="space-y-4 text-center">
+            <Button variant="primary">Primarius</Button>
+            <p className="text-[9px] font-bold text-primary/30 uppercase tracking-widest">Primary</p>
+          </div>
+          <div className="space-y-4 text-center">
+            <Button variant="secondary">Secundarius</Button>
+            <p className="text-[9px] font-bold text-primary/30 uppercase tracking-widest">Secondary</p>
+          </div>
+          <div className="space-y-4 text-center">
+            <Button variant="outline">Adumbratio</Button>
+            <p className="text-[9px] font-bold text-primary/30 uppercase tracking-widest">Outline</p>
+          </div>
+          <div className="space-y-4 text-center">
+            <Button variant="ghost">Spiritus</Button>
+            <p className="text-[9px] font-bold text-primary/30 uppercase tracking-widest">Ghost</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. CARDS */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">04. Chartulae (Cards)</h2>
+          <div className="h-px flex-1 bg-primary/5" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <Card className="p-8 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center">
+                <Icons.Sparkles className="w-6 h-6 text-primary" />
               </div>
+              <h3 className="text-xl font-bold text-primary">Standard Premium Card</h3>
             </div>
-          </div>
-        </section>
-
-        {/* Checklist Auditoria */}
-        <section className="space-y-12 pb-20">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Checklist de Auditoria Visual</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <Card padding="lg" className="bg-secondary/5 border-secondary/20">
-            <ul className="space-y-4 font-serif">
-              <li className="flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Cards:</strong> Todos os containers devem usar <code>Card</code> ou classes <code>rounded-premium shadow-premium</code>.</p>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>Button</code> (ou <code>HomeButton</code> que é o alias compatível).</p>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Grids:</strong> Manter <code>gap-8 md:gap-12 lg:gap-16</code> em listagens e <code>stack-spacing</code> para seções verticais.</p>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Sombras:</strong> Nunca usar <code>shadow-soft/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
-              </li>
-            </ul>
+            <p className="text-sm text-primary/60 leading-relaxed">
+              O card padrão do Cathedra utiliza border-radius de 24px, fundo levemente translúcido e sombra projetada suave.
+            </p>
           </Card>
-        </section>
-      </div>
+
+          <Card variant="interactive" className="p-8 space-y-6 group">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                <Icons.Flame className="w-6 h-6" />
+              </div>
+              <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:translate-x-1 transition-all" />
+            </div>
+            <h3 className="text-xl font-bold text-primary">Interactive Premium Card</h3>
+            <p className="text-sm text-primary/60 leading-relaxed">
+              Cards interativos possuem feedback visual de hover, escala e brilho, ideais para navegação e trilhas.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* 5. ÍCONES E COMPONENTES */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">05. Iconographia (Ícones)</h2>
+          <div className="h-px flex-1 bg-primary/5" />
+        </div>
+        <div className="flex flex-wrap gap-8">
+          {[Icons.Bible, Icons.Catechism, Icons.Liturgy, Icons.Journeys, Icons.Compass, Icons.Heart].map((Icon, i) => (
+            <div key={i} className="flex flex-col items-center gap-3">
+              <CathedraIcon icon={Icon as any} size={IconSizePreset.ACTION} variant={i % 2 === 0 ? 'primary' : 'secondary'} />
+              <span className="text-[8px] font-black text-primary/20 uppercase tracking-widest">Icon {i+1}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="pt-24 text-center opacity-20">
+        <p className="text-[10px] font-black uppercase tracking-widest">Cathedra Digital © MMXXVI</p>
+      </footer>
     </div>
   );
 };
