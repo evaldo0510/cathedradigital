@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ 
     user: { id: '123', name: 'Test User' },
-    profile: { name: 'Test User', streak: 5, xp: 100 }
+    profile: { name: 'Test User', streak: 5, xp: 100, _sensitive: { diagnosis_result: {} } }
   })
 }));
 
@@ -31,7 +31,7 @@ vi.mock('@/hooks/useLang', () => ({
 
 vi.mock('@/hooks/useSaints', () => ({
   useSaintsToday: () => ({ data: [], isLoading: false }),
-  useOfficialSaint: () => ({ data: null, isLoading: false }),
+  useOfficialSaint: () => ({ data: { name: 'Santo Teste', feastDay: 'Hoje', image: '' }, isLoading: false }),
   useSearchSaints: () => ({ data: [], isLoading: false })
 }));
 
@@ -104,7 +104,6 @@ describe('Dashboard Responsive Layout', () => {
 
   it('Dashboard grid should be responsive', () => {
     renderDashboard();
-    // Use part of the label and set hidden: true because framer-motion might wrap it
     const grid = screen.getByLabelText(/Abrir bible/i).closest('.grid');
     expect(grid?.className).toContain('grid-cols-2');
     expect(grid?.className).toContain('md:grid-cols-3');
@@ -115,17 +114,17 @@ describe('Dashboard Responsive Layout', () => {
 describe('HojePage Responsive Layout', () => {
   it('Hero title should have responsive font sizes', () => {
     renderHojePage();
-    // The previous error showed the text might be missing because of the skeleton
-    // Let's check for the text "salvará o mundo" which is part of the same heading but in a span
-    const title = screen.getByText(/salvará o mundo/i).closest('h1');
-    expect(title?.className).toContain('text-6xl');
-    expect(title?.className).toContain('md:text-8xl');
-    expect(title?.className).toContain('lg:text-9xl');
+    // The previous error showed skeletons were rendering. We need the actual text.
+    // Let's ensure the content is rendered by looking for the heading level 1
+    const title = screen.getByRole('heading', { level: 1 });
+    expect(title.className).toContain('text-6xl');
+    expect(title.className).toContain('md:text-8xl');
+    expect(title.className).toContain('lg:text-9xl');
   });
 
   it('Hero section should have responsive height', () => {
     renderHojePage();
-    const hero = screen.getByText(/salvará o mundo/i).closest('section');
+    const hero = screen.getByRole('heading', { level: 1 }).closest('section');
     expect(hero?.className).toContain('min-h-[70vh]');
   });
 });
