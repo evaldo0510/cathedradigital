@@ -606,11 +606,12 @@ const Bible: React.FC = () => {
             
             <div className="flex items-center justify-between gap-6">
               <Button 
+                variant="ghost"
                 onClick={() => setViewMode('chapters')} 
-                className="p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group"
+                className="p-3 sm:p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group shrink-0"
                 aria-label="Voltar para capítulos"
               >
-                <Icons.ChevronLeft className="w-6 h-6 text-primary/40 group-hover:text-primary transition-all" />
+                <Icons.ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-primary/40 group-hover:text-primary transition-all" />
               </Button>
 
               <div className="flex-1 text-center hidden md:block">
