@@ -391,6 +391,7 @@ const Bible: React.FC = () => {
     const next = selectedChapter + dir;
     if (next >= 1 && next <= selectedBook.chapters) {
       setSelectedChapter(next);
+      setHighlightedVerse(null);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [selectedBook, selectedChapter]);
@@ -433,12 +434,6 @@ const Bible: React.FC = () => {
     </motion.div>
   ));
   CategoryItem.displayName = 'CategoryItem';
-    const next = selectedChapter + dir;
-    if (next >= 1 && next <= selectedBook.chapters) {
-      setSelectedChapter(next);
-      setHighlightedVerse(null);
-    }
-  }, [selectedBook, selectedChapter]);
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
