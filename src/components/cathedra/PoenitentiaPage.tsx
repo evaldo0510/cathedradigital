@@ -106,9 +106,9 @@ const PoenitentiaPage: React.FC = () => {
               <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Exame de Consciência</h3>
               <div className="grid gap-3">
                 {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
-                  <div key={i} className="flex gap-5 p-5 rounded-premium-sm bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-soft transition-all">
-                    <div className="w-6 h-6 rounded-premium-sm bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
-                    <span className="text-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
+                  <div key={i} className="flex gap-4 sm:gap-5 p-4 sm:p-5 rounded-premium bg-muted/50 border border-border/10 group hover:bg-white hover:shadow-premium transition-all">
+                    <div className="w-6 h-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
+                    <span className="text-base sm:text-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
                   </div>
                 ))}
               </div>
