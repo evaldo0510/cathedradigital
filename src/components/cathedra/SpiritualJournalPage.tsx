@@ -390,13 +390,13 @@ const SpiritualJournalPage = () => {
           </div>
         ) : activeTab === 'journal' ? (
           sortedAndFilteredItems(entries, ['content'], 'created_at').length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-12 sm:gap-16">
               {sortedAndFilteredItems(entries, ['content'], 'created_at').map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                  className="premium-card p-8 sm:p-10 md:p-14 space-y-6 sm:space-y-8 h-full group active:scale-[0.99]"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
