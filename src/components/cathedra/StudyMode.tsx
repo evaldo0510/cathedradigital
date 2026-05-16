@@ -46,22 +46,54 @@ const TheologicalAwareText: React.FC<{
   text: string;
   onNavigateBible: (abbr: string, chapter: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
-}> = ({ text, onNavigateBible, onNavigateCatechism }) => {
-  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
+  onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
+  showDetails?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, onReferenceClick, showDetails = true }) => {
+  const processedText = useMemo(() => {
+    if (showDetails) return text;
+    const lines = text.split('\n');
+    let essential = [];
+    let skipping = false;
+    for (const line of lines) {
+      if (line.startsWith('##') || line.startsWith('---') || line.includes('Meditação') || line.includes('Aprofundamento')) {
+        skipping = true;
+      }
+      if (!skipping) essential.push(line);
+    }
+    return essential.join('\n').trim();
+  }, [text, showDetails]);
+
+  const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
   if (segments.length === 1 && segments[0].type === 'text') return <ReactMarkdown components={{
     p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
     strong: ({ children }) => <strong className="text-primary font-bold">{children}</strong>,
     em: ({ children }) => <em className="italic opacity-90">{children}</em>,
-  }}>{text}</ReactMarkdown>;
+  }}>{processedText}</ReactMarkdown>;
   
   return (
     <div className="space-y-4">
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
-          return <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateBible} />;
+          return (
+            <button
+              key={i}
+              onClick={() => onReferenceClick?.('bible', { abbr: seg.abbr, chapter: seg.chapter, verse: seg.verse })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              {seg.value}
+            </button>
+          );
         }
         if (seg.type === 'catechismRef' && seg.paragraph) {
-          return <CatechismPopover key={i} paragraph={seg.paragraph} onNavigate={onNavigateCatechism} />;
+          return (
+            <button
+              key={i}
+              onClick={() => onReferenceClick?.('catechism', { paragraph: seg.paragraph })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              §{seg.paragraph}
+            </button>
+          );
         }
         return <ReactMarkdown key={i} components={{
           p: ({ children }) => <span className="inline">{children}</span>,
