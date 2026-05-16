@@ -130,47 +130,47 @@ const LogosChat = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
+            {/* Backdrop - Ethereal */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-background/40 backdrop-blur-sm pointer-events-auto"
+              className="absolute inset-0 bg-background/20 backdrop-blur-md pointer-events-auto"
             />
             
-            {/* Sidebar */}
+            {/* Sidebar - Monastery Integrated */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute top-0 right-0 h-full w-full sm:w-[450px] bg-background border-l border-border/50 shadow-premium flex flex-col pointer-events-auto reading-sepia"
+              transition={{ type: 'spring', damping: 30, stiffness: 150 }}
+              className="absolute top-0 right-0 h-full w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden"
             >
-              {/* Header */}
-              <div className="p-8 border-b border-border/10 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                    <Compass className="w-6 h-6 text-primary" />
+              {/* Refined Header */}
+              <div className="p-10 border-b border-primary/5 flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/10 animate-pulse-slow">
+                    <Compass className="w-7 h-7 text-primary/60" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-display text-primary tracking-tight">Logos</h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Mestre Contemplativo</p>
+                    <h3 className="text-2xl font-display text-primary tracking-tightest">Logos</h3>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Mestre de Sabedoria</p>
                   </div>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => setIsOpen(false)}
-                  className="rounded-full hover:bg-primary/5"
+                  className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-6 h-6" />
                 </Button>
               </div>
 
-              {/* Messages */}
-              <ScrollArea className="flex-1 p-8" ref={scrollRef}>
-                <div className="space-y-12 max-w-sm mx-auto">
+              {/* Messages - Pure Typographic Flow */}
+              <ScrollArea className="flex-1 px-10 pt-10 pb-20" ref={scrollRef}>
+                <div className="space-y-20 max-w-md mx-auto">
                   {messages.map((msg) => (
                     <motion.div
                       key={msg.id}
@@ -179,17 +179,17 @@ const LogosChat = () => {
                       className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-2 mb-4">
-                          <span className="w-6 h-px bg-primary/20" />
-                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">Reflexão</span>
+                        <div className="flex items-center gap-3 mb-6 opacity-30">
+                          <span className="w-8 h-px bg-primary/40" />
+                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Reflexão</span>
                         </div>
                       )}
                       
                       <div
-                        className={`font-monastery leading-relaxed ${
+                        className={`font-serif leading-relaxed ${
                           msg.role === 'user'
-                            ? 'text-lg text-primary/80 italic text-right'
-                            : 'text-xl text-primary border-l-2 border-primary/10 pl-6 py-2'
+                            ? 'text-xl text-primary/50 italic text-right'
+                            : 'text-2xl text-primary border-l-4 border-secondary/10 pl-10 py-2'
                         }`}
                       >
                         <TheologicalAwareText 
@@ -200,9 +200,9 @@ const LogosChat = () => {
                       </div>
                       
                       {msg.role === 'user' && (
-                        <div className="flex items-center gap-2 mt-4">
-                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">Seu pensamento</span>
-                          <span className="w-6 h-px bg-primary/20" />
+                        <div className="flex items-center gap-3 mt-6 opacity-20">
+                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Coração Humano</span>
+                          <span className="w-8 h-px bg-primary/40" />
                         </div>
                       )}
                     </motion.div>
@@ -210,22 +210,23 @@ const LogosChat = () => {
                   
                   {isLoading && (
                     <div className="flex flex-col items-start">
-                      <div className="flex items-center gap-2 mb-4">
-                        <span className="w-6 h-px bg-primary/20" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30 animate-pulse">Logos está refletindo...</span>
+                      <div className="flex items-center gap-4 mb-6 opacity-20">
+                        <Compass className="w-4 h-4 text-primary animate-spin-slow" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] animate-pulse">Logos medita...</span>
                       </div>
-                      <div className="flex gap-1.5 ml-6">
-                        <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                        <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                        <span className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <div className="flex gap-2 ml-10">
+                        <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                        <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
+                        <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '400ms' }} />
                       </div>
                     </div>
                   )}
                 </div>
+                <div ref={messagesEndRef} className="h-10" />
               </ScrollArea>
 
-              {/* Input Area */}
-              <div className="p-8 border-t border-border/10 bg-background/50 backdrop-blur-md">
+              {/* Input Area - Journal Feel */}
+              <div className="p-10 border-t border-primary/5 bg-background/20 backdrop-blur-xl">
                 <div className="relative group">
                   <textarea
                     value={input}
@@ -236,23 +237,23 @@ const LogosChat = () => {
                         handleSend();
                       }
                     }}
-                    placeholder="Sua reflexão ou dúvida..."
-                    className="w-full bg-transparent border-b border-primary/10 py-4 pr-12 text-lg font-monastery focus:outline-none focus:border-primary/40 transition-colors resize-none placeholder:text-primary/20"
+                    placeholder="Abra seu coração ou tire uma dúvida..."
+                    className="w-full bg-transparent border-b border-primary/10 py-6 pr-14 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-700 resize-none placeholder:text-primary/10"
                     rows={1}
                   />
                   <button
                     onClick={handleSend}
                     disabled={!input.trim() || isLoading}
-                    className="absolute right-0 bottom-4 p-2 text-primary/40 hover:text-primary disabled:opacity-0 transition-all"
+                    className="absolute right-0 bottom-6 p-3 text-primary/20 hover:text-secondary disabled:opacity-0 transition-all duration-700 hover:scale-110"
                   >
-                    <ChevronRight className="w-6 h-6" />
+                    <ChevronRight className="w-8 h-8" />
                   </button>
                 </div>
-                <div className="mt-4 flex justify-between items-center">
-                  <p className="text-[9px] font-medium text-primary/30 italic">Pressione Enter para enviar sua reflexão</p>
-                  <div className="flex gap-4">
-                    <BookOpen className="w-3 h-3 text-primary/20" />
-                    <Quote className="w-3 h-3 text-primary/20" />
+                <div className="mt-8 flex justify-between items-center opacity-10">
+                  <p className="text-[10px] font-medium italic tracking-widest">Silêncio e Escuta</p>
+                  <div className="flex gap-6">
+                    <Scroll className="w-3.5 h-3.5" />
+                    <BookOpen className="w-3.5 h-3.5" />
                   </div>
                 </div>
               </div>
@@ -261,19 +262,19 @@ const LogosChat = () => {
         )}
       </AnimatePresence>
 
-      {/* Floating Trigger - Refined */}
+      {/* Floating Trigger - Integrated & Subtle */}
       {!isOpen && (
         <motion.button
           layoutId="logos-trigger"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-8 right-8 z-[200] flex items-center gap-4 pl-6 pr-4 py-3 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto group overflow-hidden"
+          className="fixed bottom-12 right-12 z-[200] flex items-center gap-6 pl-8 pr-6 py-4 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto group overflow-hidden border border-primary-foreground/5"
         >
-          <div className="absolute inset-0 bg-secondary/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
-          <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em]">Dialogar com Logos</span>
-          <div className="relative z-10 w-8 h-8 rounded-full bg-primary-foreground/10 flex items-center justify-center">
-            <Compass className="w-4 h-4" />
+          <div className="absolute inset-0 bg-secondary/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-1000" />
+          <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.4em]">Logos</span>
+          <div className="relative z-10 w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center group-hover:rotate-45 transition-transform duration-1000">
+            <Compass className="w-5 h-5" />
           </div>
         </motion.button>
       )}
