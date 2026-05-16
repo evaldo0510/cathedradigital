@@ -512,12 +512,12 @@
 
 /* Sidebar refined for library feel */
 .library-sidebar {
-  @apply backdrop-blur-xl bg-background/40 border-r border-border/10 p-8 flex flex-col gap-10 transition-all duration-500;
-  box-shadow: 20px 0 50px rgba(0,0,0,0.02);
+  @apply backdrop-blur-xl bg-background/40 border-r border-border/10 p-10 flex flex-col gap-12 transition-all duration-700;
+  box-shadow: 20px 0 80px rgba(0,0,0,0.02);
 }
 
 .library-nav-item {
-  @apply flex flex-col gap-1 opacity-40 hover:opacity-100 transition-all duration-500 cursor-pointer;
+  @apply flex flex-col gap-2 opacity-30 hover:opacity-100 transition-all duration-700 cursor-pointer relative py-2;
 }
 
 .library-nav-item.active {
@@ -525,11 +525,32 @@
 }
 
 .library-nav-item.active .nav-label {
-  @apply text-primary font-black;
+  @apply text-primary font-bold scale-[1.02] translate-x-1 transition-all;
 }
 
 .library-nav-item .nav-num {
-  @apply font-display text-[10px] tracking-widest uppercase;
+  @apply font-display text-[9px] tracking-[0.4em] uppercase text-primary/40 group-hover:text-primary/60 transition-colors;
+}
+
+.library-nav-item .nav-label {
+  @apply font-serif text-lg leading-tight transition-all;
+}
+
+.reader-text {
+  font-family: var(--reader-font-family, 'EB Garamond', serif);
+  @apply selection:bg-primary/30 mx-auto text-foreground;
+  max-width: var(--reader-max-width, 65ch);
+  font-size: var(--reader-font-size, clamp(1.2rem, 1.4vw, 1.6rem));
+  line-height: var(--reader-line-height, 1.85);
+  letter-spacing: 0.01em;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (max-width: 768px) {
+  .reader-text {
+    text-align: left;
+  }
 }
 
 .library-nav-item .nav-label {
