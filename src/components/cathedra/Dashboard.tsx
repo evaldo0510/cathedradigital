@@ -145,16 +145,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
+          <div className="flex items-center justify-center gap-6 sm:gap-10 flex-wrap pt-8">
             {streak > 0 && (
-              <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-soft transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
+              <div className="flex items-center gap-3 px-6 sm:px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-premium transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
                 <Icons.Zap size={16} className="text-secondary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
+                <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-soft transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
+            <div className="flex items-center gap-3 px-6 sm:px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-premium transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
               <Icons.Star size={16} className="text-primary" />
-              <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
+              <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </div>
