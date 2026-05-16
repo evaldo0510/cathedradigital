@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ 
     user: { id: '123', name: 'Test User' },
-    profile: { name: 'Test User', streak: 5, xp: 100, _sensitive: { diagnosis_result: {} } }
+    profile: { name: 'Test User', streak: 5, xp: 100, _sensitive: { diagnosis_result: { spiritual_profile: 'ansioso_buscador' } } }
   })
 }));
 
@@ -19,6 +19,7 @@ vi.mock('@/hooks/useDashboardData', () => ({
   useDashboardData: () => ({
     spiritualProfile: 'ansioso_buscador',
     activeJourneys: [],
+    saintsToday: [{ name: 'Santo Teste', feastDay: 'Hoje', image: '' }],
     nextUp: { type: 'bible', label: 'João 1', subtitle: 'Continuar Leitura', route: '/bible' },
     weeklyStats: { chaptersRead: 5, catechismParagraphs: 10, journeySteps: 2 },
     isLoading: false
@@ -30,7 +31,7 @@ vi.mock('@/hooks/useLang', () => ({
 }));
 
 vi.mock('@/hooks/useSaints', () => ({
-  useSaintsToday: () => ({ data: [], isLoading: false }),
+  useSaintsToday: () => ({ data: [{ name: 'Santo Teste', feastDay: 'Hoje', image: '' }], isLoading: false }),
   useOfficialSaint: () => ({ data: { name: 'Santo Teste', feastDay: 'Hoje', image: '' }, isLoading: false }),
   useSearchSaints: () => ({ data: [], isLoading: false })
 }));
@@ -114,8 +115,6 @@ describe('Dashboard Responsive Layout', () => {
 describe('HojePage Responsive Layout', () => {
   it('Hero title should have responsive font sizes', () => {
     renderHojePage();
-    // The previous error showed skeletons were rendering. We need the actual text.
-    // Let's ensure the content is rendered by looking for the heading level 1
     const title = screen.getByRole('heading', { level: 1 });
     expect(title.className).toContain('text-6xl');
     expect(title.className).toContain('md:text-8xl');
