@@ -30,6 +30,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import LibrarySidebar from './LibrarySidebar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { useTrackReadingTime } from '@/hooks/useTrackReadingTime';
 import { toast } from 'sonner';
 
 
