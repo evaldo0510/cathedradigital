@@ -6,31 +6,31 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full text-premium-tiny font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-95",
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-[24px] text-premium-tiny font-bold uppercase tracking-[0.3em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-95",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-premium hover:shadow-premium-hover",
+          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-premium",
         primary:
-          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-premium hover:shadow-premium-hover",
+          "bg-primary text-primary-foreground hover:bg-primary/90 shadow-premium",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-premium hover:shadow-premium-hover",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-premium",
         outline:
-          "border border-border/60 bg-transparent text-foreground hover:bg-muted/30 hover:border-primary/20 hover:shadow-soft",
+          "border border-white/10 bg-transparent text-foreground hover:bg-white/5",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium-hover",
-        ghost: "hover:bg-accent/10 hover:text-accent-foreground",
+          "bg-white/5 text-primary border border-white/10 hover:bg-white/10 shadow-premium",
+        ghost: "hover:bg-primary/5 hover:text-primary",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-14 px-8 py-3 text-premium-base [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5",
-        sm: "h-10 px-4 text-premium-small [&_svg]:size-4 md:[&_svg]:size-4 sm:[&_svg]:size-4",
-        xs: "h-8 px-3 text-premium-tiny [&_svg]:size-3.5 md:[&_svg]:size-3.5 sm:[&_svg]:size-3.5",
-        lg: "h-16 px-12 text-premium-base [&_svg]:size-6 md:[&_svg]:size-6 sm:[&_svg]:size-6",
-        icon: "h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5",
-        "icon-sm": "h-10 w-10 p-0 flex items-center justify-center [&_svg]:size-4 md:[&_svg]:size-4 sm:[&_svg]:size-4",
-        "icon-xs": "h-8 w-8 p-0 flex items-center justify-center [&_svg]:size-3.5 md:[&_svg]:size-3.5 sm:[&_svg]:size-3.5",
+        default: "h-[52px] px-10",
+        sm: "h-11 px-6 text-[9px]",
+        xs: "h-9 px-4 text-[8px]",
+        lg: "h-14 px-12 text-premium-small",
+        icon: "h-12 w-12 p-0 flex items-center justify-center",
+        "icon-sm": "h-10 w-10 p-0 flex items-center justify-center",
+        "icon-xs": "h-8 w-8 p-0 flex items-center justify-center",
       },
     },
     defaultVariants: {
