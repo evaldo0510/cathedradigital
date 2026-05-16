@@ -240,34 +240,39 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           </div>
 
           {user ? (
-            <button 
-              onClick={() => handleNav(AppRoute.PROFILE)} 
-              className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none text-left"
-              aria-label={`Perfil de ${user.name}`}
-            >
-              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium-sm" />
-                ) : (
-                  user.name.charAt(0).toUpperCase()
-                )}
-              </div>
-              <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
-                <p className="text-[9px] uppercase text-secondary font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
-                {!user.isPremium && (
-                  <div 
-                    onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                    className="mt-1 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-md hover:bg-primary hover:text-white transition-colors animate-pulse"
-                  >
-                    Upgrade <Icons.ArrowRight className="w-2 h-2" />
-                  </div>
-                )}
-              </div>
+            <div className="relative">
+              <button 
+                onClick={() => handleNav(AppRoute.PROFILE)} 
+                className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none text-left"
+                aria-label={`Perfil de ${user.name}`}
+              >
+                <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium-sm" />
+                  ) : (
+                    user.name.charAt(0).toUpperCase()
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
+                  <p className="text-[9px] uppercase text-secondary font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                  {!user.isPremium && (
+                    <div 
+                      onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
+                      className="mt-1 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-md hover:bg-primary hover:text-white transition-colors animate-pulse"
+                    >
+                      Upgrade <Icons.ArrowRight className="w-2 h-2" />
+                    </div>
+                  )}
+                </div>
+              </button>
               <Button 
                 onClick={(e) => { e.stopPropagation(); onSignOut?.(); }}
-                className="p-2 text-muted-foreground hover:text-destructive transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-destructive transition-colors z-10"
                 title={t('exit_session')}
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Sair da sessão"
               >
                 <Icons.LogOut className="w-4 h-4" />
               </Button>
