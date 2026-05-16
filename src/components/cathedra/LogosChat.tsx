@@ -566,12 +566,13 @@ const LogosChat = () => {
       {/* Floating Trigger - Integrated & Subtle */}
       {!isOpen && (
         <motion.button
+          ref={triggerRef}
           layoutId="logos-trigger"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
           className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
-          aria-label="Abrir Logos"
+          aria-label="Abrir Logos (Ctrl+L)"
           aria-haspopup="true"
         >
           <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
