@@ -141,7 +141,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* FOOTER QUOTE */}
-      <div className="pt-24 text-center opacity-10">
+      <div className="pt-24 pb-12 text-center opacity-5">
         <p className="text-[9px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase text-premium-body">
           "A beleza salvará o mundo." <br/> — Dostoievski
         </p>
