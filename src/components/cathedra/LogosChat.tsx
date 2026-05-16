@@ -422,7 +422,7 @@ const LogosChat = () => {
 
               {/* Input Area - Integrated Journal Feel */}
               {hasRitualPassed && (
-                <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
+                <div className="p-6 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl pb-[max(2.5rem,env(safe-area-inset-bottom))]">
                   {/* Tone Selector */}
                   <div className="flex items-center justify-center gap-6 mb-8 opacity-40 hover:opacity-100 transition-opacity">
                     {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
