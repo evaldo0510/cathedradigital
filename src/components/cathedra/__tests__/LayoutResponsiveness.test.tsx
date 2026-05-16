@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '../Dashboard';
 import HojePage from '../HojePage';
 import { LangContext } from '@/contexts/LangContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock dependencies
 vi.mock('@/hooks/useAuth', () => ({
@@ -28,6 +29,12 @@ vi.mock('@/hooks/useLang', () => ({
   useLang: () => ({ t: (key: string) => key })
 }));
 
+vi.mock('@/hooks/useSaints', () => ({
+  useSaintsToday: () => ({ data: [], isLoading: false }),
+  useOfficialSaint: () => ({ data: null, isLoading: false }),
+  useSearchSaints: () => ({ data: [], isLoading: false })
+}));
+
 vi.mock('framer-motion', () => ({
   motion: {
     div: ({ children, className, ...props }: any) => <div className={className} {...props}>{children}</div>,
@@ -37,6 +44,14 @@ vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 const mockLangContext = {
   lang: 'pt' as const,
   t: (key: string) => key,
@@ -45,21 +60,25 @@ const mockLangContext = {
 
 const renderDashboard = () => {
   return render(
-    <BrowserRouter>
-      <LangContext.Provider value={mockLangContext}>
-        <Dashboard user={{ id: '123', name: 'Test User' } as any} />
-      </LangContext.Provider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LangContext.Provider value={mockLangContext}>
+          <Dashboard user={{ id: '123', name: 'Test User' } as any} />
+        </LangContext.Provider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
 const renderHojePage = () => {
   return render(
-    <BrowserRouter>
-      <LangContext.Provider value={mockLangContext}>
-        <HojePage />
-      </LangContext.Provider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <LangContext.Provider value={mockLangContext}>
+          <HojePage />
+        </LangContext.Provider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 };
 
@@ -80,7 +99,6 @@ describe('Dashboard Responsive Layout', () => {
 
   it('Dashboard grid should be responsive', () => {
     renderDashboard();
-    // find the grid of cards
     const grid = screen.getByLabelText(/Abrir Bíblia/i).closest('.grid');
     expect(grid?.className).toContain('grid-cols-2');
     expect(grid?.className).toContain('md:grid-cols-3');
