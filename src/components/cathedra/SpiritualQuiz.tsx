@@ -66,7 +66,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'A ferida é o lugar por onde a luz entra, como diz o poeta. Não fuja do seu cansaço; nele Deus quer sussurrar algo.',
     questions: ['Onde você se sente mais cansado?', 'Como você costuma lidar com a dor?'],
     readingRecommendations: [{ title: 'Salmos de Confiança', ref: 'Sl 23' }],
-    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }]
+    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }],
+    mainQuote: {
+      text: "Vinde a mim todos vós que estais cansados e fatigados sob o peso dos vossos fardos, e eu vos darei descanso.",
+      ref: "Mt 11,28",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A esperança é a virtude teologal pela qual desejamos o Reino dos céus e a vida eterna como nossa felicidade.",
+      ref: "CIC 1817",
+      source: "catechism"
+    }
   },
   ansioso_buscador: {
     title: 'Ansioso Buscador',
@@ -83,7 +93,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'A culpa que não leva ao amor é apenas uma prisão. O perdão de Deus não é um prêmio, é um abraço.',
     questions: ['O que te impede de perdoar a si mesmo?', 'Onde está sua maior necessidade de misericórdia?'],
     readingRecommendations: [{ title: 'Parábola do Filho Pródigo', ref: 'Lc 15' }],
-    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }]
+    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }],
+    mainQuote: {
+      text: "Se reconhecemos nossos pecados, Deus que é fiel e justo, nos perdoará e nos purificará de toda injustiça.",
+      ref: "1Jo 1,9",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O perdão das ofensas é a exigência fundamental da caridade e da oração cristã.",
+      ref: "CIC 2840",
+      source: "catechism"
+    }
   },
   sedento_de_sentido: {
     title: 'Sedento de Sentido',
@@ -100,7 +120,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'O vazio que você sente é o formato exato de Deus dentro de ti.',
     questions: ['O que te faz vibrar de alegria?', 'Onde você gostaria de servir?'],
     readingRecommendations: [{ title: 'Confissões', ref: 'Agostinho' }],
-    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }]
+    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }],
+    mainQuote: {
+      text: "Fizeste-nos para ti, Senhor, e o nosso coração está inquieto enquanto não descansar em ti.",
+      ref: "Sto. Agostinho",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus.",
+      ref: "CIC 27",
+      source: "catechism"
+    }
   },
   firme_aprofundando: {
     title: 'Firme e Aprofundando',
@@ -117,7 +147,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'Deus quer levar-te a águas mais profundas.',
     questions: ['Qual virtude você quer cultivar?', 'Como está sua intimidade com Jesus?'],
     readingRecommendations: [{ title: 'Imitação de Cristo', ref: 'Kempis' }],
-    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }]
+    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }],
+    mainQuote: {
+      text: "Avança para águas mais profundas e lança as redes para a pesca.",
+      ref: "Lc 5,4",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes.",
+      ref: "CIC 2559",
+      source: "catechism"
+    }
   },
   ardente_missionario: {
     title: 'Ardente Missionário',
@@ -134,7 +174,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'Não podes dar o que não tens. Antes de servir, adora.',
     questions: ['Quem precisa do seu testemunho hoje?', 'Onde está sua maior dificuldade no serviço?'],
     readingRecommendations: [{ title: 'Atos dos Apóstolos', ref: 'At 2' }],
-    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }]
+    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }],
+    mainQuote: {
+      text: "Ide por todo o mundo e pregai o Evangelho a toda criatura.",
+      ref: "Mc 16,15",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O Espírito Santo é o mestre interior da oração cristã. Ele é o artífice da tradição viva da oração.",
+      ref: "CIC 2672",
+      source: "catechism"
+    }
   },
 };
 
