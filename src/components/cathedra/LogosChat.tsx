@@ -240,22 +240,45 @@ const LogosChat = () => {
               {/* Refined Header */}
               <div className="p-10 border-b border-primary/5 flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-12 h-12 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
-                    <Compass className="w-6 h-6 text-primary/40" />
+                  <div className="w-14 h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
+                    <Compass className="w-7 h-7 text-primary/40" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-display text-primary tracking-widest opacity-80">Logos</h3>
-                    <p className="text-[8px] font-black uppercase tracking-[0.5em] text-primary/10">Silenctium</p>
+                    <h3 className="text-2xl font-display text-primary tracking-tightest">Logos</h3>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Mestre de Sabedoria</p>
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
-                >
-                  <X className="w-6 h-6" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={handleExportPDF}
+                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
+                    title="Exportar PDF"
+                  >
+                    <Download className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setIsContemplative(!isContemplative)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      isContemplative ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title="Modo Contemplativo"
+                  >
+                    <Target className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
+                  >
+                    <X className="w-6 h-6" />
+                  </Button>
+                </div>
               </div>
 
               {/* Messages - Pure Typographic Flow */}
