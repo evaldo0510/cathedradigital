@@ -113,7 +113,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
                     {type === 'bible' ? (
                       <div className="space-y-4">
                         {content.verses?.map((v: any) => (
-                          <p key={v.number} className={params.verse === v.number ? "bg-primary/5 p-2 rounded-lg" : ""}>
+                          <p key={v.number} className={cn("inline transition-colors duration-300 rounded px-1", params.verse === v.number ? "bg-primary/10 shadow-sm" : "")}>
                             <sup className="text-[0.6em] font-black mr-2 opacity-30">{v.number}</sup>
                             {v.text}
                           </p>
