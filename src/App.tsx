@@ -123,6 +123,7 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const SpiritualProgressPage = lazy(() => import('./components/cathedra/SpiritualProgressPage'));
 const IconsDesignSystem = lazy(() => import('./components/cathedra/IconsDesignSystem'));
 
 
