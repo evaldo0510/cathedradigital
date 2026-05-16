@@ -41,18 +41,25 @@ const SpiritualJournalPage = () => {
   const fetchEntries = async () => {
     if (!user) return;
     setIsFetching(true);
-    const { data, error } = await supabase
-      .from('spiritual_journal')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('entry_date', { ascending: false })
-      .limit(30);
     
-    if (error) {
-      console.error('Error fetching journal:', error);
-    } else {
-      setEntries(data as JournalEntry[]);
-    }
+    const [journalRes, reflectionsRes] = await Promise.all([
+      supabase
+        .from('spiritual_journal')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('entry_date', { ascending: false })
+        .limit(30),
+      supabase
+        .from('user_notes')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('content_type', 'quiz_deepening')
+        .order('created_at', { ascending: false })
+    ]);
+    
+    if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
+    if (reflectionsRes.data) setReflections(reflectionsRes.data);
+    
     setIsFetching(false);
   };
 
