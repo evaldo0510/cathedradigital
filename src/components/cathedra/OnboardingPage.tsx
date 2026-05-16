@@ -2,7 +2,7 @@ import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
+import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church, ArrowLeft } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
