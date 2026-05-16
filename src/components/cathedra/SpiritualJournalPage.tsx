@@ -479,6 +479,36 @@ const SpiritualJournalPage = () => {
           </div>
         )}
       </section>
+
+      <AnimatePresence>
+        {editingEntry && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/80 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-card w-full max-w-2xl p-10 rounded-premium border border-border/40 shadow-premium space-y-8"
+            >
+              <h3 className="text-2xl font-display font-bold text-primary">Editar Reflexão</h3>
+              <Textarea
+                value={editingEntry.content}
+                onChange={(e) => setEditingEntry({ ...editingEntry, content: e.target.value })}
+                className="min-h-[250px] font-serif text-xl leading-relaxed bg-muted/10 border-none shadow-inner resize-none"
+              />
+              <div className="flex justify-end gap-6">
+                <Button variant="outline" onClick={() => setEditingEntry(null)}>Cancelar</Button>
+                <HomeButton 
+                  onClick={updateEntry}
+                  disabled={isLoading || !editingEntry.content.trim()}
+                  variant="primary"
+                >
+                  {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+                </HomeButton>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
