@@ -15,6 +15,7 @@ const ReadingPreferencesPanel: React.FC = () => {
   const themes: { id: ReadingTheme; label: string; icon: React.ElementType }[] = [
     { id: 'normal', label: 'Claro', icon: Sun },
     { id: 'sepia', label: 'Sépia', icon: Palette },
+    { id: 'monastery', label: 'Mosteiro', icon: Shield },
     { id: 'paper', label: 'Papel', icon: Settings2 },
     { id: 'night', label: 'Noite', icon: Moon },
   ];
