@@ -309,6 +309,18 @@ const LogosChat = () => {
                   <Button 
                     variant="ghost" 
                     size="icon" 
+                    onClick={() => setAutoScroll(!autoScroll)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      autoScroll ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title={autoScroll ? "Pausar Auto-scroll" : "Manter Auto-scroll"}
+                  >
+                    {autoScroll ? <Icons.ArrowDown className="w-4 h-4 animate-bounce" /> : <Icons.Lock className="w-4 h-4" />}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
                     onClick={() => setShowExtraDetails(!showExtraDetails)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
