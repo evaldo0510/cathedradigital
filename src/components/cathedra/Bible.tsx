@@ -32,6 +32,7 @@ import LibrarySidebar from './LibrarySidebar';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { useTrackReadingTime } from '@/hooks/useTrackReadingTime';
 import { Bookmark, Menu, History } from 'lucide-react';
 
 
