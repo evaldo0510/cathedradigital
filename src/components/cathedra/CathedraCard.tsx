@@ -14,7 +14,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
       none: '',
       xs: 'p-3 md:p-4',
       sm: 'p-4 md:p-6',
-      md: 'p-6 md:p-8 lg:p-10',
+      md: 'p-6 md:p-8',
       lg: 'p-8 md:p-12 lg:p-16',
       xl: 'p-12 md:p-16 lg:p-24',
       '2xl': 'p-16 md:p-24 lg:p-32',
