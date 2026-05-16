@@ -39,8 +39,8 @@ const TestimonialsSection = () => {
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-premium-small">{t.name}</p>
-                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
+                  <p className="font-bold text-premium-small text-premium-body">{t.name}</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold text-premium-body">{t.role}</p>
                 </div>
               </div>
             </Card>

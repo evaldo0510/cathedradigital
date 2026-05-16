@@ -68,7 +68,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
       </motion.p>
-      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground text-premium-body">{label}</p>
     </motion.div>
   );
 };
