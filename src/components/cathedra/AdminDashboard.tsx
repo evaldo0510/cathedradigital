@@ -411,8 +411,8 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-premium-sm border border-destructive/20">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h2 className="text-xl font-bold mb-2">Erro ao carregar dados</h2>
-        <p className="text-muted-foreground">{error}</p>
+        <h2 className="text-xl font-bold mb-2 heading-section-label">Erro ao carregar dados</h2>
+        <p className="text-muted-foreground text-premium-body">{error}</p>
       </div>
     );
   }
@@ -421,8 +421,8 @@ const AdminDashboard: React.FC = () => {
     <div className="space-y-6 sm:space-y-8 pb-20 sm:pb-10 px-0 sm:px-0">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 sm:px-0">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
+          <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary heading-hero">Painel Administrativo</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70 text-premium-body">CRM & Gestão completa da plataforma.</p>
         </div>
         {/* Redundant back button removed */}
       </div>
