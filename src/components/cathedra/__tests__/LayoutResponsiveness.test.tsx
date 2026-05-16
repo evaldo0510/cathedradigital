@@ -115,16 +115,17 @@ describe('Dashboard Responsive Layout', () => {
 describe('HojePage Responsive Layout', () => {
   it('Hero title should have responsive font sizes', () => {
     renderHojePage();
-    // Use part of the text that's not broken by tags
-    const title = screen.getByText(/A beleza/i);
-    expect(title.className).toContain('text-6xl');
-    expect(title.className).toContain('md:text-8xl');
-    expect(title.className).toContain('lg:text-9xl');
+    // The previous error showed the text might be missing because of the skeleton
+    // Let's check for the text "salvará o mundo" which is part of the same heading but in a span
+    const title = screen.getByText(/salvará o mundo/i).closest('h1');
+    expect(title?.className).toContain('text-6xl');
+    expect(title?.className).toContain('md:text-8xl');
+    expect(title?.className).toContain('lg:text-9xl');
   });
 
   it('Hero section should have responsive height', () => {
     renderHojePage();
-    const hero = screen.getByText(/A beleza/i).closest('section');
+    const hero = screen.getByText(/salvará o mundo/i).closest('section');
     expect(hero?.className).toContain('min-h-[70vh]');
   });
 });
