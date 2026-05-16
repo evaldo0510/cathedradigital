@@ -320,7 +320,7 @@
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 10px 30px rgba(0,0,0,.08);
     @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-md;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
+    padding: clamp(1.25rem, 2.5vw, 2rem);
   }
   
   .premium-card-interactive {
