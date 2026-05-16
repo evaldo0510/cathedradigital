@@ -788,6 +788,12 @@ const SpiritualQuiz: React.FC = () => {
             </Button>
           </div>
         </div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </motion.div>
     );
   }
