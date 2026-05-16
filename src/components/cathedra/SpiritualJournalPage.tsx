@@ -19,6 +19,7 @@ interface JournalEntry {
   mood: string;
   entry_date: string;
   created_at: string;
+  is_reviewed: boolean;
 }
 
 const MOODS = [
@@ -43,6 +44,7 @@ const SpiritualJournalPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [editingEntry, setEditingEntry] = useState<{ id: string, type: 'journal' | 'reflection' | 'logos', content: string } | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [reviewFilter, setReviewFilter] = useState<'all' | 'reviewed' | 'unreviewed'>('all');
 
   const fetchEntries = async () => {
     if (!user) return;
@@ -173,16 +175,42 @@ const SpiritualJournalPage = () => {
     }
   };
 
+  const toggleReview = async (id: string, type: 'journal' | 'reflection' | 'logos', currentStatus: boolean) => {
+    try {
+      const table = type === 'journal' ? 'spiritual_journal' : 'user_notes';
+      const { error } = await supabase
+        .from(table)
+        .update({ is_reviewed: !currentStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+      toast.success(!currentStatus ? 'Marcado como revisado.' : 'Marcado como não revisado.');
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao atualizar status de revisão');
+      console.error(error);
+    }
+  };
+
   const sortedAndFilteredItems = (items: any[], searchFields: string[], dateField: string) => {
     let result = items;
+    
+    // Apply search filter
     if (searchQuery.trim()) {
-      result = items.filter(item => 
+      result = result.filter(item => 
         searchFields.some(field => {
           const val = item[field];
           if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
           return false;
         })
       );
+    }
+
+    // Apply review filter
+    if (reviewFilter === 'reviewed') {
+      result = result.filter(item => item.is_reviewed === true);
+    } else if (reviewFilter === 'unreviewed') {
+      result = result.filter(item => item.is_reviewed === false);
     }
 
     return [...result].sort((a, b) => {
@@ -263,7 +291,7 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-2xl mx-auto">
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-4xl mx-auto">
             <div className="relative flex-1 w-full">
               <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
               <input 
@@ -275,15 +303,47 @@ const SpiritualJournalPage = () => {
               />
             </div>
             
-            <button
-              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-              className="h-14 px-8 rounded-full bg-primary/[0.02] border border-primary/5 text-primary/40 hover:text-primary hover:border-primary/20 transition-all flex items-center gap-3 whitespace-nowrap"
-            >
-              <Icons.ArrowUpDown className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">
-                {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigas'}
-              </span>
-            </button>
+            <div className="flex items-center gap-2">
+              <div className="flex bg-primary/[0.02] border border-primary/5 rounded-full p-1 h-14">
+                <button
+                  onClick={() => setReviewFilter('all')}
+                  className={cn(
+                    "px-4 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                    reviewFilter === 'all' ? "bg-primary text-primary-foreground shadow-sm" : "text-primary/40 hover:text-primary/60"
+                  )}
+                >
+                  Todas
+                </button>
+                <button
+                  onClick={() => setReviewFilter('unreviewed')}
+                  className={cn(
+                    "px-4 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                    reviewFilter === 'unreviewed' ? "bg-primary text-primary-foreground shadow-sm" : "text-primary/40 hover:text-primary/60"
+                  )}
+                >
+                  Pendentes
+                </button>
+                <button
+                  onClick={() => setReviewFilter('reviewed')}
+                  className={cn(
+                    "px-4 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                    reviewFilter === 'reviewed' ? "bg-primary text-primary-foreground shadow-sm" : "text-primary/40 hover:text-primary/60"
+                  )}
+                >
+                  Revisadas
+                </button>
+              </div>
+
+              <button
+                onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+                className="h-14 px-8 rounded-full bg-primary/[0.02] border border-primary/5 text-primary/40 hover:text-primary hover:border-primary/20 transition-all flex items-center gap-3 whitespace-nowrap"
+              >
+                <Icons.ArrowUpDown className="w-4 h-4" />
+                <span className="text-[10px] font-black uppercase tracking-widest">
+                  {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigas'}
+                </span>
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-12 w-full">
@@ -351,6 +411,15 @@ const SpiritualJournalPage = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => toggleReview(entry.id, 'journal', entry.is_reviewed)} 
+                        className={cn("transition-colors", entry.is_reviewed ? "text-secondary" : "text-primary/10 hover:text-primary")}
+                        title={entry.is_reviewed ? "Marcar como pendente" : "Marcar como revisado"}
+                      >
+                        <Icons.CheckCircle2 className={cn("w-5 h-5", entry.is_reviewed ? "fill-secondary/20" : "")} />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: entry.id, type: 'journal', content: entry.content })} className="text-primary/20 hover:text-primary transition-colors">
                         <Icons.PenLine className="w-4 h-4" />
                       </Button>
@@ -396,6 +465,15 @@ const SpiritualJournalPage = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => toggleReview(ref.id, 'reflection', ref.is_reviewed)} 
+                        className={cn("transition-colors", ref.is_reviewed ? "text-secondary" : "text-primary/10 hover:text-primary")}
+                        title={ref.is_reviewed ? "Marcar como pendente" : "Marcar como revisado"}
+                      >
+                        <Icons.CheckCircle2 className={cn("w-5 h-5", ref.is_reviewed ? "fill-secondary/20" : "")} />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'reflection', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
                         <Icons.PenLine className="w-4 h-4" />
                       </Button>
@@ -457,6 +535,15 @@ const SpiritualJournalPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => toggleReview(ref.id, 'logos', ref.is_reviewed)} 
+                          className={cn("transition-colors", ref.is_reviewed ? "text-secondary" : "text-primary/10 hover:text-primary")}
+                          title={ref.is_reviewed ? "Marcar como pendente" : "Marcar como revisado"}
+                        >
+                          <Icons.CheckCircle2 className={cn("w-5 h-5", ref.is_reviewed ? "fill-secondary/20" : "")} />
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'logos', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
                           <Icons.PenLine className="w-4 h-4" />
                         </Button>
