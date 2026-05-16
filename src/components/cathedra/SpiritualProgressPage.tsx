@@ -108,6 +108,92 @@ const SpiritualProgressPage: React.FC = () => {
 
   const earnedBadges = useMemo(() => new Set(profile?.badges || []), [profile?.badges]);
 
+  const handleExport = async () => {
+    if (!user || !profile) return;
+    setExporting(true);
+    try {
+      const doc = new jsPDF();
+      const timestamp = format(new Date(), 'dd/MM/yyyy HH:mm');
+      
+      // Header
+      doc.setFontSize(22);
+      doc.setTextColor(43, 64, 46); // Primary color approx
+      doc.text('Relatório de Progresso Espiritual', 20, 20);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Cathedra Digital - Gerado em ${timestamp}`, 20, 28);
+      
+      // User Info
+      doc.setFontSize(14);
+      doc.setTextColor(0);
+      doc.text('Peregrino:', 20, 45);
+      doc.setFontSize(12);
+      doc.text(`${profile.name} (${user.email})`, 60, 45);
+      
+      doc.setFontSize(14);
+      doc.text('Perfil Espiritual:', 20, 55);
+      doc.setFontSize(12);
+      doc.text(p?.title || 'Não definido', 60, 55);
+
+      // Stats
+      doc.setFontSize(14);
+      doc.text('Estatísticas:', 20, 70);
+      autoTable(doc, {
+        startY: 75,
+        head: [['Métrica', 'Valor']],
+        body: [
+          ['Streak Atual', `${profile.streak || 0} dias`],
+          ['XP Total', `${profile.xp || 0}`],
+          ['Minutos em Oração/Estudo', `${(profile as any).total_minutes_read || 0} min`],
+          ['Passos da Trilha (Mês)', `${completedDays.length}`],
+        ],
+        theme: 'striped',
+        headStyles: { fillStyle: 'fill', fillColor: [43, 64, 46] }
+      });
+
+      // Reflections
+      if (reflections.length > 0) {
+        doc.addPage();
+        doc.setFontSize(18);
+        doc.text('Reflexões Profundas', 20, 20);
+        
+        let y = 35;
+        reflections.forEach((ref, index) => {
+          if (y > 250) {
+            doc.addPage();
+            y = 20;
+          }
+          
+          doc.setFontSize(10);
+          doc.setTextColor(150);
+          doc.text(format(new Date(ref.created_at), 'dd/MM/yyyy'), 20, y);
+          
+          doc.setFontSize(11);
+          doc.setTextColor(50);
+          const questionText = doc.splitTextToSize(`Questão: ${ref.content_id}`, 170);
+          doc.text(questionText, 20, y + 7);
+          
+          doc.setFontSize(12);
+          doc.setTextColor(0);
+          doc.setFont('helvetica', 'italic');
+          const reflectionText = doc.splitTextToSize(`"${ref.note_text}"`, 170);
+          doc.text(reflectionText, 20, y + 15 + (questionText.length * 5));
+          
+          y += 30 + (questionText.length * 5) + (reflectionText.length * 5);
+        });
+      }
+
+      doc.save(`progresso-espiritual-${profile.name}.pdf`);
+      toast.success('Relatório exportado com sucesso!');
+    } catch (err) {
+      console.error('Export error:', err);
+      toast.error('Erro ao gerar PDF.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
