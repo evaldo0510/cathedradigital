@@ -216,8 +216,8 @@ const LogosChat = () => {
                 <div ref={messagesEndRef} className="h-10" />
               </ScrollArea>
 
-              {/* Input Area - Journal Feel */}
-              <div className="p-10 border-t border-primary/5 bg-background/20 backdrop-blur-xl">
+              {/* Input Area - Integrated Journal Feel */}
+              <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
                 <div className="relative group">
                   <textarea
                     value={input}
@@ -228,8 +228,8 @@ const LogosChat = () => {
                         handleSend();
                       }
                     }}
-                    placeholder="Abra seu coração ou tire uma dúvida..."
-                    className="w-full bg-transparent border-b border-primary/10 py-6 pr-14 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-700 resize-none placeholder:text-primary/10"
+                    placeholder="Abra seu coração..."
+                    className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
                     rows={1}
                   />
                   <button
