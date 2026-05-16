@@ -381,7 +381,9 @@ const StudyMode: React.FC = () => {
                       <TheologicalAwareText 
                         text={msg.content} 
                         onNavigateBible={handleNavigateToBible} 
-                        onNavigateCatechism={handleNavigateToCatechism} 
+                        onNavigateCatechism={handleNavigateToCatechism}
+                        showDetails={showExtraDetails}
+                        onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                       />
                     </div>
                   </motion.div>
