@@ -365,6 +365,26 @@
   .btn-premium-outline {
     @apply btn-premium bg-transparent border-white/10 text-primary hover:bg-white/5 shadow-none;
   }
+  /* Typography Tokens */
+  .heading-hero {
+    @apply font-display text-4xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tightest leading-[1.1] text-primary;
+  }
+
+  .heading-section {
+    @apply font-display text-2xl md:text-4xl lg:text-5xl tracking-tightest leading-tight text-primary;
+  }
+
+  .heading-card {
+    @apply font-display text-xl md:text-2xl tracking-tight leading-tight text-primary;
+  }
+
+  .text-premium-body {
+    @apply font-serif text-base md:text-lg leading-relaxed text-primary/60;
+  }
+
+  .text-premium-small {
+    @apply text-xs uppercase tracking-[0.3em] font-bold text-primary/40;
+  }
 }
 
 /* Custom scrollbar (hidden for cleaner UI as requested) */
