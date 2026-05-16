@@ -215,6 +215,15 @@ const SpiritualProgressPage: React.FC = () => {
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-bold text-primary tracking-tight">Sua Jornada</h1>
           <p className="text-lg text-primary/60 italic font-serif">"Aquele que começou em vós esta boa obra, há de completá-la."</p>
+          <div className="flex justify-center pt-4">
+            <Button 
+              onClick={handleExport} 
+              disabled={exporting}
+              className="rounded-full gap-2 bg-primary/5 text-primary border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all"
+            >
+              {exporting ? 'Gerando...' : <><Download className="w-4 h-4" /> Exportar Resumo em PDF</>}
+            </Button>
+          </div>
         </div>
       </header>
 
