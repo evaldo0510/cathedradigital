@@ -137,8 +137,8 @@ const AboutPage: React.FC = () => (
     <div className="pt-16 border-t border-border/40">
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 premium-card p-8 md:p-12">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium-sm border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
-            <div className="w-full h-full rounded-premium-sm bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
+            <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
             <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium-sm shadow-lg border-4 border-background">
