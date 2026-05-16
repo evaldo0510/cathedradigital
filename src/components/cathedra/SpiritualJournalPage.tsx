@@ -129,6 +129,60 @@ const SpiritualJournalPage = () => {
     setIsLoading(false);
   };
 
+  const deleteEntry = async (id: string, type: 'journal' | 'reflection' | 'logos') => {
+    if (!confirm('Deseja realmente apagar esta reflexão?')) return;
+    
+    try {
+      const table = type === 'journal' ? 'spiritual_journal' : 'user_notes';
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      
+      if (error) throw error;
+      toast.success('Reflexão removida.');
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao apagar reflexão');
+      console.error(error);
+    }
+  };
+
+  const updateEntry = async () => {
+    if (!editingEntry || !editingEntry.content.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      if (editingEntry.type === 'journal') {
+        await supabase
+          .from('spiritual_journal')
+          .update({ content: editingEntry.content.trim(), updated_at: new Date().toISOString() })
+          .eq('id', editingEntry.id);
+      } else {
+        await supabase
+          .from('user_notes')
+          .update({ note_text: editingEntry.content.trim(), updated_at: new Date().toISOString() })
+          .eq('id', editingEntry.id);
+      }
+      toast.success('Reflexão atualizada.');
+      setEditingEntry(null);
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao atualizar reflexão');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredItems = (items: any[], searchFields: string[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(item => 
+      searchFields.some(field => {
+        const val = item[field];
+        if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
+        return false;
+      })
+    );
+  };
+
   return (
     <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
