@@ -396,7 +396,7 @@ const LogosChat = () => {
                       </div>
                       
                       {/* Silent marker */}
-                      <div className="h-4" />
+                      <div className="h-8" />
                     </motion.div>
                   ))}
                   
