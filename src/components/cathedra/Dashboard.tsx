@@ -171,7 +171,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         >
           <div className="flex items-center gap-5">
             <CathedraIcon icon={Icons.HelpCircle} size={IconSizePreset.ACTION} variant="primary" />
-            <div>
+            <div className="text-left">
               <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
               <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
             </div>
