@@ -359,16 +359,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium-sm border border-border/50">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Icons.Bell className="w-4 h-4 text-primary" />
-                <p className="text-sm font-bold text-foreground">Push Notifications</p>
-              </div>
-              <p className="text-premium-tiny text-muted-foreground">Lembretes diários de oração.</p>
-            </div>
-            <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
-          </div>
+          <SpiritualReminderSettings />
 
           <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium-sm border border-primary/20 shadow-sm">
             <div className="space-y-1">
