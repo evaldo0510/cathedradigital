@@ -36,7 +36,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
           padding="md"
-          className="group border-primary/5 bg-primary/[0.01]"
+          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
@@ -72,7 +72,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Trilhas Principais" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <HomeCard padding="sm" className="group border-primary/5" onClick={() => onNavigate(AppRoute.TEMAS)}>
+          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.TEMAS)}>
             <div className="flex items-center gap-5">
               <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="primary" />
               <div>
@@ -82,7 +82,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </div>
           </HomeCard>
           
-          <HomeCard padding="sm" className="group border-primary/5" onClick={() => onNavigate(AppRoute.BIBLE)}>
+          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.BIBLE)}>
             <div className="flex items-center gap-5">
               <CathedraIcon icon={Icons.BookOpen} size={IconSizePreset.TINY} variant="primary" />
               <div>
@@ -100,7 +100,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
           padding="md"
-          className="group border-primary/5 bg-primary/[0.01]"
+          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label="Logos" />
         <HomeCard 
           padding="md"
-          className="group border-primary/5 bg-primary/[0.01]"
+          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
           onClick={openLogosChat}
         >
           <div className="flex items-center justify-between gap-8">
