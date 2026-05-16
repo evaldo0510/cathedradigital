@@ -35,13 +35,18 @@ vi.mock('@/hooks/useSaints', () => ({
   useSearchSaints: () => ({ data: [], isLoading: false })
 }));
 
-vi.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, className, ...props }: any) => <div className={className} {...props}>{children}</div>,
-    h1: ({ children, className, ...props }: any) => <h1 className={className} {...props}>{children}</h1>,
-    p: ({ children, className, ...props }: any) => <p className={className} {...props}>{children}</p>,
-  },
-  AnimatePresence: ({ children }: any) => <>{children}</>,
+// Use real motion but mock its presence to avoid complex animation logic in tests
+vi.mock('framer-motion', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('framer-motion')>();
+  return {
+    ...actual,
+    AnimatePresence: ({ children }: any) => <>{children}</>,
+  };
+});
+
+// Mock Radix Slot to avoid issues
+vi.mock('@radix-ui/react-slot', () => ({
+  Slot: ({ children, ...props }: any) => <div {...props}>{children}</div>,
 }));
 
 const queryClient = new QueryClient({
