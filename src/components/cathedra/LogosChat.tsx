@@ -30,7 +30,8 @@ const TheologicalAwareText: React.FC<{
   isContemplative?: boolean;
   onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
   showDetails?: boolean;
-}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true }) => {
+  isMobile?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true, isMobile }) => {
   const processedText = useMemo(() => {
     if (showDetails) return text;
     // Simple logic to hide "extra" sections: split by double newline and filter out sections starting with ## or ---
