@@ -382,8 +382,8 @@
     @apply font-serif text-base md:text-lg leading-relaxed text-primary/60;
   }
 
-  .text-premium-small {
-    @apply text-xs uppercase tracking-[0.3em] font-bold text-primary/40;
+  .text-premium-tiny {
+    @apply text-[9px] uppercase tracking-[0.3em] font-black;
   }
 }
 
