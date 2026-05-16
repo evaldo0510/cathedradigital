@@ -402,6 +402,7 @@ const LogosChat = () => {
                           isContemplative={isContemplative}
                           onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                           showDetails={showExtraDetails}
+                          isMobile={window.innerWidth < 640}
                         />
                         {msg.role === 'assistant' && msg.content.includes('\n') && (
                           <div className="mt-4 flex gap-1 items-center opacity-20 hover:opacity-100 transition-opacity">
