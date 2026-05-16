@@ -920,7 +920,7 @@ const SpiritualQuiz: React.FC = () => {
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
               placeholder="O que esta pergunta despertou em você? Registre sua reflexão..."
-              className="w-full bg-primary/[0.01] border border-primary/5 rounded-[2rem] p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
+              className="w-full bg-primary/[0.01] border border-primary/5 rounded-premium p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
             />
             <div className="flex justify-center">
               <Button 
