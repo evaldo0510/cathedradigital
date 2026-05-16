@@ -194,12 +194,8 @@ const LogosChat = () => {
                         />
                       </div>
                       
-                      {msg.role === 'user' && (
-                        <div className="flex items-center gap-3 mt-6 opacity-20">
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Coração Humano</span>
-                          <span className="w-8 h-px bg-primary/40" />
-                        </div>
-                      )}
+                      {/* Silent marker */}
+                      <div className="h-4" />
                     </motion.div>
                   ))}
                   
