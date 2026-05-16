@@ -230,17 +230,17 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="desktop-main space-y-16">
       {/* Header */}
       <motion.div 
-        className="text-center space-y-8 max-w-3xl mx-auto"
+        className="text-center space-y-6 sm:space-y-8 max-w-3xl mx-auto px-4"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="inline-flex items-center gap-3 px-5 py-2 bg-primary/[0.03] rounded-full border border-primary/10 mb-2">
-          <Icons.Journeys className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Itinerarium Mentis</span>
+        <div className="inline-flex items-center gap-3 px-4 sm:px-5 py-1.5 sm:py-2 bg-primary/[0.03] rounded-full border border-primary/10 mb-1 sm:mb-2">
+          <Icons.Journeys className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-primary" />
+          <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-primary">Itinerarium Mentis</span>
         </div>
-        <h1 className="text-5xl md:text-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Jornadas</h1>
-        <p className="text-muted-foreground font-serif italic text-lg md:text-xl leading-relaxed">
+        <h1 className="text-4xl xs:text-5xl md:text-7xl font-display font-bold text-primary tracking-tight leading-[0.9]">Jornadas</h1>
+        <p className="text-muted-foreground font-serif italic text-base md:text-xl leading-relaxed max-w-lg mx-auto">
           "Caminhai enquanto tendes a luz, para que as trevas não vos surpreendam." — João 12,35
         </p>
       </motion.div>
