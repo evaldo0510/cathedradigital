@@ -844,6 +844,61 @@ const SpiritualQuiz: React.FC = () => {
   // ── Quiz phase ──
   const q = QUESTIONS[step];
 
+  if (isPausing) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="max-w-xl mx-auto w-full space-y-16 text-center"
+        >
+          <div className="space-y-8">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-32 h-32 rounded-full border-2 border-primary/20 mx-auto flex items-center justify-center"
+            >
+              <Wind className="w-10 h-10 text-primary/20" />
+            </motion.div>
+            <div className="space-y-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/30">Pausa Contemplativa</span>
+              <p className="text-xl font-monastery text-primary/40 italic">Respire fundo...</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Diário Contemplativo</p>
+            <textarea
+              value={journalText}
+              onChange={(e) => setJournalText(e.target.value)}
+              placeholder="O que esta pergunta despertou em você? Registre sua reflexão..."
+              className="w-full bg-primary/[0.01] border border-primary/5 rounded-[2rem] p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
+            />
+            <div className="flex justify-center">
+              <Button 
+                onClick={continueQuiz}
+                className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all"
+              >
+                Continuar Jornada <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {p && p.mainQuote && (
+             <QuietQuote quote={p.mainQuote} className="opacity-40" />
+          )}
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
       <motion.div
