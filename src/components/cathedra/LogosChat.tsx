@@ -329,7 +329,7 @@ const LogosChat = () => {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden">
+    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible">
       <AnimatePresence>
         {isOpen && (
           <>
@@ -348,7 +348,7 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden max-w-full"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden max-w-full sm:rounded-l-[24px]"
             >
               {/* Refined Header */}
               <div className="p-4 sm:p-8 border-b border-primary/5 flex items-center justify-between flex-shrink-0 bg-background/40 backdrop-blur-md">
