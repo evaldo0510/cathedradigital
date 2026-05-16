@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
+import { cn } from '@/lib/utils';
 
 interface JournalEntry {
   id: string;
@@ -44,37 +45,41 @@ const SpiritualJournalPage = () => {
     if (!user) return;
     setIsFetching(true);
     
-    const [journalRes, reflectionsRes, logosRes] = await Promise.all([
-      supabase
-        .from('spiritual_journal')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('entry_date', { ascending: false })
-        .limit(30),
-      supabase
-        .from('user_notes')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('content_type', 'quiz_deepening')
-        .order('created_at', { ascending: false }),
-      supabase
-        .from('user_notes')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('content_type', 'logos_reflection')
-        .order('created_at', { ascending: false })
-    ]);
-    
-    if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
-    if (reflectionsRes.data) setReflections(reflectionsRes.data);
-    if (logosRes.data) {
-      setLogosReflections(logosRes.data.map(r => ({
-        ...r,
-        parsed: JSON.parse(r.note_text)
-      })));
+    try {
+      const [journalRes, reflectionsRes, logosRes] = await Promise.all([
+        supabase
+          .from('spiritual_journal')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('entry_date', { ascending: false })
+          .limit(30),
+        supabase
+          .from('user_notes')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('content_type', 'quiz_deepening')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('user_notes')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('content_type', 'logos_reflection')
+          .order('created_at', { ascending: false })
+      ]);
+      
+      if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
+      if (reflectionsRes.data) setReflections(reflectionsRes.data);
+      if (logosRes.data) {
+        setLogosReflections(logosRes.data.map(r => ({
+          ...r,
+          parsed: JSON.parse(r.note_text)
+        })));
+      }
+    } catch (error) {
+      console.error('Error fetching journal entries:', error);
+    } finally {
+      setIsFetching(false);
     }
-    
-    setIsFetching(false);
   };
 
   useEffect(() => {
@@ -87,7 +92,7 @@ const SpiritualJournalPage = () => {
     setIsLoading(true);
     const today = new Date().toISOString().split('T')[0];
     
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('spiritual_journal')
       .upsert({
         user_id: user.id,
@@ -95,9 +100,7 @@ const SpiritualJournalPage = () => {
         mood,
         entry_date: today,
         updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
+      });
 
     if (error) {
       toast.error('Erro ao salvar reflexão');
@@ -119,7 +122,7 @@ const SpiritualJournalPage = () => {
           <Icons.PenLine className="w-4 h-4 text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tightest">
           Diário Espiritual
         </h1>
         <p className="text-lg md:text-xl text-primary/60 italic font-serif leading-relaxed">
@@ -129,7 +132,7 @@ const SpiritualJournalPage = () => {
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <HomeCard padding="lg" className="space-y-16">
+        <HomeCard padding="lg" className="space-y-16 bg-primary/[0.01]">
           <div className="space-y-8">
             <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
             <div className="flex flex-wrap justify-center gap-8">
@@ -172,7 +175,7 @@ const SpiritualJournalPage = () => {
       </section>
 
       {/* History */}
-      <section className="space-y-12 max-w-4xl mx-auto w-full">
+      <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
           <div className="flex items-center gap-12 w-full">
             <div className="h-px flex-1 bg-border/30" />
@@ -252,7 +255,7 @@ const SpiritualJournalPage = () => {
               <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
             </div>
           )
-        ) : (
+        ) : activeTab === 'reflections' ? (
           reflections.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
               {reflections.map((ref) => (
