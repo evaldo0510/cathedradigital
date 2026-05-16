@@ -58,6 +58,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         label: 'Navegação',
         items: [
           { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
+          { label: 'Logos', path: AppRoute.STUDY_MODE, icon: Icons.Compass, pro: true },
           { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
           { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
           { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },

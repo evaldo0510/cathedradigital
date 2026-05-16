@@ -151,12 +151,12 @@ const LogosChat = () => {
               {/* Refined Header */}
               <div className="p-10 border-b border-primary/5 flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/10 animate-pulse-slow">
-                    <Compass className="w-7 h-7 text-primary/60" />
+                  <div className="w-12 h-12 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
+                    <Compass className="w-6 h-6 text-primary/40" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-display text-primary tracking-tightest">Logos</h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Mestre de Sabedoria</p>
+                    <h3 className="text-xl font-display text-primary tracking-widest opacity-80">Logos</h3>
+                    <p className="text-[8px] font-black uppercase tracking-[0.5em] text-primary/10">Silenctium</p>
                   </div>
                 </div>
                 <Button 
@@ -177,14 +177,8 @@ const LogosChat = () => {
                       key={msg.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col w-full ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
-                      {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-6 opacity-30">
-                          <span className="w-8 h-px bg-primary/40" />
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Reflexão</span>
-                        </div>
-                      )}
                       
                       <div
                         className={`font-serif leading-relaxed ${
@@ -200,12 +194,8 @@ const LogosChat = () => {
                         />
                       </div>
                       
-                      {msg.role === 'user' && (
-                        <div className="flex items-center gap-3 mt-6 opacity-20">
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Coração Humano</span>
-                          <span className="w-8 h-px bg-primary/40" />
-                        </div>
-                      )}
+                      {/* Silent marker */}
+                      <div className="h-4" />
                     </motion.div>
                   ))}
                   
@@ -226,8 +216,8 @@ const LogosChat = () => {
                 <div ref={messagesEndRef} className="h-10" />
               </ScrollArea>
 
-              {/* Input Area - Journal Feel */}
-              <div className="p-10 border-t border-primary/5 bg-background/20 backdrop-blur-xl">
+              {/* Input Area - Integrated Journal Feel */}
+              <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
                 <div className="relative group">
                   <textarea
                     value={input}
@@ -238,8 +228,8 @@ const LogosChat = () => {
                         handleSend();
                       }
                     }}
-                    placeholder="Abra seu coração ou tire uma dúvida..."
-                    className="w-full bg-transparent border-b border-primary/10 py-6 pr-14 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-700 resize-none placeholder:text-primary/10"
+                    placeholder="Abra seu coração..."
+                    className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
                     rows={1}
                   />
                   <button
@@ -250,8 +240,7 @@ const LogosChat = () => {
                     <ChevronRight className="w-8 h-8" />
                   </button>
                 </div>
-                <div className="mt-8 flex justify-between items-center opacity-10">
-                  <p className="text-[10px] font-medium italic tracking-widest">Silêncio e Escuta</p>
+                <div className="mt-8 flex justify-between items-center opacity-[0.03]">
                   <div className="flex gap-6">
                     <Scroll className="w-3.5 h-3.5" />
                     <BookOpen className="w-3.5 h-3.5" />
@@ -267,16 +256,13 @@ const LogosChat = () => {
       {!isOpen && (
         <motion.button
           layoutId="logos-trigger"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-12 right-12 z-[200] flex items-center gap-6 pl-8 pr-6 py-4 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto group overflow-hidden border border-primary-foreground/5"
+          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5"
         >
-          <div className="absolute inset-0 bg-secondary/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-1000" />
-          <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.4em]">Logos</span>
-          <div className="relative z-10 w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center group-hover:rotate-45 transition-transform duration-1000">
-            <Compass className="w-5 h-5" />
-          </div>
+          <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
+          <Compass className="relative z-10 w-6 h-6 group-hover:rotate-12 transition-transform duration-1000" />
         </motion.button>
       )}
     </div>

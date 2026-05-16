@@ -117,9 +117,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </HomeCard>
       </section>
 
-      {/* 6. LOGOS IA */}
+      {/* 6. LOGOS */}
       <section className="space-y-10">
-        <SectionHeader label="Logos IA" />
+        <SectionHeader label="Logos" />
         <HomeCard 
           padding="lg"
           className="group border-primary/5 bg-primary/[0.01]"
