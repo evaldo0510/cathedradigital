@@ -249,6 +249,7 @@ const Catechism: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
   const { prefs } = useReadingMode();
+  useTrackReadingTime(viewMode === "reading");
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem('cathedra_catechism_bookmarks');
