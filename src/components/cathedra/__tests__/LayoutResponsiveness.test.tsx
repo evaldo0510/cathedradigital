@@ -38,7 +38,7 @@ vi.mock('framer-motion', () => ({
 }));
 
 const mockLangContext = {
-  lang: 'pt',
+  lang: 'pt' as const,
   t: (key: string) => key,
   setLang: vi.fn()
 };
