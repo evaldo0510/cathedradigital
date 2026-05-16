@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, BookOpen, Scroll, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { CatechismParagraphSkeleton, BibleChapterSkeleton } from './SacredSkeleton';
 
