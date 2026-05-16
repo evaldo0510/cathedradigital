@@ -290,14 +290,15 @@ const StudyMode: React.FC = () => {
           <ScrollArea className="flex-1">
             <div className="max-w-3xl mx-auto px-8 py-16 space-y-20">
               {messages.length === 0 ? (
-                <div className="space-y-12 text-center py-12">
-                  <div className="w-20 h-20 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10">
-                    <Compass className="w-10 h-10 text-primary" />
+                <div className="space-y-16 text-center py-20">
+                  <div className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/10 animate-pulse-slow">
+                    <Compass className="w-12 h-12 text-primary" />
                   </div>
-                  <div className="space-y-4">
-                    <h1 className="text-4xl font-display text-primary">Logos</h1>
-                    <p className="text-lg text-muted-foreground font-serif italic max-w-md mx-auto">
-                      "A verdade vos libertará." — Diálogos teológicos iluminados pela tradição.
+                  <div className="space-y-6">
+                    <h1 className="text-5xl font-display text-primary tracking-tightest">Mosteiro Digital</h1>
+                    <p className="text-xl text-primary/40 font-serif italic max-w-lg mx-auto leading-relaxed">
+                      "No silêncio do coração, a Verdade se revela." <br />
+                      Diálogos guiados pela Tradição e Sabedoria.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
