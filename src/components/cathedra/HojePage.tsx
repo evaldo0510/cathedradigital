@@ -9,6 +9,7 @@ import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
+import SpiritualTrailCard from './SpiritualTrailCard';
 import { HomeCard as Card } from './HomeCard';
 import { Button } from './Button';
 import { useDashboardData } from '@/hooks/useDashboardData';
