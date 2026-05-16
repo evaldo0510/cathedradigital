@@ -126,7 +126,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   return (
     <>
       <aside ref={ref} className="h-full w-[280px] bg-card border-r border-border/20 flex flex-col p-6 overflow-hidden">
-        <div className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
+        <button 
+          className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
+          onClick={() => handleNav(AppRoute.HOJE)}
+          aria-label="Ir para a página inicial"
+        >
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
           <div className="space-y-0.5">
             <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
@@ -134,7 +138,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               Digital Sanctuarium
             </p>
           </div>
-        </div>
+        </button>
 
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
