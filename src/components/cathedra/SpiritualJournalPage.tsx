@@ -535,6 +535,15 @@ const SpiritualJournalPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => toggleReview(ref.id, 'logos', ref.is_reviewed)} 
+                          className={cn("transition-colors", ref.is_reviewed ? "text-secondary" : "text-primary/10 hover:text-primary")}
+                          title={ref.is_reviewed ? "Marcar como pendente" : "Marcar como revisado"}
+                        >
+                          <Icons.CheckCircle2 className={cn("w-5 h-5", ref.is_reviewed ? "fill-secondary/20" : "")} />
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'logos', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
                           <Icons.PenLine className="w-4 h-4" />
                         </Button>
