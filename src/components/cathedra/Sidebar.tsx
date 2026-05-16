@@ -125,7 +125,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-[280px] bg-card border-r border-border/20 flex flex-col p-6 overflow-hidden">
+      <aside ref={ref} className="h-full w-[280px] bg-card border-r border-border/20 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6">
         <button 
           className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
           onClick={() => handleNav(AppRoute.HOJE)}
