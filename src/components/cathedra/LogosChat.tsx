@@ -326,16 +326,16 @@ const LogosChat = () => {
               </div>
 
               {/* Messages - Pure Typographic Flow */}
-              <ScrollArea className="flex-1 px-6 sm:px-10 pt-6 sm:pt-10 pb-10" ref={scrollRef}>
-                <div className={cn("space-y-20 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-32 scale-[1.02]")}>
+              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10" ref={scrollRef}>
+                <div className={cn("space-y-12 sm:y-20 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-24 sm:space-y-32 scale-[1.02]")}>
                   {!hasRitualPassed && (
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="py-20 text-center space-y-12 px-6"
+                      className="py-12 sm:py-20 text-center space-y-8 sm:space-y-12 px-4 sm:px-6"
                     >
                       <div className="space-y-6">
-                        <Heart className="w-12 h-12 text-secondary/20 mx-auto" />
+                        <Heart className="w-8 h-8 sm:w-12 sm:h-12 text-secondary/20 mx-auto" />
                         <h4 className="text-3xl font-display text-primary/80">Silencie o Coração</h4>
                         <p className="text-lg text-primary/40 font-serif italic leading-relaxed">
                           Antes de iniciarmos, ofereça sua intenção ou uma breve oração ao Senhor.
@@ -367,13 +367,10 @@ const LogosChat = () => {
                   )}
                   
                   {hasRitualPassed && messages.map((msg) => (
-                    <motion.div
+                    <div
                       key={msg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
                       className={`flex flex-col w-full ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
-                      
                       <div
                         className={`font-serif leading-relaxed ${
                           msg.role === 'user'
@@ -397,10 +394,8 @@ const LogosChat = () => {
                           </div>
                         )}
                       </div>
-                      
-                      {/* Silent marker */}
                       <div className="h-8" />
-                    </motion.div>
+                    </div>
                   ))}
                   
                   {isLoading && (

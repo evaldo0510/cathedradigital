@@ -989,7 +989,7 @@ const SpiritualQuiz: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 1 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight"
+                className="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight px-2"
               >
                 {q.question}
               </motion.h3>
@@ -1003,7 +1003,7 @@ const SpiritualQuiz: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 + (idx * 0.1), duration: 0.8 }}
                   onClick={() => handleAnswer(opt.value)}
-                  className={`w-full p-8 text-center rounded-[2.5rem] border transition-all duration-700 relative overflow-hidden group ${
+                  className={`w-full p-6 sm:p-8 text-center rounded-[1.5rem] sm:rounded-[2.5rem] border transition-all duration-700 relative overflow-hidden group ${
                     answers[q.id] === opt.value
                       ? 'bg-primary text-primary-foreground border-primary shadow-premium'
                       : 'bg-primary/[0.01] border-primary/5 text-primary/50 hover:bg-primary/[0.03] hover:border-primary/10 hover:text-primary hover:scale-[1.01]'

@@ -46,12 +46,12 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   ];
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 lg:gap-12", className)}>
       {doors.map((door, idx) => (
         <Card
           key={idx}
           variant="interactive"
-          padding="lg"
+          padding="md"
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -62,9 +62,9 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="flex flex-col items-center text-center gap-8 group"
+          className="flex flex-col items-center text-center gap-4 sm:gap-8 group"
         >
-          <CathedraIcon icon={door.icon} size={IconSizePreset.CARD_HEADER} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
+          <CathedraIcon icon={door.icon} size={IconSizePreset.ACTION} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
           <div className="space-y-4">
             <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
             <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>

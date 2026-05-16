@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, BookOpen, Scroll, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { CatechismParagraphSkeleton, BibleChapterSkeleton } from './SacredSkeleton';
 
@@ -83,7 +84,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-2xl max-h-[80vh] bg-background border border-primary/10 shadow-premium rounded-[2.5rem] flex flex-col overflow-hidden reading-sepia"
+            className="relative w-full max-w-2xl max-h-[90dvh] sm:max-h-[80vh] bg-background border border-primary/10 shadow-premium rounded-[2rem] sm:rounded-[2.5rem] flex flex-col overflow-hidden reading-sepia"
           >
             {/* Header */}
             <div className="p-6 border-b border-primary/5 flex items-center justify-between">
@@ -104,7 +105,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             </div>
 
             {/* Content */}
-            <ScrollArea className="flex-1 p-8 md:p-12">
+            <ScrollArea className="flex-1 p-6 sm:p-12">
               <div className="max-w-prose mx-auto">
                 {isLoading ? (
                   type === 'bible' ? <BibleChapterSkeleton /> : <CatechismParagraphSkeleton paragraph={params.paragraph} />
@@ -113,7 +114,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
                     {type === 'bible' ? (
                       <div className="space-y-4">
                         {content.verses?.map((v: any) => (
-                          <p key={v.number} className={params.verse === v.number ? "bg-primary/5 p-2 rounded-lg" : ""}>
+                          <p key={v.number} className={cn("inline transition-colors duration-300 rounded px-1", params.verse === v.number ? "bg-primary/10 shadow-sm" : "")}>
                             <sup className="text-[0.6em] font-black mr-2 opacity-30">{v.number}</sup>
                             {v.text}
                           </p>
@@ -132,15 +133,15 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             </ScrollArea>
 
             {/* Footer Navigation */}
-            <div className="p-6 border-t border-primary/5 flex items-center justify-between bg-muted/10">
-              <Button variant="ghost" onClick={() => navigateChapter(-1)} className="gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">
-                <ChevronLeft className="w-4 h-4" /> Anterior
+            <div className="p-4 sm:p-6 border-t border-primary/5 flex items-center justify-between bg-muted/10 gap-2">
+              <Button variant="ghost" onClick={() => navigateChapter(-1)} className="gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary px-2">
+                <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="hidden xs:inline">Anterior</span>
               </Button>
-              <Button variant="outline" className="rounded-full h-10 px-6 gap-2 text-[10px] font-black uppercase tracking-widest border-primary/10 text-primary/60" onClick={() => window.open(type === 'bible' ? `/bible?book=${params.abbr}&ch=${params.chapter}` : `/catechism?p=${params.paragraph}`, '_blank')}>
-                Ver no Scriptuarium <ExternalLink className="w-3 h-3" />
+              <Button variant="outline" className="rounded-full h-8 sm:h-10 px-3 sm:px-6 gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest border-primary/10 text-primary/60" onClick={() => window.open(type === 'bible' ? `/bible?book=${params.abbr}&ch=${params.chapter}` : `/catechism?p=${params.paragraph}`, '_blank')}>
+                Scriptuarium <ExternalLink className="w-2 h-2 sm:w-3 sm:h-3" />
               </Button>
-              <Button variant="ghost" onClick={() => navigateChapter(1)} className="gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">
-                Próximo <ChevronRight className="w-4 h-4" />
+              <Button variant="ghost" onClick={() => navigateChapter(1)} className="gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary px-2">
+                <span className="hidden xs:inline">Próximo</span> <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </motion.div>

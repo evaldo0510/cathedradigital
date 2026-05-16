@@ -29,13 +29,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-32 py-24">
+    <div className="max-w-3xl mx-auto space-y-24 md:space-y-32 py-16 md:py-24 px-4 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
       <section className="space-y-10">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="lg"
+          padding="md"
           className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
@@ -99,7 +99,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label="Catecismo" />
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          padding="lg"
+          padding="md"
           className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
@@ -121,7 +121,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-10">
         <SectionHeader label="Logos" />
         <HomeCard 
-          padding="lg"
+          padding="md"
           className="group border-primary/5 bg-primary/[0.01]"
           onClick={openLogosChat}
         >

@@ -90,7 +90,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
             onClick={handleNavigate}
             className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
           >
-            {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
+            {verse ? `Ir ao v${verse}` : 'Abrir'}
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
           </Button>
         </div>

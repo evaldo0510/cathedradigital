@@ -29,12 +29,12 @@ const RitualDoDia: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <CathedraIcon icon={Sparkles} size={IconSizePreset.TINY} variant="secondary" />
-            <span className="heading-section-label !opacity-60 text-secondary">
+            <span className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-60">
               Ritual do Dia
             </span>
           </div>
-          <span className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40">
-            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 text-right">
+            {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}
           </span>
         </div>
 
@@ -50,7 +50,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraIcon icon={BookOpen} size={IconSizePreset.TINY} variant="primary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
-          <blockquote className="heading-card font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
+          <blockquote className="text-xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
           <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>

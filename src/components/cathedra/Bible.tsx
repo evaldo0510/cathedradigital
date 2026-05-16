@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, memo } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -392,8 +392,48 @@ const Bible: React.FC = () => {
     if (next >= 1 && next <= selectedBook.chapters) {
       setSelectedChapter(next);
       setHighlightedVerse(null);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [selectedBook, selectedChapter]);
+
+  // Performance: memoize category items for long lists
+  const CategoryItem = memo(({ cat, i, onSelect }: any) => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: i * 0.05 }}
+      className="space-y-6"
+    >
+      <div className="flex items-center gap-4">
+        <div className={cn("w-10 h-10 rounded-full flex items-center justify-center border border-primary/5", cat.bgColor)}>
+          <cat.icon className={cn("w-5 h-5", cat.color)} />
+        </div>
+        <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40">{cat.label}</h3>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {cat.books.map((book: any) => (
+          <Button
+            key={book.abbr}
+            variant="outline"
+            onClick={() => onSelect(book)}
+            className={cn(
+              "h-auto py-4 px-4 justify-start text-left border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02] group relative overflow-hidden",
+              completedBooks.has(book.abbr) && "bg-secondary/5 border-secondary/20"
+            )}
+          >
+            <div className="flex flex-col gap-1 z-10">
+              <span className="text-xs font-serif font-bold text-primary group-hover:text-secondary transition-colors line-clamp-1">{book.name}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">{book.chapters} caps</span>
+            </div>
+            {completedBooks.has(book.abbr) && (
+              <Icons.CheckCircle2 className="absolute -right-1 -bottom-1 w-6 h-6 text-secondary/10" />
+            )}
+          </Button>
+        ))}
+      </div>
+    </motion.div>
+  ));
+  CategoryItem.displayName = 'CategoryItem';
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
@@ -566,11 +606,12 @@ const Bible: React.FC = () => {
             
             <div className="flex items-center justify-between gap-6">
               <Button 
+                variant="ghost"
                 onClick={() => setViewMode('chapters')} 
-                className="p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group"
+                className="p-3 sm:p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group shrink-0"
                 aria-label="Voltar para capítulos"
               >
-                <Icons.ChevronLeft className="w-6 h-6 text-primary/40 group-hover:text-primary transition-all" />
+                <Icons.ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-primary/40 group-hover:text-primary transition-all" />
               </Button>
 
               <div className="flex-1 text-center hidden md:block">
@@ -622,10 +663,10 @@ const Bible: React.FC = () => {
             )}
 
             {/* Toolbar - Floating-like feel */}
-            <div className="flex items-center justify-between gap-6 p-3 bg-background/40 backdrop-blur-xl rounded-full border border-primary/5 shadow-premium sticky top-8 z-40 transition-all hover:bg-background/60">
-              <div className="flex items-center gap-3 pl-6">
-                <Icons.Compass className="w-4 h-4 text-primary/30" />
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Leitura Contemplativa</span>
+            <div className="flex items-center justify-between gap-2 sm:gap-6 p-2 sm:p-3 bg-background/40 backdrop-blur-xl rounded-full border border-primary/5 shadow-premium sticky top-4 sm:top-8 z-40 transition-all hover:bg-background/60">
+              <div className="flex items-center gap-2 sm:gap-3 pl-4 sm:pl-6">
+                <Icons.Compass className="w-3 h-3 sm:w-4 sm:h-4 text-primary/30" />
+                <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-primary/30">Leitura Contemplativa</span>
               </div>
 
               <div className="flex items-center gap-2 pr-2">
