@@ -112,7 +112,7 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {/* Progress */}
-      <Card className="border-primary/20">
+      <Card className="border-primary/20 p-4 sm:p-6">
         <CardContent className="p-4 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>
