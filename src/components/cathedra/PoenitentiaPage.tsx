@@ -132,7 +132,7 @@ const PoenitentiaPage: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
               </div>
-              <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-premium shadow-primary/20 relative">
+              <div className="bg-primary text-primary-foreground p-8 sm:p-10 md:p-14 rounded-premium border border-primary/10 shadow-premium shadow-primary/20 relative">
                 <Icons.Sparkles className="absolute -top-3 -right-3 w-8 h-8 text-white/20 rotate-12" />
                 <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
                   "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
