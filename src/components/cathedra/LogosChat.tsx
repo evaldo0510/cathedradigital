@@ -203,12 +203,12 @@ const LogosChat = () => {
             user_id: user.id,
             content_type: 'logos_reflection',
             content_id: `logos_${Date.now()}`,
-            note_text: JSON.stringify({
-              reflection: assistantMessage.content,
+            note_text: assistantMessage.content,
+            metadata: { 
               prompt: userMessage.content,
               tone,
               timestamp: new Date().toISOString()
-            })
+            }
           });
         }
       } else if (response.error) {
