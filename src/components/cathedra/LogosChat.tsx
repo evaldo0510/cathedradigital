@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll, Download, Target, Feather, Shield, Heart } from 'lucide-react';
+import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll, Download, Target, Feather, Shield, Heart, Eye } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { callColloquium } from '@/services/aiService';
@@ -21,36 +21,58 @@ interface Message {
   timestamp: Date;
 }
 
+import { ReferenceModal } from './ReferenceModal';
+
 const TheologicalAwareText: React.FC<{
   text: string;
   onNavigateBible: (abbr: string, chapter: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
   isContemplative?: boolean;
-}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative }) => {
-  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
-  if (segments.length === 1 && segments[0].type === 'text') return <>{text}</>;
+  onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
+  showDetails?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true }) => {
+  const processedText = useMemo(() => {
+    if (showDetails) return text;
+    // Simple logic to hide "extra" sections: split by double newline and filter out sections starting with ## or ---
+    const lines = text.split('\n');
+    let essential = [];
+    let skipping = false;
+    for (const line of lines) {
+      if (line.startsWith('##') || line.startsWith('---') || line.includes('Meditação') || line.includes('Aprofundamento')) {
+        skipping = true;
+      }
+      if (!skipping) {
+        essential.push(line);
+      }
+    }
+    return essential.join('\n').trim();
+  }, [text, showDetails]);
+
+  const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
+  if (segments.length === 1 && segments[0].type === 'text') return <>{processedText}</>;
   return (
     <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide")}>
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return (
-            <BibleVersePopover
+            <button
               key={i}
-              abbr={seg.abbr}
-              chapter={seg.chapter!}
-              verse={seg.verse}
-              label={seg.value}
-              onNavigate={onNavigateBible}
-            />
+              onClick={() => onReferenceClick?.('bible', { abbr: seg.abbr, chapter: seg.chapter, verse: seg.verse })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              {seg.value}
+            </button>
           );
         }
         if (seg.type === 'catechismRef' && seg.paragraph) {
           return (
-            <CatechismPopover
+            <button
               key={i}
-              paragraph={seg.paragraph}
-              onNavigate={onNavigateCatechism}
-            />
+              onClick={() => onReferenceClick?.('catechism', { paragraph: seg.paragraph })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              §{seg.paragraph}
+            </button>
           );
         }
         return <React.Fragment key={i}>{seg.value}</React.Fragment>;
@@ -68,8 +90,14 @@ const LogosChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tone, setTone] = useState<LogosTone>('contemplative');
   const [isContemplative, setIsContemplative] = useState(false);
+  const [showExtraDetails, setShowExtraDetails] = useState(true);
   const [hasRitualPassed, setHasRitualPassed] = useState(false);
   const [intention, setInputIntention] = useState('');
+  const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
+    isOpen: false,
+    type: 'bible',
+    params: {}
+  });
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -187,14 +215,14 @@ const LogosChat = () => {
         };
         setMessages((prev) => [...prev, assistantMessage]);
         
-        // Auto-save to spiritual journal if user is logged in
+        // Auto-save to spiritual journal as a dedicated reflection
         if (user) {
-          await supabase.from('user_history').insert({
+          await supabase.from('user_notes').insert({
             user_id: user.id,
-            title: 'Reflexão com Logos',
-            route: '/logos',
+            content_type: 'logos_reflection',
+            content_id: `logos_${Date.now()}`,
+            note_text: assistantMessage.content,
             metadata: { 
-              reflection: assistantMessage.content,
               prompt: userMessage.content,
               tone,
               timestamp: new Date().toISOString()
@@ -267,9 +295,21 @@ const LogosChat = () => {
                       "rounded-full hover:bg-primary/5 transition-all",
                       isContemplative ? "text-primary bg-primary/10" : "text-primary/20"
                     )}
-                    title="Modo Contemplativo"
+                    title={isContemplative ? "Modo Normal" : "Modo Contemplativo"}
                   >
                     <Target className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setShowExtraDetails(!showExtraDetails)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      !showExtraDetails ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title={showExtraDetails ? "Ocultar Detalhes" : "Mostrar Detalhes"}
+                  >
+                    <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
                   <Button 
                     variant="ghost" 
@@ -337,6 +377,8 @@ const LogosChat = () => {
                           onNavigateBible={handleNavigateToBible}
                           onNavigateCatechism={handleNavigateToCatechism}
                           isContemplative={isContemplative}
+                          onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
+                          showDetails={showExtraDetails}
                         />
                       </div>
                       
@@ -436,6 +478,13 @@ const LogosChat = () => {
           <Compass className="relative z-10 w-6 h-6 group-hover:rotate-12 transition-transform duration-1000" />
         </motion.button>
       )}
+      {/* Reference Modal */}
+      <ReferenceModal
+        isOpen={refModal.isOpen}
+        onClose={() => setRefModal(prev => ({ ...prev, isOpen: false }))}
+        initialType={refModal.type}
+        initialParams={refModal.params}
+      />
     </div>
   );
 };

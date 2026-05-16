@@ -12,8 +12,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { 
   Copy, Check, MessageSquare, Trash2, ChevronLeft, 
   Compass, Sparkles, BookOpen, ArrowRight, Shield,
-  Search, Scroll, Quote, History, Plus
+  Search, Scroll, Quote, History, Plus, Eye, Target
 } from 'lucide-react';
+import { ReferenceModal } from './ReferenceModal';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -44,22 +46,54 @@ const TheologicalAwareText: React.FC<{
   text: string;
   onNavigateBible: (abbr: string, chapter: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
-}> = ({ text, onNavigateBible, onNavigateCatechism }) => {
-  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
+  onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
+  showDetails?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, onReferenceClick, showDetails = true }) => {
+  const processedText = useMemo(() => {
+    if (showDetails) return text;
+    const lines = text.split('\n');
+    let essential = [];
+    let skipping = false;
+    for (const line of lines) {
+      if (line.startsWith('##') || line.startsWith('---') || line.includes('Meditação') || line.includes('Aprofundamento')) {
+        skipping = true;
+      }
+      if (!skipping) essential.push(line);
+    }
+    return essential.join('\n').trim();
+  }, [text, showDetails]);
+
+  const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
   if (segments.length === 1 && segments[0].type === 'text') return <ReactMarkdown components={{
     p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
     strong: ({ children }) => <strong className="text-primary font-bold">{children}</strong>,
     em: ({ children }) => <em className="italic opacity-90">{children}</em>,
-  }}>{text}</ReactMarkdown>;
+  }}>{processedText}</ReactMarkdown>;
   
   return (
     <div className="space-y-4">
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
-          return <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateBible} />;
+          return (
+            <button
+              key={i}
+              onClick={() => onReferenceClick?.('bible', { abbr: seg.abbr, chapter: seg.chapter, verse: seg.verse })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              {seg.value}
+            </button>
+          );
         }
         if (seg.type === 'catechismRef' && seg.paragraph) {
-          return <CatechismPopover key={i} paragraph={seg.paragraph} onNavigate={onNavigateCatechism} />;
+          return (
+            <button
+              key={i}
+              onClick={() => onReferenceClick?.('catechism', { paragraph: seg.paragraph })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              §{seg.paragraph}
+            </button>
+          );
         }
         return <ReactMarkdown key={i} components={{
           p: ({ children }) => <span className="inline">{children}</span>,
@@ -79,6 +113,12 @@ const StudyMode: React.FC = () => {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [lastMetadata, setLastMetadata] = useState<any>(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showExtraDetails, setShowExtraDetails] = useState(true);
+  const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
+    isOpen: false,
+    type: 'bible',
+    params: {}
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -226,6 +266,20 @@ const StudyMode: React.FC = () => {
         
         if (convId && user) {
           saveMessages(convId, [...allMessages, assistantMsg]).catch(e => console.error('Save failed:', e));
+          
+          // Also save as a dedicated journal reflection for the new Logos tab
+          await supabase.from('user_notes').insert({
+            user_id: user.id,
+            content_type: 'logos_reflection',
+            content_id: `logos_${Date.now()}`,
+            note_text: assistantMsg.content,
+            metadata: { 
+              prompt: text.trim(),
+              tone: currentMode || 'contemplative',
+              timestamp: new Date().toISOString(),
+              conversation_id: convId
+            }
+          });
         }
       } else if (response.error) {
         throw new Error(response.error);
@@ -258,7 +312,10 @@ const StudyMode: React.FC = () => {
         {/* Left Sidebar: History */}
         <aside className={`w-80 border-r border-primary/5 bg-background/50 backdrop-blur-xl hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
           <div className="p-8 border-b border-primary/5 flex items-center justify-between">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+            <div className="flex flex-col">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+              <p className="text-[8px] font-medium text-primary/20 italic mt-1">Reflexões Guardadas</p>
+            </div>
             <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full hover:bg-primary/5">
               <Plus className="w-5 h-5" />
             </Button>
@@ -322,11 +379,23 @@ const StudyMode: React.FC = () => {
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     {msg.role === 'assistant' && (
-                      <div className="flex items-center gap-4 mb-8">
-                        <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                          <Compass className="w-5 h-5 text-primary" />
+                      <div className="flex items-center justify-between w-full mb-8">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                            <Compass className="w-5 h-5 text-primary" />
+                          </div>
+                          <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
                         </div>
-                        <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => setShowExtraDetails(!showExtraDetails)}
+                            className={cn("h-8 w-8 rounded-full", !showExtraDetails && "text-primary bg-primary/10")}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     )}
                     
@@ -338,7 +407,9 @@ const StudyMode: React.FC = () => {
                       <TheologicalAwareText 
                         text={msg.content} 
                         onNavigateBible={handleNavigateToBible} 
-                        onNavigateCatechism={handleNavigateToCatechism} 
+                        onNavigateCatechism={handleNavigateToCatechism}
+                        showDetails={showExtraDetails}
+                        onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                       />
                     </div>
                   </motion.div>
@@ -395,6 +466,14 @@ const StudyMode: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Reference Modal */}
+      <ReferenceModal
+        isOpen={refModal.isOpen}
+        onClose={() => setRefModal(prev => ({ ...prev, isOpen: false }))}
+        initialType={refModal.type}
+        initialParams={refModal.params}
+      />
     </div>
   );
 };

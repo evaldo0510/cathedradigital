@@ -258,6 +258,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          metadata: Json | null
           title: string
           updated_at: string
           user_id: string
@@ -265,6 +266,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id: string
@@ -272,6 +274,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -1678,6 +1681,7 @@ export type Database = {
           created_at: string
           highlight_color: string | null
           id: string
+          metadata: Json | null
           note_text: string
           updated_at: string
           user_id: string
@@ -1688,6 +1692,7 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          metadata?: Json | null
           note_text?: string
           updated_at?: string
           user_id: string
@@ -1698,6 +1703,7 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          metadata?: Json | null
           note_text?: string
           updated_at?: string
           user_id?: string

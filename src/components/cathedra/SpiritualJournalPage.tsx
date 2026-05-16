@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
+import { cn } from '@/lib/utils';
 
 interface JournalEntry {
   id: string;
@@ -34,33 +35,65 @@ const SpiritualJournalPage = () => {
   const [mood, setMood] = useState('peace');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [reflections, setReflections] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'journal' | 'reflections'>('journal');
+  const [logosReflections, setLogosReflections] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'journal' | 'reflections' | 'logos'>('journal');
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [filterTrail, setFilterTrail] = useState<string | null>(null);
 
   const fetchEntries = async () => {
     if (!user) return;
     setIsFetching(true);
     
-    const [journalRes, reflectionsRes] = await Promise.all([
-      supabase
-        .from('spiritual_journal')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('entry_date', { ascending: false })
-        .limit(30),
-      supabase
-        .from('user_notes')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('content_type', 'quiz_deepening')
-        .order('created_at', { ascending: false })
-    ]);
-    
-    if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
-    if (reflectionsRes.data) setReflections(reflectionsRes.data);
-    
-    setIsFetching(false);
+    try {
+      const [journalRes, reflectionsRes, logosRes] = await Promise.all([
+        supabase
+          .from('spiritual_journal')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('entry_date', { ascending: false })
+          .limit(30),
+        supabase
+          .from('user_notes')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('content_type', 'quiz_deepening')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('user_notes')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('content_type', 'logos_reflection')
+          .order('created_at', { ascending: false })
+      ]);
+      
+      if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
+      if (reflectionsRes.data) setReflections(reflectionsRes.data);
+      if (logosRes.data) {
+        setLogosReflections(logosRes.data.map(r => {
+          let parsedMetadata = r.metadata;
+          if (!parsedMetadata && r.note_text.startsWith('{')) {
+            try {
+              const fullData = JSON.parse(r.note_text);
+              parsedMetadata = {
+                prompt: fullData.prompt,
+                tone: fullData.tone,
+                timestamp: fullData.timestamp
+              };
+              // Note: r.note_text might need to be cleaned up if it was a full JSON string
+              if (fullData.reflection) r.note_text = fullData.reflection;
+            } catch (e) {
+              console.error('Failed to parse legacy reflection:', e);
+            }
+          }
+          return { ...r, parsed: parsedMetadata };
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching journal entries:', error);
+    } finally {
+      setIsFetching(false);
+    }
   };
 
   useEffect(() => {
@@ -73,7 +106,7 @@ const SpiritualJournalPage = () => {
     setIsLoading(true);
     const today = new Date().toISOString().split('T')[0];
     
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('spiritual_journal')
       .upsert({
         user_id: user.id,
@@ -81,9 +114,7 @@ const SpiritualJournalPage = () => {
         mood,
         entry_date: today,
         updated_at: new Date().toISOString()
-      })
-      .select()
-      .single();
+      });
 
     if (error) {
       toast.error('Erro ao salvar reflexão');
@@ -105,7 +136,7 @@ const SpiritualJournalPage = () => {
           <Icons.PenLine className="w-4 h-4 text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tightest">
           Diário Espiritual
         </h1>
         <p className="text-lg md:text-xl text-primary/60 italic font-serif leading-relaxed">
@@ -115,7 +146,7 @@ const SpiritualJournalPage = () => {
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <HomeCard padding="lg" className="space-y-16">
+        <HomeCard padding="lg" className="space-y-16 bg-primary/[0.01]">
           <div className="space-y-8">
             <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
             <div className="flex flex-wrap justify-center gap-8">
@@ -158,7 +189,7 @@ const SpiritualJournalPage = () => {
       </section>
 
       {/* History */}
-      <section className="space-y-12 max-w-4xl mx-auto w-full">
+      <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
           <div className="flex items-center gap-12 w-full">
             <div className="h-px flex-1 bg-border/30" />
@@ -184,6 +215,14 @@ const SpiritualJournalPage = () => {
               }`}
             >
               Reflexões
+            </button>
+            <button 
+              onClick={() => setActiveTab('logos')}
+              className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                activeTab === 'logos' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
+              }`}
+            >
+              Logos
             </button>
           </div>
         </div>
@@ -230,7 +269,7 @@ const SpiritualJournalPage = () => {
               <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
             </div>
           )
-        ) : (
+        ) : activeTab === 'reflections' ? (
           reflections.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
               {reflections.map((ref) => (
@@ -268,6 +307,87 @@ const SpiritualJournalPage = () => {
               <p className="font-serif italic text-xl">Responda as perguntas no final do diagnóstico para vê-las aqui.</p>
             </div>
           )
+        ) : (
+          <div className="space-y-12">
+            <div className="flex justify-center gap-4">
+               {['contemplative', 'poetic', 'doctrinal', 'brief'].map(t => (
+                 <button
+                   key={t}
+                   onClick={() => setFilterTrail(filterTrail === t ? null : t)}
+                   className={cn(
+                     "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all",
+                     filterTrail === t ? "bg-primary text-primary-foreground border-primary" : "border-primary/10 text-primary/40 hover:border-primary/30"
+                   )}
+                 >
+                   {t}
+                 </button>
+               ))}
+            </div>
+
+            {logosReflections.length > 0 ? (
+              <div className="grid grid-cols-1 gap-12">
+                {logosReflections
+                  .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
+                  .map((ref) => (
+                  <motion.div
+                    key={ref.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center">
+                          <Icons.Compass className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Mestre Logos</p>
+                          <span className="text-sm font-serif font-bold text-primary">
+                            {ref.parsed?.timestamp ? format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR }) : 'Data não registrada'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-secondary/10 text-secondary rounded-full">
+                          {ref.parsed?.tone || 'contemplative'}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      {ref.parsed?.prompt && (
+                        <p className="text-sm text-primary/40 italic font-serif leading-relaxed px-4 py-2 border-l border-primary/10">
+                          "{ref.parsed.prompt}"
+                        </p>
+                      )}
+                      <p className="text-xl text-primary/80 font-serif leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
+                        {ref.note_text}
+                      </p>
+                    </div>
+
+                    <div className="pt-6 border-t border-primary/5 flex justify-end">
+                      <HomeButton 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-[9px] h-10 px-6"
+                        onClick={() => {
+                          const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+                          if (chatBtn) chatBtn.click();
+                        }}
+                      >
+                        Reabrir Diálogo
+                      </HomeButton>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+                <Icons.Compass className="w-16 h-16 mx-auto mb-6 stroke-1" />
+                <p className="font-serif italic text-xl">Inicie um diálogo com o Logos para guardar reflexões.</p>
+              </div>
+            )}
+          </div>
         )}
       </section>
     </div>
