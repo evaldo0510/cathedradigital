@@ -18,6 +18,7 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
+  ArrowUpDown,
   Star,
   MessageCircle,
   Zap,
