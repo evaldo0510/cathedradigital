@@ -290,6 +290,85 @@ const SpiritualJournalPage = () => {
               <p className="font-serif italic text-xl">Responda as perguntas no final do diagnóstico para vê-las aqui.</p>
             </div>
           )
+        ) : (
+          <div className="space-y-12">
+            <div className="flex justify-center gap-4">
+               {['contemplative', 'poetic', 'doctrinal', 'brief'].map(t => (
+                 <button
+                   key={t}
+                   onClick={() => setFilterTrail(filterTrail === t ? null : t)}
+                   className={cn(
+                     "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all",
+                     filterTrail === t ? "bg-primary text-primary-foreground border-primary" : "border-primary/10 text-primary/40 hover:border-primary/30"
+                   )}
+                 >
+                   {t}
+                 </button>
+               ))}
+            </div>
+
+            {logosReflections.length > 0 ? (
+              <div className="grid grid-cols-1 gap-12">
+                {logosReflections
+                  .filter(r => !filterTrail || r.parsed.tone === filterTrail)
+                  .map((ref) => (
+                  <motion.div
+                    key={ref.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center">
+                          <Icons.Compass className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Mestre Logos</p>
+                          <span className="text-sm font-serif font-bold text-primary">
+                            {format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-secondary/10 text-secondary rounded-full">
+                          {ref.parsed.tone}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-6">
+                      <p className="text-sm text-primary/40 italic font-serif leading-relaxed px-4 py-2 border-l border-primary/10">
+                        "{ref.parsed.prompt}"
+                      </p>
+                      <p className="text-xl text-primary/80 font-serif leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
+                        {ref.parsed.reflection}
+                      </p>
+                    </div>
+
+                    <div className="pt-6 border-t border-primary/5 flex justify-end">
+                      <HomeButton 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-[9px] h-10 px-6"
+                        onClick={() => {
+                          const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+                          if (chatBtn) chatBtn.click();
+                        }}
+                      >
+                        Reabrir Diálogo
+                      </HomeButton>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+                <Icons.Compass className="w-16 h-16 mx-auto mb-6 stroke-1" />
+                <p className="font-serif italic text-xl">Inicie um diálogo com o Logos para guardar reflexões.</p>
+              </div>
+            )}
+          </div>
         )}
       </section>
     </div>
