@@ -86,7 +86,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
               {label}
             </span>
           </div>
-          <Button
+          <button
             onClick={handleNavigate}
             className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
           >
