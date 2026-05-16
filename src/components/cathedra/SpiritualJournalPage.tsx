@@ -40,6 +40,8 @@ const SpiritualJournalPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [filterTrail, setFilterTrail] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [editingEntry, setEditingEntry] = useState<{ id: string, type: 'journal' | 'reflection' | 'logos', content: string } | null>(null);
 
   const fetchEntries = async () => {
     if (!user) return;
@@ -127,6 +129,60 @@ const SpiritualJournalPage = () => {
     setIsLoading(false);
   };
 
+  const deleteEntry = async (id: string, type: 'journal' | 'reflection' | 'logos') => {
+    if (!confirm('Deseja realmente apagar esta reflexão?')) return;
+    
+    try {
+      const table = type === 'journal' ? 'spiritual_journal' : 'user_notes';
+      const { error } = await supabase.from(table).delete().eq('id', id);
+      
+      if (error) throw error;
+      toast.success('Reflexão removida.');
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao apagar reflexão');
+      console.error(error);
+    }
+  };
+
+  const updateEntry = async () => {
+    if (!editingEntry || !editingEntry.content.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      if (editingEntry.type === 'journal') {
+        await supabase
+          .from('spiritual_journal')
+          .update({ content: editingEntry.content.trim(), updated_at: new Date().toISOString() })
+          .eq('id', editingEntry.id);
+      } else {
+        await supabase
+          .from('user_notes')
+          .update({ note_text: editingEntry.content.trim(), updated_at: new Date().toISOString() })
+          .eq('id', editingEntry.id);
+      }
+      toast.success('Reflexão atualizada.');
+      setEditingEntry(null);
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao atualizar reflexão');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredItems = (items: any[], searchFields: string[]) => {
+    if (!searchQuery.trim()) return items;
+    return items.filter(item => 
+      searchFields.some(field => {
+        const val = item[field];
+        if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
+        return false;
+      })
+    );
+  };
+
   return (
     <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
@@ -191,6 +247,17 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
+          <div className="w-full relative max-w-md mx-auto">
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+            <input 
+              type="text" 
+              placeholder="Buscar reflexões..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
+            />
+          </div>
+
           <div className="flex items-center gap-12 w-full">
             <div className="h-px flex-1 bg-border/30" />
             <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
@@ -234,9 +301,9 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : activeTab === 'journal' ? (
-          entries.length > 0 ? (
+          filteredItems(entries, ['content']).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {entries.map((entry) => (
+              {filteredItems(entries, ['content']).map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -255,7 +322,15 @@ const SpiritualJournalPage = () => {
                         </span>
                       </div>
                     </div>
-                    <Icons.Quote className="w-10 h-10 text-primary/5" />
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: entry.id, type: 'journal', content: entry.content })} className="text-primary/20 hover:text-primary transition-colors">
+                        <Icons.PenLine className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteEntry(entry.id, 'journal')} className="text-primary/20 hover:text-red-500 transition-colors">
+                        <Icons.Trash2 className="w-4 h-4" />
+                      </Button>
+                      <Icons.Quote className="w-10 h-10 text-primary/5" />
+                    </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
                     "{entry.content}"
@@ -270,9 +345,9 @@ const SpiritualJournalPage = () => {
             </div>
           )
         ) : activeTab === 'reflections' ? (
-          reflections.length > 0 ? (
+          filteredItems(reflections, ['note_text', 'content_id']).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {reflections.map((ref) => (
+              {filteredItems(reflections, ['note_text', 'content_id']).map((ref) => (
                 <motion.div
                   key={ref.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -291,9 +366,17 @@ const SpiritualJournalPage = () => {
                         </span>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
-                      {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'reflection', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
+                        <Icons.PenLine className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'reflection')} className="text-primary/20 hover:text-red-500 transition-colors">
+                        <Icons.Trash2 className="w-4 h-4" />
+                      </Button>
+                      <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
+                        {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-primary/10">
                     "{ref.note_text}"
@@ -324,9 +407,9 @@ const SpiritualJournalPage = () => {
                ))}
             </div>
 
-            {logosReflections.length > 0 ? (
+            {filteredItems(logosReflections, ['note_text']).length > 0 ? (
               <div className="grid grid-cols-1 gap-12">
-                {logosReflections
+                {filteredItems(logosReflections, ['note_text'])
                   .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
                   .map((ref) => (
                   <motion.div
@@ -347,7 +430,13 @@ const SpiritualJournalPage = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
+                        <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'logos', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
+                          <Icons.PenLine className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'logos')} className="text-primary/20 hover:text-red-500 transition-colors">
+                          <Icons.Trash2 className="w-4 h-4" />
+                        </Button>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-secondary/10 text-secondary rounded-full">
                           {ref.parsed?.tone || 'contemplative'}
                         </span>
@@ -390,6 +479,36 @@ const SpiritualJournalPage = () => {
           </div>
         )}
       </section>
+
+      <AnimatePresence>
+        {editingEntry && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-background/80 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-card w-full max-w-2xl p-10 rounded-premium border border-border/40 shadow-premium space-y-8"
+            >
+              <h3 className="text-2xl font-display font-bold text-primary">Editar Reflexão</h3>
+              <Textarea
+                value={editingEntry.content}
+                onChange={(e) => setEditingEntry({ ...editingEntry, content: e.target.value })}
+                className="min-h-[250px] font-serif text-xl leading-relaxed bg-muted/10 border-none shadow-inner resize-none"
+              />
+              <div className="flex justify-end gap-6">
+                <Button variant="outline" onClick={() => setEditingEntry(null)}>Cancelar</Button>
+                <HomeButton 
+                  onClick={updateEntry}
+                  disabled={isLoading || !editingEntry.content.trim()}
+                  variant="primary"
+                >
+                  {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+                </HomeButton>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
