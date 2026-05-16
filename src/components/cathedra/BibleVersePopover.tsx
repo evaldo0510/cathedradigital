@@ -110,7 +110,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
                 </p>
               ))}
               {!verse && (
-                <p className="text-premium-tiny text-muted-foreground italic pt-1 border-t border-border">
+                <p className="text-premium-tiny text-muted-foreground italic pt-1 border-t border-primary/5">
                   Mostrando primeiros versículos...
                 </p>
               )}
