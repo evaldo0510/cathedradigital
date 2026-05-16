@@ -34,7 +34,7 @@ const ReadingPreferencesPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-16 right-0 w-[320px] bg-background border border-border/50 shadow-premium rounded-[2rem] p-6 space-y-8 backdrop-blur-xl reading-sepia"
+            className="absolute bottom-16 right-0 w-[340px] bg-background border border-border/50 shadow-premium rounded-[2.5rem] p-8 space-y-8 backdrop-blur-xl reading-sepia"
           >
             <div className="flex items-center justify-between">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Preferências de Leitura</h3>
