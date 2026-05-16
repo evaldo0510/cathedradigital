@@ -219,7 +219,7 @@ const Rosary: React.FC = () => {
           <div className="md:col-span-2 grid gap-4">
             <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
             {set.mysteries.map((m, i) => (
-              <div key={i} className="p-6 md:p-8 rounded-premium-sm bg-card border border-border shadow-sm hover:shadow-soft transition-shadow">
+              <div key={i} className="p-6 md:p-8 rounded-premium-sm bg-card border border-border shadow-soft hover:shadow-premium transition-shadow">
                 <div className="flex items-start gap-6">
                   <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
                   <div className="space-y-3">
