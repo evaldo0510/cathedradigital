@@ -407,6 +407,16 @@ const LogosChat = () => {
                   >
                     <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
+                  <button
+                    onClick={() => setAutoScroll(!autoScroll)}
+                    className={cn(
+                      "text-premium-tiny transition-all px-4 py-2 rounded-full border border-primary/5 hover:bg-primary/5",
+                      autoScroll ? "text-secondary border-secondary/20" : "text-primary/30"
+                    )}
+                    aria-label={autoScroll ? "Pausar rolagem automática" : "Ativar rolagem automática"}
+                  >
+                    {autoScroll ? "Auto-scroll" : "Scroll Manual"}
+                  </button>
                   <Button 
                     ref={closeBtnRef}
                     variant="ghost" 
