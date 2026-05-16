@@ -85,7 +85,7 @@ const PricingSection = () => {
                   <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {tier.icon}
                   </div>
-                  <h3 className="font-bold font-serif heading-item">{tier.name}</h3>
+                  <h3 className="font-bold font-serif heading-card"> {tier.name}</h3>
                 </div>
 
                 <div className="space-y-2">
