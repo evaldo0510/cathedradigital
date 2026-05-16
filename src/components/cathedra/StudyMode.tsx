@@ -113,6 +113,12 @@ const StudyMode: React.FC = () => {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [lastMetadata, setLastMetadata] = useState<any>(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showExtraDetails, setShowExtraDetails] = useState(true);
+  const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
+    isOpen: false,
+    type: 'bible',
+    params: {}
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
