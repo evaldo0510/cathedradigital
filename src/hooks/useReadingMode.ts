@@ -73,7 +73,7 @@ export function useReadingMode() {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    const themes: ReadingTheme[] = ['normal', 'sepia', 'paper', 'night'];
+    const themes: ReadingTheme[] = ['normal', 'sepia', 'paper', 'night', 'monastery'];
     const nextIdx = (themes.indexOf(prefs.theme) + 1) % themes.length;
     updatePrefs({ theme: themes[nextIdx] });
   }, [prefs.theme, updatePrefs]);
