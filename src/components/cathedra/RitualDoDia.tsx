@@ -51,7 +51,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraIcon icon={BookOpen} size={IconSizePreset.TINY} variant="primary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
-          <blockquote className="text-xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
+          <blockquote className="text-lg font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
           <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
