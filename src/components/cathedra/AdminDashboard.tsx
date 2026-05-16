@@ -502,7 +502,7 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5 text-premium-body">Cadastrados</p>
               </CardContent>
             </Card>
 
@@ -513,7 +513,7 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5 text-premium-body">Últimos 30 dias</p>
               </CardContent>
             </Card>
 
@@ -524,7 +524,7 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5 text-premium-body">Assinantes</p>
               </CardContent>
             </Card>
 
@@ -535,7 +535,7 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5 text-premium-body">Recorrência</p>
               </CardContent>
             </Card>
           </div>

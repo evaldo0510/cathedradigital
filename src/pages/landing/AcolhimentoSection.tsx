@@ -18,8 +18,8 @@ const AcolhimentoSection = () => {
             <Heart className="w-4 h-4 fill-current" aria-hidden="true" />
             <span className="text-premium-tiny font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-display font-bold">Um Espaço Feito por Fiéis para Fiéis</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-serif italic">
+          <h2 className="text-4xl md:text-5xl font-display font-bold heading-section-label">Um Espaço Feito por Fiéis para Fiéis</h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto font-serif italic text-premium-body">
             "Não sois mais estrangeiros, nem hóspedes, mas sois concidadãos dos santos e membros da família de Deus." (Efésios 2,19)
           </p>
         </motion.div>
@@ -51,8 +51,8 @@ const AcolhimentoSection = () => {
                 {item.icon}
               </div>
               <div className="space-y-3">
-                <h3 className="text-xl font-bold font-serif">{item.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
+                <h3 className="text-xl font-bold font-serif heading-card">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed text-premium-body">
                   {item.desc}
                 </p>
               </div>
