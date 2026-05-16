@@ -335,6 +335,20 @@ const ProfilePage: React.FC = () => {
 
       <div className="premium-card p-8 space-y-6">
         <div className="flex items-center justify-between">
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Progresso Espiritual</h2>
+          <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.PROGRESS)} className="text-primary gap-2">
+            Ver Detalhes <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+        <div className="space-y-4">
+          <p className="text-xs text-muted-foreground italic leading-relaxed">
+            Acompanhe seu calendário de purificação e o status das suas trilhas diárias.
+          </p>
+        </div>
+      </div>
+
+      <div className="premium-card p-8 space-y-6">
+        <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
         <div className="space-y-4">
