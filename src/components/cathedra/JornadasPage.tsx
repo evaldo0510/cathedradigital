@@ -481,7 +481,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
                   <Card
-                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
+                    className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-secondary/40 outline-none ${
                       isComplete 
                         ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
                         : hasStarted 
