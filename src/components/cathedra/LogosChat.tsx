@@ -335,7 +335,7 @@ const LogosChat = () => {
                       className="py-12 sm:py-20 text-center space-y-8 sm:space-y-12 px-4 sm:px-6"
                     >
                       <div className="space-y-6">
-                        <Heart className="w-12 h-12 text-secondary/20 mx-auto" />
+                        <Heart className="w-8 h-8 sm:w-12 sm:h-12 text-secondary/20 mx-auto" />
                         <h4 className="text-3xl font-display text-primary/80">Silencie o Coração</h4>
                         <p className="text-lg text-primary/40 font-serif italic leading-relaxed">
                           Antes de iniciarmos, ofereça sua intenção ou uma breve oração ao Senhor.
