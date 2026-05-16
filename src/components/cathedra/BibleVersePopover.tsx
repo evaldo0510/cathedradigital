@@ -92,7 +92,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
           >
             {verse ? `Ir ao v${verse}` : 'Abrir'}
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-          </Button>
+          </button>
         </div>
         <div className="p-3 space-y-2">
           {loading && (
