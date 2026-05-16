@@ -15,7 +15,7 @@ interface HomeMainContentProps {
 
 const SectionHeader = ({ label }: { label: string }) => (
   <div className="flex items-center gap-6">
-    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap heading-section-label">
+    <h2 className="text-premium-small heading-section-label">
       {label}
     </h2>
     <div className="h-px flex-1 bg-primary/5" />
