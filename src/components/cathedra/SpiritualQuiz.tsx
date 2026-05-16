@@ -264,13 +264,16 @@ function computeProfile(answers: Record<string, string>): ProfileId {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0] as ProfileId;
 }
 
-const QuietQuote: React.FC<{ quote: QuoteReference; className?: string }> = ({ quote, className }) => (
+const QuietQuote: React.FC<{ quote: QuoteReference; className?: string; onOpen?: (quote: QuoteReference) => void }> = ({ quote, className, onOpen }) => (
   <motion.div 
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     className={`space-y-2 text-center max-w-sm mx-auto ${className}`}
   >
-    <p className="text-sm font-serif italic text-primary/40 leading-relaxed group cursor-pointer hover:text-primary/60 transition-colors">
+    <p 
+      className="text-sm font-serif italic text-primary/40 leading-relaxed group cursor-pointer hover:text-primary/60 transition-colors"
+      onClick={() => onOpen?.(quote)}
+    >
       "{quote.text}"
       <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-tighter opacity-40 group-hover:opacity-100 transition-opacity">
         <BookOpen className="w-2 h-2" /> {quote.ref}
@@ -294,6 +297,29 @@ const SpiritualQuiz: React.FC = () => {
   const [isSavingReflection, setIsSavingReflection] = useState(false);
   const [isPausing, setIsPausing] = useState(false);
   const [journalText, setJournalText] = useState("");
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'bible' | 'catechism'>('bible');
+  const [modalParams, setModalParams] = useState<any>({});
+
+  const handleOpenReference = (quote: QuoteReference) => {
+    if (quote.source === 'catechism') {
+      const paragraph = parseInt(quote.ref.replace(/\D/g, ''));
+      setModalType('catechism');
+      setModalParams({ paragraph });
+    } else {
+      const match = quote.ref.match(/([a-zA-Z\.\s]+)\s+(\d+)(?:,(\d+))?/);
+      if (match) {
+        setModalType('bible');
+        setModalParams({ 
+          abbr: match[1].trim(), 
+          chapter: parseInt(match[2]),
+          verse: match[3] ? parseInt(match[3]) : undefined
+        });
+      }
+    }
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     const activeId = existing || result;
