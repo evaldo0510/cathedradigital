@@ -240,8 +240,7 @@ const LogosChat = () => {
                     <ChevronRight className="w-8 h-8" />
                   </button>
                 </div>
-                <div className="mt-8 flex justify-between items-center opacity-10">
-                  <p className="text-[10px] font-medium italic tracking-widest">Silêncio e Escuta</p>
+                <div className="mt-8 flex justify-between items-center opacity-[0.03]">
                   <div className="flex gap-6">
                     <Scroll className="w-3.5 h-3.5" />
                     <BookOpen className="w-3.5 h-3.5" />
