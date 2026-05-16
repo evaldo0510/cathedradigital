@@ -680,12 +680,23 @@ const SpiritualQuiz: React.FC = () => {
             <span className="text-[10px] font-black uppercase tracking-widest">4 Dimensões da Alma</span>
             <div className="w-1 h-1 rounded-full bg-primary/20" />
           </div>
-          <Button
-            onClick={() => setPhase('quiz')}
-            className="w-full max-w-xs rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground shadow-premium group"
-          >
-            Iniciar Reflexão <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+            <Button
+              onClick={() => { setPhase('quiz'); setStep(0); setAnswers({}); setHasPartialProgress(false); }}
+              variant={hasPartialProgress ? "outline" : "primary"}
+              className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] shadow-premium group"
+            >
+              {hasPartialProgress ? "Reiniciar" : "Iniciar Reflexão"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            {hasPartialProgress && (
+              <Button
+                onClick={() => setPhase('quiz')}
+                className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground shadow-premium group"
+              >
+                Continuar do ponto salvo <Sparkles className="w-4 h-4 animate-pulse" />
+              </Button>
+            )}
+          </div>
         </div>
       </motion.div>
     );
