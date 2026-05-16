@@ -336,6 +336,7 @@ const LogosChat = () => {
                           text={msg.content} 
                           onNavigateBible={handleNavigateToBible}
                           onNavigateCatechism={handleNavigateToCatechism}
+                          isContemplative={isContemplative}
                         />
                       </div>
                       
