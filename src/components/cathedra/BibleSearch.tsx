@@ -51,7 +51,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
             placeholder="Buscar por palavra-chave nos versículos..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-primary/10 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
             autoFocus
           />
         </div>
