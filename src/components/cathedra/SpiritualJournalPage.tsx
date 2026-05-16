@@ -301,9 +301,9 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : activeTab === 'journal' ? (
-          entries.length > 0 ? (
+          filteredItems(entries, ['content']).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {entries.map((entry) => (
+              {filteredItems(entries, ['content']).map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -322,7 +322,15 @@ const SpiritualJournalPage = () => {
                         </span>
                       </div>
                     </div>
-                    <Icons.Quote className="w-10 h-10 text-primary/5" />
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: entry.id, type: 'journal', content: entry.content })} className="text-primary/20 hover:text-primary transition-colors">
+                        <Icons.PenLine className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteEntry(entry.id, 'journal')} className="text-primary/20 hover:text-red-500 transition-colors">
+                        <Icons.Trash2 className="w-4 h-4" />
+                      </Button>
+                      <Icons.Quote className="w-10 h-10 text-primary/5" />
+                    </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
                     "{entry.content}"
