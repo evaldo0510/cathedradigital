@@ -35,7 +35,7 @@ const YOUTUBE_IDS: Record<MysterySet, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-premium-sm overflow-hidden border border-border bg-black shadow-premium">
+  <div className="w-full aspect-video rounded-premium overflow-hidden border border-primary/5 bg-black shadow-premium">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
