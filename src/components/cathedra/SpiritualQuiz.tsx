@@ -936,6 +936,12 @@ const SpiritualQuiz: React.FC = () => {
              <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="opacity-40" />
           )}
         </motion.div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </div>
     );
   }
