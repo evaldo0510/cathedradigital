@@ -19,6 +19,7 @@ interface JournalEntry {
   mood: string;
   entry_date: string;
   created_at: string;
+  is_reviewed: boolean;
 }
 
 const MOODS = [
