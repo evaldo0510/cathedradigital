@@ -187,10 +187,10 @@
   }
   
   .heading-section-label { 
-    @apply font-bold uppercase tracking-[0.3em] opacity-60;
-    font-size: clamp(0.75rem, 1vw, 0.875rem);
+    @apply font-bold uppercase tracking-[0.3em] opacity-40;
+    font-size: clamp(0.7rem, 0.9vw, 0.75rem);
     line-height: 1.2;
-    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
   }
   
   .heading-card { 
