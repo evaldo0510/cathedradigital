@@ -35,6 +35,8 @@ const SpiritualJournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [reflections, setReflections] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<'journal' | 'reflections'>('journal');
 
   const fetchEntries = async () => {
     if (!user) return;
