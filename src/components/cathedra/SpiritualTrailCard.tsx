@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, CheckCircle2, Circle } from 'lucide-react';
+import { Sparkles, CheckCircle2, Circle, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute } from '@/types';
 import { PROFILES, ProfileId } from './SpiritualQuiz';
 import { HomeCard as Card } from './HomeCard';
 import { updateUserStreak } from '@/lib/streak';
 
 const SpiritualTrailCard: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileId, setProfileId] = useState<ProfileId | null>(null);
@@ -79,7 +82,12 @@ const SpiritualTrailCard: React.FC = () => {
           </div>
           <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">Sua Trilha Diária</span>
         </div>
-        <span className="text-[10px] font-black text-primary/30 uppercase tracking-widest">{Math.round(progress)}%</span>
+        <button 
+          onClick={() => navigate(AppRoute.PROGRESS)}
+          className="flex items-center gap-2 text-[10px] font-black text-primary/30 uppercase tracking-widest hover:text-primary transition-colors"
+        >
+          {Math.round(progress)}% <ChevronRight className="w-3 h-3" />
+        </button>
       </div>
 
       <div className="space-y-3">
@@ -90,7 +98,7 @@ const SpiritualTrailCard: React.FC = () => {
             className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left group ${
               completedSteps.includes(idx)
                 ? 'bg-primary/5 border-primary/10 opacity-60'
-                : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20'
+                : 'bg-primary/[0.01] border-border/5 hover:border-primary/20'
             }`}
           >
             <div className={`shrink-0 ${completedSteps.includes(idx) ? 'text-primary' : 'text-primary/20 group-hover:text-primary/40'}`}>

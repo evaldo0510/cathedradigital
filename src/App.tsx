@@ -123,6 +123,7 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const SpiritualProgressPage = lazy(() => import('./components/cathedra/SpiritualProgressPage'));
 const IconsDesignSystem = lazy(() => import('./components/cathedra/IconsDesignSystem'));
 
 
@@ -646,6 +647,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.LITURGICAL_CALENDAR} element={<Navigate to={`${AppRoute.LITURGIA}?tab=calendario`} replace />} />
                   <Route path={AppRoute.COMMUNITY} element={<PageTransition><AuthGuard><CommunityPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.PROGRESS} element={<PageTransition><AuthGuard><SpiritualProgressPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.AZ_FAITH} element={<PageTransition><AuthGuard><AZFaithPage /></AuthGuard></PageTransition>} />

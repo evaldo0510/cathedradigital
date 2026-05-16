@@ -72,6 +72,7 @@ export enum AppRoute {
   TRANSPARENCY = '/transparencia',
   DIARIO = '/diario',
   AUDIT_LOGS = '/admin/audit-logs',
+  PROGRESS = '/progresso',
 
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'
