@@ -298,7 +298,10 @@ const StudyMode: React.FC = () => {
         {/* Left Sidebar: History */}
         <aside className={`w-80 border-r border-primary/5 bg-background/50 backdrop-blur-xl hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
           <div className="p-8 border-b border-primary/5 flex items-center justify-between">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+            <div className="flex flex-col">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+              <p className="text-[8px] font-medium text-primary/20 italic mt-1">Reflexões Guardadas</p>
+            </div>
             <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full hover:bg-primary/5">
               <Plus className="w-5 h-5" />
             </Button>
