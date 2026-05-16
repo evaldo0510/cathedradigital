@@ -292,17 +292,18 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
     return (
       <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
-        <div className="w-full max-w-2xl space-y-16 text-center">
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Diagnóstico Espiritual</span>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">{diagStep + 1} / {QUESTIONS.length}</span>
+        <div className="w-full max-w-2xl space-y-24 text-center">
+          <div className="space-y-8 max-w-sm mx-auto">
+            <div className="flex items-center justify-between text-primary/20">
+              <span className="text-[10px] font-black uppercase tracking-[0.6em]">Diagnóstico</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">{diagStep + 1} / {QUESTIONS.length}</span>
             </div>
-            <div className="h-0.5 bg-primary/5 rounded-full overflow-hidden">
+            <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
               <motion.div 
-                className="h-full bg-primary/40"
+                className="h-full bg-secondary/30"
                 initial={{ width: 0 }}
                 animate={{ width: `${diagProgress}%` }}
+                transition={{ type: 'spring', damping: 30, stiffness: 100 }}
               />
             </div>
           </div>
@@ -310,14 +311,21 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
           <AnimatePresence mode="wait">
             <motion.div
               key={question.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="space-y-12"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-16"
             >
-              <div className="space-y-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Reflexão Inicial</span>
+              <div className="space-y-6">
+                <motion.span 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 block"
+                >
+                  Reflexão Inicial
+                </motion.span>
                 <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
               </div>
               <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
@@ -326,13 +334,18 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                     key={opt.value}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * idx }}
+                    transition={{ delay: 0.4 + (idx * 0.1) }}
                     whileHover={{ x: 8 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                    className="flex items-center justify-between p-8 rounded-[2rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
                   >
-                    <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                    <div className="flex items-center gap-6">
+                      <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/5 group-hover:border-primary/20 transition-all">
+                        {opt.icon}
+                      </div>
+                      <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                    </div>
                     <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -341,6 +354,16 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               </div>
             </motion.div>
           </AnimatePresence>
+
+          <div className="pt-12 flex justify-center">
+            <button 
+              onClick={() => diagStep > 0 && setDiagStep(diagStep - 1)}
+              disabled={diagStep === 0}
+              className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors disabled:opacity-0"
+            >
+              <ArrowLeft className="w-4 h-4" /> Anterior
+            </button>
+          </div>
         </div>
       </div>
     );
