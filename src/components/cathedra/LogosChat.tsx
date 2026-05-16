@@ -342,6 +342,12 @@ const LogosChat = () => {
                         <textarea
                           value={intention}
                           onChange={(e) => setInputIntention(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              if (intention.trim()) startWithRitual();
+                            }
+                          }}
                           placeholder="Minha intenção hoje é..."
                           className="w-full bg-transparent border-b border-primary/10 py-6 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-1000 resize-none placeholder:text-primary/5 text-center"
                           rows={1}
