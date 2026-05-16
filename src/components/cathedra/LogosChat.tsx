@@ -29,9 +29,27 @@ const TheologicalAwareText: React.FC<{
   onNavigateCatechism: (paragraph: number) => void;
   isContemplative?: boolean;
   onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
-}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick }) => {
-  const segments = useMemo(() => parseTheologicalReferences(text), [text]);
-  if (segments.length === 1 && segments[0].type === 'text') return <>{text}</>;
+  showDetails?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick, showDetails = true }) => {
+  const processedText = useMemo(() => {
+    if (showDetails) return text;
+    // Simple logic to hide "extra" sections: split by double newline and filter out sections starting with ## or ---
+    const lines = text.split('\n');
+    let essential = [];
+    let skipping = false;
+    for (const line of lines) {
+      if (line.startsWith('##') || line.startsWith('---') || line.includes('Meditação') || line.includes('Aprofundamento')) {
+        skipping = true;
+      }
+      if (!skipping) {
+        essential.push(line);
+      }
+    }
+    return essential.join('\n').trim();
+  }, [text, showDetails]);
+
+  const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
+  if (segments.length === 1 && segments[0].type === 'text') return <>{processedText}</>;
   return (
     <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide")}>
       {segments.map((seg, i) => {
