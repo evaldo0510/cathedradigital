@@ -173,7 +173,7 @@ const BibliotecaPage: React.FC = () => {
   }, [query]);
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-24">
+    <div className="space-y-6 max-w-2xl mx-auto px-4 pb-24">
       <div className="text-center space-y-2">
         <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
         <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
