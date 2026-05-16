@@ -324,9 +324,9 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer active:scale-[0.98];
-    @apply hover:bg-white/[0.06] hover:border-white/[0.15] hover:shadow-premium-hover;
-    @apply focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
+    @apply premium-card cursor-pointer active:scale-[0.995];
+    @apply hover:bg-white/[0.06] hover:border-primary/[0.1] hover:shadow-md;
+    @apply focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */
