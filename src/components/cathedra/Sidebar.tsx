@@ -205,7 +205,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isSpeaking ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleSpeak} 
-                className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isSpeaking ? 'bg-muted' : ''
                 }`}
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
