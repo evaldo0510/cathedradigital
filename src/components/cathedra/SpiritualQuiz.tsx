@@ -214,6 +214,43 @@ const SpiritualQuiz: React.FC = () => {
   const [done, setDone] = useState(false);
   const [existing, setExisting] = useState<ProfileId | null>(null);
   const [existingData, setExistingData] = useState<any>(null);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (!user || !existing) return;
+    supabase
+      .from('trail_progress')
+      .select('step_index')
+      .eq('user_id', user.id)
+      .eq('trail_id', existing)
+      .then(({ data }) => {
+        if (data) setCompletedSteps(data.map(d => d.step_index));
+      });
+  }, [user, existing]);
+
+  const toggleStep = async (index: number) => {
+    if (!user || !existing) return;
+    
+    const isCompleted = completedSteps.includes(index);
+    if (isCompleted) {
+      await supabase
+        .from('trail_progress')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('trail_id', existing)
+        .eq('step_index', index);
+      setCompletedSteps(prev => prev.filter(i => i !== index));
+    } else {
+      await supabase
+        .from('trail_progress')
+        .insert({
+          user_id: user.id,
+          trail_id: existing,
+          step_index: index
+        });
+      setCompletedSteps(prev => [...prev, index]);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
