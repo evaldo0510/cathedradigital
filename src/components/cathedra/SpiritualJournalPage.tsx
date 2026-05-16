@@ -390,7 +390,7 @@ const SpiritualJournalPage = () => {
                       <div>
                         <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Aprofundamento do Quiz</p>
                         <span className="text-sm font-serif font-bold text-primary">
-                          {format(new Date(ref.created_at), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                          {format(new Date(ref.created_at), "d 'de' MMMM, yyyy 'às' HH:mm", { locale: ptBR })}
                         </span>
                         <p className="text-[10px] text-primary/30 mt-1 uppercase tracking-tighter italic">{ref.content_id}</p>
                       </div>
