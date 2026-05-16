@@ -175,16 +175,42 @@ const SpiritualJournalPage = () => {
     }
   };
 
+  const toggleReview = async (id: string, type: 'journal' | 'reflection' | 'logos', currentStatus: boolean) => {
+    try {
+      const table = type === 'journal' ? 'spiritual_journal' : 'user_notes';
+      const { error } = await supabase
+        .from(table)
+        .update({ is_reviewed: !currentStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+      toast.success(!currentStatus ? 'Marcado como revisado.' : 'Marcado como não revisado.');
+      fetchEntries();
+    } catch (error) {
+      toast.error('Erro ao atualizar status de revisão');
+      console.error(error);
+    }
+  };
+
   const sortedAndFilteredItems = (items: any[], searchFields: string[], dateField: string) => {
     let result = items;
+    
+    // Apply search filter
     if (searchQuery.trim()) {
-      result = items.filter(item => 
+      result = result.filter(item => 
         searchFields.some(field => {
           const val = item[field];
           if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
           return false;
         })
       );
+    }
+
+    // Apply review filter
+    if (reviewFilter === 'reviewed') {
+      result = result.filter(item => item.is_reviewed === true);
+    } else if (reviewFilter === 'unreviewed') {
+      result = result.filter(item => item.is_reviewed === false);
     }
 
     return [...result].sort((a, b) => {
