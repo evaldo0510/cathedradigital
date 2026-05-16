@@ -51,7 +51,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
         <Card
           key={idx}
           variant="interactive"
-          padding="lg"
+          padding="md"
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
