@@ -404,112 +404,126 @@ const SpiritualQuiz: React.FC = () => {
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-[2.5rem] border border-border/10 bg-card p-8 space-y-6 shadow-premium reading-sepia">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Diagnóstico Espiritual</span>
-          <Button onClick={reset} variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary">
-            Refazer
-          </Button>
-        </div>
-
-        <div className="flex items-start gap-6">
-          <div className="w-16 h-16 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10 shrink-0">
-            <Compass className="w-8 h-8 text-primary/40" />
-          </div>
-          <div className="flex-1 space-y-2">
-            <h3 className="text-xl font-display text-primary">{p.title}</h3>
-            <p className="text-sm font-monastery text-primary/60 italic leading-relaxed">
-              "{p.message}"
-            </p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 rounded-premium-sm bg-primary/[0.02] border border-primary/5">
-            <p className="text-[9px] font-black uppercase tracking-widest text-primary/30 mb-1">Busca</p>
-            <p className="text-xs font-bold text-primary/70">{painLabel}</p>
-          </div>
-          <div className="p-4 rounded-premium-sm bg-primary/[0.02] border border-primary/5">
-            <p className="text-[9px] font-black uppercase tracking-widest text-primary/30 mb-1">Direção</p>
-            <p className="text-xs font-bold text-primary/70">{dirLabel}</p>
-          </div>
-        </div>
-
-        <div className="space-y-6 pt-4 border-t border-primary/5">
-          <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Reflexão Profunda</p>
-            <p className="text-xs font-serif italic text-primary/70 leading-relaxed bg-primary/[0.02] p-4 rounded-xl border border-primary/5">
-              {p.deepReflection}
-            </p>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+        <div className="rounded-[2.5rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <div className="flex flex-col items-center justify-between gap-6">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Seu Perfil Espiritual</span>
+            <Button onClick={reset} variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-primary/20 hover:text-primary transition-colors">
+              Refazer Diagnóstico
+            </Button>
           </div>
 
-          <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Perguntas de Aprofundamento</p>
-            <div className="space-y-4">
-              {p.questions.map((q, idx) => (
-                <div key={idx} className="space-y-2">
-                  <p className="text-[10px] font-bold text-primary/60">{q}</p>
-                  <textarea
-                    value={deepeningAnswers[q] || ''}
-                    onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
-                    onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
-                    placeholder="Sua resposta..."
-                    className="w-full bg-primary/[0.01] border border-primary/5 rounded-xl p-3 text-xs font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[60px] resize-none"
-                  />
-                </div>
-              ))}
+          <div className="space-y-8">
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5">
+              <Compass className="w-10 h-10 text-primary/40" />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-4xl md:text-5xl font-display text-primary tracking-tightest">{p.title}</h3>
+              <p className="text-xl md:text-2xl font-monastery text-primary/60 italic leading-relaxed max-w-xl mx-auto">
+                "{p.message}"
+              </p>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Trilha do Dia</p>
-            <div className="space-y-2 text-center">
-              {p.steps.map((step, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => toggleStep(idx)}
-                  className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                    completedSteps.includes(idx)
-                      ? 'bg-primary/10 border-primary/20 opacity-60'
-                      : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
-                      completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
-                    }`}>
-                      {completedSteps.includes(idx) ? <Sparkles className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
-                    </div>
-                    <div className="text-left">
-                      <p className={`text-xs font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-[10px] text-primary/40 uppercase tracking-widest">{step.time}</p>
-                        <span className="w-1 h-1 rounded-full bg-primary/20" />
-                        <p className="text-[9px] text-primary/30 italic">{step.action}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sede da Alma</p>
+                <p className="text-base font-bold text-primary/70">{painLabel}</p>
+              </div>
+            </div>
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Flame className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Caminho de Luz</p>
+                <p className="text-base font-bold text-primary/70">{dirLabel}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-16 pt-12 border-t border-primary/5">
+            <div className="space-y-6 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão para o Caminho</p>
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5">
+                {p.deepReflection}
+              </div>
+            </div>
+
+            <div className="space-y-10 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Questões de Profundidade</p>
+              <div className="space-y-10">
+                {p.questions.map((q, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <p className="text-sm font-bold text-primary/60 tracking-tight text-center px-4">{q}</p>
+                    <textarea
+                      value={deepeningAnswers[q] || ''}
+                      onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                      onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                      placeholder="Responda em silêncio..."
+                      className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none text-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-8 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Sua Trilha Contemplativa</p>
+              <div className="space-y-4">
+                {p.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleStep(idx)}
+                    className={`w-full flex items-center justify-between p-8 rounded-[2rem] border transition-all duration-700 ${
+                      completedSteps.includes(idx)
+                        ? 'bg-primary/5 border-primary/10 opacity-60'
+                        : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-700 ${
+                        completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground shadow-premium' : 'border-primary/5 text-primary/20'
+                      }`}>
+                        {completedSteps.includes(idx) ? <Sparkles className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[10px] text-primary/40 uppercase tracking-[0.2em]">{step.time}</p>
+                          <span className="w-1 h-1 rounded-full bg-primary/20" />
+                          <p className="text-xs text-primary/40 italic font-serif">{step.action}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                    completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
-                  }`}>
-                    {completedSteps.includes(idx) && <Sparkles className="w-3 h-3 text-primary-foreground" />}
-                  </div>
-                </button>
-              ))}
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/5'
+                    }`}>
+                      {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="pt-4 border-t border-primary/5 flex gap-3">
-          <Button size="sm" className="flex-1 rounded-full text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground" onClick={() => navigate(AppRoute.JORNADAS)}>
-            <Sparkles className="w-3.5 h-3.5 mr-2" /> Jornadas
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1 rounded-full text-[10px] font-black uppercase tracking-widest border-primary/10 text-primary" onClick={() => {
-             const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
-             if (chatBtn) chatBtn.click();
-          }}>
-            <Compass className="w-3.5 h-3.5 mr-2" /> Logos
-          </Button>
+          <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all">
+              <Sparkles className="w-4 h-4" /> Iniciar Trilha
+            </Button>
+            <Button variant="outline" onClick={() => {
+               const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+               if (chatBtn) chatBtn.click();
+            }} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary hover:bg-primary/5 transition-all">
+              <Compass className="w-4 h-4" /> Consultar Logos
+            </Button>
+          </div>
         </div>
       </motion.div>
     );
@@ -519,135 +533,128 @@ const SpiritualQuiz: React.FC = () => {
   if (phase === 'result' && result) {
     const p = PROFILES[result];
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="rounded-[3rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden"
-      >
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        
-        <div className="space-y-6">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-24 h-24 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10"
-          >
-            <Compass className="w-10 h-10 text-primary" />
-          </motion.div>
-          <div className="space-y-2">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+        <div className="rounded-[2.5rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <div className="space-y-4">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Diagnóstico de Alma</span>
-            <h2 className="text-4xl font-display text-primary tracking-tight">{p.title}</h2>
-          </div>
-          <p className="text-xl font-monastery text-primary italic leading-relaxed max-w-lg mx-auto">
-            "{p.message}"
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
-          <div className="p-8 rounded-[2rem] bg-primary/[0.02] border border-primary/5 space-y-4">
-            <div className="w-10 h-10 rounded-full bg-primary/5 mx-auto flex items-center justify-center">
-              <Heart className="w-5 h-5 text-primary/40" />
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5">
+              <Compass className="w-10 h-10 text-primary/40" />
             </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sua Sede</p>
-              <p className="text-sm font-bold text-primary/70">{p.pain.label}</p>
-            </div>
-          </div>
-          <div className="p-8 rounded-[2rem] bg-primary/[0.02] border border-primary/5 space-y-4">
-            <div className="w-10 h-10 rounded-full bg-primary/5 mx-auto flex items-center justify-center">
-              <Flame className="w-5 h-5 text-primary/40" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Seu Norte</p>
-              <p className="text-sm font-bold text-primary/70">{p.direction.label}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-12 pt-12 border-t border-primary/5 text-center">
-          <div className="space-y-4 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Reflexão Profunda</p>
-            <p className="text-lg font-serif italic text-primary/80 leading-relaxed bg-primary/[0.02] p-8 rounded-[2rem] border border-primary/5">
-              {p.deepReflection}
-            </p>
-          </div>
-
-          <div className="space-y-8 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Questões para o Coração</p>
-            <div className="space-y-8">
-              {p.questions.map((q, idx) => (
-                <div key={idx} className="space-y-4">
-                  <p className="text-sm font-bold text-primary/70">{q}</p>
-                  <textarea
-                    value={deepeningAnswers[q] || ''}
-                    onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
-                    onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
-                    placeholder="Sua reflexão sincera..."
-                    className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none"
-                  />
-                </div>
-              ))}
+            <div className="space-y-3">
+              <h2 className="text-4xl md:text-5xl font-display text-primary tracking-tightest">{p.title}</h2>
+              <p className="text-xl md:text-2xl font-monastery text-primary/60 italic leading-relaxed max-w-xl mx-auto">
+                "{p.message}"
+              </p>
             </div>
           </div>
 
-          <div className="space-y-6 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Trilha de Purificação</p>
-            <div className="space-y-4">
-              {p.steps.map((step, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => toggleStep(idx)}
-                  className={`w-full flex items-center justify-between p-6 rounded-[2rem] border transition-all ${
-                    completedSteps.includes(idx)
-                      ? 'bg-primary/10 border-primary/20 opacity-60'
-                      : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
-                  }`}
-                >
-                  <div className="flex items-center gap-6">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border ${
-                      completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
-                    }`}>
-                      {completedSteps.includes(idx) ? <Sparkles className="w-6 h-6" /> : <step.icon className="w-6 h-6" />}
-                    </div>
-                    <div className="text-left">
-                      <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
-                      <div className="flex items-center gap-3">
-                        <p className="text-xs text-primary/40 uppercase tracking-widest">{step.time}</p>
-                        <span className="w-1 h-1 rounded-full bg-primary/20" />
-                        <p className="text-xs text-primary/40 italic">{step.action}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sua Sede</p>
+                <p className="text-base font-bold text-primary/70">{p.pain.label}</p>
+              </div>
+            </div>
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Flame className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Seu Norte</p>
+                <p className="text-base font-bold text-primary/70">{p.direction.label}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-16 pt-12 border-t border-primary/5">
+            <div className="space-y-6 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão Profunda</p>
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5">
+                {p.deepReflection}
+              </div>
+            </div>
+
+            <div className="space-y-10 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Questões para o Coração</p>
+              <div className="space-y-10">
+                {p.questions.map((q, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <p className="text-sm font-bold text-primary/60 tracking-tight text-center px-4">{q}</p>
+                    <textarea
+                      value={deepeningAnswers[q] || ''}
+                      onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                      onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                      placeholder="Sua reflexão sincera..."
+                      className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none text-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-8 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Trilha de Purificação</p>
+              <div className="space-y-4">
+                {p.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleStep(idx)}
+                    className={`w-full flex items-center justify-between p-8 rounded-[2rem] border transition-all duration-700 ${
+                      completedSteps.includes(idx)
+                        ? 'bg-primary/5 border-primary/10 opacity-60'
+                        : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-700 ${
+                        completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground shadow-premium' : 'border-primary/5 text-primary/20'
+                      }`}>
+                        {completedSteps.includes(idx) ? <Sparkles className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[10px] text-primary/40 uppercase tracking-[0.2em]">{step.time}</p>
+                          <span className="w-1 h-1 rounded-full bg-primary/20" />
+                          <p className="text-xs text-primary/40 italic font-serif">{step.action}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center ${
-                    completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
-                  }`}>
-                    {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
-                  </div>
-                </button>
-              ))}
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/5'
+                    }`}>
+                      {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-8 pt-8 border-t border-primary/5">
-          <div className="space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Aprofundamento</span>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-14 px-10 gap-3 font-black uppercase text-[10px] tracking-[0.2em] bg-primary text-primary-foreground shadow-premium">
-                <Sparkles className="w-4 h-4" /> Iniciar Jornada
-              </Button>
-              <Button variant="outline" onClick={() => {
-                 const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
-                 if (chatBtn) chatBtn.click();
-              }} className="rounded-full h-14 px-10 gap-3 font-black uppercase text-[10px] tracking-[0.2em] border-primary/10 text-primary">
-                <Compass className="w-4 h-4" /> Logos
-              </Button>
+          <div className="pt-12 border-t border-primary/5 space-y-10">
+            <div className="space-y-6">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Seu Próximo Passo</span>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all">
+                  <Sparkles className="w-4 h-4" /> Iniciar Jornada
+                </Button>
+                <Button variant="outline" onClick={() => {
+                   const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+                   if (chatBtn) chatBtn.click();
+                }} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary hover:bg-primary/5 transition-all">
+                  <Compass className="w-4 h-4" /> Perguntar ao Logos
+                </Button>
+              </div>
             </div>
+            <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-[10px] font-black uppercase tracking-widest text-primary/20 hover:text-primary transition-colors">
+              Concluir Diagnóstico
+            </Button>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary">
-            Concluir Diagnóstico
-          </Button>
         </div>
       </motion.div>
     );
@@ -659,45 +666,78 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="rounded-[3rem] border border-border/10 bg-card p-10 md:p-16 space-y-10 shadow-premium text-center reading-sepia overflow-hidden relative"
+        className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-16 px-6"
       >
-        <div className="space-y-6 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10">
-            <Scroll className="w-10 h-10 text-primary/40" />
+        <div className="space-y-8 max-w-2xl">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5 shadow-[0_0_40px_rgba(0,0,0,0.02)]"
+          >
+            <Scroll className="w-10 h-10 text-primary/20" />
+          </motion.div>
+          
+          <div className="space-y-4">
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 1 }}
+              className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
+            >
+              Conhece-te a ti mesmo
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-5xl md:text-7xl font-display text-primary tracking-tightest"
+            >
+              Interioridade
+            </motion.h2>
           </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Conhece-te a ti mesmo</span>
-            <h2 className="text-3xl font-display text-primary tracking-tight">Diagnóstico Espiritual</h2>
-          </div>
-          <p className="text-lg font-monastery text-primary/60 italic leading-relaxed max-w-md mx-auto">
-            "Para onde eu irei, longe do teu Espírito? Para onde fugirei da tua face?" — Reflita e encontre o seu caminho.
-          </p>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1.5 }}
+            className="text-xl md:text-2xl font-monastery text-primary/40 italic leading-relaxed max-w-xl mx-auto"
+          >
+            "Não queira ir fora de ti, entra em ti mesmo; no homem interior habita a verdade." <br />
+            <span className="text-[10px] font-black uppercase tracking-widest mt-4 block">— Santo Agostinho</span>
+          </motion.p>
         </div>
         
-        <div className="flex flex-col items-center gap-6 relative z-10">
-          <div className="flex items-center gap-3 text-primary/30">
-            <div className="w-1 h-1 rounded-full bg-primary/20" />
-            <span className="text-[10px] font-black uppercase tracking-widest">4 Dimensões da Alma</span>
-            <div className="w-1 h-1 rounded-full bg-primary/20" />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="flex flex-col items-center gap-10 w-full max-w-md"
+        >
+          <div className="flex flex-col sm:flex-row gap-6 w-full">
             <Button
               onClick={() => { setPhase('quiz'); setStep(0); setAnswers({}); setHasPartialProgress(false); }}
-              variant={hasPartialProgress ? "outline" : "primary"}
-              className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] shadow-premium group"
+              variant="outline"
+              className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary/60 hover:bg-primary/5 hover:text-primary transition-all duration-700"
             >
-              {hasPartialProgress ? "Reiniciar" : "Iniciar Reflexão"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {hasPartialProgress ? "Reiniciar" : "Iniciar Silêncio"}
             </Button>
             {hasPartialProgress && (
               <Button
                 onClick={() => setPhase('quiz')}
-                className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground shadow-premium group"
+                className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all duration-700 group"
               >
-                Continuar do ponto salvo <Sparkles className="w-4 h-4 animate-pulse" />
+                Retomar <Sparkles className="w-4 h-4 animate-pulse group-hover:rotate-12 transition-transform" />
               </Button>
             )}
           </div>
-        </div>
+
+          <div className="flex items-center gap-4 text-primary/10">
+            <div className="w-8 h-px bg-current" />
+            <span className="text-[9px] font-black uppercase tracking-[0.5em]">Um portal para sua alma</span>
+            <div className="w-8 h-px bg-current" />
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
@@ -706,22 +746,22 @@ const SpiritualQuiz: React.FC = () => {
   const q = QUESTIONS[step];
 
   return (
-    <div className="min-h-[500px] flex flex-col justify-center py-12">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-2xl mx-auto w-full space-y-16"
+        className="max-w-4xl mx-auto w-full space-y-24"
       >
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Reflexão em Curso</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">{step + 1} / {QUESTIONS.length}</span>
+        <div className="space-y-8 max-w-sm mx-auto">
+          <div className="flex items-center justify-between text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em]">Exame Interior</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">{step + 1} / {QUESTIONS.length}</span>
           </div>
-          <div className="h-0.5 bg-primary/5 rounded-full overflow-hidden">
+          <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-primary/40" 
+              className="h-full bg-secondary/30" 
               animate={{ width: `${progress}%` }} 
-              transition={{ type: 'spring', damping: 25 }} 
+              transition={{ type: 'spring', damping: 30, stiffness: 100 }} 
             />
           </div>
         </div>
@@ -729,59 +769,61 @@ const SpiritualQuiz: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={q.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-12"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-20"
           >
-            <div className="space-y-4 text-center">
-              <p className="text-sm font-monastery text-primary/40 italic leading-relaxed max-w-md mx-auto whitespace-pre-line">
+            <div className="space-y-10 text-center">
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 1 }}
+                className="text-lg md:text-xl font-monastery text-primary/30 italic leading-relaxed max-w-lg mx-auto whitespace-pre-line"
+              >
                 {q.intro}
-              </p>
-              <h3 className="text-3xl font-display text-primary tracking-tight leading-tight">
+              </motion.p>
+              <motion.h3 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1 }}
+                className="text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight"
+              >
                 {q.question}
-              </h3>
+              </motion.h3>
             </div>
 
-            <div className="space-y-4" role="radiogroup" aria-label={q.question}>
+            <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
               {q.options.map((opt, idx) => (
                 <motion.button
-                  key={opt.value}
+                  key={idx}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * idx }}
-                  whileHover={{ x: 8 }}
-                  whileTap={{ scale: 0.99 }}
+                  transition={{ delay: 0.6 + (idx * 0.1), duration: 0.8 }}
                   onClick={() => handleAnswer(opt.value)}
-                  className="w-full flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                  className={`w-full p-8 text-center rounded-[2.5rem] border transition-all duration-700 relative overflow-hidden group ${
+                    answers[q.id] === opt.value
+                      ? 'bg-primary text-primary-foreground border-primary shadow-premium'
+                      : 'bg-primary/[0.01] border-primary/5 text-primary/50 hover:bg-primary/[0.03] hover:border-primary/10 hover:text-primary hover:scale-[1.01]'
+                  }`}
                 >
-                  <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors pr-8">
-                    {opt.label}
-                  </span>
-                  <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <span className="relative z-10 text-sm md:text-base font-bold uppercase tracking-[0.2em]">{opt.label}</span>
                 </motion.button>
               ))}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between items-center pt-8">
-          {step > 0 ? (
-            <Button 
-              variant="ghost" 
-              onClick={() => setStep(s => s - 1)} 
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary"
-            >
-              <ArrowLeft className="w-4 h-4" /> Voltar
-            </Button>
-          ) : <div />}
-          <div className="flex gap-4">
-            <Quote className="w-4 h-4 text-primary/10" />
-            <Scroll className="w-4 h-4 text-primary/10" />
-          </div>
+        <div className="pt-12 flex justify-center">
+          <button 
+            onClick={() => step > 0 && setStep(step - 1)}
+            disabled={step === 0}
+            className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors disabled:opacity-0"
+          >
+            <ArrowLeft className="w-4 h-4" /> Anterior
+          </button>
         </div>
       </motion.div>
     </div>
