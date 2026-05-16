@@ -33,8 +33,8 @@ const RitualDoDia: React.FC = () => {
               Ritual do Dia
             </span>
           </div>
-          <span className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40">
-            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 text-right">
+            {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}
           </span>
         </div>
 
