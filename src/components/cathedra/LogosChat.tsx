@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass } from 'lucide-react';
+import { X, Send, Sparkles, BookOpen, Quote, ChevronRight, Compass, Scroll } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { callColloquium } from '@/services/aiService';
