@@ -63,7 +63,7 @@ const RitualDoDia: React.FC = () => {
         {/* Reflection */}
         <div className="space-y-3" role="article" aria-label="Reflexão">
           <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
-          <p className="text-base text-foreground/70 leading-relaxed font-reader">
+          <p className="text-sm text-foreground/70 leading-relaxed font-reader">
             {reflection}
           </p>
         </div>
