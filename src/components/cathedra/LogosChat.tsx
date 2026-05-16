@@ -358,7 +358,7 @@ const LogosChat = () => {
                           Antes de iniciarmos, ofereça sua intenção ou uma breve oração ao Senhor.
                         </p>
                       </div>
-                      <div className="relative group max-w-sm mx-auto w-full">
+                      <div className="relative group max-w-sm mx-auto w-full px-4 sm:px-0">
                         <textarea
                           value={intention}
                           onChange={(e) => setInputIntention(e.target.value)}
@@ -369,13 +369,13 @@ const LogosChat = () => {
                             }
                           }}
                           placeholder="Minha intenção hoje é..."
-                          className="w-full bg-transparent border-b border-primary/10 py-6 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-1000 resize-none placeholder:text-primary/5 text-center min-h-[80px]"
+                          className="w-full bg-transparent border-b border-primary/10 py-4 sm:py-6 text-lg sm:text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-1000 resize-none placeholder:text-primary/10 text-center min-h-[60px] sm:min-h-[80px]"
                           rows={1}
                         />
                         <button
                           onClick={startWithRitual}
                           disabled={!intention.trim()}
-                          className="mt-12 btn-premium-primary w-full sm:w-auto mx-auto"
+                          className="mt-8 sm:mt-12 btn-premium-primary w-full sm:w-auto mx-auto"
                         >
                           Iniciar Diálogo
                         </button>
