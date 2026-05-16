@@ -329,7 +329,7 @@ const LogosChat = () => {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none">
+    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end">
       <AnimatePresence>
         {isOpen && (
           <>
@@ -348,7 +348,7 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background/95 border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe max-w-full"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background/95 border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden max-w-full"
             >
               {/* Refined Header */}
               <div className="p-4 sm:p-8 border-b border-primary/5 flex items-center justify-between flex-shrink-0 bg-background/40 backdrop-blur-md">
@@ -506,54 +506,52 @@ const LogosChat = () => {
               </ScrollArea>
 
               {/* Input Area - Integrated Journal Feel */}
-              {hasRitualPassed && (
-                <div className="p-6 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-                  {/* Tone Selector */}
-                  <div className="flex items-center justify-center gap-6 mb-8 opacity-40 hover:opacity-100 transition-opacity">
-                    {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setTone(t)}
-                        aria-label={`Mudar tom para ${t}`}
-                        aria-pressed={tone === t}
-                        className={cn(
-                          "text-[9px] font-black uppercase tracking-[0.3em] transition-all pb-1 border-b-2 focus-visible:ring-1 focus-visible:ring-primary outline-none",
-                          tone === t ? "text-primary border-secondary" : "text-primary/20 border-transparent"
-                        )}
-                      >
-                        {t === 'contemplative' && <Target className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
-                        {t === 'poetic' && <Feather className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
-                        {t === 'doctrinal' && <Shield className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
-                        {t === 'brief' && <Quote className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="relative group">
-                    <textarea
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSend();
-                        }
-                      }}
-                      placeholder="Abra seu coração..."
-                      className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
-                      rows={1}
-                    />
-                    <button
-                      onClick={handleSend}
-                      disabled={!input.trim() || isLoading}
-                      className="absolute right-0 bottom-6 p-3 text-primary/20 hover:text-secondary disabled:opacity-0 transition-all duration-700 hover:scale-110"
-                    >
-                      <ChevronRight className="w-8 h-8" />
-                    </button>
-                  </div>
+              <div className="p-4 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-md flex-shrink-0">
+                <div className="max-w-md mx-auto relative group">
+                  <textarea
+                    ref={inputTextAreaRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSend();
+                      }
+                    }}
+                    placeholder={hasRitualPassed ? "Digite sua dúvida ou reflexão..." : "Sua intenção para este diálogo..."}
+                    className="w-full bg-primary/[0.03] border border-primary/10 rounded-[28px] pl-6 pr-16 py-4 sm:py-5 text-sm sm:text-base text-primary placeholder:text-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary/30 transition-all resize-none min-h-[56px] max-h-32"
+                    rows={1}
+                  />
+                  <Button
+                    onClick={hasRitualPassed ? handleSend : startWithRitual}
+                    disabled={(!hasRitualPassed && !intention.trim()) || (hasRitualPassed && (!input.trim() || isLoading))}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform active:scale-90"
+                    size="icon"
+                  >
+                    {isLoading ? (
+                      <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
+                    )}
+                  </Button>
                 </div>
-              )}
+                <div className="mt-4 flex items-center justify-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-2">
+                  {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
+                    <button
+                      key={t}
+                      onClick={() => setTone(t)}
+                      className={cn(
+                        "text-[9px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap px-3 py-1.5 rounded-full border",
+                        tone === t 
+                          ? "text-secondary border-secondary/30 bg-secondary/5 shadow-sm" 
+                          : "text-primary/20 border-transparent hover:text-primary/40"
+                      )}
+                    >
+                      {t === 'contemplative' ? 'Contemplativo' : t === 'poetic' ? 'Poético' : t === 'doctrinal' ? 'Doutrinal' : 'Breve'}
+                    </button>
+                  ))}
+                </div>
+              </div>
               
               <div className="p-10 pt-0 bg-background/40 backdrop-blur-2xl">
                 <div className="flex justify-between items-center opacity-[0.03]">
