@@ -316,7 +316,7 @@ const LogosChat = () => {
                     )}
                     title={autoScroll ? "Pausar Auto-scroll" : "Manter Auto-scroll"}
                   >
-                    {autoScroll ? <Icons.ArrowDown className="w-4 h-4 animate-bounce" /> : <Icons.Lock className="w-4 h-4" />}
+                    {autoScroll ? <ArrowDown className="w-4 h-4 animate-bounce" /> : <Lock className="w-4 h-4" />}
                   </Button>
                   <Button 
                     variant="ghost" 
