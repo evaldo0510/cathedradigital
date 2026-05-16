@@ -435,9 +435,9 @@ const SpiritualJournalPage = () => {
                ))}
             </div>
 
-            {filteredItems(logosReflections, ['note_text']).length > 0 ? (
+            {sortedAndFilteredItems(logosReflections, ['note_text'], 'timestamp').length > 0 ? (
               <div className="grid grid-cols-1 gap-12">
-                {filteredItems(logosReflections, ['note_text'])
+                {sortedAndFilteredItems(logosReflections, ['note_text'], 'timestamp')
                   .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
                   .map((ref) => (
                   <motion.div
