@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   Trophy, Compass, Calendar as CalendarIcon, 
   Sparkles, CheckCircle2, Circle, Flame, 
-  ChevronRight, ArrowLeft, History, Star
+  ChevronRight, ArrowLeft, History, Star, Download, Clock
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +18,9 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from '
 import { ptBR } from 'date-fns/locale';
 import SEOHead from '@/components/SEOHead';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const SpiritualProgressPage: React.FC = () => {
   const navigate = useNavigate();
