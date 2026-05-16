@@ -235,7 +235,7 @@ const Rosary: React.FC = () => {
           </div>
           
           <div className="space-y-6">
-            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-sm space-y-4">
+            <div className="p-8 rounded-premium bg-card border border-border shadow-soft space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
                   <Activity className="w-5 h-5" />
