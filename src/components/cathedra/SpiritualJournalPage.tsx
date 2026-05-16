@@ -44,7 +44,7 @@ const SpiritualJournalPage = () => {
     if (!user) return;
     setIsFetching(true);
     
-    const [journalRes, reflectionsRes] = await Promise.all([
+    const [journalRes, reflectionsRes, logosRes] = await Promise.all([
       supabase
         .from('spiritual_journal')
         .select('*')
@@ -56,11 +56,23 @@ const SpiritualJournalPage = () => {
         .select('*')
         .eq('user_id', user.id)
         .eq('content_type', 'quiz_deepening')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('user_notes')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('content_type', 'logos_reflection')
         .order('created_at', { ascending: false })
     ]);
     
     if (journalRes.data) setEntries(journalRes.data as JournalEntry[]);
     if (reflectionsRes.data) setReflections(reflectionsRes.data);
+    if (logosRes.data) {
+      setLogosReflections(logosRes.data.map(r => ({
+        ...r,
+        parsed: JSON.parse(r.note_text)
+      })));
+    }
     
     setIsFetching(false);
   };
