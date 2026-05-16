@@ -283,8 +283,40 @@ const LogosChat = () => {
 
               {/* Messages - Pure Typographic Flow */}
               <ScrollArea className="flex-1 px-10 pt-10 pb-20" ref={scrollRef}>
-                <div className="space-y-20 max-w-md mx-auto">
-                  {messages.map((msg) => (
+                <div className={cn("space-y-20 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-32 scale-[1.02]")}>
+                  {!hasRitualPassed && (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="py-20 text-center space-y-12"
+                    >
+                      <div className="space-y-6">
+                        <Heart className="w-12 h-12 text-secondary/20 mx-auto" />
+                        <h4 className="text-3xl font-display text-primary/80">Silencie o Coração</h4>
+                        <p className="text-lg text-primary/40 font-serif italic leading-relaxed">
+                          Antes de iniciarmos, ofereça sua intenção ou uma breve oração ao Senhor.
+                        </p>
+                      </div>
+                      <div className="relative group max-w-sm mx-auto">
+                        <textarea
+                          value={intention}
+                          onChange={(e) => setInputIntention(e.target.value)}
+                          placeholder="Minha intenção hoje é..."
+                          className="w-full bg-transparent border-b border-primary/10 py-6 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-1000 resize-none placeholder:text-primary/5 text-center"
+                          rows={1}
+                        />
+                        <button
+                          onClick={startWithRitual}
+                          disabled={!intention.trim()}
+                          className="mt-12 px-12 py-4 bg-primary text-primary-foreground rounded-full text-[10px] font-black uppercase tracking-[0.4em] shadow-premium hover:scale-105 transition-all disabled:opacity-0"
+                        >
+                          Iniciar Diálogo
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                  
+                  {hasRitualPassed && messages.map((msg) => (
                     <motion.div
                       key={msg.id}
                       initial={{ opacity: 0, y: 10 }}
