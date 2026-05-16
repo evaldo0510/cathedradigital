@@ -190,7 +190,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5"
+              className="relative overflow-hidden p-6 sm:p-8 cursor-pointer group flex flex-col items-center text-center gap-5"
             >
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-sm">
