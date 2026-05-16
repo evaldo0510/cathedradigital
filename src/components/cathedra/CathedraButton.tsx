@@ -14,11 +14,11 @@ export interface ButtonProps extends HTMLMotionProps<"button"> {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, asChild = false, ...props }, ref) => {
     const sizeMap: Record<string, string> = {
-      xs: 'px-4 h-9 text-[9px]',
-      sm: 'px-6 h-11 text-[10px]',
-      md: 'px-10 h-14 text-[11px]',
-      lg: 'px-12 h-16 text-[12px]',
-      xl: 'px-14 h-20 text-[14px]',
+      xs: 'px-4 h-9 text-[8px]',
+      sm: 'px-6 h-11 text-[9px]',
+      md: 'px-10 h-14 text-[10px]',
+      lg: 'px-12 h-16 text-[11px]',
+      xl: 'px-14 h-20 text-[12px]',
       icon: 'h-11 w-11 p-0 flex items-center justify-center rounded-full',
       'icon-xs': 'h-9 w-9 p-0 flex items-center justify-center rounded-full',
     };
