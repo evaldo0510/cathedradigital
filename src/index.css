@@ -341,11 +341,11 @@
 
   /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-20 sm:py-24 md:py-32 lg:py-40;
+    @apply py-24 sm:py-32 md:py-40 lg:py-48;
   }
 
   .stack-spacing {
-    @apply space-y-12 md:space-y-16 lg:space-y-24;
+    @apply space-y-16 md:space-y-24 lg:space-y-32;
   }
   
   .premium-grid {
