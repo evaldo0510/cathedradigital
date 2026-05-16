@@ -61,15 +61,15 @@ const FeedbackWidget = () => {
                 <div className="w-16 h-16 bg-primary/10 rounded-premium-sm flex items-center justify-center mx-auto">
                   <Send className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
-                <p className="text-sm text-muted-foreground font-serif italic">
+                <h3 className="text-xl font-serif font-bold heading-card">Obrigado!</h3>
+                <p className="text-sm text-muted-foreground font-serif italic text-premium-body">
                   Seu feedback é precioso para construirmos o Cathedra juntos.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
+                  <h3 className="font-serif font-bold text-lg heading-card">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                     <X className="w-5 h-5" />
                   </Button>

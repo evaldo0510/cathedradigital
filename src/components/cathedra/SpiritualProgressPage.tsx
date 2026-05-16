@@ -241,13 +241,13 @@ const SpiritualProgressPage: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+              <div className="space-y-2 text-center p-6 rounded-premium bg-background border border-border/40 shadow-soft">
                 <Flame className="w-8 h-8 text-secondary mx-auto fill-current animate-pulse" />
                 <p className="text-3xl font-black text-primary">{profile?.streak || 0}</p>
                 <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Streak Atual</p>
               </div>
               
-              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+              <div className="space-y-2 text-center p-6 rounded-premium bg-background border border-border/40 shadow-soft">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
                 <p className="text-3xl font-black text-primary">
                   {trailHistory.filter(t => isSameDay(new Date(t.completed_at), new Date())).length}
@@ -255,7 +255,7 @@ const SpiritualProgressPage: React.FC = () => {
                 <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Passos Hoje</p>
               </div>
 
-              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+              <div className="space-y-2 text-center p-6 rounded-premium bg-background border border-border/40 shadow-soft">
                 <Clock className="w-8 h-8 text-amber-500 mx-auto" />
                 <p className="text-3xl font-black text-primary">{(profile as any)?.total_minutes_read || 0}</p>
                 <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Minutos Totais</p>
@@ -389,7 +389,7 @@ const SpiritualProgressPage: React.FC = () => {
             
             <div className="space-y-4">
               {activeJourneys.length > 0 ? activeJourneys.map((j) => (
-                <div key={j.id} className="flex items-center justify-between p-4 rounded-2xl bg-primary/[0.01] border border-primary/5 group hover:border-primary/20 transition-all">
+                <div key={j.id} className="flex items-center justify-between p-4 rounded-premium bg-primary/[0.01] border border-primary/5 group hover:border-primary/20 transition-all">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary/40 group-hover:scale-110 transition-transform">
                       <Sparkles className="w-5 h-5" />

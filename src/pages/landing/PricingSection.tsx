@@ -59,7 +59,7 @@ const PricingSection = () => {
       <div className="app-container space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 block italic heading-section-label">Investimento Espiritual</span>
-          <h2 className="font-display font-bold text-foreground heading-card">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
+          <h2 className="font-display font-bold text-foreground heading-section-label">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
           <p className="text-muted-foreground/90 font-serif max-w-2xl mx-auto text-premium-body">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
           </p>
@@ -85,7 +85,7 @@ const PricingSection = () => {
                   <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {tier.icon}
                   </div>
-                  <h3 className="font-bold font-serif heading-item">{tier.name}</h3>
+                  <h3 className="font-bold font-serif heading-card"> {tier.name}</h3>
                 </div>
 
                 <div className="space-y-2">

@@ -127,7 +127,7 @@ const CatechismExplorer: React.FC = () => {
 
       <div className="stack-spacing">
         <div className="flex flex-col gap-2">
-          <h1 className="font-display font-bold text-primary tracking-tight">Explorador do Catecismo</h1>
+          <h1 className="font-display font-bold text-primary tracking-tight heading-hero">Explorador do Catecismo</h1>
           <p className="text-premium-base italic font-serif">Conteúdo dogmático local e sempre disponível.</p>
         </div>
 
@@ -235,8 +235,8 @@ const CatechismExplorer: React.FC = () => {
                           §{p.paragraph}
                         </div>
                         <div className="flex-1 space-y-2">
-                          <h3 className="font-display font-bold text-primary text-xl">{p.titulo}</h3>
-                          <p className="text-premium-base leading-relaxed opacity-70">
+                          <h3 className="font-display font-bold text-primary text-xl heading-card">{p.titulo}</h3>
+                          <p className="text-premium-base leading-relaxed opacity-70 text-premium-body">
                             {p.conteudo}
                           </p>
                           <div className="flex flex-wrap gap-2 pt-2">
@@ -256,8 +256,8 @@ const CatechismExplorer: React.FC = () => {
                 {filteredParagraphs.length === 0 && (
                   <Card padding="xl" variant="outline" className="text-center border border-dashed border-border/60">
                     <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
-                    <h3 className="font-bold">Nenhum parágrafo encontrado</h3>
-                    <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
+                    <h3 className="font-bold heading-card">Nenhum parágrafo encontrado</h3>
+                    <p className="text-muted-foreground text-premium-body">Tente ajustar seus filtros ou busca.</p>
                     <Button variant="ghost" onClick={clearAll} className="mt-4">
                       Limpar tudo
                     </Button>

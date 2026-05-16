@@ -128,7 +128,7 @@ const ReadingPreferencesPanel: React.FC = () => {
               </div>
 
               {/* Zen Mode Switch */}
-              <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/[0.03] border border-primary/5">
+              <div className="flex items-center justify-between p-4 rounded-premium bg-primary/[0.03] border border-primary/5">
                 <div className="space-y-0.5">
                   <p className="text-[10px] font-black uppercase tracking-widest text-primary">Modo Zen</p>
                   <p className="text-[9px] text-primary/40">Foco total no texto sagrado</p>
