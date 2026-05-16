@@ -230,7 +230,8 @@ const SpiritualQuiz: React.FC = () => {
   }, [user, existing, result]);
 
   const toggleStep = async (index: number) => {
-    if (!user || !existing) return;
+    const activeId = existing || result;
+    if (!user || !activeId) return;
     
     const isCompleted = completedSteps.includes(index);
     if (isCompleted) {
@@ -238,15 +239,15 @@ const SpiritualQuiz: React.FC = () => {
         .from('trail_progress')
         .delete()
         .eq('user_id', user.id)
-        .eq('trail_id', existing)
+        .eq('trail_id', activeId)
         .eq('step_index', index);
       setCompletedSteps(prev => prev.filter(i => i !== index));
     } else {
-      await supabase
+      await (supabase as any)
         .from('trail_progress')
         .insert({
           user_id: user.id,
-          trail_id: existing,
+          trail_id: activeId,
           step_index: index
         });
       setCompletedSteps(prev => [...prev, index]);
