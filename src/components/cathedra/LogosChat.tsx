@@ -415,7 +415,7 @@ const LogosChat = () => {
               </div>
 
               {/* Messages - Pure Typographic Flow */}
-              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10 overscroll-contain" ref={scrollRef}>
+              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-20 overscroll-contain no-scrollbar" ref={scrollRef}>
                 <div className={cn("space-y-10 sm:space-y-16 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-20 sm:space-y-28 scale-[1.01]")}>
                   {!hasRitualPassed && (
                     <motion.div 
