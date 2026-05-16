@@ -77,7 +77,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-premium border-primary/20 shadow-premium"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-premium border border-primary/20 shadow-premium"
       >
         <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
