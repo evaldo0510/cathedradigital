@@ -845,6 +845,8 @@ const SpiritualQuiz: React.FC = () => {
   const q = QUESTIONS[step];
 
   if (isPausing) {
+    const currentProfileId = computeProfile(answers);
+    const p = PROFILES[currentProfileId];
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
         <motion.div
