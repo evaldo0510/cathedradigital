@@ -30,7 +30,7 @@ const RitualDoDia: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <CathedraIcon icon={Sparkles} size={IconSizePreset.TINY} variant="secondary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-60">
+            <span className="text-premium-small text-secondary opacity-60">
               Ritual do Dia
             </span>
           </div>

@@ -11,13 +11,13 @@ export interface CardProps extends HTMLMotionProps<"div"> {
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
     const paddingMap = {
-      none: '',
-      xs: 'p-3 md:p-4',
-      sm: 'p-4 md:p-6',
-      md: 'p-6 md:p-8',
-      lg: 'p-8 md:p-12 lg:p-16',
-      xl: 'p-12 md:p-16 lg:p-24',
-      '2xl': 'p-16 md:p-24 lg:p-32',
+      none: 'p-0',
+      xs: 'p-4',
+      sm: 'p-6',
+      md: 'p-8',
+      lg: 'p-12',
+      xl: 'p-16',
+      '2xl': 'p-20',
     };
 
     const variantStyles = {
@@ -34,7 +34,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         ref={ref as any}
         className={cn(
           variantStyles[variant],
-          paddingMap[padding],
+          padding !== 'md' && paddingMap[padding],
           hover && !variant.includes('interactive') && 'hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500',
           className
         )}

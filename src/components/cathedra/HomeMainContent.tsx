@@ -15,7 +15,7 @@ interface HomeMainContentProps {
 
 const SectionHeader = ({ label }: { label: string }) => (
   <div className="flex items-center gap-6">
-    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap heading-section-label">
+    <h2 className="text-premium-small heading-section-label">
       {label}
     </h2>
     <div className="h-px flex-1 bg-primary/5" />
@@ -29,7 +29,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-6 md:px-0">
+    <div className="max-w-4xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-6 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
       <section className="space-y-6">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
@@ -44,10 +44,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Flame className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">
+                <h3 className="heading-card">
                   {user ? 'Continuar Caminhada' : 'Inicie sua Jornada'}
                 </h3>
-                <p className="text-sm text-primary/40 mt-1 text-premium-body">
+                <p className="text-sm text-primary/40 mt-1">
                   {user 
                     ? 'Retome sua formação espiritual de onde parou.' 
                     : 'Descubra uma trilha personalizada para sua alma.'}

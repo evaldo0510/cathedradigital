@@ -143,6 +143,17 @@ const LogosChat = () => {
         toast.info(`Tom alterado para: ${tones[nextIndex]}`);
       }
 
+      // Alt + 1-4 for specific tones
+      if (e.altKey && !isNaN(parseInt(e.key))) {
+        const num = parseInt(e.key);
+        const tones: LogosTone[] = ['contemplative', 'poetic', 'doctrinal', 'brief'];
+        if (num >= 1 && num <= tones.length) {
+          e.preventDefault();
+          setTone(tones[num - 1]);
+          toast.info(`Tom alterado para: ${tones[num - 1]}`);
+        }
+      }
+
       // Trap focus
       if (e.key === 'Tab') {
         const focusableElements = document.querySelectorAll(
@@ -337,7 +348,7 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe max-w-full"
             >
               {/* Refined Header */}
               <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
@@ -396,6 +407,16 @@ const LogosChat = () => {
                   >
                     <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
+                  <button
+                    onClick={() => setAutoScroll(!autoScroll)}
+                    className={cn(
+                      "text-premium-tiny transition-all px-4 py-2 rounded-full border border-primary/5 hover:bg-primary/5",
+                      autoScroll ? "text-secondary border-secondary/20" : "text-primary/30"
+                    )}
+                    aria-label={autoScroll ? "Pausar rolagem automática" : "Ativar rolagem automática"}
+                  >
+                    {autoScroll ? "Auto-scroll" : "Scroll Manual"}
+                  </button>
                   <Button 
                     ref={closeBtnRef}
                     variant="ghost" 

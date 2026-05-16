@@ -51,7 +51,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
   return (
     <header className="app-header border-b border-border/30 bg-background/60 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="max-w-[1440px] mx-auto px-8 sm:px-12 lg:px-20 py-6 sm:py-8 flex items-center justify-between min-h-[80px] sm:min-h-[100px]">
+      <div className="app-container flex items-center justify-between py-6 sm:py-8 min-h-[80px] sm:min-h-[100px]">
         <div className="flex items-center gap-4 sm:gap-12 min-w-0">
           <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
             <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
