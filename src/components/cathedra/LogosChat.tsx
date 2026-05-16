@@ -25,11 +25,12 @@ const TheologicalAwareText: React.FC<{
   text: string;
   onNavigateBible: (abbr: string, chapter: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
-}> = ({ text, onNavigateBible, onNavigateCatechism }) => {
+  isContemplative?: boolean;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative }) => {
   const segments = useMemo(() => parseTheologicalReferences(text), [text]);
   if (segments.length === 1 && segments[0].type === 'text') return <>{text}</>;
   return (
-    <>
+    <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide")}>
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return (
