@@ -20,7 +20,8 @@ const DEFAULT_PREFS: ReadingPreferences = {
   lineHeight: 1.8,
   maxWidth: 65,
   sepiaIntensity: 100,
-  fontFamily: 'monastery'
+  fontFamily: 'monastery',
+  zenMode: false
 };
 
 export function useReadingMode() {
