@@ -365,7 +365,7 @@ const CommandCenter: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[8vh] sm:pt-[12vh] px-4 sm:px-0" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-xl bg-card border border-primary/10 rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-primary/10 rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200 overscroll-contain"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
@@ -401,7 +401,7 @@ const CommandCenter: React.FC = () => {
         )}
 
         {/* Results */}
-        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1 overscroll-contain">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
             <div className="px-5 py-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
