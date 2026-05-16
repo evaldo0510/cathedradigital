@@ -249,7 +249,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </div>
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
-                <p className="text-[10px] uppercase text-secondary font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                <p className="text-[9px] uppercase text-secondary font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
                 {!user.isPremium && (
                   <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
