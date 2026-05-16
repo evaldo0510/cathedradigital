@@ -29,7 +29,9 @@ const SpiritualProgressPage: React.FC = () => {
   const [trailHistory, setTrailHistory] = useState<any[]>([]);
   const [quizData, setQuizData] = useState<any>(null);
   const [activeJourneys, setActiveJourneys] = useState<any[]>([]);
+  const [reflections, setReflections] = useState<any[]>([]);
   const [month, setMonth] = useState<Date>(new Date());
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
