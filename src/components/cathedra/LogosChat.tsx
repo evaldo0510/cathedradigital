@@ -21,12 +21,15 @@ interface Message {
   timestamp: Date;
 }
 
+import { ReferenceModal } from './ReferenceModal';
+
 const TheologicalAwareText: React.FC<{
   text: string;
   onNavigateBible: (abbr: string, chapter: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
   isContemplative?: boolean;
-}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative }) => {
+  onReferenceClick?: (type: 'bible' | 'catechism', params: any) => void;
+}> = ({ text, onNavigateBible, onNavigateCatechism, isContemplative, onReferenceClick }) => {
   const segments = useMemo(() => parseTheologicalReferences(text), [text]);
   if (segments.length === 1 && segments[0].type === 'text') return <>{text}</>;
   return (
@@ -34,23 +37,24 @@ const TheologicalAwareText: React.FC<{
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return (
-            <BibleVersePopover
+            <button
               key={i}
-              abbr={seg.abbr}
-              chapter={seg.chapter!}
-              verse={seg.verse}
-              label={seg.value}
-              onNavigate={onNavigateBible}
-            />
+              onClick={() => onReferenceClick?.('bible', { abbr: seg.abbr, chapter: seg.chapter, verse: seg.verse })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              {seg.value}
+            </button>
           );
         }
         if (seg.type === 'catechismRef' && seg.paragraph) {
           return (
-            <CatechismPopover
+            <button
               key={i}
-              paragraph={seg.paragraph}
-              onNavigate={onNavigateCatechism}
-            />
+              onClick={() => onReferenceClick?.('catechism', { paragraph: seg.paragraph })}
+              className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none mx-0.5"
+            >
+              §{seg.paragraph}
+            </button>
           );
         }
         return <React.Fragment key={i}>{seg.value}</React.Fragment>;
