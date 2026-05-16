@@ -23,9 +23,9 @@ const RitualDoDia: React.FC = () => {
     <Card
       padding="none"
       variant="default"
-      className="relative overflow-hidden h-full p-8 md:p-12 lg:p-16"
+      className="relative overflow-hidden h-full p-8 md:p-10"
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
