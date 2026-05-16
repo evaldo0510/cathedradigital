@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label="Logos" />
         <HomeCard 
           padding="none"
-          className="group border-primary/5 bg-primary/[0.01] p-8 md:p-10"
+          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
           onClick={openLogosChat}
         >
           <div className="flex items-center justify-between gap-8">
