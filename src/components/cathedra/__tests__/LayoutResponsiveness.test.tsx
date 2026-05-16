@@ -104,7 +104,8 @@ describe('Dashboard Responsive Layout', () => {
 
   it('Dashboard grid should be responsive', () => {
     renderDashboard();
-    const grid = screen.getByLabelText(/Abrir Bíblia/i).closest('.grid');
+    // Use part of the label and set hidden: true because framer-motion might wrap it
+    const grid = screen.getByLabelText(/Abrir bible/i).closest('.grid');
     expect(grid?.className).toContain('grid-cols-2');
     expect(grid?.className).toContain('md:grid-cols-3');
     expect(grid?.className).toContain('lg:grid-cols-5');
