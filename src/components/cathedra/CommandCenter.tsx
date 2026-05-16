@@ -369,7 +369,7 @@ const CommandCenter: React.FC = () => {
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-primary/5" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
           <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
