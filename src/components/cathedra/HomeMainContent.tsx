@@ -29,7 +29,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-24 md:space-y-32 py-16 md:py-24 px-4 md:px-0">
+    <div className="max-w-3xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-6 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
       <section className="space-y-6">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
