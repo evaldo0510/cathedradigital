@@ -659,45 +659,78 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="rounded-[3rem] border border-border/10 bg-card p-10 md:p-16 space-y-10 shadow-premium text-center reading-sepia overflow-hidden relative"
+        className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-16 px-6"
       >
-        <div className="space-y-6 relative z-10">
-          <div className="w-20 h-20 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10">
-            <Scroll className="w-10 h-10 text-primary/40" />
+        <div className="space-y-8 max-w-2xl">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5 shadow-[0_0_40px_rgba(0,0,0,0.02)]"
+          >
+            <Scroll className="w-10 h-10 text-primary/20" />
+          </motion.div>
+          
+          <div className="space-y-4">
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 1 }}
+              className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
+            >
+              Conhece-te a ti mesmo
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-5xl md:text-7xl font-display text-primary tracking-tightest"
+            >
+              Interioridade
+            </motion.h2>
           </div>
-          <div className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Conhece-te a ti mesmo</span>
-            <h2 className="text-3xl font-display text-primary tracking-tight">Diagnóstico Espiritual</h2>
-          </div>
-          <p className="text-lg font-monastery text-primary/60 italic leading-relaxed max-w-md mx-auto">
-            "Para onde eu irei, longe do teu Espírito? Para onde fugirei da tua face?" — Reflita e encontre o seu caminho.
-          </p>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1.5 }}
+            className="text-xl md:text-2xl font-monastery text-primary/40 italic leading-relaxed max-w-xl mx-auto"
+          >
+            "Não queira ir fora de ti, entra em ti mesmo; no homem interior habita a verdade." <br />
+            <span className="text-[10px] font-black uppercase tracking-widest mt-4 block">— Santo Agostinho</span>
+          </motion.p>
         </div>
         
-        <div className="flex flex-col items-center gap-6 relative z-10">
-          <div className="flex items-center gap-3 text-primary/30">
-            <div className="w-1 h-1 rounded-full bg-primary/20" />
-            <span className="text-[10px] font-black uppercase tracking-widest">4 Dimensões da Alma</span>
-            <div className="w-1 h-1 rounded-full bg-primary/20" />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="flex flex-col items-center gap-10 w-full max-w-md"
+        >
+          <div className="flex flex-col sm:flex-row gap-6 w-full">
             <Button
               onClick={() => { setPhase('quiz'); setStep(0); setAnswers({}); setHasPartialProgress(false); }}
-              variant={hasPartialProgress ? "outline" : "primary"}
-              className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] shadow-premium group"
+              variant="outline"
+              className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary/60 hover:bg-primary/5 hover:text-primary transition-all duration-700"
             >
-              {hasPartialProgress ? "Reiniciar" : "Iniciar Reflexão"} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {hasPartialProgress ? "Reiniciar" : "Iniciar Silêncio"}
             </Button>
             {hasPartialProgress && (
               <Button
                 onClick={() => setPhase('quiz')}
-                className="flex-1 rounded-full h-14 gap-4 font-black uppercase text-[10px] tracking-[0.3em] bg-primary text-primary-foreground shadow-premium group"
+                className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all duration-700 group"
               >
-                Continuar do ponto salvo <Sparkles className="w-4 h-4 animate-pulse" />
+                Retomar <Sparkles className="w-4 h-4 animate-pulse group-hover:rotate-12 transition-transform" />
               </Button>
             )}
           </div>
-        </div>
+
+          <div className="flex items-center gap-4 text-primary/10">
+            <div className="w-8 h-px bg-current" />
+            <span className="text-[9px] font-black uppercase tracking-[0.5em]">Um portal para sua alma</span>
+            <div className="w-8 h-px bg-current" />
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
