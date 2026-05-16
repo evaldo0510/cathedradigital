@@ -69,7 +69,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
         <Button
-          className="px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+          className="px-2 py-0.5 rounded-sm bg-primary/5 border-b border-primary/20 text-[13px] font-bold text-primary hover:bg-primary/10 transition-all h-auto"
         >
           {label}
         </Button>
