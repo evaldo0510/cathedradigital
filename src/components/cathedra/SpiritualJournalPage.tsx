@@ -327,7 +327,7 @@ const SpiritualJournalPage = () => {
             {logosReflections.length > 0 ? (
               <div className="grid grid-cols-1 gap-12">
                 {logosReflections
-                  .filter(r => !filterTrail || r.parsed.tone === filterTrail)
+                  .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
                   .map((ref) => (
                   <motion.div
                     key={ref.id}
@@ -343,23 +343,25 @@ const SpiritualJournalPage = () => {
                         <div>
                           <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Mestre Logos</p>
                           <span className="text-sm font-serif font-bold text-primary">
-                            {format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                            {ref.parsed?.timestamp ? format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR }) : 'Data não registrada'}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-secondary/10 text-secondary rounded-full">
-                          {ref.parsed.tone}
+                          {ref.parsed?.tone || 'contemplative'}
                         </span>
                       </div>
                     </div>
                     
                     <div className="space-y-6">
-                      <p className="text-sm text-primary/40 italic font-serif leading-relaxed px-4 py-2 border-l border-primary/10">
-                        "{ref.parsed.prompt}"
-                      </p>
+                      {ref.parsed?.prompt && (
+                        <p className="text-sm text-primary/40 italic font-serif leading-relaxed px-4 py-2 border-l border-primary/10">
+                          "{ref.parsed.prompt}"
+                        </p>
+                      )}
                       <p className="text-xl text-primary/80 font-serif leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
-                        {ref.parsed.reflection}
+                        {ref.note_text}
                       </p>
                     </div>
 
