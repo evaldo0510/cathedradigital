@@ -427,20 +427,32 @@ const SpiritualQuiz: React.FC = () => {
     const q = QUESTIONS[step];
     const nextAnswers = { ...answers, [q.id]: value };
     setAnswers(nextAnswers);
+    setIsPausing(true);
+  }, [step, answers]);
+
+  const continueQuiz = async () => {
+    const q = QUESTIONS[step];
+    const currentAnswer = answers[q.id];
     
+    // Save journal if exists
+    if (journalText.trim() && user) {
+      await saveDeepeningAnswer(`quiz_step_${step}_${q.id}`, journalText);
+      setJournalText("");
+    }
+
     if (step < QUESTIONS.length - 1) {
       const nextStep = step + 1;
-      setTimeout(() => {
-        setStep(nextStep);
-        savePartialProgress(nextStep, nextAnswers);
-      }, 500);
+      setIsPausing(false);
+      setStep(nextStep);
+      savePartialProgress(nextStep, answers);
     } else {
-      const profileId = computeProfile(nextAnswers);
+      const profileId = computeProfile(answers);
       setResult(profileId);
       setPhase('result');
-      saveResult(profileId, nextAnswers);
+      setIsPausing(false);
+      saveResult(profileId, answers);
     }
-  }, [step, answers, user]);
+  };
 
   const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
