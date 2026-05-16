@@ -272,7 +272,7 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe"
             >
               {/* Refined Header */}
               <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
