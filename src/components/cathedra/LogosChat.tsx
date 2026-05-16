@@ -386,6 +386,13 @@ const LogosChat = () => {
                           onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                           showDetails={showExtraDetails}
                         />
+                        {msg.role === 'assistant' && msg.content.includes('\n') && (
+                          <div className="mt-4 flex gap-1 items-center opacity-20 hover:opacity-100 transition-opacity">
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary/60" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary/30" />
+                          </div>
+                        )}
                       </div>
                       
                       {/* Silent marker */}
