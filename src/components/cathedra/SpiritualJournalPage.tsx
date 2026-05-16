@@ -159,12 +159,33 @@ const SpiritualJournalPage = () => {
 
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full">
-        <div className="flex items-center gap-12">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-            Memória da Alma
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex items-center gap-12 w-full">
+            <div className="h-px flex-1 bg-border/30" />
+            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+              Memória da Alma
+            </h2>
+            <div className="h-px flex-1 bg-border/30" />
+          </div>
+          
+          <div className="flex gap-4 p-1 bg-muted/30 rounded-full border border-border/10">
+            <button 
+              onClick={() => setActiveTab('journal')}
+              className={`px-8 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+                activeTab === 'journal' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
+              }`}
+            >
+              Diário Diário
+            </button>
+            <button 
+              onClick={() => setActiveTab('reflections')}
+              className={`px-8 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+                activeTab === 'reflections' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
+              }`}
+            >
+              Reflexões do Quiz
+            </button>
+          </div>
         </div>
 
         {isFetching ? (
