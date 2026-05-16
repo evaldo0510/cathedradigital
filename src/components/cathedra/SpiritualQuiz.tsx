@@ -215,10 +215,14 @@ const SpiritualQuiz: React.FC = () => {
   const [existing, setExisting] = useState<ProfileId | null>(null);
   const [existingData, setExistingData] = useState<any>(null);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [deepeningAnswers, setDeepeningAnswers] = useState<Record<string, string>>({});
+  const [isSavingReflection, setIsSavingReflection] = useState(false);
 
   useEffect(() => {
     const activeId = existing || result;
     if (!user || !activeId) return;
+    
+    // Fetch trail progress
     supabase
       .from('trail_progress')
       .select('step_index')
@@ -227,7 +231,40 @@ const SpiritualQuiz: React.FC = () => {
       .then(({ data }) => {
         if (data) setCompletedSteps(data.map(d => d.step_index));
       });
+
+    // Fetch deepening answers
+    supabase
+      .from('user_notes')
+      .select('content_id, note_text')
+      .eq('user_id', user.id)
+      .eq('content_type', 'quiz_deepening')
+      .then(({ data }) => {
+        if (data) {
+          const map: Record<string, string> = {};
+          data.forEach(n => { map[n.content_id] = n.note_text; });
+          setDeepeningAnswers(map);
+        }
+      });
   }, [user, existing, result]);
+
+  const saveDeepeningAnswer = async (question: string, answer: string) => {
+    if (!user) return;
+    setIsSavingReflection(true);
+    try {
+      await (supabase as any)
+        .from('user_notes')
+        .upsert({
+          user_id: user.id,
+          content_type: 'quiz_deepening',
+          content_id: question,
+          note_text: answer,
+        }, { onConflict: 'user_id,content_type,content_id' });
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+    } finally {
+      setIsSavingReflection(false);
+    }
+  };
 
   const toggleStep = async (index: number) => {
     const activeId = existing || result;
@@ -251,6 +288,15 @@ const SpiritualQuiz: React.FC = () => {
           step_index: index
         });
       setCompletedSteps(prev => [...prev, index]);
+      
+      // Update streak and last_action_at in profile
+      await (supabase as any)
+        .from('profiles')
+        .update({
+          last_action_at: new Date().toISOString(),
+          xp: (user as any).xp + 10 // Simple XP boost
+        })
+        .eq('id', user.id);
     }
   };
 
