@@ -15,7 +15,7 @@ interface HomeMainContentProps {
 
 const SectionHeader = ({ label }: { label: string }) => (
   <div className="flex items-center gap-6">
-    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
+    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap heading-section-label">
       {label}
     </h2>
     <div className="h-px flex-1 bg-primary/5" />
@@ -44,10 +44,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Flame className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-primary tracking-tight">
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">
                   {user ? 'Continuar Caminhada' : 'Inicie sua Jornada'}
                 </h3>
-                <p className="text-sm text-primary/40 mt-1">
+                <p className="text-sm text-primary/40 mt-1 text-premium-body">
                   {user 
                     ? 'Retome sua formação espiritual de onde parou.' 
                     : 'Descubra uma trilha personalizada para sua alma.'}
@@ -76,8 +76,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="flex items-center gap-6">
               <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="primary" />
               <div>
-                <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Temas da Fé</h4>
-                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1">Doutrina e Vida</p>
+                <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Temas da Fé</h4>
+                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1 text-premium-body">Doutrina e Vida</p>
               </div>
             </div>
           </HomeCard>
@@ -86,8 +86,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             <div className="flex items-center gap-6">
               <CathedraIcon icon={Icons.BookOpen} size={IconSizePreset.TINY} variant="primary" />
               <div>
-                <h4 className="text-sm font-bold text-primary uppercase tracking-widest">Estudo Bíblico</h4>
-                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1">Sagradas Escrituras</p>
+                <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Estudo Bíblico</h4>
+                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1 text-premium-body">Sagradas Escrituras</p>
               </div>
             </div>
           </HomeCard>
@@ -108,8 +108,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Catechism className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-primary tracking-tight">Doutrina da Igreja</h3>
-                <p className="text-sm text-primary/40 mt-1">"O ensinamento da Tradição viva na Igreja."</p>
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">Doutrina da Igreja</h3>
+                <p className="text-sm text-primary/40 mt-1 text-premium-body">"O ensinamento da Tradição viva na Igreja."</p>
               </div>
             </div>
             <Icons.ChevronRight className="w-6 h-6 text-primary/10 group-hover:translate-x-1 transition-all" />
@@ -131,8 +131,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <Icons.Compass className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-primary tracking-tight">Mestre Contemplativo</h3>
-                <p className="text-sm text-primary/40 mt-1">Diálogos teológicos para iluminar sua caminhada.</p>
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">Mestre Contemplativo</h3>
+                <p className="text-sm text-primary/40 mt-1 text-premium-body">Diálogos teológicos para iluminar sua caminhada.</p>
               </div>
             </div>
             <Icons.Sparkles className="w-5 h-5 text-primary/10 group-hover:text-primary/30 transition-all" />
@@ -142,7 +142,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
       {/* FOOTER QUOTE */}
       <div className="pt-32 text-center opacity-10">
-        <p className="text-[10px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase">
+        <p className="text-[10px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase text-premium-body">
           "A beleza salvará o mundo." <br/> — Dostoievski
         </p>
       </div>

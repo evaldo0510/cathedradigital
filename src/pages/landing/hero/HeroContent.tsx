@@ -66,7 +66,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           </h1>
           
           <motion.p
-            className="max-w-lg mx-auto font-serif text-base sm:text-lg md:text-xl text-primary/60 italic leading-relaxed font-light px-6 sm:px-0"
+            className="max-w-lg mx-auto font-serif text-base sm:text-lg md:text-xl text-primary/60 italic leading-relaxed font-light px-6 sm:px-0 text-premium-body"
           >
             Uma plataforma de direção espiritual guiada <br className="hidden sm:block" /> pela Tradição e Inteligência Contemplativa.
           </motion.p>
