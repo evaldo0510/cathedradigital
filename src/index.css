@@ -180,10 +180,10 @@
   /* Utility Heading Classes for Design System */
   .heading-hero { 
     @apply font-black;
-    font-size: clamp(2.5rem, 8vw, 5rem);
-    line-height: 1;
+    font-size: clamp(2.25rem, 7vw, 4.5rem);
+    line-height: 1.1;
     letter-spacing: -0.04em;
-    margin-bottom: clamp(2rem, 4vw, 3rem);
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
   }
   
   .heading-section-label { 
