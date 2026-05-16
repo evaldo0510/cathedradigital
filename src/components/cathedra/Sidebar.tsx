@@ -179,11 +179,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant="outline"
                 size="sm"
                 onClick={onToggleDark} 
-                className="flex-1 min-w-[100px] h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                className="flex-1 min-w-[90px] h-10 rounded-xl border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
-                {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
+                {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
+                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
               <Button 
