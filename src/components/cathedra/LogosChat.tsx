@@ -55,7 +55,7 @@ const TheologicalAwareText: React.FC<{
         }
         return <React.Fragment key={i}>{seg.value}</React.Fragment>;
       })}
-    </>
+    </div>
   );
 };
 
