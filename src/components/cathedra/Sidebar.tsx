@@ -149,7 +149,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
+                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[48px] border-none shadow-none
                         ${currentPath === item.path
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
