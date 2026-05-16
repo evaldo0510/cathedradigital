@@ -61,6 +61,7 @@ const SpiritualTrailCard: React.FC = () => {
           step_index: index
         });
       setCompletedSteps(prev => [...prev, index]);
+      await updateUserStreak(user.id);
     }
   };
 
