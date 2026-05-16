@@ -257,16 +257,13 @@ const LogosChat = () => {
       {!isOpen && (
         <motion.button
           layoutId="logos-trigger"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-12 right-12 z-[200] flex items-center gap-6 pl-8 pr-6 py-4 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto group overflow-hidden border border-primary-foreground/5"
+          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5"
         >
-          <div className="absolute inset-0 bg-secondary/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-1000" />
-          <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.4em]">Logos</span>
-          <div className="relative z-10 w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center group-hover:rotate-45 transition-transform duration-1000">
-            <Compass className="w-5 h-5" />
-          </div>
+          <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
+          <Compass className="relative z-10 w-6 h-6 group-hover:rotate-12 transition-transform duration-1000" />
         </motion.button>
       )}
     </div>
