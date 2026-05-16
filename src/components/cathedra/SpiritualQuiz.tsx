@@ -921,7 +921,7 @@ const SpiritualQuiz: React.FC = () => {
           </div>
 
           {p && p.mainQuote && (
-             <QuietQuote quote={p.mainQuote} className="opacity-40" />
+             <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="opacity-40" />
           )}
         </motion.div>
       </div>
