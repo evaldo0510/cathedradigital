@@ -77,17 +77,17 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       )}
 
       {!loading && results.length > 0 && (
-        <div className="space-y-1">
-          <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
-          <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+        <div className="space-y-4">
+          <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground px-2">{results.length} resultados encontrados</p>
+          <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
             {results.map((r, i) => (
-              <Button key={i} onClick={() => goToVerse(r)}
-                className="w-full text-left p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
+              <button key={i} onClick={() => goToVerse(r)}
+                className="w-full text-left p-4 sm:p-5 rounded-premium bg-card border border-primary/5 hover:border-primary/30 hover:shadow-premium hover:-translate-y-0.5 transition-all group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded-full">{r.bookAbbrev} {r.chapter}:{r.verse}</span>
+                  <span className="text-premium-tiny text-muted-foreground font-bold">— {r.bookName}</span>
                 </div>
-                <p className="text-sm text-foreground/80 font-serif line-clamp-2"
+                <p className="text-sm sm:text-base text-foreground/80 font-serif leading-relaxed line-clamp-3"
                   dangerouslySetInnerHTML={{
                     __html: r.text.replace(
                       new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'),
@@ -95,7 +95,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     ),
                   }}
                 />
-              </Button>
+              </button>
             ))}
           </div>
         </div>
