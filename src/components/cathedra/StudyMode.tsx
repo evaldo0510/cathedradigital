@@ -365,11 +365,23 @@ const StudyMode: React.FC = () => {
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     {msg.role === 'assistant' && (
-                      <div className="flex items-center gap-4 mb-8">
-                        <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                          <Compass className="w-5 h-5 text-primary" />
+                      <div className="flex items-center justify-between w-full mb-8">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                            <Compass className="w-5 h-5 text-primary" />
+                          </div>
+                          <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
                         </div>
-                        <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => setShowExtraDetails(!showExtraDetails)}
+                            className={cn("h-8 w-8 rounded-full", !showExtraDetails && "text-primary bg-primary/10")}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     )}
                     
