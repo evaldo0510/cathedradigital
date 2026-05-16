@@ -35,7 +35,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="lg"
+          padding="md"
           className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
