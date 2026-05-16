@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -77,28 +76,28 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-premium border-primary/20 shadow-premium"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-premium border border-primary/20 shadow-premium"
       >
-        <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
+        <div className="p-3 border-b border-primary/5 bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Icons.Book className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-black uppercase tracking-wider text-primary">
               {label}
             </span>
           </div>
-          <Button
+          <button
             onClick={handleNavigate}
             className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
           >
             {verse ? `Ir ao v${verse}` : 'Abrir'}
             <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-          </Button>
+          </button>
         </div>
         <div className="p-3 space-y-2">
           {loading && (
             <div className="space-y-2 py-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-3 bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
+                <div key={i} className="h-3 bg-muted rounded-premium animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}
             </div>
           )}
@@ -111,7 +110,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
                 </p>
               ))}
               {!verse && (
-                <p className="text-premium-tiny text-muted-foreground italic pt-1 border-t border-border">
+                <p className="text-premium-tiny text-muted-foreground italic pt-1 border-t border-primary/5">
                   Mostrando primeiros versículos...
                 </p>
               )}

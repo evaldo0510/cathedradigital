@@ -365,11 +365,11 @@ const CommandCenter: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 " />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-primary/20 rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+        <div className="flex items-center gap-3 px-6 py-5 border-b border-primary/5" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
           <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -394,9 +394,9 @@ const CommandCenter: React.FC = () => {
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium-sm" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-premium-sm" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-premium" />
           </div>
         )}
 
@@ -435,13 +435,13 @@ const CommandCenter: React.FC = () => {
                   aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
+                  className={`w-full flex items-center gap-4 px-6 py-3.5 text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-1.5 rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-2 rounded-premium ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">

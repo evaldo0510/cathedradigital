@@ -22,7 +22,8 @@ const RitualDoDia: React.FC = () => {
   return (
     <Card
       padding="none"
-      className="relative overflow-hidden h-full transition-all duration-700 p-6 sm:p-8"
+      variant="default"
+      className="relative overflow-hidden h-full p-8 md:p-12 lg:p-16"
     >
       <div className="space-y-8">
         {/* Header */}

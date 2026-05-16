@@ -72,7 +72,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-premium-sm p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 premium-card p-8 md:p-12">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
@@ -120,8 +120,8 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="bg-card border border-border rounded-premium-sm p-6 space-y-4 hover:border-primary/30 transition-colors group">
-            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium-sm flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
+          <div key={pillar.title} className="premium-card p-6 space-y-4 group">
+            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
               {pillar.icon}
             </div>
             <div className="space-y-2">
@@ -135,10 +135,10 @@ const AboutPage: React.FC = () => (
 
     {/* Creator Section */}
     <div className="pt-16 border-t border-border/40">
-      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
+      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 premium-card p-8 md:p-12">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium-sm border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
-            <div className="w-full h-full rounded-premium-sm bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
+            <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
             <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium-sm shadow-lg border-4 border-background">

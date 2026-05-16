@@ -34,7 +34,7 @@ const TransparencyPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-8 rounded-[2.5rem] bg-primary/5 border border-primary/20 relative overflow-hidden"
+          className="p-8 sm:p-10 md:p-12 rounded-premium bg-primary/5 border border-primary/20 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-5">
             <Icons.Zap className="w-24 h-24 text-primary" />
@@ -106,7 +106,7 @@ const TransparencyPage: React.FC = () => {
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
+        <div className="p-8 rounded-premium border border-border text-center space-y-4">
           <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">

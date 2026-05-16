@@ -29,7 +29,7 @@ export const RitualSkeleton = () => (
 
 export const HeroSkeleton = () => (
   <div className="w-full min-h-[80vh] flex flex-col items-center justify-center p-6 space-y-8 animate-in fade-in duration-700">
-    <div className="h-12 w-12 bg-muted/20 rounded-premium-sm animate-bounce" />
+    <div className="h-12 w-12 bg-muted/20 rounded-premium animate-bounce" />
     <div className="space-y-4 items-center flex flex-col">
       <div className="h-12 w-64 md:w-96 bg-muted/20 rounded-premium" />
       <div className="h-6 w-48 md:w-64 bg-muted/10 rounded-premium" />
