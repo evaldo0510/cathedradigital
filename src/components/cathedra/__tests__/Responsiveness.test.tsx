@@ -21,8 +21,8 @@ vi.mock('@/integrations/supabase/client', () => ({
 // Mock Framer Motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, ...props }: any) => <div className={className} {...props}>{children}</div>,
-    button: ({ children, className, ...props }: any) => <button className={className} {...props}>{children}</button>,
+    div: ({ children, className, layoutId, initial, animate, exit, transition, ...props }: any) => <div className={className} {...props}>{children}</div>,
+    button: ({ children, className, layoutId, whileHover, whileTap, ...props }: any) => <button className={className} {...props}>{children}</button>,
   },
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
