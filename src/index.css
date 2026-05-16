@@ -317,15 +317,16 @@
   }
 
   .premium-card {
-    background: hsl(var(--card) / 0.3);
-    border: 1px solid hsl(var(--primary) / 0.02);
-    box-shadow: 0 4px 16px -4px rgba(0,0,0,0.01);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     @apply rounded-[24px] transition-all duration-700 relative overflow-hidden backdrop-blur-sm;
+    padding: 2rem;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer active:scale-[0.995];
-    @apply hover:bg-white/[0.06] hover:border-primary/[0.1] hover:shadow-md;
+    @apply premium-card cursor-pointer active:scale-[0.99];
+    @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
     @apply focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1;
   }
 
