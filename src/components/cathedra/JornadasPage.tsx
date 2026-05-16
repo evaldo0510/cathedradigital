@@ -364,7 +364,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Search & Filters */}
       <motion.div 
-        className="space-y-6 sm:space-y-8"
+        className="stack-spacing"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
