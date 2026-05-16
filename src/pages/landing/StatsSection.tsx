@@ -137,7 +137,7 @@ const StatsSection = () => {
         className="text-center mb-16"
       >
         <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/60 heading-section-label">Impacto Espiritual & Conhecimento</span>
-        <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold text-foreground heading-card">Transformação através do estudo e oração</h2>
+        <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold text-foreground heading-section-label">Transformação através do estudo e oração</h2>
       </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 relative z-10">
