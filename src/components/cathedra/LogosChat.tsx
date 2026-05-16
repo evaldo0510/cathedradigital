@@ -52,7 +52,7 @@ const TheologicalAwareText: React.FC<{
   const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
   if (segments.length === 1 && segments[0].type === 'text') return <>{processedText}</>;
   return (
-    <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide")}>
+    <div className={cn("inline-block", isContemplative && "leading-[2.2] tracking-wide", isMobile && !isContemplative && "leading-relaxed")}>
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return (
