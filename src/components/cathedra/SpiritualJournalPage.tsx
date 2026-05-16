@@ -407,9 +407,9 @@ const SpiritualJournalPage = () => {
                ))}
             </div>
 
-            {logosReflections.length > 0 ? (
+            {filteredItems(logosReflections, ['note_text']).length > 0 ? (
               <div className="grid grid-cols-1 gap-12">
-                {logosReflections
+                {filteredItems(logosReflections, ['note_text'])
                   .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
                   .map((ref) => (
                   <motion.div
@@ -430,7 +430,13 @@ const SpiritualJournalPage = () => {
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
+                        <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'logos', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
+                          <Icons.PenLine className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'logos')} className="text-primary/20 hover:text-red-500 transition-colors">
+                          <Icons.Trash2 className="w-4 h-4" />
+                        </Button>
                         <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-secondary/10 text-secondary rounded-full">
                           {ref.parsed?.tone || 'contemplative'}
                         </span>
