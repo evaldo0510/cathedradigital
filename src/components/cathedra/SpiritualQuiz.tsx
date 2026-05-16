@@ -10,6 +10,7 @@ import { Button } from '@/components/cathedra/Button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { updateUserStreak } from '@/lib/streak';
 
 /* ── Types ── */
 export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sentido' | 'firme_aprofundando' | 'ardente_missionario';
