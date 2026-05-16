@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/cathedra/Button';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -33,10 +33,10 @@ const SpiritualJournalPage = () => {
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('peace');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
   const [reflections, setReflections] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<'journal' | 'reflections'>('journal');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   const fetchEntries = async () => {
     if (!user) return;
@@ -175,7 +175,7 @@ const SpiritualJournalPage = () => {
                 activeTab === 'journal' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
               }`}
             >
-              Diário Diário
+              Diário
             </button>
             <button 
               onClick={() => setActiveTab('reflections')}
@@ -194,40 +194,80 @@ const SpiritualJournalPage = () => {
               <div key={i} className="h-48 bg-muted/10 animate-pulse rounded-premium border border-border/10" />
             ))}
           </div>
-        ) : entries.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-            {entries.map((entry) => (
-              <motion.div
-                key={entry.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-secondary flex items-center justify-center">
-                      {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
+        ) : activeTab === 'journal' ? (
+          entries.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
+              {entries.map((entry) => (
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-secondary flex items-center justify-center">
+                        {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
+                      </div>
+                      <div>
+                        <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
+                        <span className="text-sm font-serif font-bold text-primary">
+                          {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                        </span>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
-                      <span className="text-sm font-serif font-bold text-primary">
-                        {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
-                      </span>
-                    </div>
+                    <Icons.Quote className="w-10 h-10 text-primary/5" />
                   </div>
-                  <Icons.Quote className="w-10 h-10 text-primary/5" />
-                </div>
-                <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
-                  "{entry.content}"
-                </p>
-              </motion.div>
-            ))}
-          </div>
+                  <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
+                    "{entry.content}"
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+              <Icons.PenLine className="w-16 h-16 mx-auto mb-6 stroke-1" />
+              <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
+            </div>
+          )
         ) : (
-          <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
-            <Icons.PenLine className="w-16 h-16 mx-auto mb-6 stroke-1" />
-            <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
-          </div>
+          reflections.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
+              {reflections.map((ref) => (
+                <motion.div
+                  key={ref.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center">
+                        <Icons.Sparkles className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Aprofundamento do Quiz</p>
+                        <span className="text-sm font-serif font-bold text-primary">
+                          {ref.content_id}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
+                      {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
+                    </span>
+                  </div>
+                  <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-primary/10">
+                    "{ref.note_text}"
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
+              <Icons.Sparkles className="w-16 h-16 mx-auto mb-6 stroke-1" />
+              <p className="font-serif italic text-xl">Responda as perguntas no final do diagnóstico para vê-las aqui.</p>
+            </div>
+          )
         )}
       </section>
     </div>
