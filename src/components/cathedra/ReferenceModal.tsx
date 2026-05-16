@@ -104,7 +104,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             </div>
 
             {/* Content */}
-            <ScrollArea className="flex-1 p-8 md:p-12">
+            <ScrollArea className="flex-1 p-6 sm:p-12">
               <div className="max-w-prose mx-auto">
                 {isLoading ? (
                   type === 'bible' ? <BibleChapterSkeleton /> : <CatechismParagraphSkeleton paragraph={params.paragraph} />
