@@ -83,7 +83,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-2xl max-h-[80vh] bg-background border border-primary/10 shadow-premium rounded-[2.5rem] flex flex-col overflow-hidden reading-sepia"
+            className="relative w-full max-w-2xl max-h-[90dvh] sm:max-h-[80vh] bg-background border border-primary/10 shadow-premium rounded-[2rem] sm:rounded-[2.5rem] flex flex-col overflow-hidden reading-sepia"
           >
             {/* Header */}
             <div className="p-6 border-b border-primary/5 flex items-center justify-between">
