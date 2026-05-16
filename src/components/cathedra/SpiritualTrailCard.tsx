@@ -7,7 +7,7 @@ import { PROFILES, ProfileId } from './SpiritualQuiz';
 import { HomeCard as Card } from './HomeCard';
 
 const SpiritualTrailCard: React.FC = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileId, setProfileId] = useState<ProfileId | null>(null);
 
@@ -21,7 +21,8 @@ const SpiritualTrailCard: React.FC = () => {
       .eq('user_id', user.id)
       .maybeSingle()
       .then(({ data }) => {
-        const sp = data?.diagnosis_result?.spiritual_profile as ProfileId;
+        const result = data?.diagnosis_result as any;
+        const sp = result?.spiritual_profile as ProfileId;
         if (sp && PROFILES[sp]) {
           setProfileId(sp);
           
@@ -51,7 +52,7 @@ const SpiritualTrailCard: React.FC = () => {
         .eq('step_index', index);
       setCompletedSteps(prev => prev.filter(i => i !== index));
     } else {
-      await supabase
+      await (supabase as any)
         .from('trail_progress')
         .insert({
           user_id: user.id,
