@@ -132,15 +132,15 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             </ScrollArea>
 
             {/* Footer Navigation */}
-            <div className="p-6 border-t border-primary/5 flex items-center justify-between bg-muted/10">
-              <Button variant="ghost" onClick={() => navigateChapter(-1)} className="gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">
-                <ChevronLeft className="w-4 h-4" /> Anterior
+            <div className="p-4 sm:p-6 border-t border-primary/5 flex items-center justify-between bg-muted/10 gap-2">
+              <Button variant="ghost" onClick={() => navigateChapter(-1)} className="gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary px-2">
+                <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="hidden xs:inline">Anterior</span>
               </Button>
-              <Button variant="outline" className="rounded-full h-10 px-6 gap-2 text-[10px] font-black uppercase tracking-widest border-primary/10 text-primary/60" onClick={() => window.open(type === 'bible' ? `/bible?book=${params.abbr}&ch=${params.chapter}` : `/catechism?p=${params.paragraph}`, '_blank')}>
-                Ver no Scriptuarium <ExternalLink className="w-3 h-3" />
+              <Button variant="outline" className="rounded-full h-8 sm:h-10 px-3 sm:px-6 gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest border-primary/10 text-primary/60" onClick={() => window.open(type === 'bible' ? `/bible?book=${params.abbr}&ch=${params.chapter}` : `/catechism?p=${params.paragraph}`, '_blank')}>
+                Scriptuarium <ExternalLink className="w-2 h-2 sm:w-3 sm:h-3" />
               </Button>
-              <Button variant="ghost" onClick={() => navigateChapter(1)} className="gap-2 text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">
-                Próximo <ChevronRight className="w-4 h-4" />
+              <Button variant="ghost" onClick={() => navigateChapter(1)} className="gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary px-2">
+                <span className="hidden xs:inline">Próximo</span> <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </motion.div>
