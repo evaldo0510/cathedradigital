@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   Trophy, Compass, Calendar as CalendarIcon, 
   Sparkles, CheckCircle2, Circle, Flame, 
-  ChevronRight, ArrowLeft, History, Star
+  ChevronRight, ArrowLeft, History, Star, Download, Clock
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +18,9 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from '
 import { ptBR } from 'date-fns/locale';
 import SEOHead from '@/components/SEOHead';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const SpiritualProgressPage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,7 +29,9 @@ const SpiritualProgressPage: React.FC = () => {
   const [trailHistory, setTrailHistory] = useState<any[]>([]);
   const [quizData, setQuizData] = useState<any>(null);
   const [activeJourneys, setActiveJourneys] = useState<any[]>([]);
+  const [reflections, setReflections] = useState<any[]>([]);
   const [month, setMonth] = useState<Date>(new Date());
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -34,17 +39,17 @@ const SpiritualProgressPage: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch trail history for the current month
         const start = startOfMonth(month).toISOString();
         const end = endOfMonth(month).toISOString();
         
-        const [trailRes, quizRes, journeysRes] = await Promise.all([
+        const [trailRes, quizRes, journeysRes, reflectionsRes] = await Promise.all([
           supabase
             .from('trail_progress')
             .select('completed_at, step_index, trail_id')
             .eq('user_id', user.id)
             .gte('completed_at', start)
-            .lte('completed_at', end),
+            .lte('completed_at', end)
+            .order('completed_at', { ascending: false }),
           supabase
             .from('user_sensitive_data')
             .select('diagnosis_result')
@@ -53,11 +58,18 @@ const SpiritualProgressPage: React.FC = () => {
           supabase
             .from('journey_progress')
             .select('journey_id, completed_at')
+            .eq('user_id', user.id),
+          supabase
+            .from('user_notes')
+            .select('*')
             .eq('user_id', user.id)
+            .eq('content_type', 'quiz_deepening')
+            .order('created_at', { ascending: false })
         ]);
 
         if (trailRes.data) setTrailHistory(trailRes.data);
         if (quizRes.data) setQuizData(quizRes.data.diagnosis_result);
+        if (reflectionsRes.data) setReflections(reflectionsRes.data);
         
         if (journeysRes.data) {
           const journeyIds = [...new Set(journeysRes.data.map(j => j.journey_id))];
@@ -96,6 +108,93 @@ const SpiritualProgressPage: React.FC = () => {
 
   const earnedBadges = useMemo(() => new Set(profile?.badges || []), [profile?.badges]);
 
+  const handleExport = async () => {
+    if (!user || !profile) return;
+    setExporting(true);
+    try {
+      const doc = new jsPDF();
+      const timestamp = format(new Date(), 'dd/MM/yyyy HH:mm');
+      
+      // Header
+      doc.setFontSize(22);
+      doc.setTextColor(43, 64, 46); 
+      doc.text('Relatório de Progresso Espiritual', 20, 20);
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text(`Cathedra Digital - Gerado em ${timestamp}`, 20, 28);
+      
+      // User Info
+      doc.setFontSize(14);
+      doc.setTextColor(0);
+      doc.text('Peregrino:', 20, 45);
+      doc.setFontSize(12);
+      doc.text(`${profile.name} (${user.email})`, 60, 45);
+      
+      doc.setFontSize(14);
+      doc.text('Perfil Espiritual:', 20, 55);
+      doc.setFontSize(12);
+      doc.text(p?.title || 'Não definido', 60, 55);
+
+      // Stats
+      doc.setFontSize(14);
+      doc.text('Estatísticas:', 20, 70);
+      autoTable(doc, {
+        startY: 75,
+        head: [['Métrica', 'Valor']],
+        body: [
+          ['Streak Atual', `${profile.streak || 0} dias`],
+          ['XP Total', `${profile.xp || 0}`],
+          ['Minutos em Oração/Estudo', `${(profile as any).total_minutes_read || 0} min`],
+          ['Passos da Trilha (Mês)', `${completedDays.length}`],
+        ],
+        theme: 'striped',
+        headStyles: { fillColor: [43, 64, 46] }
+      });
+
+      // Reflections
+      if (reflections.length > 0) {
+        doc.addPage();
+        doc.setFontSize(18);
+        doc.setTextColor(43, 64, 46);
+        doc.text('Resumo de Reflexões Profundas', 20, 20);
+        
+        let y = 35;
+        reflections.forEach((ref, index) => {
+          if (y > 250) {
+            doc.addPage();
+            y = 20;
+          }
+          
+          doc.setFontSize(10);
+          doc.setTextColor(150);
+          doc.text(format(new Date(ref.created_at), 'dd/MM/yyyy'), 20, y);
+          
+          doc.setFontSize(11);
+          doc.setTextColor(50);
+          const questionText = doc.splitTextToSize(`Questão: ${ref.content_id}`, 170);
+          doc.text(questionText, 20, y + 7);
+          
+          doc.setFontSize(12);
+          doc.setTextColor(0);
+          doc.setFont('helvetica', 'italic');
+          const reflectionText = doc.splitTextToSize(`"${ref.note_text}"`, 170);
+          doc.text(reflectionText, 20, y + 15 + (questionText.length * 5));
+          
+          y += 30 + (questionText.length * 5) + (reflectionText.length * 5);
+        });
+      }
+
+      doc.save(`progresso-espiritual-${profile.name}.pdf`);
+      toast.success('Relatório exportado com sucesso!');
+    } catch (err) {
+      console.error('Export error:', err);
+      toast.error('Erro ao gerar PDF.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-[60vh]">
       <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -117,12 +216,73 @@ const SpiritualProgressPage: React.FC = () => {
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-bold text-primary tracking-tight">Sua Jornada</h1>
           <p className="text-lg text-primary/60 italic font-serif">"Aquele que começou em vós esta boa obra, há de completá-la."</p>
+          
+          <div className="flex justify-center pt-4">
+            <Button 
+              onClick={handleExport} 
+              disabled={exporting}
+              className="rounded-full gap-2 bg-primary/5 text-primary border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all"
+            >
+              {exporting ? 'Gerando...' : <><Download className="w-4 h-4" /> Exportar Resumo em PDF</>}
+            </Button>
+          </div>
         </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Status Section */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Detailed Daily Progress */}
+          <Card padding="lg" className="space-y-8 bg-gradient-to-br from-primary/[0.03] to-transparent">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                <History className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-primary">Detalhe do Progresso Diário</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <Flame className="w-8 h-8 text-secondary mx-auto fill-current animate-pulse" />
+                <p className="text-3xl font-black text-primary">{profile?.streak || 0}</p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Streak Atual</p>
+              </div>
+              
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+                <p className="text-3xl font-black text-primary">
+                  {trailHistory.filter(t => isSameDay(new Date(t.completed_at), new Date())).length}
+                </p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Passos Hoje</p>
+              </div>
+
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <Clock className="w-8 h-8 text-amber-500 mx-auto" />
+                <p className="text-3xl font-black text-primary">{(profile as any)?.total_minutes_read || 0}</p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Minutos Totais</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-primary/5">
+              <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Atividade Recente</p>
+              <div className="space-y-2">
+                {trailHistory.slice(0, 5).map((t, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/[0.01] border border-primary/5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span className="text-xs font-medium text-primary/70">
+                        {p?.steps[t.step_index]?.title || `Passo ${t.step_index + 1}`}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-primary/30">{format(new Date(t.completed_at), 'HH:mm')}</span>
+                  </div>
+                ))}
+                {trailHistory.length === 0 && (
+                  <p className="text-xs text-primary/30 italic text-center py-4">Inicie sua trilha hoje para ver o progresso.</p>
+                )}
+              </div>
+            </div>
+          </Card>
+
           {/* Quiz Status */}
           <Card padding="lg" className="space-y-6">
             <div className="flex items-center justify-between">

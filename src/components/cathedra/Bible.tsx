@@ -32,6 +32,7 @@ import LibrarySidebar from './LibrarySidebar';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { useTrackReadingTime } from '@/hooks/useTrackReadingTime';
 import { Bookmark, Menu, History } from 'lucide-react';
 
 
@@ -136,6 +137,9 @@ const Bible: React.FC = () => {
   });
 
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
+  // Track reading time when in reading mode
+  useTrackReadingTime(viewMode === 'reading');
 
   useEffect(() => {
     try {

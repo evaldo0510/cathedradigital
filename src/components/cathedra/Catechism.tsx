@@ -30,6 +30,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import LibrarySidebar from './LibrarySidebar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { useReadingMode } from '@/hooks/useReadingMode';
+import { useTrackReadingTime } from '@/hooks/useTrackReadingTime';
 import { toast } from 'sonner';
 
 
@@ -248,6 +249,7 @@ const Catechism: React.FC = () => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
   const { prefs } = useReadingMode();
+  useTrackReadingTime(viewMode === "reading");
   const [bookmarks, setBookmarks] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem('cathedra_catechism_bookmarks');
