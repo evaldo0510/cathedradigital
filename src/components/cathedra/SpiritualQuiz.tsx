@@ -533,135 +533,128 @@ const SpiritualQuiz: React.FC = () => {
   if (phase === 'result' && result) {
     const p = PROFILES[result];
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="rounded-[3rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden"
-      >
-        <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        
-        <div className="space-y-6">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-24 h-24 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10"
-          >
-            <Compass className="w-10 h-10 text-primary" />
-          </motion.div>
-          <div className="space-y-2">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+        <div className="rounded-[2.5rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <div className="space-y-4">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Diagnóstico de Alma</span>
-            <h2 className="text-4xl font-display text-primary tracking-tight">{p.title}</h2>
-          </div>
-          <p className="text-xl font-monastery text-primary italic leading-relaxed max-w-lg mx-auto">
-            "{p.message}"
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
-          <div className="p-8 rounded-[2rem] bg-primary/[0.02] border border-primary/5 space-y-4">
-            <div className="w-10 h-10 rounded-full bg-primary/5 mx-auto flex items-center justify-center">
-              <Heart className="w-5 h-5 text-primary/40" />
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5">
+              <Compass className="w-10 h-10 text-primary/40" />
             </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sua Sede</p>
-              <p className="text-sm font-bold text-primary/70">{p.pain.label}</p>
-            </div>
-          </div>
-          <div className="p-8 rounded-[2rem] bg-primary/[0.02] border border-primary/5 space-y-4">
-            <div className="w-10 h-10 rounded-full bg-primary/5 mx-auto flex items-center justify-center">
-              <Flame className="w-5 h-5 text-primary/40" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Seu Norte</p>
-              <p className="text-sm font-bold text-primary/70">{p.direction.label}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-12 pt-12 border-t border-primary/5 text-center">
-          <div className="space-y-4 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Reflexão Profunda</p>
-            <p className="text-lg font-serif italic text-primary/80 leading-relaxed bg-primary/[0.02] p-8 rounded-[2rem] border border-primary/5">
-              {p.deepReflection}
-            </p>
-          </div>
-
-          <div className="space-y-8 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Questões para o Coração</p>
-            <div className="space-y-8">
-              {p.questions.map((q, idx) => (
-                <div key={idx} className="space-y-4">
-                  <p className="text-sm font-bold text-primary/70">{q}</p>
-                  <textarea
-                    value={deepeningAnswers[q] || ''}
-                    onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
-                    onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
-                    placeholder="Sua reflexão sincera..."
-                    className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none"
-                  />
-                </div>
-              ))}
+            <div className="space-y-3">
+              <h2 className="text-4xl md:text-5xl font-display text-primary tracking-tightest">{p.title}</h2>
+              <p className="text-xl md:text-2xl font-monastery text-primary/60 italic leading-relaxed max-w-xl mx-auto">
+                "{p.message}"
+              </p>
             </div>
           </div>
 
-          <div className="space-y-6 max-w-xl mx-auto">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Trilha de Purificação</p>
-            <div className="space-y-4">
-              {p.steps.map((step, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => toggleStep(idx)}
-                  className={`w-full flex items-center justify-between p-6 rounded-[2rem] border transition-all ${
-                    completedSteps.includes(idx)
-                      ? 'bg-primary/10 border-primary/20 opacity-60'
-                      : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
-                  }`}
-                >
-                  <div className="flex items-center gap-6">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border ${
-                      completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
-                    }`}>
-                      {completedSteps.includes(idx) ? <Sparkles className="w-6 h-6" /> : <step.icon className="w-6 h-6" />}
-                    </div>
-                    <div className="text-left">
-                      <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
-                      <div className="flex items-center gap-3">
-                        <p className="text-xs text-primary/40 uppercase tracking-widest">{step.time}</p>
-                        <span className="w-1 h-1 rounded-full bg-primary/20" />
-                        <p className="text-xs text-primary/40 italic">{step.action}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sua Sede</p>
+                <p className="text-base font-bold text-primary/70">{p.pain.label}</p>
+              </div>
+            </div>
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Flame className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Seu Norte</p>
+                <p className="text-base font-bold text-primary/70">{p.direction.label}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-16 pt-12 border-t border-primary/5">
+            <div className="space-y-6 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão Profunda</p>
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5">
+                {p.deepReflection}
+              </div>
+            </div>
+
+            <div className="space-y-10 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Questões para o Coração</p>
+              <div className="space-y-10">
+                {p.questions.map((q, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <p className="text-sm font-bold text-primary/60 tracking-tight text-center px-4">{q}</p>
+                    <textarea
+                      value={deepeningAnswers[q] || ''}
+                      onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                      onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                      placeholder="Sua reflexão sincera..."
+                      className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none text-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-8 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Trilha de Purificação</p>
+              <div className="space-y-4">
+                {p.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleStep(idx)}
+                    className={`w-full flex items-center justify-between p-8 rounded-[2rem] border transition-all duration-700 ${
+                      completedSteps.includes(idx)
+                        ? 'bg-primary/5 border-primary/10 opacity-60'
+                        : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-700 ${
+                        completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground shadow-premium' : 'border-primary/5 text-primary/20'
+                      }`}>
+                        {completedSteps.includes(idx) ? <Sparkles className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[10px] text-primary/40 uppercase tracking-[0.2em]">{step.time}</p>
+                          <span className="w-1 h-1 rounded-full bg-primary/20" />
+                          <p className="text-xs text-primary/40 italic font-serif">{step.action}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center ${
-                    completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
-                  }`}>
-                    {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
-                  </div>
-                </button>
-              ))}
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/5'
+                    }`}>
+                      {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-8 pt-8 border-t border-primary/5">
-          <div className="space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Aprofundamento</span>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-14 px-10 gap-3 font-black uppercase text-[10px] tracking-[0.2em] bg-primary text-primary-foreground shadow-premium">
-                <Sparkles className="w-4 h-4" /> Iniciar Jornada
-              </Button>
-              <Button variant="outline" onClick={() => {
-                 const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
-                 if (chatBtn) chatBtn.click();
-              }} className="rounded-full h-14 px-10 gap-3 font-black uppercase text-[10px] tracking-[0.2em] border-primary/10 text-primary">
-                <Compass className="w-4 h-4" /> Logos
-              </Button>
+          <div className="pt-12 border-t border-primary/5 space-y-10">
+            <div className="space-y-6">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Seu Próximo Passo</span>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all">
+                  <Sparkles className="w-4 h-4" /> Iniciar Jornada
+                </Button>
+                <Button variant="outline" onClick={() => {
+                   const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+                   if (chatBtn) chatBtn.click();
+                }} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary hover:bg-primary/5 transition-all">
+                  <Compass className="w-4 h-4" /> Perguntar ao Logos
+                </Button>
+              </div>
             </div>
+            <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-[10px] font-black uppercase tracking-widest text-primary/20 hover:text-primary transition-colors">
+              Concluir Diagnóstico
+            </Button>
           </div>
-          <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary">
-            Concluir Diagnóstico
-          </Button>
         </div>
       </motion.div>
     );
