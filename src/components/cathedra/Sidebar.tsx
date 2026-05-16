@@ -155,7 +155,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
                       <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
-                      <span className="tracking-tight truncate">{item.label}</span>
+                      <span className="tracking-tight truncate text-[11px] font-medium">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                           {cacheCount}
