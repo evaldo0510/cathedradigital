@@ -153,10 +153,10 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[48px] border-none shadow-none
+                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-secondary/50 outline-none h-auto min-h-[48px] border-none shadow-none
                         ${currentPath === item.path
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
-                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
+                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary focus-visible:bg-primary/[0.05]'}`}
                     >
                       <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
                       <span className="tracking-tight truncate text-[11px] font-medium">{item.label}</span>
