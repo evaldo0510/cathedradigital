@@ -42,6 +42,7 @@ const SpiritualJournalPage = () => {
   const [filterTrail, setFilterTrail] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [editingEntry, setEditingEntry] = useState<{ id: string, type: 'journal' | 'reflection' | 'logos', content: string } | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const fetchEntries = async () => {
     if (!user) return;
