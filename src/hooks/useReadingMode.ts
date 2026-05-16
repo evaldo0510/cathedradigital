@@ -38,9 +38,16 @@ export function useReadingMode() {
     const root = document.documentElement;
     
     // Theme classes
-    root.classList.remove('reading-night', 'reading-sepia', 'reading-paper');
+    root.classList.remove('reading-night', 'reading-sepia', 'reading-paper', 'reading-monastery');
     if (prefs.theme !== 'normal') {
       root.classList.add(`reading-${prefs.theme}`);
+    }
+
+    // Zen mode
+    if (prefs.zenMode) {
+      root.classList.add('zen-mode');
+    } else {
+      root.classList.remove('zen-mode');
     }
     
     // CSS Variables
