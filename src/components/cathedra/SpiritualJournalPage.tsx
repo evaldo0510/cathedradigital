@@ -168,10 +168,10 @@ const SpiritualJournalPage = () => {
             <div className="h-px flex-1 bg-border/30" />
           </div>
           
-          <div className="flex gap-4 p-1 bg-muted/30 rounded-full border border-border/10">
+          <div className="flex flex-wrap justify-center gap-4 p-1 bg-muted/30 rounded-full border border-border/10">
             <button 
               onClick={() => setActiveTab('journal')}
-              className={`px-8 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+              className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeTab === 'journal' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
               }`}
             >
@@ -179,11 +179,11 @@ const SpiritualJournalPage = () => {
             </button>
             <button 
               onClick={() => setActiveTab('reflections')}
-              className={`px-8 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+              className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeTab === 'reflections' ? 'bg-primary text-primary-foreground shadow-premium' : 'text-primary/40 hover:text-primary/60'
               }`}
             >
-              Reflexões do Quiz
+              Reflexões
             </button>
           </div>
         </div>
