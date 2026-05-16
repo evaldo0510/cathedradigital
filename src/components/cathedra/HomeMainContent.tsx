@@ -99,8 +99,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label="Catecismo" />
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          padding="none"
-          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-7"
+          padding="md"
+          className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
