@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { PROFILES, ProfileId } from './SpiritualQuiz';
 import { HomeCard as Card } from './HomeCard';
+import { updateUserStreak } from '@/lib/streak';
 
 const SpiritualTrailCard: React.FC = () => {
   const { user } = useAuth();
