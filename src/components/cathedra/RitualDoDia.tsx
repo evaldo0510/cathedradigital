@@ -23,9 +23,9 @@ const RitualDoDia: React.FC = () => {
     <Card
       padding="none"
       variant="default"
-      className="relative overflow-hidden h-full p-8 md:p-12 lg:p-16"
+      className="relative overflow-hidden h-full p-8 md:p-9"
     >
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -51,7 +51,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraIcon icon={BookOpen} size={IconSizePreset.TINY} variant="primary" />
             <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
-          <blockquote className="text-xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
+          <blockquote className="text-lg font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
           <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
@@ -63,7 +63,7 @@ const RitualDoDia: React.FC = () => {
         {/* Reflection */}
         <div className="space-y-3" role="article" aria-label="Reflexão">
           <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
-          <p className="text-base text-foreground/70 leading-relaxed font-reader">
+          <p className="text-sm text-foreground/70 leading-relaxed font-reader">
             {reflection}
           </p>
         </div>
