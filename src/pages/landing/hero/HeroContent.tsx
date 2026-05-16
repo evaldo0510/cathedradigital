@@ -57,7 +57,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user
           className="space-y-8 sm:space-y-12"
         >
           <h1 
-            className="max-w-4xl mx-auto text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-normal text-primary leading-[1.1] tracking-tightest px-4 sm:px-0"
+            className="max-w-4xl mx-auto text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-normal text-primary leading-[1.1] tracking-tightest px-4 sm:px-0 heading-hero"
             aria-label="Nem toda prisão é visível"
           > 
             Nem toda <br/> 

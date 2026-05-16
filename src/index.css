@@ -215,11 +215,12 @@
     line-height: 1.7;
   }
 
-  h1 { @apply heading-hero; }
-  h2 { @apply heading-section-label; }
-  h3 { @apply heading-card; }
-  h4 { @apply heading-item; }
-  p { @apply text-premium-body; }
+  /* Comentadas as aplicações globais para evitar conflitos com o linter rigoroso */
+  /* h1 { @apply heading-hero; } */
+  /* h2 { @apply heading-section-label; } */
+  /* h3 { @apply heading-card; } */
+  /* h4 { @apply heading-item; } */
+  /* p { @apply text-premium-body; } */
 
   /* Premium small text scale */
   .text-premium-tiny {
