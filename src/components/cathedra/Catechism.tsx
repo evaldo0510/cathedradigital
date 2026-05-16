@@ -200,29 +200,34 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-premium-sm hidden md:block" />}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
-          <div className="flex items-center gap-1">
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-32 transition-all duration-1000 pb-16 border-b border-primary/5 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-60 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-10 top-0 bottom-0 w-1 bg-secondary/40 rounded-full hidden xl:block" />}
+      <div className="flex items-center gap-6 mb-10">
+        <div className="flex items-center gap-4">
+          <span className="text-4xl font-serif font-bold text-primary/80 tracking-tightest">§{p}</span>
+          <div className="flex items-center gap-2">
             <button 
               onClick={() => toggleBookmark(p)}
               className={cn(
-                "p-2 rounded-full transition-all hover:bg-primary/5",
-                bookmarks.includes(`p_${p}`) ? "text-primary" : "text-primary/20"
+                "p-2.5 rounded-full transition-all hover:bg-primary/5",
+                bookmarks.includes(`p_${p}`) ? "text-primary shadow-soft" : "text-primary/10"
               )}
               title="Marcar Parágrafo"
             >
-              <Bookmark className={cn("w-3.5 h-3.5", bookmarks.includes(`p_${p}`) && "fill-current")} />
+              <Bookmark className={cn("w-4 h-4", bookmarks.includes(`p_${p}`) && "fill-current")} />
             </button>
-            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
-              <Icons.Heart className={`w-3.5 h-3.5 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} 
+              className="rounded-full hover:bg-primary/5 transition-all active:scale-95"
+            >
+              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-primary/10'}`} />
             </Button>
-            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2.5 h-auto w-auto border-0 hover:bg-primary/5 text-primary/20 hover:text-primary transition-all" />
           </div>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/10 via-primary/[0.02] to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
 
