@@ -190,7 +190,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isHighContrast ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleHighContrast} 
-                className={`flex-1 min-w-[100px] h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 min-w-[90px] h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
                 }`}
                 aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
