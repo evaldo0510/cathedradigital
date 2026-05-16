@@ -290,12 +290,14 @@ const SpiritualQuiz: React.FC = () => {
         });
       setCompletedSteps(prev => [...prev, index]);
       
-      // Update streak and last_action_at in profile
+      // Update streak and last_action_at via helper
+      await updateUserStreak(user.id);
+      
+      // Also add XP
       await (supabase as any)
         .from('profiles')
         .update({
-          last_action_at: new Date().toISOString(),
-          xp: (user as any).xp + 10 // Simple XP boost
+          xp: ((user as any).xp || 0) + 10
         })
         .eq('id', user.id);
     }
