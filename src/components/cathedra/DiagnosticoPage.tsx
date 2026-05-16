@@ -174,55 +174,82 @@ const DiagnosticoPage: React.FC = () => {
   const question = QUESTIONS[currentStep];
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
-      <div className="text-center space-y-2">
-        <Compass className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
-        <p className="text-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
-      </div>
-
-      <Progress value={progress} className="h-2" />
-      <p className="text-xs text-muted-foreground text-center">
-        Pergunta {currentStep + 1} de {QUESTIONS.length}
-      </p>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={question.id}
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
-          transition={{ duration: 0.25 }}
-          className="space-y-4"
-        >
-          <h2 className="text-lg font-semibold text-foreground text-center">{question.question}</h2>
-
-          <div className="space-y-3">
-            {question.options.map((opt) => (
-              <motion.button
-                key={opt.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAnswer(opt.value)}
-                className={`w-full flex items-center gap-3 p-4 rounded-full border transition-all text-left
-                  ${answers[question.id] === opt.value
-                    ? 'border-primary bg-primary/10 text-foreground'
-                    : 'border-border bg-card text-foreground hover:border-primary/40'
-                  }`}
-              >
-                <span className="text-primary">{opt.icon}</span>
-                <span className="text-sm font-medium">{opt.label}</span>
-              </motion.button>
-            ))}
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6 bg-background reading-sepia">
+      <div className="w-full max-w-2xl space-y-16 text-center">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em]">Exame de Alma</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">{currentStep + 1} / {QUESTIONS.length}</span>
           </div>
-        </motion.div>
-      </AnimatePresence>
+          <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-secondary/30"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ type: 'spring', damping: 30, stiffness: 100 }}
+            />
+          </div>
+        </div>
 
-      {currentStep > 0 && (
-        <Button variant="ghost" size="sm" onClick={() => setCurrentStep(currentStep - 1)}>
-          <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-        </Button>
-      )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={question.id}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-12"
+          >
+            <div className="space-y-4">
+              <motion.span 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 block"
+              >
+                Reflexão
+              </motion.span>
+              <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+              {question.options.map((opt, idx) => (
+                <motion.button
+                  key={opt.value}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + (idx * 0.1) }}
+                  whileHover={{ x: 8 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => handleAnswer(opt.value)}
+                  className="flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                >
+                  <div className="flex items-center gap-6">
+                    <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/5 group-hover:border-primary/20 transition-all">
+                      {opt.icon}
+                    </div>
+                    <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                  </div>
+                  <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {currentStep > 0 && (
+          <div className="pt-12 flex justify-center">
+            <button 
+              onClick={() => setCurrentStep(currentStep - 1)}
+              className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Anterior
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
