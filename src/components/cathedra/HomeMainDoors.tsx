@@ -65,9 +65,9 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           className="flex flex-col items-center text-center gap-4 sm:gap-6 group p-6 sm:p-8"
         >
           <CathedraIcon icon={door.icon} size={IconSizePreset.SIDEBAR} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
-          <div className="space-y-4">
-            <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
-            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
+          <div className="space-y-3">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.3em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
+            <p className="text-[10px] text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
           </div>
         </Card>
       ))}
