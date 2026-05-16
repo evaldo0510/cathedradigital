@@ -143,11 +143,11 @@ const Rosary: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => (
             <Button key={key} onClick={() => setSelectedSet(key)}
-              className="text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden">
+              className="text-left p-0 rounded-premium bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden h-auto">
               <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
                 <val.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
               </div>
-              <div className="relative z-10">
+              <div className="relative z-10 p-8 md:p-10">
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-6 transition-transform group-hover:scale-110 ${val.color}`}>
                   <val.icon className="w-7 h-7" />
                 </div>
