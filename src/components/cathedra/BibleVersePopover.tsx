@@ -97,7 +97,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
           {loading && (
             <div className="space-y-2 py-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-3 bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
+                <div key={i} className="h-3 bg-muted rounded-premium animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}
             </div>
           )}
