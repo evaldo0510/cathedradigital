@@ -222,30 +222,60 @@ const SpiritualQuiz: React.FC = () => {
       .select('diagnosis_result')
       .eq('user_id', user.id)
       .maybeSingle()
-      .then(({ data }: any) => {
+      .then(({ data, error }: any) => {
+        if (error) return;
         const res = data?.diagnosis_result;
-        const sp = res?.spiritual_profile;
-        if (sp && PROFILES[sp as ProfileId]) {
+        if (!res) return;
+
+        // If completed
+        if (res.spiritual_profile && PROFILES[res.spiritual_profile as ProfileId]) {
           setDone(true);
-          setExisting(sp);
+          setExisting(res.spiritual_profile as ProfileId);
           setExistingData(res);
+        } else if (res.answers && res.current_step !== undefined) {
+          // If in progress
+          setAnswers(res.answers);
+          setStep(res.current_step);
+          setPhase('quiz');
         }
       });
   }, [user]);
 
+  const savePartialProgress = async (currentStep: number, currentAnswers: Record<string, string>) => {
+    if (!user) return;
+    try {
+      await (supabase as any)
+        .from('user_sensitive_data')
+        .upsert({
+          user_id: user.id,
+          diagnosis_result: {
+            answers: currentAnswers,
+            current_step: currentStep,
+          },
+        }, { onConflict: 'user_id' });
+    } catch (err) {
+      console.error('Failed to save partial progress:', err);
+    }
+  };
+
   const handleAnswer = useCallback((value: string) => {
     const q = QUESTIONS[step];
-    const next = { ...answers, [q.id]: value };
-    setAnswers(next);
+    const nextAnswers = { ...answers, [q.id]: value };
+    setAnswers(nextAnswers);
+    
     if (step < QUESTIONS.length - 1) {
-      setTimeout(() => setStep(s => s + 1), 500);
+      const nextStep = step + 1;
+      setTimeout(() => {
+        setStep(nextStep);
+        savePartialProgress(nextStep, nextAnswers);
+      }, 500);
     } else {
-      const profileId = computeProfile(next);
+      const profileId = computeProfile(nextAnswers);
       setResult(profileId);
       setPhase('result');
-      saveResult(profileId, next);
+      saveResult(profileId, nextAnswers);
     }
-  }, [step, answers]);
+  }, [step, answers, user]);
 
   const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
