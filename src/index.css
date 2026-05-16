@@ -331,12 +331,12 @@
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-8 md:p-10 lg:p-12;
+    @apply premium-card p-6 md:p-8;
   }
 
   /* Standard card shadow and radius */
   .card-standard {
-    @apply premium-card p-6;
+    @apply premium-card p-5;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */
