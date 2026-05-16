@@ -373,9 +373,9 @@ const SpiritualJournalPage = () => {
             </div>
           )
         ) : activeTab === 'reflections' ? (
-          filteredItems(reflections, ['note_text', 'content_id']).length > 0 ? (
+          sortedAndFilteredItems(reflections, ['note_text', 'content_id'], 'created_at').length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {filteredItems(reflections, ['note_text', 'content_id']).map((ref) => (
+              {sortedAndFilteredItems(reflections, ['note_text', 'content_id'], 'created_at').map((ref) => (
                 <motion.div
                   key={ref.id}
                   initial={{ opacity: 0, y: 10 }}
