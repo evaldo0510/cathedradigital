@@ -320,13 +320,13 @@
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    @apply rounded-[24px] transition-all duration-700 relative overflow-hidden backdrop-blur-sm p-8;
+    @apply rounded-[24px] transition-all duration-700 relative overflow-hidden backdrop-blur-md p-8;
   }
   
   .premium-card-interactive {
     @apply premium-card cursor-pointer active:scale-[0.99];
     @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
-    @apply focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1;
+    @apply focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */

@@ -348,56 +348,49 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe max-w-full"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background/95 border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe max-w-full"
             >
               {/* Refined Header */}
-              <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
-                    <Compass className="w-7 h-7 text-primary/40" />
+              <div className="p-4 sm:p-8 border-b border-primary/5 flex items-center justify-between flex-shrink-0 bg-background/40 backdrop-blur-md">
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
+                    <Compass className="w-5 h-5 sm:w-7 sm:h-7 text-primary/40" />
                   </div>
-                  <div>
-                    <h3 className="text-2xl font-display text-primary tracking-tightest">Logos</h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Mestre de Sabedoria</p>
+                  <div className="min-w-0">
+                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">Logos</h3>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Mestre de Sabedoria</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <Button 
                     variant="ghost" 
-                    size="icon" 
+                    size="icon-xs" 
                     onClick={handleExportPDF}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
                     title="Exportar PDF"
                   >
-                    <Download className="w-5 h-5" />
+                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                   </Button>
+                  
+                  <div className="h-6 w-px bg-primary/5 mx-1 hidden sm:block" />
+
                   <Button 
                     variant="ghost" 
-                    size="icon" 
-                    onClick={() => setIsContemplative(!isContemplative)}
-                    className={cn(
-                      "rounded-full hover:bg-primary/5 transition-all",
-                      isContemplative ? "text-primary bg-primary/10" : "text-primary/20"
-                    )}
-                    title={isContemplative ? "Modo Normal" : "Modo Contemplativo"}
-                  >
-                    <Target className="w-5 h-5" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
+                    size="icon-xs" 
                     onClick={() => setAutoScroll(!autoScroll)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
-                      autoScroll ? "text-primary bg-primary/10" : "text-primary/20"
+                      autoScroll ? "text-secondary bg-secondary/10" : "text-primary/20"
                     )}
                     title={autoScroll ? "Pausar Auto-scroll" : "Manter Auto-scroll"}
+                    aria-label={autoScroll ? "Pausar rolagem automática" : "Ativar rolagem automática"}
                   >
                     {autoScroll ? <ArrowDown className="w-4 h-4 animate-bounce" /> : <Lock className="w-4 h-4" />}
                   </Button>
+
                   <Button 
                     variant="ghost" 
-                    size="icon" 
+                    size="icon-xs" 
                     onClick={() => setShowExtraDetails(!showExtraDetails)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
@@ -405,27 +398,18 @@ const LogosChat = () => {
                     )}
                     title={showExtraDetails ? "Ocultar Detalhes" : "Mostrar Detalhes"}
                   >
-                    <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
+                    <Eye className={cn("w-4 h-4 sm:w-5 sm:h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
-                  <button
-                    onClick={() => setAutoScroll(!autoScroll)}
-                    className={cn(
-                      "text-premium-tiny transition-all px-4 py-2 rounded-full border border-primary/5 hover:bg-primary/5",
-                      autoScroll ? "text-secondary border-secondary/20" : "text-primary/30"
-                    )}
-                    aria-label={autoScroll ? "Pausar rolagem automática" : "Ativar rolagem automática"}
-                  >
-                    {autoScroll ? "Auto-scroll" : "Scroll Manual"}
-                  </button>
+
                   <Button 
                     ref={closeBtnRef}
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsOpen(false)}
-                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
                     aria-label="Fechar Logos (ESC)"
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Button>
                 </div>
               </div>
