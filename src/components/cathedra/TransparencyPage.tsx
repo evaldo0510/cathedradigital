@@ -106,7 +106,7 @@ const TransparencyPage: React.FC = () => {
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
+        <div className="p-8 rounded-premium border border-border text-center space-y-4">
           <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">
