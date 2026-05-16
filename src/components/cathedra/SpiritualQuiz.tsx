@@ -24,6 +24,12 @@ export interface SpiritualStep {
   icon: React.ElementType;
 }
 
+export interface QuoteReference {
+  text: string;
+  ref: string;
+  source: 'bible' | 'catechism';
+}
+
 export interface ProfileResult {
   title: string;
   emoji: string;
@@ -40,6 +46,8 @@ export interface ProfileResult {
   questions: string[];
   readingRecommendations: { title: string; ref: string }[];
   steps: SpiritualStep[];
+  mainQuote?: QuoteReference;
+  catechismRef?: QuoteReference;
 }
 
 export const PROFILES: Record<ProfileId, ProfileResult> = {
