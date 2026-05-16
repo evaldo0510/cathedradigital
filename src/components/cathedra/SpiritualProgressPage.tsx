@@ -43,7 +43,7 @@ const SpiritualProgressPage: React.FC = () => {
         const start = startOfMonth(month).toISOString();
         const end = endOfMonth(month).toISOString();
         
-        const [trailRes, quizRes, journeysRes] = await Promise.all([
+        const [trailRes, quizRes, journeysRes, reflectionsRes] = await Promise.all([
           supabase
             .from('trail_progress')
             .select('completed_at, step_index, trail_id')
@@ -58,12 +58,19 @@ const SpiritualProgressPage: React.FC = () => {
           supabase
             .from('journey_progress')
             .select('journey_id, completed_at')
+            .eq('user_id', user.id),
+          supabase
+            .from('user_notes')
+            .select('*')
             .eq('user_id', user.id)
+            .eq('content_type', 'quiz_deepening')
+            .order('created_at', { ascending: false })
         ]);
 
         if (trailRes.data) setTrailHistory(trailRes.data);
         if (quizRes.data) setQuizData(quizRes.data.diagnosis_result);
-        
+        if (reflectionsRes.data) setReflections(reflectionsRes.data);
+
         if (journeysRes.data) {
           const journeyIds = [...new Set(journeysRes.data.map(j => j.journey_id))];
           const { data: journeyDetails } = await supabase
