@@ -276,5 +276,3 @@ const SectionHeader = ({ label }: { label: string }) => (
 );
 
 export default HojePage;
-
-export default HojePage;
