@@ -270,7 +270,7 @@ const LogosChat = () => {
               className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden"
             >
               {/* Refined Header */}
-              <div className="p-10 border-b border-primary/5 flex items-center justify-between">
+              <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-6">
                   <div className="w-14 h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
                     <Compass className="w-7 h-7 text-primary/40" />
