@@ -115,7 +115,7 @@ describe('Dashboard Responsive Layout', () => {
 describe('HojePage Responsive Layout', () => {
   it('Hero title should have responsive font sizes', () => {
     renderHojePage();
-    const title = screen.getByRole('heading', { level: 1 });
+    const title = screen.getByText(/A beleza/i);
     expect(title.className).toContain('text-6xl');
     expect(title.className).toContain('md:text-8xl');
     expect(title.className).toContain('lg:text-9xl');
@@ -123,7 +123,7 @@ describe('HojePage Responsive Layout', () => {
 
   it('Hero section should have responsive height', () => {
     renderHojePage();
-    const hero = screen.getByRole('heading', { level: 1 }).closest('section');
+    const hero = screen.getByText(/A beleza/i).closest('section');
     expect(hero?.className).toContain('min-h-[70vh]');
   });
 });
