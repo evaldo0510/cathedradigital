@@ -655,6 +655,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </aside>
       </div>
     </div>
+    <div className="h-16 lg:hidden" /> {/* Mobile bottom spacer */}
     </>
   );
 });
