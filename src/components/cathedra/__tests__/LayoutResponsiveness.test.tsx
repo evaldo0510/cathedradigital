@@ -115,6 +115,7 @@ describe('Dashboard Responsive Layout', () => {
 describe('HojePage Responsive Layout', () => {
   it('Hero title should have responsive font sizes', () => {
     renderHojePage();
+    // Use part of the text that's not broken by tags
     const title = screen.getByText(/A beleza/i);
     expect(title.className).toContain('text-6xl');
     expect(title.className).toContain('md:text-8xl');
