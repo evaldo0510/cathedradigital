@@ -246,22 +246,22 @@ const SpiritualJournalPage = () => {
 
       {/* Entry Form */}
       <section className="max-w-4xl mx-auto w-full">
-        <HomeCard padding="lg" className="space-y-16 bg-primary/[0.01]">
+        <HomeCard padding="none" className="p-8 sm:p-12 md:p-16 space-y-12 sm:space-y-16 bg-primary/[0.01]">
           <div className="space-y-8">
-            <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
-            <div className="flex flex-wrap justify-center gap-8">
+            <h3 className="text-xl sm:text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8">
               {MOODS.map((m) => (
                 <button
                   key={m.id}
                   onClick={() => setMood(m.id)}
-                  className={`flex flex-col items-center gap-4 p-6 rounded-premium border transition-all duration-700 ${
+                  className={`flex flex-col items-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-premium border transition-all duration-700 ${
                     mood === m.id 
                       ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
                       : 'bg-primary/[0.02] border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-primary/[0.05]'
                   }`}
                 >
-                  <m.icon className="w-8 h-8" />
-                  <span className="text-premium-tiny font-bold uppercase tracking-widest">{m.label}</span>
+                  <m.icon className="w-6 h-6 sm:w-8 sm:h-8" />
+                  <span className="text-[8px] sm:text-premium-tiny font-bold uppercase tracking-widest">{m.label}</span>
                 </button>
               ))}
             </div>
@@ -272,14 +272,14 @@ const SpiritualJournalPage = () => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-              className="min-h-[300px] rounded-premium border-border/20 p-8 md:p-12 font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+              className="min-h-[250px] sm:min-h-[300px] rounded-premium border-border/20 p-6 sm:p-10 md:p-12 font-serif text-lg sm:text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
             />
             <div className="flex justify-center">
               <HomeButton 
                 onClick={saveEntry}
                 disabled={isLoading || !content.trim()}
                 variant="primary"
-                className="px-16 h-14"
+                className="px-10 sm:px-16"
               >
                 {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
               </HomeButton>
