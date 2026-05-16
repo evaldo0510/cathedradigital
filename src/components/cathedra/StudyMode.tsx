@@ -266,6 +266,20 @@ const StudyMode: React.FC = () => {
         
         if (convId && user) {
           saveMessages(convId, [...allMessages, assistantMsg]).catch(e => console.error('Save failed:', e));
+          
+          // Also save as a dedicated journal reflection for the new Logos tab
+          await supabase.from('user_notes').insert({
+            user_id: user.id,
+            content_type: 'logos_reflection',
+            content_id: `logos_${Date.now()}`,
+            note_text: assistantMsg.content,
+            metadata: { 
+              prompt: text.trim(),
+              tone: currentMode || 'contemplative',
+              timestamp: new Date().toISOString(),
+              conversation_id: convId
+            }
+          });
         }
       } else if (response.error) {
         throw new Error(response.error);
