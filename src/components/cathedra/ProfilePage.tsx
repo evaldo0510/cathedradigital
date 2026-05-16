@@ -15,6 +15,7 @@ import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
+import SpiritualReminderSettings from './SpiritualReminderSettings';
 
 interface Badge {
   id: string;
