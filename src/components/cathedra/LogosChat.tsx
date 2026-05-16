@@ -106,9 +106,12 @@ const LogosChat = () => {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
     }
-  }, [messages, isLoading, hasRitualPassed]);
+  }, [messages, isLoading, hasRitualPassed, isOpen]);
 
   const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
@@ -264,10 +267,10 @@ const LogosChat = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-full w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden"
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden"
             >
               {/* Refined Header */}
-              <div className="p-10 border-b border-primary/5 flex items-center justify-between">
+              <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-6">
                   <div className="w-14 h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
                     <Compass className="w-7 h-7 text-primary/40" />
@@ -323,7 +326,7 @@ const LogosChat = () => {
               </div>
 
               {/* Messages - Pure Typographic Flow */}
-              <ScrollArea className="flex-1 px-10 pt-10 pb-20" ref={scrollRef}>
+              <ScrollArea className="flex-1 px-6 sm:px-10 pt-6 sm:pt-10 pb-10" ref={scrollRef}>
                 <div className={cn("space-y-20 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-32 scale-[1.02]")}>
                   {!hasRitualPassed && (
                     <motion.div 
@@ -419,7 +422,7 @@ const LogosChat = () => {
 
               {/* Input Area - Integrated Journal Feel */}
               {hasRitualPassed && (
-                <div className="p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl">
+                <div className="p-6 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl pb-[max(2.5rem,env(safe-area-inset-bottom))]">
                   {/* Tone Selector */}
                   <div className="flex items-center justify-center gap-6 mb-8 opacity-40 hover:opacity-100 transition-opacity">
                     {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
