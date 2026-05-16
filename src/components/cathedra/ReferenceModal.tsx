@@ -99,7 +99,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
                   <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Referência Sagrada</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
+              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full" aria-label="Fechar modal">
                 <X className="w-5 h-5" />
               </Button>
             </div>
