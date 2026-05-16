@@ -91,6 +91,7 @@ const LogosChat = () => {
   const [tone, setTone] = useState<LogosTone>('contemplative');
   const [isContemplative, setIsContemplative] = useState(false);
   const [showExtraDetails, setShowExtraDetails] = useState(true);
+  const [autoScroll, setAutoScroll] = useState(true);
   const [hasRitualPassed, setHasRitualPassed] = useState(false);
   const [intention, setInputIntention] = useState('');
   const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
