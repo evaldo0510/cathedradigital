@@ -12,8 +12,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { 
   Copy, Check, MessageSquare, Trash2, ChevronLeft, 
   Compass, Sparkles, BookOpen, ArrowRight, Shield,
-  Search, Scroll, Quote, History, Plus
+  Search, Scroll, Quote, History, Plus, Eye, Target
 } from 'lucide-react';
+import { ReferenceModal } from './ReferenceModal';
+import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/cathedra/Button';
 import { ScrollArea } from '@/components/ui/scroll-area';
