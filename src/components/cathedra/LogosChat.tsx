@@ -277,9 +277,21 @@ const LogosChat = () => {
                       "rounded-full hover:bg-primary/5 transition-all",
                       isContemplative ? "text-primary bg-primary/10" : "text-primary/20"
                     )}
-                    title="Modo Contemplativo"
+                    title={isContemplative ? "Modo Normal" : "Modo Contemplativo"}
                   >
                     <Target className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => setShowExtraDetails(!showExtraDetails)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      !showExtraDetails ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title={showExtraDetails ? "Ocultar Detalhes" : "Mostrar Detalhes"}
+                  >
+                    <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
                   <Button 
                     variant="ghost" 
