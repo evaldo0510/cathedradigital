@@ -10,6 +10,7 @@ import { Button } from '@/components/cathedra/Button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { updateUserStreak } from '@/lib/streak';
 
 /* ── Types ── */
 export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sentido' | 'firme_aprofundando' | 'ardente_missionario';
@@ -215,10 +216,14 @@ const SpiritualQuiz: React.FC = () => {
   const [existing, setExisting] = useState<ProfileId | null>(null);
   const [existingData, setExistingData] = useState<any>(null);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [deepeningAnswers, setDeepeningAnswers] = useState<Record<string, string>>({});
+  const [isSavingReflection, setIsSavingReflection] = useState(false);
 
   useEffect(() => {
     const activeId = existing || result;
     if (!user || !activeId) return;
+    
+    // Fetch trail progress
     supabase
       .from('trail_progress')
       .select('step_index')
@@ -227,7 +232,40 @@ const SpiritualQuiz: React.FC = () => {
       .then(({ data }) => {
         if (data) setCompletedSteps(data.map(d => d.step_index));
       });
+
+    // Fetch deepening answers
+    supabase
+      .from('user_notes')
+      .select('content_id, note_text')
+      .eq('user_id', user.id)
+      .eq('content_type', 'quiz_deepening')
+      .then(({ data }) => {
+        if (data) {
+          const map: Record<string, string> = {};
+          data.forEach(n => { map[n.content_id] = n.note_text; });
+          setDeepeningAnswers(map);
+        }
+      });
   }, [user, existing, result]);
+
+  const saveDeepeningAnswer = async (question: string, answer: string) => {
+    if (!user) return;
+    setIsSavingReflection(true);
+    try {
+      await (supabase as any)
+        .from('user_notes')
+        .upsert({
+          user_id: user.id,
+          content_type: 'quiz_deepening',
+          content_id: question,
+          note_text: answer,
+        }, { onConflict: 'user_id,content_type,content_id' });
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+    } finally {
+      setIsSavingReflection(false);
+    }
+  };
 
   const toggleStep = async (index: number) => {
     const activeId = existing || result;
@@ -251,6 +289,17 @@ const SpiritualQuiz: React.FC = () => {
           step_index: index
         });
       setCompletedSteps(prev => [...prev, index]);
+      
+      // Update streak and last_action_at via helper
+      await updateUserStreak(user.id);
+      
+      // Also add XP
+      await (supabase as any)
+        .from('profiles')
+        .update({
+          xp: ((user as any).xp || 0) + 10
+        })
+        .eq('id', user.id);
     }
   };
 
@@ -384,37 +433,68 @@ const SpiritualQuiz: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-4 pt-4 border-t border-primary/5">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Trilha do Dia</p>
-          <div className="space-y-2 text-center">
-            {p.steps.map((step, idx) => (
-              <button
-                key={idx}
-                onClick={() => toggleStep(idx)}
-                className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                  completedSteps.includes(idx)
-                    ? 'bg-primary/10 border-primary/20 opacity-60'
-                    : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
-                    completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
+        <div className="space-y-6 pt-4 border-t border-primary/5">
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Reflexão Profunda</p>
+            <p className="text-xs font-serif italic text-primary/70 leading-relaxed bg-primary/[0.02] p-4 rounded-xl border border-primary/5">
+              {p.deepReflection}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Perguntas de Aprofundamento</p>
+            <div className="space-y-4">
+              {p.questions.map((q, idx) => (
+                <div key={idx} className="space-y-2">
+                  <p className="text-[10px] font-bold text-primary/60">{q}</p>
+                  <textarea
+                    value={deepeningAnswers[q] || ''}
+                    onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                    onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                    placeholder="Sua resposta..."
+                    className="w-full bg-primary/[0.01] border border-primary/5 rounded-xl p-3 text-xs font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[60px] resize-none"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Trilha do Dia</p>
+            <div className="space-y-2 text-center">
+              {p.steps.map((step, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => toggleStep(idx)}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
+                    completedSteps.includes(idx)
+                      ? 'bg-primary/10 border-primary/20 opacity-60'
+                      : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
+                    }`}>
+                      {completedSteps.includes(idx) ? <Sparkles className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
+                    </div>
+                    <div className="text-left">
+                      <p className={`text-xs font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-[10px] text-primary/40 uppercase tracking-widest">{step.time}</p>
+                        <span className="w-1 h-1 rounded-full bg-primary/20" />
+                        <p className="text-[9px] text-primary/30 italic">{step.action}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                    completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
                   }`}>
-                    {completedSteps.includes(idx) ? <Sparkles className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
+                    {completedSteps.includes(idx) && <Sparkles className="w-3 h-3 text-primary-foreground" />}
                   </div>
-                  <div className="text-left">
-                    <p className={`text-xs font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
-                    <p className="text-[10px] text-primary/40 uppercase tracking-widest">{step.time}</p>
-                  </div>
-                </div>
-                <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                  completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
-                }`}>
-                  {completedSteps.includes(idx) && <Sparkles className="w-3 h-3 text-primary-foreground" />}
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -483,37 +563,68 @@ const SpiritualQuiz: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-4 pt-4 border-t border-primary/5">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/30">Trilha Recomendada</p>
-          <div className="space-y-2 text-center">
-            {p.steps.map((step, idx) => (
-              <button
-                key={idx}
-                onClick={() => toggleStep(idx)}
-                className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                  completedSteps.includes(idx)
-                    ? 'bg-primary/10 border-primary/20 opacity-60'
-                    : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border ${
-                    completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
+        <div className="space-y-12 pt-12 border-t border-primary/5 text-center">
+          <div className="space-y-4 max-w-xl mx-auto">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Reflexão Profunda</p>
+            <p className="text-lg font-serif italic text-primary/80 leading-relaxed bg-primary/[0.02] p-8 rounded-[2rem] border border-primary/5">
+              {p.deepReflection}
+            </p>
+          </div>
+
+          <div className="space-y-8 max-w-xl mx-auto">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Questões para o Coração</p>
+            <div className="space-y-8">
+              {p.questions.map((q, idx) => (
+                <div key={idx} className="space-y-4">
+                  <p className="text-sm font-bold text-primary/70">{q}</p>
+                  <textarea
+                    value={deepeningAnswers[q] || ''}
+                    onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                    onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                    placeholder="Sua reflexão sincera..."
+                    className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-6 max-w-xl mx-auto">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Trilha de Purificação</p>
+            <div className="space-y-4">
+              {p.steps.map((step, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => toggleStep(idx)}
+                  className={`w-full flex items-center justify-between p-6 rounded-[2rem] border transition-all ${
+                    completedSteps.includes(idx)
+                      ? 'bg-primary/10 border-primary/20 opacity-60'
+                      : 'bg-primary/[0.02] border-primary/5 hover:border-primary/20'
+                  }`}
+                >
+                  <div className="flex items-center gap-6">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center border ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground' : 'border-primary/10 text-primary/40'
+                    }`}>
+                      {completedSteps.includes(idx) ? <Sparkles className="w-6 h-6" /> : <step.icon className="w-6 h-6" />}
+                    </div>
+                    <div className="text-left">
+                      <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                      <div className="flex items-center gap-3">
+                        <p className="text-xs text-primary/40 uppercase tracking-widest">{step.time}</p>
+                        <span className="w-1 h-1 rounded-full bg-primary/20" />
+                        <p className="text-xs text-primary/40 italic">{step.action}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center ${
+                    completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
                   }`}>
-                    {completedSteps.includes(idx) ? <Sparkles className="w-4 h-4" /> : <step.icon className="w-4 h-4" />}
+                    {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
                   </div>
-                  <div className="text-left">
-                    <p className={`text-xs font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
-                    <p className="text-[10px] text-primary/40 uppercase tracking-widest">{step.time}</p>
-                  </div>
-                </div>
-                <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                  completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/10'
-                }`}>
-                  {completedSteps.includes(idx) && <Sparkles className="w-3 h-3 text-primary-foreground" />}
-                </div>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

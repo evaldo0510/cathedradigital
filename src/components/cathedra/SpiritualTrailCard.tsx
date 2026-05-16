@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { PROFILES, ProfileId } from './SpiritualQuiz';
 import { HomeCard as Card } from './HomeCard';
+import { updateUserStreak } from '@/lib/streak';
 
 const SpiritualTrailCard: React.FC = () => {
   const { user } = useAuth();
@@ -60,6 +61,7 @@ const SpiritualTrailCard: React.FC = () => {
           step_index: index
         });
       setCompletedSteps(prev => [...prev, index]);
+      await updateUserStreak(user.id);
     }
   };
 
