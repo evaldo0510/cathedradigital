@@ -329,9 +329,9 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : activeTab === 'journal' ? (
-          sortedAndFilteredItems(entries, ['content'], 'entry_date').length > 0 ? (
+          sortedAndFilteredItems(entries, ['content'], 'created_at').length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {sortedAndFilteredItems(entries, ['content'], 'entry_date').map((entry) => (
+              {sortedAndFilteredItems(entries, ['content'], 'created_at').map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
