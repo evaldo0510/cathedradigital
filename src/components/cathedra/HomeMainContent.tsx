@@ -14,8 +14,8 @@ interface HomeMainContentProps {
 }
 
 const SectionHeader = ({ label }: { label: string }) => (
-  <div className="flex items-center gap-6">
-    <h2 className="text-premium-small heading-section-label">
+  <div className="flex items-center gap-6 px-4 sm:px-0">
+    <h2 className="text-premium-tiny heading-section-label !mb-0">
       {label}
     </h2>
     <div className="h-px flex-1 bg-primary/5" />
@@ -29,9 +29,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-6 md:px-0">
+    <div className="max-w-5xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-0 sm:px-6 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
-      <section className="space-y-6">
+      <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
@@ -63,15 +63,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* 3. RITUAL DO DIA */}
-      <section className="space-y-6">
+      <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Ritual do Dia" />
         <RitualDoDia />
       </section>
 
       {/* 4. TRILHAS PRINCIPAIS */}
-      <section className="space-y-6">
+      <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Trilhas Principais" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <HomeCard padding="sm" className="group border-primary/5" onClick={() => onNavigate(AppRoute.TEMAS)}>
             <div className="flex items-center gap-5">
               <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="primary" />
@@ -95,7 +95,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* 5. CATECISMO */}
-      <section className="space-y-6">
+      <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Catecismo" />
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
@@ -118,7 +118,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* 6. LOGOS */}
-      <section className="space-y-6">
+      <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Logos" />
         <HomeCard 
           padding="md"
