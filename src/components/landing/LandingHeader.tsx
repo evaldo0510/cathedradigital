@@ -71,7 +71,7 @@ const LandingHeader = () => {
         >
           <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase heading-hero">CATHEDRA</h1>
+            <span className="text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</span>
           </div>
         </div>
 
@@ -149,7 +149,7 @@ const LandingHeader = () => {
               <HomeButton
                 variant="ghost"
                 size="sm"
-                className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+                className={`hidden xs:flex rounded-[24px] px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
                 Começar <ChevronRight className="w-4 h-4 ml-1" />
@@ -159,7 +159,7 @@ const LandingHeader = () => {
             <HomeButton
               variant="ghost"
               size="sm"
-              className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+              className={`hidden xs:flex rounded-[24px] px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
               onClick={() => navigate(AppRoute.HOJE)}
             >
               Ir ao Painel <ChevronRight className="w-4 h-4 ml-1" />

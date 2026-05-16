@@ -29,14 +29,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-24 md:space-y-32 py-16 md:py-24 px-4 md:px-0">
+    <div className="max-w-3xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-6 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
       <section className="space-y-6">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="none"
-          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-7"
+          padding="md"
+          className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
@@ -99,8 +99,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <SectionHeader label="Catecismo" />
         <HomeCard 
           onClick={() => onNavigate(AppRoute.CATECHISM)}
-          padding="none"
-          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-7"
+          padding="md"
+          className="group border-primary/5 bg-primary/[0.01]"
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
@@ -121,8 +121,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-6">
         <SectionHeader label="Logos" />
         <HomeCard 
-          padding="none"
-          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-7"
+          padding="md"
+          className="group border-primary/5 bg-primary/[0.01]"
           onClick={openLogosChat}
         >
           <div className="flex items-center justify-between gap-8">
