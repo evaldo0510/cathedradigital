@@ -345,9 +345,9 @@ const SpiritualJournalPage = () => {
             </div>
           )
         ) : activeTab === 'reflections' ? (
-          reflections.length > 0 ? (
+          filteredItems(reflections, ['note_text', 'content_id']).length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {reflections.map((ref) => (
+              {filteredItems(reflections, ['note_text', 'content_id']).map((ref) => (
                 <motion.div
                   key={ref.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -366,9 +366,17 @@ const SpiritualJournalPage = () => {
                         </span>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
-                      {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
-                    </span>
+                    <div className="flex items-center gap-4">
+                      <Button variant="ghost" size="icon" onClick={() => setEditingEntry({ id: ref.id, type: 'reflection', content: ref.note_text })} className="text-primary/20 hover:text-primary transition-colors">
+                        <Icons.PenLine className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'reflection')} className="text-primary/20 hover:text-red-500 transition-colors">
+                        <Icons.Trash2 className="w-4 h-4" />
+                      </Button>
+                      <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
+                        {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
+                      </span>
+                    </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-primary/10">
                     "{ref.note_text}"
