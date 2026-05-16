@@ -346,12 +346,17 @@ const StudyMode: React.FC = () => {
                 ))
               )}
               {isLoading && (
-                <div className="flex flex-col items-start space-y-6">
+                <div className="flex flex-col items-start space-y-8 opacity-20">
                   <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                      <Compass className="w-4 h-4 text-primary animate-spin-slow" />
+                    <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10 animate-spin-slow">
+                      <Compass className="w-5 h-5 text-primary" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 animate-pulse">Consultando a Tradição...</span>
+                    <span className="text-[11px] font-black uppercase tracking-[0.4em] animate-pulse">Logos medita...</span>
+                  </div>
+                  <div className="flex gap-2 ml-10">
+                    <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '200ms' }} />
+                    <span className="w-1 h-1 bg-primary/20 rounded-full animate-bounce" style={{ animationDelay: '400ms' }} />
                   </div>
                 </div>
               )}
