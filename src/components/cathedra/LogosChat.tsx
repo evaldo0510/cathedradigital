@@ -397,11 +397,12 @@ const LogosChat = () => {
                     <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
                   <Button 
+                    ref={closeBtnRef}
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsOpen(false)}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
-                    aria-label="Fechar Logos"
+                    aria-label="Fechar Logos (ESC)"
                   >
                     <X className="w-6 h-6" />
                   </Button>
