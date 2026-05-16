@@ -39,7 +39,6 @@ const SpiritualProgressPage: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Fetch trail history for the current month
         const start = startOfMonth(month).toISOString();
         const end = endOfMonth(month).toISOString();
         
@@ -49,7 +48,8 @@ const SpiritualProgressPage: React.FC = () => {
             .select('completed_at, step_index, trail_id')
             .eq('user_id', user.id)
             .gte('completed_at', start)
-            .lte('completed_at', end),
+            .lte('completed_at', end)
+            .order('completed_at', { ascending: false }),
           supabase
             .from('user_sensitive_data')
             .select('diagnosis_result')
@@ -70,7 +70,7 @@ const SpiritualProgressPage: React.FC = () => {
         if (trailRes.data) setTrailHistory(trailRes.data);
         if (quizRes.data) setQuizData(quizRes.data.diagnosis_result);
         if (reflectionsRes.data) setReflections(reflectionsRes.data);
-
+        
         if (journeysRes.data) {
           const journeyIds = [...new Set(journeysRes.data.map(j => j.journey_id))];
           const { data: journeyDetails } = await supabase
@@ -117,7 +117,7 @@ const SpiritualProgressPage: React.FC = () => {
       
       // Header
       doc.setFontSize(22);
-      doc.setTextColor(43, 64, 46); // Primary color approx
+      doc.setTextColor(43, 64, 46); 
       doc.text('Relatório de Progresso Espiritual', 20, 20);
       
       doc.setFontSize(10);
@@ -156,7 +156,8 @@ const SpiritualProgressPage: React.FC = () => {
       if (reflections.length > 0) {
         doc.addPage();
         doc.setFontSize(18);
-        doc.text('Reflexões Profundas', 20, 20);
+        doc.setTextColor(43, 64, 46);
+        doc.text('Resumo de Reflexões Profundas', 20, 20);
         
         let y = 35;
         reflections.forEach((ref, index) => {
@@ -215,6 +216,7 @@ const SpiritualProgressPage: React.FC = () => {
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-bold text-primary tracking-tight">Sua Jornada</h1>
           <p className="text-lg text-primary/60 italic font-serif">"Aquele que começou em vós esta boa obra, há de completá-la."</p>
+          
           <div className="flex justify-center pt-4">
             <Button 
               onClick={handleExport} 
@@ -228,8 +230,59 @@ const SpiritualProgressPage: React.FC = () => {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Status Section */}
         <div className="lg:col-span-2 space-y-8">
+          {/* Detailed Daily Progress */}
+          <Card padding="lg" className="space-y-8 bg-gradient-to-br from-primary/[0.03] to-transparent">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                <History className="w-5 h-5 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-primary">Detalhe do Progresso Diário</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <Flame className="w-8 h-8 text-secondary mx-auto fill-current animate-pulse" />
+                <p className="text-3xl font-black text-primary">{profile?.streak || 0}</p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Streak Atual</p>
+              </div>
+              
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
+                <p className="text-3xl font-black text-primary">
+                  {trailHistory.filter(t => isSameDay(new Date(t.completed_at), new Date())).length}
+                </p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Passos Hoje</p>
+              </div>
+
+              <div className="space-y-2 text-center p-6 rounded-3xl bg-background border border-border/40 shadow-soft">
+                <Clock className="w-8 h-8 text-amber-500 mx-auto" />
+                <p className="text-3xl font-black text-primary">{(profile as any)?.total_minutes_read || 0}</p>
+                <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Minutos Totais</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 pt-4 border-t border-primary/5">
+              <p className="text-[10px] font-black text-primary/30 uppercase tracking-widest">Atividade Recente</p>
+              <div className="space-y-2">
+                {trailHistory.slice(0, 5).map((t, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/[0.01] border border-primary/5">
+                    <div className="flex items-center gap-3">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span className="text-xs font-medium text-primary/70">
+                        {p?.steps[t.step_index]?.title || `Passo ${t.step_index + 1}`}
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-primary/30">{format(new Date(t.completed_at), 'HH:mm')}</span>
+                  </div>
+                ))}
+                {trailHistory.length === 0 && (
+                  <p className="text-xs text-primary/30 italic text-center py-4">Inicie sua trilha hoje para ver o progresso.</p>
+                )}
+              </div>
+            </div>
+          </Card>
+
           {/* Quiz Status */}
           <Card padding="lg" className="space-y-6">
             <div className="flex items-center justify-between">
