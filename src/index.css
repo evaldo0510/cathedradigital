@@ -435,6 +435,20 @@
   --border: 222 47% 12%;
 }
 
+.reading-monastery {
+  --background: 210 20% 8%;    /* Deep Slate Blue/Black */
+  --foreground: 45 40% 90%;     /* Soft Cream */
+  --card: 210 20% 10%;
+  --card-foreground: 45 40% 90%;
+  --primary: 45 64% 52%;        /* Gold */
+  --secondary: 45 64% 40%;
+  --border: 45 64% 52% / 0.1;
+  --muted-foreground: 45 10% 60%;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+    linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+}
+
 .reading-sepia {
   --background: 40 40% 90%;    /* #F4ECD8 */
   --foreground: 25 30% 20%;    /* #433422 */
@@ -459,12 +473,32 @@
 .reading-night body,
 .reading-sepia body,
 .reading-paper body,
+.reading-monastery body,
 .reading-night,
 .reading-sepia,
-.reading-paper {
-  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+.reading-paper,
+.reading-monastery {
+  transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: hsl(var(--background)) !important;
   color: hsl(var(--foreground)) !important;
+}
+
+/* Zen Mode support */
+.zen-mode .app-header,
+.zen-mode .library-sidebar,
+.zen-mode .desktop-aside,
+.zen-mode .back-to-theme-banner,
+.zen-mode .bottom-nav {
+  @apply hidden opacity-0 pointer-events-none;
+  transition: opacity 0.5s ease;
+}
+
+.zen-mode .desktop-layout {
+  @apply grid-cols-1 max-w-4xl mx-auto;
+}
+
+.zen-mode .reader-text {
+  @apply py-32;
 }
 
 .reader-text {
