@@ -1364,6 +1364,7 @@ export type Database = {
           created_at: string
           entry_date: string
           id: string
+          is_reviewed: boolean
           journey_id: string | null
           mood: string | null
           step_id: string | null
@@ -1375,6 +1376,7 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
+          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1386,6 +1388,7 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
+          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1681,6 +1684,7 @@ export type Database = {
           created_at: string
           highlight_color: string | null
           id: string
+          is_reviewed: boolean
           metadata: Json | null
           note_text: string
           updated_at: string
@@ -1692,6 +1696,7 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          is_reviewed?: boolean
           metadata?: Json | null
           note_text?: string
           updated_at?: string
@@ -1703,6 +1708,7 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          is_reviewed?: boolean
           metadata?: Json | null
           note_text?: string
           updated_at?: string
