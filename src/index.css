@@ -119,10 +119,10 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.5; /* Slightly thicker for better legibility on mobile while keeping premium feel */
+    stroke-width: 1.5; /* Slightly thicker for better legibility while keeping premium feel */
     stroke-linecap: round;
     stroke-linejoin: round;
-    @apply opacity-60;
+    @apply opacity-70;
   }
 
   /* Professional hover state for icons within interactive elements */
