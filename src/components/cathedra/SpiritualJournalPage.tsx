@@ -173,15 +173,30 @@ const SpiritualJournalPage = () => {
     }
   };
 
-  const filteredItems = (items: any[], searchFields: string[]) => {
-    if (!searchQuery.trim()) return items;
-    return items.filter(item => 
-      searchFields.some(field => {
-        const val = item[field];
-        if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
-        return false;
-      })
-    );
+  const sortedAndFilteredItems = (items: any[], searchFields: string[], dateField: string) => {
+    let result = items;
+    if (searchQuery.trim()) {
+      result = items.filter(item => 
+        searchFields.some(field => {
+          const val = item[field];
+          if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
+          return false;
+        })
+      );
+    }
+
+    return [...result].sort((a, b) => {
+      let valA = a[dateField];
+      let valB = b[dateField];
+      
+      // Special case for logos timestamp
+      if (dateField === 'timestamp' && a.parsed?.timestamp) valA = a.parsed.timestamp;
+      if (dateField === 'timestamp' && b.parsed?.timestamp) valB = b.parsed.timestamp;
+      
+      const dateA = new Date(valA || a.created_at).getTime();
+      const dateB = new Date(valB || b.created_at).getTime();
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
   };
 
   return (
