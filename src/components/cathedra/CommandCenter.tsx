@@ -435,13 +435,13 @@ const CommandCenter: React.FC = () => {
                   aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
+                  className={`w-full flex items-center gap-4 px-6 py-3.5 text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-1.5 rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-2 rounded-premium ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">
