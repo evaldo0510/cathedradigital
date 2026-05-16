@@ -19,7 +19,7 @@ const TestimonialsSection = () => {
       <div className="app-container space-y-20 relative z-10">
         <div className="text-center space-y-6">
           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
-          <h2 className="font-display font-bold">Vozes da Comunidade</h2>
+          <h2 className="font-display font-bold heading-section-label">Vozes da Comunidade</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
@@ -30,7 +30,7 @@ const TestimonialsSection = () => {
               className="space-y-8 flex flex-col transition-all duration-700 h-full"
             >
               <Quote className="w-6 h-6 text-secondary/20" />
-              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
+              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1 text-premium-body">
                 "{t.text}"
               </p>
 
@@ -39,8 +39,8 @@ const TestimonialsSection = () => {
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-premium-small">{t.name}</p>
-                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
+                  <p className="font-bold text-premium-small text-premium-body">{t.name}</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold text-premium-body">{t.role}</p>
                 </div>
               </div>
             </Card>

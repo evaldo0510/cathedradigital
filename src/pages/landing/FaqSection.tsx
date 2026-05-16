@@ -16,7 +16,7 @@ const FaqSection = () => (
     <div className="app-container max-w-4xl space-y-20 relative z-10">
       <div className="text-center space-y-6">
         <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">Dúvidas</span>
-        <h2 className="font-display font-bold text-foreground">Perguntas Frequentes</h2>
+        <h2 className="font-display font-bold text-foreground heading-section-label">Perguntas Frequentes</h2>
       </div>
 
       <Accordion type="single" collapsible className="space-y-4">

@@ -41,8 +41,8 @@ vi.mock('framer-motion', async () => {
     ...actual,
     motion: {
       div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-      h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
+      h1: ({ children, ...props }: any) => <h1 className="heading-hero" {...props}>{children}</h1>,
+      p: ({ children, ...props }: any) => <p className="text-premium-body" {...props}>{children}</p>,
       section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
       button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
       span: ({ children, ...props }: any) => <span {...props}>{children}</span>,

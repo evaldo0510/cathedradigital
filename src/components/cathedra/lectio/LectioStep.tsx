@@ -45,7 +45,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             <Feather className="w-3 h-3" />
             Lectio Divina
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{selectedPassage}</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight heading-card">{selectedPassage}</h2>
         </div>
         <div className="flex items-center gap-3">
           <ShareButton
@@ -115,8 +115,8 @@ const LectioStep: React.FC<LectioStepProps> = ({
               <activeStep.icon className="w-10 h-10" />
             </motion.div>
             <div className="space-y-1">
-              <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{activeStep.title}</h2>
-              <p className="text-base font-serif italic text-primary opacity-80">{activeStep.latin} — {activeStep.duration}</p>
+              <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight heading-card">{activeStep.title}</h2>
+              <p className="text-base font-serif italic text-primary opacity-80 text-premium-body">{activeStep.latin} — {activeStep.duration}</p>
             </div>
           </div>
           
@@ -129,12 +129,12 @@ const LectioStep: React.FC<LectioStepProps> = ({
                   ))}
                 </div>
               ) : bibleError ? (
-                <p className="text-muted-foreground italic text-center text-lg font-serif">{bibleError}</p>
+                <p className="text-muted-foreground italic text-center text-lg font-serif text-premium-body">{bibleError}</p>
               ) : bibleText.length > 0 ? (
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 justify-center opacity-40">
                     <Book className="w-4 h-4" />
-                    <p className="text-premium-tiny font-black uppercase tracking-[0.2em]">{selectedPassage}</p>
+                    <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-premium-body">{selectedPassage}</p>
                   </div>
                   <div className="font-serif leading-relaxed text-xl text-foreground/90 text-center">
                     {bibleText.map((v, i) => (
@@ -147,15 +147,15 @@ const LectioStep: React.FC<LectioStepProps> = ({
                 </div>
               ) : (
                 <div className="text-center space-y-6">
-                  <p className="text-xl text-foreground/90 leading-relaxed font-serif italic">"{activeStep.instruction}"</p>
+                  <p className="text-xl text-foreground/90 leading-relaxed font-serif italic text-premium-body">"{activeStep.instruction}"</p>
                 </div>
               )}
             </div>
             
             <div className="space-y-8">
               <div className="text-center space-y-3">
-                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40">Oração do Coração</h3>
-                <p className="text-lg md:text-xl font-serif font-bold text-primary italic leading-relaxed">"{activeStep.prompt}"</p>
+                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 heading-item">Oração do Coração</h3>
+                <p className="text-lg md:text-xl font-serif font-bold text-primary italic leading-relaxed text-premium-body">"{activeStep.prompt}"</p>
               </div>
 
               <div className="space-y-4 group">

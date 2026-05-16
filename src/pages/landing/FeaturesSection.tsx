@@ -57,8 +57,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
-        <h3 className="text-xl font-serif font-bold text-center">{feature.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
+        <h3 className="text-xl font-serif font-bold text-center heading-card">{feature.title}</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed text-center text-premium-body">{feature.description}</p>
       </div>
     </Card>
   );
@@ -78,8 +78,8 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
       <div className="app-container relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
           <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
-          <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
-          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
+          <h2 className="font-display font-bold text-foreground heading-section-label">Arquitetura do Conhecimento</h2>
+          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto text-premium-body">A luz de Cristo ilumina o coração.</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">

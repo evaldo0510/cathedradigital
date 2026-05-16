@@ -52,7 +52,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="font-display font-bold leading-tight"
+            className="font-display font-bold leading-tight heading-section-label"
           >
             Você nunca está <span className="text-primary italic font-serif">sozinho</span> em sua jornada
           </motion.h2>
@@ -63,7 +63,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={2}
-            className="text-muted-foreground font-serif italic"
+            className="text-muted-foreground font-serif italic text-premium-body"
           >
             "Onde dois ou três estão reunidos em meu nome, ali estou eu no meio deles." (Mt 18,20)
           </motion.p>
@@ -89,8 +89,8 @@ const CommunitySection = () => {
                   {feature.tag}
                 </span>
               </div>
-              <h3 className="font-bold mb-4 font-serif">{feature.title}</h3>
-              <p className="text-premium-small text-muted-foreground leading-relaxed flex-1">
+              <h3 className="font-bold mb-4 font-serif heading-card">{feature.title}</h3>
+              <p className="text-premium-small text-muted-foreground leading-relaxed flex-1 text-premium-body">
                 {feature.desc}
               </p>
             </motion.div>
@@ -118,8 +118,8 @@ const CommunitySection = () => {
               +1k
             </div>
           </div>
-          <h4 className="font-bold">Junte-se a milhares de fiéis</h4>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+          <h4 className="font-bold heading-item">Junte-se a milhares de fiéis</h4>
+          <p className="text-muted-foreground max-w-xl mx-auto text-premium-body">
             Mais do que um aplicativo, somos uma família em busca da santidade. Participe das nossas vigílias mensais e grupos de estudo.
           </p>
         </motion.div>

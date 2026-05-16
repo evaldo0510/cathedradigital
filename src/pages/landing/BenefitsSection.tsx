@@ -51,10 +51,10 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
         <div className="space-y-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
-            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight heading-section-label">
               Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
             </h2>
-            <p className="text-lg opacity-70 leading-relaxed max-w-xl">
+            <p className="text-lg opacity-70 leading-relaxed max-w-xl text-premium-body">
               Criar sua conta permite uma experiência única de crescimento, guardando sua história viva com a Palavra de Deus e o Magistério.
             </p>
           </motion.div>
@@ -72,8 +72,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
                     {benefit.icon}
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-bold font-serif text-lg">{benefit.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{benefit.description}</p>
+                    <h3 className="font-bold font-serif text-lg heading-card">{benefit.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed text-premium-body">{benefit.description}</p>
                   </div>
                 </div>
               </Card>
@@ -99,8 +99,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             />
             <div className="absolute inset-0 bg-black/40" />
             <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 rounded-premium border border-white/20">
-              <p className="text-xl font-serif mb-4">Onde está o teu tesouro, aí estará também o teu coração.</p>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
+              <p className="text-xl font-serif mb-4 text-premium-body">Onde está o teu tesouro, aí estará também o teu coração.</p>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary text-premium-body">Mateus 6,21</p>
             </div>
           </motion.div>
         </div>
