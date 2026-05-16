@@ -435,6 +435,20 @@
   --border: 222 47% 12%;
 }
 
+.reading-monastery {
+  --background: 210 20% 8%;    /* Deep Slate Blue/Black */
+  --foreground: 45 40% 90%;     /* Soft Cream */
+  --card: 210 20% 10%;
+  --card-foreground: 45 40% 90%;
+  --primary: 45 64% 52%;        /* Gold */
+  --secondary: 45 64% 40%;
+  --border: 45 64% 52% / 0.1;
+  --muted-foreground: 45 10% 60%;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.03) 0%, transparent 70%),
+    linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+}
+
 .reading-sepia {
   --background: 40 40% 90%;    /* #F4ECD8 */
   --foreground: 25 30% 20%;    /* #433422 */
@@ -459,12 +473,32 @@
 .reading-night body,
 .reading-sepia body,
 .reading-paper body,
+.reading-monastery body,
 .reading-night,
 .reading-sepia,
-.reading-paper {
-  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+.reading-paper,
+.reading-monastery {
+  transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   background-color: hsl(var(--background)) !important;
   color: hsl(var(--foreground)) !important;
+}
+
+/* Zen Mode support */
+.zen-mode .app-header,
+.zen-mode .library-sidebar,
+.zen-mode .desktop-aside,
+.zen-mode .back-to-theme-banner,
+.zen-mode .bottom-nav {
+  @apply hidden opacity-0 pointer-events-none;
+  transition: opacity 0.5s ease;
+}
+
+.zen-mode .desktop-layout {
+  @apply grid-cols-1 max-w-4xl mx-auto;
+}
+
+.zen-mode .reader-text {
+  @apply py-32;
 }
 
 .reader-text {
@@ -478,12 +512,12 @@
 
 /* Sidebar refined for library feel */
 .library-sidebar {
-  @apply backdrop-blur-xl bg-background/40 border-r border-border/10 p-8 flex flex-col gap-10 transition-all duration-500;
-  box-shadow: 20px 0 50px rgba(0,0,0,0.02);
+  @apply backdrop-blur-xl bg-background/40 border-r border-border/10 p-10 flex flex-col gap-12 transition-all duration-700;
+  box-shadow: 20px 0 80px rgba(0,0,0,0.02);
 }
 
 .library-nav-item {
-  @apply flex flex-col gap-1 opacity-40 hover:opacity-100 transition-all duration-500 cursor-pointer;
+  @apply flex flex-col gap-2 opacity-30 hover:opacity-100 transition-all duration-700 cursor-pointer relative py-2;
 }
 
 .library-nav-item.active {
@@ -491,11 +525,32 @@
 }
 
 .library-nav-item.active .nav-label {
-  @apply text-primary font-black;
+  @apply text-primary font-bold scale-[1.02] translate-x-1 transition-all;
 }
 
 .library-nav-item .nav-num {
-  @apply font-display text-[10px] tracking-widest uppercase;
+  @apply font-display text-[9px] tracking-[0.4em] uppercase text-primary/40 group-hover:text-primary/60 transition-colors;
+}
+
+.library-nav-item .nav-label {
+  @apply font-serif text-lg leading-tight transition-all;
+}
+
+.reader-text {
+  font-family: var(--reader-font-family, 'EB Garamond', serif);
+  @apply selection:bg-primary/30 mx-auto text-foreground;
+  max-width: var(--reader-max-width, 65ch);
+  font-size: var(--reader-font-size, clamp(1.2rem, 1.4vw, 1.6rem));
+  line-height: var(--reader-line-height, 1.85);
+  letter-spacing: 0.01em;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+@media (max-width: 768px) {
+  .reader-text {
+    text-align: left;
+  }
 }
 
 .library-nav-item .nav-label {

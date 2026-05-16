@@ -256,11 +256,11 @@ const StudyMode: React.FC = () => {
     <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-background">
       <div className="flex flex-1 overflow-hidden">
         {/* Left Sidebar: History */}
-        <aside className={`w-80 border-r border-border/10 bg-background/50 backdrop-blur-md hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
-          <div className="p-6 border-b border-border/10 flex items-center justify-between">
-            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Histórico de Diálogos</h2>
-            <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full">
-              <Plus className="w-4 h-4" />
+        <aside className={`w-80 border-r border-primary/5 bg-background/50 backdrop-blur-xl hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
+          <div className="p-8 border-b border-primary/5 flex items-center justify-between">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Memória de Diálogos</h2>
+            <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full hover:bg-primary/5">
+              <Plus className="w-5 h-5" />
             </Button>
           </div>
           <ScrollArea className="flex-1">
@@ -290,14 +290,15 @@ const StudyMode: React.FC = () => {
           <ScrollArea className="flex-1">
             <div className="max-w-3xl mx-auto px-8 py-16 space-y-20">
               {messages.length === 0 ? (
-                <div className="space-y-12 text-center py-12">
-                  <div className="w-20 h-20 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10">
-                    <Compass className="w-10 h-10 text-primary" />
+                <div className="space-y-16 text-center py-20">
+                  <div className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/10 animate-pulse-slow">
+                    <Compass className="w-12 h-12 text-primary" />
                   </div>
-                  <div className="space-y-4">
-                    <h1 className="text-4xl font-display text-primary">Logos</h1>
-                    <p className="text-lg text-muted-foreground font-serif italic max-w-md mx-auto">
-                      "A verdade vos libertará." — Diálogos teológicos iluminados pela tradição.
+                  <div className="space-y-6">
+                    <h1 className="text-5xl font-display text-primary tracking-tightest">Mosteiro Digital</h1>
+                    <p className="text-xl text-primary/40 font-serif italic max-w-lg mx-auto leading-relaxed">
+                      "No silêncio do coração, a Verdade se revela." <br />
+                      Diálogos guiados pela Tradição e Sabedoria.
                     </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
@@ -322,18 +323,18 @@ const StudyMode: React.FC = () => {
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                   >
                     {msg.role === 'assistant' && (
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
-                          <Compass className="w-4 h-4 text-primary" />
+                      <div className="flex items-center gap-4 mb-8">
+                        <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                          <Compass className="w-5 h-5 text-primary" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Reflexão do Logos</span>
+                        <span className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão do Logos</span>
                       </div>
                     )}
                     
-                    <div className={`max-w-2xl font-monastery leading-relaxed ${
+                    <div className={`max-w-2xl font-serif leading-relaxed ${
                       msg.role === 'user' 
-                        ? 'text-xl text-primary/70 italic text-right' 
-                        : 'text-2xl text-primary border-l-2 border-primary/5 pl-8 py-2'
+                        ? 'text-xl text-primary/60 italic text-right' 
+                        : 'text-2xl text-primary border-l-4 border-secondary/20 pl-10 py-4 mb-16'
                     }`}>
                       <TheologicalAwareText 
                         text={msg.content} 

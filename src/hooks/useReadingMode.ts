@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ReadingTheme = 'normal' | 'night' | 'sepia' | 'paper';
+export type ReadingTheme = 'normal' | 'night' | 'sepia' | 'paper' | 'monastery';
 
 export interface ReadingPreferences {
   theme: ReadingTheme;
@@ -9,6 +9,7 @@ export interface ReadingPreferences {
   maxWidth: number; // in pixels or ch
   sepiaIntensity: number; // 0 to 100
   fontFamily: 'serif' | 'sans' | 'monastery';
+  zenMode: boolean;
 }
 
 const STORAGE_KEY = 'cathedra_reading_prefs';
@@ -19,7 +20,8 @@ const DEFAULT_PREFS: ReadingPreferences = {
   lineHeight: 1.8,
   maxWidth: 65,
   sepiaIntensity: 100,
-  fontFamily: 'monastery'
+  fontFamily: 'monastery',
+  zenMode: false
 };
 
 export function useReadingMode() {
@@ -36,9 +38,16 @@ export function useReadingMode() {
     const root = document.documentElement;
     
     // Theme classes
-    root.classList.remove('reading-night', 'reading-sepia', 'reading-paper');
+    root.classList.remove('reading-night', 'reading-sepia', 'reading-paper', 'reading-monastery');
     if (prefs.theme !== 'normal') {
       root.classList.add(`reading-${prefs.theme}`);
+    }
+
+    // Zen mode
+    if (prefs.zenMode) {
+      root.classList.add('zen-mode');
+    } else {
+      root.classList.remove('zen-mode');
     }
     
     // CSS Variables
@@ -64,7 +73,7 @@ export function useReadingMode() {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    const themes: ReadingTheme[] = ['normal', 'sepia', 'paper', 'night'];
+    const themes: ReadingTheme[] = ['normal', 'sepia', 'paper', 'night', 'monastery'];
     const nextIdx = (themes.indexOf(prefs.theme) + 1) % themes.length;
     updatePrefs({ theme: themes[nextIdx] });
   }, [prefs.theme, updatePrefs]);

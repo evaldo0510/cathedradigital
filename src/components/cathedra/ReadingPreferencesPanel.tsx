@@ -4,8 +4,9 @@ import { Icons } from '@/constants';
 import { useReadingMode, ReadingTheme } from '@/hooks/useReadingMode';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Type, Maximize2, Settings2, Sliders, Sun, Moon, Palette } from 'lucide-react';
+import { X, Type, Maximize2, Settings2, Sliders, Sun, Moon, Palette, Shield, Wind } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
 
 const ReadingPreferencesPanel: React.FC = () => {
   const { prefs, updatePrefs, toggleTheme } = useReadingMode();
@@ -14,6 +15,7 @@ const ReadingPreferencesPanel: React.FC = () => {
   const themes: { id: ReadingTheme; label: string; icon: React.ElementType }[] = [
     { id: 'normal', label: 'Claro', icon: Sun },
     { id: 'sepia', label: 'Sépia', icon: Palette },
+    { id: 'monastery', label: 'Mosteiro', icon: Shield },
     { id: 'paper', label: 'Papel', icon: Settings2 },
     { id: 'night', label: 'Noite', icon: Moon },
   ];
@@ -32,7 +34,7 @@ const ReadingPreferencesPanel: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-16 right-0 w-[320px] bg-background border border-border/50 shadow-premium rounded-[2rem] p-6 space-y-8 backdrop-blur-xl reading-sepia"
+            className="absolute bottom-16 right-0 w-[340px] bg-background border border-border/50 shadow-premium rounded-[2.5rem] p-8 space-y-8 backdrop-blur-xl reading-sepia"
           >
             <div className="flex items-center justify-between">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Preferências de Leitura</h3>
@@ -109,6 +111,31 @@ const ReadingPreferencesPanel: React.FC = () => {
                   value={[prefs.maxWidth]} 
                   onValueChange={([v]) => updatePrefs({ maxWidth: v })}
                   min={40} max={90} step={5}
+                />
+              </div>
+
+              {/* Line Height */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-primary/20">
+                  <span className="flex items-center gap-2"><Wind className="w-3 h-3" /> Espaçamento</span>
+                  <span>{prefs.lineHeight}</span>
+                </div>
+                <Slider 
+                  value={[prefs.lineHeight]} 
+                  onValueChange={([v]) => updatePrefs({ lineHeight: v })}
+                  min={1.4} max={2.4} step={0.1}
+                />
+              </div>
+
+              {/* Zen Mode Switch */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/[0.03] border border-primary/5">
+                <div className="space-y-0.5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">Modo Zen</p>
+                  <p className="text-[9px] text-primary/40">Foco total no texto sagrado</p>
+                </div>
+                <Switch 
+                  checked={prefs.zenMode}
+                  onCheckedChange={(v) => updatePrefs({ zenMode: v })}
                 />
               </div>
 

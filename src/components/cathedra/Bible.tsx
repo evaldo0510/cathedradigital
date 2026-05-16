@@ -561,23 +561,23 @@ const Bible: React.FC = () => {
         />
 
         <div className="flex-1 xl:ml-80">
-          <div className="max-w-3xl mx-auto px-6 py-12 space-y-10">
+          <div className="max-w-4xl mx-auto px-6 py-20 space-y-16">
             <BackToThemeBanner />
             
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center justify-between gap-6">
               <Button 
                 onClick={() => setViewMode('chapters')} 
-                className="p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group"
+                className="p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group"
                 aria-label="Voltar para capítulos"
               >
-                <Icons.ChevronLeft className="w-5 h-5 text-foreground group-hover:text-primary transition-colors" />
+                <Icons.ChevronLeft className="w-6 h-6 text-primary/40 group-hover:text-primary transition-all" />
               </Button>
 
               <div className="flex-1 text-center hidden md:block">
-                <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/40 mb-1 block">
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-4 block">
                   {selectedBook.name}
                 </span>
-                <h1 className="text-xl font-serif font-black text-primary tracking-tight">
+                <h1 className="text-4xl font-serif font-bold text-primary tracking-tightest">
                   Capítulo {selectedChapter}
                 </h1>
               </div>
@@ -622,9 +622,10 @@ const Bible: React.FC = () => {
             )}
 
             {/* Toolbar - Floating-like feel */}
-            <div className="flex items-center justify-between gap-3 p-2 bg-card/40 backdrop-blur-md rounded-full border border-border/10 shadow-soft sticky top-6 z-40">
-              <div className="flex items-center gap-2 pl-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Leitura Digital</span>
+            <div className="flex items-center justify-between gap-6 p-3 bg-background/40 backdrop-blur-xl rounded-full border border-primary/5 shadow-premium sticky top-8 z-40 transition-all hover:bg-background/60">
+              <div className="flex items-center gap-3 pl-6">
+                <Icons.Compass className="w-4 h-4 text-primary/30" />
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Leitura Contemplativa</span>
               </div>
 
               <div className="flex items-center gap-2 pr-2">
