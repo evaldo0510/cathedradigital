@@ -120,8 +120,8 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="bg-card border border-border rounded-premium-sm p-6 space-y-4 hover:border-primary/30 transition-colors group">
-            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium-sm flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
+          <div key={pillar.title} className="premium-card p-6 space-y-4 group">
+            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
               {pillar.icon}
             </div>
             <div className="space-y-2">
