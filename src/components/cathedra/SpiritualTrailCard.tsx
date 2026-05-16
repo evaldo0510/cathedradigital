@@ -10,6 +10,7 @@ import { HomeCard as Card } from './HomeCard';
 import { updateUserStreak } from '@/lib/streak';
 
 const SpiritualTrailCard: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [profileId, setProfileId] = useState<ProfileId | null>(null);
@@ -97,7 +98,7 @@ const SpiritualTrailCard: React.FC = () => {
             className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all text-left group ${
               completedSteps.includes(idx)
                 ? 'bg-primary/5 border-primary/10 opacity-60'
-                : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20'
+                : 'bg-primary/[0.01] border-border/5 hover:border-primary/20'
             }`}
           >
             <div className={`shrink-0 ${completedSteps.includes(idx) ? 'text-primary' : 'text-primary/20 group-hover:text-primary/40'}`}>
