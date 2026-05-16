@@ -391,6 +391,51 @@ const Bible: React.FC = () => {
     const next = selectedChapter + dir;
     if (next >= 1 && next <= selectedBook.chapters) {
       setSelectedChapter(next);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [selectedBook, selectedChapter]);
+
+  // Performance: memoize category items for long lists
+  const CategoryItem = memo(({ cat, i, onSelect }: any) => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: i * 0.05 }}
+      className="space-y-6"
+    >
+      <div className="flex items-center gap-4">
+        <div className={cn("w-10 h-10 rounded-full flex items-center justify-center border border-primary/5", cat.bgColor)}>
+          <cat.icon className={cn("w-5 h-5", cat.color)} />
+        </div>
+        <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40">{cat.label}</h3>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        {cat.books.map((book: any) => (
+          <Button
+            key={book.abbr}
+            variant="outline"
+            onClick={() => onSelect(book)}
+            className={cn(
+              "h-auto py-4 px-4 justify-start text-left border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02] group relative overflow-hidden",
+              completedBooks.has(book.abbr) && "bg-secondary/5 border-secondary/20"
+            )}
+          >
+            <div className="flex flex-col gap-1 z-10">
+              <span className="text-xs font-serif font-bold text-primary group-hover:text-secondary transition-colors line-clamp-1">{book.name}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">{book.chapters} caps</span>
+            </div>
+            {completedBooks.has(book.abbr) && (
+              <Icons.CheckCircle2 className="absolute -right-1 -bottom-1 w-6 h-6 text-secondary/10" />
+            )}
+          </Button>
+        ))}
+      </div>
+    </motion.div>
+  ));
+  CategoryItem.displayName = 'CategoryItem';
+    const next = selectedChapter + dir;
+    if (next >= 1 && next <= selectedBook.chapters) {
+      setSelectedChapter(next);
       setHighlightedVerse(null);
     }
   }, [selectedBook, selectedChapter]);
