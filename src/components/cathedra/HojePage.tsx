@@ -210,6 +210,9 @@ const HojePage: React.FC = () => {
               </section>
             )}
 
+            {/* SPIRITUAL TRAIL */}
+            <SpiritualTrailCard />
+
             {/* RITUAL DO DIA */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
