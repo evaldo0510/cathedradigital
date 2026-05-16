@@ -23,7 +23,7 @@ const RitualDoDia: React.FC = () => {
     <Card
       padding="none"
       variant="default"
-      className="relative overflow-hidden h-full p-8 md:p-10"
+      className="relative overflow-hidden h-full p-8 md:p-9"
     >
       <div className="space-y-6">
         {/* Header */}
