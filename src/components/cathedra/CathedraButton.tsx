@@ -28,8 +28,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       default: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
-      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 h-14 font-bold uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4',
-      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full font-bold uppercase tracking-widest text-[10px] h-14 flex items-center justify-center gap-4',
+      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-[24px] px-8 h-12 font-bold uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4',
+      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-[24px] font-bold uppercase tracking-widest text-[10px] h-12 flex items-center justify-center gap-4',
       link: 'text-primary underline-offset-4 hover:underline bg-transparent p-0 h-auto font-medium',
     };
 
