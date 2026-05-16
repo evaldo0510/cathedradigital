@@ -240,9 +240,10 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           </div>
 
           {user ? (
-            <div 
+            <button 
               onClick={() => handleNav(AppRoute.PROFILE)} 
-              className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
+              className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none text-left"
+              aria-label={`Perfil de ${user.name}`}
             >
               <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
                 {user.avatar ? (
