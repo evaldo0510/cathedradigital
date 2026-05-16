@@ -79,7 +79,12 @@ const SpiritualTrailCard: React.FC = () => {
           </div>
           <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">Sua Trilha Diária</span>
         </div>
-        <span className="text-[10px] font-black text-primary/30 uppercase tracking-widest">{Math.round(progress)}%</span>
+        <button 
+          onClick={() => navigate(AppRoute.PROGRESS)}
+          className="flex items-center gap-2 text-[10px] font-black text-primary/30 uppercase tracking-widest hover:text-primary transition-colors"
+        >
+          {Math.round(progress)}% <ChevronRight className="w-3 h-3" />
+        </button>
       </div>
 
       <div className="space-y-3">
