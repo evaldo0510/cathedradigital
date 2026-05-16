@@ -329,7 +329,7 @@ const LogosChat = () => {
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="py-20 text-center space-y-12"
+                      className="py-20 text-center space-y-12 px-6"
                     >
                       <div className="space-y-6">
                         <Heart className="w-12 h-12 text-secondary/20 mx-auto" />
@@ -342,6 +342,12 @@ const LogosChat = () => {
                         <textarea
                           value={intention}
                           onChange={(e) => setInputIntention(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              if (intention.trim()) startWithRitual();
+                            }
+                          }}
                           placeholder="Minha intenção hoje é..."
                           className="w-full bg-transparent border-b border-primary/10 py-6 text-xl font-serif focus:outline-none focus:border-secondary/30 transition-all duration-1000 resize-none placeholder:text-primary/5 text-center"
                           rows={1}
@@ -368,8 +374,8 @@ const LogosChat = () => {
                       <div
                         className={`font-serif leading-relaxed ${
                           msg.role === 'user'
-                            ? 'text-xl text-primary/50 italic text-right'
-                            : 'text-2xl text-primary border-l-4 border-secondary/10 pl-10 py-2'
+                            ? 'text-xl text-primary/50 italic text-right mb-4'
+                            : 'text-2xl text-primary border-l-4 border-secondary/10 pl-10 py-2 mb-12'
                         }`}
                       >
                         <TheologicalAwareText 
@@ -380,10 +386,17 @@ const LogosChat = () => {
                           onReferenceClick={(type, params) => setRefModal({ isOpen: true, type, params })}
                           showDetails={showExtraDetails}
                         />
+                        {msg.role === 'assistant' && msg.content.includes('\n') && (
+                          <div className="mt-4 flex gap-1 items-center opacity-20 hover:opacity-100 transition-opacity">
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary/60" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary/30" />
+                          </div>
+                        )}
                       </div>
                       
                       {/* Silent marker */}
-                      <div className="h-4" />
+                      <div className="h-8" />
                     </motion.div>
                   ))}
                   
