@@ -86,9 +86,50 @@ const CommandCenter: React.FC = () => {
   const [globalLoading, setGlobalLoading] = useState(false);
   const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout>>();
   const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Focus management
+  useEffect(() => {
+    if (isOpen) {
+      triggerRef.current = document.activeElement as HTMLElement;
+      setTimeout(() => inputRef.current?.focus(), 100);
+    } else {
+      triggerRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Trap focus
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        const focusableElements = document.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        const modalElements = Array.from(focusableElements).filter(el => 
+          document.querySelector('.max-w-xl')?.contains(el)
+        );
+        
+        if (modalElements.length > 0) {
+          const first = modalElements[0] as HTMLElement;
+          const last = modalElements[modalElements.length - 1] as HTMLElement;
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   useEffect(() => {
     const loadLastRead = async () => {
