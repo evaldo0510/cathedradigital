@@ -166,7 +166,7 @@ const JornadaDetailPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className={`premium-card-interactive transition-all ${isNext ? 'border-primary/40' : ''} ${isCompleted ? 'bg-primary/5 shadow-soft' : ''} ${isStepLocked ? 'opacity-60 grayscale' : ''}`}>
+              <Card className={`premium-card-interactive transition-all p-4 sm:p-5 ${isNext ? 'border-primary/40' : ''} ${isCompleted ? 'bg-primary/5 shadow-soft' : ''} ${isStepLocked ? 'opacity-60 grayscale' : ''}`}>
                 <CardContent className="p-4 flex items-center gap-4">
                   {/* Step number / status */}
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
