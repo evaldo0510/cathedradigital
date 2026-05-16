@@ -73,10 +73,10 @@ const PoenitentiaPage: React.FC = () => {
           <Button
             key={i}
             onClick={() => setActiveStep(i)}
-            className={`p-6 rounded-[2rem] border text-left transition-all relative overflow-hidden group ${
+            className={`p-6 rounded-premium border text-left transition-all relative overflow-hidden group h-full ${
               activeStep === i 
                 ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-[1.05] z-10' 
-                : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-lg'
+                : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-premium'
             }`}
           >
             <div className={`text-premium-tiny font-black opacity-40 uppercase tracking-widest mb-2 ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
