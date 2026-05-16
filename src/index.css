@@ -320,71 +320,49 @@
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 10px 30px rgba(0,0,0,.08);
     @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-md;
-    padding: clamp(1.25rem, 2.5vw, 2rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem);
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer active:scale-[0.99];
+    @apply premium-card cursor-pointer active:scale-[0.98];
     @apply hover:bg-white/[0.06] hover:border-white/[0.15] hover:shadow-premium-hover;
-    @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
-  }
-
-  /* Specific Card Sizes for Desktop */
-  .desktop-card {
-    @apply premium-card p-6 md:p-8;
-  }
-
-  /* Standard card shadow and radius */
-  .card-standard {
-    @apply premium-card p-5;
+    @apply focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-24 sm:py-32 md:py-40 lg:py-48;
+    @apply py-20 sm:py-32 md:py-48 lg:py-64;
   }
 
   .stack-spacing {
-    @apply space-y-16 md:space-y-24 lg:space-y-32;
+    @apply space-y-12 md:space-y-24 lg:space-y-36;
   }
   
   .premium-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 lg:gap-24;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16;
   }
 
   .premium-header {
-    @apply text-center space-y-10 mb-20 md:mb-32 max-w-4xl mx-auto;
+    @apply text-center space-y-8 mb-16 md:mb-32 max-w-4xl mx-auto;
   }
 
-  .section-divider-header {
-    @apply flex items-center gap-6 mb-12 md:mb-16;
-  }
-
-  .divider-line {
-    @apply h-px flex-1 bg-primary/[0.08];
-  }
-
-  .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.02] border border-primary/[0.05] rounded-full text-[9px] font-black uppercase tracking-[0.5em] text-primary/20 transition-all duration-700 hover:bg-primary/[0.04] hover:text-primary/40;
-  }
-
-  /* Global Button Standard - Premium Spiritual */
   .btn-premium {
     @apply relative overflow-hidden rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
     min-height: 56px;
-    padding: 0 2rem;
+    padding: 0 2.5rem;
+    border: 1px solid transparent;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium border border-primary;
+    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium border-primary;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium border border-secondary;
+    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium border-secondary;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-primary/10 text-primary hover:bg-primary/[0.03] shadow-none;
+    @apply btn-premium bg-transparent border-primary/10 text-primary hover:bg-primary/[0.03] shadow-none;
   }
 }
 
