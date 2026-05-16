@@ -125,12 +125,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
-        <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
-          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
-          <div className="space-y-1">
-            <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
+      <aside ref={ref} className="h-full w-[280px] bg-card border-r border-border/20 flex flex-col p-6 overflow-hidden">
+        <div className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
+          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
+          <div className="space-y-0.5">
+            <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
+            <p className="text-[9px] font-bold uppercase text-secondary/60 tracking-[0.3em]">
               Digital Sanctuarium
             </p>
           </div>
@@ -139,7 +139,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/30 mb-5 px-4">{section.label}</h3>
+              <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/30 mb-4 px-3">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
@@ -149,13 +149,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
+                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[48px] border-none shadow-none
                         ${currentPath === item.path
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
-                      <CathedraIcon icon={item.icon as any} size={IconSizePreset.SIDEBAR} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
-                      <span className="tracking-tight truncate">{item.label}</span>
+                      <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
+                      <span className="tracking-tight truncate text-[11px] font-medium">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                           {cacheCount}
@@ -179,24 +179,24 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant="outline"
                 size="sm"
                 onClick={onToggleDark} 
-                className="flex-1 min-w-[100px] h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                className="flex-1 min-w-[90px] h-10 rounded-xl border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
-                {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
+                {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
+                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
               <Button 
                 variant={isHighContrast ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleHighContrast} 
-                className={`flex-1 min-w-[100px] h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 min-w-[90px] h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
                 }`}
                 aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
               >
                 <Icons.ShieldCheck className="w-5 h-5" />
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
               </Button>
             </div>
 
@@ -205,13 +205,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isSpeaking ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleSpeak} 
-                className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isSpeaking ? 'bg-muted' : ''
                 }`}
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
-                {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
+                {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
+                <span className="text-[9px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </Button>
             </div>
 
@@ -222,7 +222,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-2 py-1 text-[9px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -238,9 +238,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           {user ? (
             <div 
               onClick={() => handleNav(AppRoute.PROFILE)} 
-              className="w-full flex items-center gap-4 p-4 bg-muted/30 rounded-full hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
+              className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
             >
-              <div className="w-12 h-12 rounded-premium-sm bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium-sm" />
                 ) : (
@@ -249,11 +249,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </div>
               <div className="flex-1 min-w-0 text-left">
                 <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
-                <p className="text-[10px] uppercase text-secondary font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                <p className="text-[9px] uppercase text-secondary font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
                 {!user.isPremium && (
                   <div 
                     onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                    className="mt-1 inline-flex items-center gap-1 text-premium-tiny font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+                    className="mt-1 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-md hover:bg-primary hover:text-white transition-colors animate-pulse"
                   >
                     Upgrade <Icons.ArrowRight className="w-2 h-2" />
                   </div>
@@ -268,7 +268,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </Button>
             </div>
           ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-11 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
             </Button>
           )}
