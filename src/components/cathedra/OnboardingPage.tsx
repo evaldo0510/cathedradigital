@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -36,9 +37,9 @@ const SLIDES = [
   },
   {
     icon: <Zap className="w-10 h-10" />,
-    title: 'Logos IA: Estudo Profundo',
-    subtitle: 'Inteligência Contemplativa',
-    description: 'Dúvidas sobre a fé? O Logos IA explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
+    title: 'Logos: Estudo Profundo',
+    subtitle: 'Mestre Contemplativo',
+    description: 'Dúvidas sobre a fé? O Logos explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
     image: onboardingStudy,
   },
   {
@@ -268,17 +269,17 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-2xl p-6 space-y-3 text-center">
+          <div className="bg-card border border-primary/20 rounded-premium-sm p-6 space-y-3 text-center">
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
 
-          <button
+          <Button
             onClick={handleGoToJourney}
             className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             Começar Minha Jornada <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </motion.div>
       </div>
     );
@@ -290,21 +291,20 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
-          <div className="flex justify-center mb-6">
-            <Icons.Logo className="w-16 h-16" variant="blue" />
-          </div>
-          
-          <div className="space-y-2 mb-8">
-            <div className="w-full h-1 bg-muted rounded-2xl overflow-hidden">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
+        <div className="w-full max-w-2xl space-y-16 text-center">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Diagnóstico Espiritual</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">{diagStep + 1} / {QUESTIONS.length}</span>
+            </div>
+            <div className="h-0.5 bg-primary/5 rounded-full overflow-hidden">
               <motion.div 
-                className="h-full bg-primary"
+                className="h-full bg-primary/40"
                 initial={{ width: 0 }}
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -313,21 +313,30 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="space-y-12"
             >
-              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {question.options.map((opt) => (
-                  <button
+              <div className="space-y-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Reflexão Inicial</span>
+                <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+                {question.options.map((opt, idx) => (
+                  <motion.button
                     key={opt.value}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 * idx }}
+                    whileHover={{ x: 8 }}
+                    whileTap={{ scale: 0.99 }}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                    className="flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
                   >
-                    <div className="p-3 rounded-2xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      {opt.icon}
+                    <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                    <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                    <span className="font-bold text-foreground">{opt.label}</span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </motion.div>
@@ -360,7 +369,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
               <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
-              <p className="text-[10px] lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-premium-tiny lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
               <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
             </div>
           </motion.div>
@@ -368,7 +377,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
         <div className="flex justify-center gap-2">
           {SLIDES.map((_, i) => (
-            <button
+            <Button
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`w-2.5 h-2.5 rounded-full transition-all ${
@@ -376,27 +385,27 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               }`}
             />
           ))}
-          <div className="w-2.5 h-2.5 rounded-2xl bg-muted-foreground/30" />
+          <div className="w-2.5 h-2.5 rounded-premium-sm bg-muted-foreground/30" />
         </div>
 
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
               <ChevronLeft className="w-4 h-4" /> Voltar
-            </button>
+            </Button>
           ) : (
-            <button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Pular
-            </button>
+            </Button>
           )}
 
-          <button
+          <Button
             onClick={handleSlideNext}
-            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-[10px] tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

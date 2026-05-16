@@ -65,6 +65,33 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
@@ -885,13 +912,10 @@ export type Database = {
           name: string
           paroquia: string | null
           program_duration: number | null
-          push_enabled: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
-          whatsapp_enabled: boolean | null
-          whatsapp_number: string | null
           xp: number | null
         }
         Insert: {
@@ -912,13 +936,10 @@ export type Database = {
           name?: string
           paroquia?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Update: {
@@ -939,16 +960,62 @@ export type Database = {
           name?: string
           paroquia?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Relationships: []
+      }
+      profiles_private: {
+        Row: {
+          created_at: string | null
+          id: string
+          push_enabled: boolean | null
+          updated_at: string | null
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "user_management_stats"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {
@@ -1714,6 +1781,95 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      visual_regression_runs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          pages_failed: number | null
+          pages_total: number | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          pages_failed?: number | null
+          pages_total?: number | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          pages_failed?: number | null
+          pages_total?: number | null
+          status?: string
+        }
+        Relationships: []
+      }
+      visual_regression_snapshots: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          baseline_url: string | null
+          created_at: string
+          current_url: string | null
+          diff_url: string | null
+          id: string
+          page_name: string
+          reason: string | null
+          route: string
+          run_id: string | null
+          status: string
+          typography_errors: Json | null
+          viewport: string
+          wcag_score: number | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseline_url?: string | null
+          created_at?: string
+          current_url?: string | null
+          diff_url?: string | null
+          id?: string
+          page_name: string
+          reason?: string | null
+          route: string
+          run_id?: string | null
+          status?: string
+          typography_errors?: Json | null
+          viewport: string
+          wcag_score?: number | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          baseline_url?: string | null
+          created_at?: string
+          current_url?: string | null
+          diff_url?: string | null
+          id?: string
+          page_name?: string
+          reason?: string | null
+          route?: string
+          run_id?: string | null
+          status?: string
+          typography_errors?: Json | null
+          viewport?: string
+          wcag_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visual_regression_snapshots_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "visual_regression_runs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -6,14 +6,15 @@ import {
   BarChart3, Calendar, AlertCircle, Crown, Shield, Search,
   ChevronDown, ChevronUp, UserCog, ArrowLeft, Home, Smartphone, MonitorSmartphone,
   Target, Activity, Bell, LayoutGrid, UserCheck, Handshake, Heart, Wallet,
-  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe
+  MessageSquare, Map as MapIcon, Clock, Tag, Building2, RefreshCcw, Globe, Palette, Eye
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { toast } from 'sonner';
 
 const AdminChartsTab = lazy(() => import('./AdminChartsTab'));
@@ -30,6 +31,8 @@ const AdminConstructionTab = lazy(() => import('./AdminConstructionTab'));
 const WebhookSimulator = lazy(() => import('./WebhookSimulator'));
 const SecurityAuditPage = lazy(() => import('./SecurityAuditPage'));
 const AdminSeoTab = lazy(() => import('./AdminSeoTab'));
+const DesignSystemGuide = lazy(() => import('./DesignSystemGuide'));
+const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 
 
 interface Stats {
@@ -406,7 +409,7 @@ const AdminDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-2xl border border-destructive/20">
+      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-premium-sm border border-destructive/20">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
         <h2 className="text-xl font-bold mb-2">Erro ao carregar dados</h2>
         <p className="text-muted-foreground">{error}</p>
@@ -427,54 +430,64 @@ const AdminDashboard: React.FC = () => {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-1 bg-muted/30 border border-border/10 rounded-full no-scrollbar scroll-smooth snap-x">
-            <TabsTrigger value="overview" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="overview" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <LayoutGrid className="w-3.5 h-3.5" /> Visão Geral
             </TabsTrigger>
-            <TabsTrigger value="users" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="users" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Users className="w-3.5 h-3.5" /> Usuários
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="transactions" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <DollarSign className="w-3.5 h-3.5" /> Financeiro
             </TabsTrigger>
-            <TabsTrigger value="partners" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Palette className="w-3.5 h-3.5" /> Design System
+            </TabsTrigger>
+            <TabsTrigger value="regression" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Eye className="w-3.5 h-3.5" /> Regressão Visual
+            </TabsTrigger>
+
+            <TabsTrigger value="partners" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Handshake className="w-3.5 h-3.5" /> Parceiros
             </TabsTrigger>
-            <TabsTrigger value="content" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="content" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <MessageSquare className="w-3.5 h-3.5" /> Conteúdo
             </TabsTrigger>
-            <TabsTrigger value="journeys" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="journeys" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <MapIcon className="w-3.5 h-3.5" /> Jornadas
             </TabsTrigger>
-            <TabsTrigger value="segmentation" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="segmentation" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Target className="w-3.5 h-3.5" /> CRM: Segmentos
             </TabsTrigger>
-            <TabsTrigger value="retention" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="retention" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Activity className="w-3.5 h-3.5" /> CRM: Retenção
             </TabsTrigger>
-            <TabsTrigger value="automations" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="automations" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Bell className="w-3.5 h-3.5" /> CRM: Automações
             </TabsTrigger>
-            <TabsTrigger value="themes" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="themes" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Tag className="w-3.5 h-3.5" /> Nexus Temas
             </TabsTrigger>
-            <TabsTrigger value="seo" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="seo" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Globe className="w-3.5 h-3.5" /> SEO
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
+            <TabsTrigger value="security" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start relative group">
               <Shield className="w-3.5 h-3.5 text-red-500" /> Segurança
               <span className="absolute -top-1 -right-1 flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
               </span>
             </TabsTrigger>
-            <TabsTrigger value="tests" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="tests" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <RefreshCcw className="w-3.5 h-3.5" /> Testes
             </TabsTrigger>
-            <TabsTrigger value="geography" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="geography" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <MapIcon className="w-3.5 h-3.5" /> Geografia
             </TabsTrigger>
-            <TabsTrigger value="construction" className="gap-2 text-[10px] font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+            <TabsTrigger value="construction" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
               <Building2 className="w-3.5 h-3.5" /> Obras
+            </TabsTrigger>
+            <TabsTrigger value="design" className="gap-2 text-premium-tiny font-black uppercase tracking-widest min-w-fit px-4 py-2.5 snap-start">
+              <Shield className="w-3.5 h-3.5" /> Design
             </TabsTrigger>
           </TabsList>
         </div>
@@ -484,45 +497,45 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Total Usuários</CardTitle>
                 <Users className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.totalUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Cadastrados</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Ativos</CardTitle>
                 <UserCheck className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.activeLast30Days}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Últimos 30 dias</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Usuários PRO</CardTitle>
                 <Crown className="h-3.5 w-3.5 text-secondary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.premiumUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Assinantes</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Retenção</CardTitle>
                 <TrendingUp className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.returnRate.toFixed(1)}%</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Recorrência</p>
               </CardContent>
             </Card>
           </div>
@@ -530,53 +543,53 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Receita</CardTitle>
                 <DollarSign className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.totalRevenue || 0)}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Aprovada</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Aprovada</p>
               </CardContent>
             </Card>
 
             <Card className="bg-amber-500/5 border-amber-500/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-amber-500 opacity-80">Pendente</CardTitle>
                 <Clock className="h-3.5 w-3.5 text-amber-500" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-amber-500 tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(stats?.pendingRevenue || 0)}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em espera</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em espera</p>
               </CardContent>
             </Card>
 
             <Card className="bg-destructive/5 border-destructive/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-destructive opacity-80">Doação</CardTitle>
                 <Heart className="h-3.5 w-3.5 text-destructive" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-destructive tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">50% Social</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">50% Social</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Op (50%)</CardTitle>
                 <Wallet className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format((stats?.totalRevenue || 0) * 0.5)}
                 </div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Operação</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Operação</p>
               </CardContent>
             </Card>
           </div>
@@ -584,34 +597,34 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Card className="bg-secondary/5 border-secondary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-secondary opacity-80">Reflexões</CardTitle>
                 <Heart className="h-3.5 w-3.5 text-secondary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-secondary tabular-nums">{stats?.totalReflections}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Impacto Espiritual</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Impacto Espiritual</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Iniciadas</CardTitle>
                 <MapIcon className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysStarted}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Jornadas Totais</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Jornadas Totais</p>
               </CardContent>
             </Card>
 
             <Card className="bg-primary/5 border-primary/20 shadow-none">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary opacity-80">Concluídas</CardTitle>
                 <Activity className="h-3.5 w-3.5 text-primary" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black text-primary tabular-nums">{stats?.totalJourneysCompleted}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Sucesso de Retenção</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Sucesso de Retenção</p>
               </CardContent>
             </Card>
           </div>
@@ -620,45 +633,45 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Hoje</CardTitle>
                 <UserCheck className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.activeToday}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Visitantes</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Visitantes</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Inativos</CardTitle>
                 <AlertCircle className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.inactiveUsers}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">{'>'} 48h sem acesso</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">{'>'} 48h sem acesso</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">Instalações</CardTitle>
                 <Smartphone className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.pwaInstalls}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">PWA Total</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">PWA Total</p>
               </CardContent>
             </Card>
 
             <Card className="shadow-none border-border/40">
               <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3 space-y-0">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest opacity-60">No Flow</CardTitle>
                 <Target className="h-3.5 w-3.5 text-muted-foreground" />
               </CardHeader>
               <CardContent className="px-3 pb-3">
                 <div className="text-xl font-black tabular-nums">{stats?.journeysInProgress}</div>
-                <p className="text-[9px] text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em andamento</p>
+                <p className="text-premium-tiny text-muted-foreground font-medium uppercase tracking-tighter mt-0.5">Em andamento</p>
               </CardContent>
             </Card>
           </div>
@@ -667,7 +680,7 @@ const AdminDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-2 pt-3 px-3">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Engajamento por Segmento</CardTitle>
               </CardHeader>
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="space-y-2.5">
@@ -678,11 +691,11 @@ const AdminDashboard: React.FC = () => {
                     { label: 'Novos / Inativos', count: users.filter(u => !u.depth_level || u.depth_level === 'Inativo' || u.depth_level === 'Novo').length, color: 'bg-muted' },
                   ].map(s => (
                     <div key={s.label} className="space-y-1">
-                      <div className="flex items-center justify-between text-[9px] font-bold uppercase tracking-wider">
+                      <div className="flex items-center justify-between text-premium-tiny font-bold uppercase tracking-wider">
                         <span className="opacity-70">{s.label}</span>
                         <span className="tabular-nums">{s.count}</span>
                       </div>
-                      <div className="h-1 w-full bg-muted/30 rounded-2xl overflow-hidden">
+                      <div className="h-1 w-full bg-muted/30 rounded-premium-sm overflow-hidden">
                         <div 
                           className={`h-full ${s.color} transition-all duration-1000`} 
                           style={{ width: `${users.length > 0 ? (s.count / users.length) * 100 : 0}%` }}
@@ -696,23 +709,23 @@ const AdminDashboard: React.FC = () => {
 
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-1 pt-3 px-3 flex flex-row items-center justify-between">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversão PRO</CardTitle>
                 <div className="text-xl font-black text-primary tabular-nums">
                   {users.length > 0 ? ((users.filter(u => u.is_premium).length / users.length) * 100).toFixed(1) : 0}%
                 </div>
               </CardHeader>
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="mt-2 grid grid-cols-2 gap-4 w-full">
-                  <div className="text-center p-2 rounded-2xl bg-primary/5 border border-primary/10">
+                  <div className="text-center p-2 rounded-premium-sm bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Assinantes</div>
+                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Assinantes</div>
                   </div>
-                  <div className="text-center p-2 rounded-2xl bg-muted/20 border border-border/10">
+                  <div className="text-center p-2 rounded-premium-sm bg-muted/20 border border-border/10">
                     <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
-                    <div className="text-[8px] font-black uppercase tracking-widest opacity-50">Gratuitos</div>
+                    <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Gratuitos</div>
                   </div>
                 </div>
-                <p className="text-[8px] text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
+                <p className="text-premium-tiny text-muted-foreground text-center mt-3 uppercase tracking-tighter italic">Base total: {users.length} usuários</p>
               </CardContent>
             </Card>
           </div>
@@ -727,28 +740,28 @@ const AdminDashboard: React.FC = () => {
             
             <Card className="border-border/40 shadow-none bg-card ">
               <CardHeader className="pb-3 pt-3 px-3">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                <CardTitle className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-2">
                   <MessageSquare className="w-3.5 h-3.5" /> Últimas Reflexões
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-3 pb-3 pt-1 space-y-3">
                 {recentJournal.length > 0 ? (
                   recentJournal.map((entry) => (
-                    <div key={entry.id} className="p-2.5 rounded-2xl bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
-                      <div className="flex items-center justify-between text-[10px] font-bold">
+                    <div key={entry.id} className="p-2.5 rounded-premium-sm bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
+                      <div className="flex items-center justify-between text-premium-tiny font-bold">
                         <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
                         <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
                       </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
+                      <p className="text-premium-small leading-relaxed line-clamp-2 italic opacity-80">"{entry.content}"</p>
                       {entry.mood && (
-                        <Badge variant="outline" className="text-[8px] font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
+                        <Badge variant="outline" className="text-premium-tiny font-black h-4 px-1 uppercase tracking-tighter bg-primary/5 border-primary/20 text-primary">
                           {entry.mood}
                         </Badge>
                       )}
                     </div>
                   ))
                 ) : (
-                  <div className="py-8 text-center text-[10px] text-muted-foreground uppercase font-black tracking-widest opacity-40">
+                  <div className="py-8 text-center text-premium-tiny text-muted-foreground uppercase font-black tracking-widest opacity-40">
                     Nenhuma reflexão recente.
                   </div>
                 )}
@@ -825,12 +838,12 @@ const AdminDashboard: React.FC = () => {
             <Card className="border-primary/20 bg-primary/5 animate-pulse">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-2xl">
+                  <div className="p-2 bg-primary/10 rounded-premium-sm">
                     <Shield className="w-5 h-5 text-primary animate-spin" />
                   </div>
                   <div>
                     <CardTitle className="text-primary uppercase font-black tracking-widest text-xs">Verificando Segurança</CardTitle>
-                    <CardDescription className="text-[10px] font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
+                    <CardDescription className="text-premium-tiny font-bold uppercase opacity-60">Escaneando vulnerabilidades e RLS...</CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -871,19 +884,19 @@ const AdminDashboard: React.FC = () => {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border/60 bg-muted/20">
-                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
+                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary" onClick={() => toggleSort('name')}>
                         Nome <SortIcon field="name" />
                       </th>
-                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 hidden md:table-cell">Email</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Status</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Cargo</th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
+                      <th className="text-left px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60 hidden md:table-cell">Email</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60">Status</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60">Cargo</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('xp')}>
                         XP <SortIcon field="xp" />
                       </th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60 cursor-pointer hover:text-primary hidden lg:table-cell" onClick={() => toggleSort('created_at')}>
                         Cadastro <SortIcon field="created_at" />
                       </th>
-                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-[10px] opacity-60">Ações</th>
+                      <th className="text-center px-3 py-2 font-black uppercase tracking-widest text-premium-tiny opacity-60">Ações</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -891,51 +904,51 @@ const AdminDashboard: React.FC = () => {
                       <tr key={u.id} className="border-b border-border/50 hover:bg-muted/50 transition-colors">
                         <td className="px-3 py-2">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded bg-foreground text-background flex items-center justify-center font-black text-[10px] shrink-0">
+                            <div className="w-6 h-6 rounded bg-foreground text-background flex items-center justify-center font-black text-premium-tiny shrink-0">
                               {u.name?.charAt(0)?.toUpperCase() || '?'}
                             </div>
                             <span className="font-bold text-xs truncate max-w-[120px]">{u.name || '—'}</span>
                           </div>
                         </td>
-                        <td className="px-3 py-2 text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-[10px] font-medium">{u.email}</td>
+                        <td className="px-3 py-2 text-muted-foreground hidden md:table-cell truncate max-w-[180px] text-premium-tiny font-medium">{u.email}</td>
                         <td className="px-3 py-2 text-center">
                           {u.is_premium ? (
-                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
+                            <Badge className="bg-primary/10 text-primary border-primary/20 gap-1 text-premium-tiny font-bold h-5 px-1.5 shadow-none">
                               <Crown className="w-2.5 h-2.5" /> PRO
                             </Badge>
                           ) : (
-                            <Badge variant="secondary" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">GRATUITO</Badge>
+                            <Badge variant="secondary" className="gap-1 text-premium-tiny font-bold h-5 px-1.5 shadow-none">GRATUITO</Badge>
                           )}
                         </td>
                         <td className="px-3 py-2 text-center">
                           {u.role === 'admin' ? (
-                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">
+                            <Badge className="bg-destructive/10 text-destructive border-destructive/20 gap-1 text-premium-tiny font-bold h-5 px-1.5 shadow-none">
                               <Shield className="w-2.5 h-2.5" /> ADMIN
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="gap-1 text-[9px] font-bold h-5 px-1.5 shadow-none">USER</Badge>
+                            <Badge variant="outline" className="gap-1 text-premium-tiny font-bold h-5 px-1.5 shadow-none">USER</Badge>
                           )}
                         </td>
-                        <td className="px-3 py-2 text-center hidden lg:table-cell font-mono text-[10px] font-bold">{u.xp ?? 0}</td>
-                        <td className="px-3 py-2 text-center hidden lg:table-cell text-[10px] font-medium text-muted-foreground">
+                        <td className="px-3 py-2 text-center hidden lg:table-cell font-mono text-premium-tiny font-bold">{u.xp ?? 0}</td>
+                        <td className="px-3 py-2 text-center hidden lg:table-cell text-premium-tiny font-medium text-muted-foreground">
                           {new Date(u.created_at).toLocaleDateString('pt-BR')}
                         </td>
                         <td className="px-3 py-2 text-center">
                           <div className="flex items-center justify-center gap-1">
-                            <button
+                            <Button
                               onClick={() => handleTogglePremium(u.id, u.is_premium)}
                               title={u.is_premium ? 'Remover PRO' : 'Ativar PRO'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors`}
+                              variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-primary/10 hover:text-primary"
                             >
-                              <Crown className="w-3.5 h-3.5" />
-                            </button>
-                            <button
+                              <Crown />
+                            </Button>
+                            <Button
                               onClick={() => handleToggleRole(u.id, u.role)}
                               title={u.role === 'admin' ? 'Remover Admin' : 'Tornar Admin'}
-                              className={`p-1 rounded bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors`}
+                              variant="ghost" size="icon-xs" className="bg-muted/50 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                             >
-                              <UserCog className="w-3.5 h-3.5" />
-                            </button>
+                              <UserCog />
+                            </Button>
                           </div>
                         </td>
                       </tr>
@@ -1061,14 +1074,21 @@ const AdminDashboard: React.FC = () => {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="regression" className="space-y-6">
+          <Suspense fallback={<Skeleton className="h-[400px] rounded-premium" />}>
+            <VisualRegressionDashboard />
+          </Suspense>
+        </TabsContent>
+
         <TabsContent value="construction">
+
           <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
             <AdminConstructionTab />
           </Suspense>
         </TabsContent>
-        <TabsContent value="tests">
-          <Suspense fallback={<Skeleton className="h-[400px] rounded-full" />}>
-            <WebhookSimulator />
+        <TabsContent value="design">
+          <Suspense fallback={<Skeleton className="h-[600px] rounded-[2rem]" />}>
+            <DesignSystemGuide />
           </Suspense>
         </TabsContent>
       </Tabs>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 
 interface AudioButtonProps {
   className?: string;

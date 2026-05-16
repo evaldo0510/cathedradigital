@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { normalizeText } from '@/lib/utils';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
+import { Button   } from '@/components/cathedra/Button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -261,7 +261,7 @@ const AdminThemesTab = () => {
           {loadingThemes ? (
             <div className="flex items-center justify-center py-8"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : filteredThemes?.length === 0 ? (
-            <div className="text-center py-12 bg-muted/20 rounded-2xl border border-dashed">
+            <div className="text-center py-12 bg-muted/20 rounded-premium-sm border border-dashed">
               <p className="text-sm text-muted-foreground">Nenhum tema encontrado.</p>
             </div>
           ) : (
@@ -278,7 +278,7 @@ const AdminThemesTab = () => {
                     <span className="text-xl">{theme.emoji || '⛪'}</span>
                     <div className="flex flex-col">
                       <span className="font-bold text-foreground">{theme.name}</span>
-                      <span className="text-[10px] uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
+                      <span className="text-premium-tiny uppercase font-black tracking-widest text-primary/60">{theme.category || 'Geral'}</span>
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -298,7 +298,7 @@ const AdminThemesTab = () => {
                   </div>
                 </div>
                 {theme.description && (
-                  <p className="text-[10px] text-muted-foreground mt-2 line-clamp-1 italic">{theme.description}</p>
+                  <p className="text-premium-tiny text-muted-foreground mt-2 line-clamp-1 italic">{theme.description}</p>
                 )}
               </div>
             ))
@@ -310,7 +310,7 @@ const AdminThemesTab = () => {
           {!selectedTheme ? (
             <Card className="border-dashed h-[400px] flex items-center justify-center">
               <CardContent className="flex flex-col items-center justify-center text-center">
-                <div className="w-16 h-16 rounded-2xl bg-muted/30 flex items-center justify-center mb-4">
+                <div className="w-16 h-16 rounded-premium-sm bg-muted/30 flex items-center justify-center mb-4">
                   <Tag className="w-8 h-8 text-muted-foreground/30" />
                 </div>
                 <h3 className="font-bold text-lg mb-1">Nenhum tema selecionado</h3>
@@ -319,12 +319,12 @@ const AdminThemesTab = () => {
             </Card>
           ) : (
             <div className="space-y-4 animate-in fade-in duration-300">
-              <div className="flex items-center justify-between bg-card p-4 rounded-2xl border border-border/50">
+              <div className="flex items-center justify-between bg-card p-4 rounded-premium-sm border border-border/50">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{selectedTheme.emoji || '⛪'}</span>
                   <div>
                     <h3 className="text-xl font-bold text-foreground leading-none mb-1">{selectedTheme.name}</h3>
-                    <Badge variant="secondary" className="text-[9px] uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
+                    <Badge variant="secondary" className="text-premium-tiny uppercase tracking-widest font-black">{selectedTheme.category || 'Geral'}</Badge>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -386,7 +386,7 @@ const AdminThemesTab = () => {
                         <div className="flex items-center gap-2 border-b border-border/50 pb-2">
                           <div className={`p-1.5 rounded-full ${config.color}`}>{config.icon}</div>
                           <span className="text-sm font-bold text-foreground uppercase tracking-widest">{config.label}</span>
-                          <Badge variant="outline" className="text-[10px] ml-auto">{items.length}</Badge>
+                          <Badge variant="outline" className="text-premium-tiny ml-auto">{items.length}</Badge>
                         </div>
                         <div className="grid gap-3">
                           {items.map(item => (
@@ -419,7 +419,7 @@ const AdminThemesTab = () => {
                                   <div className="flex items-start justify-between gap-4">
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-2 mb-2">
-                                        <Badge variant="outline" className="text-[9px] font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
+                                        <Badge variant="outline" className="text-premium-tiny font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
                                         {item.title && <span className="text-xs font-bold text-foreground/80">— {item.title}</span>}
                                       </div>
                                       <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-3">"{item.text_content}"</p>

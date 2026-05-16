@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -14,9 +15,9 @@ const FavoritesPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Heart className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Favoritos</h1>
         <p className="text-muted-foreground font-serif italic">Seus versículos, orações e estudos salvos.</p>
@@ -25,17 +26,17 @@ const FavoritesPage: React.FC = () => {
       {favorites.length > 0 && (
         <div className="flex flex-wrap gap-2 justify-center">
           {types.map(t => (
-            <button key={t} onClick={() => setFilter(t)}
+            <Button key={t} onClick={() => setFilter(t)}
               className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
               {typeLabels[t] || t}
-            </button>
+            </Button>
           ))}
         </div>
       )}
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center">
+          <div className="w-16 h-16 rounded-premium-sm bg-muted flex items-center justify-center">
             <Icons.Heart className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
@@ -46,19 +47,19 @@ const FavoritesPage: React.FC = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map(item => (
-            <div key={item.id} className="bg-card border border-border rounded-2xl p-5 group hover:border-primary/30 transition-all">
+            <div key={item.id} className="bg-card border border-border rounded-premium-sm p-5 group hover:border-primary/30 transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
-                    <span className="text-[9px] text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
+                    <span className="text-premium-tiny text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
                   </div>
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
                 </div>
-                <button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                <Button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
                   <Icons.Cross className="w-4 h-4 text-destructive" />
-                </button>
+                </Button>
               </div>
             </div>
           ))}

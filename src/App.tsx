@@ -16,7 +16,8 @@ import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
-import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
+import ReadingPreferencesPanel from './components/cathedra/ReadingPreferencesPanel';
+import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
 import { initGA4AutoTracking } from './lib/analytics';
 
 import PageTransition from './components/PageTransition';
@@ -45,7 +46,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-// Dashboard component removed in favor of HojePage
+const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
@@ -107,6 +108,10 @@ const CatechismHealthCheck = lazy(() => import('./components/cathedra/CatechismH
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
 const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
+const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
+const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
+const AuditLogsPage = lazy(() => import('./components/cathedra/AuditLogsPage'));
+
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
 const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
@@ -117,6 +122,8 @@ const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPa
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
+const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const IconsDesignSystem = lazy(() => import('./components/cathedra/IconsDesignSystem'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -130,8 +137,8 @@ SkeletonBar.displayName = 'SkeletonBar';
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
     <div className="relative mb-8">
-      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
-      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
+      <div className="w-16 h-16 rounded-premium-sm bg-primary/10 animate-pulse border-2 border-primary/20" />
+      <div className="absolute inset-0 w-16 h-16 rounded-premium-sm border-t-2 border-primary animate-spin" />
     </div>
     
     <div className="w-full max-w-sm space-y-4">
@@ -141,7 +148,7 @@ const LoadingFallback = () => (
       
       <div className="grid grid-cols-2 gap-3 pt-6">
         {[1, 2].map(i => (
-          <div key={i} className="rounded-2xl bg-muted/20 border border-border/20 p-4 space-y-3">
+          <div key={i} className="rounded-premium-sm bg-muted/20 border border-border/20 p-4 space-y-3">
             <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-full" />
             <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
           </div>
@@ -164,12 +171,18 @@ const getInitialLanguage = (): Language => {
   return storedLang ? (storedLang as Language) : 'pt';
 };
 
-const getInitialTheme = () => readStoredValue('cathedra_dark') === 'true';
+const getInitialTheme = () => {
+  const storedTheme = readStoredValue('cathedra_theme');
+  if (storedTheme) return storedTheme === 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
 
 const AppLayout: React.FC = () => {
   const [lang, setLangState] = useState<Language>(getInitialLanguage);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDark, setIsDark] = useState(getInitialTheme);
+  const [isHighContrast, setIsHighContrast] = useState(() => readStoredValue('cathedra_high_contrast') === 'true');
+  const [showA11ySettings, setShowA11ySettings] = useState(false);
   
   const { user, profile, signOut, isPremium, loading } = useAuth();
   const navigate = useNavigate();
@@ -241,10 +254,28 @@ const AppLayout: React.FC = () => {
 
 
   useEffect(() => {
-    if (isDark) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
-    localStorage.setItem('cathedra_dark', isDark ? 'true' : 'false');
-  }, [isDark]);
+    const root = document.documentElement;
+    if (isDark) root.classList.add('dark');
+    else root.classList.remove('dark');
+    
+    if (isHighContrast) root.classList.add('high-contrast');
+    else root.classList.remove('high-contrast');
+    
+    localStorage.setItem('cathedra_theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('cathedra_high_contrast', isHighContrast ? 'true' : 'false');
+  }, [isDark, isHighContrast]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (!readStoredValue('cathedra_theme')) {
+        setIsDark(e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
   
   useEffect(() => {
     const handleLangChange = (e: CustomEvent) => {
@@ -256,6 +287,12 @@ const AppLayout: React.FC = () => {
     window.addEventListener('change-lang' as any, handleLangChange);
     return () => window.removeEventListener('change-lang' as any, handleLangChange);
   }, [lang]);
+
+  useEffect(() => {
+    const handleOpenA11y = () => setShowA11ySettings(true);
+    window.addEventListener('open-a11y-settings', handleOpenA11y);
+    return () => window.removeEventListener('open-a11y-settings', handleOpenA11y);
+  }, []);
 
   const [isSpeaking, setIsSpeaking] = useState(false);
   
@@ -400,7 +437,7 @@ const AppLayout: React.FC = () => {
       if (path.includes('biblia')) pageTitle = 'Sagrada Escritura';
       else if (path.includes('catecismo')) pageTitle = 'Catecismo da Igreja';
       else if (path.includes('hoje')) pageTitle = 'Liturgia do Dia';
-      else if (path.includes('estudo')) pageTitle = 'Logos IA';
+      else if (path.includes('estudo')) pageTitle = 'Logos';
       else if (path.includes('jornada')) pageTitle = 'Jornada Espiritual';
       else if (path.includes('santos')) pageTitle = 'Vida dos Santos';
       else if (path.includes('oracao')) pageTitle = 'Momento de Oração';
@@ -456,19 +493,19 @@ const AppLayout: React.FC = () => {
       <Suspense fallback={
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-background p-6">
           <div className="relative mb-12 animate-in fade-in zoom-in duration-700">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-[3px] border-primary/10 shadow-2xl p-4 bg-muted/20">
-              <div className="w-full h-full bg-primary/20 rounded-2xl animate-ping" />
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-primary/10 shadow-premium p-4 bg-muted/20">
+              <div className="w-full h-full bg-primary/20 rounded-premium-sm animate-ping" />
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 border-t-2 border-primary rounded-2xl animate-spin" />
+              <div className="w-16 h-16 border-t-2 border-primary rounded-premium-sm animate-spin" />
             </div>
           </div>
           
           <div className="space-y-4 w-full max-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-            <div className="h-1 w-full bg-muted rounded-2xl overflow-hidden">
+            <div className="h-1 w-full bg-muted rounded-premium-sm overflow-hidden">
               <div className="h-full bg-primary/40 animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
             </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">
               Cathedra Digital
             </p>
           </div>
@@ -487,6 +524,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -519,6 +558,8 @@ const AppLayout: React.FC = () => {
                 user={appUser} 
                 isDark={isDark}
                 onToggleDark={() => setIsDark(!isDark)}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                 isSpeaking={isSpeaking}
                 onToggleSpeak={toggleSpeak}
                 onSignOut={signOut}
@@ -536,6 +577,8 @@ const AppLayout: React.FC = () => {
                   user={appUser}
                   isDark={isDark}
                   onToggleDark={() => setIsDark(!isDark)}
+                  isHighContrast={isHighContrast}
+                  onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
                   lang={lang}
                   onChangeLang={(l) => window.dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   isSpeaking={isSpeaking}
@@ -554,7 +597,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path="/curso-pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path="/pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
-                  <Route path={AppRoute.DASHBOARD} element={<Navigate to={AppRoute.HOJE} replace />} />
+                  <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
@@ -566,6 +609,11 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.CATECHISM_HEALTH} element={<PageTransition><AdminGuard><CatechismHealthCheck /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM_VERIFY} element={<PageTransition><AdminGuard><CatechismVerification /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.VISUAL_AUDIT} element={<PageTransition><AdminGuard><VisualAuditPage /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.VISUAL_REGRESSION} element={<PageTransition><AdminGuard><VisualRegressionDashboard /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.AUDIT_LOGS} element={<PageTransition><AdminGuard><AuditLogsPage /></AdminGuard></PageTransition>} />
+                  <Route path="/design-system/icons" element={<PageTransition><AdminGuard><IconsDesignSystem /></AdminGuard></PageTransition>} />
+
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DAILY_LITURGY} element={<Navigate to={`${AppRoute.LITURGIA}?tab=liturgia`} replace />} />
@@ -615,10 +663,10 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.UPGRADE} element={<PageTransition><UpgradePage /></PageTransition>} />
-                  <Route path={AppRoute.A11Y_AUDIT} element={<PageTransition><A11yAuditPage /></PageTransition>} />
-                  <Route path={AppRoute.SECURITY_AUDIT} element={<PageTransition><SecurityAuditPage /></PageTransition>} />
-                  <Route path={AppRoute.SELLER} element={<PageTransition><AuthGuard><SellerDashboard /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AuthGuard><TransactionsPage /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.A11Y_AUDIT} element={<PageTransition><AdminGuard><A11yAuditPage /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.SECURITY_AUDIT} element={<PageTransition><AdminGuard><SecurityAuditPage /></AdminGuard></PageTransition>} />
+                   <Route path={AppRoute.SELLER} element={<PageTransition><AdminGuard><SellerDashboard /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AdminGuard><TransactionsPage /></AdminGuard></PageTransition>} />
                   <Route path="/transactions/my" element={<PageTransition><AuthGuard><UserTransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
@@ -631,6 +679,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
                   <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
+                  <Route path={AppRoute.DIARIO} element={<PageTransition><AuthGuard><SpiritualJournalPage /></AuthGuard></PageTransition>} />
 
                   <Route path={AppRoute.POPES} element={<PageTransition><AuthGuard><PopesPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.BUSCAR} element={<PageTransition><AuthGuard><GlobalSearchPage /></AuthGuard></PageTransition>} />
@@ -657,11 +706,21 @@ const AppLayout: React.FC = () => {
             </Suspense>
             <OfflineModeToggle />
             {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
-              <ReadingModeToggle />
+              <ReadingPreferencesPanel />
             )}
             <OfflineIndicator />
             <PWAInstallPrompt />
           </>
+        )}
+        {!isChromeless && (
+          <A11ySettingsPanel 
+            isOpen={showA11ySettings} 
+            onClose={() => setShowA11ySettings(false)}
+            isDark={isDark}
+            onToggleDark={() => setIsDark(!isDark)}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+          />
         )}
       </div>
       </Suspense>

@@ -9,15 +9,17 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Copy, Check, Plus, MessageSquare, Trash2, ChevronLeft, Compass, Sparkles, BookOpen, ArrowRight, Shield } from 'lucide-react';
+import { 
+  Copy, Check, MessageSquare, Trash2, ChevronLeft, 
+  Compass, Sparkles, BookOpen, ArrowRight, Shield,
+  Search, Scroll, Quote, History, Plus
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/cathedra/Button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import { callColloquium } from '@/services/aiService';
-import logosAvatarImg from '@/assets/logos-avatar.png';
-import logosAquinasImg from '@/assets/logos-aquinas.png';
-import logosColloquiumImg from '@/assets/logos-colloquium.png';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -44,9 +46,14 @@ const TheologicalAwareText: React.FC<{
   onNavigateCatechism: (paragraph: number) => void;
 }> = ({ text, onNavigateBible, onNavigateCatechism }) => {
   const segments = useMemo(() => parseTheologicalReferences(text), [text]);
-  if (segments.length === 1 && segments[0].type === 'text') return <>{text}</>;
+  if (segments.length === 1 && segments[0].type === 'text') return <ReactMarkdown components={{
+    p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+    strong: ({ children }) => <strong className="text-primary font-bold">{children}</strong>,
+    em: ({ children }) => <em className="italic opacity-90">{children}</em>,
+  }}>{text}</ReactMarkdown>;
+  
   return (
-    <>
+    <div className="space-y-4">
       {segments.map((seg, i) => {
         if (seg.type === 'bibleRef' && seg.abbr) {
           return <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateBible} />;
@@ -54,30 +61,13 @@ const TheologicalAwareText: React.FC<{
         if (seg.type === 'catechismRef' && seg.paragraph) {
           return <CatechismPopover key={i} paragraph={seg.paragraph} onNavigate={onNavigateCatechism} />;
         }
-        return <React.Fragment key={i}>{seg.value}</React.Fragment>;
+        return <ReactMarkdown key={i} components={{
+          p: ({ children }) => <span className="inline">{children}</span>,
+          strong: ({ children }) => <strong className="text-primary font-bold">{children}</strong>,
+          em: ({ children }) => <em className="italic opacity-90">{children}</em>,
+        }}>{seg.value}</ReactMarkdown>;
       })}
-    </>
-  );
-};
-
-// ── Copy button ──
-const CopyButton: React.FC<{ text: string }> = ({ text }) => {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      toast.success('Copiado!');
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error('Erro ao copiar');
-    }
-  };
-  return (
-    <button onClick={handleCopy} className="mt-2 inline-flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-primary transition-colors">
-      {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-      {copied ? 'Copiado' : 'Copiar'}
-    </button>
+    </div>
   );
 };
 
@@ -114,19 +104,10 @@ const StudyMode: React.FC = () => {
     const base = [...SUGGESTIONS];
     if (profile === 'ferido_em_busca') {
       base.unshift("Como encontrar paz em meio à ansiedade?");
-      base.unshift("O que a Bíblia diz sobre o descanso da alma?");
     } else if (profile === 'ansioso_buscador') {
       base.unshift("Como o perdão de Deus pode me libertar da culpa?");
-      base.unshift("Explique a misericórdia divina para quem falhou.");
     } else if (profile === 'sedento_de_sentido') {
       base.unshift("Qual o propósito da vida segundo Santo Agostinho?");
-      base.unshift("Como descobrir minha vocação e missão?");
-    } else if (profile === 'firme_aprofundando') {
-      base.unshift("Explique a oração contemplativa de Santa Teresa.");
-      base.unshift("Quais são as etapas da vida espiritual (vias)?");
-    } else if (profile === 'ardente_missionario') {
-      base.unshift("Como manter o fervor apostólico no deserto?");
-      base.unshift("Explique o papel do Espírito Santo na missão.");
     }
     return base.slice(0, 4);
   }, [profile]);
@@ -148,7 +129,7 @@ const StudyMode: React.FC = () => {
         .from('colloquium_conversations')
         .select('id, title, updated_at')
         .order('updated_at', { ascending: false })
-        .limit(50);
+        .limit(20);
       if (data) setConversations(data);
     };
     loadConversations();
@@ -176,25 +157,9 @@ const StudyMode: React.FC = () => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
 
-  const markdownComponents = useMemo(() => {
-    const renderChildren = (children: React.ReactNode) =>
-      React.Children.map(children, (child) =>
-        typeof child === 'string' ? (
-          <TheologicalAwareText text={child} onNavigateBible={handleNavigateToBible} onNavigateCatechism={handleNavigateToCatechism} />
-        ) : child
-      );
-    return {
-      p: ({ children, ...props }: any) => <p {...props}>{renderChildren(children)}</p>,
-      li: ({ children, ...props }: any) => <li {...props}>{renderChildren(children)}</li>,
-      strong: ({ children, ...props }: any) => <strong {...props}>{renderChildren(children)}</strong>,
-      em: ({ children, ...props }: any) => <em {...props}>{renderChildren(children)}</em>,
-    };
-  }, [handleNavigateToBible, handleNavigateToCatechism]);
-
   // ── Persistence helpers ──
   const saveMessages = useCallback(async (conversationId: string, newMessages: Message[]) => {
     if (!user) return;
-    // Save only the last two messages (user + assistant)
     const toSave = newMessages.slice(-2);
     for (const msg of toSave) {
       await supabase.from('colloquium_messages').insert({
@@ -203,9 +168,8 @@ const StudyMode: React.FC = () => {
         content: msg.content,
       });
     }
-    // Update conversation title from first user message
     if (newMessages.filter(m => m.role === 'user').length === 1) {
-      const title = newMessages[0].content.slice(0, 80);
+      const title = newMessages[0].content.slice(0, 60);
       await supabase.from('colloquium_conversations').update({ title }).eq('id', conversationId);
       setConversations(prev => prev.map(c => c.id === conversationId ? { ...c, title } : c));
     }
@@ -248,61 +212,27 @@ const StudyMode: React.FC = () => {
     setInput('');
     setIsLoading(true);
 
-    let assistantContent = '';
     let convId = activeConversationId;
-
-    // Create conversation if needed
     if (!convId && user) {
       convId = await createConversation();
     }
 
     try {
-      const result = await callColloquium(allMessages, currentMode, (content) => {
-        assistantContent = content;
+      const response = await callColloquium(allMessages, currentMode);
+      
+      if (response.content) {
+        const assistantMsg: Message = { role: 'assistant', content: response.content };
+        setMessages(prev => [...prev, assistantMsg]);
         
-        // Look for metadata line: [RECOMMENDATION:{"category":...}]
-        const metadataMatch = content.match(/\[RECOMMENDATION:({.*})\]$/);
-        let displayContent = content;
-        if (metadataMatch) {
-          try {
-            const meta = JSON.parse(metadataMatch[1]);
-            setLastMetadata(meta);
-            // Remove metadata from display content if it's the last line
-            displayContent = content.replace(/\[RECOMMENDATION:({.*})\]$/, '').trim();
-          } catch (e) { console.error('Meta parse error:', e); }
+        if (convId && user) {
+          saveMessages(convId, [...allMessages, assistantMsg]).catch(e => console.error('Save failed:', e));
         }
-
-        setMessages(prev => {
-          const last = prev[prev.length - 1];
-          if (last?.role === 'assistant') {
-            return prev.map((m, i) => i === prev.length - 1 ? { ...m, content: displayContent } : m);
-          }
-          return [...prev, { role: 'assistant', content: displayContent }];
-        });
-      });
-
-      if (result.error) {
-        if (result.limit_reached) navigate('/pricing');
-        throw new Error(result.error);
-      }
-
-      // Background save to DB to keep UI responsive
-      if (convId && user) {
-        const finalMessages = [...allMessages, { role: 'assistant' as const, content: assistantContent }];
-        saveMessages(convId, finalMessages).catch(e => console.error('BG Save failed:', e));
+      } else if (response.error) {
+        throw new Error(response.error);
       }
     } catch (e: any) {
-      console.error('Study mode error:', e);
-      if (e.message?.includes('402') || e.message?.includes('esgotados')) {
-        window.dispatchEvent(new CustomEvent('ai-status-error', { 
-          detail: { type: 'credits_exhausted' } 
-        }));
-      } else if (e.message?.includes('429')) {
-        window.dispatchEvent(new CustomEvent('ai-status-error', { 
-          detail: { type: 'rate_limited' } 
-        }));
-      }
-      setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ ${e.message || 'Erro ao consultar a IA. Tente novamente.'}` }]);
+      toast.error(e.message || 'Erro ao consultar o Logos.');
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Desculpe, não consegui processar sua reflexão no momento. Tente novamente em breve.' }]);
     } finally {
       setIsLoading(false);
     }
@@ -311,69 +241,157 @@ const StudyMode: React.FC = () => {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); }
   };
-  // Handle initial topic from URL or state
+
   useEffect(() => {
     if (initialTopicProcessed.current) return;
-    
     const searchParams = new URLSearchParams(location.search);
     const topic = searchParams.get('topic') || (location.state as any)?.topic;
-    
     if (topic && !messages.length && !isLoading) {
       initialTopicProcessed.current = true;
-      const initialPrompt = `Gostaria de aprofundar meu estudo sobre o tema: "${topic}". Poderia me dar uma explicação teológica detalhada, conexões bíblicas e como aplicar isso na minha vida de fé?`;
-      sendMessage(initialPrompt);
+      sendMessage(`Gostaria de aprofundar meu estudo sobre: "${topic}".`);
     }
   }, [location.search, location.state, messages.length, isLoading]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-12">
-      <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-        <Shield className="w-12 h-12 text-primary" />
-      </div>
-      
-      <div className="space-y-4">
-        <h1 className="text-3xl md:text-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
-        <p className="text-lg text-muted-foreground font-serif italic">
-          "Para garantir a integridade absoluta da doutrina e a soberania da sua experiência espiritual, a Cathedra Digital optou por não utilizar serviços de Inteligência Artificial."
-        </p>
-      </div>
-
-      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-sm space-y-6">
-        <p className="text-sm text-foreground/80 leading-relaxed">
-          O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest"
-            onClick={() => navigate(AppRoute.CATECHISM)}
-          >
-            Explorar Catecismo
-          </Button>
-          <Button 
-            variant="outline"
-            className="rounded-full h-12 px-8 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary"
-            onClick={() => navigate(AppRoute.TRANSPARENCY)}
-          >
-            Saiba Mais
-          </Button>
-        </div>
-      </div>
-
-      <div className="pt-8 border-t border-border w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[
-          { label: 'Integridade', desc: 'Conteúdo validado por humanos.' },
-          { label: 'Offline', desc: 'Funciona sem APIs externas.' },
-          { label: 'Fidelidade', desc: 'Fiel ao Magistério Vivo.' }
-        ].map(item => (
-          <div key={item.label} className="space-y-1">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">{item.label}</h4>
-            <p className="text-[10px] text-muted-foreground">{item.desc}</p>
+    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden bg-background">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar: History */}
+        <aside className={`w-80 border-r border-border/10 bg-background/50 backdrop-blur-md hidden lg:flex flex-col ${showSidebar ? 'fixed inset-0 z-50 flex' : ''}`}>
+          <div className="p-6 border-b border-border/10 flex items-center justify-between">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Histórico de Diálogos</h2>
+            <Button variant="ghost" size="icon" onClick={startNewConversation} className="rounded-full">
+              <Plus className="w-4 h-4" />
+            </Button>
           </div>
-        ))}
+          <ScrollArea className="flex-1">
+            <div className="p-4 space-y-2">
+              {conversations.map(conv => (
+                <button
+                  key={conv.id}
+                  onClick={() => { setActiveConversationId(conv.id); setShowSidebar(false); }}
+                  className={`w-full text-left p-4 rounded-premium-sm transition-all group relative ${activeConversationId === conv.id ? 'bg-primary/5 text-primary' : 'hover:bg-primary/5 text-muted-foreground'}`}
+                >
+                  <p className="text-sm font-monastery truncate pr-8">{conv.title}</p>
+                  <p className="text-[9px] uppercase tracking-widest opacity-40 mt-1">{new Date(conv.updated_at).toLocaleDateString()}</p>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); deleteConversation(conv.id); }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 hover:text-destructive transition-opacity"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </button>
+              ))}
+            </div>
+          </ScrollArea>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="flex-1 flex flex-col relative overflow-hidden bg-background reading-sepia">
+          <ScrollArea className="flex-1">
+            <div className="max-w-3xl mx-auto px-8 py-16 space-y-20">
+              {messages.length === 0 ? (
+                <div className="space-y-12 text-center py-12">
+                  <div className="w-20 h-20 rounded-full bg-primary/5 mx-auto flex items-center justify-center border border-primary/10">
+                    <Compass className="w-10 h-10 text-primary" />
+                  </div>
+                  <div className="space-y-4">
+                    <h1 className="text-4xl font-display text-primary">Logos</h1>
+                    <p className="text-lg text-muted-foreground font-serif italic max-w-md mx-auto">
+                      "A verdade vos libertará." — Diálogos teológicos iluminados pela tradição.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+                    {dynamicSuggestions.map(s => (
+                      <button
+                        key={s}
+                        onClick={() => sendMessage(s)}
+                        className="p-6 text-left rounded-premium-sm border border-primary/5 hover:border-primary/20 bg-background/50 hover:bg-primary/5 transition-all group"
+                      >
+                        <p className="text-sm font-monastery text-primary/80 leading-relaxed">{s}</p>
+                        <ArrowRight className="w-4 h-4 mt-4 text-primary/20 group-hover:text-primary/60 transition-colors" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                messages.map((msg, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                  >
+                    {msg.role === 'assistant' && (
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                          <Compass className="w-4 h-4 text-primary" />
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/40">Reflexão do Logos</span>
+                      </div>
+                    )}
+                    
+                    <div className={`max-w-2xl font-monastery leading-relaxed ${
+                      msg.role === 'user' 
+                        ? 'text-xl text-primary/70 italic text-right' 
+                        : 'text-2xl text-primary border-l-2 border-primary/5 pl-8 py-2'
+                    }`}>
+                      <TheologicalAwareText 
+                        text={msg.content} 
+                        onNavigateBible={handleNavigateToBible} 
+                        onNavigateCatechism={handleNavigateToCatechism} 
+                      />
+                    </div>
+                  </motion.div>
+                ))
+              )}
+              {isLoading && (
+                <div className="flex flex-col items-start space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center border border-primary/10">
+                      <Compass className="w-4 h-4 text-primary animate-spin-slow" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30 animate-pulse">Consultando a Tradição...</span>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
+
+          {/* Persistent Input Bar */}
+          <div className="p-8 bg-background/50 backdrop-blur-xl border-t border-border/10">
+            <div className="max-w-3xl mx-auto">
+              <div className="relative group">
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Inicie um diálogo sobre a fé..."
+                  className="w-full bg-transparent border-b border-primary/10 py-6 pr-16 text-xl font-monastery focus:outline-none focus:border-primary/40 transition-colors resize-none placeholder:text-primary/20"
+                  rows={1}
+                />
+                <button
+                  onClick={() => sendMessage(input)}
+                  disabled={!input.trim() || isLoading}
+                  className="absolute right-0 bottom-6 p-2 text-primary/40 hover:text-primary disabled:opacity-0 transition-all"
+                >
+                  <ArrowRight className="w-8 h-8" />
+                </button>
+              </div>
+              <div className="mt-6 flex items-center justify-between text-[10px] font-black uppercase tracking-[0.3em] text-primary/20">
+                <div className="flex gap-8">
+                  <span className="flex items-center gap-2"><Scroll className="w-3 h-3" /> Magistério Vivo</span>
+                  <span className="flex items-center gap-2"><BookOpen className="w-3 h-3" /> Sagradas Escrituras</span>
+                </div>
+                <span className="italic">Modo Contemplativo Ativo</span>
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
 };
 
 export default StudyMode;
-

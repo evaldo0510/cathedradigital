@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
@@ -148,13 +148,13 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       animate={{ opacity: 1, scale: 1 }}
       className="reader-text bg-muted/30 border border-border rounded-[2rem] p-8 text-center space-y-6 my-10"
     >
-      <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10">
+      <div className="mx-auto w-16 h-16 rounded-premium-sm bg-primary/5 flex items-center justify-center border border-primary/10">
         <Icons.WifiOff className="w-8 h-8 text-primary/40" />
       </div>
 
       {downloading && (
         <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary">
+          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
@@ -212,7 +212,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       </div>
 
       <div className="pt-4 border-t border-border/40">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>

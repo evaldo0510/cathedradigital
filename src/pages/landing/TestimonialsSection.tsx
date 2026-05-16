@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { Card   } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -24,9 +24,10 @@ const TestimonialsSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.slice(0, 3).map((t) => (
-            <HomeCard
+            <Card
               key={t.name}
-              className="p-8 space-y-8 flex flex-col"
+              padding="md"
+              className="space-y-8 flex flex-col transition-all duration-700 h-full"
             >
               <Quote className="w-6 h-6 text-secondary/20" />
               <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
@@ -34,7 +35,7 @@ const TestimonialsSection = () => {
               </p>
 
               <div className="pt-8 border-t border-border/10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
+                <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
                   {t.avatar}
                 </div>
                 <div>
@@ -42,7 +43,7 @@ const TestimonialsSection = () => {
                   <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
-            </HomeCard>
+            </Card>
           ))}
         </div>
       </div>

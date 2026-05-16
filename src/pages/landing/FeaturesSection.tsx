@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { BookOpen, Sparkles, Hash } from "lucide-react";
 import { AppRoute } from "@/types";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { Card   } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const features = [
@@ -38,9 +38,10 @@ interface FeaturesSectionProps {
 
 const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onNavigate: (r: string) => void }) => {
   return (
-    <HomeCard
-      as="button"
-      className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
+    <Card
+      variant="interactive"
+      padding="md"
+      className="flex flex-col items-center text-center space-y-6 group w-full transition-all duration-700 h-full"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -52,14 +53,14 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       role="button"
       tabIndex={0}
     >
-      <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+      <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
       </div>
       <div className="space-y-2 w-full">
-        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
+        <h3 className="text-xl font-serif font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
-    </HomeCard>
+    </Card>
   );
 };
 FeatureCard.displayName = 'FeatureCard';
@@ -76,7 +77,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
           <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
           <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>

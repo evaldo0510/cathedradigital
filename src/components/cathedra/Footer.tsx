@@ -1,8 +1,10 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-
+import { useAuth } from '@/hooks/useAuth';
+import { canUserAccess } from '@/utils/auth-utils';
 import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [
@@ -121,6 +123,7 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { t, lang } = useLang();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
@@ -175,7 +178,7 @@ const Footer: React.FC = React.memo(() => {
                <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
                <div>
                  <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-[9px] font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                 <p className="text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
                </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
@@ -189,40 +192,46 @@ const Footer: React.FC = React.memo(() => {
                 { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
                 { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
               ].map((social, i) => (
-                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all p-2 rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30">
-                  {social.icon}
-                </a>
+                <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
+                  <a href={social.url} target="_blank" rel="noopener noreferrer">
+                    {social.icon}
+                  </a>
+                </Button>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🏛️</span> Santa Sé
             </h4>
             <ul className="flex flex-col gap-4">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
+                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </Button>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
+            <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🇧🇷</span> CNBB
             </h4>
             <ul className="flex flex-col gap-4">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center gap-2 group">
-                    <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
-                    {link.title}
-                  </a>
+                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">
+                      <span className="w-1 h-1 rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      {link.title}
+                    </a>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -230,7 +239,7 @@ const Footer: React.FC = React.memo(() => {
 
           <div className="flex flex-col gap-8">
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Sua Diocese' : 'Your Diocese'}</h4>
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
@@ -242,13 +251,15 @@ const Footer: React.FC = React.memo(() => {
                 ))}
               </select>
               {dioceseUrl && (
-                <a href={dioceseUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 mt-3 text-xs text-primary hover:underline">
-                  {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
-                </a>
+                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-xs text-primary hover:underline">
+                  <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
+                  </a>
+                </Button>
               )}
             </div>
             <div>
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
+              <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-4">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
               <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
                 {lang === 'pt' 
                   ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
@@ -263,17 +274,17 @@ const Footer: React.FC = React.memo(() => {
                   required
                   className="w-full bg-foreground/5 border border-foreground/10 rounded-full pl-4 pr-12 py-2.5 text-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
-                <button 
+                <Button 
                   type="submit" 
                   disabled={isSubmitting}
                   className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-2xl animate-spin" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium-sm animate-spin" />
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
-                </button>
+                </Button>
               </form>
             </div>
           </div>
@@ -281,17 +292,21 @@ const Footer: React.FC = React.memo(() => {
 
         <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-[12px] font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
+            <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <button 
-                onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
-              >
-                Evaldo.os
-              </button>
+              {canUserAccess(profile?.role, AppRoute.ADMIN) ? (
+                <Button 
+                  onClick={() => navigate(AppRoute.ADMIN)} 
+                  className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+                >
+                  Evaldo.os
+                </Button>
+              ) : (
+                <span className="font-black text-primary">Evaldo.os</span>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-8">
@@ -305,13 +320,13 @@ const Footer: React.FC = React.memo(() => {
 
               ].map((item, index, array) => (
                 <React.Fragment key={item.label}>
-                  <button 
+                  <Button 
                     onClick={() => navigate(item.route)} 
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
                     aria-label={item.label}
                   >
                     {item.label}
-                  </button>
+                  </Button>
 
                   {index < array.length - 1 && (
                     <span className="mx-3 text-muted-foreground/20 font-light select-none">|</span>
@@ -319,13 +334,13 @@ const Footer: React.FC = React.memo(() => {
                 </React.Fragment>
               ))}
             </nav>
-            <button 
+            <Button 
               onClick={scrollToTop} 
               className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
               <Icons.ArrowDown className="w-4 h-4 rotate-180" />
-            </button>
+            </Button>
 
           </div>
         </div>

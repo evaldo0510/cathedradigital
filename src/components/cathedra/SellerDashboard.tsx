@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Store } from 'lucide-react';
@@ -68,7 +68,7 @@ const SellerDashboard: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto space-y-8 py-8 px-4 animate-in fade-in duration-700">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+        <div className="w-12 h-12 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
           <Store className="w-6 h-6" />
         </div>
         <div>

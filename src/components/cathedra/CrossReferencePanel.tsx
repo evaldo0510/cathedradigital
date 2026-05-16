@@ -34,12 +34,12 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   if (!hasRefs) return null;
 
   return (
-    <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 space-y-3">
+    <div className="bg-primary/5 border border-primary/20 rounded-premium-sm p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-2xl bg-primary/10 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-premium-sm bg-primary/10 flex items-center justify-center">
           <Icons.Cross className="w-3 h-3 text-primary" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-[0.15em] text-primary">
+        <span className="text-premium-tiny font-black uppercase tracking-[0.15em] text-primary">
           Nexus Theologicus
         </span>
       </div>

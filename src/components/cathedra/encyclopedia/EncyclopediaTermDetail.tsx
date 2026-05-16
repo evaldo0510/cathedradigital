@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Book, Bookmark, Globe, Target, Quote, Brain, Compass, Heart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { HomeButton as Button } from '../HomeButton';
 import { FaithTerm } from '../AZFaithPage';
 import BibleVersePopover from '../BibleVersePopover';
 import CatechismPopover from '../CatechismPopover';
@@ -37,8 +37,8 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-full border border-dashed border-border/40"
           >
             <Sparkles className="h-10 w-10 text-primary/30 mb-4" />
-            <h3 className="text-xl font-bold text-foreground mb-2">Selecione um termo</h3>
-            <p className="text-muted-foreground text-sm">Escolha um termo da lista para explorar sua profundidade teológica.</p>
+            <h3 className="heading-card mb-2">Selecione um termo</h3>
+            <p className="text-premium-body">Escolha um termo da lista para explorar sua profundidade teológica.</p>
           </motion.div>
         ) : (
           <motion.div
@@ -47,32 +47,32 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-full p-6 md:p-8 space-y-6 shadow-sm"
+            className="bg-card border border-border rounded-premium p-6 md:p-8 space-y-6 shadow-sm"
           >
             {/* Term Header */}
             <div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-[9px] uppercase tracking-[0.15em] font-black mb-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-premium-tiny uppercase tracking-[0.15em] font-black mb-2">
                 {selectedTerm.category || 'Conceito'}
               </Badge>
-              <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
+              <h2 className="heading-section-label !text-3xl md:!text-4xl !tracking-tight">
                 🫧 {selectedTerm.term}
               </h2>
             </div>
 
             {/* Definition */}
             <div className="space-y-1">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Definição</p>
-              <p className="text-foreground/90 leading-relaxed text-base font-medium italic">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Definição</p>
+              <p className="text-premium-body !text-foreground/90 !italic !font-medium">
                 {selectedTerm.definition}
               </p>
             </div>
 
             {/* Bible */}
             {(selectedTerm.bibleVerses || selectedTerm.reference) && (
-              <div className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium-sm p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Book className="w-4 h-4 text-blue-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {(selectedTerm.bibleVerses || [selectedTerm.reference!]).flatMap((v, vIdx) => {
@@ -106,10 +106,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Catechism */}
             {selectedTerm.catechismReferences && (
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium-sm p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Bookmark className="w-4 h-4 text-amber-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedTerm.catechismReferences.flatMap((r, rIdx) => {
@@ -137,10 +137,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Magisterium */}
             {selectedTerm.magisteriumReferences && (
-              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium-sm p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Globe className="w-4 h-4 text-emerald-600" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {selectedTerm.magisteriumReferences.map((m, idx) => {
@@ -160,12 +160,12 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Practical Application */}
             {selectedTerm.practicalApplication && (
-              <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 space-y-2">
+              <div className="bg-primary/5 border border-primary/10 rounded-premium-sm p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Target className="w-4 h-4 text-primary" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
                 </div>
-                <p className="text-foreground/80 leading-relaxed text-sm font-medium">
+                <p className="text-premium-body !text-foreground/80 !font-medium">
                   {selectedTerm.practicalApplication}
                 </p>
               </div>
@@ -173,12 +173,12 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Deep Interpretation */}
             {selectedTerm.deepInterpretation && (
-              <div className="bg-muted/30 rounded-2xl p-4 space-y-2">
+              <div className="bg-muted/30 rounded-premium-sm p-4 space-y-2">
                 <div className="flex items-center gap-2">
                   <Quote className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
+                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
                 </div>
-                <p className="text-foreground/70 leading-relaxed text-sm italic font-serif">
+                <p className="text-premium-body !text-foreground/70 !font-serif !italic">
                   {selectedTerm.deepInterpretation}
                 </p>
               </div>
@@ -198,7 +198,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
               <Button
                 onClick={() => onLiveThis(selectedTerm)}
                 className={`w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
-                variant={selectedTerm.journey_id ? 'default' : 'outline'}
+                variant={selectedTerm.journey_id ? 'primary' : 'outline'}
               >
                 {selectedTerm.journey_id ? <Compass className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
                 🚀 Viver isso {selectedTerm.journey_id ? '— Jornada Prática' : ''}

@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
 
@@ -96,24 +97,24 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icons.Audio className={`w-4 h-4 ${mutedClass}`} />
-          <span className={`text-[10px] font-black uppercase tracking-widest ${mutedClass}`}>
+          <span className={`text-premium-tiny font-black uppercase tracking-widest ${mutedClass}`}>
             Áudio das Orações
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`text-[10px] font-bold ${mutedClass}`}>Vel:</span>
+          <span className={`text-premium-tiny font-bold ${mutedClass}`}>Vel:</span>
           {[0.7, 0.85, 1.0].map(r => (
-            <button
+            <Button
               key={r}
               onClick={() => setRate(r)}
-              className={`w-6 h-6 rounded-full text-[10px] font-bold transition-all ${
+              className={`w-6 h-6 rounded-full text-premium-tiny font-bold transition-all ${
                 rate === r
                   ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
-                  : (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')
+                  : (isDark ? 'bg-white/[0.05] text-secondary/40' : 'bg-card text-muted-foreground')
               }`}
             >
               {r === 0.7 ? '−' : r === 1.0 ? '+' : '•'}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -137,7 +138,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
         </p>
       )}
 
-      <button
+      <Button
         onClick={togglePlay}
         className={`w-full py-3 rounded-full border font-bold text-sm transition-all flex items-center justify-center gap-2 ${btnClass}`}
       >
@@ -152,9 +153,9 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
             Ouvir Orações
           </>
         )}
-      </button>
+      </Button>
 
-      <p className={`text-[9px] text-center ${mutedClass} italic`}>
+      <p className={`text-premium-tiny text-center ${mutedClass} italic`}>
         Funciona em segundo plano • Síntese de voz nativa
       </p>
     </div>

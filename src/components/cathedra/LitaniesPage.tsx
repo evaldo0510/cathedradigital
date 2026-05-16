@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useMemo } from 'react';
 import { 
   Heart, 
@@ -238,11 +239,11 @@ const LitaniesPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
             <ArrowLeft className="w-6 h-6 text-foreground" />
-          </button>
+          </Button>
           <div className="space-y-1">
-            <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
+            <span className={`inline-flex px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
@@ -250,7 +251,7 @@ const LitaniesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-[2.5rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02]">
+        <div className="premium-card p-8 md:p-16 space-y-10">
           {/* Opening */}
           {litany.opening && (
             <div className="text-center pb-8 border-b border-border/50">
@@ -282,9 +283,9 @@ const LitaniesPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-12">
       <div className="text-center space-y-4 pt-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium-sm">
           <Heart className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
@@ -304,24 +305,24 @@ const LitaniesPage: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map(l => (
-          <button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+          <Button key={l.id} onClick={() => setSelectedId(l.id)}
+            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
               <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
             </div>
             <div className="relative z-10 space-y-4">
-              <span className={`inline-block font-serif px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+              <span className={`inline-block font-serif px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
               <div className="space-y-1">
                 <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
                 {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
-              <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary pt-2">
+              <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary pt-2">
                 Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
               </div>
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </div>

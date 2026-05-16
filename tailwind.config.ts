@@ -16,6 +16,12 @@ export default {
       screens: {
         'xs': '420px',
       },
+      letterSpacing: {
+        'tightest': '-0.05em',
+        'tighter': '-0.02em',
+        'widest': '0.3em',
+        'premium': '0.5em',
+      },
       fontFamily: {
         display: ['Cinzel', 'serif'],
         serif: ['Playfair Display', 'serif'],
@@ -70,13 +76,20 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        'premium': '1.5rem', // 24px - Standardized radius for all major cards
+        'premium-lg': '2rem',
+        'premium-sm': '1rem',
         '3xl': '1.75rem',
         '4xl': '2.25rem',
+        'full': '9999px',
       },
       boxShadow: {
-        'premium': '0 4px 20px -4px rgba(0, 0, 0, 0.04)',
-        'premium-hover': '0 20px 40px -12px rgba(0, 0, 0, 0.08)',
-        'soft': '0 2px 10px -2px rgba(0, 0, 0, 0.03)',
+        'premium': '0 10px 30px rgba(0, 0, 0, 0.08)',
+        'premium-hover': '0 20px 40px rgba(0, 0, 0, 0.12)',
+        'premium-active': '0 5px 15px rgba(0, 0, 0, 0.05)',
+        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.02)',
+        'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.1)',
+        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.01)',
       },
       keyframes: {
         "accordion-down": {

@@ -1,0 +1,1437 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Home Page Visual Regression & A11y > Logged In State > should match snapshot for Hero (logged in) 1`] = `
+<DocumentFragment>
+  <div
+    class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
+  >
+    <div
+      animate="[object Object]"
+      class="flex justify-center"
+      initial="[object Object]"
+      transition="[object Object]"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 bg-white/5 mx-auto shadow-premium"
+          >
+            <img
+              alt="Logos — Mestre Contemplativo"
+              class="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]"
+              loading="eager"
+              src="/src/assets/logos-avatar.png"
+            />
+          </div>
+        </div>
+        <div
+          class="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto"
+        >
+          Logos · Mestre Contemplativo
+        </div>
+      </div>
+    </div>
+    <h1
+      animate="visible"
+      aria-label="Nem toda prisão é visível"
+      class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
+      initial="hidden"
+      variants="[object Object]"
+    >
+       Nem toda 
+      <br />
+       prisão é 
+      <span
+        class="text-secondary/60 italic font-serif"
+      >
+        visível
+      </span>
+       
+    </h1>
+    <p
+      animate="visible"
+      class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
+    >
+      Uma plataforma espiritual inteligente guiada pela Tradição viva, 
+      <br
+        class="hidden md:block"
+      />
+       Sagradas Escrituras e o mestre contemplativo Logos IA.
+    </p>
+    <div
+      animate="visible"
+      class="flex flex-col items-center justify-center gap-6 pt-4"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
+    >
+      <div
+        class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
+      >
+        <button
+          aria-label="Acessar suas atividades"
+          class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          whiletap="[object Object]"
+        >
+          Ver Atividades
+        </button>
+        <button
+          aria-label="Ver vídeo de apresentação"
+          class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          whiletap="[object Object]"
+        >
+          Ver Apresentação
+        </button>
+      </div>
+      <div
+        animate="[object Object]"
+        class="w-full max-w-sm flex flex-col gap-3"
+        initial="[object Object]"
+        transition="[object Object]"
+      />
+      <div
+        class="flex items-center gap-3 opacity-40"
+      >
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+        <p
+          class="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest"
+        >
+          Tradição & Tecnologia
+        </p>
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Home Page Visual Regression & A11y > Logged In State > should match snapshot for Main Content (logged in) 1`] = `
+<DocumentFragment>
+  <div
+    class="w-full space-y-24 md:space-y-40 max-w-[1280px] mx-auto"
+  >
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start"
+    >
+      <section
+        aria-labelledby="section-jornada"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-jornada"
+          >
+            Jornada
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          animate="[object Object]"
+          class="premium-card-interactive p-6 md:p-8 lg:p-10 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all flex flex-col justify-between gap-8 group"
+          initial="[object Object]"
+          role="button"
+          tabindex="0"
+          transition="[object Object]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <div
+              class="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-premium"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-flame transition-all duration-200 shrink-0 w-6 h-6"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3
+                class="text-xl md:text-2xl font-bold text-primary tracking-tight"
+              >
+                Retomar Jornada
+              </h3>
+              <p
+                class="mt-3 text-sm text-primary/40 leading-relaxed max-w-sm"
+              >
+                Continue de onde parou em suas trilhas de formação.
+              </p>
+            </div>
+          </div>
+          <button
+            aria-label="Continuar sua jornada"
+            class="btn-premium-primary px-10 py-4 text-[11px] sm:text-[12px] w-full"
+            whiletap="[object Object]"
+          >
+            Continuar
+          </button>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-hoje"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-hoje"
+          >
+            Hoje
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div>
+          <div
+            animate="[object Object]"
+            class="premium-card p-8 md:p-12 lg:p-16 relative overflow-hidden"
+            initial="[object Object]"
+            transition="[object Object]"
+          >
+            <div
+              class="space-y-8"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-2.5"
+                >
+                  <div
+                    class="flex items-center justify-center rounded-premium-sm bg-white/5 border border-white/10 transition-all duration-300 shadow-premium w-6 h-6 md:w-7 md:h-7"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-sparkles w-3 h-3 md:w-3.5 md:h-3.5 text-secondary"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                      />
+                      <path
+                        d="M20 3v4"
+                      />
+                      <path
+                        d="M22 5h-4"
+                      />
+                      <path
+                        d="M4 17v2"
+                      />
+                      <path
+                        d="M5 18H3"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/60"
+                  >
+                    Ritual do Dia
+                  </span>
+                </div>
+                <span
+                  class="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40"
+                >
+                  sexta-feira, 15 de maio
+                </span>
+              </div>
+              <div
+                animate="[object Object]"
+                class="premium-card-interactive text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all w-full flex items-center gap-6 group text-left p-5"
+                initial="[object Object]"
+                role="button"
+                tabindex="0"
+                transition="[object Object]"
+              >
+                <div
+                  class="w-20 h-20 rounded-premium-sm overflow-hidden border border-white/10 shadow-premium shrink-0"
+                >
+                  <div
+                    class="relative bg-[#0c0a09] overflow-hidden w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  >
+                    <div
+                      class="absolute inset-0 z-0 transition-opacity duration-1000 opacity-100"
+                      style="background-color: rgb(11, 31, 58);"
+                    >
+                      <div
+                        class="absolute inset-[-50%] opacity-60"
+                        style="animation: drift-slow 15s ease-in-out infinite;"
+                      />
+                      <div
+                        class="absolute inset-0 "
+                      />
+                    </div>
+                    <img
+                      alt="São Bento"
+                      class="relative z-[2] w-full h-full object-cover transition-all opacity-0 scale-105 blur-md"
+                      loading="lazy"
+                      src="https://source.unsplash.com/featured/?auto=format&fit=crop&q=75&w=800"
+                      style="transition-duration: 2000ms;"
+                    />
+                    <div
+                      class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    >
+                      <svg
+                        class="lucide lucide-cross transition-all duration-200 shrink-0 w-10 h-10 opacity-20 text-secondary animate-spin"
+                        fill="none"
+                        height="20"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        style="animation-duration: 12s;"
+                        viewBox="0 0 24 24"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/60 opacity-50"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="flex-1 min-w-0"
+                >
+                  <p
+                    class="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1"
+                  >
+                    Santo do Dia
+                  </p>
+                  <h3
+                    class="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate"
+                  >
+                    São Bento
+                  </h3>
+                  <p
+                    class="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed"
+                  >
+                    ...
+                  </p>
+                </div>
+                <svg
+                  class="lucide lucide-chevron-right w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="h-px bg-border/20"
+              />
+              <div
+                aria-label="Versículo do Dia"
+                class="space-y-4"
+                role="article"
+              >
+                <div
+                  class="flex items-center gap-2.5"
+                >
+                  <div
+                    class="flex items-center justify-center rounded-premium-sm bg-white/5 border border-white/10 transition-all duration-300 shadow-premium w-6 h-6 md:w-7 md:h-7"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-book-open w-3 h-3 md:w-3.5 md:h-3.5 text-primary"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 7v14"
+                      />
+                      <path
+                        d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60"
+                  >
+                    Versículo do Dia
+                  </span>
+                </div>
+                <blockquote
+                  class="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20"
+                >
+                  "Confia no Senhor de todo o teu coração."
+                </blockquote>
+                <p
+                  class="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6"
+                >
+                  — Pr 3,5
+                </p>
+              </div>
+              <div
+                class="h-px bg-border/20"
+              />
+              <div
+                aria-label="Reflexão"
+                class="space-y-3"
+                role="article"
+              >
+                <span
+                  class="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40"
+                >
+                  ✦ Reflexão
+                </span>
+                <p
+                  class="text-base text-foreground/70 leading-relaxed font-reader"
+                >
+                  A humildade é a verdade sobre quem somos diante de Deus. Reconheça suas fraquezas e a força Dele.
+                </p>
+              </div>
+              <div
+                class="pt-2"
+              >
+                <div
+                  class="flex items-center gap-2 w-full justify-center"
+                >
+                  <button
+                    class="btn-premium-outline px-6 py-2.5 text-[10px] sm:text-[11px] rounded-full flex items-center gap-2 transition-all"
+                    whiletap="[object Object]"
+                  >
+                    <svg
+                      class="lucide lucide-headphones w-4 h-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"
+                      />
+                    </svg>
+                    <span
+                      class="text-premium-tiny font-black uppercase tracking-widest"
+                    >
+                      Ouvir o Ritual do Dia
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-doutrina"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-doutrina"
+          >
+            Doutrina
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          animate="[object Object]"
+          class="premium-card-interactive p-6 md:p-8 lg:p-10 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all flex flex-col justify-between gap-8 group"
+          initial="[object Object]"
+          role="button"
+          tabindex="0"
+          transition="[object Object]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <div
+              class="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700 shadow-premium"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-shield-check transition-all duration-200 shrink-0 w-6 h-6"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                />
+                <path
+                  d="m9 12 2 2 4-4"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3
+                class="text-xl md:text-2xl font-bold text-primary tracking-tight"
+              >
+                Catecismo
+              </h3>
+              <p
+                class="mt-3 text-sm text-primary/40 leading-relaxed font-serif italic max-w-sm"
+              >
+                "O Catecismo apresenta fielmente o ensinamento da Tradição viva na Igreja."
+              </p>
+            </div>
+          </div>
+          <button
+            aria-label="Explorar o Catecismo"
+            class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full"
+            whiletap="[object Object]"
+          >
+            Explorar Doutrina
+          </button>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-trilhas"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-trilhas"
+          >
+            Trilhas
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          class="grid grid-cols-1 gap-6"
+        >
+          <div
+            animate="[object Object]"
+            class="premium-card-interactive p-4 md:p-6 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all space-y-4"
+            initial="[object Object]"
+            role="button"
+            tabindex="0"
+            transition="[object Object]"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <h4
+                class="text-base font-bold text-primary"
+              >
+                Temas da Fé
+              </h4>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-star transition-all duration-200 shrink-0 w-4 h-4 text-primary/40"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-xs text-primary/40 leading-relaxed"
+            >
+              Aprofunde-se em tópicos específicos da doutrina.
+            </p>
+            <button
+              aria-label="Explorar temas da fé"
+              class="bg-transparent hover:bg-primary/[0.03] rounded-full font-bold uppercase tracking-[0.2em] sm:text-[12px] p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group"
+              whiletap="[object Object]"
+            >
+              Explorar 
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-right duration-200 shrink-0 ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            animate="[object Object]"
+            class="premium-card-interactive p-4 md:p-6 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all space-y-4"
+            initial="[object Object]"
+            role="button"
+            tabindex="0"
+            transition="[object Object]"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <h4
+                class="text-base font-bold text-primary"
+              >
+                Estudo Bíblico
+              </h4>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-book-open transition-all duration-200 shrink-0 w-4 h-4 text-secondary/40"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 7v14"
+                />
+                <path
+                  d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-xs text-primary/40 leading-relaxed"
+            >
+              Aprofunde seu conhecimento das Escrituras.
+            </p>
+            <button
+              aria-label="Ver planos de estudo bíblico"
+              class="bg-transparent hover:bg-primary/[0.03] rounded-full font-bold uppercase tracking-[0.2em] sm:text-[12px] p-0 h-auto text-[10px] text-secondary/40 hover:text-secondary transition-all group"
+              whiletap="[object Object]"
+            >
+              Ver Planos 
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-right duration-200 shrink-0 ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div
+      class="pt-12 text-center opacity-20"
+    >
+      <p
+        class="text-xs font-serif italic max-w-sm mx-auto"
+      >
+        "A beleza salvará o mundo." — Dostoievski
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Home Page Visual Regression & A11y > Logged Out State > should match snapshot for Hero 1`] = `
+<DocumentFragment>
+  <div
+    class="relative z-10 max-w-[1280px] w-full text-center space-y-16 sm:space-y-24 px-6 mx-auto"
+  >
+    <div
+      animate="[object Object]"
+      class="flex justify-center"
+      initial="[object Object]"
+      transition="[object Object]"
+    >
+      <div
+        class="relative"
+      >
+        <div
+          class="relative"
+        >
+          <div
+            class="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-white/10 bg-white/5 mx-auto shadow-premium"
+          >
+            <img
+              alt="Logos — Mestre Contemplativo"
+              class="w-full h-full object-cover grayscale-[0.1] contrast-[1.05]"
+              loading="eager"
+              src="/src/assets/logos-avatar.png"
+            />
+          </div>
+        </div>
+        <div
+          class="mt-4 px-4 py-1.5 rounded-2xl border border-border/10 bg-background text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 inline-block mx-auto"
+        >
+          Logos · Mestre Contemplativo
+        </div>
+      </div>
+    </div>
+    <h1
+      animate="visible"
+      aria-label="Nem toda prisão é visível"
+      class="pt-6 sm:pt-10 max-w-5xl mx-auto text-5xl md:text-7xl lg:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter"
+      initial="hidden"
+      variants="[object Object]"
+    >
+       Nem toda 
+      <br />
+       prisão é 
+      <span
+        class="text-secondary/60 italic font-serif"
+      >
+        visível
+      </span>
+       
+    </h1>
+    <p
+      animate="visible"
+      class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/50 italic leading-relaxed"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
+    >
+      Uma plataforma espiritual inteligente guiada pela Tradição viva, 
+      <br
+        class="hidden md:block"
+      />
+       Sagradas Escrituras e o mestre contemplativo Logos IA.
+    </p>
+    <div
+      animate="visible"
+      class="flex flex-col items-center justify-center gap-6 pt-4"
+      initial="hidden"
+      transition="[object Object]"
+      variants="[object Object]"
+    >
+      <div
+        class="flex flex-col sm:flex-row items-center gap-4 w-full max-w-sm"
+      >
+        <button
+          aria-label="Iniciar sua jornada espiritual"
+          class="btn-premium-primary px-12 py-5 text-[12px] sm:text-[14px] w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          whiletap="[object Object]"
+        >
+          Iniciar Jornada
+        </button>
+        <button
+          aria-label="Ver vídeo de apresentação"
+          class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full sm:w-auto focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          whiletap="[object Object]"
+        >
+          Ver Apresentação
+        </button>
+      </div>
+      <div
+        animate="[object Object]"
+        class="w-full max-w-sm flex flex-col gap-3"
+        initial="[object Object]"
+        transition="[object Object]"
+      />
+      <div
+        class="flex items-center gap-3 opacity-40"
+      >
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+        <p
+          class="text-premium-tiny text-muted-foreground font-bold uppercase tracking-widest"
+        >
+          Tradição & Tecnologia
+        </p>
+        <span
+          class="w-8 h-px bg-muted-foreground"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Home Page Visual Regression & A11y > Logged Out State > should match snapshot for Main Content 1`] = `
+<DocumentFragment>
+  <div
+    class="w-full space-y-24 md:space-y-40 max-w-[1280px] mx-auto"
+  >
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-start"
+    >
+      <section
+        aria-labelledby="section-jornada"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-jornada"
+          >
+            Jornada
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          animate="[object Object]"
+          class="premium-card-interactive p-6 md:p-8 lg:p-10 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all flex flex-col justify-between gap-8 group"
+          initial="[object Object]"
+          role="button"
+          tabindex="0"
+          transition="[object Object]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <div
+              class="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-premium"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-flame transition-all duration-200 shrink-0 w-6 h-6"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3
+                class="text-xl md:text-2xl font-bold text-primary tracking-tight"
+              >
+                Inicie sua Caminhada
+              </h3>
+              <p
+                class="mt-3 text-sm text-primary/40 leading-relaxed max-w-sm"
+              >
+                Descubra trilhas personalizadas para sua vida espiritual.
+              </p>
+            </div>
+          </div>
+          <button
+            aria-label="Começar nova jornada"
+            class="btn-premium-primary px-10 py-4 text-[11px] sm:text-[12px] w-full"
+            whiletap="[object Object]"
+          >
+            Começar
+          </button>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-hoje"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-hoje"
+          >
+            Hoje
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div>
+          <div
+            animate="[object Object]"
+            class="premium-card p-8 md:p-12 lg:p-16 relative overflow-hidden"
+            initial="[object Object]"
+            transition="[object Object]"
+          >
+            <div
+              class="space-y-8"
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div
+                  class="flex items-center gap-2.5"
+                >
+                  <div
+                    class="flex items-center justify-center rounded-premium-sm bg-white/5 border border-white/10 transition-all duration-300 shadow-premium w-6 h-6 md:w-7 md:h-7"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-sparkles w-3 h-3 md:w-3.5 md:h-3.5 text-secondary"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                      />
+                      <path
+                        d="M20 3v4"
+                      />
+                      <path
+                        d="M22 5h-4"
+                      />
+                      <path
+                        d="M4 17v2"
+                      />
+                      <path
+                        d="M5 18H3"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/60"
+                  >
+                    Ritual do Dia
+                  </span>
+                </div>
+                <span
+                  class="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground/40"
+                >
+                  sexta-feira, 15 de maio
+                </span>
+              </div>
+              <div
+                animate="[object Object]"
+                class="premium-card-interactive text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all w-full flex items-center gap-6 group text-left p-5"
+                initial="[object Object]"
+                role="button"
+                tabindex="0"
+                transition="[object Object]"
+              >
+                <div
+                  class="w-20 h-20 rounded-premium-sm overflow-hidden border border-white/10 shadow-premium shrink-0"
+                >
+                  <div
+                    class="relative bg-[#0c0a09] overflow-hidden w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  >
+                    <div
+                      class="absolute inset-0 z-0 transition-opacity duration-1000 opacity-100"
+                      style="background-color: rgb(11, 31, 58);"
+                    >
+                      <div
+                        class="absolute inset-[-50%] opacity-60"
+                        style="animation: drift-slow 15s ease-in-out infinite;"
+                      />
+                      <div
+                        class="absolute inset-0 "
+                      />
+                    </div>
+                    <img
+                      alt="São Bento"
+                      class="relative z-[2] w-full h-full object-cover transition-all opacity-0 scale-105 blur-md"
+                      loading="lazy"
+                      src="https://source.unsplash.com/featured/?auto=format&fit=crop&q=75&w=800"
+                      style="transition-duration: 2000ms;"
+                    />
+                    <div
+                      class="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"
+                    >
+                      <svg
+                        class="lucide lucide-cross transition-all duration-200 shrink-0 w-10 h-10 opacity-20 text-secondary animate-spin"
+                        fill="none"
+                        height="20"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        style="animation-duration: 12s;"
+                        viewBox="0 0 24 24"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="absolute inset-0 z-[3] pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/60 opacity-50"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="flex-1 min-w-0"
+                >
+                  <p
+                    class="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1"
+                  >
+                    Santo do Dia
+                  </p>
+                  <h3
+                    class="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate"
+                  >
+                    São Bento
+                  </h3>
+                  <p
+                    class="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed"
+                  >
+                    ...
+                  </p>
+                </div>
+                <svg
+                  class="lucide lucide-chevron-right w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m9 18 6-6-6-6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="h-px bg-border/20"
+              />
+              <div
+                aria-label="Versículo do Dia"
+                class="space-y-4"
+                role="article"
+              >
+                <div
+                  class="flex items-center gap-2.5"
+                >
+                  <div
+                    class="flex items-center justify-center rounded-premium-sm bg-white/5 border border-white/10 transition-all duration-300 shadow-premium w-6 h-6 md:w-7 md:h-7"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-book-open w-3 h-3 md:w-3.5 md:h-3.5 text-primary"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1.5"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 7v14"
+                      />
+                      <path
+                        d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                      />
+                    </svg>
+                  </div>
+                  <span
+                    class="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60"
+                  >
+                    Versículo do Dia
+                  </span>
+                </div>
+                <blockquote
+                  class="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20"
+                >
+                  "Confia no Senhor de todo o teu coração."
+                </blockquote>
+                <p
+                  class="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6"
+                >
+                  — Pr 3,5
+                </p>
+              </div>
+              <div
+                class="h-px bg-border/20"
+              />
+              <div
+                aria-label="Reflexão"
+                class="space-y-3"
+                role="article"
+              >
+                <span
+                  class="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40"
+                >
+                  ✦ Reflexão
+                </span>
+                <p
+                  class="text-base text-foreground/70 leading-relaxed font-reader"
+                >
+                  A humildade é a verdade sobre quem somos diante de Deus. Reconheça suas fraquezas e a força Dele.
+                </p>
+              </div>
+              <div
+                class="pt-2"
+              >
+                <div
+                  class="flex items-center gap-2 w-full justify-center"
+                >
+                  <button
+                    class="btn-premium-outline px-6 py-2.5 text-[10px] sm:text-[11px] rounded-full flex items-center gap-2 transition-all"
+                    whiletap="[object Object]"
+                  >
+                    <svg
+                      class="lucide lucide-headphones w-4 h-4"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"
+                      />
+                    </svg>
+                    <span
+                      class="text-premium-tiny font-black uppercase tracking-widest"
+                    >
+                      Ouvir o Ritual do Dia
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-doutrina"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-doutrina"
+          >
+            Doutrina
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          animate="[object Object]"
+          class="premium-card-interactive p-6 md:p-8 lg:p-10 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all flex flex-col justify-between gap-8 group"
+          initial="[object Object]"
+          role="button"
+          tabindex="0"
+          transition="[object Object]"
+        >
+          <div
+            class="space-y-6"
+          >
+            <div
+              class="w-12 h-12 rounded-premium-sm bg-white/5 border border-white/10 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700 shadow-premium"
+            >
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-shield-check transition-all duration-200 shrink-0 w-6 h-6"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+                />
+                <path
+                  d="m9 12 2 2 4-4"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3
+                class="text-xl md:text-2xl font-bold text-primary tracking-tight"
+              >
+                Catecismo
+              </h3>
+              <p
+                class="mt-3 text-sm text-primary/40 leading-relaxed font-serif italic max-w-sm"
+              >
+                "O Catecismo apresenta fielmente o ensinamento da Tradição viva na Igreja."
+              </p>
+            </div>
+          </div>
+          <button
+            aria-label="Explorar o Catecismo"
+            class="btn-premium-outline px-10 py-4 text-[11px] sm:text-[12px] w-full"
+            whiletap="[object Object]"
+          >
+            Explorar Doutrina
+          </button>
+        </div>
+      </section>
+      <section
+        aria-labelledby="section-trilhas"
+        class="space-y-8"
+      >
+        <div
+          class="flex items-center gap-6"
+        >
+          <h2
+            class="text-[10px] font-black uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap"
+            id="section-trilhas"
+          >
+            Trilhas
+          </h2>
+          <div
+            class="h-px flex-1 bg-border/20"
+          />
+        </div>
+        <div
+          class="grid grid-cols-1 gap-6"
+        >
+          <div
+            animate="[object Object]"
+            class="premium-card-interactive p-4 md:p-6 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all space-y-4"
+            initial="[object Object]"
+            role="button"
+            tabindex="0"
+            transition="[object Object]"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <h4
+                class="text-base font-bold text-primary"
+              >
+                Temas da Fé
+              </h4>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-star transition-all duration-200 shrink-0 w-4 h-4 text-primary/40"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-xs text-primary/40 leading-relaxed"
+            >
+              Aprofunde-se em tópicos específicos da doutrina.
+            </p>
+            <button
+              aria-label="Explorar temas da fé"
+              class="bg-transparent hover:bg-primary/[0.03] rounded-full font-bold uppercase tracking-[0.2em] sm:text-[12px] p-0 h-auto text-[10px] text-primary/40 hover:text-primary transition-all group"
+              whiletap="[object Object]"
+            >
+              Explorar 
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-right duration-200 shrink-0 ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
+            animate="[object Object]"
+            class="premium-card-interactive p-4 md:p-6 text-card-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ring-offset-background transition-all space-y-4"
+            initial="[object Object]"
+            role="button"
+            tabindex="0"
+            transition="[object Object]"
+          >
+            <div
+              class="flex items-center justify-between"
+            >
+              <h4
+                class="text-base font-bold text-primary"
+              >
+                Estudo Bíblico
+              </h4>
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-book-open transition-all duration-200 shrink-0 w-4 h-4 text-secondary/40"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 7v14"
+                />
+                <path
+                  d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"
+                />
+              </svg>
+            </div>
+            <p
+              class="text-xs text-primary/40 leading-relaxed"
+            >
+              Aprofunde seu conhecimento das Escrituras.
+            </p>
+            <button
+              aria-label="Ver planos de estudo bíblico"
+              class="bg-transparent hover:bg-primary/[0.03] rounded-full font-bold uppercase tracking-[0.2em] sm:text-[12px] p-0 h-auto text-[10px] text-secondary/40 hover:text-secondary transition-all group"
+              whiletap="[object Object]"
+            >
+              Ver Planos 
+              <svg
+                aria-hidden="true"
+                class="lucide lucide-chevron-right duration-200 shrink-0 ml-1 w-3 h-3 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m9 18 6-6-6-6"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div
+      class="pt-12 text-center opacity-20"
+    >
+      <p
+        class="text-xs font-serif italic max-w-sm mx-auto"
+      >
+        "A beleza salvará o mundo." — Dostoievski
+      </p>
+    </div>
+  </div>
+</DocumentFragment>
+`;

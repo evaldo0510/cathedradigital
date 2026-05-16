@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
+    "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && bun run scripts/enforce-design-system.ts && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -13,10 +13,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:visual": "playwright test --grep 'Visual'",
+    "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
+    "test:audit": "bun run scripts/run-visual-regression.ts",
     "test:a11y": "playwright test tests/e2e/accessibility.spec.ts",
     "test:report": "bun run scripts/generate-test-report.ts",
-    "test:pdf": "bun run scripts/generate-pdf-report.ts"
+    "test:pdf": "bun run scripts/generate-pdf-report.ts",
+    "test:system-audit": "bun run scripts/audit-visual-system.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
@@ -106,6 +108,8 @@
     "@vitejs/plugin-react-swc": "^3.11.0",
     "@vitest/coverage-v8": "^4.1.6",
     "autoprefixer": "^10.4.21",
+    "axe-core": "^4.11.4",
+    "axe-playwright": "^2.2.2",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

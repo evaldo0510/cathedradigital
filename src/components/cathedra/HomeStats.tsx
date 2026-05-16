@@ -22,7 +22,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({ stats, t }) => {
     return (
       <div className="grid grid-cols-3 gap-3">
         {[1, 2, 3].map(i => (
-          <div key={i} className="p-3 rounded-2xl bg-muted/20 border border-border/50 animate-pulse h-20" />
+          <div key={i} className="p-3 rounded-premium-sm bg-muted/20 border border-border/50 animate-pulse h-20" />
         ))}
       </div>
     );
@@ -44,7 +44,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({ stats, t }) => {
         >
           <div className="flex justify-center text-primary/40 mb-1" aria-hidden="true">{item.icon}</div>
           <p className="text-xl font-black text-foreground tabular-nums leading-none">{item.value}</p>
-          <p className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">{item.label}</p>
+          <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">{item.label}</p>
         </motion.div>
       ))}
     </div>

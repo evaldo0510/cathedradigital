@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
-import { Card } from '@/components/ui/card';
+import { Card     } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { isCatechism } from '@/lib/catechismValidation';
@@ -87,7 +87,7 @@ const CatechismHealthCheck: React.FC = () => {
                 <p className="text-xs text-muted-foreground">{res.message}</p>
               </div>
             </div>
-            <Badge variant={res.status === 'pass' ? 'secondary' : 'destructive'} className="uppercase text-[9px] font-black tracking-widest">
+            <Badge variant={res.status === 'pass' ? 'secondary' : 'destructive'} className="uppercase text-premium-tiny font-black tracking-widest">
               {res.status}
             </Badge>
           </Card>
@@ -98,19 +98,19 @@ const CatechismHealthCheck: React.FC = () => {
         <h2 className="text-sm font-bold uppercase tracking-widest mb-4">Fluxo de Navegação Sugerido</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Button variant="ghost" className="h-auto p-4 flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM)}>
-            <span className="text-primary font-black text-[10px] mb-1">Passo 1</span>
+            <span className="text-primary font-black text-premium-tiny mb-1">Passo 1</span>
             <span className="text-xs font-bold">Leitor do Catecismo</span>
-            <span className="text-[10px] text-muted-foreground mt-1">Verifique o botão "Explorar"</span>
+            <span className="text-premium-tiny text-muted-foreground mt-1">Verifique o botão "Explorar"</span>
           </Button>
           <Button variant="ghost" className="h-auto p-4 flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM_EXPLORER)}>
-            <span className="text-primary font-black text-[10px] mb-1">Passo 2</span>
+            <span className="text-primary font-black text-premium-tiny mb-1">Passo 2</span>
             <span className="text-xs font-bold">Explorer do Catecismo</span>
-            <span className="text-[10px] text-muted-foreground mt-1">Teste busca e tags multi-select</span>
+            <span className="text-premium-tiny text-muted-foreground mt-1">Teste busca e tags multi-select</span>
           </Button>
           <Button variant="ghost" className="h-auto p-4 flex flex-col items-start text-left border border-border" onClick={() => navigate(`${AppRoute.CATECHISM_EXPLORER}?tags=fe&sort=number-desc`)}>
-            <span className="text-primary font-black text-[10px] mb-1">Passo 3</span>
+            <span className="text-primary font-black text-premium-tiny mb-1">Passo 3</span>
             <span className="text-xs font-bold">Filtros Persistentes</span>
-            <span className="text-[10px] text-muted-foreground mt-1">Recarregue a página e veja se mantém</span>
+            <span className="text-premium-tiny text-muted-foreground mt-1">Recarregue a página e veja se mantém</span>
           </Button>
         </div>
       </div>

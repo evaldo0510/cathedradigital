@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
+import { Button   } from '@/components/cathedra/Button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -69,10 +69,10 @@ const WebhookSimulator: React.FC = () => {
   };
 
   return (
-    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-xl overflow-hidden">
+    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-premium overflow-hidden">
       <CardHeader className="bg-primary/10 border-b border-primary/10">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-2xl text-primary-foreground">
+          <div className="p-2 bg-primary rounded-premium-sm text-primary-foreground">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
@@ -84,7 +84,7 @@ const WebhookSimulator: React.FC = () => {
       <CardContent className="p-8 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione um usuário" />
@@ -100,7 +100,7 @@ const WebhookSimulator: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o status" />
@@ -117,7 +117,7 @@ const WebhookSimulator: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-6 items-end">
           <div className="flex-1 space-y-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
+            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o tipo" />
