@@ -263,6 +263,21 @@ function computeProfile(answers: Record<string, string>): ProfileId {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0] as ProfileId;
 }
 
+const QuietQuote: React.FC<{ quote: QuoteReference; className?: string }> = ({ quote, className }) => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className={`space-y-2 text-center max-w-sm mx-auto ${className}`}
+  >
+    <p className="text-sm font-serif italic text-primary/40 leading-relaxed group cursor-pointer hover:text-primary/60 transition-colors">
+      "{quote.text}"
+      <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-tighter opacity-40 group-hover:opacity-100 transition-opacity">
+        <BookOpen className="w-2 h-2" /> {quote.ref}
+      </span>
+    </p>
+  </motion.div>
+);
+
 const SpiritualQuiz: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -276,6 +291,8 @@ const SpiritualQuiz: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [deepeningAnswers, setDeepeningAnswers] = useState<Record<string, string>>({});
   const [isSavingReflection, setIsSavingReflection] = useState(false);
+  const [isPausing, setIsPausing] = useState(false);
+  const [journalText, setJournalText] = useState("");
 
   useEffect(() => {
     const activeId = existing || result;
