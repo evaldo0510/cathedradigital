@@ -7,6 +7,7 @@ import {
   Mountain, Users, Church, Compass, Scroll, Quote 
 } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
+import { ReferenceModal } from '@/components/cathedra/ReferenceModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -22,6 +23,12 @@ export interface SpiritualStep {
   action: string;
   time: string;
   icon: React.ElementType;
+}
+
+export interface QuoteReference {
+  text: string;
+  ref: string;
+  source: 'bible' | 'catechism';
 }
 
 export interface ProfileResult {
@@ -40,6 +47,8 @@ export interface ProfileResult {
   questions: string[];
   readingRecommendations: { title: string; ref: string }[];
   steps: SpiritualStep[];
+  mainQuote?: QuoteReference;
+  catechismRef?: QuoteReference;
 }
 
 export const PROFILES: Record<ProfileId, ProfileResult> = {
@@ -58,7 +67,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'A ferida é o lugar por onde a luz entra, como diz o poeta. Não fuja do seu cansaço; nele Deus quer sussurrar algo.',
     questions: ['Onde você se sente mais cansado?', 'Como você costuma lidar com a dor?'],
     readingRecommendations: [{ title: 'Salmos de Confiança', ref: 'Sl 23' }],
-    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }]
+    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }],
+    mainQuote: {
+      text: "Vinde a mim todos vós que estais cansados e fatigados sob o peso dos vossos fardos, e eu vos darei descanso.",
+      ref: "Mt 11,28",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A esperança é a virtude teologal pela qual desejamos o Reino dos céus e a vida eterna como nossa felicidade.",
+      ref: "CIC 1817",
+      source: "catechism"
+    }
   },
   ansioso_buscador: {
     title: 'Ansioso Buscador',
@@ -75,7 +94,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'A culpa que não leva ao amor é apenas uma prisão. O perdão de Deus não é um prêmio, é um abraço.',
     questions: ['O que te impede de perdoar a si mesmo?', 'Onde está sua maior necessidade de misericórdia?'],
     readingRecommendations: [{ title: 'Parábola do Filho Pródigo', ref: 'Lc 15' }],
-    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }]
+    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }],
+    mainQuote: {
+      text: "Se reconhecemos nossos pecados, Deus que é fiel e justo, nos perdoará e nos purificará de toda injustiça.",
+      ref: "1Jo 1,9",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O perdão das ofensas é a exigência fundamental da caridade e da oração cristã.",
+      ref: "CIC 2840",
+      source: "catechism"
+    }
   },
   sedento_de_sentido: {
     title: 'Sedento de Sentido',
@@ -92,7 +121,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'O vazio que você sente é o formato exato de Deus dentro de ti.',
     questions: ['O que te faz vibrar de alegria?', 'Onde você gostaria de servir?'],
     readingRecommendations: [{ title: 'Confissões', ref: 'Agostinho' }],
-    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }]
+    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }],
+    mainQuote: {
+      text: "Fizeste-nos para ti, Senhor, e o nosso coração está inquieto enquanto não descansar em ti.",
+      ref: "Sto. Agostinho",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus.",
+      ref: "CIC 27",
+      source: "catechism"
+    }
   },
   firme_aprofundando: {
     title: 'Firme e Aprofundando',
@@ -109,7 +148,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'Deus quer levar-te a águas mais profundas.',
     questions: ['Qual virtude você quer cultivar?', 'Como está sua intimidade com Jesus?'],
     readingRecommendations: [{ title: 'Imitação de Cristo', ref: 'Kempis' }],
-    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }]
+    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }],
+    mainQuote: {
+      text: "Avança para águas mais profundas e lança as redes para a pesca.",
+      ref: "Lc 5,4",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes.",
+      ref: "CIC 2559",
+      source: "catechism"
+    }
   },
   ardente_missionario: {
     title: 'Ardente Missionário',
@@ -126,7 +175,17 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     deepReflection: 'Não podes dar o que não tens. Antes de servir, adora.',
     questions: ['Quem precisa do seu testemunho hoje?', 'Onde está sua maior dificuldade no serviço?'],
     readingRecommendations: [{ title: 'Atos dos Apóstolos', ref: 'At 2' }],
-    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }]
+    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }],
+    mainQuote: {
+      text: "Ide por todo o mundo e pregai o Evangelho a toda criatura.",
+      ref: "Mc 16,15",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O Espírito Santo é o mestre interior da oração cristã. Ele é o artífice da tradição viva da oração.",
+      ref: "CIC 2672",
+      source: "catechism"
+    }
   },
 };
 
@@ -205,6 +264,24 @@ function computeProfile(answers: Record<string, string>): ProfileId {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0] as ProfileId;
 }
 
+const QuietQuote: React.FC<{ quote: QuoteReference; className?: string; onOpen?: (quote: QuoteReference) => void }> = ({ quote, className, onOpen }) => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className={`space-y-2 text-center max-w-sm mx-auto ${className}`}
+  >
+    <p 
+      className="text-sm font-serif italic text-primary/40 leading-relaxed group cursor-pointer hover:text-primary/60 transition-colors"
+      onClick={() => onOpen?.(quote)}
+    >
+      "{quote.text}"
+      <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-tighter opacity-40 group-hover:opacity-100 transition-opacity">
+        <BookOpen className="w-2 h-2" /> {quote.ref}
+      </span>
+    </p>
+  </motion.div>
+);
+
 const SpiritualQuiz: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -218,6 +295,31 @@ const SpiritualQuiz: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [deepeningAnswers, setDeepeningAnswers] = useState<Record<string, string>>({});
   const [isSavingReflection, setIsSavingReflection] = useState(false);
+  const [isPausing, setIsPausing] = useState(false);
+  const [journalText, setJournalText] = useState("");
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'bible' | 'catechism'>('bible');
+  const [modalParams, setModalParams] = useState<any>({});
+
+  const handleOpenReference = (quote: QuoteReference) => {
+    if (quote.source === 'catechism') {
+      const paragraph = parseInt(quote.ref.replace(/\D/g, ''));
+      setModalType('catechism');
+      setModalParams({ paragraph });
+    } else {
+      const match = quote.ref.match(/([a-zA-Z\.\s]+)\s+(\d+)(?:,(\d+))?/);
+      if (match) {
+        setModalType('bible');
+        setModalParams({ 
+          abbr: match[1].trim(), 
+          chapter: parseInt(match[2]),
+          verse: match[3] ? parseInt(match[3]) : undefined
+        });
+      }
+    }
+    setIsModalOpen(true);
+  };
 
   useEffect(() => {
     const activeId = existing || result;
@@ -352,20 +454,32 @@ const SpiritualQuiz: React.FC = () => {
     const q = QUESTIONS[step];
     const nextAnswers = { ...answers, [q.id]: value };
     setAnswers(nextAnswers);
+    setIsPausing(true);
+  }, [step, answers]);
+
+  const continueQuiz = async () => {
+    const q = QUESTIONS[step];
+    const currentAnswer = answers[q.id];
     
+    // Save journal if exists
+    if (journalText.trim() && user) {
+      await saveDeepeningAnswer(`quiz_step_${step}_${q.id}`, journalText);
+      setJournalText("");
+    }
+
     if (step < QUESTIONS.length - 1) {
       const nextStep = step + 1;
-      setTimeout(() => {
-        setStep(nextStep);
-        savePartialProgress(nextStep, nextAnswers);
-      }, 500);
+      setIsPausing(false);
+      setStep(nextStep);
+      savePartialProgress(nextStep, answers);
     } else {
-      const profileId = computeProfile(nextAnswers);
+      const profileId = computeProfile(answers);
       setResult(profileId);
       setPhase('result');
-      saveResult(profileId, nextAnswers);
+      setIsPausing(false);
+      saveResult(profileId, answers);
     }
-  }, [step, answers, user]);
+  };
 
   const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
@@ -451,9 +565,15 @@ const SpiritualQuiz: React.FC = () => {
           <div className="space-y-16 pt-12 border-t border-primary/5">
             <div className="space-y-6 max-w-xl mx-auto">
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão para o Caminho</p>
-              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5">
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5 space-y-8">
                 {p.deepReflection}
+                {p.mainQuote && <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="mt-6 border-t border-primary/5 pt-6" />}
               </div>
+              {p.catechismRef && (
+                <div className="pt-4">
+                   <QuietQuote quote={p.catechismRef} onOpen={handleOpenReference} />
+                </div>
+              )}
             </div>
 
             <div className="space-y-10 max-w-xl mx-auto">
@@ -525,6 +645,12 @@ const SpiritualQuiz: React.FC = () => {
             </Button>
           </div>
         </div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </motion.div>
     );
   }
@@ -574,9 +700,15 @@ const SpiritualQuiz: React.FC = () => {
           <div className="space-y-16 pt-12 border-t border-primary/5">
             <div className="space-y-6 max-w-xl mx-auto">
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão Profunda</p>
-              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5">
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5 space-y-8">
                 {p.deepReflection}
+                {p.mainQuote && <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="mt-6 border-t border-primary/5 pt-6" />}
               </div>
+              {p.catechismRef && (
+                <div className="pt-4">
+                   <QuietQuote quote={p.catechismRef} onOpen={handleOpenReference} />
+                </div>
+              )}
             </div>
 
             <div className="space-y-10 max-w-xl mx-auto">
@@ -656,6 +788,12 @@ const SpiritualQuiz: React.FC = () => {
             </Button>
           </div>
         </div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </motion.div>
     );
   }
@@ -745,6 +883,69 @@ const SpiritualQuiz: React.FC = () => {
   // ── Quiz phase ──
   const q = QUESTIONS[step];
 
+  if (isPausing) {
+    const currentProfileId = computeProfile(answers);
+    const p = PROFILES[currentProfileId];
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="max-w-xl mx-auto w-full space-y-16 text-center"
+        >
+          <div className="space-y-8">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-32 h-32 rounded-full border-2 border-primary/20 mx-auto flex items-center justify-center"
+            >
+              <Wind className="w-10 h-10 text-primary/20" />
+            </motion.div>
+            <div className="space-y-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/30">Pausa Contemplativa</span>
+              <p className="text-xl font-monastery text-primary/40 italic">Respire fundo...</p>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Diário Contemplativo</p>
+            <textarea
+              value={journalText}
+              onChange={(e) => setJournalText(e.target.value)}
+              placeholder="O que esta pergunta despertou em você? Registre sua reflexão..."
+              className="w-full bg-primary/[0.01] border border-primary/5 rounded-[2rem] p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
+            />
+            <div className="flex justify-center">
+              <Button 
+                onClick={continueQuiz}
+                className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all"
+              >
+                Continuar Jornada <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {p && p.mainQuote && (
+             <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="opacity-40" />
+          )}
+        </motion.div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
       <motion.div
@@ -826,6 +1027,12 @@ const SpiritualQuiz: React.FC = () => {
           </button>
         </div>
       </motion.div>
+      <ReferenceModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialType={modalType}
+        initialParams={modalParams}
+      />
     </div>
   );
 };
