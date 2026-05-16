@@ -42,6 +42,7 @@ const SpiritualJournalPage = () => {
   const [filterTrail, setFilterTrail] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [editingEntry, setEditingEntry] = useState<{ id: string, type: 'journal' | 'reflection' | 'logos', content: string } | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const fetchEntries = async () => {
     if (!user) return;
@@ -172,15 +173,30 @@ const SpiritualJournalPage = () => {
     }
   };
 
-  const filteredItems = (items: any[], searchFields: string[]) => {
-    if (!searchQuery.trim()) return items;
-    return items.filter(item => 
-      searchFields.some(field => {
-        const val = item[field];
-        if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
-        return false;
-      })
-    );
+  const sortedAndFilteredItems = (items: any[], searchFields: string[], dateField: string) => {
+    let result = items;
+    if (searchQuery.trim()) {
+      result = items.filter(item => 
+        searchFields.some(field => {
+          const val = item[field];
+          if (typeof val === 'string') return val.toLowerCase().includes(searchQuery.toLowerCase());
+          return false;
+        })
+      );
+    }
+
+    return [...result].sort((a, b) => {
+      let valA = a[dateField];
+      let valB = b[dateField];
+      
+      // Special case for logos timestamp
+      if (dateField === 'timestamp' && a.parsed?.timestamp) valA = a.parsed.timestamp;
+      if (dateField === 'timestamp' && b.parsed?.timestamp) valB = b.parsed.timestamp;
+      
+      const dateA = new Date(valA || a.created_at).getTime();
+      const dateB = new Date(valB || b.created_at).getTime();
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
   };
 
   return (
@@ -247,15 +263,27 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
-          <div className="w-full relative max-w-md mx-auto">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
-            <input 
-              type="text" 
-              placeholder="Buscar reflexões..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
-            />
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full max-w-2xl mx-auto">
+            <div className="relative flex-1 w-full">
+              <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+              <input 
+                type="text" 
+                placeholder="Buscar reflexões..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
+              />
+            </div>
+            
+            <button
+              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+              className="h-14 px-8 rounded-full bg-primary/[0.02] border border-primary/5 text-primary/40 hover:text-primary hover:border-primary/20 transition-all flex items-center gap-3 whitespace-nowrap"
+            >
+              <Icons.ArrowUpDown className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">
+                {sortOrder === 'desc' ? 'Mais Recentes' : 'Mais Antigas'}
+              </span>
+            </button>
           </div>
 
           <div className="flex items-center gap-12 w-full">
@@ -301,9 +329,9 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : activeTab === 'journal' ? (
-          filteredItems(entries, ['content']).length > 0 ? (
+          sortedAndFilteredItems(entries, ['content'], 'entry_date').length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {filteredItems(entries, ['content']).map((entry) => (
+              {sortedAndFilteredItems(entries, ['content'], 'entry_date').map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -345,9 +373,9 @@ const SpiritualJournalPage = () => {
             </div>
           )
         ) : activeTab === 'reflections' ? (
-          filteredItems(reflections, ['note_text', 'content_id']).length > 0 ? (
+          sortedAndFilteredItems(reflections, ['note_text', 'content_id'], 'created_at').length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {filteredItems(reflections, ['note_text', 'content_id']).map((ref) => (
+              {sortedAndFilteredItems(reflections, ['note_text', 'content_id'], 'created_at').map((ref) => (
                 <motion.div
                   key={ref.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -407,9 +435,9 @@ const SpiritualJournalPage = () => {
                ))}
             </div>
 
-            {filteredItems(logosReflections, ['note_text']).length > 0 ? (
+            {sortedAndFilteredItems(logosReflections, ['note_text'], 'timestamp').length > 0 ? (
               <div className="grid grid-cols-1 gap-12">
-                {filteredItems(logosReflections, ['note_text'])
+                {sortedAndFilteredItems(logosReflections, ['note_text'], 'timestamp')
                   .filter(r => !filterTrail || r.parsed?.tone === filterTrail)
                   .map((ref) => (
                   <motion.div
