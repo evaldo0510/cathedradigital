@@ -106,9 +106,12 @@ const LogosChat = () => {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      const scrollContainer = scrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
     }
-  }, [messages, isLoading, hasRitualPassed]);
+  }, [messages, isLoading, hasRitualPassed, isOpen]);
 
   const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
