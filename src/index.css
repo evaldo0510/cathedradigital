@@ -353,7 +353,7 @@
   .btn-premium {
     @apply relative overflow-hidden rounded-[24px] font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-500 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
     height: 52px;
-    padding: 0 2.5rem;
+    padding: 0 2rem;
     border: 1px solid transparent;
   }
 
