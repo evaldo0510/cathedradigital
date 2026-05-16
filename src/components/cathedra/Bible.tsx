@@ -138,6 +138,9 @@ const Bible: React.FC = () => {
 
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
 
+  // Track reading time when in reading mode
+  useTrackReadingTime(viewMode === 'reading');
+
   useEffect(() => {
     try {
       localStorage.setItem('cathedra_bible_bookmarks', JSON.stringify(bookmarks));
