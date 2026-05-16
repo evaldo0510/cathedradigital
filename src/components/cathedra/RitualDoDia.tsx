@@ -21,7 +21,7 @@ const RitualDoDia: React.FC = () => {
 
   return (
     <Card
-      padding="none"
+      padding="md"
       variant="default"
       className="relative overflow-hidden h-full"
     >
