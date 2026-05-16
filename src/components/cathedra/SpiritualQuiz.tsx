@@ -739,22 +739,22 @@ const SpiritualQuiz: React.FC = () => {
   const q = QUESTIONS[step];
 
   return (
-    <div className="min-h-[500px] flex flex-col justify-center py-12">
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="max-w-2xl mx-auto w-full space-y-16"
+        className="max-w-4xl mx-auto w-full space-y-24"
       >
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Reflexão em Curso</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">{step + 1} / {QUESTIONS.length}</span>
+        <div className="space-y-8 max-w-sm mx-auto">
+          <div className="flex items-center justify-between text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em]">Exame Interior</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">{step + 1} / {QUESTIONS.length}</span>
           </div>
-          <div className="h-0.5 bg-primary/5 rounded-full overflow-hidden">
+          <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-primary/40" 
+              className="h-full bg-secondary/30" 
               animate={{ width: `${progress}%` }} 
-              transition={{ type: 'spring', damping: 25 }} 
+              transition={{ type: 'spring', damping: 30, stiffness: 100 }} 
             />
           </div>
         </div>
@@ -762,59 +762,61 @@ const SpiritualQuiz: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={q.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="space-y-12"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-20"
           >
-            <div className="space-y-4 text-center">
-              <p className="text-sm font-monastery text-primary/40 italic leading-relaxed max-w-md mx-auto whitespace-pre-line">
+            <div className="space-y-10 text-center">
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 1 }}
+                className="text-lg md:text-xl font-monastery text-primary/30 italic leading-relaxed max-w-lg mx-auto whitespace-pre-line"
+              >
                 {q.intro}
-              </p>
-              <h3 className="text-3xl font-display text-primary tracking-tight leading-tight">
+              </motion.p>
+              <motion.h3 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1 }}
+                className="text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight"
+              >
                 {q.question}
-              </h3>
+              </motion.h3>
             </div>
 
-            <div className="space-y-4" role="radiogroup" aria-label={q.question}>
+            <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
               {q.options.map((opt, idx) => (
                 <motion.button
-                  key={opt.value}
+                  key={idx}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * idx }}
-                  whileHover={{ x: 8 }}
-                  whileTap={{ scale: 0.99 }}
+                  transition={{ delay: 0.6 + (idx * 0.1), duration: 0.8 }}
                   onClick={() => handleAnswer(opt.value)}
-                  className="w-full flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                  className={`w-full p-8 text-center rounded-[2.5rem] border transition-all duration-700 relative overflow-hidden group ${
+                    answers[q.id] === opt.value
+                      ? 'bg-primary text-primary-foreground border-primary shadow-premium'
+                      : 'bg-primary/[0.01] border-primary/5 text-primary/50 hover:bg-primary/[0.03] hover:border-primary/10 hover:text-primary hover:scale-[1.01]'
+                  }`}
                 >
-                  <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors pr-8">
-                    {opt.label}
-                  </span>
-                  <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <span className="relative z-10 text-sm md:text-base font-bold uppercase tracking-[0.2em]">{opt.label}</span>
                 </motion.button>
               ))}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between items-center pt-8">
-          {step > 0 ? (
-            <Button 
-              variant="ghost" 
-              onClick={() => setStep(s => s - 1)} 
-              className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary/30 hover:text-primary"
-            >
-              <ArrowLeft className="w-4 h-4" /> Voltar
-            </Button>
-          ) : <div />}
-          <div className="flex gap-4">
-            <Quote className="w-4 h-4 text-primary/10" />
-            <Scroll className="w-4 h-4 text-primary/10" />
-          </div>
+        <div className="pt-12 flex justify-center">
+          <button 
+            onClick={() => step > 0 && setStep(step - 1)}
+            disabled={step === 0}
+            className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors disabled:opacity-0"
+          >
+            <ArrowLeft className="w-4 h-4" /> Anterior
+          </button>
         </div>
       </motion.div>
     </div>
