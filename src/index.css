@@ -372,18 +372,19 @@
   .btn-premium {
     @apply relative overflow-hidden rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
     min-height: 56px;
+    padding: 0 2rem;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium;
+    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium border border-primary;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium;
+    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium border border-secondary;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-white/10 text-primary hover:bg-white/[0.04] shadow-none;
+    @apply btn-premium bg-transparent border border-primary/10 text-primary hover:bg-primary/[0.03] shadow-none;
   }
 }
 
