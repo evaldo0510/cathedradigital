@@ -103,8 +103,73 @@ const LogosChat = () => {
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const inputTextAreaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Focus management
+  useEffect(() => {
+    if (isOpen) {
+      // Focus the close button or first element when opening
+      setTimeout(() => closeBtnRef.current?.focus(), 100);
+    } else {
+      // Return focus to trigger when closing
+      triggerRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'l') {
+        e.preventDefault();
+        setIsOpen(prev => !prev);
+      }
+      
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+
+      // Alt + T to cycle tones
+      if (e.altKey && e.key === 't') {
+        e.preventDefault();
+        const tones: LogosTone[] = ['contemplative', 'poetic', 'doctrinal', 'brief'];
+        const nextIndex = (tones.indexOf(tone) + 1) % tones.length;
+        setTone(tones[nextIndex]);
+        toast.info(`Tom alterado para: ${tones[nextIndex]}`);
+      }
+
+      // Trap focus
+      if (e.key === 'Tab') {
+        const focusableElements = document.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        const modalElements = Array.from(focusableElements).filter(el => 
+          document.querySelector('.reading-monastery')?.contains(el)
+        );
+        
+        if (modalElements.length > 0) {
+          const first = modalElements[0] as HTMLElement;
+          const last = modalElements[modalElements.length - 1] as HTMLElement;
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, tone]);
 
   useEffect(() => {
     if (autoScroll && scrollRef.current) {
@@ -332,11 +397,12 @@ const LogosChat = () => {
                     <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
                   <Button 
+                    ref={closeBtnRef}
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsOpen(false)}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
-                    aria-label="Fechar Logos"
+                    aria-label="Fechar Logos (ESC)"
                   >
                     <X className="w-6 h-6" />
                   </Button>
@@ -500,12 +566,13 @@ const LogosChat = () => {
       {/* Floating Trigger - Integrated & Subtle */}
       {!isOpen && (
         <motion.button
+          ref={triggerRef}
           layoutId="logos-trigger"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
           className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
-          aria-label="Abrir Logos"
+          aria-label="Abrir Logos (Ctrl+L)"
           aria-haspopup="true"
         >
           <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
