@@ -303,6 +303,8 @@ const SpiritualQuiz: React.FC = () => {
     }
   };
 
+  const [hasPartialProgress, setHasPartialProgress] = useState(false);
+
   useEffect(() => {
     if (!user) return;
     (supabase as any)
@@ -322,9 +324,9 @@ const SpiritualQuiz: React.FC = () => {
           setExistingData(res);
         } else if (res.answers && res.current_step !== undefined) {
           // If in progress
+          setHasPartialProgress(true);
           setAnswers(res.answers);
           setStep(res.current_step);
-          setPhase('quiz');
         }
       });
   }, [user]);
