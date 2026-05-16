@@ -143,6 +143,17 @@ const LogosChat = () => {
         toast.info(`Tom alterado para: ${tones[nextIndex]}`);
       }
 
+      // Alt + 1-4 for specific tones
+      if (e.altKey && !isNaN(parseInt(e.key))) {
+        const num = parseInt(e.key);
+        const tones: LogosTone[] = ['contemplative', 'poetic', 'doctrinal', 'brief'];
+        if (num >= 1 && num <= tones.length) {
+          e.preventDefault();
+          setTone(tones[num - 1]);
+          toast.info(`Tom alterado para: ${tones[num - 1]}`);
+        }
+      }
+
       // Trap focus
       if (e.key === 'Tab') {
         const focusableElements = document.querySelectorAll(
