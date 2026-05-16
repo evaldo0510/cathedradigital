@@ -153,13 +153,13 @@
   }
 
   body {
-    @apply bg-background text-foreground selection:bg-secondary/20;
+    @apply bg-background text-foreground selection:bg-primary/5;
     width: 100% !important;
     min-height: 100vh !important;
     display: block !important;
     font-family: 'Inter', sans-serif;
     text-rendering: optimizeLegibility;
-    line-height: 1.6;
+    line-height: 1.5;
     opacity: 1 !important;
     visibility: visible !important;
     transition: background-color 0.3s ease, color 0.3s ease;
