@@ -40,15 +40,15 @@ const AboutCreatorSection = () => {
               <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
             </div>
             
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider">
+            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground uppercase tracking-wider heading-section-label">
               Evaldo.os
             </h2>
             
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
-              <p>
+              <p className="text-premium-body">
                 Idealizador do Cathedra, buscador da Verdade e entusiasta da tecnologia. Minha missão é construir pontes entre o sagrado e o digital, permitindo que a profundidade da tradição católica floresça no mundo contemporâneo.
               </p>
-              <p className="font-serif text-foreground/80">
+              <p className="font-serif text-foreground/80 text-premium-body">
                 Acreditamos que a tecnologia, quando a serviço da fé, pode ser um instrumento poderoso de santificação e estudo.
               </p>
             </div>
