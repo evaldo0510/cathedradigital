@@ -72,8 +72,14 @@ const LogosChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tone, setTone] = useState<LogosTone>('contemplative');
   const [isContemplative, setIsContemplative] = useState(false);
+  const [showExtraDetails, setShowExtraDetails] = useState(true);
   const [hasRitualPassed, setHasRitualPassed] = useState(false);
   const [intention, setInputIntention] = useState('');
+  const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
+    isOpen: false,
+    type: 'bible',
+    params: {}
+  });
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
