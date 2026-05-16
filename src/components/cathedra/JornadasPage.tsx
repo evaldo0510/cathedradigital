@@ -376,13 +376,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           isSearching={fuzzySearch.isPending}
         />
 
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Icons.Filter className="w-4 h-4" />
-            <span className="font-medium">Filtrar</span>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">
+            <Icons.Filter className="w-3.5 h-3.5" />
+            <span>Filtrar Caminho</span>
           </div>
-
-          <div className="flex flex-wrap gap-2" role="list">
+          <div className="flex flex-wrap gap-2 sm:gap-3" role="list">
             <div role="listitem">
               <BubbleTag
                 label="Todas"
