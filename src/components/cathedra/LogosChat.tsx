@@ -407,7 +407,9 @@ const LogosChat = () => {
                   </div>
                 </div>
               )}
-                <div className="mt-8 flex justify-between items-center opacity-[0.03]">
+              
+              <div className="p-10 pt-0 bg-background/40 backdrop-blur-2xl">
+                <div className="flex justify-between items-center opacity-[0.03]">
                   <div className="flex gap-6">
                     <Scroll className="w-3.5 h-3.5" />
                     <BookOpen className="w-3.5 h-3.5" />
