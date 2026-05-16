@@ -300,15 +300,15 @@ const StudyMode: React.FC = () => {
                       "Abra o coração ao Silêncio."
                     </p>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+                  <div className="grid grid-cols-1 gap-6 max-w-md mx-auto">
                     {dynamicSuggestions.map(s => (
                       <button
                         key={s}
                         onClick={() => sendMessage(s)}
-                        className="p-6 text-left rounded-premium-sm border border-primary/5 hover:border-primary/20 bg-background/50 hover:bg-primary/5 transition-all group"
+                        className="p-8 text-center rounded-2xl border border-primary/5 hover:border-secondary/20 bg-primary/[0.01] hover:bg-primary/[0.02] transition-all duration-700 group relative overflow-hidden"
                       >
-                        <p className="text-sm font-monastery text-primary/80 leading-relaxed">{s}</p>
-                        <ArrowRight className="w-4 h-4 mt-4 text-primary/20 group-hover:text-primary/60 transition-colors" />
+                        <div className="absolute inset-0 bg-secondary/5 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
+                        <p className="relative z-10 text-sm font-serif text-primary/40 group-hover:text-primary transition-colors italic leading-relaxed">"{s}"</p>
                       </button>
                     ))}
                   </div>
