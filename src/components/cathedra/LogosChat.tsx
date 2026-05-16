@@ -329,7 +329,7 @@ const LogosChat = () => {
                     <motion.div 
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="py-20 text-center space-y-12"
+                      className="py-20 text-center space-y-12 px-6"
                     >
                       <div className="space-y-6">
                         <Heart className="w-12 h-12 text-secondary/20 mx-auto" />
