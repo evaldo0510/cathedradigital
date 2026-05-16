@@ -989,7 +989,7 @@ const SpiritualQuiz: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 1 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight"
+                className="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight px-2"
               >
                 {q.question}
               </motion.h3>
