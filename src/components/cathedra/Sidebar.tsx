@@ -268,7 +268,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </Button>
             </div>
           ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-11 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
             </Button>
           )}
