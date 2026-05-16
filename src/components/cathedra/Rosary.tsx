@@ -143,11 +143,11 @@ const Rosary: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => (
             <Button key={key} onClick={() => setSelectedSet(key)}
-              className="text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden">
+              className="text-left p-0 rounded-premium bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden h-auto">
               <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
                 <val.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
               </div>
-              <div className="relative z-10">
+              <div className="relative z-10 p-8 md:p-10">
                 <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-6 transition-transform group-hover:scale-110 ${val.color}`}>
                   <val.icon className="w-7 h-7" />
                 </div>
@@ -167,7 +167,7 @@ const Rosary: React.FC = () => {
         </div>
 
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 text-center space-y-6"
+          className="bg-card border border-border rounded-premium p-8 md:p-12 text-center space-y-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -219,7 +219,7 @@ const Rosary: React.FC = () => {
           <div className="md:col-span-2 grid gap-4">
             <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
             {set.mysteries.map((m, i) => (
-              <div key={i} className="p-6 md:p-8 rounded-premium-sm bg-card border border-border shadow-sm hover:shadow-soft transition-shadow">
+              <div key={i} className="p-6 md:p-8 rounded-premium-sm bg-card border border-border shadow-soft hover:shadow-premium transition-shadow">
                 <div className="flex items-start gap-6">
                   <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
                   <div className="space-y-3">
@@ -235,7 +235,7 @@ const Rosary: React.FC = () => {
           </div>
           
           <div className="space-y-6">
-            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-sm space-y-4">
+            <div className="p-8 rounded-premium bg-card border border-border shadow-soft space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
                   <Activity className="w-5 h-5" />
@@ -253,7 +253,7 @@ const Rosary: React.FC = () => {
               />
             </div>
             
-            <div className="p-8 rounded-[2rem] bg-primary text-primary-foreground shadow-premium shadow-primary/20 space-y-4">
+            <div className="p-8 rounded-premium bg-primary text-primary-foreground shadow-premium shadow-primary/20 space-y-4">
               <p className="text-sm font-serif italic opacity-90 leading-relaxed">
                 "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
               </p>

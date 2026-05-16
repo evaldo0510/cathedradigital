@@ -14,11 +14,11 @@ export interface ButtonProps extends HTMLMotionProps<"button"> {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, asChild = false, ...props }, ref) => {
     const sizeMap: Record<string, string> = {
-      xs: 'px-4 h-9 text-[9px]',
-      sm: 'px-6 h-11 text-[10px]',
-      md: 'px-10 h-14 text-[11px]',
-      lg: 'px-12 h-16 text-[12px]',
-      xl: 'px-14 h-20 text-[14px]',
+      xs: 'px-4 h-9 text-[8px]',
+      sm: 'px-6 h-11 text-[9px]',
+      md: 'px-10 h-14 text-[10px]',
+      lg: 'px-12 h-16 text-[11px]',
+      xl: 'px-14 h-20 text-[12px]',
       icon: 'h-11 w-11 p-0 flex items-center justify-center rounded-full',
       'icon-xs': 'h-9 w-9 p-0 flex items-center justify-center rounded-full',
     };
@@ -28,8 +28,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       default: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
-      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 py-4 font-bold uppercase tracking-[0.2em] text-[10px]',
-      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full font-bold uppercase tracking-widest text-[10px]',
+      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 h-14 font-bold uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4',
+      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full font-bold uppercase tracking-widest text-[10px] h-14 flex items-center justify-center gap-4',
       link: 'text-primary underline-offset-4 hover:underline bg-transparent p-0 h-auto font-medium',
     };
 

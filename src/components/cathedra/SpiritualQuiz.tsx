@@ -920,7 +920,7 @@ const SpiritualQuiz: React.FC = () => {
               value={journalText}
               onChange={(e) => setJournalText(e.target.value)}
               placeholder="O que esta pergunta despertou em você? Registre sua reflexão..."
-              className="w-full bg-primary/[0.01] border border-primary/5 rounded-[2rem] p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
+              className="w-full bg-primary/[0.01] border border-primary/5 rounded-premium p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
             />
             <div className="flex justify-center">
               <Button 
@@ -1003,7 +1003,7 @@ const SpiritualQuiz: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 + (idx * 0.1), duration: 0.8 }}
                   onClick={() => handleAnswer(opt.value)}
-                  className={`w-full p-6 sm:p-8 text-center rounded-[1.5rem] sm:rounded-[2.5rem] border transition-all duration-700 relative overflow-hidden group ${
+                  className={`w-full p-6 sm:p-8 text-center rounded-premium border transition-all duration-700 relative overflow-hidden group ${
                     answers[q.id] === opt.value
                       ? 'bg-primary text-primary-foreground border-primary shadow-premium'
                       : 'bg-primary/[0.01] border-primary/5 text-primary/50 hover:bg-primary/[0.03] hover:border-primary/10 hover:text-primary hover:scale-[1.01]'

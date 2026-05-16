@@ -183,12 +183,14 @@
     font-size: clamp(2.5rem, 8vw, 5rem);
     line-height: 1;
     letter-spacing: -0.04em;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
   
   .heading-section-label { 
     @apply font-bold uppercase tracking-[0.3em] opacity-60;
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     line-height: 1.2;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
   
   .heading-card { 
@@ -196,6 +198,7 @@
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
 
   .heading-item {
@@ -203,6 +206,7 @@
     font-size: clamp(1.15rem, 2.5vw, 1.5rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
   }
 
   .text-premium-body { 
@@ -311,12 +315,12 @@
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
-  /* Premium card style - Cathedra Digital Global Standard */
   .premium-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
     @apply rounded-premium transition-all duration-700 relative overflow-hidden backdrop-blur-md;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
   }
   
   .premium-card-interactive {
@@ -337,11 +341,11 @@
 
   /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-20 sm:py-24 md:py-32 lg:py-40;
+    @apply py-24 sm:py-32 md:py-40 lg:py-48;
   }
 
   .stack-spacing {
-    @apply space-y-12 md:space-y-16 lg:space-y-24;
+    @apply space-y-16 md:space-y-24 lg:space-y-32;
   }
   
   .premium-grid {
@@ -368,18 +372,19 @@
   .btn-premium {
     @apply relative overflow-hidden rounded-full font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-700 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
     min-height: 56px;
+    padding: 0 2rem;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium;
+    @apply btn-premium bg-primary text-primary-foreground hover:brightness-110 shadow-premium border border-primary;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium;
+    @apply btn-premium bg-secondary text-secondary-foreground shadow-premium border border-secondary;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-white/10 text-primary hover:bg-white/[0.04] shadow-none;
+    @apply btn-premium bg-transparent border border-primary/10 text-primary hover:bg-primary/[0.03] shadow-none;
   }
 }
 

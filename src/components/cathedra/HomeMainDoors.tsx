@@ -51,7 +51,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
         <Card
           key={idx}
           variant="interactive"
-          padding="md"
+          padding="none"
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -62,7 +62,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="flex flex-col items-center text-center gap-4 sm:gap-8 group"
+          className="flex flex-col items-center text-center gap-4 sm:gap-8 group p-8 md:p-10"
         >
           <CathedraIcon icon={door.icon} size={IconSizePreset.ACTION} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
           <div className="space-y-4">

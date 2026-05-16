@@ -496,7 +496,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   >
 
                     {/* Gradient accent */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-60 pointer-events-none`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-40 pointer-events-none`} />
                     
                     {journey.cover_url && (
                       <div className="relative w-full h-24 sm:h-32 overflow-hidden">
