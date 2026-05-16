@@ -250,37 +250,62 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const title = categoryNames[recommendedCategory] || 'Formação Integral';
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-lg lg:max-w-3xl space-y-6 lg:space-y-12"
-        >
-          <div className="text-center space-y-3">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
+        <div className="w-full max-w-2xl space-y-24 text-center">
+          <div className="space-y-8">
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', delay: 0.2 }}
-              className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', delay: 0.2, duration: 1 }}
+              className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5 shadow-[0_0_40px_rgba(0,0,0,0.02)]"
             >
-              <Compass className="w-10 h-10 text-primary" />
+              <Compass className="w-10 h-10 text-primary/40" />
             </motion.div>
-            <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
-            <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
+            
+            <div className="space-y-4">
+              <motion.span 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
+              >
+                Caminho Revelado
+              </motion.span>
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="text-4xl md:text-6xl font-display text-primary tracking-tightest"
+              >
+                Sua Jornada
+              </motion.h1>
+            </div>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-premium-sm p-6 space-y-3 text-center">
-            <h2 className="text-xl font-bold text-foreground">{title}</h2>
-            <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
-          </div>
-
-          <Button
-            onClick={handleGoToJourney}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="p-10 rounded-[3rem] border border-primary/5 bg-primary/[0.01] space-y-10 relative overflow-hidden group"
           >
-            Começar Minha Jornada <ChevronRight className="w-4 h-4" />
-          </Button>
-        </motion.div>
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-secondary/20 to-transparent" />
+            
+            <div className="space-y-4">
+              <h2 className="text-3xl font-bold text-primary tracking-tight">{title}</h2>
+              <p className="text-lg font-monastery text-primary/40 italic max-w-md mx-auto leading-relaxed">
+                "Onde está o teu tesouro, aí estará também o teu coração." <br />
+                Preparamos uma trilha única para o seu momento.
+              </p>
+            </div>
+            
+            <Button
+              onClick={handleGoToJourney}
+              className="w-full max-w-sm mx-auto h-16 rounded-full gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all"
+            >
+              Iniciar Caminhada <ArrowRight className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        </div>
       </div>
     );
   }
