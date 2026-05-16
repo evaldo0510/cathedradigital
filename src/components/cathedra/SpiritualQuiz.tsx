@@ -7,6 +7,7 @@ import {
   Mountain, Users, Church, Compass, Scroll, Quote 
 } from 'lucide-react';
 import { Button } from '@/components/cathedra/Button';
+import { ReferenceModal } from '@/components/cathedra/ReferenceModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
