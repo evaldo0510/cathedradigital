@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Icons } from '@/constants';
 import { lovable } from '@/integrations/lovable/index';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/cathedra/Button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 

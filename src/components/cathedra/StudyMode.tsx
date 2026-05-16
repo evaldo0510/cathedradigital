@@ -65,7 +65,7 @@ const TheologicalAwareText: React.FC<{
 
   const segments = useMemo(() => parseTheologicalReferences(processedText), [processedText]);
   if (segments.length === 1 && segments[0].type === 'text') return <ReactMarkdown components={{
-    p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+    p: ({ children }) => <p className="mb-4 last:mb-0 text-premium-body">{children}</p>,
     strong: ({ children }) => <strong className="text-primary font-bold">{children}</strong>,
     em: ({ children }) => <em className="italic opacity-90">{children}</em>,
   }}>{processedText}</ReactMarkdown>;
@@ -362,7 +362,7 @@ const StudyMode: React.FC = () => {
                       <button
                         key={s}
                         onClick={() => sendMessage(s)}
-                        className="p-8 text-center rounded-2xl border border-primary/5 hover:border-secondary/20 bg-primary/[0.01] hover:bg-primary/[0.02] transition-all duration-700 group relative overflow-hidden"
+                        className="p-8 text-center rounded-premium border border-primary/5 hover:border-secondary/20 bg-primary/[0.01] hover:bg-primary/[0.02] transition-all duration-700 group relative overflow-hidden"
                       >
                         <div className="absolute inset-0 bg-secondary/5 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-1000" />
                         <p className="relative z-10 text-sm font-serif text-primary/40 group-hover:text-primary transition-colors italic leading-relaxed">"{s}"</p>
