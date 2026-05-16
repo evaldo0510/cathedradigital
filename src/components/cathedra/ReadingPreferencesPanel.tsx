@@ -114,6 +114,31 @@ const ReadingPreferencesPanel: React.FC = () => {
                 />
               </div>
 
+              {/* Line Height */}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-primary/20">
+                  <span className="flex items-center gap-2"><Wind className="w-3 h-3" /> Espaçamento</span>
+                  <span>{prefs.lineHeight}</span>
+                </div>
+                <Slider 
+                  value={[prefs.lineHeight]} 
+                  onValueChange={([v]) => updatePrefs({ lineHeight: v })}
+                  min={1.4} max={2.4} step={0.1}
+                />
+              </div>
+
+              {/* Zen Mode Switch */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-primary/[0.03] border border-primary/5">
+                <div className="space-y-0.5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary">Modo Zen</p>
+                  <p className="text-[9px] text-primary/40">Foco total no texto sagrado</p>
+                </div>
+                <Switch 
+                  checked={prefs.zenMode}
+                  onCheckedChange={(v) => updatePrefs({ zenMode: v })}
+                />
+              </div>
+
               {/* Sepia Intensity (only if sepia is selected) */}
               {prefs.theme === 'sepia' && (
                 <div className="space-y-3">
