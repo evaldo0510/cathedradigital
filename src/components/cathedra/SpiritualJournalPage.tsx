@@ -452,7 +452,7 @@ const SpiritualJournalPage = () => {
                         <div>
                           <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Mestre Logos</p>
                           <span className="text-sm font-serif font-bold text-primary">
-                            {ref.parsed?.timestamp ? format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR }) : 'Data não registrada'}
+                            {format(new Date(ref.parsed?.timestamp || ref.created_at), "d 'de' MMMM, yyyy 'às' HH:mm", { locale: ptBR })}
                           </span>
                         </div>
                       </div>
