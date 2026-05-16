@@ -168,7 +168,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             )}
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+            <div className="w-10 h-10 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
               <Sparkles className="w-5 h-5" />
             </div>
             <span className="text-premium-small font-black uppercase tracking-widest text-primary">Conhecer</span>
