@@ -329,9 +329,9 @@ const SpiritualJournalPage = () => {
             ))}
           </div>
         ) : activeTab === 'journal' ? (
-          sortedAndFilteredItems(entries, ['content'], 'entry_date').length > 0 ? (
+          sortedAndFilteredItems(entries, ['content'], 'created_at').length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
-              {sortedAndFilteredItems(entries, ['content'], 'entry_date').map((entry) => (
+              {sortedAndFilteredItems(entries, ['content'], 'created_at').map((entry) => (
                 <motion.div
                   key={entry.id}
                   initial={{ opacity: 0, y: 10 }}
@@ -346,7 +346,7 @@ const SpiritualJournalPage = () => {
                       <div>
                         <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
                         <span className="text-sm font-serif font-bold text-primary">
-                          {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
+                          {format(new Date(entry.created_at), "d 'de' MMMM, yyyy 'às' HH:mm", { locale: ptBR })}
                         </span>
                       </div>
                     </div>
@@ -390,8 +390,9 @@ const SpiritualJournalPage = () => {
                       <div>
                         <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Aprofundamento do Quiz</p>
                         <span className="text-sm font-serif font-bold text-primary">
-                          {ref.content_id}
+                          {format(new Date(ref.created_at), "d 'de' MMMM, yyyy 'às' HH:mm", { locale: ptBR })}
                         </span>
+                        <p className="text-[10px] text-primary/30 mt-1 uppercase tracking-tighter italic">{ref.content_id}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -401,9 +402,6 @@ const SpiritualJournalPage = () => {
                       <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'reflection')} className="text-primary/20 hover:text-red-500 transition-colors">
                         <Icons.Trash2 className="w-4 h-4" />
                       </Button>
-                      <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
-                        {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
-                      </span>
                     </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-primary/10">
@@ -454,7 +452,7 @@ const SpiritualJournalPage = () => {
                         <div>
                           <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Mestre Logos</p>
                           <span className="text-sm font-serif font-bold text-primary">
-                            {ref.parsed?.timestamp ? format(new Date(ref.parsed.timestamp), "d 'de' MMMM, yyyy", { locale: ptBR }) : 'Data não registrada'}
+                            {format(new Date(ref.parsed?.timestamp || ref.created_at), "d 'de' MMMM, yyyy 'às' HH:mm", { locale: ptBR })}
                           </span>
                         </div>
                       </div>
