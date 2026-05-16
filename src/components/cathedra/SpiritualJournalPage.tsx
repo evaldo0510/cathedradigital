@@ -247,6 +247,17 @@ const SpiritualJournalPage = () => {
       {/* History */}
       <section className="space-y-12 max-w-4xl mx-auto w-full pb-32">
         <div className="flex flex-col items-center gap-8">
+          <div className="w-full relative max-w-md mx-auto">
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+            <input 
+              type="text" 
+              placeholder="Buscar reflexões..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-14 pl-14 pr-6 rounded-full bg-primary/[0.02] border border-primary/5 font-serif italic focus:outline-none focus:border-primary/20 transition-all text-primary/70"
+            />
+          </div>
+
           <div className="flex items-center gap-12 w-full">
             <div className="h-px flex-1 bg-border/30" />
             <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
