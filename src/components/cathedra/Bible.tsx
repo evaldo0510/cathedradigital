@@ -663,7 +663,7 @@ const Bible: React.FC = () => {
             )}
 
             {/* Toolbar - Floating-like feel */}
-            <div className="flex items-center justify-between gap-6 p-3 bg-background/40 backdrop-blur-xl rounded-full border border-primary/5 shadow-premium sticky top-8 z-40 transition-all hover:bg-background/60">
+            <div className="flex items-center justify-between gap-2 sm:gap-6 p-2 sm:p-3 bg-background/40 backdrop-blur-xl rounded-full border border-primary/5 shadow-premium sticky top-4 sm:top-8 z-40 transition-all hover:bg-background/60">
               <div className="flex items-center gap-3 pl-6">
                 <Icons.Compass className="w-4 h-4 text-primary/30" />
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Leitura Contemplativa</span>
