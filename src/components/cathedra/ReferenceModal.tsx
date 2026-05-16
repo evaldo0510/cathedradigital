@@ -133,7 +133,7 @@ export const ReferenceModal: React.FC<ReferenceModalProps> = ({
             </ScrollArea>
 
             {/* Footer Navigation */}
-            <div className="p-4 sm:p-6 border-t border-primary/5 flex items-center justify-between bg-muted/10 gap-2">
+            <div className="p-4 sm:p-6 border-t border-primary/5 flex items-center justify-between bg-muted/5 gap-2">
               <Button variant="ghost" onClick={() => navigateChapter(-1)} className="gap-1 sm:gap-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary px-2">
                 <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="hidden xs:inline">Anterior</span>
               </Button>
