@@ -390,8 +390,9 @@ const SpiritualJournalPage = () => {
                       <div>
                         <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/40 mb-1">Aprofundamento do Quiz</p>
                         <span className="text-sm font-serif font-bold text-primary">
-                          {ref.content_id}
+                          {format(new Date(ref.created_at), "d 'de' MMMM, yyyy", { locale: ptBR })}
                         </span>
+                        <p className="text-[10px] text-primary/30 mt-1 uppercase tracking-tighter italic">{ref.content_id}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -401,9 +402,6 @@ const SpiritualJournalPage = () => {
                       <Button variant="ghost" size="icon" onClick={() => deleteEntry(ref.id, 'reflection')} className="text-primary/20 hover:text-red-500 transition-colors">
                         <Icons.Trash2 className="w-4 h-4" />
                       </Button>
-                      <span className="text-[10px] font-bold text-primary/20 uppercase tracking-widest">
-                        {format(new Date(ref.created_at), "d/MM/yy", { locale: ptBR })}
-                      </span>
                     </div>
                   </div>
                   <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-primary/10">
