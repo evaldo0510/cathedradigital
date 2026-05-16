@@ -183,12 +183,14 @@
     font-size: clamp(2.5rem, 8vw, 5rem);
     line-height: 1;
     letter-spacing: -0.04em;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
   }
   
   .heading-section-label { 
     @apply font-bold uppercase tracking-[0.3em] opacity-60;
     font-size: clamp(0.75rem, 1vw, 0.875rem);
     line-height: 1.2;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
   
   .heading-card { 
@@ -196,6 +198,7 @@
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.02em;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
   }
 
   .heading-item {
@@ -203,6 +206,7 @@
     font-size: clamp(1.15rem, 2.5vw, 1.5rem);
     line-height: 1.2;
     letter-spacing: -0.01em;
+    margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
   }
 
   .text-premium-body { 
