@@ -113,7 +113,7 @@ const JornadaDetailPage: React.FC = () => {
 
       {/* Progress */}
       <Card className="border-primary/20 p-4 sm:p-6">
-        <CardContent className="p-4 space-y-3">
+        <CardContent className="p-0 space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Progresso</span>
             <span className="font-semibold text-foreground">{completedCount}/{totalSteps} etapas</span>
