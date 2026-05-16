@@ -234,7 +234,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
               </div>
             </div>
-            <div className="w-12 h-12 rounded-full border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-soft">
+            <div className="w-12 h-12 rounded-full border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-premium">
               <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </HomeCard>
