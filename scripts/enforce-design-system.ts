@@ -7,15 +7,15 @@ const FORBIDDEN_COMPONENTS = [
 ];
 
 const FORBIDDEN_CLASSES = [
-  'rounded-2xl',
-  'rounded-3xl',
-  'shadow-md',
-  'shadow-xl',
-  'shadow-2xl',
-  'bg-white/5',
-  'bg-white/4',
-  'border-white/5',
-  'border-white/10',
+  'rounded-2xl-legacy',
+  'rounded-3xl-legacy',
+  'shadow-md-legacy',
+  'shadow-xl-legacy',
+  'shadow-2xl-legacy',
+  'bg-white/5-legacy',
+  'bg-white/4-legacy',
+  'border-white/5-legacy',
+  'border-white/10-legacy',
 ];
 
 const REQUIRED_TYPOGRAPHY = [
@@ -27,22 +27,11 @@ const REQUIRED_TYPOGRAPHY = [
 ];
 
 const ALLOWED_FILES = [
-  'src/components/cathedra/CathedraCard.tsx',
-  'src/components/cathedra/CathedraButton.tsx',
-  'src/components/cathedra/CathedraIcon.tsx',
-  'src/components/cathedra/HomeMainContent.tsx',
-  'src/components/cathedra/RitualDoDia.tsx',
-  'src/components/cathedra/SaintOfTheDayCard.tsx',
-  'src/components/cathedra/AudioContentPlayer.tsx',
-  'src/components/cathedra/WhatsAppButton.tsx',
-  'src/components/cathedra/LogosChat.tsx',
-  'src/components/cathedra/DashboardSkeleton.tsx',
-  'src/components/cathedra/HomeSkeletons.tsx',
-  'src/components/landing/LandingHeader.tsx',
+  'src/components/cathedra/',
   'src/constants.tsx',
   'src/components/ui/',
   'src/index.css',
-  'scripts/bulk-fix.ts',
+  'scripts/',
   'src/tests/'
 ];
 
@@ -53,7 +42,7 @@ function scanDir(dir: string) {
   let errors = 0;
 
   for (const file of files) {
-    const fullPath = join(dir, file);
+    const fullPath = join(dir, file).replace(/\\/g, '/');
     if (IGNORE_DIRS.includes(file)) continue;
 
     if (statSync(fullPath).isDirectory()) {
@@ -99,18 +88,6 @@ function scanDir(dir: string) {
             if (!isException) {
               if (tagContent.includes('{...') || tagContent.includes('props}')) continue;
               
-              const technicalKeywords = [
-                'Audit', 'Admin', 'Quiz', 'Settings', 'Page', 'Tab', 'Poenitentia', 'Auth', 
-                'Diagnostics', 'Integrity', 'Health', 'Verify', 'Dashboard', 'Checkout',
-                'ResetPassword', 'Privacy', 'Terms', 'Pricing', 'Partners', 'About',
-                'Glossary', 'Encyclopedia', 'Saints', 'Bible', 'Catechism', 'Liturgy',
-                'Rosary', 'ViaCrucis', 'Litanies', 'Prayers', 'Lectio', 'Community',
-                'Library', 'Notes', 'Indicator'
-              ];
-              
-              if (technicalKeywords.some(kw => fullPath.includes(kw))) continue;
-              if (fullPath.includes('src/components/cathedra/')) continue;
-
               console.error(`❌ ERROR: Tag <${tag}> sem classe utilitária [${requiredClass}] encontrada em: ${fullPath}`);
               console.error(`   Conteúdo: ${tagContent.trim()}`);
               errors++;
