@@ -253,7 +253,7 @@ const Rosary: React.FC = () => {
               />
             </div>
             
-            <div className="p-8 rounded-[2rem] bg-primary text-primary-foreground shadow-premium shadow-primary/20 space-y-4">
+            <div className="p-8 rounded-premium bg-primary text-primary-foreground shadow-premium shadow-primary/20 space-y-4">
               <p className="text-sm font-serif italic opacity-90 leading-relaxed">
                 "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
               </p>
