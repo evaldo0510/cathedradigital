@@ -58,27 +58,28 @@ const TheologicalAwareText: React.FC<{
   );
 };
 
+type LogosTone = 'contemplative' | 'poetic' | 'doctrinal' | 'brief';
+
 const LogosChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Bem-vindo ao Logos. Em que posso auxiliá-lo em sua caminhada espiritual hoje?',
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [tone, setTone] = useState<LogosTone>('contemplative');
+  const [isContemplative, setIsContemplative] = useState(false);
+  const [hasRitualPassed, setHasRitualPassed] = useState(false);
+  const [intention, setInputIntention] = useState('');
+  
   const scrollRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, hasRitualPassed]);
 
   const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
     navigate(`/bible?book=${abbr}&ch=${chapter}`);
@@ -87,6 +88,74 @@ const LogosChat = () => {
   const handleNavigateToCatechism = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
   }, [navigate]);
+
+  const startWithRitual = async () => {
+    if (!intention.trim()) return;
+    
+    setHasRitualPassed(true);
+    const welcomeMsg: Message = {
+      id: 'welcome',
+      role: 'assistant',
+      content: `Paz e bem. Recebo sua intenção: "${intention}". Em que posso auxiliá-lo em sua caminhada espiritual hoje?`,
+      timestamp: new Date(),
+    };
+    setMessages([welcomeMsg]);
+    
+    // Auto-save intention if needed
+    if (user) {
+      const { data: conv } = await supabase
+        .from('colloquium_conversations')
+        .insert({ user_id: user.id, title: `Diálogo: ${intention.slice(0, 30)}...` })
+        .select('id')
+        .single();
+        
+      if (conv) {
+        await supabase.from('colloquium_messages').insert({
+          conversation_id: conv.id,
+          role: 'assistant',
+          content: welcomeMsg.content
+        });
+      }
+    }
+  };
+
+  const handleExportPDF = () => {
+    if (messages.length === 0) return;
+    
+    const doc = new jsPDF();
+    const title = `Diálogo Espiritual - ${new Date().toLocaleDateString()}`;
+    
+    doc.setFont('times', 'bold');
+    doc.setFontSize(22);
+    doc.text('Cathedra Digital', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(16);
+    doc.text(title, 105, 30, { align: 'center' });
+    
+    let y = 50;
+    doc.setFontSize(12);
+    doc.setFont('times', 'normal');
+    
+    messages.forEach((msg) => {
+      const role = msg.role === 'user' ? 'Você' : 'Logos';
+      const lines = doc.splitTextToSize(`${role}: ${msg.content}`, 170);
+      
+      if (y + lines.length * 7 > 280) {
+        doc.addPage();
+        y = 20;
+      }
+      
+      doc.setFont('times', 'bold');
+      doc.text(`${role}:`, 20, y);
+      doc.setFont('times', 'normal');
+      doc.text(lines.map((l: string) => l.replace(`${role}: `, '')), 20, y + 6);
+      
+      y += lines.length * 7 + 10;
+    });
+    
+    doc.save(`logos-reflexao-${Date.now()}.pdf`);
+    toast.success('PDF exportado com sucesso.');
+  };
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
