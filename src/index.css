@@ -109,13 +109,17 @@
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-secondary ring-offset-2 ring-offset-background transition-shadow;
+    @apply outline-none ring-2 ring-secondary ring-offset-2 ring-offset-background transition-all;
+  }
+
+  .focus-ring {
+    @apply focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all;
   }
 
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.25; /* Thinner for premium minimalist feel */
+    stroke-width: 1.5; /* Slightly thicker for better legibility while keeping premium feel */
     stroke-linecap: round;
     stroke-linejoin: round;
     @apply opacity-70;
@@ -260,15 +264,15 @@
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[1280px] mx-auto px-6 md:px-12 lg:px-16;
+    @apply w-full max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16;
   }
 
   .content-section {
-    @apply w-full max-w-[1280px] mx-auto py-12 md:py-20 lg:py-24;
+    @apply w-full max-w-[1280px] mx-auto py-8 md:py-20 lg:py-24;
   }
 
   .responsive-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10;
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 lg:gap-10;
   }
 
   /* Desktop two-column layout: main content + optional side panel */
@@ -320,13 +324,13 @@
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    @apply rounded-[24px] transition-all duration-700 relative overflow-hidden backdrop-blur-sm p-8;
+    @apply rounded-[24px] transition-all duration-700 relative overflow-hidden backdrop-blur-md p-8;
   }
   
   .premium-card-interactive {
     @apply premium-card cursor-pointer active:scale-[0.99];
     @apply hover:bg-white/[0.06] hover:border-white/[0.12] hover:shadow-premium-hover;
-    @apply focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1;
+    @apply focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2;
   }
 
   /* Section Spacing - Standardized Vertical Rhythm */
@@ -349,7 +353,7 @@
   .btn-premium {
     @apply relative overflow-hidden rounded-[24px] font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-500 flex items-center justify-center gap-4 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed;
     height: 52px;
-    padding: 0 2.5rem;
+    padding: 0 2rem;
     border: 1px solid transparent;
   }
 
