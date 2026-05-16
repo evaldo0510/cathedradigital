@@ -151,5 +151,3 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 };
 
 export default HomeMainContent;
-
-export default HomeMainContent;
