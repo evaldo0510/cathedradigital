@@ -177,14 +177,8 @@ const LogosChat = () => {
                       key={msg.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+                      className={`flex flex-col w-full ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
                     >
-                      {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-6 opacity-30">
-                          <span className="w-8 h-px bg-primary/40" />
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Reflexão</span>
-                        </div>
-                      )}
                       
                       <div
                         className={`font-serif leading-relaxed ${
