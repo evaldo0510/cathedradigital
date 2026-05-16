@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-export type ReadingTheme = 'normal' | 'night' | 'sepia' | 'paper';
+export type ReadingTheme = 'normal' | 'night' | 'sepia' | 'paper' | 'monastery';
 
 export interface ReadingPreferences {
   theme: ReadingTheme;
@@ -9,6 +9,7 @@ export interface ReadingPreferences {
   maxWidth: number; // in pixels or ch
   sepiaIntensity: number; // 0 to 100
   fontFamily: 'serif' | 'sans' | 'monastery';
+  zenMode: boolean;
 }
 
 const STORAGE_KEY = 'cathedra_reading_prefs';
