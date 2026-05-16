@@ -28,8 +28,8 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
       <PopoverTrigger asChild>
         <Button
           className={variant === 'mini' 
-            ? "ml-1 inline-flex h-3.5 w-3.5 items-center justify-center rounded-sm bg-primary/10 text-[9px] font-black text-primary border-b border-primary/20 hover:bg-primary/20 transition-all align-middle"
-            : "px-2 py-0.5 rounded-sm bg-primary/5 border-b border-primary/20 text-[13px] font-bold text-primary hover:bg-primary/10 transition-all h-auto"}
+            ? "ml-1 inline-flex h-3.5 w-3.5 items-center justify-center rounded-sm bg-secondary/10 text-[9px] font-black text-secondary border-b border-secondary/20 hover:bg-secondary/20 transition-all align-middle"
+            : "inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none"}
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
         </Button>
