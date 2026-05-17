@@ -89,7 +89,7 @@ const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetail
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
-const Journeys = lazy(() => import('./components/cathedra/JornadasPage'));
+const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const Index = lazy(() => import('./pages/Index'));
 const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
 const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
