@@ -1,8 +1,9 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bookmark, Star, Trophy, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { fadeUp, cardHover, buttonHover } from "./animations";
+import { Button } from "@/components/cathedra/CathedraButton";
+import { Card   } from "@/components/cathedra/Card";
+import { fadeUp, buttonHover } from "./animations";
 
 const registerBenefits = [
   { 
@@ -50,37 +51,44 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
         <div className="space-y-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
-            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight heading-section-label">
               Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
             </h2>
-            <p className="text-lg opacity-70 leading-relaxed max-w-xl">
+            <p className="text-lg opacity-70 leading-relaxed max-w-xl text-premium-body">
               Criar sua conta permite uma experiência única de crescimento, guardando sua história viva com a Palavra de Deus e o Magistério.
             </p>
           </motion.div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
             {registerBenefits.map((benefit, i) => (
-              <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
-                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-3xl bg-white/5 border border-white/10 cursor-pointer h-full">
-                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-8 h-8 rounded-xl bg-primary/20 flex items-center justify-center">
+              <Card 
+                key={benefit.title} 
+                variant="interactive" 
+                padding="md"
+                className="transition-all duration-700 h-full"
+              >
+                <div className="space-y-4">
+                  <div className="w-10 h-10 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {benefit.icon}
-                  </motion.div>
-                  <h3 className="font-bold text-lg">{benefit.title}</h3>
-                  <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
-                </motion.div>
-              </motion.div>
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-bold font-serif text-lg heading-card">{benefit.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed text-premium-body">{benefit.description}</p>
+                  </div>
+                </div>
+              </Card>
             ))}
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <Button size="lg" className="h-16 px-12 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <Button size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
               Criar Conta Gratuitamente
             </Button>
           </motion.div>
         </div>
 
         <div className="relative hidden lg:block">
-          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-lg">
+          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-premium-lg overflow-hidden border border-white/20 shadow-lg">
             <motion.img
               src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600"
               alt="Devoção católica"
@@ -90,9 +98,9 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
               style={{ y: imageY, scale: imageScale }}
             />
             <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 rounded-3xl border border-white/20">
-              <p className="text-xl font-serif mb-4">Onde está o teu tesouro, aí estará também o teu coração.</p>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
+            <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 rounded-premium border border-white/20">
+              <p className="text-xl font-serif mb-4 text-premium-body">Onde está o teu tesouro, aí estará também o teu coração.</p>
+              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary text-premium-body">Mateus 6,21</p>
             </div>
           </motion.div>
         </div>

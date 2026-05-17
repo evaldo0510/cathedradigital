@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
 
 const MODULES = [
@@ -58,17 +58,17 @@ const MODULES = [
     bg: 'bg-primary/10'
   },
   {
-    title: 'Logos IA',
-    icon: <Icons.Brain className="w-8 h-8" />,
-    description: 'Assistente teológico inteligente baseado na Tradição.',
+    title: 'Logos',
+    icon: <Icons.Compass className="w-8 h-8" />,
+    description: 'Mestre espiritual e teológico contemplativo.',
     details: [
-      'Respostas fundamentadas exclusivamente no Magistério.',
-      'Capacidade de sintetizar temas complexos em linguagem simples.',
-      'Geração de reflexões personalizadas a partir do seu perfil.',
-      'Análise de conexões entre Bíblia, Tradição e Magistério.'
+      'Diálogos fundamentados na Tradição e no Magistério.',
+      'Linguagem contemplativa e focada na vida de oração.',
+      'Reflexões personalizadas a partir do seu perfil espiritual.',
+      'Análise de conexões profundas entre Fé e Razão.'
     ],
-    color: 'text-secondary',
-    bg: 'bg-secondary/10'
+    color: 'text-primary',
+    bg: 'bg-primary/5'
   },
   {
     title: 'Nexus Theologicus',
@@ -115,9 +115,9 @@ const ModulesGuidePage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-20">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Feather className="w-4 h-4 text-primary" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
           Entenda os Módulos
@@ -135,10 +135,10 @@ const ModulesGuidePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
           >
-            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-sm hover:shadow-xl rounded-3xl overflow-hidden group">
+            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-sm hover:shadow-premium rounded-premium-sm overflow-hidden group">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-14 h-14 rounded-2xl ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
+                  <div className={`w-14 h-14 rounded-full ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
                     {module.icon}
                   </div>
                   <div>
@@ -163,7 +163,7 @@ const ModulesGuidePage: React.FC = () => {
       </div>
 
       <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-8 md:p-12 text-center space-y-6 relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full  -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-premium-sm  -mr-32 -mt-32" />
         <div className="relative z-10 space-y-4">
           <h2 className="text-2xl md:text-3xl font-bold text-primary">Ainda tem dúvidas?</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">

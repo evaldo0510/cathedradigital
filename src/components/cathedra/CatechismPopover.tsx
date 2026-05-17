@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React from 'react';
 import {
   Popover,
@@ -25,18 +26,18 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button
+        <Button
           className={variant === 'mini' 
-            ? "ml-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 text-[8px] font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
-            : "px-2.5 py-1 rounded-lg bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
+            ? "ml-1 inline-flex h-3.5 w-3.5 items-center justify-center rounded-sm bg-secondary/10 text-[9px] font-black text-secondary border-b border-secondary/20 hover:bg-secondary/20 transition-all align-middle"
+            : "inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none"}
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-2xl border-primary/20"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-primary/20"
       >
         <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -46,13 +47,13 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
             </span>
           </div>
           {onNavigate && (
-            <button
+            <Button
               onClick={() => onNavigate(paragraph)}
-              className="text-[10px] font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              className="text-premium-tiny font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
               Abrir completo
               <Icons.ArrowDown className="w-3 h-3 -rotate-90" />
-            </button>
+            </Button>
           )}
         </div>
         <div className="p-3">

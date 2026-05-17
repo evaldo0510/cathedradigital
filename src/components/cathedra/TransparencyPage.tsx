@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
+import { Button   } from '@/components/cathedra/Button';
 import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
 
 const TransparencyPage: React.FC = () => {
@@ -16,7 +17,7 @@ const TransparencyPage: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-16 px-4">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-premium-sm bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
             <ShieldCheck className="w-3 h-3" />
             Integridade Doutrinária
           </div>
@@ -33,7 +34,7 @@ const TransparencyPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-8 rounded-[2.5rem] bg-primary/5 border border-primary/20 relative overflow-hidden"
+          className="p-8 sm:p-10 md:p-12 rounded-premium bg-primary/5 border border-primary/20 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-5">
             <Icons.Zap className="w-24 h-24 text-primary" />
@@ -84,32 +85,35 @@ const TransparencyPage: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a 
-              href="mailto:contato@cathedradigital.com" 
-              className="flex items-center gap-3 px-8 py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary transition-all w-full sm:w-auto justify-center"
+            <Button 
+              asChild
+              className="h-14 px-8 w-full sm:w-auto shadow-premium"
             >
-              <Mail className="w-4 h-4" />
-              Enviar E-mail
-            </a>
-            <button 
+              <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-3">
+                <Mail className="w-4 h-4" />
+                Enviar E-mail
+              </a>
+            </Button>
+            <Button 
+              variant="secondary"
               onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
-              className="flex items-center gap-3 px-8 py-4 bg-secondary text-primary rounded-2xl font-black uppercase text-[10px] tracking-widest border border-primary/20 hover:bg-secondary/80 transition-all w-full sm:w-auto justify-center"
+              className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-sm gap-3"
             >
               <Icons.MessageSquare className="w-4 h-4" />
               Suporte WhatsApp
-            </button>
+            </Button>
           </div>
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
+        <div className="p-8 rounded-premium border border-border text-center space-y-4">
           <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">
             O site foi projetado para funcionar de forma soberana. As chamadas para provedores externos foram reduzidas ao mínimo essencial (Supabase para dados), garantindo que a plataforma opere mesmo sem conexão estável e sem depender de serviços de terceiros que possam comprometer a integridade do conteúdo.
           </p>
           <div className="pt-4">
-            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-[9px] font-black uppercase tracking-widest border border-primary/10">
+            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-premium-tiny font-black uppercase tracking-widest border border-primary/10">
               PWA Habilitado para Uso Offline
             </span>
           </div>

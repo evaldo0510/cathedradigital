@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -79,21 +80,21 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-lg"
+        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-lg"
       >
         {/* Dismiss */}
-        <button
+        <Button
           onClick={handleDismiss}
           className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-primary/10 transition-colors"
           aria-label="Fechar"
         >
           <X className="w-4 h-4 text-muted-foreground" />
-        </button>
+        </Button>
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           {/* Icon */}
           <motion.div
-            className="w-14 h-14 rounded-2xl bg-primary/15 flex items-center justify-center flex-shrink-0"
+            className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0"
             animate={{ rotate: [0, -5, 5, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
           >
@@ -113,12 +114,12 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           </div>
 
           {/* CTA */}
-          <button
+          <Button
             onClick={() => navigate(AppRoute.UPGRADE)}
-            className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-2xl text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-md whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-soft whitespace-nowrap flex-shrink-0"
           >
             Desbloquear experiência completa <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          </Button>
         </div>
       </motion.div>
     </AnimatePresence>

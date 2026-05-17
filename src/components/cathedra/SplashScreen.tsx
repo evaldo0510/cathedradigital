@@ -62,7 +62,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-[3px] border-secondary/50 shadow-2xl bg-primary">
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-secondary/50 shadow-premium bg-primary">
             <Icons.Logo className="w-full h-full p-4" variant="blue" />
           </div>
         </motion.div>
@@ -85,13 +85,13 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
+            className="text-premium-tiny md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
           >
             Digital Sanctuarium
           </motion.p>
         </motion.div>
 
-        <motion.div className="absolute bottom-12 w-32 h-0.5 bg-white/5 rounded-full overflow-hidden">
+        <motion.div className="absolute bottom-12 w-32 h-0.5 bg-white/[0.05] rounded-premium-sm overflow-hidden">
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}

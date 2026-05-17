@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useMemo } from 'react';
 import { Icons } from '../../constants';
 
@@ -100,17 +101,17 @@ const HORAS: HoraInfo[] = [
 const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, onBack }) => (
   <div className="max-w-3xl mx-auto space-y-6">
     <div className="flex items-center gap-4">
-      <button onClick={onBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+      <Button onClick={onBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
         <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-      </button>
+      </Button>
       <div>
-        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
+        <span className="text-premium-tiny font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
         <h1 className="text-2xl font-display font-bold text-foreground">{hora.title}</h1>
         <p className="text-xs font-serif italic text-muted-foreground">{hora.latin}</p>
       </div>
     </div>
 
-    <div className="bg-card border border-border rounded-2xl p-6 md:p-10 space-y-8">
+    <div className="bg-card border border-border rounded-premium-sm p-6 md:p-10 space-y-8">
       {/* Opening */}
       <div className="text-center space-y-2 pb-6 border-b border-border">
         <p className="text-sm text-primary font-display font-bold">✠ Deus, vinde em meu auxílio.</p>
@@ -120,18 +121,18 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
       {/* Hymn */}
       <div className="space-y-3">
-        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Hino</h3>
-        <div className="bg-secondary/50 rounded-xl p-5 border border-border">
+        <h3 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground">Hino</h3>
+        <div className="bg-secondary/50 rounded-premium-sm p-5 border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9] italic">{hora.hymn}</p>
         </div>
       </div>
 
       {/* Psalms */}
       <div className="space-y-3">
-        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Salmodia</h3>
+        <h3 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground">Salmodia</h3>
         <div className="space-y-3">
           {hora.psalms.map((psalm, i) => (
-            <div key={i} className="bg-secondary/30 rounded-xl p-5 border border-border">
+            <div key={i} className="bg-secondary/30 rounded-premium-sm p-5 border border-border">
               <p className="reader-text text-foreground/90 leading-[1.9]">{psalm}</p>
             </div>
           ))}
@@ -141,8 +142,8 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       {/* Reading */}
       {hora.reading && (
         <div className="space-y-3">
-          <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Leitura Breve</h3>
-          <div className="bg-primary/5 rounded-xl p-5 border border-primary/10">
+          <h3 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground">Leitura Breve</h3>
+          <div className="bg-primary/5 rounded-premium-sm p-5 border border-primary/10">
             <p className="reader-text text-foreground/90 leading-[1.9]">{hora.reading}</p>
           </div>
         </div>
@@ -150,8 +151,8 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
       {/* Prayer */}
       <div className="space-y-3">
-        <h3 className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground">Oração</h3>
-        <div className="bg-secondary/50 rounded-xl p-5 border border-border">
+        <h3 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground">Oração</h3>
+        <div className="bg-secondary/50 rounded-premium-sm p-5 border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9]">{hora.prayer}</p>
         </div>
       </div>
@@ -188,9 +189,9 @@ const BreviaryPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.History className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">Breviário</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto leading-relaxed">
@@ -199,21 +200,21 @@ const BreviaryPage: React.FC = () => {
       </div>
 
       <div className="text-center">
-        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-3">Hora sugerida agora</p>
-        <button
+        <p className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground mb-3">Hora sugerida agora</p>
+        <Button
           onClick={() => setSelectedHora(suggestedHora as Hora)}
-          className="px-6 py-3 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
+          className="px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
         >
           {HORAS.find(h => h.id === suggestedHora)?.icon} Rezar {HORAS.find(h => h.id === suggestedHora)?.title}
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {HORAS.map(h => (
-          <button
+          <Button
             key={h.id}
             onClick={() => setSelectedHora(h.id)}
-            className={`text-left p-5 rounded-xl border transition-all group space-y-1.5 ${
+            className={`text-left p-5 rounded-full border transition-all group space-y-1.5 ${
               h.id === suggestedHora
                 ? 'bg-primary/5 border-primary/30 hover:bg-primary/10'
                 : 'bg-card border-border hover:border-primary/30 hover:bg-primary/5'
@@ -221,17 +222,17 @@ const BreviaryPage: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <span className="opacity-80">{h.icon}</span>
-              <span className="text-[9px] font-black text-primary tracking-widest">{h.time}</span>
+              <span className="text-premium-tiny font-black text-primary tracking-widest">{h.time}</span>
             </div>
             <h3 className="text-base font-display font-bold text-foreground group-hover:text-primary transition-colors">{h.title}</h3>
             <p className="text-xs font-serif italic text-muted-foreground">{h.latin}</p>
             <p className="text-sm text-muted-foreground leading-relaxed">{h.description}</p>
             {h.id === suggestedHora && (
-              <span className="inline-block font-serif px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider bg-primary/10 text-primary">
+              <span className="inline-block font-serif px-2 py-0.5 rounded text-premium-tiny font-black uppercase tracking-wider bg-primary/10 text-primary">
                 Hora atual
               </span>
             )}
-          </button>
+          </Button>
         ))}
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
 
@@ -33,13 +34,13 @@ class AppErrorBoundary extends Component<Props, State> {
             Nossa equipe técnica já foi notificada.
           </p>
           <div className="flex flex-col gap-3 w-full max-w-xs">
-            <button
+            <Button
               onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-primary text-primary-foreground rounded-2xl text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              className="px-8 py-3 bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Tentar Novamente
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={async () => {
                 localStorage.clear();
                 sessionStorage.clear();
@@ -51,10 +52,10 @@ class AppErrorBoundary extends Component<Props, State> {
                 } catch (e) {}
                 window.location.href = '/';
               }}
-              className="px-8 py-3 bg-muted text-primary rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              className="px-8 py-3 bg-muted text-primary rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Limpar Dados e Reiniciar
-            </button>
+            </Button>
 
           </div>
         </div>

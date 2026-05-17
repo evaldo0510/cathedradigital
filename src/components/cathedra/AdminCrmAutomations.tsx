@@ -3,9 +3,9 @@ import {
   Bell, Zap, Clock, Send, CheckCircle2, AlertTriangle,
   Flame, UserMinus, MessageCircle
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -119,9 +119,9 @@ const AdminCrmAutomations: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
                   <div className="text-right hidden sm:block">
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
+                    <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
                     {auto.edgeFunction && (
-                      <p className="text-[10px] font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
+                      <p className="text-premium-tiny font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
                     )}
                   </div>
                   <Badge className={auto.status === 'active'

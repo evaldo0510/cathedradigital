@@ -5,9 +5,9 @@ import {
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
   ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import {
@@ -59,7 +59,7 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
   const badge = (
-    <span className={`inline-flex items-center gap-0.5 text-[10px] font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+    <span className={`inline-flex items-center gap-0.5 text-premium-tiny font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-3 h-3" />}
       {direction === 'down' && <ArrowDown className="w-3 h-3" />}
       {direction === 'flat' && <Minus className="w-3 h-3" />}
@@ -288,7 +288,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     if (!active || !payload?.[0]) return null;
     const label = payload[0]?.payload?.label || '';
     return (
-      <div className="rounded-md bg-popover px-2 py-1 text-[10px] font-medium text-popover-foreground shadow-md border border-border">
+      <div className="rounded-premium-sm bg-popover px-2 py-1 text-premium-tiny font-medium text-popover-foreground shadow-soft border border-border">
         {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );
@@ -403,7 +403,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                       {kpi.value}
                       {kpi.delta}
                     </div>
-                    <p className="text-[11px] text-muted-foreground mt-1">{kpi.sub}</p>
+                    <p className="text-premium-small text-muted-foreground mt-1">{kpi.sub}</p>
                   </div>
                   {kpi.spark}
                 </div>

@@ -1,17 +1,35 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, Flame, Brain, Clock, Shield, Eye, Wind, Anchor, Mountain, Users, Church } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { 
+  Sparkles, Heart, BookOpen, Sun, ArrowRight, ArrowLeft, 
+  Flame, Brain, Clock, Shield, Eye, Wind, Anchor, 
+  Mountain, Users, Church, Compass, Scroll, Quote 
+} from 'lucide-react';
+import { Button } from '@/components/cathedra/Button';
+import { ReferenceModal } from '@/components/cathedra/ReferenceModal';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
-import confetti from 'canvas-confetti';
+import { updateUserStreak } from '@/lib/streak';
 
 /* ── Types ── */
 export type ProfileId = 'ferido_em_busca' | 'ansioso_buscador' | 'sedento_de_sentido' | 'firme_aprofundando' | 'ardente_missionario';
 export type PainId = 'ansiedade' | 'culpa' | 'vazio' | 'distancia' | 'solidao';
 export type DirectionId = 'silencio' | 'perdao' | 'proposito' | 'oracao' | 'servico';
+
+export interface SpiritualStep {
+  title: string;
+  action: string;
+  time: string;
+  icon: React.ElementType;
+}
+
+export interface QuoteReference {
+  text: string;
+  ref: string;
+  source: 'bible' | 'catechism';
+}
 
 export interface ProfileResult {
   title: string;
@@ -25,6 +43,12 @@ export interface ProfileResult {
   bgGradient: string;
   logosPrompt: string;
   greeting: string;
+  deepReflection: string;
+  questions: string[];
+  readingRecommendations: { title: string; ref: string }[];
+  steps: SpiritualStep[];
+  mainQuote?: QuoteReference;
+  catechismRef?: QuoteReference;
 }
 
 export const PROFILES: Record<ProfileId, ProfileResult> = {
@@ -36,10 +60,24 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     direction: { id: 'silencio', label: 'Silenciar e reorganizar o interior' },
     journeyName: 'Silêncio Interior',
     theme: 'Paz',
-    color: 'text-rose-500',
-    bgGradient: 'from-rose-500/5 via-card to-amber-500/5',
-    logosPrompt: 'Estou ansioso e ferido. Preciso encontrar paz interior. Me ajude com uma reflexão acolhedora.',
+    color: 'text-primary',
+    bgGradient: 'from-primary/5 via-background to-primary/5',
+    logosPrompt: 'Estou ansioso e ferido. Preciso encontrar paz interior.',
     greeting: 'Que a paz de Cristo alcance o seu coração hoje.',
+    deepReflection: 'A ferida é o lugar por onde a luz entra, como diz o poeta. Não fuja do seu cansaço; nele Deus quer sussurrar algo.',
+    questions: ['Onde você se sente mais cansado?', 'Como você costuma lidar com a dor?'],
+    readingRecommendations: [{ title: 'Salmos de Confiança', ref: 'Sl 23' }],
+    steps: [{ title: 'Lectio Divina', action: 'Ler o Salmo 23', time: '10 min', icon: BookOpen }],
+    mainQuote: {
+      text: "Vinde a mim todos vós que estais cansados e fatigados sob o peso dos vossos fardos, e eu vos darei descanso.",
+      ref: "Mt 11,28",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A esperança é a virtude teologal pela qual desejamos o Reino dos céus e a vida eterna como nossa felicidade.",
+      ref: "CIC 1817",
+      source: "catechism"
+    }
   },
   ansioso_buscador: {
     title: 'Ansioso Buscador',
@@ -49,57 +87,112 @@ export const PROFILES: Record<ProfileId, ProfileResult> = {
     direction: { id: 'perdao', label: 'Acolher o perdão e se libertar' },
     journeyName: 'Libertação Interior',
     theme: 'Perdão',
-    color: 'text-sky-500',
-    bgGradient: 'from-sky-500/5 via-card to-violet-500/5',
-    logosPrompt: 'Sinto culpa e peso interior. Preciso entender o perdão de Deus. Me ajude a me libertar.',
+    color: 'text-primary',
+    bgGradient: 'from-primary/5 via-background to-primary/5',
+    logosPrompt: 'Sinto culpa e peso interior. Preciso entender o perdão de Deus.',
     greeting: 'Deus já perdoou. Agora é a sua vez de se libertar.',
+    deepReflection: 'A culpa que não leva ao amor é apenas uma prisão. O perdão de Deus não é um prêmio, é um abraço.',
+    questions: ['O que te impede de perdoar a si mesmo?', 'Onde está sua maior necessidade de misericórdia?'],
+    readingRecommendations: [{ title: 'Parábola do Filho Pródigo', ref: 'Lc 15' }],
+    steps: [{ title: 'Exame de Consciência', action: 'Refletir sobre o dia', time: '5 min', icon: Clock }],
+    mainQuote: {
+      text: "Se reconhecemos nossos pecados, Deus que é fiel e justo, nos perdoará e nos purificará de toda injustiça.",
+      ref: "1Jo 1,9",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O perdão das ofensas é a exigência fundamental da caridade e da oração cristã.",
+      ref: "CIC 2840",
+      source: "catechism"
+    }
   },
   sedento_de_sentido: {
     title: 'Sedento de Sentido',
     emoji: '🔍',
-    message: 'Algo dentro de você sabe que a vida pede mais. Essa inquietação não é fraqueza — é vocação. O sentido que você procura tem nome.',
+    message: 'Algo dentro de você sabe que a vida pede mais. Essa inquietação não é fraqueza — é vocação.',
     pain: { id: 'vazio', label: 'Vazio existencial' },
     direction: { id: 'proposito', label: 'Descobrir o propósito verdadeiro' },
     journeyName: 'Propósito Interior',
     theme: 'Fé',
-    color: 'text-amber-500',
-    bgGradient: 'from-amber-500/5 via-card to-emerald-500/5',
-    logosPrompt: 'Sinto vazio existencial e busco propósito. Me ajude a encontrar sentido na fé.',
+    color: 'text-primary',
+    bgGradient: 'from-primary/5 via-background to-primary/5',
+    logosPrompt: 'Sinto vazio existencial e busco propósito.',
     greeting: 'Quem busca de coração, encontra. Continue caminhando.',
+    deepReflection: 'O vazio que você sente é o formato exato de Deus dentro de ti.',
+    questions: ['O que te faz vibrar de alegria?', 'Onde você gostaria de servir?'],
+    readingRecommendations: [{ title: 'Confissões', ref: 'Agostinho' }],
+    steps: [{ title: 'Meditação Guiada', action: 'Oração de Entrega', time: '15 min', icon: Anchor }],
+    mainQuote: {
+      text: "Fizeste-nos para ti, Senhor, e o nosso coração está inquieto enquanto não descansar em ti.",
+      ref: "Sto. Agostinho",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O desejo de Deus está inscrito no coração do homem, porque o homem foi criado por Deus e para Deus.",
+      ref: "CIC 27",
+      source: "catechism"
+    }
   },
   firme_aprofundando: {
     title: 'Firme e Aprofundando',
     emoji: '📖',
-    message: 'Você já caminha com firmeza, mas sente o chamado para ir mais fundo. A santidade não é destino — é caminho diário. Continue.',
+    message: 'Você já caminha com firmeza, mas sente o chamado para ir mais fundo. A santidade não é destino — é caminho diário.',
     pain: { id: 'distancia', label: 'Desejo de mais profundidade' },
     direction: { id: 'oracao', label: 'Mergulhar na oração contemplativa' },
     journeyName: 'Formação Teológica',
     theme: 'Oração',
     color: 'text-primary',
-    bgGradient: 'from-primary/5 via-card to-secondary/5',
-    logosPrompt: 'Quero aprofundar minha fé e vida de oração. Me guie na contemplação e no estudo teológico.',
+    bgGradient: 'from-primary/5 via-background to-primary/5',
+    logosPrompt: 'Quero aprofundar minha fé e vida de oração.',
     greeting: 'Persevere na santidade. Cada dia é um passo.',
+    deepReflection: 'Deus quer levar-te a águas mais profundas.',
+    questions: ['Qual virtude você quer cultivar?', 'Como está sua intimidade com Jesus?'],
+    readingRecommendations: [{ title: 'Imitação de Cristo', ref: 'Kempis' }],
+    steps: [{ title: 'Adoração Eucarística', action: 'Visita ao Santíssimo', time: '30 min', icon: Sun }],
+    mainQuote: {
+      text: "Avança para águas mais profundas e lança as redes para a pesca.",
+      ref: "Lc 5,4",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "A oração é a elevação da alma a Deus ou o pedido a Deus de bens convenientes.",
+      ref: "CIC 2559",
+      source: "catechism"
+    }
   },
   ardente_missionario: {
     title: 'Ardente Missionário',
     emoji: '🔥',
-    message: 'O fogo que arde em você não é acaso — é o Espírito Santo. Você foi chamado para incendiar o mundo com a verdade do Evangelho.',
+    message: 'O fogo que arde em você não é acaso — é o Espírito Santo.',
     pain: { id: 'solidao', label: 'Solidão na missão' },
     direction: { id: 'servico', label: 'Servir com raízes profundas' },
     journeyName: 'Vida Mística',
     theme: 'Propósito',
-    color: 'text-red-500',
-    bgGradient: 'from-red-500/5 via-card to-orange-500/5',
-    logosPrompt: 'Sou missionário e quero servir melhor. Me ajude a aprofundar a missão com raízes espirituais.',
+    color: 'text-primary',
+    bgGradient: 'from-primary/5 via-background to-primary/5',
+    logosPrompt: 'Sou missionário e quero servir melhor.',
     greeting: 'O Espírito arde em você. Vá e incendeie o mundo.',
+    deepReflection: 'Não podes dar o que não tens. Antes de servir, adora.',
+    questions: ['Quem precisa do seu testemunho hoje?', 'Onde está sua maior dificuldade no serviço?'],
+    readingRecommendations: [{ title: 'Atos dos Apóstolos', ref: 'At 2' }],
+    steps: [{ title: 'Serviço Fraterno', action: 'Praticar caridade concreta', time: '60 min', icon: Users }],
+    mainQuote: {
+      text: "Ide por todo o mundo e pregai o Evangelho a toda criatura.",
+      ref: "Mc 16,15",
+      source: "bible"
+    },
+    catechismRef: {
+      text: "O Espírito Santo é o mestre interior da oração cristã. Ele é o artífice da tradição viva da oração.",
+      ref: "CIC 2672",
+      source: "catechism"
+    }
   },
 };
 
-/* ── Questions (7 perguntas) ── */
+/* ── Questions ── */
 interface QuizOption {
   label: string;
   value: string;
-  icon: React.ReactNode;
   weight: Record<ProfileId, number>;
 }
 
@@ -113,112 +206,46 @@ interface QuizQuestion {
 const QUESTIONS: QuizQuestion[] = [
   {
     id: 'estado',
-    intro: 'Respire fundo.\nEsta primeira pergunta é sobre onde você está agora.',
-    question: 'Como está o seu interior neste momento?',
+    intro: 'Respire fundo.\nOnde o seu interior se encontra agora?',
+    question: 'Como você descreveria seu estado interior?',
     options: [
-      { label: 'Pesado, cansado por dentro', value: 'pesado', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Inquieto, procurando algo', value: 'inquieto', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Estável, mas querendo mais', value: 'estavel', icon: <Anchor className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Aceso, pronto para agir', value: 'aceso', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'Um peso silencioso, um cansaço da alma', value: 'pesado', weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Uma inquietação que busca algo maior', value: 'inquieto', weight: { ferido_em_busca: 1, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Uma paz estável, mas com sede de profundidade', value: 'estavel', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
+      { label: 'Um ardor pronto para o serviço e a missão', value: 'aceso', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
   {
     id: 'dor',
-    intro: 'Não tenha medo de olhar para dentro.\nDeus já conhece essa dor — e quer curá-la.',
-    question: 'O que mais pesa no seu coração?',
+    intro: 'Deus conhece cada dobra do seu coração.\nNão tenha medo de olhar para o que dói.',
+    question: 'O que mais pesa em sua caminhada hoje?',
     options: [
-      { label: 'Ansiedade ou medo do futuro', value: 'ansiedade', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Culpa, remorso ou mágoas', value: 'culpa', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Vazio, falta de propósito', value: 'vazio', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Desejo de fazer mais por Deus', value: 'chamado', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 4 } },
-    ],
-  },
-  {
-    id: 'conhecimento',
-    intro: 'A fé e a razão caminham juntas.\nConhecer a verdade nos liberta.',
-    question: 'Como você avalia seu conhecimento sobre a Fé?',
-    options: [
-      { label: 'Estou começando agora', value: 'iniciante', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Conheço o básico, mas quero mais', value: 'medio', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Tenho uma boa base doutrinária', value: 'avancado', icon: <Shield className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Estudo profundamente há anos', value: 'mestre', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
+      { label: 'O medo do amanhã e a ansiedade constante', value: 'ansiedade', weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'O peso da culpa ou de feridas não curadas', value: 'culpa', weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'A sensação de que falta um sentido real', value: 'vazio', weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'O desejo ardente de se entregar mais a Deus', value: 'chamado', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 2, ardente_missionario: 4 } },
     ],
   },
   {
     id: 'oracao',
-    intro: 'A oração é o termômetro da alma.\nEla revela onde você está — sem julgamento.',
-    question: 'Qual a sua relação com a oração?',
+    intro: 'A oração é o diálogo silencioso com o Criador.\nComo tem sido esse encontro?',
+    question: 'Qual a sua relação atual com a oração?',
     options: [
-      { label: 'Quase não rezo', value: 'raro', icon: <Sun className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 1, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Rezo nos momentos difíceis', value: 'crise', icon: <Shield className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Tenho tentado criar uma rotina', value: 'rotina', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
-      { label: 'Rezo diariamente com profundidade', value: 'profunda', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
-    ],
-  },
-  {
-    id: 'tempo',
-    intro: 'Deus habita no agora.\nO tempo que damos a Ele é sagrado.',
-    question: 'Quanto tempo você dedica a Deus por dia?',
-    options: [
-      { label: 'Menos de 15 minutos', value: 'pouco', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Entre 15 e 30 minutos', value: 'medio', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 2, ardente_missionario: 0 } },
-      { label: 'Mais de 30 minutos', value: 'muito', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 3, ardente_missionario: 2 } },
-      { label: 'Vivo em constante oração', value: 'contemplativo', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
-    ],
-  },
-  {
-    id: 'sacramento',
-    intro: 'Os sacramentos são o toque de Deus\nna concretude da sua vida.',
-    question: 'Como você vive os Sacramentos?',
-    options: [
-      { label: 'Fui batizado mas não pratico', value: 'batizado', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Vou à Missa quando posso', value: 'eventual', icon: <Church className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 3, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Missa semanal e confissão regular', value: 'regular', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Vida sacramental intensa e diária', value: 'intensa', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
-    ],
-  },
-  {
-    id: 'obstaculo',
-    intro: 'Identificar o obstáculo\né o primeiro passo para a superação.',
-    question: 'O que mais te impede de crescer hoje?',
-    options: [
-      { label: 'Cansaço ou esgotamento mental', value: 'cansaco', icon: <Wind className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Falta de tempo e correria', value: 'tempo', icon: <Clock className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 4, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Falta de foco ou preguiça', value: 'foco', icon: <Brain className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
-      { label: 'Sentir-se sozinho na caminhada', value: 'solidao', icon: <Users className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 3 } },
-    ],
-  },
-  {
-    id: 'comunidade',
-    intro: 'Ninguém caminha sozinho.\nA fé se fortalece na comunhão.',
-    question: 'Como é a sua relação com a comunidade?',
-    options: [
-      { label: 'Não participo de nenhum grupo', value: 'sozinho', icon: <Sun className="w-5 h-5" />, weight: { ferido_em_busca: 3, ansioso_buscador: 2, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Gostaria, mas não sei como', value: 'desejo', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 2, sedento_de_sentido: 3, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Participo de um grupo ou pastoral', value: 'ativo', icon: <Users className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 3, ardente_missionario: 1 } },
-      { label: 'Lidero ou sirvo ativamente', value: 'lider', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 3 } },
+      { label: 'Um deserto onde raramente consigo entrar', value: 'raro', weight: { ferido_em_busca: 3, ansioso_buscador: 1, sedento_de_sentido: 2, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Um refúgio buscado apenas na necessidade', value: 'crise', weight: { ferido_em_busca: 1, ansioso_buscador: 3, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Uma disciplina que tento cultivar diariamente', value: 'rotina', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 2, firme_aprofundando: 3, ardente_missionario: 0 } },
+      { label: 'O centro da minha vida, um estado de presença', value: 'profunda', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 3 } },
     ],
   },
   {
     id: 'desejo',
-    intro: 'O desejo mais profundo do coração\nrevela a direção que Deus traçou para você.',
-    question: 'O que o seu coração mais pede agora?',
+    intro: 'O que o seu coração pede no silêncio?\nAli está a voz de Deus sussurrando a direção.',
+    question: 'Qual o maior anseio da sua alma agora?',
     options: [
-      { label: 'Paz, silêncio interior', value: 'paz', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Cura, libertação de algo', value: 'cura', icon: <Heart className="w-5 h-5" />, weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Sentido, propósito claro', value: 'sentido', icon: <Eye className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Servir, fazer diferença', value: 'servir', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
-    ],
-  },
-  {
-    id: 'passo',
-    intro: 'Esta é a última pergunta.\nResponda com sinceridade — não para acertar,\nmas para se encontrar.',
-    question: 'Qual seria o próximo passo ideal para você?',
-    options: [
-      { label: 'Parar, respirar e acolher a dor', value: 'parar', icon: <Mountain className="w-5 h-5" />, weight: { ferido_em_busca: 4, ansioso_buscador: 2, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
-      { label: 'Entender melhor a fé católica', value: 'entender', icon: <BookOpen className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
-      { label: 'Aprofundar na vida espiritual', value: 'aprofundar', icon: <Sparkles className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 1, firme_aprofundando: 4, ardente_missionario: 1 } },
-      { label: 'Evangelizar e servir na missão', value: 'missao', icon: <Flame className="w-5 h-5" />, weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 4 } },
+      { label: 'Encontrar paz e silêncio interior', value: 'paz', weight: { ferido_em_busca: 4, ansioso_buscador: 1, sedento_de_sentido: 1, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Sentir o perdão e a libertação de pesos', value: 'cura', weight: { ferido_em_busca: 1, ansioso_buscador: 4, sedento_de_sentido: 0, firme_aprofundando: 0, ardente_missionario: 0 } },
+      { label: 'Descobrir meu propósito e missão de vida', value: 'sentido', weight: { ferido_em_busca: 0, ansioso_buscador: 1, sedento_de_sentido: 4, firme_aprofundando: 1, ardente_missionario: 0 } },
+      { label: 'Transbordar o amor de Deus em serviço', value: 'servir', weight: { ferido_em_busca: 0, ansioso_buscador: 0, sedento_de_sentido: 0, firme_aprofundando: 1, ardente_missionario: 4 } },
     ],
   },
 ];
@@ -237,7 +264,24 @@ function computeProfile(answers: Record<string, string>): ProfileId {
   return Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0] as ProfileId;
 }
 
-/* ── Component ── */
+const QuietQuote: React.FC<{ quote: QuoteReference; className?: string; onOpen?: (quote: QuoteReference) => void }> = ({ quote, className, onOpen }) => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className={`space-y-2 text-center max-w-sm mx-auto ${className}`}
+  >
+    <p 
+      className="text-sm font-serif italic text-primary/40 leading-relaxed group cursor-pointer hover:text-primary/60 transition-colors"
+      onClick={() => onOpen?.(quote)}
+    >
+      "{quote.text}"
+      <span className="ml-2 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-tighter opacity-40 group-hover:opacity-100 transition-opacity">
+        <BookOpen className="w-2 h-2" /> {quote.ref}
+      </span>
+    </p>
+  </motion.div>
+);
+
 const SpiritualQuiz: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -248,6 +292,120 @@ const SpiritualQuiz: React.FC = () => {
   const [done, setDone] = useState(false);
   const [existing, setExisting] = useState<ProfileId | null>(null);
   const [existingData, setExistingData] = useState<any>(null);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [deepeningAnswers, setDeepeningAnswers] = useState<Record<string, string>>({});
+  const [isSavingReflection, setIsSavingReflection] = useState(false);
+  const [isPausing, setIsPausing] = useState(false);
+  const [journalText, setJournalText] = useState("");
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'bible' | 'catechism'>('bible');
+  const [modalParams, setModalParams] = useState<any>({});
+
+  const handleOpenReference = (quote: QuoteReference) => {
+    if (quote.source === 'catechism') {
+      const paragraph = parseInt(quote.ref.replace(/\D/g, ''));
+      setModalType('catechism');
+      setModalParams({ paragraph });
+    } else {
+      const match = quote.ref.match(/([a-zA-Z\.\s]+)\s+(\d+)(?:,(\d+))?/);
+      if (match) {
+        setModalType('bible');
+        setModalParams({ 
+          abbr: match[1].trim(), 
+          chapter: parseInt(match[2]),
+          verse: match[3] ? parseInt(match[3]) : undefined
+        });
+      }
+    }
+    setIsModalOpen(true);
+  };
+
+  useEffect(() => {
+    const activeId = existing || result;
+    if (!user || !activeId) return;
+    
+    // Fetch trail progress
+    supabase
+      .from('trail_progress')
+      .select('step_index')
+      .eq('user_id', user.id)
+      .eq('trail_id', activeId)
+      .then(({ data }) => {
+        if (data) setCompletedSteps(data.map(d => d.step_index));
+      });
+
+    // Fetch deepening answers
+    supabase
+      .from('user_notes')
+      .select('content_id, note_text')
+      .eq('user_id', user.id)
+      .eq('content_type', 'quiz_deepening')
+      .then(({ data }) => {
+        if (data) {
+          const map: Record<string, string> = {};
+          data.forEach(n => { map[n.content_id] = n.note_text; });
+          setDeepeningAnswers(map);
+        }
+      });
+  }, [user, existing, result]);
+
+  const saveDeepeningAnswer = async (question: string, answer: string) => {
+    if (!user) return;
+    setIsSavingReflection(true);
+    try {
+      await (supabase as any)
+        .from('user_notes')
+        .upsert({
+          user_id: user.id,
+          content_type: 'quiz_deepening',
+          content_id: question,
+          note_text: answer,
+        }, { onConflict: 'user_id,content_type,content_id' });
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+    } finally {
+      setIsSavingReflection(false);
+    }
+  };
+
+  const toggleStep = async (index: number) => {
+    const activeId = existing || result;
+    if (!user || !activeId) return;
+    
+    const isCompleted = completedSteps.includes(index);
+    if (isCompleted) {
+      await supabase
+        .from('trail_progress')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('trail_id', activeId)
+        .eq('step_index', index);
+      setCompletedSteps(prev => prev.filter(i => i !== index));
+    } else {
+      await (supabase as any)
+        .from('trail_progress')
+        .insert({
+          user_id: user.id,
+          trail_id: activeId,
+          step_index: index
+        });
+      setCompletedSteps(prev => [...prev, index]);
+      
+      // Update streak and last_action_at via helper
+      await updateUserStreak(user.id);
+      
+      // Also add XP
+      await (supabase as any)
+        .from('profiles')
+        .update({
+          xp: ((user as any).xp || 0) + 10
+        })
+        .eq('id', user.id);
+    }
+  };
+
+  const [hasPartialProgress, setHasPartialProgress] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -256,40 +414,79 @@ const SpiritualQuiz: React.FC = () => {
       .select('diagnosis_result')
       .eq('user_id', user.id)
       .maybeSingle()
-      .then(({ data }: any) => {
+      .then(({ data, error }: any) => {
+        if (error) return;
         const res = data?.diagnosis_result;
-        const sp = res?.spiritual_profile;
-        if (sp && PROFILES[sp as ProfileId]) {
+        if (!res) return;
+
+        // If completed
+        if (res.spiritual_profile && PROFILES[res.spiritual_profile as ProfileId]) {
           setDone(true);
-          setExisting(sp);
+          setExisting(res.spiritual_profile as ProfileId);
           setExistingData(res);
+        } else if (res.answers && res.current_step !== undefined) {
+          // If in progress
+          setHasPartialProgress(true);
+          setAnswers(res.answers);
+          setStep(res.current_step);
         }
       });
   }, [user]);
 
+  const savePartialProgress = async (currentStep: number, currentAnswers: Record<string, string>) => {
+    if (!user) return;
+    try {
+      await (supabase as any)
+        .from('user_sensitive_data')
+        .upsert({
+          user_id: user.id,
+          diagnosis_result: {
+            answers: currentAnswers,
+            current_step: currentStep,
+          },
+        }, { onConflict: 'user_id' });
+    } catch (err) {
+      console.error('Failed to save partial progress:', err);
+    }
+  };
+
   const handleAnswer = useCallback((value: string) => {
     const q = QUESTIONS[step];
-    const next = { ...answers, [q.id]: value };
-    setAnswers(next);
+    const nextAnswers = { ...answers, [q.id]: value };
+    setAnswers(nextAnswers);
+    setIsPausing(true);
+  }, [step, answers]);
+
+  const continueQuiz = async () => {
+    const q = QUESTIONS[step];
+    const currentAnswer = answers[q.id];
+    
+    // Save journal if exists
+    if (journalText.trim() && user) {
+      await saveDeepeningAnswer(`quiz_step_${step}_${q.id}`, journalText);
+      setJournalText("");
+    }
+
     if (step < QUESTIONS.length - 1) {
-      setTimeout(() => setStep(s => s + 1), 350);
+      const nextStep = step + 1;
+      setIsPausing(false);
+      setStep(nextStep);
+      savePartialProgress(nextStep, answers);
     } else {
-      const profileId = computeProfile(next);
+      const profileId = computeProfile(answers);
       setResult(profileId);
       setPhase('result');
-      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#8B5CF6', '#F43F5E'] });
-      saveResult(profileId, next);
+      setIsPausing(false);
+      saveResult(profileId, answers);
     }
-  }, [step, answers]);
+  };
 
   const saveResult = async (profileId: ProfileId, allAnswers: Record<string, string>) => {
     if (!user) return;
     try {
       const p = PROFILES[profileId];
-      
       const painQ = QUESTIONS.find(q => q.id === 'dor');
       const painOpt = painQ?.options.find(o => o.value === allAnswers['dor']);
-      
       const dirQ = QUESTIONS.find(q => q.id === 'desejo');
       const dirOpt = dirQ?.options.find(o => o.value === allAnswers['desejo']);
 
@@ -314,200 +511,529 @@ const SpiritualQuiz: React.FC = () => {
   const reset = () => { setPhase('intro'); setStep(0); setAnswers({}); setResult(null); setDone(false); setExisting(null); };
   const progress = ((step + 1) / QUESTIONS.length) * 100;
 
-  // ── Compact result (already done) ──
+  // ── Compact result ──
   if (done && existing && PROFILES[existing]) {
     const p = PROFILES[existing];
     const painLabel = existingData?.pain || p.pain.label;
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl border border-border bg-card p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
-          <button 
-            onClick={reset} 
-            className="text-[10px] text-primary hover:underline focus-visible:ring-2 focus-visible:ring-primary outline-none rounded px-1"
-            aria-label="Refazer teste de perfil espiritual"
-          >
-            Refazer
-          </button>
-        </div>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+        <div className="rounded-[2.5rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <div className="flex flex-col items-center justify-between gap-6">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Seu Perfil Espiritual</span>
+            <Button onClick={reset} variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-primary/20 hover:text-primary transition-colors">
+              Refazer Diagnóstico
+            </Button>
+          </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{p.emoji}</span>
-          <div className="flex-1 min-w-0">
-            <h3 className={`text-base font-bold ${p.color}`}>{p.title}</h3>
-            <p className="text-[11px] text-muted-foreground mt-0.5">💔 {painLabel} · 🔥 {dirLabel}</p>
+          <div className="space-y-8">
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5">
+              <Compass className="w-10 h-10 text-primary/40" />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-4xl md:text-5xl font-display text-primary tracking-tightest">{p.title}</h3>
+              <p className="text-xl md:text-2xl font-monastery text-primary/60 italic leading-relaxed max-w-xl mx-auto">
+                "{p.message}"
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sede da Alma</p>
+                <p className="text-base font-bold text-primary/70">{painLabel}</p>
+              </div>
+            </div>
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Flame className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Caminho de Luz</p>
+                <p className="text-base font-bold text-primary/70">{dirLabel}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-16 pt-12 border-t border-primary/5">
+            <div className="space-y-6 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão para o Caminho</p>
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5 space-y-8">
+                {p.deepReflection}
+                {p.mainQuote && <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="mt-6 border-t border-primary/5 pt-6" />}
+              </div>
+              {p.catechismRef && (
+                <div className="pt-4">
+                   <QuietQuote quote={p.catechismRef} onOpen={handleOpenReference} />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-10 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Questões de Profundidade</p>
+              <div className="space-y-10">
+                {p.questions.map((q, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <p className="text-sm font-bold text-primary/60 tracking-tight text-center px-4">{q}</p>
+                    <textarea
+                      value={deepeningAnswers[q] || ''}
+                      onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                      onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                      placeholder="Responda em silêncio..."
+                      className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none text-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-8 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Sua Trilha Contemplativa</p>
+              <div className="space-y-4">
+                {p.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleStep(idx)}
+                    className={`w-full flex items-center justify-between p-8 rounded-[2rem] border transition-all duration-700 ${
+                      completedSteps.includes(idx)
+                        ? 'bg-primary/5 border-primary/10 opacity-60'
+                        : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-700 ${
+                        completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground shadow-premium' : 'border-primary/5 text-primary/20'
+                      }`}>
+                        {completedSteps.includes(idx) ? <Sparkles className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[10px] text-primary/40 uppercase tracking-[0.2em]">{step.time}</p>
+                          <span className="w-1 h-1 rounded-full bg-primary/20" />
+                          <p className="text-xs text-primary/40 italic font-serif">{step.action}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/5'
+                    }`}>
+                      {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-12 border-t border-primary/5 flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all">
+              <Sparkles className="w-4 h-4" /> Iniciar Trilha
+            </Button>
+            <Button variant="outline" onClick={() => {
+               const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+               if (chatBtn) chatBtn.click();
+            }} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary hover:bg-primary/5 transition-all">
+              <Compass className="w-4 h-4" /> Consultar Logos
+            </Button>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button size="sm" className="flex-1 rounded-xl text-xs bg-primary text-primary-foreground" onClick={() => navigate(AppRoute.JORNADAS)}>
-            <Sparkles className="w-3 h-3 mr-1" /> {p.journeyName}
-          </Button>
-          <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => navigate(AppRoute.STUDY_MODE)}>
-            <Brain className="w-3 h-3 mr-1" /> Logos
-          </Button>
-        </div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </motion.div>
     );
   }
 
-  // ── Result ──
+  // ── Result phase ──
   if (phase === 'result' && result) {
     const p = PROFILES[result];
-    const painQ = QUESTIONS.find(q => q.id === 'dor');
-    const painOpt = painQ?.options.find(o => o.value === answers['dor']);
-    const painLabel = painOpt?.label || p.pain.label;
-
-    const dirQ = QUESTIONS.find(q => q.id === 'desejo');
-    const dirOpt = dirQ?.options.find(o => o.value === answers['desejo']);
-    const dirLabel = dirOpt?.label || p.direction.label;
-
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-3xl border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
-      >
-        <div className="text-center space-y-3">
-          <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">✨ Seu momento atual</p>
-          <h2 className={`text-2xl font-black ${p.color}`}>{p.title}</h2>
-          <p className="text-sm text-foreground/80 leading-relaxed max-w-sm mx-auto italic font-serif">"{p.message}"</p>
-        </div>
-
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
-            <p className="text-sm font-bold text-foreground">{painLabel}</p>
-          </div>
-          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
-            <p className="text-sm font-bold text-foreground">{dirLabel}</p>
-          </div>
-        </div>
-
-        <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-        <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
-          <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <Sparkles className="w-4 h-4 text-primary shrink-0" />
-              <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="space-y-10">
+        <div className="rounded-[2.5rem] border border-border/10 bg-card p-10 md:p-16 space-y-12 shadow-premium reading-sepia text-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          
+          <div className="space-y-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Diagnóstico de Alma</span>
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5">
+              <Compass className="w-10 h-10 text-primary/40" />
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-primary/[0.04] border border-primary/10">
-              <BookOpen className="w-4 h-4 text-primary shrink-0" />
-              <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-secondary/[0.06] border border-secondary/10">
-              <Brain className="w-4 h-4 text-secondary shrink-0" />
-              <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
+            <div className="space-y-3">
+              <h2 className="text-4xl md:text-5xl font-display text-primary tracking-tightest">{p.title}</h2>
+              <p className="text-xl md:text-2xl font-monastery text-primary/60 italic leading-relaxed max-w-xl mx-auto">
+                "{p.message}"
+              </p>
             </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-3">
-          <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground">
-            <Sparkles className="w-4 h-4" /> Começar agora
-          </Button>
-          <Button variant="outline" onClick={() => navigate(AppRoute.STUDY_MODE)} className="rounded-2xl h-11 gap-2 text-xs font-bold border-secondary/30 text-secondary hover:bg-secondary/5">
-            <Brain className="w-4 h-4" /> Refletir com Logos
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-xs text-muted-foreground">
-            Continuar navegando
-          </Button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Heart className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Sua Sede</p>
+                <p className="text-base font-bold text-primary/70">{p.pain.label}</p>
+              </div>
+            </div>
+            <div className="p-8 rounded-[2rem] bg-primary/[0.01] border border-primary/5 space-y-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center">
+                <Flame className="w-5 h-5 text-primary/20" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">Seu Norte</p>
+                <p className="text-base font-bold text-primary/70">{p.direction.label}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-16 pt-12 border-t border-primary/5">
+            <div className="space-y-6 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Reflexão Profunda</p>
+              <div className="text-lg md:text-xl font-serif italic text-primary/80 leading-relaxed bg-primary/[0.01] p-10 rounded-[2.5rem] border border-primary/5 space-y-8">
+                {p.deepReflection}
+                {p.mainQuote && <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="mt-6 border-t border-primary/5 pt-6" />}
+              </div>
+              {p.catechismRef && (
+                <div className="pt-4">
+                   <QuietQuote quote={p.catechismRef} onOpen={handleOpenReference} />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-10 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Questões para o Coração</p>
+              <div className="space-y-10">
+                {p.questions.map((q, idx) => (
+                  <div key={idx} className="space-y-4">
+                    <p className="text-sm font-bold text-primary/60 tracking-tight text-center px-4">{q}</p>
+                    <textarea
+                      value={deepeningAnswers[q] || ''}
+                      onChange={(e) => setDeepeningAnswers(prev => ({ ...prev, [q]: e.target.value }))}
+                      onBlur={(e) => saveDeepeningAnswer(q, e.target.value)}
+                      placeholder="Sua reflexão sincera..."
+                      className="w-full bg-primary/[0.01] border border-primary/5 rounded-[1.5rem] p-6 text-base font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[120px] resize-none text-center"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-8 max-w-xl mx-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Trilha de Purificação</p>
+              <div className="space-y-4">
+                {p.steps.map((step, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleStep(idx)}
+                    className={`w-full flex items-center justify-between p-8 rounded-[2rem] border transition-all duration-700 ${
+                      completedSteps.includes(idx)
+                        ? 'bg-primary/5 border-primary/10 opacity-60'
+                        : 'bg-primary/[0.01] border-primary/5 hover:border-primary/20 hover:bg-primary/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center border transition-all duration-700 ${
+                        completedSteps.includes(idx) ? 'bg-primary border-primary text-primary-foreground shadow-premium' : 'border-primary/5 text-primary/20'
+                      }`}>
+                        {completedSteps.includes(idx) ? <Sparkles className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <div className="text-left">
+                        <p className={`text-lg font-bold ${completedSteps.includes(idx) ? 'line-through text-primary/40' : 'text-primary'}`}>{step.title}</p>
+                        <div className="flex items-center gap-3">
+                          <p className="text-[10px] text-primary/40 uppercase tracking-[0.2em]">{step.time}</p>
+                          <span className="w-1 h-1 rounded-full bg-primary/20" />
+                          <p className="text-xs text-primary/40 italic font-serif">{step.action}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                      completedSteps.includes(idx) ? 'bg-primary border-primary' : 'border-primary/5'
+                    }`}>
+                      {completedSteps.includes(idx) && <Sparkles className="w-4 h-4 text-primary-foreground" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-12 border-t border-primary/5 space-y-10">
+            <div className="space-y-6">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Seu Próximo Passo</span>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all">
+                  <Sparkles className="w-4 h-4" /> Iniciar Jornada
+                </Button>
+                <Button variant="outline" onClick={() => {
+                   const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
+                   if (chatBtn) chatBtn.click();
+                }} className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary hover:bg-primary/5 transition-all">
+                  <Compass className="w-4 h-4" /> Perguntar ao Logos
+                </Button>
+              </div>
+            </div>
+            <Button variant="ghost" size="sm" onClick={() => { setDone(true); setExisting(result); }} className="text-[10px] font-black uppercase tracking-widest text-primary/20 hover:text-primary transition-colors">
+              Concluir Diagnóstico
+            </Button>
+          </div>
         </div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
       </motion.div>
     );
   }
 
-  // ── Intro ──
+  // ── Intro phase ──
   if (phase === 'intro') {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-sm text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-[70vh] flex flex-col items-center justify-center text-center space-y-16 px-6"
       >
-        <div className="space-y-3">
-          <span className="text-4xl block">🧠</span>
-          <h2 className="text-xl font-black text-foreground leading-tight">Descubra seu momento espiritual</h2>
-          <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
-            Responda {QUESTIONS.length} perguntas rápidas e receba um caminho personalizado
-          </p>
+        <div className="space-y-8 max-w-2xl">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5 shadow-[0_0_40px_rgba(0,0,0,0.02)]"
+          >
+            <Scroll className="w-10 h-10 text-primary/20" />
+          </motion.div>
+          
+          <div className="space-y-4">
+            <motion.span 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 1 }}
+              className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
+            >
+              Conhece-te a ti mesmo
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-5xl md:text-7xl font-display text-primary tracking-tightest"
+            >
+              Interioridade
+            </motion.h2>
+          </div>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8, duration: 1.5 }}
+            className="text-xl md:text-2xl font-monastery text-primary/40 italic leading-relaxed max-w-xl mx-auto"
+          >
+            "Não queira ir fora de ti, entra em ti mesmo; no homem interior habita a verdade." <br />
+            <span className="text-[10px] font-black uppercase tracking-widest mt-4 block">— Santo Agostinho</span>
+          </motion.p>
         </div>
-        <div className="flex items-center justify-center gap-1 text-muted-foreground">
-          <Clock className="w-3.5 h-3.5" />
-          <span className="text-[11px] font-medium">Leva menos de 2 minutos</span>
-        </div>
-        <Button
-          onClick={() => setPhase('quiz')}
-          className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90"
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 1 }}
+          className="flex flex-col items-center gap-10 w-full max-w-md"
         >
-          Começar <ArrowRight className="w-4 h-4" />
-        </Button>
+          <div className="flex flex-col sm:flex-row gap-6 w-full">
+            <Button
+              onClick={() => { setPhase('quiz'); setStep(0); setAnswers({}); setHasPartialProgress(false); }}
+              variant="outline"
+              className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] border-primary/10 text-primary/60 hover:bg-primary/5 hover:text-primary transition-all duration-700"
+            >
+              {hasPartialProgress ? "Reiniciar" : "Iniciar Silêncio"}
+            </Button>
+            {hasPartialProgress && (
+              <Button
+                onClick={() => setPhase('quiz')}
+                className="flex-1 rounded-full h-16 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all duration-700 group"
+              >
+                Retomar <Sparkles className="w-4 h-4 animate-pulse group-hover:rotate-12 transition-transform" />
+              </Button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4 text-primary/10">
+            <div className="w-8 h-px bg-current" />
+            <span className="text-[9px] font-black uppercase tracking-[0.5em]">Um portal para sua alma</span>
+            <div className="w-8 h-px bg-current" />
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
 
-  // ── Quiz ──
+  // ── Quiz phase ──
   const q = QUESTIONS[step];
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
-    >
-      <div className="space-y-1">
-        <div className="flex items-center justify-between">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
-          <p className="text-[10px] font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
-        </div>
-        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-          <motion.div className="h-full bg-secondary rounded-full" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
-        </div>
-      </div>
-
-      <AnimatePresence mode="wait">
+  if (isPausing) {
+    const currentProfileId = computeProfile(answers);
+    const p = PROFILES[currentProfileId];
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
         <motion.div
-          key={q.id}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.3 }}
-          className="space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="max-w-xl mx-auto w-full space-y-16 text-center"
         >
-          <p className="text-xs text-muted-foreground text-center italic leading-relaxed whitespace-pre-line font-serif">{q.intro}</p>
-          <h3 className="text-base font-bold text-foreground text-center leading-snug">{q.question}</h3>
-          <div className="space-y-2.5" role="radiogroup" aria-label={q.question}>
-            {q.options.map((opt) => (
-              <motion.button
-                key={opt.value}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAnswer(opt.value)}
-                role="radio"
-                aria-checked={answers[q.id] === opt.value}
-                className="w-full flex items-center gap-3 p-3.5 rounded-2xl border border-border bg-card hover:border-secondary/40 hover:bg-secondary/5 transition-all text-left group focus-visible:ring-2 focus-visible:ring-secondary outline-none"
-              >
-                <span className="text-secondary/60 group-hover:text-secondary transition-colors shrink-0" aria-hidden="true">{opt.icon}</span>
-                <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">{opt.label}</span>
-              </motion.button>
-            ))}
+          <div className="space-y-8">
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-32 h-32 rounded-full border-2 border-primary/20 mx-auto flex items-center justify-center"
+            >
+              <Wind className="w-10 h-10 text-primary/20" />
+            </motion.div>
+            <div className="space-y-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/30">Pausa Contemplativa</span>
+              <p className="text-xl font-monastery text-primary/40 italic">Respire fundo...</p>
+            </div>
           </div>
 
-        </motion.div>
-      </AnimatePresence>
+          <div className="space-y-6">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Diário Contemplativo</p>
+            <textarea
+              value={journalText}
+              onChange={(e) => setJournalText(e.target.value)}
+              placeholder="O que esta pergunta despertou em você? Registre sua reflexão..."
+              className="w-full bg-primary/[0.01] border border-primary/5 rounded-premium p-8 text-lg font-serif italic focus:outline-none focus:border-primary/20 transition-all min-h-[180px] resize-none text-center shadow-inner"
+            />
+            <div className="flex justify-center">
+              <Button 
+                onClick={continueQuiz}
+                className="rounded-full h-16 px-12 gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all"
+              >
+                Continuar Jornada <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
 
-      {step > 0 && (
-        <button onClick={() => setStep(s => s - 1)} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-3 h-3" /> Voltar
-        </button>
-      )}
-    </motion.div>
+          {p && p.mainQuote && (
+             <QuietQuote quote={p.mainQuote} onOpen={handleOpenReference} className="opacity-40" />
+          )}
+        </motion.div>
+        <ReferenceModal 
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          initialType={modalType}
+          initialParams={modalParams}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="max-w-4xl mx-auto w-full space-y-24"
+      >
+        <div className="space-y-8 max-w-sm mx-auto">
+          <div className="flex items-center justify-between text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em]">Exame Interior</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">{step + 1} / {QUESTIONS.length}</span>
+          </div>
+          <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-secondary/30" 
+              animate={{ width: `${progress}%` }} 
+              transition={{ type: 'spring', damping: 30, stiffness: 100 }} 
+            />
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={q.id}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-20"
+          >
+            <div className="space-y-10 text-center">
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 1 }}
+                className="text-lg md:text-xl font-monastery text-primary/30 italic leading-relaxed max-w-lg mx-auto whitespace-pre-line"
+              >
+                {q.intro}
+              </motion.p>
+              <motion.h3 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 1 }}
+                className="text-2xl xs:text-3xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight px-2"
+              >
+                {q.question}
+              </motion.h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+              {q.options.map((opt, idx) => (
+                <motion.button
+                  key={idx}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 + (idx * 0.1), duration: 0.8 }}
+                  onClick={() => handleAnswer(opt.value)}
+                  className={`w-full p-6 sm:p-8 text-center rounded-premium border transition-all duration-700 relative overflow-hidden group ${
+                    answers[q.id] === opt.value
+                      ? 'bg-primary text-primary-foreground border-primary shadow-premium'
+                      : 'bg-primary/[0.01] border-primary/5 text-primary/50 hover:bg-primary/[0.03] hover:border-primary/10 hover:text-primary hover:scale-[1.01]'
+                  }`}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/5 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <span className="relative z-10 text-sm md:text-base font-bold uppercase tracking-[0.2em]">{opt.label}</span>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="pt-12 flex justify-center">
+          <button 
+            onClick={() => step > 0 && setStep(step - 1)}
+            disabled={step === 0}
+            className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors disabled:opacity-0"
+          >
+            <ArrowLeft className="w-4 h-4" /> Anterior
+          </button>
+        </div>
+      </motion.div>
+      <ReferenceModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialType={modalType}
+        initialParams={modalParams}
+      />
+    </div>
   );
 };
 

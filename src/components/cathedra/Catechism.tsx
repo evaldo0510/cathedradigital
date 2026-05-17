@@ -1,7 +1,10 @@
+import { Button } from '@/components/cathedra/Button';
+import { Card } from '@/components/cathedra/Card';
+import { cn } from '@/lib/utils';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Menu, History, Bookmark } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
@@ -14,7 +17,6 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -25,6 +27,11 @@ import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
+import LibrarySidebar from './LibrarySidebar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { useReadingMode } from '@/hooks/useReadingMode';
+import { useTrackReadingTime } from '@/hooks/useTrackReadingTime';
+import { toast } from 'sonner';
 
 
 
@@ -61,17 +68,17 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     }
 
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-2xl p-4 text-destructive font-serif text-sm py-4 space-y-2">
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium-sm p-4 text-destructive font-serif text-sm py-4 space-y-2">
         <div className="font-bold flex items-center gap-2">
-           <Icons.Cross className="w-4 h-4" />
+           <Icons.Cross className="w-3.5 h-3.5" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
-        <button 
+        <Button 
           onClick={() => window.location.reload()}
-          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
+          className="px-3 py-1.5 bg-destructive/10 text-destructive rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-destructive/20 transition-all"
         >
           Tentar novamente
-        </button>
+        </Button>
       </div>
     );
   }
@@ -79,9 +86,9 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
 
   if (data?.status === 'error_402') {
     return (
-      <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-2xl p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
+      <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-premium-sm p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
         <div className="font-bold flex items-center gap-2">
-           <Icons.AlertTriangle className="w-4 h-4" />
+           <Icons.AlertTriangle className="w-3.5 h-3.5" />
            Geração pausada: Créditos de IA esgotados.
         </div>
         <p className="text-xs opacity-80 leading-relaxed">
@@ -94,7 +101,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
            </div>
         ) : (
           <div className="pt-2 border-t border-amber-500/10 flex flex-col gap-2">
-            <p className="text-[10px] uppercase font-black tracking-widest opacity-60">Alternativa:</p>
+            <p className="text-premium-tiny uppercase font-black tracking-widest opacity-60">Alternativa:</p>
             <a 
               href={`https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html`} 
               target="_blank" 
@@ -115,17 +122,17 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
       <div className="reader-text py-4 space-y-3">
         <p className="text-sm text-muted-foreground italic">Conteúdo do §{paragraph} ainda não disponível no nosso banco de dados.</p>
         <div className="flex flex-wrap gap-2">
-          <button
+          <Button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
             <Icons.Loader className="w-3 h-3" /> Tentar carregar
-          </button>
+          </Button>
           <a 
             href="https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
+            className="px-4 py-2 bg-card border border-border hover:bg-primary/5 text-muted-foreground hover:text-primary rounded-full text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2"
           >
             <Icons.ExternalLink className="w-3 h-3" /> Ver no Vaticano
           </a>
@@ -177,7 +184,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   );
 };
 
-const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void; bookmarks: string[]; toggleBookmark: (p: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, bookmarks, toggleBookmark }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -193,19 +200,34 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-full hidden md:block" />}
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
-          <div className="flex items-center gap-1">
-            <button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-xl hover:bg-primary/10 transition-all active:scale-95">
-              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-32 transition-all duration-1000 pb-16 border-b border-primary/5 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-60 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-10 top-0 bottom-0 w-1 bg-secondary/40 rounded-full hidden xl:block" />}
+      <div className="flex items-center gap-6 mb-10">
+        <div className="flex items-center gap-4">
+          <span className="text-4xl font-serif font-bold text-primary/80 tracking-tightest">§{p}</span>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => toggleBookmark(p)}
+              className={cn(
+                "p-2.5 rounded-full transition-all hover:bg-primary/5",
+                bookmarks.includes(`p_${p}`) ? "text-primary shadow-soft" : "text-primary/10"
+              )}
+              title="Marcar Parágrafo"
+            >
+              <Bookmark className={cn("w-4 h-4", bookmarks.includes(`p_${p}`) && "fill-current")} />
             </button>
-            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} 
+              className="rounded-full hover:bg-primary/5 transition-all active:scale-95"
+            >
+              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-primary/10'}`} />
+            </Button>
+            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2.5 h-auto w-auto border-0 hover:bg-primary/5 text-primary/20 hover:text-primary transition-all" />
           </div>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/10 via-primary/[0.02] to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
 
@@ -228,10 +250,39 @@ const Catechism: React.FC = () => {
   const [currentParagraph, setCurrentParagraph] = useState(1);
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
-  const [showCrossRefs, setShowCrossRefs] = useState(true);
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
+  const { prefs } = useReadingMode();
+  useTrackReadingTime(viewMode === "reading");
+  const [bookmarks, setBookmarks] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_catechism_bookmarks');
+      return stored ? JSON.parse(stored) : [];
+    } catch { return []; }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cathedra_catechism_bookmarks', JSON.stringify(bookmarks));
+    } catch {}
+  }, [bookmarks]);
+
+  const toggleBookmark = (p: number) => {
+    const key = `p_${p}`;
+    setBookmarks(prev => prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]);
+    toast.success(bookmarks.includes(key) ? 'Marcador removido' : 'Marcador adicionado');
+  };
+
+  const resumeLastRead = () => {
+    try {
+      const stored = localStorage.getItem('cathedra_last_catechism_para');
+      if (stored) {
+        const num = parseInt(stored);
+        if (!isNaN(num)) navigateToParagraph(num);
+      }
+    } catch {}
+  };
 
   const crossRefs = getCatechismCrossRefs(currentParagraph);
   const docsRefs = getCatechismDocs(currentParagraph);
@@ -367,120 +418,205 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
+    
+    const sidebarItems = selectedPart.sections.map(sec => ({
+      id: sec.id,
+      num: sec.paragraphs[0],
+      label: sec.title,
+      isActive: sec.id === selectedSection.id,
+      onClick: () => {
+        setSelectedSection(sec);
+        setCurrentParagraph(sec.paragraphs[0]);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      status: (sec.paragraphs[1] <= Math.max(...Array.from(paragraphsRead), 0) ? 'read' : 'unread') as 'read' | 'unread' | 'reading'
+    }));
+
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
-        <BackToThemeBanner />
-        {fromDashboard && (
-          <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </button>
-        )}
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={goBack} 
-            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
-            aria-label="Voltar para o Sumário"
-          >
-            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
-            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
-          </button>
+      <div className="flex w-full min-h-screen">
+        {/* Library Sidebar - Desktop Only */}
+        <LibrarySidebar 
+          title={selectedPart.title}
+          subtitle={selectedPart.part}
+          items={sidebarItems}
+          className="fixed left-0 top-0 w-80 h-screen hidden xl:flex"
+        />
 
-          <button 
-            onClick={goToExplorer} 
-            className="px-3 py-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
-            title="Explorar por Temas"
-          >
-            <Icons.Search className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
-          </button>
+        <div className="flex-1 xl:ml-80">
+          <div className="max-w-4xl mx-auto px-6 py-20 space-y-16">
+            <BackToThemeBanner />
+            
+            {fromDashboard && (
+              <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary/40 hover:text-primary transition-all">
+                <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+              </Button>
+            )}
 
-          <div className="flex-1 min-w-0">
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
+            <div className="flex items-center justify-between gap-6">
+              <div className="flex items-center gap-3">
+                <Button 
+                  onClick={goBack} 
+                  className="p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group"
+                  aria-label="Voltar para o Sumário"
+                >
+                  <Icons.ArrowDown className="w-4 h-4 rotate-90 text-primary/40 group-hover:text-primary transition-all" />
+                </Button>
+
+                <Button 
+                  onClick={goToExplorer} 
+                  className="p-4 rounded-full bg-card border border-border hover:bg-primary/5 transition-all group"
+                  title="Explorar por Temas"
+                >
+                  <Icons.Search className="w-4 h-4 text-primary/40 group-hover:text-primary transition-all" />
+                </Button>
+              </div>
+
+              <div className="flex-1 text-center hidden md:block">
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/20 mb-4 block">
+                  {selectedPart.part}
+                </span>
+                <h1 className="text-3xl font-serif font-bold text-primary tracking-tightest">
+                  {selectedSection.title}
+                </h1>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <AudioButton />
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button className="xl:hidden p-3 rounded-full bg-card border border-border hover:bg-primary/10 transition-all group">
+                      <Menu className="w-5 h-5 text-foreground group-hover:text-primary" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="p-0 w-80 reading-sepia">
+                    <LibrarySidebar 
+                      title={selectedPart.title}
+                      subtitle={selectedPart.part}
+                      items={sidebarItems}
+                      className="flex border-none shadow-none"
+                    />
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </div>
+
+            {/* Section Progress on Mobile */}
+            <div className="xl:hidden flex items-center gap-3 justify-center py-4 border-y border-border/10">
+              <Button 
+                disabled={selectedSection.id <= 1} 
+                onClick={() => {
+                  const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                  if (prevSec) {
+                    setSelectedSection(prevSec);
+                    setCurrentParagraph(prevSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="p-2 text-muted-foreground hover:text-primary disabled:opacity-20"
+              >
+                <Icons.ChevronLeft className="w-5 h-5" />
+              </Button>
+              <div className="text-premium-tiny font-black uppercase tracking-widest text-primary">
+                Seção {selectedSection.id} de {selectedPart.sections.length}
+              </div>
+              <Button 
+                disabled={selectedSection.id >= selectedPart.sections.length} 
+                onClick={() => {
+                  const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                  if (nextSec) {
+                    setSelectedSection(nextSec);
+                    setCurrentParagraph(nextSec.paragraphs[0]);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="p-2 text-muted-foreground hover:text-primary disabled:opacity-20"
+              >
+                <Icons.ChevronRight className="w-5 h-5" />
+              </Button>
+            </div>
+
+            {/* Cross references */}
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
+              <CrossReferencePanel
+                type="catechism"
+                bibleRefs={crossRefs}
+                documents={docsRefs}
+                onNavigateToBible={handleNavigateToBible}
+                onNavigateToDoc={handleNavigateToDoc}
+              />
+            )}
+
+            <div className="reader-container">
+              <div className="flex flex-col gap-16">
+                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} bookmarks={bookmarks} toggleBookmark={toggleBookmark} />
+                ))}
+              </div>
+            </div>
+
+            {/* Enhanced Navigation - The "Library" feeling footer */}
+            <div className="mt-20 pt-10 border-t border-border/10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {selectedSection.id > 1 && (
+                  <Card 
+                    variant="interactive" 
+                    padding="sm"
+                    className="group"
+                    onClick={() => {
+                      const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                      if (prevSec) {
+                        setSelectedSection(prevSec);
+                        setCurrentParagraph(prevSec.paragraphs[0]);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-primary transition-colors">Voltar para</span>
+                      <h4 className="font-monastery text-lg">{selectedPart.sections.find(s => s.id === selectedSection.id - 1)?.title}</h4>
+                    </div>
+                  </Card>
+                )}
+                
+                {selectedSection.id < selectedPart.sections.length && (
+                  <Card 
+                    variant="interactive" 
+                    padding="sm"
+                    className="group text-right"
+                    onClick={() => {
+                      const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                      if (nextSec) {
+                        setSelectedSection(nextSec);
+                        setCurrentParagraph(nextSec.paragraphs[0]);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60 group-hover:text-primary transition-colors">Continuar Lendo</span>
+                      <h4 className="font-monastery text-lg">{selectedPart.sections.find(s => s.id === selectedSection.id + 1)?.title}</h4>
+                    </div>
+                  </Card>
+                )}
+              </div>
+            </div>
+
+            {/* Quick nav - Paragraph Dots */}
+            <div className="flex flex-wrap gap-3 justify-center py-10 opacity-40 hover:opacity-100 transition-opacity">
+              {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                <button 
+                  key={p} 
+                  onClick={() => jumpToParagraph(p)}
+                  title={`Pular para §${p}`}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    currentParagraph === p ? "bg-primary scale-150" : 
+                    paragraphsRead.has(p) ? "bg-primary/40" : "bg-muted-foreground/20 hover:bg-primary/40"
+                  )}
+                />
+              ))}
+            </div>
           </div>
-          {(crossRefs.length > 0 || docsRefs.length > 0) && (
-            <button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-xl border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Catecismo & Documentos">
-              <Icons.Cross className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Section navigator */}
-        <div className="flex items-center gap-3 justify-center">
-          <button 
-            disabled={selectedSection.id <= 1} 
-            onClick={() => {
-              const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
-              if (prevSec) {
-                setSelectedSection(prevSec);
-                setCurrentParagraph(prevSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Seção anterior"
-          >
-            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
-          </button>
-
-          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-xl text-xs font-black uppercase tracking-widest text-primary">
-            Lendo Seção {selectedSection.id}
-          </div>
-          <button 
-            disabled={selectedSection.id >= 10} 
-            onClick={() => {
-              const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
-              if (nextSec) {
-                setSelectedSection(nextSec);
-                setCurrentParagraph(nextSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-xl bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Próxima seção"
-          >
-            Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
-          </button>
-
-        </div>
-
-        {/* Cross references */}
-        {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-          <CrossReferencePanel
-            type="catechism"
-            bibleRefs={crossRefs}
-            documents={docsRefs}
-            onNavigateToBible={handleNavigateToBible}
-            onNavigateToDoc={handleNavigateToDoc}
-          />
-        )}
-
-        <div className="bg-card border border-border rounded-3xl p-6 md:p-10 space-y-12">
-          <div className="flex flex-col gap-10">
-            {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
-            ))}
-          </div>
-        </div>
-
-        {/* Quick nav - Anchor links to jump between paragraphs */}
-        <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
-          <span className="w-full text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
-          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-            <button key={p} 
-              onClick={() => jumpToParagraph(p)}
-              className={`w-10 h-10 rounded-xl text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
-                paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
-                'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
-              }`}>
-              {p}
-              {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
-            </button>
-          ))}
         </div>
       </div>
     );
@@ -491,23 +627,23 @@ const Catechism: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex items-center gap-4">
-          <button onClick={goBack} className="p-2 rounded-xl bg-card border border-border hover:bg-primary/10 transition-all">
+          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
-          </button>
+          </Button>
           <div>
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
+            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-3xl font-serif font-bold text-foreground">{selectedPart.title}</h1>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {selectedPart.sections.map(sec => (
-            <button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-              className="text-left p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
+            <Button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+              <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
               <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
               <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -530,18 +666,18 @@ const Catechism: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
         <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
         <div className="max-w-xs mx-auto pt-4">
-          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
+          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-2">
             <span>Seu Progresso</span>
             <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
           </div>
-          <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-muted rounded-premium-sm overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
@@ -549,16 +685,25 @@ const Catechism: React.FC = () => {
             />
           </div>
         </div>
+        <div className="flex justify-center pt-6">
+          <Button 
+            variant="outline" 
+            onClick={resumeLastRead}
+            className="rounded-full border-primary/20 text-primary gap-2"
+          >
+            <History className="w-4 h-4" /> Retomar Leitura
+          </Button>
+        </div>
       </motion.div>
       
       {user?.role === 'admin' && (
         <div className="flex justify-center">
-          <button 
+          <Button 
             onClick={() => navigate('/catechism/integrity')}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500/10 text-orange-600 border border-orange-500/20 text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-premium-tiny font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
           >
             <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
-          </button>
+          </Button>
         </div>
       )}
 
@@ -568,14 +713,14 @@ const Catechism: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <div 
             onClick={() => navigateToParagraph(nextUnreadParagraph)}
-            className="max-w-md mx-auto p-4 rounded-2xl border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
+            className="max-w-md mx-auto p-4 rounded-full border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
           >
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
+              <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
                 <Icons.Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Continuar Formação</p>
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">Continuar Formação</p>
                 <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
               </div>
             </div>
@@ -592,28 +737,28 @@ const Catechism: React.FC = () => {
             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSearch()}
             placeholder="Buscar por número do parágrafo (ex: 1324)..."
-            className="w-full pl-11 pr-20 py-3 rounded-2xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full pl-11 pr-20 py-3 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
-          <button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-xl text-xs font-bold">
+          <Button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-bold">
             Ir
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Parts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {CIC_SECTIONS.map(part => (
-          <button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-            className="text-left p-5 md:p-6 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-            <span className="text-[10px] font-black text-primary uppercase tracking-widest">{part.part}</span>
+          <Button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
+            className="text-left p-5 md:p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+            <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{part.part}</span>
             <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
             <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>
             <div className="flex flex-wrap gap-1 mt-4">
               {part.sections.map(s => (
-                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-lg text-[10px] font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
+                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
               ))}
             </div>
-          </button>
+          </Button>
         ))}
       </div>
     </motion.div>

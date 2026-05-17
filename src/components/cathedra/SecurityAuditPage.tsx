@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button   } from '@/components/cathedra/Button';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
 import { CheckCircle, XCircle, ShieldAlert, FileCode, RotateCcw, AlertTriangle, Search, ExternalLink, ShieldCheck } from 'lucide-react';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
@@ -49,9 +49,9 @@ const SecurityAuditPage = () => {
   return (
     <div className="max-w-4xl mx-auto py-4 md:py-8 px-4 space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-red-600 border border-red-500/20">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-premium-sm text-red-600 border border-red-500/20">
           <ShieldAlert className="w-4 h-4" />
-          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground text-primary">Painel de Segurança & Integridade</h1>
         <p className="text-muted-foreground italic font-serif">Controle de deploys, migrações e proteção de segredos.</p>
@@ -60,7 +60,7 @@ const SecurityAuditPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Main Checklist */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-xl overflow-hidden">
+          <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-premium overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/40 p-6">
               <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
                 <ShieldCheck className="w-5 h-5 text-primary" />
@@ -82,8 +82,8 @@ const SecurityAuditPage = () => {
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
-                    <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-xl">
-                      <Link to={item.link} className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest">
+                    <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-full">
+                      <Link to={item.link} className="flex items-center gap-1.5 text-premium-tiny font-black uppercase tracking-widest">
                         Detalhes <ExternalLink className="w-3 h-3" />
                       </Link>
                     </Button>
@@ -94,9 +94,9 @@ const SecurityAuditPage = () => {
           </Card>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="border-red-500/20 bg-red-500/5 rounded-3xl p-6 space-y-4">
+            <Card className="border-red-500/20 bg-red-500/5 rounded-premium-sm p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-500/10 rounded-xl text-red-600">
+                <div className="p-2 bg-red-500/10 rounded-premium-sm text-red-600">
                   <RotateCcw className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Rollback Crítico</h3>
@@ -107,15 +107,15 @@ const SecurityAuditPage = () => {
               <Button 
                 variant="destructive" 
                 onClick={handleRollback}
-                className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
+                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
               >
                 Copiar SQL de Rollback
               </Button>
             </Card>
 
-            <Card className="border-primary/20 bg-primary/5 rounded-3xl p-6 space-y-4">
+            <Card className="border-primary/20 bg-primary/5 rounded-premium-sm p-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-xl text-primary">
+                <div className="p-2 bg-primary/10 rounded-premium-sm text-primary">
                   <FileCode className="w-5 h-5" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Scan de Segredos</h3>
@@ -125,7 +125,7 @@ const SecurityAuditPage = () => {
               </p>
               <Button 
                 variant="outline" 
-                className="w-full rounded-xl text-[10px] font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
+                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
               >
                 Simular Varredura
               </Button>
@@ -141,15 +141,15 @@ const SecurityAuditPage = () => {
             </h3>
             <div className="space-y-4">
               <div className="space-y-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Última Varredura</p>
-                <p className="text-xs font-mono bg-muted p-2 rounded-lg">2024-05-20 14:30</p>
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Última Varredura</p>
+                <p className="text-xs font-mono bg-muted p-2 rounded-full">2024-05-20 14:30</p>
               </div>
               <div className="space-y-2">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
                 <p className="text-xs font-bold text-foreground">0 detectadas esta semana</p>
               </div>
             </div>
-            <div className="pt-4 border-t border-border/40 text-[10px] text-muted-foreground italic leading-relaxed">
+            <div className="pt-4 border-t border-border/40 text-premium-tiny text-muted-foreground italic leading-relaxed">
               * O scanner E2E automatizado roda em todas as branches antes do merge para 'main'.
             </div>
           </Card>
@@ -157,7 +157,7 @@ const SecurityAuditPage = () => {
       </div>
 
       <footer className="text-center pt-8">
-        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Segurança v1.2
         </p>
       </footer>

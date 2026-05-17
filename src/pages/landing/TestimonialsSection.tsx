@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { HomeCard } from "@/components/cathedra/HomeCard";
+import { Card   } from "@/components/cathedra/Card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import React from "react";
@@ -18,31 +18,32 @@ const TestimonialsSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-background">
       <div className="app-container space-y-20 relative z-10">
         <div className="text-center space-y-6">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
-          <h2 className="font-display font-bold">Vozes da Comunidade</h2>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
+          <h2 className="font-display font-bold heading-section-label">Vozes da Comunidade</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {testimonials.slice(0, 3).map((t) => (
-            <HomeCard
+            <Card
               key={t.name}
-              className="p-8 space-y-8 flex flex-col"
+              padding="md"
+              className="space-y-8 flex flex-col transition-all duration-700 h-full"
             >
               <Quote className="w-6 h-6 text-secondary/20" />
-              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
+              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1 text-premium-body">
                 "{t.text}"
               </p>
 
               <div className="pt-8 border-t border-border/10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary font-bold text-sm">
+                <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
                   {t.avatar}
                 </div>
                 <div>
-                  <p className="font-bold text-sm">{t.name}</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
+                  <p className="font-bold text-premium-small text-premium-body">{t.name}</p>
+                  <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider font-bold text-premium-body">{t.role}</p>
                 </div>
               </div>
-            </HomeCard>
+            </Card>
           ))}
         </div>
       </div>

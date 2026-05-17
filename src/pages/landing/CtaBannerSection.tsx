@@ -18,10 +18,10 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             <Church className="w-16 h-16 text-primary" />
           </div>
           <div className="space-y-4">
-            <h2 className="font-display font-bold leading-tight text-foreground">
+            <h2 className="font-display font-bold leading-tight text-foreground heading-section-label">
               Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
             </h2>
-            <p className="text-lg text-muted-foreground/90 max-w-lg mx-auto font-serif">
+            <p className="text-lg text-muted-foreground/90 max-w-lg mx-auto font-serif text-premium-body">
               "Não tenhas medo, pois Eu estou contigo."
             </p>
           </div>
@@ -33,7 +33,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             >
               Iniciar Minha Jornada
             </HomeButton>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
+            <p className="text-premium-tiny text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40 text-premium-body">
               Acesso totalmente gratuito
             </p>
           </div>

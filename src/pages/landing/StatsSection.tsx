@@ -68,7 +68,7 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
       </motion.p>
-      <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground text-premium-body">{label}</p>
     </motion.div>
   );
 };
@@ -124,8 +124,8 @@ const StatsSection = () => {
         style={{ y: bgY }}
         className="absolute inset-0 pointer-events-none opacity-20"
       >
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-primary/5" />
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-primary/5" />
+        <div className="absolute top-10 left-10 w-32 h-32 rounded-premium-sm bg-primary/5" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-premium-sm bg-primary/5" />
       </motion.div>
 
       {/* Section header */}
@@ -136,8 +136,8 @@ const StatsSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-16"
       >
-        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
-        <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
+        <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/60 heading-section-label">Impacto Espiritual & Conhecimento</span>
+        <h2 className="mt-4 text-3xl md:text-4xl font-display font-bold text-foreground heading-section-label">Transformação através do estudo e oração</h2>
       </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 relative z-10">

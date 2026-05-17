@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle  , CardFooter   } from '@/components/cathedra/Card';
+import { Button   } from '@/components/cathedra/Button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
@@ -149,7 +149,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="pending" className="gap-2">
             Pendentes
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-[10px] font-bold">
+              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-premium-tiny font-bold">
                 {pendingCount}
               </span>
             )}
@@ -173,8 +173,8 @@ const AdminContentTab: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <User className="w-3.5 h-3.5 text-muted-foreground" />
                     <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
-                    <span className="text-[10px] text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
-                    {post.category && <Badge variant="outline" className="text-[9px] uppercase h-4 px-1">{post.category}</Badge>}
+                    <span className="text-premium-tiny text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                    {post.category && <Badge variant="outline" className="text-premium-tiny uppercase h-4 px-1">{post.category}</Badge>}
                   </div>
                   <div className="scale-90 origin-right">
                     {getStatusBadge(post.status)}
@@ -185,15 +185,15 @@ const AdminContentTab: React.FC = () => {
                   <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
                 </CardContent>
                 <CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-[10px] font-bold uppercase tracking-widest px-2">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-premium-tiny font-bold uppercase tracking-widest px-2">
                     <Trash2 className="w-3 h-3 mr-1" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-[10px] font-bold uppercase tracking-widest px-2">
+                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-premium-tiny font-bold uppercase tracking-widest px-2">
                         <X className="w-3 h-3 mr-1" /> Rejeitar
                       </Button>
-                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-[10px] font-bold uppercase tracking-widest px-2 bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-premium-tiny font-bold uppercase tracking-widest px-2 bg-emerald-600 hover:bg-emerald-700 text-white">
                         <Check className="w-3 h-3 mr-1" /> Aprovar
                       </Button>
                     </>

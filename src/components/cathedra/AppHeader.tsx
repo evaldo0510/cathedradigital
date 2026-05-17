@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
+import { cn } from '@/lib/utils';
+import { Button } from './Button';
 import GoogleSignInButton from '../auth/GoogleSignInButton';
+import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { canUserAccess } from '@/utils/auth-utils';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
@@ -11,6 +15,8 @@ interface AppHeaderProps {
   user: any;
   isDark: boolean;
   onToggleDark: () => void;
+  isHighContrast?: boolean;
+  onToggleHighContrast?: () => void;
   lang: Language;
   onChangeLang: (lang: Language) => void;
   isSpeaking?: boolean;
@@ -20,7 +26,7 @@ interface AppHeaderProps {
 }
 
 const AppHeader: React.FC<AppHeaderProps> = React.memo(({
-  user, isDark, onToggleDark, lang, onChangeLang, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
+  user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, lang, onChangeLang, isSpeaking, onToggleSpeak, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -44,29 +50,31 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border bg-background sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-10 lg:px-12 py-3 sm:py-4 flex items-center justify-between min-h-[56px] sm:min-h-[64px]">
-        <div className="flex items-center gap-2 sm:gap-10 min-w-0">
-          <div className="flex lg:hidden items-center gap-2 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
+    <header className="app-header border-b border-border/10 bg-background/40 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+      <div className="app-container flex items-center justify-between py-4 sm:py-6 min-h-[70px] sm:min-h-[90px]">
+        <div className="flex items-center gap-4 sm:gap-12 min-w-0">
+          <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
+            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
-              <span className="text-xs sm:text-xl font-display font-black uppercase tracking-[0.1em] sm:tracking-[0.25em] text-primary leading-none truncate">Cathedra</span>
-              <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] text-secondary opacity-80 mt-0.5 sm:mt-1 truncate">{t('digital')}</span>
+              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
             </div>
           </div>
           
           {!isDashboard && (
-            <button 
-              onClick={() => navigate(-1)} 
-              className="p-2 sm:p-2.5 bg-muted text-primary border border-border rounded-xl flex items-center gap-2 px-3 sm:px-5 active:scale-95 transition-all hover:bg-primary hover:text-white group shadow-sm focus-visible:ring-2 focus-visible:ring-primary outline-none"
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="h-10 sm:h-12 px-4 sm:px-6"
             >
-              <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
-            </button>
+              <CathedraIcon icon={Icons.ChevronLeft} size={IconSizePreset.TINY} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+              <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
+            </Button>
           )}
 
           {isDashboard && (
-            <nav className="hidden 2xl:flex items-center gap-5 border-l border-border pl-6 ml-2 min-w-0">
+            <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
                 { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
@@ -75,19 +83,21 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('themes'), route: AppRoute.TEMAS },
                 { label: t('community'), route: AppRoute.COMMUNITY },
                 { label: t('profile'), route: AppRoute.PROFILE },
-              ].map(item => (
-                <button 
+              ].filter(item => canUserAccess(user?.role, item.route)).map(item => (
+                <Button 
                   key={item.route} 
+                  variant={pathname === item.route ? 'primary' : 'ghost'}
+                  size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap relative group focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded ${
-                    pathname === item.route ? 'text-primary' : 'text-muted-foreground hover:text-primary'
-                  }`}
+                  className={cn(
+                    "px-5 py-3 h-auto whitespace-nowrap relative group",
+                    pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-muted-foreground/50 hover:text-primary'
+                  )}
                   aria-label={item.label}
                   aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </button>
+                </Button>
 
               ))}
             </nav>
@@ -95,49 +105,71 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
-          <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
               navigate(AppRoute.ONBOARDING);
             }}
-            title={t('ecosystem_guide') || "Guia do Ecossistema"}
-          >
-            <Icons.Compass className="w-4 h-4" />
-            <span className="hidden md:inline text-[9px] font-black uppercase tracking-widest">{t('guide') || "Guia"}</span>
-          </button>
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
+            title={t('ecosystem_guide') || "Guia do Ecossistema"}>
+            <CathedraIcon icon={Icons.Compass} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+          </Button>
 
-          <button 
-            className="p-2.5 sm:p-3 bg-muted text-primary rounded-xl sm:rounded-2xl border border-border hover:bg-primary hover:text-white transition-all shadow-sm active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none" 
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onToggleDark}
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full flex lg:hidden"
+            aria-label="Alternar tema">
+            {isDark ? <CathedraIcon icon={Icons.Sun} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Moon} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
+          </Button>
+
+          <Button
+            variant={isHighContrast ? "primary" : "outline"}
+            size="sm"
+            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
+            className={cn(
+              "w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full hidden sm:flex",
+              isHighContrast && 'ring-2 ring-primary ring-offset-1'
+            )}
+            aria-label="Configurações de Acessibilidade">
+            <CathedraIcon icon={Icons.ShieldCheck} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
             aria-label={t('search') || "Buscar"}
+            className="w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
           >
-            <Icons.Search className="w-4 h-4" />
-          </button>
+            <CathedraIcon icon={Icons.Search} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+          </Button>
 
           {user && (
-            <button 
-              onClick={() => setShowNotifs(!showNotifs)} 
-              className="p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border relative transition-all shadow-sm active:scale-95 focus:visible:ring-2 focus-visible:ring-primary outline-none"
+            <Button
+              variant={showNotifs ? "primary" : "outline"}
+              size="sm"
+              onClick={() => setShowNotifs(!showNotifs)}
+              className="relative w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
               aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
-              aria-expanded={showNotifs}
-            >
-
-
-              <Icons.Message className="w-4 h-4" />
+              aria-expanded={showNotifs}>
+              <CathedraIcon icon={Icons.Message} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[10px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-[9px] font-black flex items-center justify-center rounded-full border-2 border-background shadow-soft">
                   {unreadCount}
                 </span>
               )}
-            </button>
+            </Button>
           )}
           
           {showNotifs && user && (
-            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-3xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-premium-sm shadow-premium z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
-                <button onClick={markAllRead} className="text-[10px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</button>
+                <h3 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
+                <Button variant="ghost" size="sm" onClick={markAllRead} className="h-auto p-1 text-[9px] font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>
               </div>
               <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
                 {notifications.length > 0 ? (
@@ -147,45 +179,55 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                       className={`p-5 border-b border-border/50 hover:bg-muted/50 transition-colors cursor-pointer ${!n.is_read ? 'bg-primary/5' : ''}`}
                       onClick={() => markAsRead(n.id)}
                     >
-                      <p className="text-xs font-bold text-primary mb-1">{n.title}</p>
-                      <p className="text-[11px] text-muted-foreground leading-relaxed">{n.message}</p>
+                      <p className="text-premium-small font-bold text-primary mb-1">{n.title}</p>
+                      <p className="text-premium-tiny text-muted-foreground leading-relaxed">{n.message}</p>
                     </div>
                   ))
                 ) : (
                   <div className="p-12 text-center">
                     <Icons.Message className="w-10 h-10 text-muted-foreground/20 mx-auto mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">{t('silence')}</p>
+                    <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/40">{t('silence')}</p>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {user && user.role === 'admin' && (
-            <button 
+          {canUserAccess(user?.role, AppRoute.ADMIN) && (
+            <Button 
+              variant="secondary"
+              size="sm"
               onClick={() => navigate(AppRoute.ADMIN)} 
-              className="hidden sm:flex lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-all items-center gap-2 bg-secondary/20 rounded-xl border border-secondary/30 shadow-sm"
+              className="hidden sm:flex lg:hidden h-10 px-4 items-center gap-2 rounded-full border border-secondary/30"
             >
-              <Icons.Star className="w-4 h-4" />
+              <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="secondary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
               <span>{t('admin')}</span>
-            </button>
+            </Button>
           )}
 
           {user ? (
-            <button onClick={onSignOut} className="hidden sm:block lg:hidden px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-all">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={onSignOut} 
+              className="hidden sm:block lg:hidden h-10 text-muted-foreground hover:text-primary transition-all shadow-none"
+            >
               {t('exit_session')}
-            </button>
+            </Button>
           ) : (
             <div className="flex items-center gap-2">
               <div className="hidden md:block">
                 <GoogleSignInButton 
-                  className="h-10 px-4 rounded-xl"
+                  className="h-10 px-4 rounded-full"
                   text="Google"
                 />
               </div>
-              <button onClick={() => navigate(AppRoute.LOGIN)} className="px-4 sm:px-6 py-2 sm:py-2.5 bg-foreground text-background rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all shadow-lg active:scale-95">
+              <Button 
+                onClick={() => navigate(AppRoute.LOGIN)} 
+                className="h-10 px-4 sm:px-6 shadow-lg active:scale-95"
+              >
                 {t('enter')}
-              </button>
+              </Button>
             </div>
           )}
 
@@ -193,7 +235,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <select 
               value={lang} 
               onChange={(e) => onChangeLang(e.target.value as Language)}
-              className="appearance-none bg-muted text-primary border border-border rounded-xl px-2 py-1.5 text-[10px] font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
+              className="appearance-none bg-muted text-primary border border-border rounded-full px-2 py-1.5 text-premium-tiny font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
             >
               <option value="pt">PT</option>
               <option value="en">EN</option>
@@ -205,22 +247,28 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </select>
           </div>
 
-          <button 
-            onClick={onToggleSpeak} 
-            className={`hidden sm:flex lg:hidden p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none ${isSpeaking ? 'bg-primary text-white animate-pulse' : 'bg-muted text-primary hover:bg-primary hover:text-white'}`}
+          <Button
+            variant={isSpeaking ? "primary" : "outline"}
+            size="sm"
+            onClick={onToggleSpeak}
+            className={cn(
+              "hidden sm:flex lg:hidden w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full",
+              isSpeaking && 'animate-pulse'
+            )}
             title={isSpeaking ? t('audio_stop') : t('audio_read')}
-            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
-          >
-            {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
-          </button>
+            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
+            {isSpeaking ? <CathedraIcon icon={Icons.Stop} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Volume2} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
+          </Button>
 
-          <button onClick={onToggleDark} className="hidden sm:flex lg:hidden p-2.5 sm:p-3 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl sm:rounded-2xl border border-border transition-all active:scale-95 shadow-sm items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Alternar tema">
-            {isDark ? <Icons.Sun className="w-4 h-4" /> : <Icons.Moon className="w-4 h-4" />}
-          </button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onToggleDark}
+            className="hidden lg:flex w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full"
+            aria-label="Alternar tema">
+            {isDark ? <CathedraIcon icon={Icons.Sun} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" /> : <CathedraIcon icon={Icons.Moon} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />}
+          </Button>
 
-          <button onClick={onOpenSidebar} className="sm:hidden p-2.5 bg-muted text-primary hover:bg-primary hover:text-white rounded-xl border border-border transition-all active:scale-95 shadow-sm flex items-center justify-center focus-visible:ring-2 focus-visible:ring-primary outline-none" aria-label="Abrir menu lateral">
-            <Icons.Menu className="w-4.5 h-4.5" />
-          </button>
 
         </div>
       </div>

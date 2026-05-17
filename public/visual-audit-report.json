@@ -1,0 +1,4081 @@
+{
+  "timestamp": "2026-05-15T02:58:59.736444",
+  "total_violations": 679,
+  "violations": [
+    {
+      "file": "src/pages/Index.tsx",
+      "line": 48,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 14,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 25,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 26,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/AboutCreatorSection.tsx",
+      "line": 39,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 16,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 52,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 52,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/AcolhimentoSection.tsx",
+      "line": 54,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 35,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 82,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 82,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 85,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 109,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 109,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 117,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/CommunitySection.tsx",
+      "line": 117,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/pages/landing/DailyRoutineSection.tsx",
+      "line": 46,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/pages/landing/FaqSection.tsx",
+      "line": 24,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/HowItWorksSection.tsx",
+      "line": 67,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 209,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 210,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 255,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 290,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 292,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 321,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 326,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 359,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 365,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
+      "line": 398,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/PricingSection.tsx",
+      "line": 77,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/PricingSection.tsx",
+      "line": 84,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/StatsSection.tsx",
+      "line": 127,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/StatsSection.tsx",
+      "line": 128,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/BenefitsSection.tsx",
+      "line": 89,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 44,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 44,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/pages/landing/hero/HeroContent.tsx",
+      "line": 48,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithPage.tsx",
+      "line": 105,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithPage.tsx",
+      "line": 120,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 173,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 178,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 191,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 223,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 280,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 298,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 326,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AZFaithQuiz.tsx",
+      "line": 342,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 48,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 62,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 75,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 95,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 95,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 123,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 124,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 140,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 140,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 140,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 141,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 144,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 144,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 144,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/AboutPage.tsx",
+      "line": 179,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AchievementsPage.tsx",
+      "line": 18,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AchievementsPage.tsx",
+      "line": 27,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AchievementsPage.tsx",
+      "line": 63,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminGuard.tsx",
+      "line": 16,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminGuard.tsx",
+      "line": 16,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminGuard.tsx",
+      "line": 28,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 47,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 58,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 66,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 167,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 182,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AparicoesPage.tsx",
+      "line": 237,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AppErrorBoundary.tsx",
+      "line": 39,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 201,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 215,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 218,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 224,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 242,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 242,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 245,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 251,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 269,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 271,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 281,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 285,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 289,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 293,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 307,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 315,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 319,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 323,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 327,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 340,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 356,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AquinasOpera.tsx",
+      "line": 412,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AuthGuard.tsx",
+      "line": 17,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AuthGuard.tsx",
+      "line": 17,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/BackToThemeBanner.tsx",
+      "line": 16,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 534,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 534,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 556,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 596,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 765,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/Bible.tsx",
+      "line": 812,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/BibleSearch.tsx",
+      "line": 70,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BottomNav.tsx",
+      "line": 75,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 114,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 125,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 135,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 146,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 155,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 192,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/BreviaryPage.tsx",
+      "line": 206,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 65,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 83,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 198,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 430,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 462,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 534,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 545,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Catechism.tsx",
+      "line": 575,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 336,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 342,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 356,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 360,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 364,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 368,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 374,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 374,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 377,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 380,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 386,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 392,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 398,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 399,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 400,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 401,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 585,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismDebug.tsx",
+      "line": 593,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 152,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 213,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 231,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 235,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 239,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 245,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 245,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 247,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 248,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 249,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 250,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismIntegrity.tsx",
+      "line": 251,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismOfflineFallback.tsx",
+      "line": 151,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 138,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 138,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 139,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 156,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 171,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 182,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 190,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 200,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Certamen.tsx",
+      "line": 200,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutResultPage.tsx",
+      "line": 128,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutResultPage.tsx",
+      "line": 128,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/CommandCenter.tsx",
+      "line": 397,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommandCenter.tsx",
+      "line": 399,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CookieConsent.tsx",
+      "line": 45,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CrossReferencePanel.tsx",
+      "line": 37,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CrossReferencePanel.tsx",
+      "line": 39,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Dashboard.tsx",
+      "line": 172,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Dashboard.tsx",
+      "line": 197,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Dashboard.tsx",
+      "line": 201,
+      "pattern": "Legacy Radius",
+      "match": "radius-3xl"
+    },
+    {
+      "file": "src/components/cathedra/DeepContentSection.tsx",
+      "line": 124,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DevDataInspector.tsx",
+      "line": 41,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DevDataInspector.tsx",
+      "line": 53,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DevDataInspector.tsx",
+      "line": 70,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DogmasPage.tsx",
+      "line": 303,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/FavoritesPage.tsx",
+      "line": 18,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/FavoritesPage.tsx",
+      "line": 39,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/FavoritesPage.tsx",
+      "line": 50,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Footer.tsx",
+      "line": 281,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Footer.tsx",
+      "line": 281,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 167,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 242,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 242,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 290,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 296,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 311,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 332,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/GlossaryPage.tsx",
+      "line": 346,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 112,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 210,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 232,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 242,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 252,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/GuidedJourney.tsx",
+      "line": 262,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 6,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 9,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 17,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 19,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 20,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 22,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 24,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 25,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 32,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 34,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 35,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 38,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeSkeletons.tsx",
+      "line": 39,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeStats.tsx",
+      "line": 25,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/HomeStats.tsx",
+      "line": 43,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 190,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 190,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 230,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 230,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 266,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 266,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 276,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 353,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 389,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 415,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 419,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 419,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaStepPage.tsx",
+      "line": 441,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/LitaniesPage.tsx",
+      "line": 242,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/LitaniesPage.tsx",
+      "line": 286,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LitaniesPage.tsx",
+      "line": 302,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/LitaniesPage.tsx",
+      "line": 309,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 99,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 99,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 106,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 110,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 229,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 233,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 235,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 252,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 260,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 260,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaPage.tsx",
+      "line": 260,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaSkeleton.tsx",
+      "line": 7,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaSkeleton.tsx",
+      "line": 9,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaSkeleton.tsx",
+      "line": 11,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgiaSkeleton.tsx",
+      "line": 17,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 329,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 351,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 373,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 373,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 415,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 433,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 433,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 480,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 489,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 506,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 506,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
+      "line": 514,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/LogosChat.tsx",
+      "line": 147,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/MagisteriumViewer.tsx",
+      "line": 112,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/MagisteriumViewer.tsx",
+      "line": 112,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/MagisteriumViewer.tsx",
+      "line": 123,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/MagisteriumViewer.tsx",
+      "line": 172,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/MissalPage.tsx",
+      "line": 83,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/MissalPage.tsx",
+      "line": 122,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 147,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 150,
+      "pattern": "Legacy Radius",
+      "match": "radius-3xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 160,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 169,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 180,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 186,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 190,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 199,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 209,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 307,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 308,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 467,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 477,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 535,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 537,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NexusBubbles.tsx",
+      "line": 539,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NotesPanel.tsx",
+      "line": 64,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NotesPanel.tsx",
+      "line": 64,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/NotesPanel.tsx",
+      "line": 89,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/OfflineIndicator.tsx",
+      "line": 50,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/OfflineModeToggle.tsx",
+      "line": 13,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/OfflineModeToggle.tsx",
+      "line": 13,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/OfflinePage.tsx",
+      "line": 25,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/OfflinePage.tsx",
+      "line": 31,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/OfflinePage.tsx",
+      "line": 49,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/OnboardingPage.tsx",
+      "line": 272,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/OnboardingPage.tsx",
+      "line": 301,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/OnboardingPage.tsx",
+      "line": 327,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/OnboardingPage.tsx",
+      "line": 380,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PWAInstallPrompt.tsx",
+      "line": 69,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PWAInstallPrompt.tsx",
+      "line": 69,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PWAInstallPrompt.tsx",
+      "line": 77,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 63,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 109,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 109,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 110,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 119,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 130,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 135,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 150,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 161,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "line": 172,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 45,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 45,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 189,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 197,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 223,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 240,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 257,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 275,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 293,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 314,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 323,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 342,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 382,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 398,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 422,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 444,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 481,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 511,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 513,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 525,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 543,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ProConversionBanner.tsx",
+      "line": 83,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/ProConversionBanner.tsx",
+      "line": 119,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/ProGate.tsx",
+      "line": 20,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProGate.tsx",
+      "line": 28,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/ProGate.tsx",
+      "line": 28,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProGate.tsx",
+      "line": 31,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ProGate.tsx",
+      "line": 37,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 29,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 32,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 33,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 38,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 75,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/ProShowcase.tsx",
+      "line": 75,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/QuickModals.tsx",
+      "line": 177,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/QuickModals.tsx",
+      "line": 217,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/QuickModals.tsx",
+      "line": 217,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ReadingModeToggle.tsx",
+      "line": 12,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/ReadingModeToggle.tsx",
+      "line": 12,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ResetPasswordPage.tsx",
+      "line": 77,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ResetPasswordPage.tsx",
+      "line": 79,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ResetPasswordPage.tsx",
+      "line": 82,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ResetPasswordPage.tsx",
+      "line": 104,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 38,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 38,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 135,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 146,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 159,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 175,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 202,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 211,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 222,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 222,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 222,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 224,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 238,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 240,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 256,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 281,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 288,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 298,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 313,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 326,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 346,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 360,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 381,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 395,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 413,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Rosary.tsx",
+      "line": 441,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 88,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 118,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 129,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 141,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 152,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 276,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 278,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 307,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 310,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SaintDetail.tsx",
+      "line": 326,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/SaintOfTheDayCard.tsx",
+      "line": 171,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Saints.tsx",
+      "line": 195,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Saints.tsx",
+      "line": 416,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/Saints.tsx",
+      "line": 522,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Saints.tsx",
+      "line": 547,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 324,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 370,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 382,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 386,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 397,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 401,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 405,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 433,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 463,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 470,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualQuiz.tsx",
+      "line": 471,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SplashScreen.tsx",
+      "line": 65,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SplashScreen.tsx",
+      "line": 65,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SplashScreen.tsx",
+      "line": 94,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/StudyMode.tsx",
+      "line": 330,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/StudyMode.tsx",
+      "line": 341,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 136,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 147,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 147,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 187,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 193,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 202,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 232,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 236,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemasPage.tsx",
+      "line": 253,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransparencyPage.tsx",
+      "line": 20,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransparencyPage.tsx",
+      "line": 90,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/TransparencyPage.tsx",
+      "line": 100,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 78,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 79,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 90,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 119,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 120,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 138,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 154,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UpgradePage.tsx",
+      "line": 168,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 44,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 53,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 61,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 66,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 85,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 106,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 112,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 112,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/ViaCrucis.tsx",
+      "line": 170,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/WhatsAppButton.tsx",
+      "line": 19,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/WhatsAppButton.tsx",
+      "line": 22,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Sidebar.tsx",
+      "line": 158,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Sidebar.tsx",
+      "line": 236,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Sidebar.tsx",
+      "line": 238,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Sidebar.tsx",
+      "line": 264,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+      "line": 117,
+      "pattern": "Legacy Radius",
+      "match": "radius-3xl"
+    },
+    {
+      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
+      "line": 178,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/A11ySettingsPanel.tsx",
+      "line": 44,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/A11ySettingsPanel.tsx",
+      "line": 50,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/A11ySettingsPanel.tsx",
+      "line": 93,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CathedraButton.tsx",
+      "line": 42,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 224,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 228,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 230,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 255,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 272,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 346,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 346,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 347,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminConstructionTab.tsx",
+      "line": 368,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminContentTab.tsx",
+      "line": 165,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminCrmRetention.tsx",
+      "line": 291,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/AdminCrmRetention.tsx",
+      "line": 291,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminCrmSegmentation.tsx",
+      "line": 179,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminCrmUserProfile.tsx",
+      "line": 100,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminCrmUserProfile.tsx",
+      "line": 197,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminJourneysTab.tsx",
+      "line": 365,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminJourneysTab.tsx",
+      "line": 394,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminJourneysTab.tsx",
+      "line": 398,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminJourneysTab.tsx",
+      "line": 444,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminPartnersTab.tsx",
+      "line": 160,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminPartnersTab.tsx",
+      "line": 203,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AdminPartnersTab.tsx",
+      "line": 205,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminPartnersTab.tsx",
+      "line": 220,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminPartnersTab.tsx",
+      "line": 220,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 135,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 260,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 266,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 268,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 287,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 324,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 366,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 411,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 418,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminSeoTab.tsx",
+      "line": 425,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/AdminThemesTab.tsx",
+      "line": 264,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminThemesTab.tsx",
+      "line": 313,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminThemesTab.tsx",
+      "line": 322,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminTransactionsTab.tsx",
+      "line": 21,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminTransactionsTab.tsx",
+      "line": 23,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 283,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 286,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 288,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 307,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 307,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/CacheManager.tsx",
+      "line": 307,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 231,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 234,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 240,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 246,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 256,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/CatechismVerification.tsx",
+      "line": 256,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 155,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 174,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 192,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 192,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 213,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 264,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 280,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 314,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 316,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CheckoutPage.tsx",
+      "line": 393,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 287,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 289,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 318,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 320,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 332,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 365,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 407,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 417,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 449,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/CommunityPage.tsx",
+      "line": 480,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DiagnosticsPage.tsx",
+      "line": 51,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/DiagnosticsPage.tsx",
+      "line": 105,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 178,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 178,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 245,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 245,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 297,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 298,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 309,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 310,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaCompletePage.tsx",
+      "line": 373,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaDetailPage.tsx",
+      "line": 77,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadaDetailPage.tsx",
+      "line": 77,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadaDetailPage.tsx",
+      "line": 139,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 210,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 211,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 212,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 216,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 296,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 296,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 327,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 350,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 512,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 512,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 524,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 620,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 651,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 652,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/JornadasPage.tsx",
+      "line": 653,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 189,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 212,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 235,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 299,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 320,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 381,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 384,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/Magisterium.tsx",
+      "line": 423,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/ModulesGuidePage.tsx",
+      "line": 118,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ModulesGuidePage.tsx",
+      "line": 138,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/ModulesGuidePage.tsx",
+      "line": 138,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/ModulesGuidePage.tsx",
+      "line": 138,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ModulesGuidePage.tsx",
+      "line": 166,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 138,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 150,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 159,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 194,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 196,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 210,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PartnersPage.tsx",
+      "line": 283,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PopesPage.tsx",
+      "line": 179,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 59,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 59,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 61,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 97,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 97,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 102,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 125,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 139,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 139,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/PricingPage.tsx",
+      "line": 160,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 183,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 183,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 212,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 212,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 236,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 247,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 247,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 274,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 288,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 318,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 353,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 364,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 364,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 369,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 404,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 410,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 426,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/ProfilePage.tsx",
+      "line": 521,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/QuickDonation.tsx",
+      "line": 59,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/QuickDonation.tsx",
+      "line": 124,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 13,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 14,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 15,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 22,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 22,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 30,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SacredSkeleton.tsx",
+      "line": 56,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SearchResultCard.tsx",
+      "line": 77,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/SellerDashboard.tsx",
+      "line": 71,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 396,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 406,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 432,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 444,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 445,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 446,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TemaDetailPage.tsx",
+      "line": 680,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 460,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 475,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 563,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 565,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 603,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 632,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/TransactionsPage.tsx",
+      "line": 645,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 37,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 48,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 269,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 286,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 430,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 445,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 445,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 504,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 542,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/UserTransactionsPage.tsx",
+      "line": 561,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/WebhookSimulator.tsx",
+      "line": 72,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/WebhookSimulator.tsx",
+      "line": 75,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/WebhookSimulator.tsx",
+      "line": 134,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 412,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 698,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 719,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 723,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 750,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AdminDashboard.tsx",
+      "line": 841,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 141,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 263,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 320,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 322,
+      "pattern": "Legacy Radius",
+      "match": "radius-md"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 328,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 334,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/VisualRegressionDashboard.tsx",
+      "line": 347,
+      "pattern": "Legacy Radius",
+      "match": "radius-xl"
+    },
+    {
+      "file": "src/components/cathedra/AppHeader.tsx",
+      "line": 159,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-md"
+    },
+    {
+      "file": "src/components/cathedra/AppHeader.tsx",
+      "line": 159,
+      "pattern": "Non-standard Border",
+      "match": "border-2"
+    },
+    {
+      "file": "src/components/cathedra/AppHeader.tsx",
+      "line": 167,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AppHeader.tsx",
+      "line": 167,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/AppHeader.tsx",
+      "line": 225,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 50,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 72,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 109,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 140,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 163,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/encyclopedia/EncyclopediaTermDetail.tsx",
+      "line": 176,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioConclusio.tsx",
+      "line": 66,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioConclusio.tsx",
+      "line": 73,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioConclusio.tsx",
+      "line": 85,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioConclusio.tsx",
+      "line": 144,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 25,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 39,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-lg"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 78,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 78,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 92,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 107,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
+      "line": 132,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 40,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 55,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 55,
+      "pattern": "Legacy Radius",
+      "match": "radius-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 102,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-2xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 110,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 110,
+      "pattern": "Non-standard Border",
+      "match": "border-4"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 170,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-sm"
+    },
+    {
+      "file": "src/components/cathedra/lectio/LectioStep.tsx",
+      "line": 199,
+      "pattern": "Legacy Shadow",
+      "match": "shadow-xl"
+    }
+  ],
+  "status": "pendente"
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { AppRoute } from '@/types';
 
 const BackToThemeBanner: React.FC = () => {
@@ -19,7 +19,7 @@ const BackToThemeBanner: React.FC = () => {
           variant="ghost"
           size="sm"
           onClick={() => navigate(`${AppRoute.TEMAS}/${tema}`)}
-          className="rounded-xl h-8 sm:h-9 px-3 text-primary hover:bg-primary/5 font-bold text-[10px] sm:text-xs uppercase tracking-widest gap-1.5"
+          className="rounded-full h-8 sm:h-9 px-3 text-primary hover:bg-primary/5 font-bold text-premium-tiny sm:text-xs uppercase tracking-widest gap-1.5"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <Tag className="w-3 h-3" />

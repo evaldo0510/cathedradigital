@@ -1,3 +1,4 @@
+import { Button   } from '@/components/cathedra/Button';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ExternalLink } from 'lucide-react';
@@ -24,12 +25,12 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 min-w-0">
-          <button
+          <Button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-secondary transition-colors flex-shrink-0"
           >
             <X className="w-5 h-5 text-foreground" />
-          </button>
+          </Button>
           <h3 className="text-sm font-bold text-foreground truncate">{title}</h3>
         </div>
         <a

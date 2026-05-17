@@ -10,17 +10,15 @@ import { LangContext } from "@/contexts/LangContext";
 import HomeMainContent from "@/components/cathedra/HomeMainContent";
 
 // Lazy-load secondary components
-const FeedbackWidget = lazy(() => import("@/components/landing/FeedbackWidget"));
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
-const WhatsAppButton = lazy(() => import("@/components/cathedra/WhatsAppButton"));
 const LogosChat = lazy(() => import("@/components/cathedra/LogosChat"));
-const GuidedJourney = lazy(() => import("@/components/cathedra/GuidedJourney"));
+
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
   const { t } = useContext(LangContext);
-  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
+  
 
   useEffect(() => {
     if (!loading && user) {
@@ -36,7 +34,10 @@ const Index = () => {
   }, [user, profile, loading, navigate]);
 
   const handleStart = () => {
-    setIsJourneyOpen(true);
+    const el = document.getElementById('main-content');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleNavigate = (route: string) => navigate(route);
@@ -45,7 +46,7 @@ const Index = () => {
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden selection:bg-primary/10">
       <a 
         href="#main-content" 
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
       >
         Pular para o conteúdo principal
       </a>
@@ -54,30 +55,29 @@ const Index = () => {
       
       <SEOHead
         title="Bíblia, Catecismo e Tradição Católica"
-        description="Aprofunde sua fé católica com o Logos IA, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
+        description="Aprofunde sua fé católica com o Logos, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
         path="/"
       />
 
-      <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
+      <div className="w-full flex flex-col items-center">
+        <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
 
-      <main id="main-content" className="w-full flex flex-col items-center outline-none pt-32 md:pt-48 pb-32 md:pb-48" tabIndex={-1}>
-        <Suspense fallback={<SectionSkeleton />}>
-          <HomeMainContent 
-            user={user} 
-            profile={profile} 
-            onNavigate={handleNavigate} 
-            t={t} 
-          />
-        </Suspense>
+        <main id="main-content" className="app-container section-spacing" tabIndex={-1}>
+          <Suspense fallback={<SectionSkeleton />}>
+            <HomeMainContent 
+              user={user} 
+              profile={profile} 
+              onNavigate={handleNavigate} 
+              t={t} 
+            />
+          </Suspense>
 
-        <Suspense fallback={null}>
-          <FeedbackWidget />
-          <LogosChat />
-          <WhatsAppButton />
-          <CookieConsent />
-          <GuidedJourney isOpen={isJourneyOpen} onClose={() => setIsJourneyOpen(false)} />
-        </Suspense>
-      </main>
+          <Suspense fallback={null}>
+            <LogosChat />
+            <CookieConsent />
+          </Suspense>
+        </main>
+      </div>
     </div>
   );
 };

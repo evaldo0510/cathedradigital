@@ -5,6 +5,7 @@ import { lovable } from '@/integrations/lovable/index';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { ArrowLeft } from 'lucide-react';
+import { Button   } from '@/components/cathedra/Button';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -81,13 +82,15 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
   return (
     <div className="max-w-md mx-auto space-y-8 relative">
-      <button 
+      <Button 
+        variant="ghost"
+        size="sm"
         onClick={() => navigate(AppRoute.HOME)}
-        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group"
+        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="text-[10px] font-black uppercase tracking-widest">Voltar para Início</span>
-      </button>
+        <span className="text-premium-tiny font-black uppercase tracking-widest">Voltar para Início</span>
+      </Button>
 
       <div className="text-center space-y-4">
         <div className="flex justify-center">
@@ -101,58 +104,58 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <div className="bg-card border border-border rounded-3xl p-8 space-y-6">
+      <div className="premium-card p-8 space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-sm text-destructive font-medium">{error}</div>
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
         {success && (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-2xl text-sm text-primary font-medium">{success}</div>
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
-                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
           <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
+            <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           {mode !== 'forgot' && (
             <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 rounded-2xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
-          <button type="submit" disabled={loading}
-            className="w-full py-4 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
-            {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
-          </button>
+          <Button type="submit" isLoading={loading} className="w-full h-14 rounded-full">
+            {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
+          </Button>
         </form>
 
         <div className="relative flex items-center gap-4 my-2">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">ou</span>
+          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">ou</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={async () => {
               setLoading(true);
               setError('');
@@ -170,14 +173,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               }
               setLoading(false);
             }}
-            disabled={loading}
-            className="w-full py-3.5 bg-background text-foreground border border-border rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-sm hover:bg-muted transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            isLoading={loading}
+            className="w-full h-12 flex items-center justify-center gap-3 group"
           >
             <Icons.Google className="w-5 h-5 transition-transform group-hover:scale-110" />
             Google
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="button"
             onClick={async () => {
               setLoading(true);
@@ -193,33 +196,44 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               }
               setLoading(false);
             }}
-            disabled={loading}
-            className="w-full py-3.5 bg-primary text-primary-foreground rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center justify-center gap-3 group"
+            isLoading={loading}
+            className="w-full h-12 flex items-center justify-center gap-3 group"
           >
             <Icons.Apple className="w-5 h-5 transition-transform group-hover:scale-110" />
             Apple
-          </button>
+          </Button>
         </div>
 
         {error && (
-          <button 
+          <Button 
+            variant="ghost"
+            size="sm"
             onClick={() => { setError(''); setLoading(false); }}
-            className="w-full py-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+            className="w-full h-10 shadow-none"
           >
             Tentar novamente
-          </button>
+          </Button>
         )}
 
         <div className="text-center space-y-2">
           {mode === 'login' && (
-            <button onClick={() => switchMode('forgot')} className="text-sm text-muted-foreground hover:text-primary hover:underline font-medium block w-full">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => switchMode('forgot')} 
+              className="text-muted-foreground hover:text-primary font-medium w-full shadow-none capitalize tracking-normal text-sm"
+            >
               Esqueci minha senha
-            </button>
+            </Button>
           )}
-          <button onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-sm text-primary hover:underline font-medium">
+          <Button 
+            variant="ghost"
+            size="sm"
+            onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
+            className="text-primary hover:text-primary/80 font-medium w-full shadow-none capitalize tracking-normal text-sm"
+          >
             {mode === 'login' ? 'Não tem conta? Criar agora' : mode === 'signup' ? 'Já tem conta? Fazer login' : 'Voltar ao login'}
-          </button>
+          </Button>
         </div>
       </div>
 

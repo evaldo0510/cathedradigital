@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowUpRight, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
 
 interface AdminTransactionsTabProps {
@@ -18,16 +18,16 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
       ) : (
         <div className="space-y-3">
           {transactions.map((t: any) => (
-            <div key={t.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/30 border border-border/50">
+            <div key={t.id} className="flex items-center justify-between p-4 rounded-premium-sm bg-muted/30 border border-border/50">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-premium-sm bg-primary/10 flex items-center justify-center">
                   <ArrowUpRight className="w-4 h-4 text-primary" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <p className="font-medium text-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
+                      <span className="text-premium-tiny bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
                         <User className="w-2.5 h-2.5" />
                         {t.profiles.name}
                       </span>

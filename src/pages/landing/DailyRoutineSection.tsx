@@ -31,19 +31,20 @@ const DailyRoutineSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-primary/[0.01]">
       <div className="app-container space-y-20">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Ritmo</span>
-          <h2 className="font-display font-bold text-foreground">Vivência Cotidiana</h2>
-          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
+          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Ritmo</span>
+          <h2 className="font-display font-bold text-foreground heading-section-label">Vivência Cotidiana</h2>
+          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto text-premium-body">Fazei tudo para a glória de Deus.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {dayFlow.map((step) => (
             <HomeCard
               key={step.title}
-              className="p-8 flex flex-col space-y-8"
+              padding="md"
+              className="flex flex-col space-y-8 h-full transition-all duration-700"
             >
               <div className="flex justify-between items-center">
-                <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
                 <span className="text-xs font-display font-bold text-primary/50 uppercase tracking-widest">
@@ -52,8 +53,8 @@ const DailyRoutineSection = () => {
               </div>
               
               <div className="space-y-3">
-                <h3 className="font-bold font-serif">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <h3 className="font-bold font-serif heading-card">{step.title}</h3>
+                <p className="text-muted-foreground leading-relaxed text-premium-body">
                   {step.desc}
                 </p>
               </div>

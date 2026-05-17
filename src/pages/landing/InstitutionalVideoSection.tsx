@@ -1,3 +1,4 @@
+import { Button   } from "@/components/cathedra/Button";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { Play, Sparkles, X, Volume2, VolumeX, Shield, Church, Globe, Users, Languages } from "lucide-react";
@@ -205,8 +206,8 @@ const InstitutionalVideoSection = () => {
     <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
       <div className="absolute inset-0 z-0 bg-background/50" aria-hidden="true">
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-full" />
-        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-full" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-premium-sm" />
+        <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-premium-sm" />
       </div>
 
       <div className="container px-6 mx-auto relative z-10">
@@ -217,11 +218,11 @@ const InstitutionalVideoSection = () => {
             className="space-y-8"
           >
             <div className="space-y-4">
-              <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
-              <h2 id="video-section-title" className="text-4xl md:text-5xl font-display font-bold leading-tight">
+              <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/40 block italic">Apresentação</span>
+              <h2 id="video-section-title" className="font-display font-bold leading-tight heading-section-label">
                 A Tradição em <span className="text-primary italic font-serif">Movimento</span>
               </h2>
-              <p className="text-base text-muted-foreground font-serif max-w-md">
+              <p className="text-muted-foreground font-serif max-w-md text-premium-body">
                 Coloca a tecnologia a serviço do Evangelho.
               </p>
             </div>
@@ -234,8 +235,8 @@ const InstitutionalVideoSection = () => {
                 { title: "Comunhão", desc: "Rede global de oração." },
               ].map((item) => (
                 <div key={item.title} className="space-y-1">
-                  <h4 className="font-bold text-foreground text-sm">{item.title}</h4>
-                  <p className="text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h4 className="font-bold text-foreground text-premium-small heading-item">{item.title}</h4>
+                  <p className="text-premium-tiny text-muted-foreground leading-relaxed text-premium-body">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -250,7 +251,7 @@ const InstitutionalVideoSection = () => {
             custom={3}
             className="relative group"
           >
-            <button 
+            <Button 
               className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
               aria-label="Abrir vídeo de apresentação da Catedra Digital"
@@ -288,15 +289,15 @@ const InstitutionalVideoSection = () => {
                   whileTap={{ scale: 0.95 }}
                   className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative"
                 >
-                  <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-full" />
+                  <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-premium-sm" />
                   <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
                 </motion.div>
                 
                 <div className="text-center space-y-2 px-8">
-                  <h3 className="text-2xl md:text-3xl font-display font-bold text-white tracking-tight">
+                  <h3 className="font-display font-bold text-white tracking-tight heading-card">
                     Assistir Apresentação
                   </h3>
-                  <p className="text-white/60 text-sm font-medium tracking-wide uppercase">
+                  <p className="text-white/60 text-premium-small font-medium tracking-wide uppercase text-premium-body">
                     Mergulhe na Proposta da Catedra
                   </p>
                 </div>
@@ -311,25 +312,25 @@ const InstitutionalVideoSection = () => {
                   className="h-full bg-primary/60"
                 />
               </div>
-            </button>
+            </Button>
 
             {/* Floating Badge / Sound Control */}
             <motion.div
               animate={shouldReduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-2xl shadow-xl z-20 cursor-pointer select-none"
+              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-full shadow-premium z-20 cursor-pointer select-none"
               onClick={toggleMute}
               role="button"
               aria-label={isMuted ? "Ativar som" : "Desativar som"}
             >
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
                 {isMuted ? <VolumeX className="w-5 h-5 text-primary" /> : <Volume2 className="w-5 h-5 text-primary" />}
               </div>
               <div className="space-y-0.5">
-                <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
+                <p className="text-premium-tiny font-black text-primary uppercase tracking-tighter text-premium-body">
                   {isMuted ? "Mudo" : "Som Ativado"}
                 </p>
-                <p className="text-xs font-bold text-foreground">Experiência Imersiva</p>
+                <p className="text-premium-tiny font-bold text-foreground text-premium-body">Experiência Imersiva</p>
               </div>
             </motion.div>
           </motion.div>
@@ -355,13 +356,13 @@ const InstitutionalVideoSection = () => {
               initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10"
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-premium border border-white/[0.08]"
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
               <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-black/60">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-full border border-white/20">
+                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-premium-sm border border-white/20">
                     <Languages className="w-4 h-4 text-white/70" />
                     <select 
                       value={currentLang}
@@ -375,30 +376,30 @@ const InstitutionalVideoSection = () => {
                           to_lang: newLang 
                         });
                       }}
-                      className="bg-transparent text-white text-xs font-bold focus:outline-none cursor-pointer"
+                      className="bg-transparent text-white text-premium-tiny font-bold focus:outline-none cursor-pointer"
                       aria-label="Selecionar idioma das legendas"
                     >
                       {SUBTITLES.map(s => <option key={s.lang} value={s.lang} className="bg-black">{s.label}</option>)}
                     </select>
                   </div>
                   
-                  <button 
+                  <Button 
                     onClick={toggleMute}
                     className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
                     aria-label={isMuted ? "Ativar som" : "Desativar som"}
                   >
                     {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
-                  </button>
+                  </Button>
                 </div>
 
-                <button 
+                <Button 
                   ref={closeBtnRef}
                   onClick={handleClose}
                   className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
                   <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
-                </button>
+                </Button>
               </div>
 
               <video

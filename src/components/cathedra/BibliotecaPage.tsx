@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
 import { ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card    , CardContent   } from '@/components/cathedra/Card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 
@@ -93,9 +93,9 @@ const sections = [
     category: 'Formação Intelectual',
     items: [
       {
-        title: 'Logos IA',
-        description: 'Tire suas dúvidas iluminadas pela fé',
-        icon: <Icons.Brain className="w-5 h-5" />,
+        title: 'Logos',
+        description: 'Diálogos teológicos e mestre espiritual contemplativo',
+        icon: <Icons.Compass className="w-5 h-5" />,
         route: AppRoute.STUDY_MODE,
         color: 'bg-primary/10 text-primary',
       },
@@ -173,7 +173,7 @@ const BibliotecaPage: React.FC = () => {
   }, [query]);
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-24">
+    <div className="space-y-6 max-w-2xl mx-auto px-4 pb-24">
       <div className="text-center space-y-2">
         <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
         <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
@@ -196,7 +196,7 @@ const BibliotecaPage: React.FC = () => {
         )}
         {filtered.map((group, groupIdx) => (
           <div key={group.category} className="space-y-4">
-            <h2 className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3">
+            <h2 className="text-premium-small font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3">
               <div className="h-px w-6 bg-primary/20" /> {group.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -223,16 +223,16 @@ const BibliotecaPage: React.FC = () => {
                           handleNavigate(); 
                         }
                       }}
-                      className="cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl"
+                      className="cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-premium"
                     >
-                      <Card className="hover:border-primary/40 transition-all group h-full overflow-hidden bg-white/5 border-white/10 group-focus-visible:border-primary/40">
+                      <Card className="premium-card-interactive h-full overflow-hidden">
                         <CardContent className="p-5 flex items-center gap-5 h-full">
-                          <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${item.color} transition-transform group-hover:scale-110 duration-300`}>
+                          <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${item.color} transition-transform group-hover:scale-110 duration-300`}>
                             {item.icon}
                           </div>
                           <div className="space-y-1 text-left flex-1">
                             <h3 className="font-bold text-foreground text-sm tracking-tight">{item.title}</h3>
-                            <p className="text-[10px] leading-relaxed text-muted-foreground line-clamp-2">{item.description}</p>
+                            <p className="text-premium-tiny leading-relaxed text-muted-foreground line-clamp-2">{item.description}</p>
                           </div>
                           <Icons.ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </CardContent>

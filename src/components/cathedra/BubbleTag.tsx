@@ -119,9 +119,9 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   ...props
 }, ref) => {
   const sizeClasses = {
-    xs: 'px-2 py-0.5 text-[8px] gap-1',
-    sm: 'px-2.5 py-1 text-[9px] gap-1.5',
-    md: 'px-3.5 py-2 text-[11px] gap-1.5'
+    xs: 'px-2 py-0.5 text-premium-tiny gap-1',
+    sm: 'px-2.5 py-1 text-premium-tiny gap-1.5',
+    md: 'px-3.5 py-2 text-premium-small gap-1.5'
   };
 
   const iconSizes = {
@@ -156,7 +156,7 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
           ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
           : isSuggested
             ? 'border-secondary/50 bg-secondary/10 hover:border-secondary/80 hover:bg-secondary/20 text-secondary hover:scale-105'
-            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-md text-foreground/80 hover:scale-105 hover:text-foreground'
+            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-soft text-foreground/80 hover:scale-105 hover:text-foreground'
         }
         ${className}
       `}

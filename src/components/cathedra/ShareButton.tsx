@@ -1,14 +1,15 @@
 import React from 'react';
 import { Share2 } from 'lucide-react';
 import { useShare } from '@/hooks/useShare';
+import { Button   } from '@/components/cathedra/Button';
 
 interface ShareButtonProps {
   title: string;
   text: string;
   url?: string;
   className?: string;
-  size?: 'sm' | 'md';
-  variant?: 'icon' | 'button';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
+  variant?: 'outline' | 'ghost' | 'default';
 }
 
 const ShareButton: React.FC<ShareButtonProps> = ({
@@ -16,34 +17,24 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   text,
   url,
   className = '',
-  size = 'sm',
-  variant = 'icon',
+  size = 'icon',
+  variant = 'outline',
 }) => {
   const share = useShare();
 
-  const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5';
-
-  if (variant === 'button') {
-    return (
-      <button
-        onClick={() => share({ title, text, url })}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card border border-border text-xs font-medium text-muted-foreground hover:text-primary hover:border-primary/30 transition-all ${className}`}
-        title="Compartilhar"
-      >
-        <Share2 className={iconSize} />
-        Compartilhar
-      </button>
-    );
-  }
+  const isIcon = size === 'icon';
 
   return (
-    <button
+    <Button
       onClick={() => share({ title, text, url })}
-      className={`p-2 rounded-xl border border-border text-muted-foreground hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-all ${className}`}
+      variant={variant}
+      size={isIcon ? 'icon' : 'sm'}
+      className={className}
       title="Compartilhar"
     >
-      <Share2 className={iconSize} />
-    </button>
+      <Share2 className="w-4 h-4" />
+      {!isIcon && "Compartilhar"}
+    </Button>
   );
 };
 
