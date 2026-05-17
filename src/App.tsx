@@ -46,11 +46,11 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Sanctuarium = lazy(() => import('./components/cathedra/Dashboard'));
-const Scriptuarium = lazy(() => import('./components/cathedra/Bible'));
-const CodexFidei = lazy(() => import('./components/cathedra/Catechism'));
-const LogosIA = lazy(() => import('./components/cathedra/LogosChat'));
-const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
+const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
+const Bible = lazy(() => import('./components/cathedra/Bible'));
+const Catechism = lazy(() => import('./components/cathedra/Catechism'));
+const LogosChat = lazy(() => import('./components/cathedra/LogosChat'));
+const StudyMode = lazy(() => import('./components/cathedra/LogosChat')); // Mapping study mode to Logos chat for now as per prompt focus
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 // Redundant imports removed (DailyLiturgy, MissalPage)
@@ -196,10 +196,12 @@ const AppLayout: React.FC = () => {
 
   // Main pages where "Back" button shouldn't show (root pages)
   const isMainPage = [
+    AppRoute.DASHBOARD,
     AppRoute.SANCTUARIUM,
     AppRoute.HOME,
     AppRoute.LOGOS,
     AppRoute.JOURNEYS,
+    AppRoute.JORNADAS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
     AppRoute.LITURGIA,

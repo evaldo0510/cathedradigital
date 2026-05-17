@@ -3,8 +3,12 @@ export type Language = 'pt' | 'en' | 'es' | 'la' | 'it' | 'fr' | 'de';
 export enum AppRoute {
   HOME = '/',
   SANCTUARIUM = '/sanctuarium',
+  DASHBOARD = '/sanctuarium',
   LOGOS = '/logos',
+  STUDY_MODE = '/logos',
+  BIBLE = '/scriptuarium',
   SCRIPTUARIUM = '/scriptuarium',
+  CATECHISM = '/codex-fidei',
   CODEX_FIDEI = '/codex-fidei',
    SAINTS = '/santos',
    SAINT_DETAIL = '/santos/:id',
