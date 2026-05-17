@@ -46,7 +46,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
+const Dashboard = lazy(() => import('./components/cathedra/Sanctuarium'));
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const LogosChat = lazy(() => import('./components/cathedra/LogosChat'));
