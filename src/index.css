@@ -32,6 +32,8 @@
     --sidebar-accent-foreground: 222 47% 11%;
     --sidebar-border: 222 47% 11% / 0.04;
     --sidebar-ring: 222 47% 11%;
+    --liturgical-burgundy: 343 79% 29%; /* #881337 */
+    --liturgical-gold: 45 64% 52%;     /* #D4AF37 */
   }
 
   /* Universal colors for all modes */
@@ -63,6 +65,8 @@
     --sidebar-accent-foreground: 45 80% 65%;
     --sidebar-border: 222 47% 12%;
     --sidebar-ring: 45 80% 65%;
+    --liturgical-burgundy: 343 79% 40%;
+    --liturgical-gold: 45 80% 70%;
   }
 
   /* High Contrast Mode - Force pure black/white/yellow for maximum accessibility */
@@ -398,6 +402,22 @@
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 @layer utilities {
+  .bg-liturgical {
+    background-color: hsl(var(--liturgical-burgundy));
+  }
+  .text-liturgical {
+    color: hsl(var(--liturgical-burgundy));
+  }
+  .border-liturgical {
+    border-color: hsl(var(--liturgical-burgundy));
+  }
+  .bg-gold {
+    background-color: hsl(var(--liturgical-gold));
+  }
+  .text-gold {
+    color: hsl(var(--liturgical-gold));
+  }
+  
   .responsive-padding {
     @apply p-4 sm:p-6 md:p-8 lg:p-12;
   }
