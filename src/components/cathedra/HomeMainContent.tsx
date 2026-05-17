@@ -82,7 +82,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </div>
           </HomeCard>
           
-          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.BIBLE)}>
+          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.SCRIPTUARIUM)}>
             <div className="flex items-center gap-5">
               <CathedraIcon icon={Icons.BookOpen} size={IconSizePreset.TINY} variant="primary" />
               <div>
@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <section className="space-y-6 px-4 sm:px-0">
         <SectionHeader label="Catecismo" />
         <HomeCard 
-          onClick={() => onNavigate(AppRoute.CATECHISM)}
+          onClick={() => onNavigate(AppRoute.CODEX_FIDEI)}
           padding="md"
           className="group border-primary/5 bg-primary/[0.01] rounded-premium"
         >
@@ -123,7 +123,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeCard 
           padding="md"
           className="group border-primary/5 bg-primary/[0.01] rounded-premium"
-          onClick={openLogosChat}
+          onClick={() => onNavigate(AppRoute.LOGOS)}
         >
           <div className="flex items-center justify-between gap-8">
             <div className="flex items-center gap-6">
