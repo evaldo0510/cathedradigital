@@ -624,11 +624,11 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ORACAO} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VIA_CRUCIS} element={<PageTransition><AuthGuard><ViaCrucis /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.STUDY_MODE} element={
+                   <Route path={AppRoute.LOGOS} element={
                     <PageTransition>
                       <AuthGuard>
                         <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                          <StudyMode />
+                          <LogosChat isPage />
                         </ProGate>
                       </AuthGuard>
                     </PageTransition>
