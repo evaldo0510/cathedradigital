@@ -46,9 +46,10 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
-const Bible = lazy(() => import('./components/cathedra/Bible'));
-const Catechism = lazy(() => import('./components/cathedra/Catechism'));
+const Sanctuarium = lazy(() => import('./components/cathedra/Dashboard'));
+const Scriptuarium = lazy(() => import('./components/cathedra/Bible'));
+const CodexFidei = lazy(() => import('./components/cathedra/Catechism'));
+const LogosIA = lazy(() => import('./components/cathedra/LogosChat'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
@@ -88,7 +89,7 @@ const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetail
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
-const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const Journeys = lazy(() => import('./components/cathedra/JornadasPage'));
 const Index = lazy(() => import('./pages/Index'));
 const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
 const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
@@ -195,10 +196,10 @@ const AppLayout: React.FC = () => {
 
   // Main pages where "Back" button shouldn't show (root pages)
   const isMainPage = [
-    AppRoute.DASHBOARD,
+    AppRoute.SANCTUARIUM,
     AppRoute.HOME,
-    AppRoute.HOJE,
-    AppRoute.JORNADAS,
+    AppRoute.LOGOS,
+    AppRoute.JOURNEYS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
     AppRoute.LITURGIA,
