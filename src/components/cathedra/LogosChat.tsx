@@ -87,13 +87,27 @@ type LogosTone = 'contemplative' | 'poetic' | 'doctrinal' | 'brief';
 const LogosChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [tone, setTone] = useState<LogosTone>('contemplative');
-  const [isContemplative, setIsContemplative] = useState(false);
-  const [showExtraDetails, setShowExtraDetails] = useState(true);
-  const [autoScroll, setAutoScroll] = useState(true);
-  const [hasRitualPassed, setHasRitualPassed] = useState(false);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    {
+      id: 'mock-1',
+      role: 'assistant',
+      content: 'Paz e bem. Sou o Logos, seu mestre contemplativo. Como posso iluminar seu entendimento sobre as Sagradas Escrituras ou o Catecismo hoje?',
+      timestamp: new Date()
+    },
+    {
+      id: 'mock-2',
+      role: 'user',
+      content: 'Gostaria de entender melhor o conceito de Graça Santificante.',
+      timestamp: new Date()
+    },
+    {
+      id: 'mock-3',
+      role: 'assistant',
+      content: 'A Graça Santificante é um dom gratuito que Deus nos faz de sua vida, infundida pelo Espírito Santo em nossa alma para curá-la do pecado e santificá-la. Como ensina o Catecismo (§1999), ela é uma disposição estável e sobrenatural que aperfeiçoa a alma para torná-la capaz de viver com Deus.',
+      timestamp: new Date()
+    }
+  ]);
+  const [hasRitualPassed, setHasRitualPassed] = useState(true);
   const [intention, setInputIntention] = useState('');
   const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
     isOpen: false,
@@ -329,7 +343,10 @@ const LogosChat = () => {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible">
+    <div className={cn(
+      "fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible",
+      isOpen ? "w-full sm:w-auto" : "w-0"
+    )}>
       <AnimatePresence>
         {isOpen && (
           <>
@@ -574,7 +591,7 @@ const LogosChat = () => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
+          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-rose-900 text-white rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-white/5 focus-visible:ring-2 focus-visible:ring-rose-900 focus-visible:ring-offset-2 outline-none"
           aria-label="Abrir Logos (Ctrl+L)"
           aria-haspopup="true"
         >
