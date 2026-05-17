@@ -91,8 +91,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
-    { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: 'Home', icon: <Icons.Home />, route: AppRoute.SANCTUARIUM },
+    { label: 'Jornadas', icon: <Icons.Journeys />, route: AppRoute.JOURNEYS },
     { label: t('explore'), icon: <Icons.Compass />, route: AppRoute.BIBLIOTECA },
     { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
     { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
@@ -107,7 +107,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
             label={item.label}
             icon={item.icon}
             route={item.route || ''}
-            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
+            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.SCRIPTUARIUM, AppRoute.CODEX_FIDEI, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);

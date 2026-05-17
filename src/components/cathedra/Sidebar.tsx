@@ -57,9 +57,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       {
         label: 'Navegação',
         items: [
-          { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
-          { label: 'Logos', path: AppRoute.STUDY_MODE, icon: Icons.Compass, pro: true },
-          { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
+          { label: 'Sanctuarium', path: AppRoute.SANCTUARIUM, icon: Icons.Home },
+          { label: 'Logos IA', path: AppRoute.LOGOS, icon: Icons.Compass, pro: true },
+          { label: 'Jornadas de Fé', path: AppRoute.JOURNEYS, icon: Icons.Journeys },
           { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
           { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
           { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
@@ -71,8 +71,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       {
         label: 'Devocionário',
         items: [
-          { label: t('bible'), path: AppRoute.BIBLE, icon: Icons.Bible },
-          { label: t('catechism'), path: AppRoute.CATECHISM, icon: Icons.Catechism },
+          { label: 'Scriptuarium (Bíblia)', path: AppRoute.SCRIPTUARIUM, icon: Icons.Bible },
+          { label: 'Codex Fidei (Catecismo)', path: AppRoute.CODEX_FIDEI, icon: Icons.Catechism },
           { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: Icons.Search },
           { label: t('liturgy'), path: AppRoute.LITURGIA, icon: Icons.Liturgy },
           { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: Icons.Heart },
@@ -128,7 +128,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       <aside ref={ref} className="h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6">
         <button 
           className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
-          onClick={() => handleNav(AppRoute.HOJE)}
+          onClick={() => handleNav(AppRoute.SANCTUARIUM)}
           aria-label="Ir para a página inicial"
         >
           <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
