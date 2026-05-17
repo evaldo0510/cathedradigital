@@ -84,8 +84,8 @@ const TheologicalAwareText: React.FC<{
 
 type LogosTone = 'contemplative' | 'poetic' | 'doctrinal' | 'brief';
 
-const LogosChat = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
+  const [isOpen, setIsOpen] = useState(isPage);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>(() => [
     {
@@ -349,8 +349,8 @@ const LogosChat = () => {
 
   return (
     <div className={cn(
-      "fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible",
-      isOpen ? "w-full sm:w-auto" : "w-0"
+      isPage ? "relative h-screen w-full" : "fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible",
+      isOpen || isPage ? "w-full sm:w-auto" : "w-0"
     )}>
       <AnimatePresence>
         {isOpen && (
@@ -366,11 +366,14 @@ const LogosChat = () => {
             
             {/* Sidebar - Monastery Integrated */}
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              initial={isPage ? { opacity: 0 } : { x: '100%' }}
+              animate={isPage ? { opacity: 1 } : { x: 0 }}
+              exit={isPage ? { opacity: 0 } : { x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[520px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden max-w-full sm:rounded-l-[24px]"
+              className={cn(
+                "h-[100dvh] bg-background border-l border-primary/5 shadow-premium flex flex-col reading-monastery overflow-hidden max-w-full",
+                isPage ? "w-full" : "absolute top-0 right-0 w-full sm:w-[520px] sm:rounded-l-[24px] pointer-events-auto"
+              )}
             >
               {/* Refined Header */}
               <div className="p-4 sm:p-8 border-b border-primary/5 flex items-center justify-between flex-shrink-0 bg-background/40 backdrop-blur-md">
@@ -589,7 +592,7 @@ const LogosChat = () => {
       </AnimatePresence>
 
       {/* Floating Trigger - Integrated & Subtle */}
-      {!isOpen && (
+      {!isOpen && !isPage && (
         <motion.button
           ref={triggerRef}
           layoutId="logos-trigger"
