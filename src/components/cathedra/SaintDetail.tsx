@@ -10,7 +10,7 @@ import { type Saint } from '@/data/saints';
 import { AppRoute } from '@/types';
 import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
@@ -85,15 +85,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       initial={{ scale: 0.9, y: 20 }}
       animate={{ scale: 1, y: 0 }}
       exit={{ scale: 0.9, y: 20 }}
-      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-premium border border-border flex flex-col md:flex-row relative"
+      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
-      <Button 
+      <button 
         onClick={onClose} 
         className="absolute top-6 right-6 p-3 bg-foreground/10 hover:bg-foreground/20 rounded-full  text-foreground transition-all z-20"
       >
         <Icons.X className="w-5 h-5" />
-      </Button>
+      </button>
 
       {/* Image Sidebar */}
       <div className="w-full md:w-2/5 h-64 md:h-auto relative overflow-hidden flex-shrink-0">
@@ -101,7 +101,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
         <div className="absolute bottom-8 left-8 right-8 text-white space-y-2">
-          <span className="text-premium-tiny font-black uppercase tracking-widest bg-primary px-3 py-1.5 rounded-full mb-4 inline-block">
+          <span className="text-[10px] font-black uppercase tracking-widest bg-primary px-3 py-1.5 rounded-lg mb-4 inline-block">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
           <h2 className="text-4xl font-serif font-bold leading-tight">{saint.name}</h2>
@@ -115,22 +115,22 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {/* Top Info Strip */}
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.Calendar className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <Icons.Calendar className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Dia de Festa</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Dia de Festa</span>
               <span className="text-sm font-bold text-foreground">{saint.feastDay}</span>
             </div>
           </div>
 
           {saint.born && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium-sm bg-secondary/30 flex items-center justify-center text-primary">
-                <Icons.User className="w-4 h-4" />
+              <div className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center text-primary">
+                <Icons.User className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
                 <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.born}</span>
               </div>
             </div>
@@ -138,22 +138,22 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           {saint.died && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium-sm bg-destructive/10 flex items-center justify-center text-destructive">
-                <Icons.XCircle className="w-4 h-4" />
+              <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive">
+                <Icons.XCircle className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
+                <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
                 <span className="text-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.died}</span>
               </div>
             </div>
           )}
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-secondary flex items-center justify-center text-secondary-foreground">
-              <Shield className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground">
+              <Shield className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
               <span className="text-sm font-bold text-foreground">{saint.virtues?.[0] || 'Santidade'}</span>
             </div>
           </div>
@@ -171,7 +171,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <Button 
                 onClick={() => window.open((saint as any).url, '_blank')}
                 variant="outline"
-                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-premium-tiny font-black uppercase tracking-widest h-9 px-4 rounded-full flex items-center gap-2 transition-all"
+                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-[9px] font-black uppercase tracking-widest h-9 px-4 rounded-xl flex items-center gap-2 transition-all"
               >
                 <Icons.Globe className="w-3 h-3" />
                 Fonte Oficial
@@ -181,9 +181,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             <ShareButton
               title={saint.name}
               text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
-              variant="default"
-              size="sm"
-              className="!px-4 !py-2.5 !text-premium-small !rounded-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
+              variant="button"
+              className="!px-4 !py-2.5 !text-[11px] !rounded-2xl !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
           </div>
 
@@ -193,7 +192,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         <section className="space-y-4">
           <div className="flex items-center gap-2 text-primary">
             <Info className="w-4 h-4" />
-            <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Sua História</h3>
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Sua História</h3>
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
             <p className="text-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-6 py-1">
@@ -231,7 +230,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary">
               <Quote className="w-4 h-4" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
             </div>
             <div className="bg-secondary/30 p-8 rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
               <Quote className="absolute top-4 right-4 w-12 h-12 text-primary/5 group-hover:text-primary/10 transition-colors" />
@@ -249,7 +248,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-primary">
               <Heart className="w-4 h-4" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
             </div>
             <div className="bg-primary/5 p-8 rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
               <Lightbulb className="absolute top-4 right-4 w-12 h-12 text-primary/10 group-hover:scale-110 transition-all" />
@@ -269,18 +268,18 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           <section className="space-y-4">
             <div className="flex items-center gap-2 text-primary">
               <BookOpen className="w-4 h-4" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {saint.works.map((work, idx) => (
-                <div key={idx} className="p-4 bg-card border border-border rounded-premium-sm flex items-center justify-between group hover:border-primary/30 transition-all">
+                <div key={idx} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                       <Icons.Book className="w-4 h-4" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{work.title}</p>
-                      {work.year && <p className="text-premium-tiny text-muted-foreground uppercase">{work.year}</p>}
+                      {work.year && <p className="text-[10px] text-muted-foreground uppercase">{work.year}</p>}
                     </div>
                   </div>
                   {work.url && (
@@ -307,11 +306,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
         >
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-premium-sm bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
-              <Icons.Route className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <Icons.Route className="w-7 h-7" />
             </div>
             <div>
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">Transformar Inspiração em Prática</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-1">Transformar Inspiração em Prática</p>
               <h4 className="text-lg font-bold text-foreground font-serif leading-tight">Jornada {suggestedJourney.name}</h4>
               <p className="text-xs text-muted-foreground font-serif italic max-w-sm">
                 Inspirada pela virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span>.
@@ -323,7 +322,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               navigate(`/jornadas/${suggestedJourney.id}`);
               onClose();
             }}
-            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-lg shadow-primary/20 group/btn transition-all"
+            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl shadow-lg shadow-primary/20 group/btn transition-all"
           >
             Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>

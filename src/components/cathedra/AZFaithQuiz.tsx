@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Trophy, RotateCcw, Sparkles, ArrowRight, BookOpen, Brain, TrendingUp, Calendar } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -165,20 +165,20 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-foreground">Histórico de Quizzes</h2>
-          <Button variant="ghost" size="xs" onClick={() => setShowHistory(false)}>Voltar</Button>
+          <Button variant="ghost" size="sm" onClick={() => setShowHistory(false)} className="text-xs">Voltar</Button>
         </div>
 
         {history.length > 0 && (
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-primary/5 border border-primary/10 rounded-premium-sm p-4 text-center">
+            <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4 text-center">
               <TrendingUp className="w-5 h-5 text-primary mx-auto mb-1" />
               <p className="text-2xl font-black text-primary">{bestScore}%</p>
-              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Melhor</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Melhor</p>
             </div>
-            <div className="bg-accent/50 border border-border rounded-premium-sm p-4 text-center">
+            <div className="bg-accent/50 border border-border rounded-2xl p-4 text-center">
               <Brain className="w-5 h-5 text-foreground/60 mx-auto mb-1" />
               <p className="text-2xl font-black text-foreground">{avgScore}%</p>
-              <p className="text-premium-tiny text-muted-foreground uppercase tracking-widest">Média</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Média</p>
             </div>
           </div>
         )}
@@ -188,7 +188,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
             <p className="text-center text-muted-foreground text-sm py-8">Nenhum quiz realizado ainda.</p>
           ) : (
             history.map((r) => (
-              <div key={r.id} className="flex items-center justify-between bg-card border border-border rounded-premium-sm px-4 py-3">
+              <div key={r.id} className="flex items-center justify-between bg-card border border-border rounded-xl px-4 py-3">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
                   <span className="text-xs text-muted-foreground">
@@ -218,9 +218,9 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-card border border-border rounded-full p-8 text-center space-y-6 max-w-md mx-auto"
+        className="bg-card border border-border rounded-3xl p-8 text-center space-y-6 max-w-md mx-auto"
       >
-        <div className="w-20 h-20 rounded-premium-sm bg-primary/10 flex items-center justify-center mx-auto">
+        <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
           <Trophy className="w-10 h-10 text-primary" />
         </div>
         <div>
@@ -228,7 +228,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <p className="text-muted-foreground text-sm">
             Você acertou <span className="font-bold text-primary">{score}</span> de <span className="font-bold">{total}</span> ({pct}%)
           </p>
-          {user && <p className="text-premium-tiny text-muted-foreground mt-1">✓ Resultado salvo</p>}
+          {user && <p className="text-[10px] text-muted-foreground mt-1">✓ Resultado salvo</p>}
         </div>
 
         <div className="relative w-32 h-32 mx-auto">
@@ -246,15 +246,15 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
 
         <div className="flex flex-col gap-3">
           <div className="flex gap-3 justify-center">
-            <Button variant="outline" onClick={onClose} className="rounded-full gap-2">
+            <Button variant="outline" onClick={onClose} className="rounded-2xl gap-2">
               <BookOpen className="w-4 h-4" /> Voltar ao A-Z
             </Button>
-            <Button onClick={handleRestart} className="rounded-full gap-2 bg-primary text-primary-foreground">
+            <Button onClick={handleRestart} className="rounded-2xl gap-2 bg-primary text-primary-foreground">
               <RotateCcw className="w-4 h-4" /> Jogar Novamente
             </Button>
           </div>
           {user && (
-            <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-1 text-muted-foreground">
+            <Button variant="ghost" onClick={() => setShowHistory(true)} className="text-xs gap-1 text-muted-foreground">
               <TrendingUp className="w-3 h-3" /> Ver Histórico
             </Button>
           )}
@@ -272,12 +272,12 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           <span className="font-bold text-primary">{score} acertos</span>
         </div>
         {user && history.length > 0 && (
-          <Button variant="ghost" size="xs" onClick={() => setShowHistory(true)} className="gap-1">
+          <Button variant="ghost" size="sm" onClick={() => setShowHistory(true)} className="text-[10px] gap-1 h-7">
             <TrendingUp className="w-3 h-3" /> Histórico
           </Button>
         )}
       </div>
-      <div className="h-1.5 bg-muted rounded-premium-sm overflow-hidden">
+      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-primary rounded-full"
           initial={{ width: 0 }}
@@ -295,8 +295,8 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
           transition={{ type: 'spring', damping: 25 }}
           className="space-y-5"
         >
-          <div className="bg-card border border-border rounded-premium-sm p-6 space-y-4">
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2.5 py-1 rounded-full">
+          <div className="bg-card border border-border rounded-3xl p-6 space-y-4">
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary bg-primary/10 px-2.5 py-1 rounded-full">
               {question.category}
             </span>
             <h3 className="text-lg font-bold text-foreground leading-snug">
@@ -315,19 +315,19 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
                 else classes = 'opacity-50 border-border text-muted-foreground';
               }
               return (
-                <Button
+                <button
                   key={idx}
                   onClick={() => handleSelect(idx)}
                   disabled={answered}
                   aria-label={`Opção ${String.fromCharCode(65 + idx)}: ${opt}`}
                   aria-pressed={idx === selected}
-                  className={`w-full text-left p-4 rounded-full transition-all text-sm font-medium flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-primary outline-none ${classes}`}
+                  className={`w-full text-left p-4 rounded-2xl transition-all text-sm font-medium flex items-center gap-3 focus-visible:ring-2 focus-visible:ring-primary outline-none ${classes}`}
                 >
                   <span className="w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 text-xs font-black" aria-hidden="true">
                     {answered && isCorrect ? <Check className="w-4 h-4" /> : answered && isSelected ? <X className="w-4 h-4" /> : String.fromCharCode(65 + idx)}
                   </span>
                   <span className="line-clamp-3">{opt}</span>
-                </Button>
+                </button>
 
               );
             })}
@@ -339,8 +339,8 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-4"
             >
-              <div className="bg-primary/5 border border-primary/10 rounded-premium-sm p-4">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">
+              <div className="bg-primary/5 border border-primary/10 rounded-2xl p-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">
                   <Sparkles className="w-3 h-3 inline mr-1" />
                   {selected === question.correctIndex ? 'Correto!' : `A resposta certa era sobre "${question.term}"`}
                 </p>
@@ -350,7 +350,7 @@ const AZFaithQuiz: React.FC<AZFaithQuizProps> = ({ terms, onClose }) => {
               </div>
               <Button
                 onClick={handleNext}
-                className="w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground"
+                className="w-full rounded-2xl h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-primary text-primary-foreground"
               >
                 {currentQ + 1 >= total ? 'Ver Resultado' : 'Próxima'}
                 <ArrowRight className="w-4 h-4" />

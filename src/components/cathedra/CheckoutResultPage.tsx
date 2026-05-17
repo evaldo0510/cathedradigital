@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -125,7 +125,7 @@ const CheckoutResultPage: React.FC = () => {
   if (state === 'loading') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-full animate-spin" />
         <p className="text-muted-foreground font-serif italic text-lg">Confirmando seu pagamento...</p>
       </div>
     );
@@ -153,11 +153,11 @@ const CheckoutResultPage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full bg-muted/50 rounded-full p-6 border border-border/50 space-y-4"
+          className="w-full bg-muted/50 rounded-3xl p-6 border border-border/50 space-y-4"
         >
           <div className="flex justify-between items-center pb-2 border-b border-border/50">
-            <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
-            <span className="text-premium-tiny font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
+            <span className="text-[10px] font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
           </div>
           
           <div className="space-y-3">
@@ -173,7 +173,7 @@ const CheckoutResultPage: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Status</span>
-              <span className={`text-premium-tiny font-bold uppercase px-2 py-0.5 rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+              <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
                 {state === 'success' ? 'Aprovado' : 'Em processamento'}
               </span>
             </div>
@@ -183,7 +183,7 @@ const CheckoutResultPage: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full h-8 text-premium-tiny font-bold uppercase text-muted-foreground gap-2"
+              className="w-full h-8 text-[10px] font-bold uppercase text-muted-foreground gap-2"
               onClick={() => window.print()}
             >
               <Download className="w-3 h-3" /> Baixar Comprovante
@@ -195,7 +195,7 @@ const CheckoutResultPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-3 w-full">
         <Button
           onClick={() => navigate(c.primaryAction.route)}
-          className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
+          className="flex-1 h-12 rounded-2xl font-bold uppercase text-xs tracking-widest"
         >
           {c.primaryAction.label}
         </Button>
@@ -203,7 +203,7 @@ const CheckoutResultPage: React.FC = () => {
           <Button
             variant="outline"
             onClick={() => navigate(c.secondaryAction!.route)}
-            className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
+            className="flex-1 h-12 rounded-2xl font-bold uppercase text-xs tracking-widest"
           >
             {c.secondaryAction.label}
           </Button>

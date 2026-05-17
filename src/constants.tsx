@@ -18,7 +18,6 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  ArrowUpDown,
   Star,
   MessageCircle,
   Zap,
@@ -125,11 +124,11 @@ import {
 import { cn } from './lib/utils';
 
 export const COLORS = {
-  primary: '#0F172A',
-  secondary: '#D4AF37',
-  background: '#F8F5EE',
-  text: '#0F172A',
-  accent: '#D4AF37',
+  primary: '#0B1F3A',
+  secondary: '#C8A96A',
+  background: '#FFFFFF',
+  text: '#1A1A1A',
+  accent: '#C8A96A',
 };
 
 import cathedraLogo from './assets/cathedra-logo.png';
@@ -155,7 +154,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         )}
       />
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-secondary/5 rounded-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-secondary/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       )}
     </div>
   );
@@ -436,7 +435,6 @@ export const Icons = {
   ArrowLeft: IconsInternal.ArrowLeft,
   ArrowRight: IconsInternal.ArrowRight,
   ArrowDown: IconsInternal.ArrowDown,
-  ArrowUpDown: createIcon(ArrowUpDown),
   Video: IconsInternal.Video,
   
   // Utilities

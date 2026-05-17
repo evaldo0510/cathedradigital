@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { DeepContent, AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Lock } from 'lucide-react';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
@@ -52,7 +52,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
       {title && (
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px flex-1 bg-border/40" />
-          <h3 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
           <div className="h-px flex-1 bg-border/40" />
         </div>
       )}
@@ -68,14 +68,14 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`p-6 rounded-full border transition-all relative overflow-hidden ${
+              className={`p-6 rounded-3xl border transition-all relative overflow-hidden ${
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
               } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-full ${
+                <div className={`p-2 rounded-xl ${
                   isLocked ? 'bg-muted text-muted-foreground' : (section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground')
                 } transition-colors`}>
                   {isLocked ? <Lock className="w-4 h-4" /> : section.icon}
@@ -85,7 +85,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 }`}>
                   {section.label}
                   {section.isPremium && !isLocked && (
-                    <span className="ml-2 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-premium-tiny">PRO</span>
+                    <span className="ml-2 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[8px]">PRO</span>
                   )}
                 </h4>
               </div>
@@ -121,8 +121,8 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-premium-sm bg-muted/30 border border-dashed border-border/50 text-center">
-                    <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                  <div className="py-4 px-2 rounded-xl bg-muted/30 border border-dashed border-border/50 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
                   </div>
@@ -137,7 +137,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="font-bold text-premium-tiny uppercase tracking-widest h-9"
+                      className="font-bold text-[10px] uppercase tracking-widest h-9"
                       onClick={() => navigate(AppRoute.PRICING)}
                     >
                       Desbloquear PRO

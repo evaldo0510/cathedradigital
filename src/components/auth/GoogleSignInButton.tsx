@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Icons } from '@/constants';
 import { lovable } from '@/integrations/lovable/index';
-import { Button } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
 interface GoogleSignInButtonProps {
   className?: string;
   variant?: 'default' | 'outline' | 'ghost';
-  size?: 'md' | 'sm' | 'lg' | 'icon';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   text?: string;
   showIcon?: boolean;
   onSuccess?: () => void;
@@ -17,7 +17,7 @@ interface GoogleSignInButtonProps {
 const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
   className,
   variant = 'outline',
-  size = 'md',
+  size = 'default',
   text = 'Entrar com Google',
   showIcon = true,
   onSuccess,
@@ -60,7 +60,7 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
       onClick={handleSignIn}
       disabled={loading}
       className={cn(
-        "gap-3",
+        "font-black uppercase text-[10px] tracking-widest gap-3 transition-all active:scale-95",
         className
       )}
     >

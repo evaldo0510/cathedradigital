@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle  , CardFooter   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -221,13 +221,13 @@ const AdminConstructionTab: React.FC = () => {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-48 rounded-premium-sm bg-muted/40 animate-pulse border border-border" />
+            <div key={i} className="h-48 rounded-2xl bg-muted/40 animate-pulse border border-border" />
           ))}
         </div>
       ) : filteredProjects.length === 0 ? (
         <Card className="border-dashed border-2 py-12">
           <CardContent className="flex flex-col items-center text-center space-y-4">
-            <div className="w-16 h-16 rounded-premium-sm bg-muted flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
               <Building2 className="w-8 h-8 text-muted-foreground" />
             </div>
             <div className="space-y-1">
@@ -252,14 +252,14 @@ const AdminConstructionTab: React.FC = () => {
               </CardHeader>
               <CardContent className="pb-3 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 rounded-premium-sm bg-muted/50 border space-y-1">
+                  <div className="p-3 rounded-xl bg-muted/50 border space-y-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <DollarSign className="w-3 h-3" /> Orçamento
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-8 gap-2 text-premium-tiny font-black uppercase tracking-widest"
+                      className="w-full h-8 gap-2 text-[10px] font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('budget');
@@ -269,14 +269,14 @@ const AdminConstructionTab: React.FC = () => {
                       <Upload className="w-3 h-3" /> Subir Planilha
                     </Button>
                   </div>
-                  <div className="p-3 rounded-premium-sm bg-muted/50 border space-y-1">
+                  <div className="p-3 rounded-xl bg-muted/50 border space-y-1">
                     <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <Calendar className="w-3 h-3" /> Cronograma
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-8 gap-2 text-premium-tiny font-black uppercase tracking-widest"
+                      className="w-full h-8 gap-2 text-[10px] font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('schedule');
@@ -289,7 +289,7 @@ const AdminConstructionTab: React.FC = () => {
                 </div>
               </CardContent>
               <CardFooter className="bg-muted/10 py-3 flex justify-between">
-                <span className="text-premium-tiny text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
+                <span className="text-[10px] text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
                   <Trash2 className="w-3.5 h-3.5" />
                 </Button>
@@ -343,8 +343,8 @@ const AdminConstructionTab: React.FC = () => {
               {uploadType === 'budget' ? ' "Item", "Previsto", "Real"' : ' "Tarefa", "Início Previsto", "Fim Previsto", "Progresso"'}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-premium-sm gap-4 bg-muted/5">
-            <div className="w-12 h-12 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center py-8 border-2 border-dashed rounded-xl gap-4 bg-muted/5">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
               <FileSpreadsheet className="w-6 h-6 text-primary" />
             </div>
             <div className="text-center px-4">
@@ -365,7 +365,7 @@ const AdminConstructionTab: React.FC = () => {
               />
             </div>
           </div>
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium-sm p-3 flex gap-3">
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex gap-3">
             <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
             <div className="text-xs text-amber-800">
               <p className="font-bold">Atenção!</p>

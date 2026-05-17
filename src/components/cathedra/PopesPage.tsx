@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import SacredImage from './SacredImage';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Info, Calendar, Scroll, ChevronRight } from 'lucide-react';
@@ -176,9 +176,9 @@ const PopesPage: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
           <Icons.ShieldCheck className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">Os Papas</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
@@ -190,7 +190,7 @@ const PopesPage: React.FC = () => {
           placeholder="Buscar Papa..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-9 bg-muted/50 border-border/50 rounded-full"
+          className="pl-9 bg-muted/50 border-border/50 rounded-xl"
         />
       </div>
 
@@ -215,7 +215,7 @@ const PopesPage: React.FC = () => {
                     <div className="flex items-center justify-between mb-1">
                       <h3 className="text-xl font-serif font-bold text-white">{pope.name}</h3>
                       {pope.isSaint && (
-                        <Badge variant="outline" className="text-premium-tiny bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
+                        <Badge variant="outline" className="text-[8px] bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
                       )}
                     </div>
                     <p className="text-white/80 text-xs font-serif italic">{pope.title}</p>
@@ -223,7 +223,7 @@ const PopesPage: React.FC = () => {
                 </div>
 
                 <CardContent className="p-5 flex-1 flex flex-col space-y-4">
-                  <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary">
                     <Calendar className="w-3 h-3" /> {pope.reign}
                   </div>
 
@@ -232,12 +232,12 @@ const PopesPage: React.FC = () => {
                   </p>
 
                   <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                       <Scroll className="w-3 h-3" /> Legado Principal
                     </div>
                     <ul className="space-y-1">
                       {pope.contributions.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-premium-small text-foreground font-bold">
+                        <li key={i} className="flex items-start gap-2 text-[11px] text-foreground font-bold">
                           <ChevronRight className="w-3 h-3 text-primary mt-0.5 shrink-0" />
                           <span>{item}</span>
                         </li>
@@ -247,7 +247,7 @@ const PopesPage: React.FC = () => {
 
                   {pope.motto && (
                     <div className="pt-4 border-t border-border/50 text-center">
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-1">Lema</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Lema</p>
                       <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}

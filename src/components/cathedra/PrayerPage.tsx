@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -42,7 +41,7 @@ const YOUTUBE_IDS: Record<MysteryKey, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-premium-sm overflow-hidden border border-border bg-black shadow-lg">
+  <div className="w-full aspect-video rounded-2xl overflow-hidden border border-border bg-black shadow-lg">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
@@ -168,10 +167,10 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-4 sticky top-0 z-10 bg-inherit/80 ">
-        <Button onClick={onClose} className="p-2 rounded-full bg-white/[0.05] border border-white/[0.08] hover:bg-white/10 transition-all">
+        <button onClick={onClose} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
           <ArrowLeft className="w-5 h-5 text-secondary/70" />
-        </Button>
-        <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/40">{data.title}</span>
+        </button>
+        <span className="text-[10px] font-black uppercase tracking-widest text-secondary/40">{data.title}</span>
         <div className="w-9" />
       </div>
 
@@ -186,15 +185,15 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
       {/* Intention */}
       {intention && phase === 'intro' && (
-        <div className="mx-6 mt-4 p-4 bg-secondary/5 border border-secondary/10 rounded-premium-sm text-center max-w-xl md:mx-auto">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
+        <div className="mx-6 mt-4 p-4 bg-secondary/5 border border-secondary/10 rounded-2xl text-center max-w-xl md:mx-auto">
+          <p className="text-[10px] font-black uppercase tracking-widest text-secondary/50 mb-1">Intenção</p>
           <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
         </div>
       )}
 
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
-        <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 md:p-12 space-y-8  shadow-premium shadow-black/50">
+        <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 md:p-12 space-y-8  shadow-2xl shadow-black/50">
           {/* Audio Player — works in background */}
           <PrayerAudioPlayer
             variant="dark"
@@ -220,7 +219,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   { key: 'aveMaria', label: 'Ave Maria' },
                   { key: 'gloria', label: 'Glória ao Pai' },
                 ].map(p => (
-                  <div key={p.key} className="group bg-white/[0.04] rounded-premium-sm p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <div key={p.key} className="group bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-sm text-secondary/90">{p.label}</p>
                       <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
@@ -232,21 +231,21 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 ))}
 
                 {expandedPrayer && (PRAYER_DETAILS as any)[expandedPrayer] && (
-                  <div className="mt-8 pt-8 border-t border-white/[0.08]">
+                  <div className="mt-8 pt-8 border-t border-white/10">
                     <DeepContentSection content={(PRAYER_DETAILS as any)[expandedPrayer]} title="Profundidade da Oração" />
                   </div>
                 )}
               </div>
-              <Button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              <button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Iniciar 1º Mistério
-              </Button>
+              </button>
             </div>
           )}
 
           {phase === 'mystery' && (
             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
               <div className="text-center space-y-3">
-                <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/50">{currentMystery + 1}º Mistério</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-secondary/50">{currentMystery + 1}º Mistério</span>
                 <h3 className="text-3xl font-serif font-bold text-secondary leading-tight">{mystery.title}</h3>
                 <p className="text-sm text-secondary/60 font-bold tracking-wide">{mystery.scripture}</p>
               </div>
@@ -254,22 +253,22 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-secondary/10 rotate-12" />
                 <p className="text-xl text-secondary/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
               </div>
-              <Button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              <button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 Rezar a Dezena
-              </Button>
+              </button>
             </div>
           )}
 
           {phase === 'decade' && (
             <div className="space-y-8 animate-in fade-in duration-500">
               <div className="text-center">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/30 mb-4">{currentMystery + 1}º Mistério — Dezena</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-secondary/30 mb-4">{currentMystery + 1}º Mistério — Dezena</p>
                 
                 {/* Bead Counter */}
                 <div className="flex flex-col items-center gap-4 py-4">
                   <div className="grid grid-cols-5 gap-4 md:flex md:items-center md:gap-3">
                     {Array.from({ length: 10 }).map((_, i) => (
-                      <Button
+                      <button
                         key={i}
                         onClick={() => setAveCount(i + 1)}
                         className={`w-6 h-6 rounded-full border-2 transition-all duration-300 ${
@@ -280,7 +279,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                       />
                     ))}
                   </div>
-                  <p className="text-secondary/40 text-premium-tiny font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
+                  <p className="text-secondary/40 text-[10px] font-black uppercase tracking-[0.2em]">{aveCount}/10 Ave-Marias</p>
                 </div>
               </div>
 
@@ -290,7 +289,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   { key: 'aveMaria', label: 'Ave Maria (×10)' },
                   { key: 'gloria', label: 'Glória ao Pai' },
                 ].map(p => (
-                  <div key={p.key} className="group bg-white/[0.04] rounded-premium-sm p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
+                  <div key={p.key} className="group bg-white/[0.04] rounded-2xl p-5 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === p.key ? null : p.key)}>
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-sm text-secondary/90">{p.label}</p>
                       <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === p.key ? 'rotate-90' : ''}`} />
@@ -302,7 +301,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 ))}
               </div>
 
-              <Button onClick={() => {
+              <button onClick={() => {
                 setExpandedPrayer(null);
                 setAveCount(0);
                 if (currentMystery < 4) {
@@ -311,16 +310,16 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
-              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
                 {currentMystery < 4 ? 'Próximo Mistério' : 'Concluir Rosário'}
-              </Button>
+              </button>
             </div>
           )}
 
           {phase === 'closing' && (
             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-700">
               <h3 className="text-2xl font-serif font-bold text-secondary text-center">Oração Final</h3>
-              <div className="bg-white/[0.04] rounded-premium-sm p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
+              <div className="bg-white/[0.04] rounded-2xl p-6 cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-sm text-secondary/90">Salve Rainha</p>
                   <ChevronRight className={`w-4 h-4 text-secondary/30 transition-transform ${expandedPrayer === 'salve' ? 'rotate-90' : ''}`} />
@@ -339,9 +338,9 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <p className="text-base text-secondary/40 font-serif italic max-w-[280px] mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e por todas as vossas intenções.</p>
                 </div>
               </div>
-              <Button onClick={onClose} className="w-full py-4 bg-secondary text-primary rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary transition-all shadow-premium shadow-secondary/20">
+              <button onClick={onClose} className="w-full py-4 bg-secondary text-primary rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-secondary transition-all shadow-xl shadow-secondary/20">
                 <Icons.Cross className="w-4 h-4 inline mr-2" /> Amém — Finalizar
-              </Button>
+              </button>
             </div>
           )}
         </div>
@@ -379,9 +378,9 @@ const PrayerPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-full">
           <Heart className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Oratio et Devotio</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Oração e Devoção</h1>
         <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">"A oração é a respiração da alma. Sem ela, a vida interior desfalece."</p>
@@ -395,7 +394,7 @@ const PrayerPage: React.FC = () => {
       >
         {/* Main Content — Today's Rosary */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-premium shadow-black/[0.02]">
+          <div className="group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/[0.02]">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
               <todayData.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
             </div>
@@ -403,13 +402,13 @@ const PrayerPage: React.FC = () => {
             <div className="relative space-y-8">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
                     <Calendar className="w-3 h-3" />
                     {getDayName()}
                   </div>
                   <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">Terço de Hoje</h2>
                 </div>
-                <div className={`inline-flex items-center gap-3 px-4 py-2 rounded-full ${todayData.color} border border-current/10`}>
+                <div className={`inline-flex items-center gap-3 px-4 py-2 rounded-2xl ${todayData.color} border border-current/10`}>
                   <todayData.icon className="w-5 h-5" />
                   <span className="text-sm font-serif font-bold tracking-tight">{todayData.title}</span>
                 </div>
@@ -419,7 +418,7 @@ const PrayerPage: React.FC = () => {
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                         <MessageSquare className="w-4 h-4" />
                       </div>
                       <p className="text-sm font-serif text-muted-foreground italic leading-relaxed">
@@ -427,24 +426,24 @@ const PrayerPage: React.FC = () => {
                       </p>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                         <Activity className="w-3 h-3" /> Suas Intenções
                       </label>
                       <textarea
                         value={intention}
                         onChange={e => setIntention(e.target.value)}
                         placeholder="Escreva por quem ou pelo que você oferece este terço..."
-                        className="w-full px-5 py-4 rounded-full bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-24"
+                        className="w-full px-5 py-4 rounded-2xl bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-24"
                       />
                     </div>
                   </div>
 
-                  <Button
+                  <button
                     onClick={() => setPrayingMystery(todayKey)}
-                    className="w-full inline-flex items-center justify-center gap-3 px-8 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all active:scale-95"
+                    className="w-full inline-flex items-center justify-center gap-3 px-8 py-5 bg-foreground text-background rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all active:scale-95"
                   >
                     <Play className="w-4 h-4 fill-current" /> Começar Rosário
-                  </Button>
+                  </button>
                 </div>
 
                 <div className="space-y-4">
@@ -466,36 +465,36 @@ const PrayerPage: React.FC = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between px-2">
               <h3 className="text-2xl font-serif font-bold">Mistérios do Rosário</h3>
-              <Button 
+              <button 
                 onClick={() => navigate('/rosary')}
-                className="text-premium-tiny font-black uppercase tracking-widest text-primary hover:underline transition-all"
+                className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline transition-all"
               >
                 Ver Rosário Completo <ChevronRight className="w-3 h-3 inline ml-1" />
-              </Button>
+              </button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {(Object.entries(MYSTERY_DATA) as [MysteryKey, typeof MYSTERY_DATA[MysteryKey]][]).map(([key, val]) => (
-                <Button
+                <button
                   key={key}
                   onClick={() => setPrayingMystery(key)}
-                  className={`group relative flex items-center gap-5 p-6 rounded-full border transition-all hover:shadow-premium hover:-translate-y-1 ${
+                  className={`group relative flex items-center gap-5 p-6 rounded-3xl border transition-all hover:shadow-xl hover:-translate-y-1 ${
                     key === todayKey ? 'bg-primary/5 border-primary/30 shadow-lg' : 'bg-card border-border hover:border-primary/30'
                   }`}
                 >
-                  <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${val.color}`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${val.color}`}>
                     <val.icon className="w-7 h-7" />
                   </div>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <p className="font-serif font-bold text-foreground group-hover:text-primary transition-colors">{val.title}</p>
                       {key === todayKey && (
-                        <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">Hoje</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded-full">Hoje</span>
                       )}
                     </div>
-                    <p className="text-premium-tiny text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{val.days}</p>
+                    <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{val.days}</p>
                   </div>
                   <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-primary/50 group-hover:translate-x-1 transition-all" />
-                </Button>
+                </button>
               ))}
             </div>
           </div>
@@ -510,7 +509,7 @@ const PrayerPage: React.FC = () => {
         >
           <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                 <BookOpen className="w-5 h-5" />
               </div>
               <h3 className="text-xl font-serif font-bold">Orações Comuns</h3>
@@ -522,7 +521,7 @@ const PrayerPage: React.FC = () => {
                 { key: 'gloria', title: 'Glória ao Pai', icon: Sparkles },
                 { key: 'salveRainha', title: 'Salve Rainha', icon: Heart },
               ].map(p => (
-                <div key={p.key} className="p-5 rounded-premium-sm bg-muted/30 border border-border/50 space-y-3 hover:bg-muted/50 transition-colors group">
+                <div key={p.key} className="p-5 rounded-2xl bg-muted/30 border border-border/50 space-y-3 hover:bg-muted/50 transition-colors group">
                   <div className="flex items-center gap-3">
                     <p className="font-serif font-bold text-sm flex-1">{p.title}</p>
                     <ShareButton
@@ -540,15 +539,15 @@ const PrayerPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="bg-primary text-primary-foreground rounded-[2rem] p-8 space-y-4 shadow-premium shadow-primary/20">
+          <div className="bg-primary text-primary-foreground rounded-[2rem] p-8 space-y-4 shadow-xl shadow-primary/20">
             <Cross className="w-8 h-8 opacity-50" />
             <h4 className="text-xl font-serif font-bold">Via-Sacra</h4>
             <p className="text-sm opacity-80 leading-relaxed font-serif">
               Medite sobre a Paixão de Cristo em 14 estações de profunda oração.
             </p>
-            <Button onClick={() => navigate('/via-crucis')} className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full font-bold text-xs uppercase tracking-widest transition-all">
+            <button onClick={() => navigate('/via-crucis')} className="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
               Explorar Via-Sacra
-            </Button>
+            </button>
           </div>
         </motion.div>
       </motion.div>

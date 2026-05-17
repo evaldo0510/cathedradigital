@@ -1,4 +1,3 @@
-import { Button } from '@/components/cathedra/Button';
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { FaithTerm } from '../AZFaithPage';
@@ -22,11 +21,11 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
       {terms.map(t => {
         const isActive = selectedTerm?.term === t.term;
         return (
-          <Button
+          <button
             key={t.term}
             onClick={() => onTermClick(t)}
             aria-pressed={isActive}
-            className={`w-full text-left px-4 py-3 rounded-full transition-all flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none
+            className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group focus-visible:ring-2 focus-visible:ring-primary outline-none
               ${isActive
                 ? 'bg-primary/10 border border-primary/20 text-foreground'
                 : 'hover:bg-muted/50 text-foreground/80'
@@ -35,7 +34,7 @@ const EncyclopediaTermList: React.FC<EncyclopediaTermListProps> = ({
 
             <span className="font-semibold text-sm truncate">{t.term}</span>
             <ChevronRight className={`w-4 h-4 shrink-0 transition-transform ${isActive ? 'text-primary rotate-90' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
-          </Button>
+          </button>
         );
       })}
     </div>

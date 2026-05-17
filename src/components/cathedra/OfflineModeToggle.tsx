@@ -1,4 +1,3 @@
-import { Button   } from '@/components/cathedra/Button';
 import React from 'react';
 import { Icons } from '@/constants';
 import { useOfflineMode } from '@/hooks/useOfflineMode';
@@ -8,9 +7,9 @@ const OfflineModeToggle: React.FC = () => {
   const { isOfflineMode, toggle } = useOfflineMode();
 
   return (
-    <Button
+    <button
       onClick={toggle}
-      className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-lg hover:shadow-premium transition-all group flex items-center gap-2 ${
+      className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-lg hover:shadow-xl transition-all group flex items-center gap-2 ${
         isOfflineMode 
           ? 'bg-primary border-primary text-primary-foreground' 
           : 'bg-card border-border text-muted-foreground'
@@ -28,13 +27,13 @@ const OfflineModeToggle: React.FC = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 'auto', opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="text-premium-tiny font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
+            className="text-[10px] font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
           >
             Offline
           </motion.span>
         )}
       </AnimatePresence>
-    </Button>
+    </button>
   );
 };
 

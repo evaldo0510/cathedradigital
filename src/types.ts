@@ -63,16 +63,11 @@ export enum AppRoute {
   A11Y_AUDIT = '/a11y-audit',
   SECURITY_AUDIT = '/security-audit',
   SELLER = '/vendedor',
-  VISUAL_AUDIT = '/admin/visual-audit',
-  VISUAL_REGRESSION = '/admin/visual-regression',
   CATECHISM_INTEGRITY = '/catechism/integrity',
   CATECHISM_EXPLORER = '/catechism/explorer',
   CATECHISM_HEALTH = '/catechism/health',
   CATECHISM_VERIFY = '/catechism/verify',
   TRANSPARENCY = '/transparencia',
-  DIARIO = '/diario',
-  AUDIT_LOGS = '/admin/audit-logs',
-  PROGRESS = '/progresso',
 
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'

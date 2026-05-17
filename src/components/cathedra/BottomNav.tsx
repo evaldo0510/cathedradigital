@@ -1,11 +1,9 @@
-import { Button   } from '@/components/cathedra/Button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -48,7 +46,7 @@ interface BottomNavItemProps {
 }
 
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
-  <Button 
+  <button 
     onClick={(e) => { onRipple(e); onClick(); }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
@@ -60,22 +58,22 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
   >
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
-      <CathedraIcon 
-        icon={(icon as React.ReactElement).type as any} 
-        size={IconSizePreset.NAV} 
-        variant={isActive ? 'primary' : 'muted'} 
-        containerClassName="bg-transparent border-none p-0 w-auto h-auto"
-      />
+      {React.cloneElement(icon as React.ReactElement, { 
+        className: `w-5 h-5 sm:w-5 sm:h-5`,
+        size: undefined,
+        strokeWidth: 2,
+        fill: isActive ? 'currentColor' : 'none'
+      })}
     </div>
-    <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
+    <span className={`text-[8px] sm:text-[10px] font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-premium-sm" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full" />
     )}
-  </Button>
+  </button>
 );
 
 interface BottomNavProps {
@@ -93,24 +91,23 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const items = [
     { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
     { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
+    { label: t('themes'), icon: <Icons.Themes />, route: AppRoute.TEMAS },
     { label: t('explore'), icon: <Icons.Compass />, route: AppRoute.BIBLIOTECA },
     { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
-    { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
   ];
 
   return (
-    <div className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-primary/5 safe-area-bottom">
-      <div className="flex items-stretch h-14 px-1">
-        {items.map((item: any) => (
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
+      <div className="flex items-stretch h-16 px-1">
+        {items.map((item) => (
           <BottomNavItem 
             key={item.label}
             label={item.label}
             icon={item.icon}
-            route={item.route || ''}
-            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
+            route={item.route}
+            isActive={currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))}
             onClick={() => {
-              if (item.onClick) item.onClick();
-              else if (item.route) navigate(item.route);
+              navigate(item.route);
             }}
             onRipple={triggerRipple}
           />

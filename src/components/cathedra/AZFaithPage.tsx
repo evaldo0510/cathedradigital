@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { 
   Search, X, BookOpen, Brain
 } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import AZFaithQuiz from './AZFaithQuiz';
 import { useGlossary } from '@/hooks/useGlossary';
 import AlphabetBar from './encyclopedia/AlphabetBar';
@@ -102,7 +102,7 @@ const AZFaithPage: React.FC = () => {
   if (isLoading && allTerms.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-premium-sm h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -117,15 +117,15 @@ const AZFaithPage: React.FC = () => {
 
       <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
         <header className="text-center space-y-6 pt-12 mb-16">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium-sm border border-primary/10 shadow-inner">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-full border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
-            <span className="text-premium-small font-bold uppercase tracking-[0.3em] text-primary/60">Glossarium Fidei</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Glossarium Fidei</span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-display font-medium tracking-tight text-primary leading-none">A–Z da Fé</h1>
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent">A–Z da Fé</h1>
           <Button
             variant={quizMode ? 'default' : 'outline'}
             onClick={() => setQuizMode(!quizMode)}
-            className="rounded-full gap-2 font-bold text-xs uppercase tracking-widest mt-2"
+            className="rounded-2xl gap-2 font-bold text-xs uppercase tracking-widest mt-2"
           >
             <Brain className="w-4 h-4" />
             {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
@@ -146,12 +146,12 @@ const AZFaithPage: React.FC = () => {
                   setSearchQuery(e.target.value);
                   if (e.target.value) setSelectedLetter(null);
                 }}
-                className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+                className="w-full pl-11 pr-10 py-3 bg-card border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
               />
               {searchQuery && (
-                <Button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
+                <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2">
                   <X className="w-4 h-4 text-muted-foreground" />
-                </Button>
+                </button>
               )}
             </div>
 
@@ -169,10 +169,10 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-8 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-soft
+                    className={`px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-[0.1em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary outline-none shadow-sm
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
-                        : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-soft'
+                        : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-md'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 relative z-10">

@@ -9,9 +9,6 @@ import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
-import SpiritualTrailCard from './SpiritualTrailCard';
-import { HomeCard as Card } from './HomeCard';
-import { Button } from './Button';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -126,144 +123,144 @@ const HojePage: React.FC = () => {
 
   if (loadingStats || loadingJourney) return <DashboardSkeleton />;
 
-  const openLogosChat = () => {
-    const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
-    if (chatBtn) chatBtn.click();
-  };
-
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-background pb-32">
-      <SEOHead title="Home - Cathedra" description="Seu portal de espiritualidade católica guiado." path="/hoje" />
+    <div className="flex flex-col items-center w-full min-h-screen bg-[#F8F5EE] pt-6 md:pt-16 pb-32">
+      <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
+      {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
-      {/* 1. HERO PRINCIPAL */}
-      <section className="w-full min-h-[70vh] flex flex-col items-center justify-center text-center px-6 pt-20">
+      <div className="w-full max-w-[640px] px-6 space-y-20">
+        {/* HERO SECTION */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          className="space-y-12 max-w-4xl"
+          className="text-center space-y-8"
         >
-          <div className="space-y-6">
-            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30">
+          <div className="space-y-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#0F172A]/40">
               {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
             </p>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display text-primary leading-tight tracking-tight">
-              A beleza <br />
-              <span className="text-secondary italic font-serif">salvará o mundo.</span>
+            <h1 className="text-4xl md:text-5xl font-serif text-[#0F172A] leading-tight">
+              Sua jornada espiritual <br />
+              <span className="text-[#D4AF37] italic">guiada pela Sabedoria.</span>
             </h1>
           </div>
           
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-4 flex-wrap">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/5">
-                <Icons.Zap className="w-3.5 h-3.5 text-primary" />
-                <span className="text-[10px] font-black text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A]/5 border border-[#0F172A]/10">
+                <Icons.Zap className="w-4 h-4 text-[#0F172A]" />
+                <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/[0.03] border border-primary/5">
-              <Icons.Star className="w-3.5 h-3.5 text-secondary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A]/5 border border-[#0F172A]/10">
+              <Icons.Star className="w-4 h-4 text-[#D4AF37]" />
+              <span className="text-[10px] font-bold text-[#0F172A] uppercase tracking-wider">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
-      </section>
 
-      <div className="app-container max-w-3xl space-y-32">
-        {/* 2. CONTINUAR JORNADA */}
+        {/* CONTINUE JORNADA */}
         {nextUp && (
-          <section className="space-y-10">
-            <SectionHeader label="Continuar Jornada" />
-            <Card 
-              variant="interactive"
-              padding="none"
+          <section className="space-y-6">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+              <div className="h-px w-8 bg-[#0F172A]/10" /> Continue sua Jornada
+            </h2>
+            
+            <motion.div 
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               onClick={() => navigate(nextUp.route)}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(nextUp.route)}
-              className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
-              aria-label={`Continuar ${nextUp.label}`}
+              className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all flex items-center justify-between shadow-sm"
             >
-              <div className="flex items-center justify-between gap-8">
-                <div className="flex items-center gap-8">
-                  <div className="w-14 h-14 rounded-premium-sm bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
-                    <Icons.Flame className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-primary/30 mb-2">{nextUp.subtitle}</p>
-                    <h3 className="text-2xl md:text-3xl font-bold text-primary tracking-tight">{nextUp.label}</h3>
-                  </div>
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37]">
+                  <Icons.Flame className="w-7 h-7" />
                 </div>
-                <Icons.ChevronRight className="w-6 h-6 text-primary/10 group-hover:translate-x-1 transition-all" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#0F172A]/40 mb-1.5">{nextUp.subtitle}</p>
+                  <h3 className="text-xl font-bold text-[#0F172A]">{nextUp.label}</h3>
+                  {activeJourney && (
+                    <div className="mt-4 flex items-center gap-4 w-48">
+                      <div className="flex-1 h-1 bg-[#0F172A]/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#D4AF37] transition-all duration-1000" style={{ width: `${journeyProgress.total > 0 ? (journeyProgress.completed / journeyProgress.total) * 100 : 0}%` }} />
+                      </div>
+                      <span className="text-[10px] font-bold text-[#0F172A]/60 tabular-nums">{journeyProgress.completed}/{journeyProgress.total}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </Card>
+              <Icons.ChevronRight className="w-6 h-6 text-[#0F172A]/20" />
+            </motion.div>
           </section>
         )}
 
-        {/* 3. RITUAL DO DIA */}
-        <section className="space-y-10">
-          <SectionHeader label="Ritual do Dia" />
+        {/* RITUAL DO DIA */}
+        <section className="space-y-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+            <div className="h-px w-8 bg-[#0F172A]/10" /> Ritual do Dia
+          </h2>
           <RitualDoDia />
         </section>
 
-        {/* 4. TRILHAS PRINCIPAIS */}
-        <section className="space-y-10">
-          <SectionHeader label="Trilhas Principais" />
-          <SpiritualTrailCard />
+        {/* TEMAS PRINCIPAIS */}
+        <section className="space-y-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+            <div className="h-px w-8 bg-[#0F172A]/10" /> Temas Principais
+          </h2>
+          <HomeMainDoors t={t} />
         </section>
 
-        {/* 5. CATECISMO */}
-        <section className="space-y-10">
-          <SectionHeader label="Catecismo" />
-          <Card 
-            variant="interactive"
-            padding="none"
+        {/* CATECISMO */}
+        <section className="space-y-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+            <div className="h-px w-8 bg-[#0F172A]/10" /> Catecismo
+          </h2>
+          <motion.div 
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
             onClick={() => navigate(AppRoute.CATECHISM)}
-            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && navigate(AppRoute.CATECHISM)}
-            className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
-            aria-label="Abrir Catechismo da Igreja Católica"
+            className="p-10 rounded-[2.5rem] border border-[#0F172A]/5 bg-white cursor-pointer hover:border-[#D4AF37]/30 transition-all group shadow-sm"
           >
-            <div className="flex items-center justify-between gap-8">
-              <div className="flex items-center gap-8">
-                <div className="w-14 h-14 rounded-premium-sm bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700">
-                  <Icons.Catechism className="w-7 h-7" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-primary tracking-tight">Doutrina da Igreja</h3>
-                  <p className="text-sm text-primary/40 mt-1">Explore a sabedoria milenar da Tradição Viva.</p>
-                </div>
+            <div className="flex items-center gap-8">
+              <div className="w-20 h-20 rounded-3xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+                <Icons.Catechism className="w-10 h-10" />
               </div>
-              <Icons.ChevronRight className="w-6 h-6 text-primary/10 group-hover:translate-x-1 transition-all" />
+              <div className="flex-1">
+                <h3 className="text-2xl font-bold text-[#0F172A]">Catecismo da Igreja</h3>
+                <p className="text-base text-[#0F172A]/60 mt-2">Explore a doutrina católica em profundidade e clareza.</p>
+              </div>
+              <Icons.ChevronRight className="w-8 h-8 text-[#0F172A]/20" />
             </div>
-          </Card>
+          </motion.div>
         </section>
 
-        {/* 6. LOGOS IA */}
-        <section className="space-y-10">
-          <SectionHeader label="Logos IA" />
-          <Card 
-            variant="interactive"
-            padding="none"
-            onClick={openLogosChat}
-            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openLogosChat()}
-            className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
-            aria-label="Abrir conversa com o Logos"
+        {/* TRILHAS */}
+        <section className="space-y-6">
+          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#0F172A]/30 flex items-center gap-4">
+            <div className="h-px w-8 bg-[#0F172A]/10" /> Trilhas de Formação
+          </h2>
+          <motion.div 
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => navigate(AppRoute.JORNADAS)} 
+            className="p-8 rounded-[2rem] border border-[#0F172A]/5 bg-white hover:border-[#D4AF37]/30 transition-all flex items-center justify-between group shadow-sm"
           >
-            <div className="flex items-center justify-between gap-8">
-              <div className="flex items-center gap-8">
-                <div className="w-14 h-14 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700">
-                  <Icons.Compass className="w-7 h-7" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-primary tracking-tight">Mestre Contemplativo</h3>
-                  <p className="text-sm text-primary/40 mt-1">Diálogos teológicos para iluminar sua caminhada.</p>
-                </div>
+            <div className="flex items-center gap-6">
+              <div className="w-14 h-14 rounded-2xl bg-[#0F172A]/5 flex items-center justify-center text-[#D4AF37] group-hover:bg-[#0F172A]/10 transition-colors">
+                <Icons.Route className="w-7 h-7" />
               </div>
-              <Icons.Sparkles className="w-5 h-5 text-primary/10 group-hover:text-primary/30 transition-all" />
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-[#0F172A]">Explorar todas as Trilhas</h3>
+                <p className="text-sm text-[#0F172A]/60 mt-1">Descubra novos caminhos para sua vida espiritual.</p>
+              </div>
             </div>
-          </Card>
+            <Icons.ChevronRight className="w-6 h-6 text-[#0F172A]/20" />
+          </motion.div>
         </section>
 
         {/* FOOTER QUOTE */}
-        <div className="pt-32 text-center opacity-10">
-          <p className="text-[10px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase">
+        <div className="pt-20 text-center">
+          <p className="text-sm text-[#0F172A]/40 font-serif italic max-w-sm mx-auto leading-relaxed">
             {todayQuote}
           </p>
         </div>
@@ -271,14 +268,5 @@ const HojePage: React.FC = () => {
     </div>
   );
 };
-
-const SectionHeader = ({ label }: { label: string }) => (
-  <div className="flex items-center gap-6">
-    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap">
-      {label}
-    </h2>
-    <div className="h-px flex-1 bg-primary/5" />
-  </div>
-);
 
 export default HojePage;

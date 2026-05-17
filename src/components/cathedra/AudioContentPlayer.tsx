@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { Loader2, Play, Pause, Headphones, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -137,17 +137,17 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         ) : (
           <Headphones className="w-4 h-4" />
         )}
-        {showTitle && <span className="text-premium-tiny font-black uppercase tracking-widest">{title}</span>}
+        {showTitle && <span className="text-[10px] font-black uppercase tracking-widest">{title}</span>}
       </Button>
       
       {isPlaying && (
-        <Button 
+        <button 
           onClick={resetAudio}
           className="p-2 text-muted-foreground hover:text-foreground transition-colors"
           title="Reiniciar"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-        </Button>
+        </button>
       )}
     </div>
   );

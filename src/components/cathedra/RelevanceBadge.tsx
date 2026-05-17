@@ -23,8 +23,8 @@ export interface RelevanceBadgeProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<RelevanceBadgeProps['size']>, string> = {
-  xs: 'px-1.5 py-0.5 text-premium-tiny',
-  sm: 'px-2 py-0.5 text-premium-tiny',
+  xs: 'px-1.5 py-0.5 text-[8px]',
+  sm: 'px-2 py-0.5 text-[9px]',
 };
 
 export const RelevanceBadge: React.FC<RelevanceBadgeProps> = ({

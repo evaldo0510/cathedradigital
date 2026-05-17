@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
 import RitualDoDia from './RitualDoDia';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import HomeMainDoors from './HomeMainDoors';
+import { SectionSkeleton } from './HomeSkeletons';
 
 interface HomeMainContentProps {
   user: any;
@@ -13,137 +16,143 @@ interface HomeMainContentProps {
   t: (key: string) => string;
 }
 
-const SectionHeader = ({ label }: { label: string }) => (
-  <div className="flex items-center gap-6 px-4 sm:px-0">
-    <h2 className="text-premium-tiny heading-section-label !mb-0">
-      {label}
-    </h2>
-    <div className="h-px flex-1 bg-primary/5" />
-  </div>
-);
-
 const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
-  const openLogosChat = () => {
-    const chatBtn = document.querySelector('button[aria-label*="Logos"]') as HTMLButtonElement;
-    if (chatBtn) chatBtn.click();
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="max-w-5xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-0 sm:px-6 md:px-0">
-      {/* 2. CONTINUAR JORNADA */}
-      <section className="space-y-6 px-4 sm:px-0">
-        <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
+    <div className="app-container space-y-48 md:space-y-64 pb-48 md:pb-64">
+      {/* CONTINUE JORNADA */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+            Continue sua Jornada
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
+          className="p-10 md:p-16 lg:p-20 flex flex-col md:flex-row items-center justify-between gap-12 group"
         >
-          <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform duration-700">
-                <Icons.Flame className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="heading-card">
-                  {user ? 'Continuar Caminhada' : 'Inicie sua Jornada'}
-                </h3>
-                <p className="text-sm text-primary/40 mt-1">
-                  {user 
-                    ? 'Retome sua formação espiritual de onde parou.' 
-                    : 'Descubra uma trilha personalizada para sua alma.'}
-                </p>
-              </div>
+          <div className="flex items-center gap-8 text-center md:text-left flex-col md:flex-row">
+            <div className="w-20 h-20 rounded-3xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-500 shadow-inner">
+              <Icons.Flame className="w-10 h-10" />
             </div>
-            <HomeButton variant="primary" size="sm" onClick={() => onNavigate(AppRoute.JORNADAS)} className="hidden md:flex">
-              {user ? 'Continuar' : 'Começar'}
-            </HomeButton>
-            <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:translate-x-1 transition-all md:hidden" />
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2">Seu Próximo Passo</p>
+              <h3 className="text-2xl md:text-3xl font-serif text-foreground">
+                {user ? 'Retomar caminhada de fé' : 'Inicie sua caminhada hoje'}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-2 max-w-md">
+                {user 
+                  ? 'Continue de onde parou e aprofunde seu conhecimento.' 
+                  : 'Descubra trilhas personalizadas para sua vida espiritual.'}
+              </p>
+            </div>
           </div>
+          <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+            {user ? 'Continuar' : 'Começar'}
+          </HomeButton>
         </HomeCard>
       </section>
 
-      {/* 3. RITUAL DO DIA */}
-      <section className="space-y-6 px-4 sm:px-0">
-        <SectionHeader label="Ritual do Dia" />
-        <RitualDoDia />
+      {/* RITUAL DO DIA */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+            Ritual do Dia
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <div className="max-w-4xl mx-auto w-full">
+          <RitualDoDia />
+        </div>
       </section>
 
-      {/* 4. TRILHAS PRINCIPAIS */}
-      <section className="space-y-6 px-4 sm:px-0">
-        <SectionHeader label="Trilhas Principais" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.TEMAS)}>
-            <div className="flex items-center gap-5">
-              <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="primary" />
-              <div>
-                <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Temas da Fé</h4>
-                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1 text-premium-body">Doutrina e Vida</p>
-              </div>
+      {/* TEMAS PRINCIPAIS */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+            Temas Principais
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <HomeMainDoors t={t} />
+      </section>
+
+      {/* CATECISMO */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+            Catecismo
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <HomeCard 
+          onClick={() => onNavigate(AppRoute.CATECHISM)}
+          className="p-12 md:p-24 lg:p-32 text-center space-y-12 group border-primary/5 hover:border-primary/20"
+        >
+          <div className="w-24 h-24 rounded-[2.5rem] bg-secondary/5 flex items-center justify-center text-secondary mx-auto group-hover:rotate-12 transition-transform duration-700">
+            <Icons.Catechism className="w-12 h-12" />
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-3xl md:text-4xl font-serif text-foreground">Catecismo da Igreja</h3>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed font-serif italic">
+              "O Catecismo deve apresentar, com fidelidade e de modo orgânico, o ensinamento da Sagrada Escritura, da Tradição viva na Igreja e do Magistério autêntico."
+            </p>
+          </div>
+          <HomeButton variant="outline" className="mx-auto px-12">
+            Explorar Doutrina
+          </HomeButton>
+        </HomeCard>
+      </section>
+
+      {/* TRILHAS */}
+      <section className="space-y-12">
+        <div className="flex items-center gap-6">
+          <div className="h-px flex-1 bg-border/40" />
+          <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground whitespace-nowrap">
+            Trilhas de Formação
+          </h2>
+          <div className="h-px flex-1 bg-border/40" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
+          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-primary/20">
+            <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+              <Icons.Star className="w-6 h-6" />
             </div>
+            <div>
+              <h4 className="text-xl font-bold font-serif">Fundamentos da Fé</h4>
+              <p className="text-sm text-muted-foreground mt-2">Para quem está iniciando sua jornada espiritual agora.</p>
+            </div>
+            <HomeButton variant="ghost" className="p-0 h-auto text-primary hover:bg-transparent" onClick={() => onNavigate(AppRoute.JORNADAS)}>
+              Explorar Trilhas <Icons.ChevronRight className="ml-2 w-4 h-4" />
+            </HomeButton>
           </HomeCard>
           
-          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.BIBLE)}>
-            <div className="flex items-center gap-5">
-              <CathedraIcon icon={Icons.BookOpen} size={IconSizePreset.TINY} variant="primary" />
-              <div>
-                <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Estudo Bíblico</h4>
-                <p className="text-[10px] text-primary/30 uppercase tracking-widest mt-1 text-premium-body">Sagradas Escrituras</p>
-              </div>
+          <HomeCard className="p-10 md:p-12 lg:p-16 space-y-8 hover:border-secondary/20">
+            <div className="w-12 h-12 rounded-2xl bg-secondary/5 flex items-center justify-center text-secondary">
+              <Icons.BookOpen className="w-6 h-6" />
             </div>
+            <div>
+              <h4 className="text-xl font-bold font-serif">Estudo Bíblico</h4>
+              <p className="text-sm text-muted-foreground mt-2">Aprofunde seu conhecimento das Escrituras Sagradas.</p>
+            </div>
+            <HomeButton variant="ghost" className="p-0 h-auto text-secondary hover:bg-transparent" onClick={() => onNavigate(AppRoute.BIBLE)}>
+              Ver Planos <Icons.ChevronRight className="ml-2 w-4 h-4" />
+            </HomeButton>
           </HomeCard>
         </div>
       </section>
 
-      {/* 5. CATECISMO */}
-      <section className="space-y-6 px-4 sm:px-0">
-        <SectionHeader label="Catecismo" />
-        <HomeCard 
-          onClick={() => onNavigate(AppRoute.CATECHISM)}
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
-        >
-          <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:rotate-6 transition-transform duration-700">
-                <Icons.Catechism className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">Doutrina da Igreja</h3>
-                <p className="text-sm text-primary/40 mt-1 text-premium-body">"O ensinamento da Tradição viva na Igreja."</p>
-              </div>
-            </div>
-            <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:translate-x-1 transition-all" />
-          </div>
-        </HomeCard>
-      </section>
-
-      {/* 6. LOGOS */}
-      <section className="space-y-6 px-4 sm:px-0">
-        <SectionHeader label="Logos" />
-        <HomeCard 
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
-          onClick={openLogosChat}
-        >
-          <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700">
-                <Icons.Compass className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">Mestre Contemplativo</h3>
-                <p className="text-sm text-primary/40 mt-1 text-premium-body">Diálogos teológicos para iluminar sua caminhada.</p>
-              </div>
-            </div>
-            <Icons.Sparkles className="w-4 h-4 text-primary/10 group-hover:text-primary/30 transition-all" />
-          </div>
-        </HomeCard>
-      </section>
-
       {/* FOOTER QUOTE */}
-      <div className="pt-24 pb-12 text-center opacity-5">
-        <p className="text-[9px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase text-premium-body">
-          "A beleza salvará o mundo." <br/> — Dostoievski
+      <div className="pt-16 text-center opacity-30 select-none">
+        <p className="text-xs font-serif italic max-w-sm mx-auto leading-relaxed">
+          "A beleza salvará o mundo." — Dostoievski
         </p>
       </div>
     </div>
