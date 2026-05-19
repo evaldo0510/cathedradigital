@@ -127,11 +127,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     <>
       <aside ref={ref} className="h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6">
         <button 
-          className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
+          className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
           onClick={() => handleNav(AppRoute.SANCTUARIUM)}
           aria-label="Ir para a página inicial"
         >
-          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
+          <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
           <div className="space-y-0.5">
             <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
             <p className="text-[9px] font-bold uppercase text-secondary/60 tracking-[0.3em]">
