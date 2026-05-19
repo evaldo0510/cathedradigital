@@ -4,6 +4,8 @@ import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
   return (
