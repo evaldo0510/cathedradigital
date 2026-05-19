@@ -1,5 +1,7 @@
 import React from 'react';
 import { Icons } from '../../constants';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const AboutPage: React.FC = () => (
   <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -81,17 +83,18 @@ const AboutPage: React.FC = () => (
         
         <div className="flex flex-wrap justify-center gap-6">
           {[
-            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: 'https://www.instagram.com/cathedradigital/', color: 'hover:text-pink-600' },
-            { icon: <Icons.Youtube className="w-6 h-6" />, label: 'YouTube', url: 'https://youtube.com/@cathedradigital', color: 'hover:text-red-600' },
-            { icon: <Icons.Twitter className="w-6 h-6" />, label: 'X (Twitter)', url: 'https://twitter.com/cathedradigital', color: 'hover:text-sky-500' },
-            { icon: <Icons.Facebook className="w-6 h-6" />, label: 'Facebook', url: 'https://facebook.com/cathedradigital', color: 'hover:text-blue-600' },
-            { icon: <Icons.Whatsapp className="w-6 h-6" />, label: 'WhatsApp', url: 'https://wa.me/seulink', color: 'hover:text-green-600' },
+            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM, color: 'hover:text-pink-600' },
+            { icon: <Icons.Youtube className="w-6 h-6" />, label: 'YouTube', url: SOCIAL_LINKS.YOUTUBE, color: 'hover:text-red-600' },
+            { icon: <Icons.Twitter className="w-6 h-6" />, label: 'X (Twitter)', url: SOCIAL_LINKS.TWITTER, color: 'hover:text-sky-500' },
+            { icon: <Icons.Facebook className="w-6 h-6" />, label: 'Facebook', url: SOCIAL_LINKS.FACEBOOK, color: 'hover:text-blue-600' },
+            { icon: <Icons.Whatsapp className="w-6 h-6" />, label: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP, color: 'hover:text-green-600' },
           ].map((social) => (
             <a
               key={social.label}
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackEvent('social_link_click', { platform: social.label, url: social.url })}
               className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">

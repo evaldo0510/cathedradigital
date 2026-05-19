@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-
 import { useLang } from '@/hooks/useLang';
+import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const DIOCESES_BR = [
   // Arquidioceses de SP
@@ -128,16 +129,16 @@ const Footer: React.FC = React.memo(() => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
-    { title: 'Santa Sé (Vatican)', url: 'https://www.vatican.va' },
-    { title: lang === 'pt' ? 'Catecismo Oficial' : 'Official Catechism', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
-    { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
-    { title: lang === 'pt' ? 'Dicastérios' : 'Dicasteries', url: 'https://www.vatican.va/content/romancuria/pt.html' },
+    { title: 'Santa Sé (Vatican)', url: EXTERNAL_URLS.VATICAN },
+    { title: lang === 'pt' ? 'Catecismo Oficial' : 'Official Catechism', url: EXTERNAL_URLS.CATECHISM_OFFICIAL },
+    { title: 'Vatican News', url: EXTERNAL_URLS.VATICAN_NEWS },
+    { title: lang === 'pt' ? 'Dicastérios' : 'Dicasteries', url: `${EXTERNAL_URLS.VATICAN}/content/romancuria/pt.html` },
   ];
 
   const cnbbLinks = [
-    { title: 'CNBB Oficial', url: 'https://www.cnbb.org.br' },
-    { title: lang === 'pt' ? 'Liturgia Diária CNBB' : 'CNBB Daily Liturgy', url: 'https://www.cnbb.org.br/liturgia' },
-    { title: lang === 'pt' ? 'Documentos e Publicações' : 'Documents & Publications', url: 'https://www.cnbb.org.br/category/publicacoes' },
+    { title: 'CNBB Oficial', url: EXTERNAL_URLS.CNBB },
+    { title: lang === 'pt' ? 'Liturgia Diária CNBB' : 'CNBB Daily Liturgy', url: `${EXTERNAL_URLS.CNBB}/liturgia` },
+    { title: lang === 'pt' ? 'Documentos e Publicações' : 'Documents & Publications', url: `${EXTERNAL_URLS.CNBB}/category/publicacoes` },
   ];
 
   const scrollToTop = () => {
@@ -150,6 +151,7 @@ const Footer: React.FC = React.memo(() => {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    trackEvent('newsletter_signup', { email });
     await new Promise(resolve => setTimeout(resolve, 1500));
     alert(lang === 'pt' ? `E-mail ${email} cadastrado com sucesso!` : `Email ${email} registered successfully!`);
     setEmail('');
@@ -160,6 +162,10 @@ const Footer: React.FC = React.memo(() => {
     setSelectedDiocese(val);
     if (val) localStorage.setItem('cathedra_diocese', val);
     else localStorage.removeItem('cathedra_diocese');
+  };
+
+  const handleSocialClick = (platform: string, url: string) => {
+    trackEvent('social_link_click', { platform, url });
   };
 
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
@@ -186,12 +192,12 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://www.instagram.com/cathedradigital/' },
-                { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
-                { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
+                { icon: <Icons.Instagram className="w-4 h-4" />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
+                { icon: <Icons.Youtube className="w-4 h-4" />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
+                { icon: <Icons.Whatsapp className="w-4 h-4" />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
               ].map((social, i) => (
                 <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
-                  <a href={social.url} target="_blank" rel="noopener noreferrer">
+                  <a href={social.url} target="_blank" rel="noopener noreferrer" onClick={() => handleSocialClick(social.platform, social.url)}>
                     {social.icon}
                   </a>
                 </Button>

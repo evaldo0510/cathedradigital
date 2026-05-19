@@ -65,6 +65,33 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          path: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          path?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
@@ -231,6 +258,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          metadata: Json | null
           title: string
           updated_at: string
           user_id: string
@@ -238,6 +266,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id: string
@@ -245,6 +274,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -884,14 +914,12 @@ export type Database = {
           movimento_pastoral: string | null
           name: string
           paroquia: string | null
+          preferred_reminder_time: string | null
           program_duration: number | null
-          push_enabled: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
-          whatsapp_enabled: boolean | null
-          whatsapp_number: string | null
           xp: number | null
         }
         Insert: {
@@ -911,14 +939,12 @@ export type Database = {
           movimento_pastoral?: string | null
           name?: string
           paroquia?: string | null
+          preferred_reminder_time?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Update: {
@@ -938,17 +964,64 @@ export type Database = {
           movimento_pastoral?: string | null
           name?: string
           paroquia?: string | null
+          preferred_reminder_time?: string | null
           program_duration?: number | null
-          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           xp?: number | null
         }
         Relationships: []
+      }
+      profiles_private: {
+        Row: {
+          created_at: string | null
+          id: string
+          push_enabled: boolean | null
+          updated_at: string | null
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          push_enabled?: boolean | null
+          updated_at?: string | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_private_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "user_management_stats"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       push_subscriptions: {
         Row: {
@@ -1291,6 +1364,7 @@ export type Database = {
           created_at: string
           entry_date: string
           id: string
+          is_reviewed: boolean
           journey_id: string | null
           mood: string | null
           step_id: string | null
@@ -1302,6 +1376,7 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
+          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1313,6 +1388,7 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
+          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1608,6 +1684,8 @@ export type Database = {
           created_at: string
           highlight_color: string | null
           id: string
+          is_reviewed: boolean
+          metadata: Json | null
           note_text: string
           updated_at: string
           user_id: string
@@ -1618,6 +1696,8 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          is_reviewed?: boolean
+          metadata?: Json | null
           note_text?: string
           updated_at?: string
           user_id: string
@@ -1628,6 +1708,8 @@ export type Database = {
           created_at?: string
           highlight_color?: string | null
           id?: string
+          is_reviewed?: boolean
+          metadata?: Json | null
           note_text?: string
           updated_at?: string
           user_id?: string
