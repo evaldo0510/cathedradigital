@@ -454,7 +454,7 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                     size="icon" 
                     onClick={() => setIsOpen(false)}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
-                    aria-label="Fechar Logos (ESC)"
+                    aria-label="Fechar IARA (ESC)"
                   >
                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Button>
