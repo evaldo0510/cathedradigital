@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
 
@@ -110,7 +110,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
               className={`w-6 h-6 rounded-full text-premium-tiny font-bold transition-all ${
                 rate === r
                   ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
-                  : (isDark ? 'bg-white/[0.05] text-secondary/40' : 'bg-card text-muted-foreground')
+                  : (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')
               }`}
             >
               {r === 0.7 ? '−' : r === 1.0 ? '+' : '•'}

@@ -1,5 +1,5 @@
-import { Button   } from '@/components/cathedra/Button';
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
@@ -7,8 +7,6 @@ import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
-import { canUserAccess } from '@/utils/auth-utils';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -40,81 +38,76 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     return () => window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
   }, []);
   
-  const sections = useMemo(() => {
-    const rawSections = [
-      {
-        label: t('admin'),
-        items: [
-          { label: t('admin'), path: AppRoute.ADMIN, icon: Icons.ShieldCheck },
-          { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: Icons.ShieldCheck },
-          { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: Icons.ShieldCheck },
-          { label: 'Auditoria A11y', path: AppRoute.A11Y_AUDIT, icon: Icons.ShieldCheck },
-          { label: 'Auditoria de Segurança', path: AppRoute.SECURITY_AUDIT, icon: Icons.ShieldCheck },
-          { label: 'Logs de Auditoria', path: AppRoute.AUDIT_LOGS, icon: Icons.Activity },
-          { label: 'Transações', path: AppRoute.TRANSACTIONS, icon: Icons.CreditCard },
-        ]
-      },
-      {
-        label: 'Navegação',
-        items: [
-          { label: t('home'), path: AppRoute.HOJE, icon: Icons.Home },
-          { label: 'Logos', path: AppRoute.STUDY_MODE, icon: Icons.Compass, pro: true },
-          { label: t('journeys'), path: AppRoute.JORNADAS, icon: Icons.Journeys },
-          { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
-          { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
-          { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
-          { label: t('community'), path: AppRoute.COMMUNITY, icon: Icons.Users },
-          { label: t('profile'), path: AppRoute.PROFILE, icon: Icons.User },
-          { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: Icons.PenLine },
-        ]
-      },
-      {
-        label: 'Devocionário',
-        items: [
-          { label: t('bible'), path: AppRoute.BIBLE, icon: Icons.Bible },
-          { label: t('catechism'), path: AppRoute.CATECHISM, icon: Icons.Catechism },
-          { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: Icons.Search },
-          { label: t('liturgy'), path: AppRoute.LITURGIA, icon: Icons.Liturgy },
-          { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: Icons.Heart },
-          { label: t('prayers'), path: AppRoute.ORACAO, icon: Icons.Volume2 },
-          { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: Icons.Cross },
-          { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: Icons.Flame },
-          { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: Icons.Lectio },
-          { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: Icons.Clock },
-          { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: Icons.MessageCircle },
-        ]
-      },
-      {
-        label: 'Formação',
-        items: [
-          { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: Icons.Trophy, pro: false },
-          { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: Icons.ScrollText },
-          { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: Icons.Library },
-          { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: Icons.ScrollText },
-          { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: Icons.Heart },
-          { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
-          { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
-          { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
-        ]
-      },
-      {
-        label: t('digital'),
-        items: [
-          { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: Icons.Creator },
-          { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: Icons.Handshake },
-          { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: Icons.HelpCircle },
-          { label: t('transparency') || 'Transparência', path: AppRoute.TRANSPARENCY, icon: Icons.Info },
-          { label: 'Status da Rede', path: AppRoute.OFFLINE, icon: Icons.Globe },
-          { label: 'Gerenciar Cache', path: AppRoute.CACHE_MANAGER, icon: Icons.Database },
-        ]
-      }
-    ];
+  const sections = [
+    ...(user?.role === 'admin' ? [{
+      label: t('admin'),
+      items: [
+        { label: t('admin'), path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
 
-    return rawSections.map(section => ({
-      ...section,
-      items: section.items.filter(item => canUserAccess(user?.role, item.path))
-    })).filter(section => section.items.length > 0);
-  }, [t, user?.role]);
+      ]
+    }] : []),
+    {
+      label: 'Navegação',
+      items: [
+        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
+        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
+        { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
+        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Compass className="w-5 h-5" /> },
+        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
+        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
+        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: 'Devocionário',
+      items: [
+        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
+        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
+        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: t('liturgy'), path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
+        { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
+        { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
+        { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Flame className="w-5 h-5" /> },
+        { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Lectio className="w-5 h-5" /> },
+        { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5" /> },
+        { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.MessageCircle className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: 'Formação',
+      items: [
+        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
+        { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
+        { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-5 h-5" /> },
+        { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
+        { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
+        { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
+        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: t('digital'),
+      items: [
+        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
+        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
+        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.HelpCircle className="w-5 h-5" /> },
+        { 
+          label: 'Redefinir Onboarding', 
+          path: AppRoute.ONBOARDING, 
+          icon: <Icons.Compass className="w-5 h-5" />,
+          onClick: () => {
+            localStorage.removeItem('cathedra_onboarding_done');
+          }
+        },
+        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: <Icons.Library className="w-5 h-5" /> },
+      ]
+    }
+  ];
 
   const handleNav = (item: string | { path: string; onClick?: () => void }) => {
     const path = typeof item === 'string' ? item : item.path;
@@ -125,25 +118,21 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
 
   return (
     <>
-      <aside ref={ref} className="h-full w-[280px] bg-card border-r border-border/20 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6">
-        <button 
-          className="mb-8 px-1 flex items-center gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
-          onClick={() => handleNav(AppRoute.HOJE)}
-          aria-label="Ir para a página inicial"
-        >
-          <Icons.Logo className="w-8 h-8 flex-shrink-0" variant="blue" />
-          <div className="space-y-0.5">
-            <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[9px] font-bold uppercase text-secondary/60 tracking-[0.3em]">
+      <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
+        <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
+          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
+          <div className="space-y-1">
+            <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
+            <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
               Digital Sanctuarium
             </p>
           </div>
-        </button>
+        </div>
 
-        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar overscroll-contain">
+        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
-              <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/30 mb-4 px-3">{section.label}</h3>
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/30 mb-5 px-4">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
                   <li key={idx}>
@@ -153,20 +142,20 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-secondary/50 outline-none h-auto min-h-[48px] border-none shadow-none
+                      className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
                         ${currentPath === item.path
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
-                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary focus-visible:bg-primary/[0.05]'}`}
+                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
-                      <CathedraIcon icon={item.icon as any} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none" className="opacity-70" />
-                      <span className="tracking-tight truncate text-[11px] font-medium">{item.label}</span>
+                      <span className="opacity-70 flex-shrink-0">{item.icon}</span>
+                      <span className="tracking-tight truncate">{item.label}</span>
                       {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                         <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                           {cacheCount}
                         </span>
                       )}
                       {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
-                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-premium-sm bg-primary flex-shrink-0" />}
+                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-2xl bg-primary flex-shrink-0" />}
                     </Button>
                   </li>
                 ))}
@@ -183,24 +172,24 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant="outline"
                 size="sm"
                 onClick={onToggleDark} 
-                className="flex-1 min-w-[90px] h-10 rounded-xl border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                className="flex-1 min-w-[100px] h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
-                {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
-                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
+                {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
+                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
               </Button>
 
               <Button 
                 variant={isHighContrast ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleHighContrast} 
-                className={`flex-1 min-w-[90px] h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 min-w-[100px] h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
                 }`}
                 aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
               >
                 <Icons.ShieldCheck className="w-5 h-5" />
-                <span className="text-[9px] font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
+                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
               </Button>
             </div>
 
@@ -209,13 +198,13 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isSpeaking ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleSpeak} 
-                className={`flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                   !isSpeaking ? 'bg-muted' : ''
                 }`}
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
               >
-                {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
-                <span className="text-[9px] font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
+                {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
+                <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
               </Button>
             </div>
 
@@ -226,7 +215,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-[9px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-2 py-1 text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -240,45 +229,39 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           </div>
 
           {user ? (
-            <div className="relative">
-              <button 
-                onClick={() => handleNav(AppRoute.PROFILE)} 
-                className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none text-left"
-                aria-label={`Perfil de ${user.name}`}
-              >
-                <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium-sm" />
-                  ) : (
-                    user.name.charAt(0).toUpperCase()
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
-                  <p className="text-[9px] uppercase text-secondary font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
-                  {!user.isPremium && (
-                    <div 
-                      onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                      className="mt-1 inline-flex items-center gap-1 text-[8px] font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-md hover:bg-primary hover:text-white transition-colors animate-pulse"
-                    >
-                      Upgrade <Icons.ArrowRight className="w-2 h-2" />
-                    </div>
-                  )}
-                </div>
-              </button>
+            <div 
+              onClick={() => handleNav(AppRoute.PROFILE)} 
+              className="w-full flex items-center gap-4 p-4 bg-muted/30 rounded-full hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-2xl" />
+                ) : (
+                  user.name.charAt(0).toUpperCase()
+                )}
+              </div>
+              <div className="flex-1 min-w-0 text-left">
+                <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
+                <p className="text-[10px] uppercase text-secondary font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
+                {!user.isPremium && (
+                  <div 
+                    onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
+                    className="mt-1 inline-flex items-center gap-1 text-premium-tiny font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+                  >
+                    Upgrade <Icons.ArrowRight className="w-2 h-2" />
+                  </div>
+                )}
+              </div>
               <Button 
                 onClick={(e) => { e.stopPropagation(); onSignOut?.(); }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-destructive transition-colors z-10"
+                className="p-2 text-muted-foreground hover:text-destructive transition-colors"
                 title={t('exit_session')}
-                variant="ghost"
-                size="icon-xs"
-                aria-label="Sair da sessão"
               >
                 <Icons.LogOut className="w-4 h-4" />
               </Button>
             </div>
           ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-11 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:bg-primary hover:text-primary-foreground transition-all">
               {t('enter')}
             </Button>
           )}

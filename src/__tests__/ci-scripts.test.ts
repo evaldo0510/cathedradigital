@@ -1,27 +1,23 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { execSync } from 'child_process';
 
-// Design Tokens for Visual Consistency
-const TOKENS = {
-  radius: '1.5rem', // 24px - premium-card standard
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
-  shadow: '0 10px 30px rgba(0,0,0,.08)',
-  buttonHeight: '56px', // Standard btn-premium
-};
-
-describe('Design System Integrity', () => {
-  it('should maintain consistent design tokens across themes', () => {
-    expect(TOKENS.radius).toBe('1.5rem');
-    expect(TOKENS.buttonHeight).toBe('56px');
+describe('CI Scripts Environment Safety', () => {
+  it('should run validate-catechism script without window or localStorage', () => {
+    // We execute the script in a separate process to ensure a clean environment
+    // similar to how it would run in CI (via bun run)
+    expect(() => {
+      execSync('bun run scripts/validate-catechism.ts', { 
+        env: { ...process.env, CATECHISM_DRY_RUN: 'true' },
+        stdio: 'pipe' 
+      });
+    }).not.toThrow();
   });
-});
 
-describe('Layout Responsiveness Check', () => {
-  it('should ensure critical containers have responsive paddings', () => {
-    // This is a placeholder for future visual regression or automated CSS audits
-    const hasResponsivePadding = (className: string) => 
-      className.includes('px-') && className.includes('sm:px-') && className.includes('lg:px-');
-    
-    expect(hasResponsivePadding('app-container px-6 sm:px-8 lg:px-16')).toBe(true);
+  it('should run security-audit script without window or localStorage', () => {
+    expect(() => {
+      execSync('bun run scripts/security-audit.ts', { 
+        stdio: 'pipe' 
+      });
+    }).not.toThrow();
   });
 });

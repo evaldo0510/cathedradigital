@@ -32,7 +32,7 @@ const CommunitySection = () => {
 
   return (
     <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-premium-sm pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-2xl pointer-events-none" />
       
       <div className="max-w-7xl mx-auto space-y-20 relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
@@ -52,7 +52,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={1}
-            className="font-display font-bold leading-tight heading-section-label"
+            className="font-display font-bold leading-tight"
           >
             Você nunca está <span className="text-primary italic font-serif">sozinho</span> em sua jornada
           </motion.h2>
@@ -63,7 +63,7 @@ const CommunitySection = () => {
             whileInView="visible"
             viewport={{ once: true }}
             custom={2}
-            className="text-muted-foreground font-serif italic text-premium-body"
+            className="text-muted-foreground font-serif italic"
           >
             "Onde dois ou três estão reunidos em meu nome, ali estou eu no meio deles." (Mt 18,20)
           </motion.p>
@@ -79,18 +79,18 @@ const CommunitySection = () => {
               viewport={{ once: true }}
               custom={i + 3}
               whileHover={{ y: -10 }}
-              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-sm hover:shadow-premium hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
+              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
                 <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-full">
                   {feature.tag}
                 </span>
               </div>
-              <h3 className="font-bold mb-4 font-serif heading-card">{feature.title}</h3>
-              <p className="text-premium-small text-muted-foreground leading-relaxed flex-1 text-premium-body">
+              <h3 className="font-bold mb-4 font-serif">{feature.title}</h3>
+              <p className="text-premium-small text-muted-foreground leading-relaxed flex-1">
                 {feature.desc}
               </p>
             </motion.div>
@@ -106,7 +106,7 @@ const CommunitySection = () => {
         >
           <div className="flex -space-x-4 justify-center mb-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="w-12 h-12 rounded-premium-sm border-4 border-background bg-muted overflow-hidden">
+              <div key={i} className="w-12 h-12 rounded-2xl border-4 border-background bg-muted overflow-hidden">
                 <img 
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 20}`} 
                   alt="Avatar de membro"
@@ -114,12 +114,12 @@ const CommunitySection = () => {
                 />
               </div>
             ))}
-            <div className="w-12 h-12 rounded-premium-sm border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
+            <div className="w-12 h-12 rounded-2xl border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
               +1k
             </div>
           </div>
-          <h4 className="font-bold heading-item">Junte-se a milhares de fiéis</h4>
-          <p className="text-muted-foreground max-w-xl mx-auto text-premium-body">
+          <h4 className="font-bold">Junte-se a milhares de fiéis</h4>
+          <p className="text-muted-foreground max-w-xl mx-auto">
             Mais do que um aplicativo, somos uma família em busca da santidade. Participe das nossas vigílias mensais e grupos de estudo.
           </p>
         </motion.div>

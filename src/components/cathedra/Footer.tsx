@@ -1,10 +1,9 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
-import { useAuth } from '@/hooks/useAuth';
-import { canUserAccess } from '@/utils/auth-utils';
+
 import { useLang } from '@/hooks/useLang';
 
 const DIOCESES_BR = [
@@ -123,7 +122,6 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
-  const { profile } = useAuth();
   const { t, lang } = useLang();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
@@ -280,7 +278,7 @@ const Footer: React.FC = React.memo(() => {
                   className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium-sm animate-spin" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-2xl animate-spin" />
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
@@ -297,16 +295,12 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              {canUserAccess(profile?.role, AppRoute.ADMIN) ? (
-                <Button 
-                  onClick={() => navigate(AppRoute.ADMIN)} 
-                  className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
-                >
-                  Evaldo.os
-                </Button>
-              ) : (
-                <span className="font-black text-primary">Evaldo.os</span>
-              )}
+              <Button 
+                onClick={() => navigate(AppRoute.ADMIN)} 
+                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+              >
+                Evaldo.os
+              </Button>
             </p>
           </div>
           <div className="flex items-center gap-8">

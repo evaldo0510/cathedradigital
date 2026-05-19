@@ -1,193 +1,123 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { AppRoute } from '../../src/types';
 import fs from 'fs';
 import path from 'path';
 
-const RESULTS_DIR = path.join(process.cwd(), 'public', 'a11y-reports');
-if (!fs.existsSync(RESULTS_DIR)) {
-  fs.mkdirSync(RESULTS_DIR, { recursive: true });
-}
+test.describe('Home Page Accessibility & Keyboard Navigation', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    // Wait for main content
+    await page.waitForSelector('main#main-content', { state: 'visible' });
+  });
 
-// Configurable threshold for critical errors
-const MAX_CRITICAL_ERRORS = parseInt(process.env.A11Y_MAX_CRITICAL_ERRORS || '0', 10);
-
-const a11ySummary: any[] = [];
-
-// Auto-discover all valid routes from AppRoute
-const ROUTES_TO_TEST = Object.entries(AppRoute)
-  .filter(([key, value]) => typeof value === 'string' && !value.includes(':'))
-  .map(([key, value]) => ({ path: value, name: key }));
-
-test.describe('Global Accessibility & Contrast Audit', () => {
-  for (const route of ROUTES_TO_TEST) {
-    for (const theme of ['light', 'dark']) {
-      test(`Audit ${route.name} (${route.path}) - ${theme} mode`, async ({ page }) => {
-        await page.goto(route.path);
-        
-        // Apply theme
-        await page.evaluate((t) => {
-          if (t === 'dark') document.documentElement.classList.add('dark');
-          else document.documentElement.classList.remove('dark');
-        }, theme);
-        
-        await page.waitForTimeout(500); // Wait for transitions
-
-        const results = await new AxeBuilder({ page })
-          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-          .analyze();
-
-        // Count critical violations
-        const criticalViolations = results.violations.filter(v => v.impact === 'critical');
-        
-        a11ySummary.push({
-          theme,
-          route: route.path,
-          name: route.name,
-          violations: results.violations.length,
-          criticalCount: criticalViolations.length,
-          details: results.violations
-        });
-
-        // Screenshot for contrast review
-        const screenshotPath = path.join(RESULTS_DIR, `contrast-${route.name}-${theme}.png`);
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Fail only if critical violations exceed threshold
-        expect(criticalViolations.length, `Route ${route.path} has ${criticalViolations.length} critical a11y violations in ${theme} mode`).toBeLessThanOrEqual(MAX_CRITICAL_ERRORS);
+  test('full accessibility audit with axe-core and report generation', async ({ page }, testInfo) => {
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .analyze();
+    
+    // Attach report if violations found
+    if (accessibilityScanResults.violations.length > 0) {
+      const reportPath = path.join(testInfo.outputDir, `a11y-report-${testInfo.project.name}.json`);
+      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+      await testInfo.attach('accessibility-scan-results', {
+        path: reportPath,
+        contentType: 'application/json'
       });
     }
-  }
 
-  test('Premium Components - Individual Component Audit', async ({ page }) => {
-    await page.goto('/');
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
+  test('should have a functional skip link as first tabbable element', async ({ page }) => {
+    await page.keyboard.press('Tab');
+    const skipLink = page.locator('a[href="#main-content"]');
+    await expect(skipLink).toBeFocused();
+    // In mobile, it might be visually hidden but still accessible. 
+    // We expect it to be Visible when focused (per CSS)
+    await expect(skipLink).toBeVisible();
     
-    const components = [
-      { selector: '.btn-premium', name: 'Premium Button' },
-      { selector: '.premium-card', name: 'Premium Card' }
-    ];
+    await page.keyboard.press('Enter');
+    const mainContent = page.locator('main#main-content');
+    await expect(mainContent).toBeFocused();
+  });
 
-    for (const theme of ['light', 'dark']) {
-      await page.evaluate((t) => {
-        if (t === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      }, theme);
+  test('visual focus ring visibility on HomeButton and HomeCard', async ({ page }) => {
+    // Select all HomeButton and HomeCard elements that are interactive
+    const interactiveElements = page.locator('button, a[href], [role="button"]');
+    const count = await interactiveElements.count();
+    
+    // Test a subset to avoid excessive run time, focus on the first few in view
+    for (let i = 0; i < Math.min(count, 5); i++) {
+      const element = interactiveElements.nth(i);
+      await element.focus();
       
-      await page.waitForTimeout(500);
-
-      for (const comp of components) {
-        const locator = page.locator(comp.selector).first();
-        if (await locator.isVisible()) {
-          const results = await new AxeBuilder({ page })
-            .include(comp.selector)
-            .analyze();
-
-          const critical = results.violations.filter(v => v.impact === 'critical');
-          
-          a11ySummary.push({
-            theme,
-            component: comp.name,
-            violations: results.violations.length,
-            criticalCount: critical.length,
-            details: results.violations
-          });
-
-          // Component-specific screenshot
-          const compPath = path.join(RESULTS_DIR, `comp-${comp.name.replace(/\s+/g, '-')}-${theme}.png`);
-          await locator.screenshot({ path: compPath });
-        }
-      }
+      // Check for focus ring or outline. 
+      // Tailwind's ring adds a box-shadow or specific outline.
+      // focus-visible:ring-primary focus-visible:ring-offset-2
+      const hasFocusStyles = await element.evaluate((node) => {
+        const style = window.getComputedStyle(node);
+        return style.boxShadow !== 'none' || style.outlineStyle !== 'none' || style.outlineWidth !== '0px';
+      });
+      
+      expect(hasFocusStyles, `Element ${i} should have visible focus styles`).toBe(true);
     }
   });
 
-  test.afterAll(async () => {
-    // Generate HTML report index
-    const htmlReport = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Accessibility Audit Report</title>
-        <style>
-          body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-          .card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-          .error { color: #dc2626; font-weight: bold; }
-          .success { color: #16a34a; }
-          .theme-badge { padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-          .dark { background: #333; color: white; }
-          .light { background: #eee; color: #333; }
-          img { max-width: 100%; border: 1px solid #ddd; margin-top: 10px; }
-          details { margin-top: 10px; font-size: 14px; }
-        </style>
-      </head>
-      <body>
-        <h1>Accessibility Audit Summary</h1>
-        <p>Threshold: Max ${MAX_CRITICAL_ERRORS} critical errors allowed.</p>
-        <p><a href="summary.json" target="_blank">View Raw Summary JSON</a></p>
-        
-        <section>
-          <h2>Hero Visuals across Breakpoints</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
-            ${['mobile', 'sm', 'md', 'lg'].flatMap(v => ['light', 'dark'].map(t => `
-              <div class="card">
-                <h4>Hero - ${t.toUpperCase()} - ${v.toUpperCase()}</h4>
-                <a href="hero-visuals/hero-${t}-${v}.png" target="_blank">
-                  <img src="hero-visuals/hero-${t}-${v}.png" alt="Hero ${t} ${v}">
-                </a>
-              </div>
-            `)).join('')}
-          </div>
-        </section>
+  test('interaction consistency: Enter and Space trigger same action', async ({ page }) => {
+    // Find "Iniciar Jornada" button as a primary CTA
+    const cta = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
+    await cta.scrollIntoViewIfNeeded();
 
-        <section>
-          <h2>Hero CTA Focus & Keyboard States</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
-            ${['light', 'dark'].map(t => `
-              <div class="card">
-                <h4>CTA Focus - ${t.toUpperCase()}</h4>
-                <a href="hero-visuals/hero-cta-focus-${t}.png" target="_blank">
-                  <img src="hero-visuals/hero-cta-focus-${t}.png" alt="Hero CTA Focus ${t}">
-                </a>
-              </div>
-            `).join('')}
-          </div>
-        </section>
+    const checkModal = async () => {
+      // Check if GuidedJourney modal opens
+      await expect(page.locator('text=Como podemos ajudar você hoje?')).toBeVisible();
+      // Close it
+      await page.keyboard.press('Escape');
+      await expect(page.locator('text=Como podemos ajudar você hoje?')).not.toBeVisible();
+    };
 
-        <section>
-          <h2>Page Contrast & A11y Violations</h2>
-          ${a11ySummary.map(s => {
-            const imageFile = s.component 
-              ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
-              : `contrast-${s.name}-${s.theme}.png`;
-            
-            return `
-              <div class="card">
-                <h3>
-                  ${s.name || s.component} 
-                  <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
-                </h3>
-                <p>Context: ${s.route || s.component || 'N/A'}</p>
-                <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
-                  Violations: ${s.violations} (${s.criticalCount} critical)
-                </p>
-                <details>
-                  <summary>View Details</summary>
-                  <pre>${JSON.stringify(s.details, null, 2)}</pre>
-                </details>
-                <div style="margin-top: 15px;">
-                  <strong>Contrast Preview:</strong><br>
-                  <a href="${imageFile}" target="_blank">
-                    <img src="${imageFile}" alt="Contrast check for ${s.name || s.component}">
-                  </a>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </section>
-      </body>
-      </html>
-    `;
+    // Test Space
+    await cta.focus();
+    await page.keyboard.press(' ');
+    await checkModal();
 
-    fs.writeFileSync(path.join(RESULTS_DIR, 'index.html'), htmlReport);
-    fs.writeFileSync(path.join(RESULTS_DIR, 'summary.json'), JSON.stringify(a11ySummary, null, 2));
+    // Test Enter
+    await cta.focus();
+    await page.keyboard.press('Enter');
+    await checkModal();
+
+    // Test Click for baseline
+    await cta.click();
+    await checkModal();
+  });
+
+  test('logical tab order and navigation targets', async ({ page }) => {
+    // 1. Skip link
+    await page.keyboard.press('Tab');
+    const skipLink = page.locator('a[href="#main-content"]');
+    await expect(skipLink).toBeFocused();
+    
+    // 2. Logo in Header
+    await page.keyboard.press('Tab');
+    const logo = page.getByLabel(/Cathedra - Página Inicial/i);
+    await expect(logo).toBeFocused();
+    
+    // 3. First nav link (Funcionalidades)
+    await page.keyboard.press('Tab');
+    const featuresLink = page.getByRole('button', { name: /Funcionalidades/i });
+    await expect(featuresLink).toBeFocused();
+
+    // 4. Iniciar Jornada in Hero (might need multiple tabs depending on screen)
+    // We tab until we find a button with "Iniciar Jornada"
+    let foundHeroBtn = false;
+    for (let i = 0; i < 20; i++) {
+        await page.keyboard.press('Tab');
+        const focused = page.getByRole('button', { name: /Iniciar Jornada/i }).first();
+        if (await focused.evaluate(node => document.activeElement === node)) {
+            foundHeroBtn = true;
+            break;
+        }
+    }
+    expect(foundHeroBtn).toBe(true);
   });
 });

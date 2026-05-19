@@ -98,7 +98,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         onClick={handleNavigate}
         className="w-full flex items-center gap-6 group text-left p-5"
       >
-        <div className="w-20 h-20 rounded-premium overflow-hidden border border-white/[0.08] shadow-premium shrink-0">
+        <div className="w-20 h-20 rounded-premium-sm overflow-hidden border border-border/20 shadow-soft shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}
@@ -109,7 +109,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
-          <h3 className="heading-item text-foreground group-hover:text-primary transition-colors truncate">
+          <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
             {saint.name}
           </h3>
           <p className="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed">
@@ -144,7 +144,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         <div className="absolute bottom-6 left-6 right-6">
           <p className="text-premium-tiny font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
           <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
@@ -159,7 +159,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             {saint.quotes?.[0] || saint.bio}
           </p>
         </div>
-        <div className="flex items-center justify-between pt-6 border-t border-primary/[0.04]">
+        <div className="flex items-center justify-between pt-6 border-t border-border/40">
           <div className="flex gap-2">
             {saint.virtues?.slice(0, 2).map((v: string) => (
               <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">{v}</span>
@@ -168,7 +168,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             )}
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+            <div className="w-10 h-10 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
               <Sparkles className="w-5 h-5" />
             </div>
             <span className="text-premium-small font-black uppercase tracking-widest text-primary">Conhecer</span>

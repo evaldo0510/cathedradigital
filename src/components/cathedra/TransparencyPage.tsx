@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
 
 const TransparencyPage: React.FC = () => {
@@ -17,7 +17,7 @@ const TransparencyPage: React.FC = () => {
       <div className="max-w-3xl mx-auto space-y-16 px-4">
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-premium-sm bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-2xl bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
             <ShieldCheck className="w-3 h-3" />
             Integridade Doutrinária
           </div>
@@ -34,7 +34,7 @@ const TransparencyPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-8 sm:p-10 md:p-12 rounded-premium bg-primary/5 border border-primary/20 relative overflow-hidden"
+          className="p-8 rounded-[2.5rem] bg-primary/5 border border-primary/20 relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-8 opacity-5">
             <Icons.Zap className="w-24 h-24 text-primary" />
@@ -87,7 +87,7 @@ const TransparencyPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
               asChild
-              className="h-14 px-8 w-full sm:w-auto shadow-premium"
+              className="h-14 px-8 w-full sm:w-auto shadow-xl"
             >
               <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-3">
                 <Mail className="w-4 h-4" />
@@ -106,7 +106,7 @@ const TransparencyPage: React.FC = () => {
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-8 rounded-premium border border-border text-center space-y-4">
+        <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
           <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
           <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">

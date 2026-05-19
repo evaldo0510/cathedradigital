@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -37,7 +37,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-4 h-4" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
   { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-4 h-4" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
   { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-4 h-4" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
-  { label: 'Logos', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
+  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
   { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
   { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
   { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
@@ -86,50 +86,9 @@ const CommandCenter: React.FC = () => {
   const [globalLoading, setGlobalLoading] = useState(false);
   const [lastBible, setLastBible] = useState<{ book_abbr: string; chapter: number } | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
   const searchTimer = useRef<ReturnType<typeof setTimeout>>();
   const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-
-  // Focus management
-  useEffect(() => {
-    if (isOpen) {
-      triggerRef.current = document.activeElement as HTMLElement;
-      setTimeout(() => inputRef.current?.focus(), 100);
-    } else {
-      triggerRef.current?.focus();
-    }
-  }, [isOpen]);
-
-  // Trap focus
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        const focusableElements = document.querySelectorAll(
-          'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        const modalElements = Array.from(focusableElements).filter(el => 
-          document.querySelector('.max-w-xl')?.contains(el)
-        );
-        
-        if (modalElements.length > 0) {
-          const first = modalElements[0] as HTMLElement;
-          const last = modalElements[modalElements.length - 1] as HTMLElement;
-
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
 
   useEffect(() => {
     const loadLastRead = async () => {
@@ -403,14 +362,14 @@ const CommandCenter: React.FC = () => {
   const hasGlobalResults = globalResults.length > 0;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[8vh] sm:pt-[12vh] px-4 sm:px-0" onClick={() => setIsOpen(false)}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
+      <div className="absolute inset-0 bg-black/60 " />
       <div
-        className="relative w-full max-w-xl bg-card border border-primary/10 rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200 overscroll-contain"
+        className="relative w-full max-w-xl bg-card border border-border rounded-full shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 px-6 py-5 border-b border-primary/5" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
           <Icons.Search className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -435,14 +394,14 @@ const CommandCenter: React.FC = () => {
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-2xl" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-premium" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-2xl" />
           </div>
         )}
 
         {/* Results */}
-        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1 overscroll-contain">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-1">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
             <div className="px-5 py-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
@@ -476,13 +435,13 @@ const CommandCenter: React.FC = () => {
                   aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-4 px-6 py-3.5 text-left transition-all outline-none focus:ring-0 ${
+                  className={`w-full flex items-center gap-3 px-5 py-2.5 text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-2 rounded-premium ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-1.5 rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">

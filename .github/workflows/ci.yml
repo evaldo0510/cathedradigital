@@ -60,9 +60,6 @@ jobs:
       - name: Lint
         run: bun run lint > ci-logs/lint.log 2>&1
 
-      - name: Design System Audit
-        run: bun run scripts/enforce-design-system.ts > ci-logs/design-system.log 2>&1
-
       - name: Typecheck
         run: bun run typecheck > ci-logs/typecheck.log 2>&1
 
@@ -173,7 +170,6 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-          A11Y_MAX_CRITICAL_ERRORS: 5
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4

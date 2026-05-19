@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import AudioContentPlayer from './AudioContentPlayer';
 import SaintOfTheDayCard from './SaintOfTheDayCard';
 import { BookOpen, Sparkles } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
-import { HomeCard as Card } from './HomeCard';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { HomeCard } from './HomeCard';
 
 const RitualDoDia: React.FC = () => {
   const dayOfYear = useMemo(() => {
@@ -20,22 +20,24 @@ const RitualDoDia: React.FC = () => {
   const audioText = `Versículo do dia: ${verse.text} — ${verse.ref}. Reflexão: ${reflection}`;
 
   return (
-    <Card
-      padding="none"
-      variant="default"
-      className="relative overflow-hidden h-full p-8 md:p-12 lg:p-16"
+    <HomeCard
+      as={motion.div}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="relative overflow-hidden"
     >
-      <div className="space-y-8">
+      <div className="relative z-10 p-8 md:p-12 space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <CathedraIcon icon={Sparkles} size={IconSizePreset.TINY} variant="secondary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-secondary opacity-60">
+            <Sparkles className="w-5 h-5 text-secondary" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60">
               Ritual do Dia
             </span>
           </div>
-          <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/40 text-right">
-            {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
           </span>
         </div>
 
@@ -43,26 +45,26 @@ const RitualDoDia: React.FC = () => {
         <SaintOfTheDayCard variant="compact" />
 
         {/* Divider */}
-        <div className="divider-line !bg-primary/[0.04]" />
+        <div className="h-px bg-border/20" />
 
         {/* Bible Verse */}
         <div className="space-y-4" role="article" aria-label="Versículo do Dia">
           <div className="flex items-center gap-2.5">
-            <CathedraIcon icon={BookOpen} size={IconSizePreset.TINY} variant="primary" />
-            <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
+            <BookOpen className="w-4 h-4 text-primary" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/60">Versículo do Dia</span>
           </div>
-          <blockquote className="text-xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
+          <blockquote className="text-xl md:text-2xl font-serif italic text-primary/90 leading-relaxed pl-6 border-l-[3px] border-secondary/20">
             "{verse.text}"
           </blockquote>
-          <p className="text-premium-tiny font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
+          <p className="text-[10px] font-bold text-secondary uppercase tracking-widest pl-6">— {verse.ref}</p>
         </div>
 
         {/* Divider */}
-        <div className="divider-line !bg-primary/[0.04]" />
+        <div className="h-px bg-border/20" />
 
         {/* Reflection */}
         <div className="space-y-3" role="article" aria-label="Reflexão">
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40">✦ Reflexão</span>
           <p className="text-base text-foreground/70 leading-relaxed font-reader">
             {reflection}
           </p>
@@ -77,7 +79,7 @@ const RitualDoDia: React.FC = () => {
           />
         </div>
       </div>
-    </Card>
+    </HomeCard>
   );
 };
 

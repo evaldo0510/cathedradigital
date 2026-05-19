@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
@@ -69,10 +69,10 @@ const WebhookSimulator: React.FC = () => {
   };
 
   return (
-    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-premium overflow-hidden">
+    <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-xl overflow-hidden">
       <CardHeader className="bg-primary/10 border-b border-primary/10">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-premium-sm text-primary-foreground">
+          <div className="p-2 bg-primary rounded-2xl text-primary-foreground">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>

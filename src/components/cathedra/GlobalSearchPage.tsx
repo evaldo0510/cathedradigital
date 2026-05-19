@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';

@@ -10,7 +10,7 @@ import { type Saint } from '@/data/saints';
 import { AppRoute } from '@/types';
 import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
@@ -85,7 +85,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       initial={{ scale: 0.9, y: 20 }}
       animate={{ scale: 1, y: 0 }}
       exit={{ scale: 0.9, y: 20 }}
-      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-premium border border-border flex flex-col md:flex-row relative"
+      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
       <Button 
@@ -115,8 +115,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {/* Top Info Strip */}
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.Calendar className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <Icons.Calendar className="w-5 h-5" />
             </div>
             <div>
               <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Dia de Festa</span>
@@ -126,8 +126,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           {saint.born && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium-sm bg-secondary/30 flex items-center justify-center text-primary">
-                <Icons.User className="w-4 h-4" />
+              <div className="w-10 h-10 rounded-2xl bg-secondary/30 flex items-center justify-center text-primary">
+                <Icons.User className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
@@ -138,8 +138,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           {saint.died && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium-sm bg-destructive/10 flex items-center justify-center text-destructive">
-                <Icons.XCircle className="w-4 h-4" />
+              <div className="w-10 h-10 rounded-2xl bg-destructive/10 flex items-center justify-center text-destructive">
+                <Icons.XCircle className="w-5 h-5" />
               </div>
               <div>
                 <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
@@ -149,8 +149,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           )}
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-secondary flex items-center justify-center text-secondary-foreground">
-              <Shield className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-2xl bg-secondary flex items-center justify-center text-secondary-foreground">
+              <Shield className="w-5 h-5" />
             </div>
             <div>
               <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
@@ -273,9 +273,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {saint.works.map((work, idx) => (
-                <div key={idx} className="p-4 bg-card border border-border rounded-premium-sm flex items-center justify-between group hover:border-primary/30 transition-all">
+                <div key={idx} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                       <Icons.Book className="w-4 h-4" />
                     </div>
                     <div>
@@ -307,8 +307,8 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
         >
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-premium-sm bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
-              <Icons.Route className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <Icons.Route className="w-7 h-7" />
             </div>
             <div>
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">Transformar Inspiração em Prática</p>

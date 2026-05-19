@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle  , CardFooter   } from '@/components/cathedra/Card';
-import { Button   } from '@/components/cathedra/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -362,7 +362,7 @@ const AdminJourneysTab: React.FC = () => {
 
   if (loading) {
     return <div className="space-y-4 animate-pulse">
-      {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted/40 rounded-premium-sm" />)}
+      {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted/40 rounded-2xl" />)}
     </div>;
   }
 
@@ -391,11 +391,11 @@ const AdminJourneysTab: React.FC = () => {
 
       <div className="grid gap-4">
         {filteredJourneys.map((journey) => (
-          <div key={journey.id} className="border rounded-premium-sm overflow-hidden bg-card">
+          <div key={journey.id} className="border rounded-2xl overflow-hidden bg-card">
             <div className="p-4 flex items-center justify-between">
               <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => toggleJourneySteps(journey.id)}>
                 {selectedJourneyId === journey.id ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
-                <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Map className="w-5 h-5 text-primary" />
                 </div>
                 <div>
@@ -441,7 +441,7 @@ const AdminJourneysTab: React.FC = () => {
                 ) : (
                   <div className="space-y-2">
                     {steps.map(step => (
-                      <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-premium-sm border text-sm group">
+                      <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-2xl border text-sm group">
                         <div className="flex items-center gap-3">
                           <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-premium-tiny">{step.step_order}</span>
                           <div>

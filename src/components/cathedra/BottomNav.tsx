@@ -1,11 +1,10 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -60,12 +59,12 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
   >
 
     <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
-      <CathedraIcon 
-        icon={(icon as React.ReactElement).type as any} 
-        size={IconSizePreset.NAV} 
-        variant={isActive ? 'primary' : 'muted'} 
-        containerClassName="bg-transparent border-none p-0 w-auto h-auto"
-      />
+      {React.cloneElement(icon as React.ReactElement, { 
+        className: `w-5 h-5 sm:w-5 sm:h-5`,
+        size: undefined,
+        strokeWidth: 2,
+        fill: isActive ? 'currentColor' : 'none'
+      })}
     </div>
     <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
       isActive ? 'opacity-100' : 'opacity-60'
@@ -73,7 +72,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-premium-sm" />
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-2xl" />
     )}
   </Button>
 );
@@ -99,7 +98,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   ];
 
   return (
-    <div className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
       <div className="flex items-stretch h-16 px-1">
         {items.map((item: any) => (
           <BottomNavItem 

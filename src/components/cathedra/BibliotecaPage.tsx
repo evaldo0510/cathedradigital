@@ -4,7 +4,7 @@ import { prefetchRoute } from '@/lib/prefetch';
 import { motion } from 'framer-motion';
 import { ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 
@@ -93,9 +93,9 @@ const sections = [
     category: 'Formação Intelectual',
     items: [
       {
-        title: 'Logos',
-        description: 'Diálogos teológicos e mestre espiritual contemplativo',
-        icon: <Icons.Compass className="w-5 h-5" />,
+        title: 'Logos IA',
+        description: 'Tire suas dúvidas iluminadas pela fé',
+        icon: <Icons.Brain className="w-5 h-5" />,
         route: AppRoute.STUDY_MODE,
         color: 'bg-primary/10 text-primary',
       },
@@ -173,7 +173,7 @@ const BibliotecaPage: React.FC = () => {
   }, [query]);
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto px-4 pb-24">
+    <div className="space-y-6 max-w-2xl mx-auto pb-24">
       <div className="text-center space-y-2">
         <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
         <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>

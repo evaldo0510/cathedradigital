@@ -35,8 +35,8 @@ const HowItWorksSection = () => {
           >
             Passo a passo
           </motion.span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold heading-section-label">Como Funciona</h2>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto text-premium-body">Três passos simples para iniciar sua transformação espiritual</p>
+          <h2 className="text-4xl md:text-5xl font-display font-bold">Como Funciona</h2>
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">Três passos simples para iniciar sua transformação espiritual</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
@@ -78,8 +78,8 @@ const HowItWorksSection = () => {
                   {step.num}
                 </motion.span>
               </motion.div>
-              <h3 className="text-xl font-serif font-bold heading-card">{step.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto text-premium-body">{step.desc}</p>
+              <h3 className="text-xl font-serif font-bold">{step.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">{step.desc}</p>
             </motion.div>
           ))}
         </div>

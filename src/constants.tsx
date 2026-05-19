@@ -18,7 +18,6 @@ import {
   ChevronRight,
   ChevronDown,
   ChevronUp,
-  ArrowUpDown,
   Star,
   MessageCircle,
   Zap,
@@ -436,7 +435,6 @@ export const Icons = {
   ArrowLeft: IconsInternal.ArrowLeft,
   ArrowRight: IconsInternal.ArrowRight,
   ArrowDown: IconsInternal.ArrowDown,
-  ArrowUpDown: createIcon(ArrowUpDown),
   Video: IconsInternal.Video,
   
   // Utilities

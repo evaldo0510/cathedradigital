@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Icons } from '../../constants';
-import { Button   } from '@/components/cathedra/Button';
-import { Card    , CardContent  , CardDescription  , CardFooter  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
@@ -152,7 +152,7 @@ const CheckoutPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-14 py-8">
       {/* Hero */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Zap className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
@@ -171,13 +171,13 @@ const CheckoutPage: React.FC = () => {
 
         <div className="space-y-4">
           {/* Plan selector */}
-          <div className="flex gap-2 p-1 bg-muted rounded-premium-sm">
+          <div className="flex gap-2 p-1 bg-muted rounded-2xl">
             {PLANS.map(p => (
               <Button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
                 className={`flex-1 py-3 px-4 rounded-full text-sm font-bold transition-all ${
-                  selectedPlan === p.id ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
+                  selectedPlan === p.id ? 'bg-background text-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {p.label}
@@ -189,7 +189,7 @@ const CheckoutPage: React.FC = () => {
           </div>
 
           {/* Plan card */}
-          <Card className="border-2 border-primary shadow-premium rounded-[2.5rem] overflow-hidden">
+          <Card className="border-2 border-primary shadow-2xl rounded-[2.5rem] overflow-hidden">
             <CardHeader className="text-center bg-primary/5 pb-10 pt-12 space-y-4">
               <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
@@ -210,7 +210,7 @@ const CheckoutPage: React.FC = () => {
                 </span>
               </div>
               {plan.totalLabel && (
-                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-premium-sm inline-block font-serif">
+                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-4 py-1.5 rounded-2xl inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
@@ -261,7 +261,7 @@ const CheckoutPage: React.FC = () => {
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
-                className="w-full h-14 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-premium shadow-primary/20"
+                className="w-full h-14 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-xl shadow-primary/20"
               >
                 {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
@@ -277,7 +277,7 @@ const CheckoutPage: React.FC = () => {
       {/* Plan Comparison */}
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl font-serif font-bold text-center mb-8">Gratuito vs PRO</h2>
-        <Card className="rounded-premium-sm overflow-hidden border border-border/50">
+        <Card className="rounded-2xl overflow-hidden border border-border/50">
           <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
@@ -311,9 +311,9 @@ const CheckoutPage: React.FC = () => {
 
       {/* Donation */}
       <div className="max-w-2xl mx-auto">
-        <Card className="border border-border/50 rounded-premium-sm overflow-hidden bg-muted/30">
+        <Card className="border border-border/50 rounded-2xl overflow-hidden bg-muted/30">
           <CardHeader className="text-center space-y-3 pb-4">
-            <div className="mx-auto w-14 h-14 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+            <div className="mx-auto w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-7 h-7 text-primary" />
             </div>
             <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
@@ -390,7 +390,7 @@ const BenefitsSection: React.FC = () => (
         { icon: <Icons.Globe className="w-5 h-5" />, title: 'Offline total', desc: 'Baixe toda a Bíblia e o Catecismo para ler onde quer que esteja.' },
       ].map((benefit, i) => (
         <div key={i} className="flex gap-4 group">
-          <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+          <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             {benefit.icon}
           </div>
           <div className="space-y-1">

@@ -1,35 +1,22 @@
-I will optimize the layout of Cathedra Digital by standardizing cards, buttons, and spacings across key components to align with the premium spiritual design system.
-
-### Optimization Steps
-
-1.  **Global Style Refinement (`src/index.css`)**
-    *   Update `premium-card` to strictly use the requested design tokens (radius 24px, translucid background/border).
-    *   Ensure `btn-premium` and its variants have consistent heights and typography.
-    *   Refine `stack-spacing` and `section-spacing` utility classes.
-
-2.  **Logos IA (LogosChat) Optimization**
-    *   Adjust mobile layout to ensure the virtual keyboard doesn't overlap text/citations.
-    *   Apply `premium-card` and `btn-premium` styles to the chat interface.
-    *   Standardize typography for contemplatve reading.
-
-3.  **Spiritual Quiz (SpiritualQuiz) Optimization**
-    *   Refactor the quiz flow to show one question at a time with smooth transitions.
-    *   Apply the spiritual design system to result cards and reading recommendations.
-    *   Integrate discrete Bible/Catechism citations with `ReferenceModal` links.
-
-4.  **Sacred Texts (Bible & Catechism) Optimization**
-    *   Ensure Bible and Catechism viewers use the standardized `premium-card` and spacing.
-    *   Refine the "Contemplative Reading" mode with better line-height and focus.
-
-5.  **General Component Audit**
-    *   Update `SaintCard` (in `Saints.tsx`) and other UI elements to use the global design system classes.
+### Goals
+1. **Audit & Replace `<button>` Tags**: Migrate raw HTML `<button>` elements to the standardized `Button` or `HomeButton` components across the entire site.
+2. **Standardize Typography**: Remove hardcoded `text-[...]` classes and replace them with the fluid typographic scale (`text-premium-tiny`, `text-premium-small`, `text-premium-base`) to ensure legibility across all breakpoints.
+3. **Consistency for Icon Buttons**: Ensure all icon-only buttons use `size="icon"`, have consistent alignment, and inherit icon sizing from the `Button` component.
+4. **Accessibility Reinforcement**: Add `aria-label` to all icon buttons and ensure `aria-busy`/`aria-disabled` are correctly managed via the `Button` component.
+5. **Design System Documentation**: Update the guide to include the fluid typography scale and real-world button examples.
 
 ### Technical Details
+- **Component Migration**: Use `import { Button } from "@/components/ui/button"` or `HomeButton`.
+- **Icon Sizing**: Remove manual `w-4 h-4` or `size={16}` from icons inside `Button size="icon"` as the component defines `[&_svg]:size-5`.
+- **Typography Scale**:
+  - `text-[9px]/text-[10px]` -> `text-premium-tiny`
+  - `text-[11px]/text-[12px]` -> `text-premium-small`
+  - `text-[14px]/text-[16px]` -> `text-premium-base`
+- **Focus States**: Ensure `focus-visible` rings are consistent.
 
-*   **Design Tokens:**
-    *   `border-radius`: 24px (mapped to `rounded-premium`)
-    *   `background`: `rgba(255,255,255,0.04)`
-    *   `border`: `1px solid rgba(255,255,255,0.08)`
-    *   `box-shadow`: `0 10px 30px rgba(0,0,0,.08)`
-*   **Mobile UX:** Use `h-[100dvh]` and `pb-safe` for consistent height across devices.
-*   **Standardization:** Replace inline styles with CSS variables and utility classes defined in `index.css`.
+### Files to be Modified (Phased Approach)
+- **Phase 1: Navigation & Header**: `AppHeader.tsx`, `LandingHeader.tsx`.
+- **Phase 2: Core Features**: `Rosary.tsx`, `JornadaStepPage.tsx`, `LiturgiaPage.tsx`.
+- **Phase 3: Admin & Dashboard**: `AdminDashboard.tsx`, `AdminJourneysTab.tsx`.
+- **Phase 4: Misc Components**: `CookieConsent.tsx`, `FeedbackWidget.tsx`, `Certamen.tsx`.
+- **Phase 5: Documentation**: `DesignSystemGuide.tsx`.

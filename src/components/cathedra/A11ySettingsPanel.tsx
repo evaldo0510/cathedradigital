@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useLang } from '@/hooks/useLang';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface A11ySettingsPanelProps {
   isOpen: boolean;
@@ -42,19 +41,19 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-premium z-[201] p-8 flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-2xl z-[201] p-8 flex flex-col"
             role="dialog"
             aria-labelledby="a11y-title"
           >
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-0 text-primary">
-                  <CathedraIcon icon={Icons.ShieldCheck} size={IconSizePreset.ACTION} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                  <Icons.ShieldCheck className="w-5 h-5" />
                 </div>
                 <h2 id="a11y-title" className="text-xl font-serif font-bold text-primary">Acessibilidade</h2>
               </div>
               <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
-                <CathedraIcon icon={Icons.X} size={IconSizePreset.ACTION} containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+                <Icons.X className="w-5 h-5" />
               </Button>
             </div>
 
@@ -91,9 +90,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
               <section className="space-y-4">
                 <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
-                <div className="p-4 rounded-premium-sm bg-primary/5 border border-primary/10 space-y-3">
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">
-                    <CathedraIcon icon={Icons.Info} size={IconSizePreset.TINY} variant="primary" containerClassName="bg-transparent border-none p-0 w-auto h-auto" />
+                    <Icons.Info className="w-3.5 h-3.5" />
                     <span>Otimização para NVDA & VoiceOver</span>
                   </div>
                   <p className="text-[11px] text-primary/60 leading-relaxed italic">

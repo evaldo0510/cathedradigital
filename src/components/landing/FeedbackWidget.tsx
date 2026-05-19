@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, X, Star } from 'lucide-react';
-import { Button } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -54,22 +54,22 @@ const FeedbackWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-premium rounded-full p-6 overflow-hidden"
+            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-2xl rounded-full p-6 overflow-hidden"
           >
             {submitted ? (
               <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-premium-sm flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
                   <Send className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-serif font-bold heading-card">Obrigado!</h3>
-                <p className="text-sm text-muted-foreground font-serif italic text-premium-body">
+                <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
+                <p className="text-sm text-muted-foreground font-serif italic">
                   Seu feedback é precioso para construirmos o Cathedra juntos.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-serif font-bold text-lg heading-card">Deixe seu feedback</h3>
+                  <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                     <X className="w-5 h-5" />
                   </Button>
@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-premium font-bold uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-2xl font-bold uppercase tracking-widest text-premium-tiny min-w-0"
       >
         <MessageSquare className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

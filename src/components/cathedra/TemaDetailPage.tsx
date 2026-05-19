@@ -8,8 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ChevronLeft, Sparkles, BookOpen, Quote, Shield, Globe, ExternalLink, CheckCircle, Flame, AlertTriangle } from 'lucide-react';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AppRoute } from '@/types';
@@ -393,7 +393,7 @@ const TemaDetailPage = () => {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60">{selectedTag?.category}</span>
-                <div className="w-1 h-1 rounded-premium-sm bg-primary/30" />
+                <div className="w-1 h-1 rounded-2xl bg-primary/30" />
                 <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary/70">Nexus</Badge>
               </div>
               <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-foreground">{selectedTag?.label}</h1>
@@ -403,7 +403,7 @@ const TemaDetailPage = () => {
           <Button 
             onClick={handleLoadInsight}
             disabled={loadingLogos || !!logosInsight}
-            className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-premium shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
+            className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:animate-shimmer" />
             {loadingLogos ? (
@@ -429,7 +429,7 @@ const TemaDetailPage = () => {
                 <CardContent className="p-8 sm:p-10">
                   <div className="flex items-center justify-between mb-8">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-premium-sm bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
+                      <div className="w-12 h-12 rounded-2xl bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-inner">
                         <Sparkles className="w-6 h-6 text-secondary" />
                       </div>
                       <div>
@@ -441,9 +441,9 @@ const TemaDetailPage = () => {
                   </div>
                   {loadingLogos && !logosInsight ? (
                     <div className="space-y-4">
-                      <div className="h-4 w-full bg-muted animate-pulse rounded-premium-sm" />
-                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-premium-sm opacity-70" />
-                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-premium-sm opacity-40" />
+                      <div className="h-4 w-full bg-muted animate-pulse rounded-2xl" />
+                      <div className="h-4 w-[90%] bg-muted animate-pulse rounded-2xl opacity-70" />
+                      <div className="h-4 w-[75%] bg-muted animate-pulse rounded-2xl opacity-40" />
                     </div>
                   ) : (
                     <div className="space-y-6">
@@ -677,7 +677,7 @@ const TemaDetailPage = () => {
 
           <Card className="border-primary/20 bg-primary/5 rounded-[2rem] overflow-hidden">
             <CardContent className="p-6 space-y-4">
-              <div className="w-10 h-10 rounded-premium-sm bg-primary/20 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center">
                 <Quote className="w-5 h-5 text-primary" />
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed italic">

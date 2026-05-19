@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
@@ -263,9 +263,9 @@ const AdminSeoTab: React.FC = () => {
               <CardDescription>Como seu site aparece nos resultados de busca.</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="bg-background border border-border/50 rounded-premium-sm p-6 shadow-inner space-y-2">
+              <div className="bg-background border border-border/50 rounded-2xl p-6 shadow-inner space-y-2">
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="w-5 h-5 bg-muted rounded-premium-sm flex items-center justify-center overflow-hidden">
+                  <div className="w-5 h-5 bg-muted rounded-2xl flex items-center justify-center overflow-hidden">
                     <Globe className="w-3 h-3 text-muted-foreground" />
                   </div>
                   <div className="text-premium-small text-[#202124]">
@@ -363,7 +363,7 @@ const AdminSeoTab: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="bg-black/90 text-amber-400 p-3 rounded-premium-sm text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                <div className="bg-black/90 text-amber-400 p-3 rounded-2xl text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
                   <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -415,7 +415,7 @@ const AdminSeoTab: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <div className="p-3 bg-muted/50 rounded-premium-sm border border-border/50 text-premium-small leading-relaxed">
+              <div className="p-3 bg-muted/50 rounded-2xl border border-border/50 text-premium-small leading-relaxed">
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>

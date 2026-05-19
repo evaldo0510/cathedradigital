@@ -16,7 +16,7 @@ import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import { toast } from 'sonner';
 
 // Core UI components (not lazy to ensure layout is instant)
-import ReadingPreferencesPanel from './components/cathedra/ReadingPreferencesPanel';
+import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
 import { initGA4AutoTracking } from './lib/analytics';
 
@@ -46,7 +46,7 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
+// Dashboard component removed in favor of HojePage
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
@@ -110,7 +110,6 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
-const AuditLogsPage = lazy(() => import('./components/cathedra/AuditLogsPage'));
 
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
@@ -123,8 +122,6 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
-const SpiritualProgressPage = lazy(() => import('./components/cathedra/SpiritualProgressPage'));
-const IconsDesignSystem = lazy(() => import('./components/cathedra/IconsDesignSystem'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -138,8 +135,8 @@ SkeletonBar.displayName = 'SkeletonBar';
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
     <div className="relative mb-8">
-      <div className="w-16 h-16 rounded-premium-sm bg-primary/10 animate-pulse border-2 border-primary/20" />
-      <div className="absolute inset-0 w-16 h-16 rounded-premium-sm border-t-2 border-primary animate-spin" />
+      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
+      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
     </div>
     
     <div className="w-full max-w-sm space-y-4">
@@ -149,7 +146,7 @@ const LoadingFallback = () => (
       
       <div className="grid grid-cols-2 gap-3 pt-6">
         {[1, 2].map(i => (
-          <div key={i} className="rounded-premium-sm bg-muted/20 border border-border/20 p-4 space-y-3">
+          <div key={i} className="rounded-2xl bg-muted/20 border border-border/20 p-4 space-y-3">
             <SkeletonBar w="w-12 mx-auto" h="h-12" className="rounded-full" />
             <SkeletonBar w="w-2/3 mx-auto" h="h-3" />
           </div>
@@ -438,7 +435,7 @@ const AppLayout: React.FC = () => {
       if (path.includes('biblia')) pageTitle = 'Sagrada Escritura';
       else if (path.includes('catecismo')) pageTitle = 'Catecismo da Igreja';
       else if (path.includes('hoje')) pageTitle = 'Liturgia do Dia';
-      else if (path.includes('estudo')) pageTitle = 'Logos';
+      else if (path.includes('estudo')) pageTitle = 'Logos IA';
       else if (path.includes('jornada')) pageTitle = 'Jornada Espiritual';
       else if (path.includes('santos')) pageTitle = 'Vida dos Santos';
       else if (path.includes('oracao')) pageTitle = 'Momento de Oração';
@@ -494,16 +491,16 @@ const AppLayout: React.FC = () => {
       <Suspense fallback={
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-background p-6">
           <div className="relative mb-12 animate-in fade-in zoom-in duration-700">
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-primary/10 shadow-premium p-4 bg-muted/20">
-              <div className="w-full h-full bg-primary/20 rounded-premium-sm animate-ping" />
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-[3px] border-primary/10 shadow-2xl p-4 bg-muted/20">
+              <div className="w-full h-full bg-primary/20 rounded-2xl animate-ping" />
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 border-t-2 border-primary rounded-premium-sm animate-spin" />
+              <div className="w-16 h-16 border-t-2 border-primary rounded-2xl animate-spin" />
             </div>
           </div>
           
           <div className="space-y-4 w-full max-w-[200px] animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-            <div className="h-1 w-full bg-muted rounded-premium-sm overflow-hidden">
+            <div className="h-1 w-full bg-muted rounded-2xl overflow-hidden">
               <div className="h-full bg-primary/40 animate-[shimmer_2s_infinite]" style={{ width: '40%' }} />
             </div>
             <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary/60 text-center animate-pulse">
@@ -598,7 +595,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.HOME} element={<PageTransition><Index /></PageTransition>} />
                   <Route path="/curso-pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
                   <Route path="/pch" element={<Navigate to={AppRoute.JORNADAS} replace />} />
-                  <Route path={AppRoute.DASHBOARD} element={<PageTransition><AuthGuard><Dashboard user={appUser} /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.DASHBOARD} element={<Navigate to={AppRoute.HOJE} replace />} />
                   <Route path={AppRoute.BIBLE} element={<PageTransition><AuthGuard><Bible /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.CATECHISM} element={<PageTransition><AuthGuard><Catechism /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.SAINTS} element={<PageTransition><AuthGuard><Saints /></AuthGuard></PageTransition>} />
@@ -612,8 +609,6 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_AUDIT} element={<PageTransition><AdminGuard><VisualAuditPage /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_REGRESSION} element={<PageTransition><AdminGuard><VisualRegressionDashboard /></AdminGuard></PageTransition>} />
-                  <Route path={AppRoute.AUDIT_LOGS} element={<PageTransition><AdminGuard><AuditLogsPage /></AdminGuard></PageTransition>} />
-                  <Route path="/design-system/icons" element={<PageTransition><AdminGuard><IconsDesignSystem /></AdminGuard></PageTransition>} />
 
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
@@ -647,7 +642,6 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.LITURGICAL_CALENDAR} element={<Navigate to={`${AppRoute.LITURGIA}?tab=calendario`} replace />} />
                   <Route path={AppRoute.COMMUNITY} element={<PageTransition><AuthGuard><CommunityPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.PROFILE} element={<PageTransition><AuthGuard><ProfilePage /></AuthGuard></PageTransition>} />
-                  <Route path={AppRoute.PROGRESS} element={<PageTransition><AuthGuard><SpiritualProgressPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.POENITENTIA} element={<PageTransition><AuthGuard><PoenitentiaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.GLOSSARY} element={<PageTransition><AuthGuard><GlossaryPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.AZ_FAITH} element={<PageTransition><AuthGuard><AZFaithPage /></AuthGuard></PageTransition>} />
@@ -665,10 +659,10 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.PRIVACY} element={<PageTransition><PrivacyPage /></PageTransition>} />
                   <Route path={AppRoute.PRICING} element={<PageTransition><PricingPage /></PageTransition>} />
                   <Route path={AppRoute.UPGRADE} element={<PageTransition><UpgradePage /></PageTransition>} />
-                  <Route path={AppRoute.A11Y_AUDIT} element={<PageTransition><AdminGuard><A11yAuditPage /></AdminGuard></PageTransition>} />
-                  <Route path={AppRoute.SECURITY_AUDIT} element={<PageTransition><AdminGuard><SecurityAuditPage /></AdminGuard></PageTransition>} />
-                   <Route path={AppRoute.SELLER} element={<PageTransition><AdminGuard><SellerDashboard /></AdminGuard></PageTransition>} />
-                  <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AdminGuard><TransactionsPage /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.A11Y_AUDIT} element={<PageTransition><A11yAuditPage /></PageTransition>} />
+                  <Route path={AppRoute.SECURITY_AUDIT} element={<PageTransition><SecurityAuditPage /></PageTransition>} />
+                  <Route path={AppRoute.SELLER} element={<PageTransition><AuthGuard><SellerDashboard /></AuthGuard></PageTransition>} />
+                  <Route path={AppRoute.TRANSACTIONS} element={<PageTransition><AuthGuard><TransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path="/transactions/my" element={<PageTransition><AuthGuard><UserTransactionsPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.DIAGNOSTICO} element={<PageTransition><AuthGuard><DiagnosticoPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.HOJE} element={<PageTransition><AuthGuard><HojePage /></AuthGuard></PageTransition>} />
@@ -707,8 +701,8 @@ const AppLayout: React.FC = () => {
               <BottomNav onOpenSidebar={() => setIsSidebarOpen(true)} user={appUser} />
             </Suspense>
             <OfflineModeToggle />
-            {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.STUDY_MODE].includes(location.pathname as AppRoute) && (
-              <ReadingPreferencesPanel />
+            {[AppRoute.BIBLE, AppRoute.DAILY_LITURGY, AppRoute.LITURGIA, AppRoute.BREVIARY, AppRoute.LECTIO_DIVINA, AppRoute.CATECHISM, AppRoute.MAGISTERIUM].includes(location.pathname as AppRoute) && (
+              <ReadingModeToggle />
             )}
             <OfflineIndicator />
             <PWAInstallPrompt />

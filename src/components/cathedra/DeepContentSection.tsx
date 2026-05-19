@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Icons } from '../../constants';
 import { DeepContent, AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Lock } from 'lucide-react';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
@@ -121,7 +121,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-premium-sm bg-muted/30 border border-dashed border-border/50 text-center">
+                  <div className="py-4 px-2 rounded-2xl bg-muted/30 border border-dashed border-border/50 text-center">
                     <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>

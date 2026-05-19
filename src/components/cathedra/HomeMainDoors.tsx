@@ -1,10 +1,9 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { cn } from '@/lib/utils';
-import { HomeCard as Card } from './HomeCard';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
@@ -46,12 +45,12 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   ];
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 lg:gap-12", className)}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
       {doors.map((door, idx) => (
-        <Card
+        <motion.div
           key={idx}
-          variant="interactive"
-          padding="none"
+          whileHover={{ y: -8 }}
+          whileTap={{ scale: 0.995 }}
           onClick={() => navigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -62,14 +61,16 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="flex flex-col items-center text-center gap-4 sm:gap-6 group p-6 sm:p-8"
+          className="p-10 md:p-14 rounded-premium border border-border/40 bg-card flex flex-col items-center text-center gap-10 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/20 hover:bg-primary/[0.01] hover:-translate-y-1.5 active:scale-[0.985]"
         >
-          <CathedraIcon icon={door.icon} size={IconSizePreset.SIDEBAR} variant={door.color.includes('secondary') ? 'secondary' : 'primary'} />
-          <div className="space-y-3">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.3em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
-            <p className="text-[10px] text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
+          <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-110 transition-all duration-700 border border-border/30">
+            <door.icon className="w-10 h-10" strokeWidth={1.25} />
           </div>
-        </Card>
+          <div className="space-y-4">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
+            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
+          </div>
+        </motion.div>
       ))}
     </div>
   );

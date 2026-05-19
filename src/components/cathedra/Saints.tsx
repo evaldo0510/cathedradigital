@@ -17,7 +17,7 @@ import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, BookOpen
 import { RelevanceBadge } from './RelevanceBadge';
 import { FuzzySearchInput } from './FuzzySearchInput';
 import { SearchResultCard } from './SearchResultCard';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { format, addDays, subDays, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -192,7 +192,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </header>
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
-          <div className="bg-secondary/50 p-1 rounded-premium-sm flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
             {viewModes.map((mode, idx) => (
               <Button
                 key={mode}
@@ -343,7 +343,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   ))
                 ) : (
                   <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-4">
-                    <Icons.Star className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+                    <Icons.Star className="w-12 h-12 text-muted-foreground/30 mx-auto" />
                     <div className="space-y-2">
                       <p className="text-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
                       <p className="text-xs text-muted-foreground/60 max-w-xs mx-auto">
@@ -519,7 +519,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
   return (
     <Button
       onClick={onClick}
-      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
+      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
       <div className="relative h-48 overflow-hidden">
         <SacredImage 
@@ -544,7 +544,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
           <div className="flex items-center justify-between mb-2">
             <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
-              <div className="p-1 bg-primary/5 rounded-premium-sm text-primary" title="Possui obras escritas">
+              <div className="p-1 bg-primary/5 rounded-2xl text-primary" title="Possui obras escritas">
                 <BookOpen className="w-3 h-3" />
               </div>
             )}

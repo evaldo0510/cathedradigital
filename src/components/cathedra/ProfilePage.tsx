@@ -6,17 +6,14 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Card, CardContent } from '@/components/cathedra/Card';
-import { Button } from '@/components/cathedra/Button';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
-import SpiritualReminderSettings from './SpiritualReminderSettings';
-import { ChevronRight } from 'lucide-react';
 
 interface Badge {
   id: string;
@@ -90,7 +87,10 @@ const ProfilePage: React.FC = () => {
   }, [user]);
 
   const badges = useMemo(() => {
+    const { posts, likes, notes } = stats;
     const currentBadges = new Set(profile?.badges || []);
+    
+    // We combine global badges with community-specific ones for display
     return BADGE_DEFINITIONS.map(b => ({
       id: b.id,
       label: b.name,
@@ -146,6 +146,7 @@ const ProfilePage: React.FC = () => {
     if (!user) return;
     setSaving(true);
     
+    // Background push notification updates (they take long and aren't critical for initial feedback)
     const handlePush = async () => {
       try {
         if (pushEnabled) await subscribe();
@@ -155,26 +156,19 @@ const ProfilePage: React.FC = () => {
     handlePush();
 
     try {
-      const profileUpdate = supabase.from('profiles').update({ 
+      const { error } = await supabase.from('profiles').update({ 
         name, 
         bio, 
+        whatsapp_number: whatsappNumber,
+        whatsapp_enabled: whatsappEnabled,
+        push_enabled: pushEnabled,
         estado: estado || null,
         diocese: diocese || null,
         paroquia: paroquia || null,
         movimento_pastoral: movimentoPastoral || null,
-      }).eq('id', user.id);
-
-      const privateUpdate = supabase.from('profiles_private').update({
-        whatsapp_number: whatsappNumber,
-        whatsapp_enabled: whatsappEnabled,
-        push_enabled: pushEnabled,
-      }).eq('id', user.id);
+      } as any).eq('id', user.id);
       
-      const [pRes, prRes] = await Promise.all([profileUpdate, privateUpdate]);
-      
-      if (pRes.error) throw pRes.error;
-      if (prRes.error) throw prRes.error;
-      
+      if (error) throw error;
       toast.success('Perfil atualizado!');
     } catch (err) {
       console.error('Failed to save profile:', err);
@@ -186,7 +180,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
     </div>
   );
 
@@ -196,10 +190,10 @@ const ProfilePage: React.FC = () => {
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
   const statCards = [
-    { label: 'Discussões', value: stats.posts, icon: <CathedraIcon icon={Icons.Message} size={IconSizePreset.ACTION} /> },
-    { label: 'Curtidas', value: stats.likes, icon: <CathedraIcon icon={Icons.Heart} size={IconSizePreset.ACTION} /> },
-    { label: 'Anotações', value: stats.notes, icon: <CathedraIcon icon={Icons.Feather} size={IconSizePreset.ACTION} /> },
-    { label: 'Dias Ativos', value: stats.daysActive, icon: <CathedraIcon icon={Icons.History} size={IconSizePreset.ACTION} /> },
+    { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
+    { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
+    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-5 h-5" /> },
+    { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-5 h-5" /> },
   ];
 
   return (
@@ -215,7 +209,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
-              className="bg-card border-2 border-primary rounded-full p-8 shadow-premium text-center pointer-events-auto max-w-sm mx-4"
+              className="bg-card border-2 border-primary rounded-full p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
             >
               <motion.div
                 animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
@@ -250,7 +244,7 @@ const ProfilePage: React.FC = () => {
             aria-label="Alterar foto de perfil"
           >
             {uploading ? (
-              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}
@@ -277,7 +271,7 @@ const ProfilePage: React.FC = () => {
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-premium-sm overflow-hidden">
+        <div className="relative h-3 bg-muted rounded-2xl overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
@@ -291,7 +285,7 @@ const ProfilePage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
-          <div key={s.label} className="bg-card border border-border rounded-premium-sm p-4 text-center space-y-1">
+          <div key={s.label} className="bg-card border border-border rounded-2xl p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -321,26 +315,12 @@ const ProfilePage: React.FC = () => {
               <p className="text-premium-tiny font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
               <p className="text-premium-tiny text-muted-foreground mt-0.5">{b.description}</p>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-premium-sm flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-2xl flex items-center justify-center">
                   <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
                 </div>
               )}
             </div>
           ))}
-        </div>
-      </div>
-
-      <div className="premium-card p-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Progresso Espiritual</h2>
-          <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.PROGRESS)} className="text-primary gap-2">
-            Ver Detalhes <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-        <div className="space-y-4">
-          <p className="text-xs text-muted-foreground italic leading-relaxed">
-            Acompanhe seu calendário de purificação e o status das suas trilhas diárias.
-          </p>
         </div>
       </div>
 
@@ -360,6 +340,7 @@ const ProfilePage: React.FC = () => {
             <Icons.History className="w-4 h-4" />
             Ver Histórico de Doações
           </Button>
+
         </div>
       </div>
 
@@ -369,14 +350,23 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <SpiritualReminderSettings />
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Bell className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Push Notifications</p>
+              </div>
+              <p className="text-premium-tiny text-muted-foreground">Lembretes diários de oração.</p>
+            </div>
+            <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
+          </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium-sm border border-primary/20 shadow-sm">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/20 shadow-sm">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-premium-sm bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
+                <div className="px-1.5 py-0.5 rounded-2xl bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
               </div>
               <p className="text-premium-tiny text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
@@ -406,7 +396,34 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-premium-sm p-6 space-y-5">
+      {!profile.is_premium && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <Card className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group cursor-pointer" onClick={() => navigate(AppRoute.PRICING)}>
+            <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
+              <Icons.Star className="w-20 h-20 text-secondary fill-current" />
+            </div>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
+                  Acesso Completo
+                </div>
+              </div>
+              <h3 className="text-xl font-serif text-foreground font-bold">Eleve sua vida espiritual ao nível PRO.</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
+                Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
+              </p>
+              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-premium-tiny uppercase tracking-widest h-10 px-6">
+                Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
         <div className="space-y-2">
@@ -429,6 +446,7 @@ const ProfilePage: React.FC = () => {
           />
         </div>
 
+        {/* Localização Eclesial */}
         <div className="border-t border-border pt-5 space-y-4">
           <div className="flex items-center gap-2 mb-1">
             <Icons.Church className="w-4 h-4 text-primary" />
@@ -437,6 +455,7 @@ const ProfilePage: React.FC = () => {
           <p className="text-premium-tiny text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Estado */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Estado</label>
               <select
@@ -451,6 +470,7 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
+            {/* Diocese */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Diocese</label>
               <select
@@ -466,6 +486,7 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
+            {/* Paróquia */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Paróquia</label>
               <input
@@ -477,6 +498,7 @@ const ProfilePage: React.FC = () => {
               />
             </div>
 
+            {/* Movimento/Pastoral */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
               <select
@@ -496,7 +518,7 @@ const ProfilePage: React.FC = () => {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
