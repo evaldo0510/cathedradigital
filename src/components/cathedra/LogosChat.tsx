@@ -91,7 +91,7 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
     {
       id: 'mock-1',
       role: 'assistant',
-      content: 'Paz e bem. Sou o Logos, seu mestre contemplativo. Como posso iluminar seu entendimento sobre as Sagradas Escrituras ou o Catecismo hoje?',
+      content: 'Paz e bem. Sou IARA (Inteligência Artificial de Reflexão Aplicada), sua guia de sabedoria. Como posso iluminar seu entendimento hoje?',
       timestamp: new Date()
     },
     {
