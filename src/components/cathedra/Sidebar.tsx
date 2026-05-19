@@ -154,6 +154,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         <button 
           className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg outline-none" 
           onClick={() => handleNav(AppRoute.SANCTUARIUM)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleNav(AppRoute.SANCTUARIUM);
+            }
+          }}
           aria-label="Ir para a página inicial Cathedra Digital"
         >
           <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
