@@ -316,6 +316,28 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
           content: response.content,
           timestamp: new Date(),
         };
+
+        // Command parsing for IARA
+        const commandMatch = response.content.match(/\{"command":\s*"NAVIGATE",\s*"target":\s*"(PORTAL|ESTÚDIO|ESTELA)"\}/i);
+        if (commandMatch) {
+          const target = commandMatch[1].toUpperCase();
+          let path = '';
+          if (target === 'PORTAL') path = '/sanctuarium';
+          else if (target === 'ESTÚDIO') path = '/lectio';
+          else if (target === 'ESTELA') path = '/diagnostico';
+          
+          if (path) {
+            toast.info(`IARA: Encaminhando para ${target}...`, {
+              icon: <Compass className="w-4 h-4 animate-spin" />,
+              duration: 3000
+            });
+            setTimeout(() => {
+              navigate(path);
+              setIsOpen(false);
+            }, 2000);
+          }
+        }
+
         setMessages((prev) => [...prev, assistantMessage]);
         
         // Auto-save to spiritual journal as a dedicated reflection
