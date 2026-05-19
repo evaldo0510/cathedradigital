@@ -54,7 +54,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 outline-none transition-colors ${
+    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 outline-none transition-colors ${
       isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
   >
@@ -99,7 +99,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   ];
 
   return (
-    <div className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-primary/5 safe-area-bottom">
+    <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-primary/5 safe-area-bottom" aria-label="Navegação móvel inferior">
       <div className="flex items-stretch h-14 px-1">
         {items.map((item: any) => (
           <BottomNavItem 
@@ -116,7 +116,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
           />
         ))}
       </div>
-    </div>
+    </nav>
   );
 };
 
