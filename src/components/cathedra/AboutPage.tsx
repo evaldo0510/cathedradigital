@@ -94,6 +94,7 @@ const AboutPage: React.FC = () => (
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={social.label}
               onClick={() => trackEvent('social_link_click', { platform: social.label, url: social.url })}
               className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-sm transition-all hover:shadow-md hover:-translate-y-1 ${social.color} group`}
             >
