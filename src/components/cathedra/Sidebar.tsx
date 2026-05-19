@@ -184,25 +184,44 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         aria-label="Menu principal lateral"
         onKeyDown={(e) => e.key === 'Escape' && onClose?.()}
       >
-        <button 
-          className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg outline-none" 
-          onClick={() => handleNav(AppRoute.SANCTUARIUM)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleNav(AppRoute.SANCTUARIUM);
-            }
-          }}
-          aria-label="Ir para a página inicial Cathedra Digital"
-        >
-          <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
-          <div className="space-y-0.5">
-            <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[9px] font-bold uppercase text-secondary/60 tracking-[0.3em]">
-              Digital Sanctuarium
-            </p>
-          </div>
-        </button>
+        <div className="flex items-center justify-between mb-8 px-1">
+          <button 
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg outline-none" 
+            onClick={() => handleNav(AppRoute.SANCTUARIUM)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleNav(AppRoute.SANCTUARIUM);
+              }
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const firstNav = document.querySelector('aside[role="navigation"] nav button') as HTMLElement;
+                if (firstNav) firstNav.focus();
+              }
+            }}
+            aria-label="Ir para a página inicial Cathedra Digital"
+          >
+            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
+            <div className="space-y-0.5">
+              <h1 className="text-lg font-display font-medium tracking-[0.05em] text-primary leading-none uppercase">CATHEDRA</h1>
+              <p className="text-[9px] font-bold uppercase text-secondary/60 tracking-[0.3em]">
+                Digital Sanctuarium
+              </p>
+            </div>
+          </button>
+
+          {onClose && (
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={onClose}
+              className="lg:hidden rounded-full h-8 w-8 hover:bg-destructive/10 hover:text-destructive focus-visible:ring-destructive focus-visible:ring-offset-1"
+              aria-label="Fechar menu"
+            >
+              <Icons.X className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
 
         <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar overscroll-contain">
           {sections.map((section) => (section.items.length > 0 && (
