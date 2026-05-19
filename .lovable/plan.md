@@ -1,36 +1,28 @@
-Refactor the Cathedra Digital layout to ensure a 100% premium experience, consistent with the Design System (radius 24px, glass backgrounds, standardized typography, and mobile-optimized spacing).
+## Refactor Logo VM (Visual Mark) Consistency
+
+Standardize the main application logo across all platforms (mobile, tablet, desktop) using responsive breakpoints and consistent spacing.
+
+### Implementation Details
+
+1.  **Standardize Logo Sizes:**
+    -   **Mobile:** 32px (`w-8 h-8`)
+    -   **Tablet:** 40px (`w-10 h-10`)
+    -   **Desktop:** 48px (`w-12 h-12`)
+
+2.  **Apply to Components:**
+    -   `AppHeader.tsx`: Update the main navigation logo.
+    -   `LandingHeader.tsx`: Update the landing page header logo.
+    -   `Sidebar.tsx`: Ensure the sidebar logo follows the scale.
+    -   `Footer.tsx`: Refine the footer logo size.
+    -   `SplashScreen.tsx`: Adjust the splash screen logo to be perfectly centered and sized.
+
+3.  **Refine Spacing:**
+    -   Ensure the gaps between the logo and accompanying text (like "Cathedra") are consistent across breakpoints (e.g., `gap-3` on mobile, `gap-4` on tablet, `gap-5` on desktop).
 
 ### Technical Tasks
-
-#### 1. Global CSS Enhancements (src/index.css)
-- Implement a global grid limit (`max-width: 1280px`) on the main container.
-- Refine `.premium-card` to match the requested specs: `rgba(255,255,255,0.04)` background, `rgba(255,255,255,0.08)` border, and `radius: 24px`.
-- Consolidate spacing tokens: standardize `section-spacing` and `stack-spacing`.
-- Enforce the "Monastery" typography: Cinzel for displays, Playfair Display/EB Garamond for body content.
-- Fix mobile keyboard issues by ensuring interactive areas (like LogosChat) use `dvh` and appropriate bottom safe areas.
-
-#### 2. LogosChat Optimization (src/components/cathedra/LogosChat.tsx)
-- Adjust the layout to prevent the virtual keyboard from obscuring text (using `h-[100dvh]` and relative flex positioning).
-- Standardize the "Intention" field for better mobile reach.
-- Ensure the "Auto-scroll" and "Pause" options are highly visible.
-
-#### 3. Navigation Refactoring (src/components/cathedra/AppHeader.tsx, BottomNav.tsx, Sidebar.tsx)
-- Standardize the AppHeader height and blur effect.
-- Refine the BottomNav to use the new `btn-premium` logic and standardized icons.
-- Update the Sidebar to follow the premium card style (glassy/monastery theme).
-
-#### 4. Landing Page Consolidation (src/pages/Index.tsx)
-- Wrap all landing sections in the standardized `app-container` and `section-spacing` classes.
-- Audit and replace any remaining generic `bg-white` or `rounded-lg` with `premium-card` and `rounded-premium`.
-
-#### 5. Accessibility & Responsiveness
-- Ensure all interactive elements have visible focus states (`ring-2 ring-primary`).
-- Verify ARIA labels across the LogosChat and CommandCenter.
-- Implement a "safe-area" utility check for notched phones.
-
-### Design Tokens
-- **Radius**: 24px (rounded-premium)
-- **Background**: Glassy translucency with backdrop-blur
-- **Border**: Thin, subtle white-alpha (0.08)
-- **Shadow**: 0 10px 30px rgba(0,0,0,0.08)
-- **Typography**: Display (Cinzel), Serif (Playfair/EB Garamond)
+- Edit `src/components/cathedra/AppHeader.tsx`
+- Edit `src/components/landing/LandingHeader.tsx`
+- Edit `src/components/cathedra/Sidebar.tsx`
+- Edit `src/components/cathedra/Footer.tsx`
+- Edit `src/components/cathedra/SplashScreen.tsx`
+- Edit `src/constants.tsx` (to ensure the Logo component itself handles the className correctly)

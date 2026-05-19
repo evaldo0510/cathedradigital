@@ -130,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Logo className="w-16 h-16 text-rose-900" variant="blue" />
+              <Icons.Logo className="w-12 h-12 md:w-16 md:h-16 text-rose-900" variant="blue" />
             </div>
           </motion.div>
           <div className="space-y-6">

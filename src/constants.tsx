@@ -135,7 +135,7 @@ export const COLORS = {
 import cathedraLogo from './assets/cathedra-logo.png';
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
-  className = "w-12 h-12", 
+  className = "w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12", 
   variant = 'gold' 
 }, ref) => {
   return (

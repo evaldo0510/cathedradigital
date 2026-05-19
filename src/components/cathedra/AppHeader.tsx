@@ -52,12 +52,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <header className="app-header border-b border-border/10 bg-background/40 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
       <div className="app-container flex items-center justify-between py-4 sm:py-6 min-h-[70px] sm:min-h-[90px]">
-        <div className="flex items-center gap-4 sm:gap-12 min-w-0">
-          <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
+        <div className="flex items-center gap-3 md:gap-4 lg:gap-12 min-w-0">
+          <div className="flex lg:hidden items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
+            <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
-              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
+              <span className="text-lg sm:text-xl md:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
             </div>
           </div>
           
