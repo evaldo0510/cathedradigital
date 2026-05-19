@@ -126,14 +126,26 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     navigate(path);
     onClose?.();
   };
+  
+  const handleKeyDown = (e: React.KeyboardEvent, item: string | { path: string; onClick?: () => void }) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleNav(item);
+    }
+  };
 
   return (
     <>
-      <aside ref={ref} className="h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6">
+      <aside 
+        ref={ref} 
+        className="h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6"
+        role="navigation"
+        aria-label="Menu principal lateral"
+      >
         <button 
-          className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary/20 rounded-lg outline-none" 
+          className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg outline-none" 
           onClick={() => handleNav(AppRoute.SANCTUARIUM)}
-          aria-label="Ir para a página inicial"
+          aria-label="Ir para a página inicial Cathedra Digital"
         >
           <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0" variant="blue" />
           <div className="space-y-0.5">
@@ -150,14 +162,16 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/30 mb-4 px-3">{section.label}</h3>
               <ul className="space-y-1">
                 {section.items.map((item, idx) => (
-                  <li key={idx}>
+                  <li key={idx} role="none">
                     <Button
                       variant="ghost"
                       onClick={() => handleNav(item.path)}
+                      onKeyDown={(e) => handleKeyDown(e, item.path)}
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-secondary/50 outline-none h-auto min-h-[48px] border-none shadow-none
+                      aria-label={item.label}
+                      className={`w-full flex items-center justify-start gap-4 px-4 py-3.5 rounded-xl text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none h-auto min-h-[48px] border-none shadow-none
                         ${currentPath === item.path
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary focus-visible:bg-primary/[0.05]'}`}
@@ -187,7 +201,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant="outline"
                 size="sm"
                 onClick={onToggleDark} 
-                className="flex-1 min-w-[90px] h-10 rounded-xl border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                className="flex-1 min-w-[90px] h-10 rounded-xl border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none"
                 aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
               >
                 {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4" />}
@@ -198,7 +212,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isHighContrast ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleHighContrast} 
-                className={`flex-1 min-w-[90px] h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 min-w-[90px] h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none ${
                   !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
                 }`}
                 aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
@@ -213,7 +227,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                 variant={isSpeaking ? "default" : "outline"}
                 size="sm"
                 onClick={onToggleSpeak} 
-                className={`flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                className={`flex-1 h-10 rounded-xl border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none ${
                   !isSpeaking ? 'bg-muted' : ''
                 }`}
                 aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
@@ -230,7 +244,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-[9px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-2 py-1 text-[9px] font-black uppercase rounded-lg border transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none ${
                     lang === l 
                       ? 'bg-primary text-white border-primary' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
@@ -247,7 +261,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
             <div className="relative">
               <button 
                 onClick={() => handleNav(AppRoute.PROFILE)} 
-                className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none text-left"
+                className="w-full flex items-center gap-3 p-3 bg-muted/30 rounded-xl hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left"
                 aria-label={`Perfil de ${user.name}`}
               >
                 <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform text-xs">
@@ -282,7 +296,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </Button>
             </div>
           ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-11 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all">
+            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-11 bg-foreground text-background rounded-xl font-black uppercase text-[10px] tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
               {t('enter')}
             </Button>
           )}

@@ -53,7 +53,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
     <header className="app-header border-b border-border/10 bg-background/40 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
       <div className="app-container flex items-center justify-between py-4 sm:py-6 min-h-[70px] sm:min-h-[90px]">
         <div className="flex items-center gap-3 md:gap-4 lg:gap-12 min-w-0">
-          <div className="flex lg:hidden items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
+          <div className="flex lg:hidden items-center gap-2 sm:gap-3 md:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)} aria-label="Ir para a página inicial Cathedra">
             <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
               <span className="text-lg sm:text-xl md:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
@@ -74,7 +74,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {isDashboard && (
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 border-l border-border/40 pl-4 xl:pl-8 ml-2 xl:ml-4 min-w-0 overflow-x-auto no-scrollbar">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 border-l border-border/40 pl-4 xl:pl-8 ml-2 xl:ml-4 min-w-0 overflow-x-auto no-scrollbar" role="navigation" aria-label="Navegação horizontal principal">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
                 { label: t('logos'), route: AppRoute.LOGOS },
@@ -91,7 +91,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   size="sm"
                   onClick={() => navigate(item.route)}
                   className={cn(
-                    "px-3 xl:px-5 py-2 xl:py-3 h-auto whitespace-nowrap relative group text-[10px] xl:text-xs font-bold uppercase tracking-widest",
+                    "px-3 xl:px-5 py-2 xl:py-3 h-auto whitespace-nowrap relative group text-[10px] xl:text-xs font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 outline-none",
                     pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-muted-foreground/50 hover:text-primary'
                   )}
                   aria-label={item.label}
