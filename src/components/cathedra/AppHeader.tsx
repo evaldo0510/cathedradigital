@@ -74,14 +74,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {isDashboard && (
-            <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-2 border-l border-border/40 pl-4 xl:pl-8 ml-2 xl:ml-4 min-w-0 overflow-x-auto no-scrollbar">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
+                { label: t('logos'), route: AppRoute.LOGOS },
                 { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
                 { label: t('journeys'), route: AppRoute.JORNADAS },
                 { label: t('explore'), route: AppRoute.BIBLIOTECA },
                 { label: t('themes'), route: AppRoute.TEMAS },
-                { label: t('community'), route: AppRoute.COMMUNITY },
+                { label: t('favorites'), route: AppRoute.FAVORITES },
                 { label: t('profile'), route: AppRoute.PROFILE },
               ].filter(item => canUserAccess(user?.role, item.route)).map(item => (
                 <Button 
@@ -90,7 +91,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   size="sm"
                   onClick={() => navigate(item.route)}
                   className={cn(
-                    "px-5 py-3 h-auto whitespace-nowrap relative group",
+                    "px-3 xl:px-5 py-2 xl:py-3 h-auto whitespace-nowrap relative group text-[10px] xl:text-xs font-bold uppercase tracking-widest",
                     pathname === item.route ? 'bg-primary text-primary-foreground' : 'text-muted-foreground/50 hover:text-primary'
                   )}
                   aria-label={item.label}

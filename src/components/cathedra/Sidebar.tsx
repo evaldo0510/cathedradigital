@@ -58,10 +58,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         label: 'Navegação',
         items: [
           { label: 'Sanctuarium', path: AppRoute.SANCTUARIUM, icon: Icons.Home },
-          { label: 'Logos IA', path: AppRoute.LOGOS, icon: Icons.Compass, pro: true },
+          { label: t('logos'), path: AppRoute.LOGOS, icon: Icons.Compass, pro: true },
           { label: 'Jornadas de Fé', path: AppRoute.JOURNEYS, icon: Icons.Journeys },
           { label: t('themes'), path: AppRoute.TEMAS, icon: Icons.Themes },
           { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: Icons.Compass },
+          { label: t('favorites'), path: AppRoute.FAVORITES, icon: Icons.Heart },
+          { label: 'Progresso', path: AppRoute.PROGRESS, icon: Icons.Activity },
           { label: 'Busca Global', path: AppRoute.BUSCAR, icon: Icons.Search },
           { label: t('community'), path: AppRoute.COMMUNITY, icon: Icons.Users },
           { label: t('profile'), path: AppRoute.PROFILE, icon: Icons.User },
@@ -95,6 +97,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
           { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
           { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
+          { label: t('glossary'), path: AppRoute.GLOSSARY, icon: Icons.Glossary },
+          { label: t('achievements'), path: AppRoute.ACHIEVEMENTS, icon: Icons.Award },
         ]
       },
       {
