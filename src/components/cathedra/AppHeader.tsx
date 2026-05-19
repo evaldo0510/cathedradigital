@@ -77,12 +77,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <nav className="hidden lg:flex items-center gap-1 xl:gap-2 border-l border-border/40 pl-4 xl:pl-8 ml-2 xl:ml-4 min-w-0 overflow-x-auto no-scrollbar">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
-                { label: 'Logos IA', route: AppRoute.LOGOS },
+                { label: t('logos'), route: AppRoute.LOGOS },
                 { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
                 { label: t('journeys'), route: AppRoute.JORNADAS },
                 { label: t('explore'), route: AppRoute.BIBLIOTECA },
                 { label: t('themes'), route: AppRoute.TEMAS },
-                { label: 'Favoritos', route: AppRoute.FAVORITES },
+                { label: t('favorites'), route: AppRoute.FAVORITES },
                 { label: t('profile'), route: AppRoute.PROFILE },
               ].filter(item => canUserAccess(user?.role, item.route)).map(item => (
                 <Button 
