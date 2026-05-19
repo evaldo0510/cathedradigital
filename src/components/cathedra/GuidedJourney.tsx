@@ -101,7 +101,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const getWhatsAppLink = () => {
     const theme = answers[0] || "espiritualidade";
     const text = encodeURIComponent(`Olá! Concluí minha jornada guiada no Cathedra sobre o tema "${theme}". Gostaria de aprofundar minha reflexão.`);
-    return `https://wa.me/5511999999999?text=${text}`;
+    return `${SOCIAL_LINKS.WHATSAPP}?text=${text}`;
   };
 
   if (!isOpen) return null;
