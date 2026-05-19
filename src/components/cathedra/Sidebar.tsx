@@ -97,8 +97,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: Icons.AZ },
           { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: Icons.ShieldCheck },
           { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: Icons.Aquinas },
-          { label: 'Glossário', path: AppRoute.GLOSSARY, icon: Icons.Glossary },
-          { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: Icons.Award },
+          { label: t('glossary'), path: AppRoute.GLOSSARY, icon: Icons.Glossary },
+          { label: t('achievements'), path: AppRoute.ACHIEVEMENTS, icon: Icons.Award },
         ]
       },
       {
