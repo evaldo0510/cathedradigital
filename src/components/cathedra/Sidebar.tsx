@@ -1,5 +1,5 @@
 import { Button   } from '@/components/cathedra/Button';
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
