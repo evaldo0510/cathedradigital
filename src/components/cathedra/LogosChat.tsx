@@ -404,8 +404,8 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                     <Compass className="w-5 h-5 sm:w-7 sm:h-7 text-primary/40" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">Logos</h3>
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Mestre de Sabedoria</p>
+                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">IARA</h3>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Inteligência de Reflexão Aplicada</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
