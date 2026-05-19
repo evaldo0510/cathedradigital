@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const WhatsAppButton = () => {
   const whatsappNumber = '5511999999999'; // Exemplo
