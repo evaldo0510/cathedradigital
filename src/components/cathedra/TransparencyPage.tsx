@@ -4,6 +4,8 @@ import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Info, Mail, Search, FileText, CheckCircle } from 'lucide-react';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
   return (
@@ -96,7 +98,10 @@ const TransparencyPage: React.FC = () => {
             </Button>
             <Button 
               variant="secondary"
-              onClick={() => window.open('https://wa.me/seunumerowhatsapp', '_blank')}
+              onClick={() => {
+                trackEvent('social_link_click', { platform: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP });
+                window.open(SOCIAL_LINKS.WHATSAPP, '_blank');
+              }}
               className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-sm gap-3"
             >
               <Icons.MessageSquare className="w-4 h-4" />

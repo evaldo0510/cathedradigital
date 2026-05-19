@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 interface Step {
   title: string;
@@ -99,7 +101,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const getWhatsAppLink = () => {
     const theme = answers[0] || "espiritualidade";
     const text = encodeURIComponent(`Olá! Concluí minha jornada guiada no Cathedra sobre o tema "${theme}". Gostaria de aprofundar minha reflexão.`);
-    return `https://wa.me/5511999999999?text=${text}`;
+    return `${SOCIAL_LINKS.WHATSAPP}?text=${text}`;
   };
 
   if (!isOpen) return null;
@@ -275,7 +277,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 asChild
                 className="flex-1 h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
               >
-                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
+                <a 
+                  href={getWhatsAppLink()} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url: getWhatsAppLink() })}
+                >
                   Aprofundar via WhatsApp
                 </a>
               </Button>

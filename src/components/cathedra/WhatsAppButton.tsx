@@ -1,15 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const WhatsAppButton = () => {
-  const whatsappNumber = '5511999999999'; // Exemplo
   const message = encodeURIComponent('Olá! Gostaria de saber mais sobre o Cathedra.');
-  const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+  const url = `${SOCIAL_LINKS.WHATSAPP}?text=${message}`;
 
   return (
     <motion.a
       href={url}
+      onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url })}
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
