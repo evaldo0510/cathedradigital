@@ -84,35 +84,16 @@ const TheologicalAwareText: React.FC<{
 
 type LogosTone = 'contemplative' | 'poetic' | 'doctrinal' | 'brief';
 
-const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
-  const [isOpen, setIsOpen] = useState(isPage);
+const LogosChat = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>(() => [
-    {
-      id: 'mock-1',
-      role: 'assistant',
-      content: 'Paz e bem. Sou o Logos, seu mestre contemplativo. Como posso iluminar seu entendimento sobre as Sagradas Escrituras ou o Catecismo hoje?',
-      timestamp: new Date()
-    },
-    {
-      id: 'mock-2',
-      role: 'user',
-      content: 'Gostaria de entender melhor o conceito de Graça Santificante.',
-      timestamp: new Date()
-    },
-    {
-      id: 'mock-3',
-      role: 'assistant',
-      content: 'A Graça Santificante é um dom gratuito que Deus nos faz de sua vida, infundida pelo Espírito Santo em nossa alma para curá-la do pecado e santificá-la. Como ensina o Catecismo (§1999), ela é uma disposição estável e sobrenatural que aperfeiçoa a alma para torná-la capaz de viver com Deus.',
-      timestamp: new Date()
-    }
-  ]);
-  const [hasRitualPassed, setHasRitualPassed] = useState(true);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [tone, setTone] = useState<LogosTone>('contemplative');
   const [isContemplative, setIsContemplative] = useState(false);
   const [showExtraDetails, setShowExtraDetails] = useState(true);
   const [autoScroll, setAutoScroll] = useState(true);
+  const [hasRitualPassed, setHasRitualPassed] = useState(false);
   const [intention, setInputIntention] = useState('');
   const [refModal, setRefModal] = useState<{ isOpen: boolean; type: 'bible' | 'catechism'; params: any }>({
     isOpen: false,
@@ -160,17 +141,6 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
         const nextIndex = (tones.indexOf(tone) + 1) % tones.length;
         setTone(tones[nextIndex]);
         toast.info(`Tom alterado para: ${tones[nextIndex]}`);
-      }
-
-      // Alt + 1-4 for specific tones
-      if (e.altKey && !isNaN(parseInt(e.key))) {
-        const num = parseInt(e.key);
-        const tones: LogosTone[] = ['contemplative', 'poetic', 'doctrinal', 'brief'];
-        if (num >= 1 && num <= tones.length) {
-          e.preventDefault();
-          setTone(tones[num - 1]);
-          toast.info(`Tom alterado para: ${tones[num - 1]}`);
-        }
       }
 
       // Trap focus
@@ -348,10 +318,7 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
   };
 
   return (
-    <div className={cn(
-      isPage ? "relative h-screen w-full" : "fixed inset-y-0 right-0 z-[250] pointer-events-none flex flex-col justify-end overflow-hidden sm:overflow-visible",
-      isOpen || isPage ? "w-full sm:w-auto" : "w-0"
-    )}>
+    <div className="fixed inset-y-0 right-0 z-[250] pointer-events-none">
       <AnimatePresence>
         {isOpen && (
           <>
@@ -366,56 +333,60 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
             
             {/* Sidebar - Monastery Integrated */}
             <motion.div
-              initial={isPage ? { opacity: 0 } : { x: '100%' }}
-              animate={isPage ? { opacity: 1 } : { x: 0 }}
-              exit={isPage ? { opacity: 0 } : { x: '100%' }}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 150 }}
-              className={cn(
-                "h-[100dvh] bg-background border-l border-primary/5 shadow-premium flex flex-col reading-monastery overflow-hidden max-w-full",
-                isPage ? "w-full" : "absolute top-0 right-0 w-full sm:w-[520px] sm:rounded-l-[24px] pointer-events-auto"
-              )}
+              className="absolute top-0 right-0 h-[100dvh] w-full sm:w-[480px] bg-background border-l border-primary/5 shadow-premium flex flex-col pointer-events-auto reading-monastery overflow-hidden pb-safe"
             >
               {/* Refined Header */}
-              <div className="p-4 sm:p-8 border-b border-primary/5 flex items-center justify-between flex-shrink-0 bg-background/40 backdrop-blur-md">
-                <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
-                    <Compass className="w-5 h-5 sm:w-7 sm:h-7 text-primary/40" />
+              <div className="p-6 sm:p-10 border-b border-primary/5 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-full bg-primary/[0.03] flex items-center justify-center border border-primary/10 transition-all duration-1000">
+                    <Compass className="w-7 h-7 text-primary/40" />
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">Logos</h3>
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Mestre de Sabedoria</p>
+                  <div>
+                    <h3 className="text-2xl font-display text-primary tracking-tightest">Logos</h3>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">Mestre de Sabedoria</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-1 sm:gap-2">
+                <div className="flex items-center gap-2">
                   <Button 
                     variant="ghost" 
-                    size="icon-xs" 
+                    size="icon" 
                     onClick={handleExportPDF}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all"
                     title="Exportar PDF"
                   >
-                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <Download className="w-5 h-5" />
                   </Button>
-                  
-                  <div className="h-6 w-px bg-primary/5 mx-1 hidden sm:block" />
-
                   <Button 
                     variant="ghost" 
-                    size="icon-xs" 
+                    size="icon" 
+                    onClick={() => setIsContemplative(!isContemplative)}
+                    className={cn(
+                      "rounded-full hover:bg-primary/5 transition-all",
+                      isContemplative ? "text-primary bg-primary/10" : "text-primary/20"
+                    )}
+                    title={isContemplative ? "Modo Normal" : "Modo Contemplativo"}
+                  >
+                    <Target className="w-5 h-5" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
                     onClick={() => setAutoScroll(!autoScroll)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
-                      autoScroll ? "text-secondary bg-secondary/10" : "text-primary/20"
+                      autoScroll ? "text-primary bg-primary/10" : "text-primary/20"
                     )}
                     title={autoScroll ? "Pausar Auto-scroll" : "Manter Auto-scroll"}
-                    aria-label={autoScroll ? "Pausar rolagem automática" : "Ativar rolagem automática"}
                   >
                     {autoScroll ? <ArrowDown className="w-4 h-4 animate-bounce" /> : <Lock className="w-4 h-4" />}
                   </Button>
-
                   <Button 
                     variant="ghost" 
-                    size="icon-xs" 
+                    size="icon" 
                     onClick={() => setShowExtraDetails(!showExtraDetails)}
                     className={cn(
                       "rounded-full hover:bg-primary/5 transition-all",
@@ -423,24 +394,23 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                     )}
                     title={showExtraDetails ? "Ocultar Detalhes" : "Mostrar Detalhes"}
                   >
-                    <Eye className={cn("w-4 h-4 sm:w-5 sm:h-5", !showExtraDetails && "opacity-50")} />
+                    <Eye className={cn("w-5 h-5", !showExtraDetails && "opacity-50")} />
                   </Button>
-
                   <Button 
                     ref={closeBtnRef}
                     variant="ghost" 
                     size="icon" 
                     onClick={() => setIsOpen(false)}
-                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                    className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
                     aria-label="Fechar Logos (ESC)"
                   >
-                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <X className="w-6 h-6" />
                   </Button>
                 </div>
               </div>
 
               {/* Messages - Pure Typographic Flow */}
-              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-20 overscroll-contain no-scrollbar scroll-smooth" ref={scrollRef}>
+              <ScrollArea className="flex-1 px-4 sm:px-10 pt-4 sm:pt-10 pb-10 overscroll-contain" ref={scrollRef}>
                 <div className={cn("space-y-10 sm:space-y-16 max-w-md mx-auto transition-all duration-1000", isContemplative && "space-y-20 sm:space-y-28 scale-[1.01]")}>
                   {!hasRitualPassed && (
                     <motion.div 
@@ -488,8 +458,8 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                       <div
                         className={`font-serif leading-relaxed ${
                           msg.role === 'user'
-                            ? 'text-base sm:text-lg text-primary/40 italic text-right mb-2'
-                            : 'text-lg sm:text-xl text-primary border-l-[2px] border-secondary/10 pl-6 sm:pl-8 py-1 mb-8'
+                            ? 'text-lg sm:text-xl text-primary/50 italic text-right mb-2'
+                            : 'text-xl sm:text-2xl text-primary border-l-[3px] border-secondary/10 pl-6 sm:pl-10 py-1 mb-8'
                         }`}
                       >
                         <TheologicalAwareText 
@@ -531,52 +501,54 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
               </ScrollArea>
 
               {/* Input Area - Integrated Journal Feel */}
-              <div className="p-4 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-md flex-shrink-0">
-                <div className="max-w-md mx-auto relative group">
-                  <textarea
-                    ref={inputTextAreaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSend();
-                      }
-                    }}
-                    placeholder={hasRitualPassed ? "Digite sua dúvida ou reflexão..." : "Sua intenção para este diálogo..."}
-                    className="w-full bg-primary/[0.03] border border-primary/10 rounded-[28px] pl-6 pr-16 py-4 sm:py-5 text-sm sm:text-base text-primary placeholder:text-primary/20 focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary/30 transition-all resize-none min-h-[56px] max-h-32"
-                    rows={1}
-                  />
-                  <Button
-                    onClick={hasRitualPassed ? handleSend : startWithRitual}
-                    disabled={(!hasRitualPassed && !intention.trim()) || (hasRitualPassed && (!input.trim() || isLoading))}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 p-0 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform active:scale-90"
-                    size="icon"
-                  >
-                    {isLoading ? (
-                      <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4 sm:w-5 sm:h-5" />
-                    )}
-                  </Button>
-                </div>
-                <div className="mt-4 flex items-center justify-center gap-4 sm:gap-6 overflow-x-auto no-scrollbar py-2">
-                  {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
+              {hasRitualPassed && (
+                <div className="p-6 sm:p-10 border-t border-primary/5 bg-background/40 backdrop-blur-2xl pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+                  {/* Tone Selector */}
+                  <div className="flex items-center justify-center gap-6 mb-8 opacity-40 hover:opacity-100 transition-opacity">
+                    {(['contemplative', 'poetic', 'doctrinal', 'brief'] as const).map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setTone(t)}
+                        aria-label={`Mudar tom para ${t}`}
+                        aria-pressed={tone === t}
+                        className={cn(
+                          "text-[9px] font-black uppercase tracking-[0.3em] transition-all pb-1 border-b-2 focus-visible:ring-1 focus-visible:ring-primary outline-none",
+                          tone === t ? "text-primary border-secondary" : "text-primary/20 border-transparent"
+                        )}
+                      >
+                        {t === 'contemplative' && <Target className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'poetic' && <Feather className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'doctrinal' && <Shield className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t === 'brief' && <Quote className="w-3 h-3 mb-1 mx-auto" aria-hidden="true" />}
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="relative group">
+                    <textarea
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSend();
+                        }
+                      }}
+                      placeholder="Abra seu coração..."
+                      className="w-full bg-transparent py-6 pr-14 text-xl font-serif focus:outline-none transition-all duration-1000 resize-none placeholder:text-primary/5 border-none"
+                      rows={1}
+                    />
                     <button
-                      key={t}
-                      onClick={() => setTone(t)}
-                      className={cn(
-                        "text-[9px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap px-3 py-1.5 rounded-full border",
-                        tone === t 
-                          ? "text-secondary border-secondary/30 bg-secondary/5 shadow-sm" 
-                          : "text-primary/20 border-transparent hover:text-primary/40"
-                      )}
+                      onClick={handleSend}
+                      disabled={!input.trim() || isLoading}
+                      className="absolute right-0 bottom-6 p-3 text-primary/20 hover:text-secondary disabled:opacity-0 transition-all duration-700 hover:scale-110"
                     >
-                      {t === 'contemplative' ? 'Contemplativo' : t === 'poetic' ? 'Poético' : t === 'doctrinal' ? 'Doutrinal' : 'Breve'}
+                      <ChevronRight className="w-8 h-8" />
                     </button>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              )}
               
               <div className="p-10 pt-0 bg-background/40 backdrop-blur-2xl">
                 <div className="flex justify-between items-center opacity-[0.03]">
@@ -592,14 +564,14 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
       </AnimatePresence>
 
       {/* Floating Trigger - Integrated & Subtle */}
-      {!isOpen && !isPage && (
+      {!isOpen && (
         <motion.button
           ref={triggerRef}
           layoutId="logos-trigger"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-rose-900 text-white rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-white/5 focus-visible:ring-2 focus-visible:ring-rose-900 focus-visible:ring-offset-2 outline-none"
+          className="fixed bottom-12 right-12 z-[200] w-14 h-14 bg-primary text-primary-foreground rounded-full shadow-premium pointer-events-auto flex items-center justify-center group overflow-hidden border border-primary-foreground/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none"
           aria-label="Abrir Logos (Ctrl+L)"
           aria-haspopup="true"
         >

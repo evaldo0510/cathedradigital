@@ -65,8 +65,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       description: t('bible_sub'),
       icon: Icons.Bible,
       route: (nextUp as any)?.lastBible 
-        ? `${AppRoute.SCRIPTUARIUM}?book=${(nextUp as any).lastBible.book_abbr}&ch=${(nextUp as any).lastBible.chapter}` 
-        : AppRoute.SCRIPTUARIUM,
+        ? `${AppRoute.BIBLE}?book=${(nextUp as any).lastBible.book_abbr}&ch=${(nextUp as any).lastBible.chapter}` 
+        : AppRoute.BIBLE,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
@@ -96,7 +96,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       label: t('journeys'),
       description: t('journeys_sub') || 'Trilhas de formação',
       icon: Icons.Journeys,
-      route: AppRoute.JOURNEYS,
+      route: AppRoute.JORNADAS,
       gradient: 'from-primary/5 to-transparent',
       iconColor: 'text-primary',
       borderColor: 'border-border hover:border-secondary/50',
@@ -106,7 +106,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       label: t('catechism'),
       description: t('catechism_sub') || 'Doutrina e ensinamentos da Igreja',
       icon: Icons.Catechism,
-      route: AppRoute.CODEX_FIDEI,
+      route: AppRoute.CATECHISM,
       gradient: 'from-secondary/5 to-transparent',
       iconColor: 'text-secondary',
       borderColor: 'border-border hover:border-secondary/50',
@@ -130,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Logo className="w-12 h-12 md:w-16 md:h-16 text-rose-900" variant="blue" />
+              <Icons.Logo className="w-16 h-16 text-primary" variant="blue" />
             </div>
           </motion.div>
           <div className="space-y-6">

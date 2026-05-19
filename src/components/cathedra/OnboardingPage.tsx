@@ -401,7 +401,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
-          <Icons.Logo className="w-16 h-16 md:w-20 md:h-20" variant="blue" />
+          <Icons.Logo className="w-20 h-20" variant="blue" />
         </div>
 
         <AnimatePresence mode="wait">

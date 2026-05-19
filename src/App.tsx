@@ -46,11 +46,10 @@ const queryClient = new QueryClient({
 });
 
 // ALL route components are lazy-loaded for faster initial load
-const Dashboard = lazy(() => import('./components/cathedra/Sanctuarium'));
+const Dashboard = lazy(() => import('./components/cathedra/Dashboard'));
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
-const LogosChat = lazy(() => import('./components/cathedra/LogosChat'));
-const StudyMode = lazy(() => import('./components/cathedra/LogosChat')); // Mapping study mode to Logos chat for now as per prompt focus
+const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 // Redundant imports removed (DailyLiturgy, MissalPage)
@@ -197,10 +196,8 @@ const AppLayout: React.FC = () => {
   // Main pages where "Back" button shouldn't show (root pages)
   const isMainPage = [
     AppRoute.DASHBOARD,
-    AppRoute.SANCTUARIUM,
     AppRoute.HOME,
-    AppRoute.LOGOS,
-    AppRoute.JOURNEYS,
+    AppRoute.HOJE,
     AppRoute.JORNADAS,
     AppRoute.BIBLIOTECA,
     AppRoute.PROFILE,
@@ -549,7 +546,7 @@ const AppLayout: React.FC = () => {
               transition={{ duration: 0.15 }}
               className="fixed inset-0 z-[150] lg:hidden"
             >
-              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} aria-hidden="true" />
+              <div className="absolute inset-0 bg-black/60" onClick={() => setIsSidebarOpen(false)} />
               <motion.div
                 initial={{ x: -288 }}
                 animate={{ x: 0 }}
@@ -624,11 +621,11 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.ROSARY} element={<PageTransition><AuthGuard><Rosary /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.ORACAO} element={<PageTransition><AuthGuard><PrayerPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VIA_CRUCIS} element={<PageTransition><AuthGuard><ViaCrucis /></AuthGuard></PageTransition>} />
-                   <Route path={AppRoute.LOGOS} element={
+                  <Route path={AppRoute.STUDY_MODE} element={
                     <PageTransition>
                       <AuthGuard>
                         <ProGate isPremium={isPremium} isLoggedIn={!!user} onLogin={() => navigate(AppRoute.LOGIN)}>
-                          <LogosChat isPage />
+                          <StudyMode />
                         </ProGate>
                       </AuthGuard>
                     </PageTransition>

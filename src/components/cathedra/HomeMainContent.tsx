@@ -14,8 +14,8 @@ interface HomeMainContentProps {
 }
 
 const SectionHeader = ({ label }: { label: string }) => (
-  <div className="flex items-center gap-6 px-4 sm:px-0">
-    <h2 className="text-premium-tiny heading-section-label !mb-0">
+  <div className="flex items-center gap-6">
+    <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 whitespace-nowrap heading-section-label">
       {label}
     </h2>
     <div className="h-px flex-1 bg-primary/5" />
@@ -29,51 +29,51 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-16 md:space-y-24 py-12 md:py-20 px-0 sm:px-6 md:px-0">
+    <div className="max-w-3xl mx-auto space-y-24 md:space-y-32 py-16 md:py-24 px-4 md:px-0">
       {/* 2. CONTINUAR JORNADA */}
-      <section className="space-y-6 px-4 sm:px-0">
+      <section className="space-y-10">
         <SectionHeader label={user ? "Retomar Jornada" : "Iniciar Jornada"} />
         <HomeCard
           onClick={() => onNavigate(AppRoute.JORNADAS)}
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
+          padding="none"
+          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
         >
           <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:scale-105 transition-transform duration-700">
-                <Icons.Flame className="w-6 h-6" />
+            <div className="flex items-center gap-8">
+              <div className="w-14 h-14 rounded-premium-sm bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
+                <Icons.Flame className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="heading-card">
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">
                   {user ? 'Continuar Caminhada' : 'Inicie sua Jornada'}
                 </h3>
-                <p className="text-sm text-primary/40 mt-1">
+                <p className="text-sm text-primary/40 mt-1 text-premium-body">
                   {user 
                     ? 'Retome sua formação espiritual de onde parou.' 
                     : 'Descubra uma trilha personalizada para sua alma.'}
                 </p>
               </div>
             </div>
-            <HomeButton variant="primary" size="sm" onClick={() => onNavigate(AppRoute.JORNADAS)} className="hidden md:flex">
+            <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.JORNADAS)} className="hidden md:flex">
               {user ? 'Continuar' : 'Começar'}
             </HomeButton>
-            <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:translate-x-1 transition-all md:hidden" />
+            <Icons.ChevronRight className="w-6 h-6 text-primary/10 group-hover:translate-x-1 transition-all md:hidden" />
           </div>
         </HomeCard>
       </section>
 
       {/* 3. RITUAL DO DIA */}
-      <section className="space-y-6 px-4 sm:px-0">
+      <section className="space-y-10">
         <SectionHeader label="Ritual do Dia" />
         <RitualDoDia />
       </section>
 
       {/* 4. TRILHAS PRINCIPAIS */}
-      <section className="space-y-6 px-4 sm:px-0">
+      <section className="space-y-10">
         <SectionHeader label="Trilhas Principais" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.TEMAS)}>
-            <div className="flex items-center gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <HomeCard padding="md" className="group border-primary/5" onClick={() => onNavigate(AppRoute.TEMAS)}>
+            <div className="flex items-center gap-6">
               <CathedraIcon icon={Icons.Star} size={IconSizePreset.TINY} variant="primary" />
               <div>
                 <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Temas da Fé</h4>
@@ -82,8 +82,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
             </div>
           </HomeCard>
           
-          <HomeCard padding="sm" className="group border-primary/5 rounded-premium" onClick={() => onNavigate(AppRoute.SCRIPTUARIUM)}>
-            <div className="flex items-center gap-5">
+          <HomeCard padding="md" className="group border-primary/5" onClick={() => onNavigate(AppRoute.BIBLE)}>
+            <div className="flex items-center gap-6">
               <CathedraIcon icon={Icons.BookOpen} size={IconSizePreset.TINY} variant="primary" />
               <div>
                 <h4 className="text-sm font-bold text-primary uppercase tracking-widest heading-item">Estudo Bíblico</h4>
@@ -95,54 +95,54 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* 5. CATECISMO */}
-      <section className="space-y-6 px-4 sm:px-0">
+      <section className="space-y-10">
         <SectionHeader label="Catecismo" />
         <HomeCard 
-          onClick={() => onNavigate(AppRoute.CODEX_FIDEI)}
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
+          onClick={() => onNavigate(AppRoute.CATECHISM)}
+          padding="none"
+          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
         >
           <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:rotate-6 transition-transform duration-700">
-                <Icons.Catechism className="w-6 h-6" />
+            <div className="flex items-center gap-8">
+              <div className="w-14 h-14 rounded-premium-sm bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-secondary group-hover:rotate-12 transition-transform duration-700">
+                <Icons.Catechism className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">Doutrina da Igreja</h3>
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">Doutrina da Igreja</h3>
                 <p className="text-sm text-primary/40 mt-1 text-premium-body">"O ensinamento da Tradição viva na Igreja."</p>
               </div>
             </div>
-            <Icons.ChevronRight className="w-5 h-5 text-primary/10 group-hover:translate-x-1 transition-all" />
+            <Icons.ChevronRight className="w-6 h-6 text-primary/10 group-hover:translate-x-1 transition-all" />
           </div>
         </HomeCard>
       </section>
 
       {/* 6. LOGOS */}
-      <section className="space-y-6 px-4 sm:px-0">
+      <section className="space-y-10">
         <SectionHeader label="Logos" />
         <HomeCard 
-          padding="md"
-          className="group border-primary/5 bg-primary/[0.01] rounded-premium"
-          onClick={() => onNavigate(AppRoute.LOGOS)}
+          padding="none"
+          className="group border-primary/5 bg-primary/[0.01] p-6 sm:p-8"
+          onClick={openLogosChat}
         >
           <div className="flex items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700">
-                <Icons.Compass className="w-6 h-6" />
+            <div className="flex items-center gap-8">
+              <div className="w-14 h-14 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700">
+                <Icons.Compass className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight heading-card">Mestre Contemplativo</h3>
+                <h3 className="text-2xl font-bold text-primary tracking-tight heading-card">Mestre Contemplativo</h3>
                 <p className="text-sm text-primary/40 mt-1 text-premium-body">Diálogos teológicos para iluminar sua caminhada.</p>
               </div>
             </div>
-            <Icons.Sparkles className="w-4 h-4 text-primary/10 group-hover:text-primary/30 transition-all" />
+            <Icons.Sparkles className="w-5 h-5 text-primary/10 group-hover:text-primary/30 transition-all" />
           </div>
         </HomeCard>
       </section>
 
       {/* FOOTER QUOTE */}
-      <div className="pt-24 pb-12 text-center opacity-5">
-        <p className="text-[9px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase text-premium-body">
+      <div className="pt-32 text-center opacity-10">
+        <p className="text-[10px] font-serif italic max-w-sm mx-auto leading-relaxed tracking-[0.2em] uppercase text-premium-body">
           "A beleza salvará o mundo." <br/> — Dostoievski
         </p>
       </div>

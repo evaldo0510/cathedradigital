@@ -62,16 +62,16 @@ const LandingHeader = () => {
     >
       <div className="app-container flex items-center justify-between">
         <div 
-          className="flex items-center gap-2 md:gap-3 lg:gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
+          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
           onClick={() => navigate(AppRoute.HOME)}
           onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
           tabIndex={0}
           role="button"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
+          <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
           <div className="hidden sm:block">
-            <span className="text-xs md:text-sm font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</span>
+            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase heading-hero">CATHEDRA</h1>
           </div>
         </div>
 
@@ -149,7 +149,7 @@ const LandingHeader = () => {
               <HomeButton
                 variant="ghost"
                 size="sm"
-                className={`hidden xs:flex rounded-[24px] px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+                className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
                 onClick={() => navigate(AppRoute.LOGIN)}
               >
                 Começar <ChevronRight className="w-4 h-4 ml-1" />
@@ -159,7 +159,7 @@ const LandingHeader = () => {
             <HomeButton
               variant="ghost"
               size="sm"
-              className={`hidden xs:flex rounded-[24px] px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+              className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
               onClick={() => navigate(AppRoute.HOJE)}
             >
               Ir ao Painel <ChevronRight className="w-4 h-4 ml-1" />

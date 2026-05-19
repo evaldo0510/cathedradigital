@@ -174,11 +174,11 @@ const Footer: React.FC = React.memo(() => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-24 mb-16">
           
           <div className="flex flex-col gap-6">
-             <div className="flex items-center gap-3 md:gap-4">
-               <Icons.Logo className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex-shrink-0" variant="blue" />
+             <div className="flex items-center gap-4">
+               <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
                <div>
-                 <h3 className="text-lg md:text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-[9px] md:text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                 <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                 <p className="text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
                </div>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">

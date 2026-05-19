@@ -1,28 +1,35 @@
-## Refactor Logo VM (Visual Mark) Consistency
+I will optimize the layout of Cathedra Digital by standardizing cards, buttons, and spacings across key components to align with the premium spiritual design system.
 
-Standardize the main application logo across all platforms (mobile, tablet, desktop) using responsive breakpoints and consistent spacing.
+### Optimization Steps
 
-### Implementation Details
+1.  **Global Style Refinement (`src/index.css`)**
+    *   Update `premium-card` to strictly use the requested design tokens (radius 24px, translucid background/border).
+    *   Ensure `btn-premium` and its variants have consistent heights and typography.
+    *   Refine `stack-spacing` and `section-spacing` utility classes.
 
-1.  **Standardize Logo Sizes:**
-    -   **Mobile:** 32px (`w-8 h-8`)
-    -   **Tablet:** 40px (`w-10 h-10`)
-    -   **Desktop:** 48px (`w-12 h-12`)
+2.  **Logos IA (LogosChat) Optimization**
+    *   Adjust mobile layout to ensure the virtual keyboard doesn't overlap text/citations.
+    *   Apply `premium-card` and `btn-premium` styles to the chat interface.
+    *   Standardize typography for contemplatve reading.
 
-2.  **Apply to Components:**
-    -   `AppHeader.tsx`: Update the main navigation logo.
-    -   `LandingHeader.tsx`: Update the landing page header logo.
-    -   `Sidebar.tsx`: Ensure the sidebar logo follows the scale.
-    -   `Footer.tsx`: Refine the footer logo size.
-    -   `SplashScreen.tsx`: Adjust the splash screen logo to be perfectly centered and sized.
+3.  **Spiritual Quiz (SpiritualQuiz) Optimization**
+    *   Refactor the quiz flow to show one question at a time with smooth transitions.
+    *   Apply the spiritual design system to result cards and reading recommendations.
+    *   Integrate discrete Bible/Catechism citations with `ReferenceModal` links.
 
-3.  **Refine Spacing:**
-    -   Ensure the gaps between the logo and accompanying text (like "Cathedra") are consistent across breakpoints (e.g., `gap-3` on mobile, `gap-4` on tablet, `gap-5` on desktop).
+4.  **Sacred Texts (Bible & Catechism) Optimization**
+    *   Ensure Bible and Catechism viewers use the standardized `premium-card` and spacing.
+    *   Refine the "Contemplative Reading" mode with better line-height and focus.
 
-### Technical Tasks
-- Edit `src/components/cathedra/AppHeader.tsx`
-- Edit `src/components/landing/LandingHeader.tsx`
-- Edit `src/components/cathedra/Sidebar.tsx`
-- Edit `src/components/cathedra/Footer.tsx`
-- Edit `src/components/cathedra/SplashScreen.tsx`
-- Edit `src/constants.tsx` (to ensure the Logo component itself handles the className correctly)
+5.  **General Component Audit**
+    *   Update `SaintCard` (in `Saints.tsx`) and other UI elements to use the global design system classes.
+
+### Technical Details
+
+*   **Design Tokens:**
+    *   `border-radius`: 24px (mapped to `rounded-premium`)
+    *   `background`: `rgba(255,255,255,0.04)`
+    *   `border`: `1px solid rgba(255,255,255,0.08)`
+    *   `box-shadow`: `0 10px 30px rgba(0,0,0,.08)`
+*   **Mobile UX:** Use `h-[100dvh]` and `pb-safe` for consistent height across devices.
+*   **Standardization:** Replace inline styles with CSS variables and utility classes defined in `index.css`.

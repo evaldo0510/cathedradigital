@@ -107,10 +107,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     popes: "Os Papas",
     aquinas: "Obras de Aquino",
     ecosystem_guide: "Guia do Ecossistema",
-    guide: "Guia",
-    favorites: "Favoritos",
-    logos: "Logos IA",
-    achievements: "Conquistas"
+    guide: "Guia"
   },
   en: {
     home: "Home (Narthex)",
@@ -185,10 +182,7 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     good_afternoon: "Good afternoon",
     good_evening: "Good evening",
     liturgy_sub: "Daily readings and prayers",
-    journeys_sub: "Spiritual formation paths",
-    favorites: "Favorites",
-    logos: "Logos AI",
-    achievements: "Achievements"
+    journeys_sub: "Spiritual formation paths"
   },
   es: {
     home: "Inicio (Nártex)",

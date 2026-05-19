@@ -2,14 +2,14 @@
 const prefetched = new Set<string>();
 
 const routeImports: Record<string, () => Promise<any>> = {
-  '/sanctuarium': () => import('@/components/cathedra/Sanctuarium'),
+  '/dashboard': () => import('@/components/cathedra/Dashboard'),
   '/hoje': () => import('@/components/cathedra/HojePage'),
   '/jornadas': () => import('@/components/cathedra/JornadasPage'),
   '/biblioteca': () => import('@/components/cathedra/BibliotecaPage'),
   '/community': () => import('@/components/cathedra/CommunityPage'),
   '/profile': () => import('@/components/cathedra/ProfilePage'),
-  '/scriptuarium': () => import('@/components/cathedra/Bible'),
-  '/codex-fidei': () => import('@/components/cathedra/Catechism'),
+  '/bible': () => import('@/components/cathedra/Bible'),
+  '/catechism': () => import('@/components/cathedra/Catechism'),
   '/saints': () => import('@/components/cathedra/Saints'),
   '/liturgia': () => import('@/components/cathedra/LiturgiaPage'),
   '/study': () => import('@/components/cathedra/StudyMode'),
@@ -41,7 +41,7 @@ export function prefetchCoreModules() {
   // Skip on save-data mode
   if ('connection' in navigator && (navigator as any).connection?.saveData) return;
 
-  const coreRoutes = ['/sanctuarium', '/scriptuarium', '/codex-fidei', '/journeys', '/biblioteca', '/community', '/profile'];
+  const coreRoutes = ['/dashboard', '/hoje', '/bible', '/catechism', '/jornadas', '/biblioteca', '/community', '/profile'];
   let i = 0;
   const prefetchNext = () => {
     if (i < coreRoutes.length) {

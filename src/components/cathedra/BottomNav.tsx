@@ -50,17 +50,11 @@ interface BottomNavItemProps {
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
   <Button 
     onClick={(e) => { onRipple(e); onClick(); }}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onClick();
-      }
-    }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 outline-none transition-colors ${
+    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 outline-none transition-colors ${
       isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
     }`}
   >
@@ -97,23 +91,23 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: 'Home', icon: <Icons.Home />, route: AppRoute.SANCTUARIUM },
-    { label: 'Jornadas', icon: <Icons.Journeys />, route: AppRoute.JOURNEYS },
+    { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
+    { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
     { label: t('explore'), icon: <Icons.Compass />, route: AppRoute.BIBLIOTECA },
     { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
     { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
   ];
 
   return (
-    <nav className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/80 backdrop-blur-xl border-t border-primary/5 safe-area-bottom" aria-label="Navegação móvel inferior">
-      <div className="flex items-stretch h-14 px-1">
+    <div className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
+      <div className="flex items-stretch h-16 px-1">
         {items.map((item: any) => (
           <BottomNavItem 
             key={item.label}
             label={item.label}
             icon={item.icon}
             route={item.route || ''}
-            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.SCRIPTUARIUM, AppRoute.CODEX_FIDEI, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
+            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
@@ -122,7 +116,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
           />
         ))}
       </div>
-    </nav>
+    </div>
   );
 };
 

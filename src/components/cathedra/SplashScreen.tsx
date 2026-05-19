@@ -62,8 +62,8 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-secondary/50 shadow-premium bg-primary">
-            <Icons.Logo className="w-full h-full p-4 sm:p-5 md:p-6" variant="blue" />
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-secondary/50 shadow-premium bg-primary">
+            <Icons.Logo className="w-full h-full p-4" variant="blue" />
           </div>
         </motion.div>
 
