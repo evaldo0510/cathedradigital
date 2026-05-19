@@ -236,6 +236,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <select 
               value={lang} 
               onChange={(e) => onChangeLang(e.target.value as Language)}
+              aria-label="Selecionar idioma"
               className="appearance-none bg-muted text-primary border border-border rounded-full px-2 py-1.5 text-premium-tiny font-black uppercase tracking-widest cursor-pointer hover:bg-primary hover:text-white transition-all outline-none"
             >
               <option value="pt">PT</option>
