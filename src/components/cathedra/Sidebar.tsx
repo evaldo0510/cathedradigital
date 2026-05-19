@@ -132,15 +132,24 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       e.preventDefault();
       handleNav(item);
     }
+    if (e.key === 'Escape') {
+      onClose?.();
+    }
   };
 
   return (
     <>
+      <div 
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[145] lg:hidden animate-in fade-in duration-300" 
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <aside 
         ref={ref} 
-        className="h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6"
+        className="fixed inset-y-0 left-0 lg:relative z-[150] h-full w-[280px] bg-background/95 backdrop-blur-xl border-r border-border/10 flex flex-col p-6 overflow-hidden pb-safe lg:pb-6 shadow-premium lg:shadow-none animate-in slide-in-from-left duration-300"
         role="navigation"
         aria-label="Menu principal lateral"
+        onKeyDown={(e) => e.key === 'Escape' && onClose?.()}
       >
         <button 
           className="mb-8 px-1 flex items-center gap-2 sm:gap-3 cursor-pointer group hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg outline-none" 
@@ -160,9 +169,9 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
           {sections.map((section) => (section.items.length > 0 && (
             <div key={section.label}>
               <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/30 mb-4 px-3">{section.label}</h3>
-              <ul className="space-y-1">
+              <ul className="space-y-1" role="list">
                 {section.items.map((item, idx) => (
-                  <li key={idx} role="none">
+                  <li key={idx}>
                     <Button
                       variant="ghost"
                       onClick={() => handleNav(item.path)}

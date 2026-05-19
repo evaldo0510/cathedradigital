@@ -36,6 +36,24 @@
     --liturgical-gold: 45 64% 52%;     /* #D4AF37 */
   }
 
+  .high-contrast {
+    --primary: 221 100% 40%;
+    --primary-foreground: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --background: 0 0% 100%;
+    --ring: 0 0% 0%;
+    --border: 0 0% 0%;
+  }
+
+  .dark.high-contrast {
+    --primary: 217 100% 70%;
+    --primary-foreground: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --background: 0 0% 0%;
+    --ring: 0 0% 100%;
+    --border: 0 0% 100%;
+  }
+
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
     --background: 222 47% 4%;
@@ -588,6 +606,16 @@
   to {
     transform: scale(1);
     opacity: 0;
+  }
+}
+
+@layer utilities {
+  .focus-visible-ring {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+  
+  .high-contrast .focus-visible-ring {
+    @apply ring-4 ring-foreground ring-offset-0;
   }
 }
 
