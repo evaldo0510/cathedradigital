@@ -109,7 +109,8 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     ecosystem_guide: "Guia do Ecossistema",
     guide: "Guia",
     favorites: "Favoritos",
-    logos: "Logos IA"
+    logos: "Logos IA",
+    achievements: "Conquistas"
   },
   en: {
     home: "Home (Narthex)",
@@ -186,7 +187,8 @@ export const UI_TRANSLATIONS: Record<Language, any> = {
     liturgy_sub: "Daily readings and prayers",
     journeys_sub: "Spiritual formation paths",
     favorites: "Favorites",
-    logos: "Logos AI"
+    logos: "Logos AI",
+    achievements: "Achievements"
   },
   es: {
     home: "Inicio (Nártex)",
