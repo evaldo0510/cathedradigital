@@ -186,7 +186,7 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com' },
+                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://www.instagram.com/cathedradigital/' },
                 { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
                 { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
               ].map((social, i) => (

@@ -81,7 +81,7 @@ const AboutPage: React.FC = () => (
         
         <div className="flex flex-wrap justify-center gap-6">
           {[
-            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: 'https://instagram.com/cathedra.digital', color: 'hover:text-pink-600' },
+            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: 'https://www.instagram.com/cathedradigital/', color: 'hover:text-pink-600' },
             { icon: <Icons.Youtube className="w-6 h-6" />, label: 'YouTube', url: 'https://youtube.com/@cathedradigital', color: 'hover:text-red-600' },
             { icon: <Icons.Twitter className="w-6 h-6" />, label: 'X (Twitter)', url: 'https://twitter.com/cathedradigital', color: 'hover:text-sky-500' },
             { icon: <Icons.Facebook className="w-6 h-6" />, label: 'Facebook', url: 'https://facebook.com/cathedradigital', color: 'hover:text-blue-600' },
