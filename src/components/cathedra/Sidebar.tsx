@@ -28,6 +28,22 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   const currentPath = location.pathname;
   const { lang, t } = useLang();
   const [cacheCount, setCacheCount] = useState<number | null>(null);
+  const lastFocusedElement = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    // Capture focus when opened and restore when closed
+    lastFocusedElement.current = document.activeElement as HTMLElement;
+    
+    // Focus the first navigation item for accessibility
+    const firstItem = document.querySelector('aside[role="navigation"] button, aside[role="navigation"] a') as HTMLElement;
+    if (firstItem) firstItem.focus();
+
+    return () => {
+      if (lastFocusedElement.current) {
+        lastFocusedElement.current.focus();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
