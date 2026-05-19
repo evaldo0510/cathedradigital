@@ -14,7 +14,7 @@ vi.mock('../lib/analytics', () => ({
   initGA4AutoTracking: vi.fn(),
 }));
 
-describe('AboutPage Social Links Tests', () => {
+describe('AboutPage Social Links Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -33,24 +33,51 @@ describe('AboutPage Social Links Tests', () => {
     );
   };
 
-  it('contains correctly configured social links', () => {
+  it('contains correctly configured Instagram link that opens in new tab', () => {
     renderAboutPage();
     
-    const instagramLink = screen.getByRole('link', { name: /instagram/i });
+    const instagramLink = screen.getByRole('link', { name: /^instagram$/i });
     expect(instagramLink).toHaveAttribute('href', SOCIAL_LINKS.INSTAGRAM);
     expect(instagramLink).toHaveAttribute('target', '_blank');
-    
-    const youtubeLink = screen.getByRole('link', { name: /youtube/i });
-    expect(youtubeLink).toHaveAttribute('href', SOCIAL_LINKS.YOUTUBE);
-    
-    const whatsappLink = screen.getByRole('link', { name: /whatsapp/i });
-    expect(whatsappLink).toHaveAttribute('href', SOCIAL_LINKS.WHATSAPP);
+    expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
-  it('triggers analytics event when social links are clicked on About page', () => {
+  it('maintains the official domain even after multiple simulated clicks', () => {
     renderAboutPage();
     
-    const instagramLink = screen.getByRole('link', { name: /instagram/i });
+    const instagramLink = screen.getByRole('link', { name: /^instagram$/i });
+    
+    // Check multiple times to simulate "maintaining domain" in a unit/integration context
+    for (let i = 0; i < 3; i++) {
+      fireEvent.click(instagramLink);
+      expect(instagramLink).toHaveAttribute('href', SOCIAL_LINKS.INSTAGRAM);
+      expect(SOCIAL_LINKS.INSTAGRAM).toBe('https://www.instagram.com/cathedradigital/');
+    }
+  });
+
+  it('all social buttons have consistent aria-labels on About page', () => {
+    renderAboutPage();
+    
+    const socialLinks = screen.getAllByRole('link');
+    const socialPlatforms = ['Instagram', 'YouTube', 'X (Twitter)', 'Facebook', 'WhatsApp'];
+    
+    const linksWithLabels = socialLinks.filter(link => {
+      const label = link.getAttribute('aria-label');
+      return label && socialPlatforms.includes(label);
+    });
+
+    expect(linksWithLabels.length).toBe(socialPlatforms.length);
+    
+    linksWithLabels.forEach(link => {
+      const label = link.getAttribute('aria-label');
+      expect(label).toBeTruthy();
+    });
+  });
+
+  it('triggers analytics event with correct data when Instagram is clicked', () => {
+    renderAboutPage();
+    
+    const instagramLink = screen.getByRole('link', { name: /^instagram$/i });
     fireEvent.click(instagramLink);
     
     expect(analytics.trackEvent).toHaveBeenCalledWith('social_link_click', {

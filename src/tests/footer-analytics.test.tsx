@@ -14,7 +14,7 @@ vi.mock('../lib/analytics', () => ({
   initGA4AutoTracking: vi.fn(),
 }));
 
-describe('Footer Analytics Tests', () => {
+describe('Footer Social Links Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -33,18 +33,31 @@ describe('Footer Analytics Tests', () => {
     );
   };
 
-  it('triggers analytics event when Instagram link is clicked', () => {
+  it('triggers analytics event with correct data when Instagram link is clicked', () => {
     renderFooter();
     
-    // Find Instagram link by its href
-    const instagramLink = screen.getByRole('link', { name: /instagram/i });
+    const instagramLink = screen.getByRole('link', { name: /^instagram$/i });
     expect(instagramLink).toHaveAttribute('href', SOCIAL_LINKS.INSTAGRAM);
+    expect(instagramLink).toHaveAttribute('target', '_blank');
+    expect(instagramLink).toHaveAttribute('rel', 'noopener noreferrer');
     
     fireEvent.click(instagramLink);
     
     expect(analytics.trackEvent).toHaveBeenCalledWith('social_link_click', {
       platform: 'Instagram',
       url: SOCIAL_LINKS.INSTAGRAM
+    });
+  });
+
+  it('all social buttons in footer have consistent aria-labels', () => {
+    renderFooter();
+    
+    const platforms = ['Instagram', 'Youtube', 'Whatsapp'];
+    
+    platforms.forEach(platform => {
+      const link = screen.getByRole('link', { name: new RegExp(`^${platform}$`, 'i') });
+      expect(link).toBeInTheDocument();
+      expect(link).toHaveAttribute('aria-label', platform);
     });
   });
 
