@@ -20,6 +20,13 @@ export const trackEvent = (name: EventName, properties?: Record<string, any>) =>
   if (typeof window !== 'undefined' && (window as any).gtag) {
     (window as any).gtag('event', name, properties);
   }
-  
-  // Custom tracking logic can be added here
+};
+
+/**
+ * Empty implementation to satisfy existing imports.
+ */
+export const initGA4AutoTracking = () => {
+  if (import.meta.env.DEV) {
+    console.log('[Analytics] GA4 Auto Tracking Mock Initialized');
+  }
 };
