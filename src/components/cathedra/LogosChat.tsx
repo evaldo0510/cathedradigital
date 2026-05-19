@@ -91,7 +91,7 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
     {
       id: 'mock-1',
       role: 'assistant',
-      content: 'Paz e bem. Sou IARA (Inteligência Artificial de Reflexão Aplicada), sua guia de sabedoria. Como posso iluminar seu entendimento hoje?',
+      content: 'Paz e bem. Sou o Logos, seu mestre contemplativo. Como posso iluminar seu entendimento sobre as Sagradas Escrituras ou o Catecismo hoje?',
       timestamp: new Date()
     },
     {
@@ -316,28 +316,6 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
           content: response.content,
           timestamp: new Date(),
         };
-
-        // Command parsing for IARA
-        const commandMatch = response.content.match(/\{"command":\s*"NAVIGATE",\s*"target":\s*"(PORTAL|ESTÚDIO|ESTELA)"\}/i);
-        if (commandMatch) {
-          const target = commandMatch[1].toUpperCase();
-          let path = '';
-          if (target === 'PORTAL') path = '/sanctuarium';
-          else if (target === 'ESTÚDIO') path = '/lectio';
-          else if (target === 'ESTELA') path = '/diagnostico';
-          
-          if (path) {
-            toast.info(`IARA: Encaminhando para ${target}...`, {
-              icon: <Compass className="w-4 h-4 animate-spin" />,
-              duration: 3000
-            });
-            setTimeout(() => {
-              navigate(path);
-              setIsOpen(false);
-            }, 2000);
-          }
-        }
-
         setMessages((prev) => [...prev, assistantMessage]);
         
         // Auto-save to spiritual journal as a dedicated reflection
@@ -404,8 +382,8 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                     <Compass className="w-5 h-5 sm:w-7 sm:h-7 text-primary/40" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">IARA</h3>
-                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Inteligência de Reflexão Aplicada</p>
+                    <h3 className="text-xl sm:text-2xl font-display text-primary tracking-tightest truncate">Logos</h3>
+                    <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 truncate">Mestre de Sabedoria</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2">
@@ -454,7 +432,7 @@ const LogosChat = ({ isPage = false }: { isPage?: boolean }) => {
                     size="icon" 
                     onClick={() => setIsOpen(false)}
                     className="rounded-full hover:bg-primary/5 text-primary/20 hover:text-primary transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
-                    aria-label="Fechar IARA (ESC)"
+                    aria-label="Fechar Logos (ESC)"
                   >
                     <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </Button>

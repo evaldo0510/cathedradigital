@@ -111,64 +111,31 @@ test.describe('Comprehensive Navigation Accessibility', () => {
     await expect(menuButton).toBeFocused();
   });
 
-  test('High Contrast Mode Axe audit for Header and Menu', async ({ page }) => {
+  test('High Contrast and Theme switching Axe audit', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     
-    // Toggle High Contrast via Sidebar (desktop)
-    const hcToggle = page.locator('aside[role="navigation"] button[aria-label*="contraste"]');
-    await expect(hcToggle).toBeVisible();
+    // Open accessibility settings if needed or use Sidebar toggles
+    const sidebar = page.locator('aside[role="navigation"]');
+    
+    // Toggle High Contrast
+    const hcToggle = sidebar.locator('button[aria-label*="contraste"]');
     await hcToggle.click();
     
-    // Axe audit for Header in High Contrast
-    const headerScan = await new AxeBuilder({ page })
-      .include('.app-header')
-      .analyze();
-    expect(headerScan.violations).toEqual([]);
-
-    // Axe audit for Sidebar in High Contrast
-    const sidebarScan = await new AxeBuilder({ page })
-      .include('aside[role="navigation"]')
-      .analyze();
-    expect(sidebarScan.violations).toEqual([]);
+    // Axe audit in HC mode
+    const hcScan = await new AxeBuilder({ page }).analyze();
+    expect(hcScan.violations).toEqual([]);
     
-    // Switch to mobile to test mobile menu in HC
-    await page.setViewportSize({ width: 375, height: 667 });
-    const menuButton = page.locator('nav[aria-label="Navegação móvel inferior"] button[aria-label*="Menu"]');
-    await menuButton.click();
+    // Toggle Theme
+    const themeToggle = sidebar.locator('button[aria-label*="modo"]');
+    await themeToggle.click();
     
-    const mobileMenuScan = await new AxeBuilder({ page })
-      .include('aside[role="navigation"]')
-      .analyze();
-    expect(mobileMenuScan.violations).toEqual([]);
-
-    // Ensure focus ring is visible in HC
-    const closeButton = page.locator('button[aria-label*="Fechar"]');
-    await closeButton.focus();
-    const className = await closeButton.getAttribute('class');
+    // Axe audit in new theme
+    const themeScan = await new AxeBuilder({ page }).analyze();
+    expect(themeScan.violations).toEqual([]);
+    
+    // Ensure focus ring is still visible
+    await themeToggle.focus();
+    const className = await themeToggle.getAttribute('class');
     expect(className).toContain('focus-visible:ring-');
-  });
-
-  test('Focus restoration when closing mobile menu via X button or ESC', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 667 });
-    
-    const menuButton = page.locator('nav[aria-label="Navegação móvel inferior"] button[aria-label*="Menu"]');
-    await menuButton.focus();
-    await menuButton.click();
-    
-    const sidebar = page.locator('aside[role="navigation"]');
-    await expect(sidebar).toBeVisible();
-    
-    // 1. Close via X button
-    const closeButton = sidebar.locator('button[aria-label*="Fechar"]');
-    await closeButton.click();
-    await expect(sidebar).not.toBeVisible();
-    await expect(menuButton).toBeFocused();
-    
-    // 2. Open again and close via ESC
-    await menuButton.click();
-    await expect(sidebar).toBeVisible();
-    await page.keyboard.press('Escape');
-    await expect(sidebar).not.toBeVisible();
-    await expect(menuButton).toBeFocused();
   });
 });

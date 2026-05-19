@@ -45,7 +45,7 @@ export const callColloquium = async (
       return { error: 'Muitas solicitações. Aguarde um momento.' };
     }
 
-    return { error: 'Ocorreu um erro ao conectar com a IARA.' };
+    return { error: 'Ocorreu um erro ao conectar com o Logos.' };
   }
 };
 
