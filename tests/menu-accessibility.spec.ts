@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Menu Accessibility', () => {
   test.beforeEach(async ({ page }) => {
@@ -10,6 +11,21 @@ test.describe('Menu Accessibility', () => {
     }
   });
 
+  test('automated accessibility check with Axe', async ({ page }) => {
+    // Open menu if mobile
+    await page.setViewportSize({ width: 375, height: 667 });
+    const menuButton = page.locator('button[aria-label="Menu"]');
+    if (await menuButton.isVisible()) {
+      await menuButton.click();
+    }
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .include('aside[role="navigation"]')
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
   test('navigation by keyboard in sidebar', async ({ page }) => {
     // Desktop view
     await page.setViewportSize({ width: 1280, height: 720 });
@@ -18,16 +34,30 @@ test.describe('Menu Accessibility', () => {
     await expect(sidebar).toBeVisible();
 
     // Tab through links
-    await page.keyboard.press('Tab');
-    const firstLink = sidebar.locator('button').first();
-    await expect(firstLink).toBeFocused();
+    await page.keyboard.press('Tab'); // Logo
+    await page.keyboard.press('Tab'); // First nav item
+    
+    const firstNavItem = sidebar.locator('ul[role="list"] button').first();
+    await expect(firstNavItem).toBeFocused();
     
     // Check focus ring visibility (simulated by checking class)
-    const hasFocusRing = await firstLink.evaluate(el => 
+    const hasFocusRing = await firstNavItem.evaluate(el => 
       window.getComputedStyle(el).boxShadow !== 'none' || 
-      el.classList.contains('focus-visible:ring-2')
+      el.classList.contains('focus-visible:ring-2') ||
+      el.classList.contains('focus-visible:ring-offset-2')
     );
     expect(hasFocusRing).toBeTruthy();
+  });
+
+  test('keyboard handling - Enter and Space', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    const sidebar = page.locator('aside[role="navigation"]');
+    
+    // Test logo link with Space
+    const logoLink = sidebar.locator('button[aria-label*="página inicial"]');
+    await logoLink.focus();
+    await page.keyboard.press(' ');
+    await expect(page).toHaveURL(/.*sanctuarium/);
   });
 
   test('ARIA labels and roles in menu', async ({ page }) => {
@@ -68,3 +98,4 @@ test.describe('Menu Accessibility', () => {
     }
   });
 });
+

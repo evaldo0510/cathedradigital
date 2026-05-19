@@ -50,6 +50,12 @@ interface BottomNavItemProps {
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
   <Button 
     onClick={(e) => { onRipple(e); onClick(); }}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick();
+      }
+    }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
