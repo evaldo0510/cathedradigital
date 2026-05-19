@@ -277,7 +277,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 asChild
                 className="flex-1 h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
               >
-                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
+                <a 
+                  href={getWhatsAppLink()} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url: getWhatsAppLink() })}
+                >
                   Aprofundar via WhatsApp
                 </a>
               </Button>
