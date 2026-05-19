@@ -11,6 +11,7 @@ const WhatsAppButton = () => {
   return (
     <motion.a
       href={url}
+      onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url })}
       target="_blank"
       rel="noopener noreferrer"
       initial={{ scale: 0, opacity: 0 }}
