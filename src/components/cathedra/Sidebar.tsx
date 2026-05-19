@@ -151,6 +151,23 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     if (e.key === 'Escape') {
       onClose?.();
     }
+    
+    // Arrow key navigation
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const focusableElements = Array.from(
+        document.querySelectorAll('aside[role="navigation"] button, aside[role="navigation"] a')
+      ) as HTMLElement[];
+      const currentIndex = focusableElements.indexOf(document.activeElement as HTMLElement);
+      
+      if (e.key === 'ArrowDown') {
+        const nextIndex = (currentIndex + 1) % focusableElements.length;
+        focusableElements[nextIndex].focus();
+      } else {
+        const prevIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+        focusableElements[prevIndex].focus();
+      }
+    }
   };
 
   return (
