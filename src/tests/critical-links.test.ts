@@ -21,4 +21,8 @@ describe('Critical External Links Validation', () => {
   it('Official Catechism link should be valid', () => {
     expect(EXTERNAL_URLS.CATECHISM_OFFICIAL).toContain('vatican.va/archive/ccc');
   });
+
+  it('WhatsApp link should be valid', () => {
+    expect(SOCIAL_LINKS.WHATSAPP).toContain('wa.me/5511');
+  });
 });
