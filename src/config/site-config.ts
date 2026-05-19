@@ -8,7 +8,7 @@ export const SOCIAL_LINKS = {
   YOUTUBE: 'https://www.youtube.com/@cathedradigital',
   TWITTER: 'https://twitter.com/cathedradigital',
   FACEBOOK: 'https://facebook.com/cathedradigital',
-  WHATSAPP: 'https://wa.me/5511999999999', // Placeholder or real number
+  WHATSAPP: 'https://wa.me/5511999999999', // Official number placeholder
 } as const;
 
 export const EXTERNAL_URLS = {
