@@ -169,7 +169,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
+            <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
               <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
             </div>
             <div>

@@ -180,7 +180,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
     </div>
   );
 
@@ -244,7 +244,7 @@ const ProfilePage: React.FC = () => {
             aria-label="Alterar foto de perfil"
           >
             {uploading ? (
-              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}
@@ -271,7 +271,7 @@ const ProfilePage: React.FC = () => {
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-2xl overflow-hidden">
+        <div className="relative h-3 bg-muted rounded-premium overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
@@ -285,7 +285,7 @@ const ProfilePage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-4 text-center space-y-1">
+          <div key={s.label} className="bg-card border border-border rounded-premium p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -315,7 +315,7 @@ const ProfilePage: React.FC = () => {
               <p className="text-premium-tiny font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
               <p className="text-premium-tiny text-muted-foreground mt-0.5">{b.description}</p>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-2xl flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-premium flex items-center justify-center">
                   <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
                 </div>
               )}
@@ -350,7 +350,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Bell className="w-4 h-4 text-primary" />
@@ -361,12 +361,12 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/20 shadow-sm">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium border border-primary/20 shadow-sm">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-2xl bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
+                <div className="px-1.5 py-0.5 rounded-premium bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
               </div>
               <p className="text-premium-tiny text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
@@ -407,7 +407,7 @@ const ProfilePage: React.FC = () => {
             </div>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
+                <div className="px-2 py-0.5 rounded-premium bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
                 </div>
               </div>
@@ -423,7 +423,7 @@ const ProfilePage: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+      <div className="bg-card border border-border rounded-premium p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
         <div className="space-y-2">
@@ -518,7 +518,7 @@ const ProfilePage: React.FC = () => {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </Button>

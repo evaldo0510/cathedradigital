@@ -339,7 +339,7 @@ const StudyMode: React.FC = () => {
           { name: "Logos IA", path: "/estudo" }
         ]}
       />
-      <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+      <div className="w-24 h-24 rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
         <Shield className="w-12 h-12 text-primary" />
       </div>
       

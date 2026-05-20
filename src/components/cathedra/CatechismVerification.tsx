@@ -228,7 +228,7 @@ const CatechismVerification: React.FC = () => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-2xl border border-border">
+          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-premium border border-border">
             <Button 
               onClick={() => setFilter('all')} 
               className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
@@ -253,7 +253,7 @@ const CatechismVerification: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+        <div className="bg-card border border-border rounded-premium overflow-hidden shadow-sm">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">

@@ -95,7 +95,7 @@ const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClos
 
             {history.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
+                <div className={`max-w-[85%] p-4 rounded-premium text-sm leading-relaxed ${
                   msg.role === 'user' 
                     ? 'bg-primary text-white' 
                     : 'bg-muted border border-border/40 font-serif'
@@ -107,7 +107,7 @@ const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClos
 
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-muted p-4 rounded-2xl flex gap-2">
+                <div className="bg-muted p-4 rounded-premium flex gap-2">
                   <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" />
                   <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]" />
                   <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]" />

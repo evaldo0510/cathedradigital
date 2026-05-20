@@ -335,7 +335,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           </div>
         </div>
 
-        <div className="bg-muted/30 p-4 rounded-xl border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="bg-muted/30 p-4 rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-primary/10 rounded-lg">
               <RefreshCcw className={`w-5 h-5 text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
@@ -516,7 +516,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <Copy className="w-3 h-3" /> Copiar Tags
                             </Button>
                           </div>
-                          <div className="border border-border/50 rounded-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-md">
+                          <div className="border border-border/50 rounded-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-premium">
                             <div className="aspect-[1.91/1] relative group">
                               <img 
                                 src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
@@ -551,7 +551,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <Copy className="w-3 h-3" /> Copiar Tags
                             </Button>
                           </div>
-                          <div className="border border-border/40 rounded-2xl overflow-hidden bg-white dark:bg-[#15202b] shadow-sm">
+                          <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-sm">
                             <div className="aspect-[1.91/1] bg-muted">
                               <img 
                                 src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
@@ -574,7 +574,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="border-border/50 shadow-md">
+                <Card className="border-border/50 shadow-premium">
                   <CardHeader className="pb-3 border-b border-border/50 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-sm">Generated HTML Tags</CardTitle>

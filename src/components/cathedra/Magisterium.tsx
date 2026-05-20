@@ -188,7 +188,7 @@ const Magisterium: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
           <Icons.Scroll className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
@@ -211,7 +211,7 @@ const Magisterium: React.FC = () => {
         <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
           <div className="space-y-12">
             <div 
-              className="flex flex-wrap justify-center gap-3 bg-card  p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group"
+              className="flex flex-wrap justify-center gap-3 bg-card  p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-premium-hover relative overflow-hidden group"
               role="tablist"
               aria-label="Temas de guia espiritual"
             >
@@ -236,7 +236,7 @@ const Magisterium: React.FC = () => {
                   onClick={() => handleSelectGuidance(item)}
                   className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     selectedGuidance.id === item.id 
-                      ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30 scale-110" 
+                      ? "bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 scale-110" 
                       : "bg-card/60 text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
                   }`}
 
@@ -298,7 +298,7 @@ const Magisterium: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
+                  <div className="bg-primary/5 rounded-premium p-6 border border-primary/10 space-y-4">
                     <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
                     <p className="text-sm font-bold text-foreground">
                       {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
@@ -319,7 +319,7 @@ const Magisterium: React.FC = () => {
                       {selectedGuidance.relatedDocs.map(docId => {
                         const doc = DOCS_LIST.find(d => d.id === docId);
                         return (
-                          <div key={docId} className="p-4 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
+                          <div key={docId} className="p-4 rounded-premium border border-border bg-muted/30 flex items-center gap-3">
                             <Icons.FileText className="w-5 h-5 text-primary" />
                             <div>
                               <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
@@ -380,10 +380,10 @@ const Magisterium: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
               >
-                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
+                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-premium">
                   <CardContent className="p-6 flex flex-col h-full space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                      <div className="p-2.5 rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
                         {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
                          doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
                          <Icons.FileText className="w-5 h-5" />}

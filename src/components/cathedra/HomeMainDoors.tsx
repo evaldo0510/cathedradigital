@@ -106,7 +106,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
                   )}
                 >
                   <div className={cn(
-                    "w-16 h-16 rounded-2xl bg-primary/[0.02] flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-105 transition-all duration-700 border border-border/20",
+                    "w-16 h-16 rounded-premium bg-primary/[0.02] flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-105 transition-all duration-700 border border-border/20",
                     isActive && "bg-primary/5 scale-105 border-primary/20 text-secondary"
                   )}>
                     <door.icon className="w-7 h-7" strokeWidth={1} />

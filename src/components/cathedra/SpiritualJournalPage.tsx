@@ -175,7 +175,7 @@ const SpiritualJournalPage = () => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-secondary flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
                       {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
                     </div>
                     <div>

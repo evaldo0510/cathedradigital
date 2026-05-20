@@ -22,7 +22,7 @@ const OfflinePage: React.FC = () => {
       <SEOHead title="Você está Offline" description="O Cathedra Digital continua disponível em modo offline." path="/offline" />
       
       <div className="relative">
-        <div className="w-32 h-32 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10">
+        <div className="w-32 h-32 rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
           <Icons.WifiOff className="w-12 h-12 text-primary/40" />
         </div>
         <motion.div 
@@ -46,7 +46,7 @@ const OfflinePage: React.FC = () => {
         
         {stats && stats.total > 0 && (
           <div className="flex flex-col items-center gap-2 pt-2 animate-in fade-in slide-in-from-top-1 duration-1000">
-            <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/5 px-4 py-2 rounded-2xl border border-primary/10">
+            <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/5 px-4 py-2 rounded-premium border border-primary/10">
               <Icons.Library className="w-3 h-3" />
               {stats.total} textos salvos offline
             </div>

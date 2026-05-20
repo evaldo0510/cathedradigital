@@ -58,7 +58,7 @@ const FeedbackWidget = () => {
           >
             {submitted ? (
               <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
                   <Send className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Obrigado!</h3>

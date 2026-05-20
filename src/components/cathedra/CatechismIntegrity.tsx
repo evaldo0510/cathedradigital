@@ -149,7 +149,7 @@ const CatechismIntegrity: React.FC = () => {
           </Button>
 
           
-          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-2xl border border-border">
+          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-premium border border-border">
             <div className="flex items-center gap-1">
               <span className="text-premium-tiny font-bold text-muted-foreground uppercase px-1">De:</span>
               <input 
@@ -228,23 +228,23 @@ const CatechismIntegrity: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.error402}</div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Incompletos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.empty}</div>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-sm">
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
+          <div className="flex items-center gap-2 bg-background/50 border border-border rounded-premium p-1">
             <Button onClick={() => setFilter('all')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
             <Button onClick={() => setFilter('not_cached')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</Button>
             <Button onClick={() => setFilter('error_402')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</Button>

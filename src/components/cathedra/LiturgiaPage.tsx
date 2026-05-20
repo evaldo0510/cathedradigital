@@ -96,14 +96,14 @@ const ReadingCard: React.FC<{
     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
     <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{icon}</div>
+        <div className="p-2.5 rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{icon}</div>
         <div>
           <h2 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
           <p className="text-premium-tiny font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
         </div>
       </div>
     </div>
-    {refrain && <div className="bg-secondary/5 rounded-2xl p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
+    {refrain && <div className="bg-secondary/5 rounded-premium p-6 border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
     <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
       <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-4 h-4 mr-2" /> Bíblia</Button>
@@ -205,7 +205,7 @@ const LiturgiaPage: React.FC = () => {
               <Button
                 key={tab.id}
                 {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  activeTab === tab.id ? 'bg-background shadow-xl text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+                  activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 }`)}
                 onClick={() => setSearchParams({ tab: tab.id })}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
@@ -226,13 +226,13 @@ const LiturgiaPage: React.FC = () => {
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
                   <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight className="w-4 h-4" /></Button>
                 </div>
-                {isOfflineData && <div className="flex items-center justify-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-2xl px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
+                {isOfflineData && <div className="flex items-center justify-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
 
               {profile?.diocese && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-2xl p-4 flex items-center justify-between group">
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-premium p-4 flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-2xl bg-secondary/10 text-secondary"><Icons.Church className="w-5 h-5" /></div>
+                    <div className="p-2 rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-5 h-5" /></div>
                     <div><p className="text-premium-tiny font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-sm font-bold text-primary">{profile.diocese}</h3></div>
                   </div>
                   <div className="text-right"><p className="text-premium-tiny font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-xs font-bold text-primary">{profile.estado}</p></div>
@@ -257,7 +257,7 @@ const LiturgiaPage: React.FC = () => {
 
               {saintsToday.length > 0 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
+                  <div className="w-20 h-20 rounded-premium overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
                   <div className="space-y-1">
                     <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
                     <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>

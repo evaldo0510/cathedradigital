@@ -67,7 +67,7 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
                 {fields.map((field) => {
                   const status = getStatus(field.name.toLowerCase(), field.value);
                   return (
-                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-2xl bg-muted/20 border border-border/50">
+                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-premium bg-muted/20 border border-border/50">
                       <div className="flex items-center justify-between">
                         <span className="text-premium-tiny font-bold text-muted-foreground uppercase">{field.name}</span>
                         <span className={`text-premium-tiny font-black uppercase px-1.5 py-0.5 rounded ${status.color}`}>

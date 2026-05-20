@@ -128,7 +128,7 @@ const DesignSystemGuide: React.FC = () => {
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p><strong>Sombras:</strong> Nunca usar <code>shadow-md/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
+                <p><strong>Sombras:</strong> Nunca usar <code>shadow-premium/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
               </li>
             </ul>
           </CathedraCard>

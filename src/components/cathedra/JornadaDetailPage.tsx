@@ -75,7 +75,7 @@ const JornadaDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ const JornadaDetailPage: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-premium bg-primary/20 flex items-center justify-center flex-shrink-0">
                 <Award className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">

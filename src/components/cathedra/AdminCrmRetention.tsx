@@ -288,7 +288,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     if (!active || !payload?.[0]) return null;
     const label = payload[0]?.payload?.label || '';
     return (
-      <div className="rounded-2xl bg-popover px-2 py-1 text-premium-tiny font-medium text-popover-foreground shadow-md border border-border">
+      <div className="rounded-premium bg-popover px-2 py-1 text-premium-tiny font-medium text-popover-foreground shadow-premium border border-border">
         {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );

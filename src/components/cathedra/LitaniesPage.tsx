@@ -283,7 +283,7 @@ const LitaniesPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-12">
       <div className="text-center space-y-4 pt-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium">
           <Heart className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
@@ -306,7 +306,7 @@ const LitaniesPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filtered.map(l => (
           <Button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
             <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
               <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
             </div>

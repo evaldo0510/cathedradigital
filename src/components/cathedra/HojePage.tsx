@@ -212,7 +212,7 @@ const HojePage: React.FC = () => {
                   { title: 'Dashboard do Peregrino', icon: <Icons.Activity />, label: 'Progresso' },
                 ].map((item) => (
                   <div key={item.title} className="p-6 rounded-[2rem] border border-border/20 bg-muted/20 opacity-60 flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center text-primary/40">
+                    <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary/40">
                       {React.cloneElement(item.icon as React.ReactElement, { className: 'w-6 h-6' })}
                     </div>
                     <div>

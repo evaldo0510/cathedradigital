@@ -353,28 +353,28 @@ const CatechismDebug: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Total no Banco</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.total}</div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-success text-green-500">Gerados OK</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.generated}</div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Pendentes (402)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.pending}</div>
         </div>
-        <div className="bg-card border border-border rounded-2xl p-4">
+        <div className="bg-card border border-border rounded-premium p-4">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Inválidos/Curtos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.invalid}</div>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-sm">
         <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
+            <div className="flex items-center gap-2 bg-background/50 border border-border rounded-premium p-1">
               <Button 
                 onClick={() => setView('cache')}
                 className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
@@ -395,7 +395,7 @@ const CatechismDebug: React.FC = () => {
               </Button>
             </div>
             {view === 'cache' && (
-              <div className="flex items-center gap-2 bg-background/50 border border-border rounded-2xl p-1">
+              <div className="flex items-center gap-2 bg-background/50 border border-border rounded-premium p-1">
                 <Button onClick={() => setFilter('all')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
                 <Button onClick={() => setFilter('generated')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
                 <Button onClick={() => setFilter('error')} className={`px-3 py-1 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
@@ -582,7 +582,7 @@ const CatechismDebug: React.FC = () => {
                         <span>{item.label}</span>
                         <span>{percent}%</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-2xl overflow-hidden">
+                      <div className="h-2 bg-muted rounded-premium overflow-hidden">
                         <div className="h-full bg-primary transition-all" style={{ width: `${percent}%` }} />
                       </div>
                     </div>
@@ -590,7 +590,7 @@ const CatechismDebug: React.FC = () => {
                 })}
               </div>
 
-              <div className="border border-border rounded-2xl overflow-hidden">
+              <div className="border border-border rounded-premium overflow-hidden">
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/50 border-b border-border">
                     <tr className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
