@@ -17,10 +17,9 @@ interface HeroContentProps {
   heroScale?: number;
   heroY: MotionValue<number>;
   onStart: () => void;
-  onAbout: () => void;
 }
 
-const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: HeroContentProps) => {
+const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContentProps) => {
   const navigate = useNavigate();
 
   return (
