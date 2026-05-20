@@ -430,14 +430,14 @@
   --border: 0 0% 100% / 0.1;
 }
 
-/* --- Visual Silence --- */
+/* --- Visual Silence & Contemplation --- */
 .visual-silence .sidebar-trigger,
 .visual-silence .bottom-nav,
 .visual-silence .app-header-actions,
 .visual-silence .back-to-theme-banner,
 .visual-silence .floating-action-button {
   opacity: 0.1;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.8s ease;
 }
 
 .visual-silence .sidebar-trigger:hover,
@@ -448,10 +448,37 @@
   opacity: 1;
 }
 
-.visual-silence * {
-  animation: none !important;
-  transition-duration: 0.1s !important;
+.visual-silence .hero-decorative-elements,
+.visual-silence .coming-soon-badge,
+.visual-silence .footer-quote {
+  opacity: 0;
+  pointer-events: none;
 }
+
+/* Reduce Animations */
+.reduce-animations *,
+.reduce-animations *::before,
+.reduce-animations *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Contemplative Mode */
+.contemplative-mode {
+  filter: sepia(0.05) contrast(0.98);
+}
+
+.contemplative-mode .shadow-premium,
+.contemplative-mode .shadow-premium-hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02) !important;
+}
+
+.contemplative-mode .btn-premium {
+  box-shadow: none !important;
+}
+
 
 /* Typography Overrides */
 .font-size-small .reader-text { font-size: 0.875rem; }
