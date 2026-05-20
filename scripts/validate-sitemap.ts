@@ -91,6 +91,15 @@ function validateRedirects() {
     }
   });
 
+  // Check for essential legacy redirects
+  const essentialRedirects = ['/dashboard', '/biblia', '/catecismo', '/curso-pch'];
+  essentialRedirects.forEach(route => {
+    if (!content.includes(route)) {
+      console.error(`❌ Missing essential legacy redirect: ${route}`);
+      errorCount++;
+    }
+  });
+
   if (errorCount > 0) {
     process.exit(1);
   }
