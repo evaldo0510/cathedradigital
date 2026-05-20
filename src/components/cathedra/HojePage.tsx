@@ -170,31 +170,7 @@ const HojePage: React.FC = () => {
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {[
-                  { title: t('bible'), subtitle: 'A Palavra Viva', icon: <Icons.Bible />, route: AppRoute.BIBLE, description: 'Mergulhe nas Escrituras Sagradas com profundidade e oração.' },
-                  { title: t('catechism'), subtitle: 'A Fé Professada', icon: <Icons.Catechism />, route: AppRoute.CATECHISM, description: 'Explore a doutrina católica em sua forma mais pura e organizada.' },
-                  { title: 'Magistério', subtitle: 'A Voz da Igreja', icon: <Icons.ScrollText />, route: AppRoute.MAGISTERIUM, description: 'Acesse encíclicas e documentos que guiam o povo de Deus.' },
-                  { title: 'Logos IA', subtitle: 'Sabedoria Contextual', icon: <Icons.Search />, route: AppRoute.BUSCAR, description: 'Esclareça dúvidas e aprofunde seu conhecimento com auxílio da IA.' },
-                ].map((door) => (
-                  <motion.div 
-                    key={door.title}
-                    whileHover={{ y: -8 }}
-                    whileTap={{ scale: 0.995 }}
-                    onClick={() => navigate(door.route)}
-                    className="premium-card-interactive p-10 flex flex-col gap-6 group"
-                  >
-                    <div className="w-16 h-16 rounded-2xl bg-primary/[0.02] border border-border/40 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform duration-700">
-                      {React.cloneElement(door.icon as React.ReactElement, { className: 'w-8 h-8' })}
-                    </div>
-                    <div>
-                      <p className="text-premium-tiny font-bold uppercase tracking-widest text-primary/30 mb-2">{door.subtitle}</p>
-                      <h3 className="text-2xl font-bold text-primary tracking-tight">{door.title}</h3>
-                      <p className="text-sm text-primary/40 mt-3 leading-relaxed">{door.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2" />
             </section>
 
             {/* RITUAL DO DIA */}
