@@ -125,7 +125,7 @@ const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPa
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
-const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const SpiritualJournalPage = lazy(() => import('./components/cathedra/ReadingJournal'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(

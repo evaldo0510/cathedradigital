@@ -9,6 +9,10 @@ export interface UserNote {
   content_id: string;
   note_text: string;
   highlight_color: string;
+  book_abbr?: string;
+  chapter?: number;
+  paragraph?: number;
+  verse?: number;
   created_at: string;
   updated_at: string;
 }
@@ -37,7 +41,7 @@ export function useNotes(contentType: string, contentId?: string) {
 
   useEffect(() => { fetchNotes(); }, [fetchNotes]);
 
-  const addNote = useCallback(async (cId: string, text: string, color = 'yellow') => {
+  const addNote = useCallback(async (cId: string, text: string, color = 'yellow', context?: { book_abbr?: string; chapter?: number; paragraph?: number; verse?: number }) => {
     if (!user || !text.trim()) return null;
     
     // Create temporary item for optimistic UI
@@ -48,6 +52,7 @@ export function useNotes(contentType: string, contentId?: string) {
       content_id: cId,
       note_text: text.trim(),
       highlight_color: color,
+      ...context,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -58,7 +63,7 @@ export function useNotes(contentType: string, contentId?: string) {
     try {
       const { data, error } = await supabase
         .from('user_notes')
-        .insert({ user_id: user.id, content_type: contentType, content_id: cId, note_text: text.trim(), highlight_color: color })
+        .insert({ user_id: user.id, content_type: contentType, content_id: cId, note_text: text.trim(), highlight_color: color, ...context })
         .select()
         .single();
         

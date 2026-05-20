@@ -32,6 +32,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { History, LayoutPanelLeft, Compass } from 'lucide-react';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -549,6 +550,17 @@ const Bible: React.FC = () => {
               <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
               <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
             </div>
+            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => navigate(lastReadMark.url)}
+                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+              >
+                <History className="w-4 h-4" />
+                <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Voltar ao ponto salvo</span>
+              </Button>
+            )}
           </div>
 
         {/* Highlighted verse indicator (when ?v= is active) */}
@@ -609,13 +621,23 @@ const Bible: React.FC = () => {
                 <span className="hidden sm:inline">Continuar de onde parei</span>
               </Button>
             )}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/diario')}
+              className="rounded-full flex items-center gap-2 border-primary/10 hover:bg-primary/5"
+            >
+              <LayoutPanelLeft className="w-4 h-4 text-primary" />
+              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Meu Diário</span>
+            </Button>
             <ReadingControlPanel />
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Catecismo & Documentos">
-                <Icons.Cross className="w-4 h-4" />
-                <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
+                title="Conexões Sagradas (Catecismo & Magistério)">
+                <Compass className={`w-4 h-4 ${showCrossRefs ? 'animate-spin-slow' : ''}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Conexões</span>
+                <span className="text-xs font-bold bg-primary/10 px-1.5 rounded-full">{crossRefs.length + docsRefs.length}</span>
               </Button>
             )}
             <Button 

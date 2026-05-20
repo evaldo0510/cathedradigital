@@ -1781,6 +1781,8 @@ export type Database = {
       }
       user_notes: {
         Row: {
+          book_abbr: string | null
+          chapter: number | null
           content_id: string
           content_type: string
           created_at: string
@@ -1789,10 +1791,14 @@ export type Database = {
           is_reviewed: boolean
           metadata: Json | null
           note_text: string
+          paragraph: number | null
           updated_at: string
           user_id: string
+          verse: number | null
         }
         Insert: {
+          book_abbr?: string | null
+          chapter?: number | null
           content_id: string
           content_type: string
           created_at?: string
@@ -1801,10 +1807,14 @@ export type Database = {
           is_reviewed?: boolean
           metadata?: Json | null
           note_text?: string
+          paragraph?: number | null
           updated_at?: string
           user_id: string
+          verse?: number | null
         }
         Update: {
+          book_abbr?: string | null
+          chapter?: number | null
           content_id?: string
           content_type?: string
           created_at?: string
@@ -1813,8 +1823,10 @@ export type Database = {
           is_reviewed?: boolean
           metadata?: Json | null
           note_text?: string
+          paragraph?: number | null
           updated_at?: string
           user_id?: string
+          verse?: number | null
         }
         Relationships: []
       }
