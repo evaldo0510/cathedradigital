@@ -116,6 +116,8 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
     }
   };
 
+  if (settings.totalSilence) return null;
+
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <Button
