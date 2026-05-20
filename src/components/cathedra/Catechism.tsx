@@ -8,7 +8,7 @@ import SEOHead from '@/components/SEOHead';
 import ShareButton from './ShareButton';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import CrossReferencePanel from './CrossReferencePanel';
+import Relatio from './Relatio';
 import NotesPanel from './NotesPanel';
 import BibleVersePopover from './BibleVersePopover';
 import DeepContentSection from './DeepContentSection';
@@ -626,18 +626,23 @@ const Catechism: React.FC = () => {
               </div>
             </div>
 
-            {/* Cross References & Docs - Below the reader for focus */}
-            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+            {/* Relatio: Intelligent Contextual Connections */}
+            {showCrossRefs && (
               <div className="w-full max-w-[72ch] mx-auto">
-                <CrossReferencePanel 
-                  type="catechism"
-                  bibleRefs={crossRefs} 
-                  documents={docsRefs}
+                <Relatio 
+                  context={{
+                    type: 'catechism',
+                    id: `catechism-${currentParagraph}`,
+                    paragraph: currentParagraph,
+                    tags: CATECHISM_LOCAL_DATA[currentParagraph]?.tags || ['Catecismo', 'Doutrina', 'Igreja']
+                  }}
                   onNavigateToBible={handleNavigateToBible}
+                  onNavigateToCIC={(p) => setCurrentParagraph(p)}
                   onNavigateToDoc={handleNavigateToDoc}
                 />
               </div>
             )}
+
             
             {showLogosAI && (
               <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
