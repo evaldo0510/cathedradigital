@@ -394,6 +394,14 @@ const Bible: React.FC = () => {
   }, [viewMode, selectedBook, navigateChapter]);
 
   useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
+
+  useEffect(() => {
     if (viewMode === 'reading' && !isLoading && verses.length > 0) {
       const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
       const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
