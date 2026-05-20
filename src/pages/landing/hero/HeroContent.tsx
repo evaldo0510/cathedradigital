@@ -80,13 +80,6 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           >
             Entrar no Santuário
           </HomeButton>
-          
-          <button
-            onClick={onAbout}
-            className="text-[10px] tracking-[0.2em] font-bold uppercase text-primary/40 hover:text-primary/60 transition-colors duration-500"
-          >
-            Apresentação
-          </button>
         </div>
 
         {/* Elegant Minimal Signature */}
