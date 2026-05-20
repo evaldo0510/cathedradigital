@@ -502,6 +502,12 @@ const Catechism: React.FC = () => {
             </Button>
           ))}
         </div>
+        <LogosAI 
+          isOpen={showLogosAI} 
+          onClose={() => setShowLogosAI(false)} 
+          context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+          type="catechism"
+        />
       </div>
     );
   }
