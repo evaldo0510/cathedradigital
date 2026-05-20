@@ -9,6 +9,7 @@ interface ReadingSettings {
   highContrast: boolean;
   contemplativeMode: boolean;
   lineHeight: 'relaxed' | 'snug' | 'normal';
+  fullScreen: boolean;
   shortcuts: {
     bible: string;
     catechism: string;
@@ -33,6 +34,7 @@ const defaultSettings: ReadingSettings = {
   highContrast: false,
   contemplativeMode: false,
   lineHeight: 'relaxed',
+  fullScreen: false,
   shortcuts: {
     bible: 'b',
     catechism: 'c',
@@ -80,6 +82,12 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('reduce-animations');
     } else {
       root.classList.remove('reduce-animations');
+    }
+
+    if (settings.fullScreen) {
+      root.classList.add('full-screen-mode');
+    } else {
+      root.classList.remove('full-screen-mode');
     }
 
   }, [settings]);
