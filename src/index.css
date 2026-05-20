@@ -499,3 +499,9 @@
     opacity: 0;
   }
 }
+
+/* --- Auto Focus Highlight --- */
+.auto-focused-title {
+  @apply ring-4 ring-primary/20 rounded-lg transition-all duration-1000;
+  background: linear-gradient(to right, hsl(var(--primary) / 0.05), transparent);
+}
