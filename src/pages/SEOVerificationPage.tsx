@@ -30,72 +30,7 @@ interface SEOPageData {
   keywords?: string;
 }
 
-const SEO_PAGES: SEOPageData[] = [
-  {
-    name: "Home",
-    path: "/",
-    title: "Cathedra Digital | Portal de Espiritualidade Minimalista",
-    description: "Aprofunde sua fé com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente no portal espiritual inteligente.",
-    image: "https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png",
-    keywords: "bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade minimalista, portal católico premium"
-  },
-  {
-    name: "Hoje (Leitura Diária)",
-    path: "/hoje",
-    title: "Sua Jornada de Hoje",
-    description: "Leituras bíblicas, parágrafos do catecismo e ensinamentos dos santos selecionados para o seu crescimento espiritual hoje.",
-    image: "https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-today.png"
-  },
-  {
-    name: "Logos IA (Busca Global)",
-    path: "/search",
-    title: "Logos IA | Inteligência Teológica",
-    description: "Consulte a Logos IA para resumos contextuais, explicações teológicas e buscas inteligentes em toda a tradição da Igreja.",
-    keywords: "inteligência artificial católica, logos ia, busca teológica, teologia ia"
-  },
-  {
-    name: "Bíblia Sagrada",
-    path: "/bible",
-    title: "Bíblia Sagrada Online",
-    description: "Leia a Bíblia Sagrada em diversas traduções. Estudo bíblico católico completo com referências cruzadas e comentários.",
-    keywords: "bíblia online, bíblia católica, sagrada escritura, ler a bíblia, estudo bíblico"
-  },
-  {
-    name: "Catecismo",
-    path: "/catechism",
-    title: "Catecismo da Igreja Católica",
-    description: "Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos.",
-    keywords: "catecismo online, catecismo da igreja católica, doutrina católica, CIC"
-  },
-  {
-    name: "Magistério",
-    path: "/magisterium",
-    title: "Documentos do Magistério",
-    description: "Explore encíclicas, cartas apostólicas e constituições conciliares da Igreja Católica.",
-    keywords: "magistério, encíclicas, papas, concílio vaticano ii, documentos da igreja"
-  },
-  {
-    name: "Vidas dos Santos",
-    path: "/santos",
-    title: "Vidas dos Santos - Exemplos de Santidade",
-    description: "Conheça a história e os ensinamentos dos grandes santos da Igreja Católica. Inspiração para a vida cristã.",
-    keywords: "santos católicos, vidas dos santos, hagiografia, santidade, exemplos de fé"
-  },
-  {
-    name: "Dogmas da Fé",
-    path: "/dogmas",
-    title: "Dogmas da Fé Católica",
-    description: "Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo.",
-    keywords: "dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé"
-  },
-  {
-    name: "Liturgia Diária",
-    path: "/liturgia",
-    title: "Liturgia Diária e Missal",
-    description: "Acompanhe a liturgia diária, leituras da missa e o missal romano completo para cada dia do ano litúrgico.",
-    keywords: "liturgia diária, missa de hoje, evangelho do dia, missal romano"
-  }
-];
+// Removed SEO_PAGES constant as we will load it from sitemap.xml
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
 const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png';
