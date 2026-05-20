@@ -56,14 +56,14 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
             viewport={{ once: true }}
-            className="p-8 rounded-premium border border-border/20 bg-card/30 flex flex-col items-center text-center gap-6 group hover:bg-card/50 transition-all cursor-default"
+            className="p-8 rounded-premium border border-border/10 bg-card/[0.02] flex flex-col items-center text-center gap-6 group hover:bg-card/[0.05] transition-all cursor-default"
           >
-            <div className="w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center text-muted-foreground/40 group-hover:scale-110 transition-transform duration-500">
-              <item.icon className="w-6 h-6" strokeWidth={1.5} />
+            <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center text-muted-foreground/20 group-hover:scale-105 transition-transform duration-500">
+              <item.icon className="w-5 h-5" strokeWidth={1} />
             </div>
             <div className="space-y-2">
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-foreground/40">{item.label}</h3>
-              <p className="text-[10px] text-muted-foreground/30 leading-relaxed italic">{item.description}</p>
+              <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/20">{item.label}</h3>
+              <p className="text-[9px] text-muted-foreground/20 leading-relaxed italic">{item.description}</p>
             </div>
           </motion.div>
         ))}

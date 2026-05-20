@@ -83,9 +83,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
             size="lg"
             className="w-full"
             onClick={onStart}
-            aria-label="Iniciar sua jornada espiritual"
+            aria-label="Entrar no santuário digital"
           >
-            Iniciar Jornada
+            Entrar no Santuário
           </HomeButton>
           
           <HomeButton
