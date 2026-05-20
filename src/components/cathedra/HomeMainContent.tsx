@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { HomeCard } from './HomeCard';
 import HomeMainDoors from './HomeMainDoors';
 import RitualDoDia from './RitualDoDia';
+import { ReadingProgressSection } from './ReadingProgressSection';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
