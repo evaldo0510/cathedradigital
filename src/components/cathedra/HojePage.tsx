@@ -203,9 +203,9 @@ const HojePage: React.FC = () => {
                   <p className="text-lg text-primary/60 font-serif italic">{nextUp.subtitle}</p>
                 </div>
                 
-                {nextUp.description && (
+                {nextUp && 'description' in nextUp && (
                   <p className="text-sm leading-relaxed text-muted-foreground max-w-xl">
-                    {nextUp.description}
+                    {(nextUp as any).description}
                   </p>
                 )}
                 
