@@ -31,9 +31,9 @@ const RitualDoDia: React.FC = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-5 h-5 text-secondary" strokeWidth={1.5} />
-            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60">
-              Ritual do Dia
+            <Sparkles className="w-4 h-4 text-secondary/40" strokeWidth={1} />
+            <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-secondary/40">
+              Contemplação Diária
             </span>
           </div>
           <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
