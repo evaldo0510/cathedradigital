@@ -615,6 +615,7 @@ const Bible: React.FC = () => {
                           onClick={() => {
                             setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
                             setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
+                            setShowLogosAI(true);
                           }}
                           className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
                             ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
