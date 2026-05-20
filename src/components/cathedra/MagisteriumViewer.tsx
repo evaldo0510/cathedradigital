@@ -10,6 +10,8 @@ import ReactMarkdown from 'react-markdown';
 import SEOHead from '@/components/SEOHead';
 import AudioButton from './AudioButton';
 import ReadingControlPanel from './ReadingControlPanel';
+import ReadingMark from './ReadingMark';
+import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
@@ -70,6 +72,28 @@ const MagisteriumViewer: React.FC = () => {
 
     fetchDoc();
   }, [id]);
+
+  // Auto-save scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [id]);
+
+  // Restore scroll position
+  useEffect(() => {
+    if (content && id) {
+      const savedScroll = localStorage.getItem(`cathedra_last_magisterium_scroll_${id}`);
+      if (savedScroll && !highlight) {
+        setTimeout(() => {
+          window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+        }, 800);
+      }
+    }
+  }, [content, id, highlight]);
+
 
   // Scroll to highlight when content is loaded
   useEffect(() => {
@@ -178,6 +202,7 @@ const MagisteriumViewer: React.FC = () => {
           <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()} title="Imprimir / PDF">
             <Icons.Printer className="w-4 h-4" />
           </Button>
+          <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
         </div>
       </div>
 
@@ -200,13 +225,24 @@ const MagisteriumViewer: React.FC = () => {
           <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
             <div 
               ref={contentRef}
+              onScroll={() => {
+                if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+              }}
               className={`p-8 md:p-16 lg:p-24 prose prose-slate dark:prose-invert max-w-none reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight}
                 prose-headings:font-serif prose-headings:text-primary 
                 prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
-              <ReactMarkdown>{processedText}</ReactMarkdown>
+              {processedText.split('\n\n').map((para, idx) => (
+                <div key={idx} className="group relative mb-4">
+                  <ReactMarkdown>{para}</ReactMarkdown>
+                  <div className="absolute top-0 -right-12 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity no-print">
+                    <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
+                    <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </motion.div>
