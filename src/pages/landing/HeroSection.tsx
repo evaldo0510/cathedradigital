@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import HeroBackground from "./hero/HeroBackground";
 import HeroContent from "./hero/HeroContent";
+import HeroParticles from "./hero/HeroParticles";
 import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
 interface HeroSectionProps {
@@ -20,8 +21,9 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   return (
-    <section ref={heroRef} className="relative w-full min-h-[100dvh] flex items-center justify-center px-6 overflow-hidden">
+    <section ref={heroRef} className="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background">
       <HeroBackground bgY={heroY} />
+      <HeroParticles />
       <HeroContent 
         heroOpacity={heroOpacity} 
         heroScale={1} 
@@ -29,7 +31,7 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
         onStart={onStart} 
         onAbout={onAbout} 
       />
-      <div className="sr-only">Rolar para baixo para ver as funcionalidades</div>
+      <div className="sr-only">Rolar para baixo para explorar o santuário digital</div>
       <HeroScrollIndicator />
     </section>
   );
