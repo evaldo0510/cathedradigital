@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
+import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
 
 /**
  * Script to validate sitemap.xml, robots.txt and legacy redirects.
