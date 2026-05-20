@@ -2,44 +2,54 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { toast } from 'sonner';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 
 interface ReadingMarkProps {
   contentType: 'bible' | 'catechism' | 'magisterium';
   contentId: string;
   label?: string;
+  chapter?: number;
+  paragraph?: number;
+  position?: number;
 }
 
-const ReadingMark: React.FC<ReadingMarkProps> = ({ contentType, contentId, label }) => {
-  const [isMarked, setIsMarked] = useState(false);
-  const STORAGE_KEY = 'cathedra_reading_marks';
+const ReadingMark: React.FC<ReadingMarkProps> = ({ 
+  contentType, 
+  contentId, 
+  label,
+  chapter,
+  paragraph,
+  position
+}) => {
+  const { marks, addMark, deleteMark } = useReadingMarks();
+  const [existingMarkId, setExistingMarkId] = useState<string | null>(null);
 
   useEffect(() => {
-    const marks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    const key = `${contentType}:${contentId}`;
-    setIsMarked(!!marks[key]);
-  }, [contentType, contentId]);
+    const found = marks.find(m => m.content_type === contentType && m.content_id === contentId && !m.is_last_read);
+    setExistingMarkId(found ? found.id : null);
+  }, [marks, contentType, contentId]);
 
-  const toggleMark = () => {
-    const marks = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    const key = `${contentType}:${contentId}`;
-    
-    if (isMarked) {
-      delete marks[key];
+  const toggleMark = async () => {
+    if (existingMarkId) {
+      await deleteMark(existingMarkId);
       toast.info('Marca de leitura removida');
     } else {
-      marks[key] = {
+      await addMark({
+        content_type: contentType,
+        content_id: contentId,
         label: label || contentId,
-        timestamp: new Date().toISOString(),
+        chapter,
+        paragraph,
+        position,
         url: window.location.pathname + window.location.search
-      };
+      });
       toast.success('Marca de leitura adicionada', {
         description: 'Você pode retornar a este ponto depois.'
       });
     }
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(marks));
-    setIsMarked(!isMarked);
   };
+
+  const isMarked = !!existingMarkId;
 
   return (
     <Button
