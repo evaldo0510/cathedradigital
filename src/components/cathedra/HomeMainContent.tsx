@@ -112,10 +112,11 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
           </div>
           
           <div className="relative z-10 space-y-3 text-center max-w-2xl">
-            <h3 className="text-2xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed font-serif italic max-w-md mx-auto">
+            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
+            <p className="text-base text-muted-foreground leading-relaxed font-serif italic max-w-md mx-auto opacity-40">
               "A inteligência a serviço da fé."
             </p>
+
           </div>
 
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
