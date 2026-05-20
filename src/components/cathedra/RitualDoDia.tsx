@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles, CheckCircle2, ArrowRight, Book, Heart, VolumeX, Bell, Download, Settings2, Clock } from 'lucide-react';
+import { BookOpen, Sparkles, CheckCircle2, ArrowRight, Book, Heart, VolumeX, Bell, Download, Settings2, Clock, Map } from 'lucide-react';
 import { DAILY_RITUALS } from '@/data/dailyRitual';
 import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
@@ -202,7 +202,10 @@ const RitualDoDia: React.FC = () => {
                 Ritual do Dia
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-display text-primary tracking-tight">Caminho de Santidade</h2>
+            <h2 className="text-3xl md:text-4xl font-display text-primary tracking-tight flex items-center gap-3">
+              <Map className="w-6 h-6 text-secondary/40" />
+              Caminho de Santidade
+            </h2>
           </div>
           <div className="flex flex-col items-start md:items-end gap-2">
             <span className="text-xs font-serif italic text-muted-foreground">

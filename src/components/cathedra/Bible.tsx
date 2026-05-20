@@ -32,7 +32,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { History, LayoutPanelLeft } from 'lucide-react';
+import { History, LayoutPanelLeft, Compass } from 'lucide-react';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -634,9 +634,10 @@ const Bible: React.FC = () => {
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Catecismo & Documentos">
-                <Icons.Cross className="w-4 h-4" />
-                <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
+                title="Conexões Sagradas (Catecismo & Magistério)">
+                <Compass className={`w-4 h-4 ${showCrossRefs ? 'animate-spin-slow' : ''}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Conexões</span>
+                <span className="text-xs font-bold bg-primary/10 px-1.5 rounded-full">{crossRefs.length + docsRefs.length}</span>
               </Button>
             )}
             <Button 

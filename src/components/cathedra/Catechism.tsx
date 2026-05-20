@@ -506,9 +506,10 @@ const Catechism: React.FC = () => {
             </Button>
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Catecismo & Documentos">
-                <Icons.Cross className="w-4 h-4" />
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Conexões Sagradas (Bíblia & Magistério)">
+                <Icons.Compass className={`w-4 h-4 ${showCrossRefs ? 'animate-spin-slow' : ''}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Conexões</span>
               </Button>
             )}
           </div>
