@@ -164,9 +164,15 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </Button>
         </div>
         
-        <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
+        <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto scrollbar-none">
+          {/* Elegant Map Header */}
+          <div className="flex flex-col gap-1 items-center justify-center text-center pb-4 border-b border-border/10">
+            <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/30">NEXUS THEOLOGICUM</span>
+            <p className="text-xs text-muted-foreground font-serif italic">Conexões essenciais entre Escritura e Tradição</p>
+          </div>
+
           {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
+          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-40">
             <div className="flex gap-2">
               <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
               <span>Source: {metrics.source || 'pending'}</span>
