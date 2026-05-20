@@ -17,6 +17,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 
 const AdminSeoTab: React.FC = () => {
+  const navigate = useNavigate();
   const { data: seoSettings, refetch: refetchSEO } = useSEO();
   const { data: keywords, refetch: refetchKeywords } = useKeywords();
   
