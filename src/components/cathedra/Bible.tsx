@@ -27,6 +27,8 @@ import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
+import ReadingMark from './ReadingMark';
+import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
@@ -342,6 +344,7 @@ const Bible: React.FC = () => {
     if (next >= 1 && next <= selectedBook.chapters) {
       setSelectedChapter(next);
       setHighlightedVerse(null);
+      localStorage.setItem('cathedra_last_bible_scroll', '0');
     }
   }, [selectedBook, selectedChapter]);
 
@@ -626,25 +629,33 @@ const Bible: React.FC = () => {
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
-                        <span key={v.number} 
+                        <div key={v.number} 
                           id={`v${v.number}`}
-                          onClick={() => {
-                            setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
-                            setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
-                            setShowLogosAI(true);
-                          }}
-                          className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
-                            ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
-                          <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
-                          {v.text}{' '}
-                          {relatedP && (
-                            <span className="inline-flex gap-0.5">
-                              {relatedP.map(p => (
-                                <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
-                              ))}
-                            </span>
-                          )}
-                        </span>
+                          className={`group relative py-2 px-3 rounded-premium transition-all duration-300 mb-1
+                            ${highlightedVerse === v.number ? 'bg-primary/10 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`}>
+                          <div className="flex items-start gap-3">
+                            <sup className="text-[0.6em] font-bold text-primary mt-1.5 select-none opacity-60">{v.number}</sup>
+                            <div className="flex-1" onClick={() => {
+                              setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
+                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
+                              localStorage.setItem('cathedra_last_bible_verse', v.number.toString());
+                              localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+                            }}>
+                              <span className="cursor-pointer">{v.text}</span>
+                              {relatedP && (
+                                <span className="inline-flex gap-0.5 ml-2">
+                                  {relatedP.map(p => (
+                                    <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
+                                  ))}
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
+                              <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} />
+                            </div>
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
