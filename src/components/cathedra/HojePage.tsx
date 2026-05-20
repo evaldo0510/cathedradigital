@@ -148,32 +148,18 @@ const HojePage: React.FC = () => {
           transition={{ duration: 2.5, ease: [0.2, 0.8, 0.2, 1] }}
           className="text-center space-y-24 max-w-6xl mx-auto"
         >
-          <div className="space-y-12">
-            <div className="flex flex-col items-center gap-6">
-              <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-              <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
-                {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
-              </p>
-            </div>
-            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
-              Silêncio <br />
-              <span className="text-secondary/60 italic font-serif">da Alma.</span>
-            </h1>
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+            <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
+              {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
+            </p>
           </div>
-          
-          <div className="flex items-center justify-center gap-10 flex-wrap opacity-40 hover:opacity-100 transition-opacity duration-1000">
-             {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
-                <Icons.Zap className="w-3.5 h-3.5 text-primary/40" />
-                <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.streak} {profile?.streak === 1 ? 'Dies' : 'Dies'}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
-              <Icons.Star className="w-3.5 h-3.5 text-secondary/40" />
-              <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.xp || 0} XP</span>
-            </div>
-          </div>
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
+            Mosteiro <br />
+            <span className="text-secondary/60 italic font-serif">Digital.</span>
+          </h1>
         </motion.div>
+
 
         {/* PRÓXIMO PASSO - RECOMENDAÇÃO DINÂMICA */}
         {nextUp && (
