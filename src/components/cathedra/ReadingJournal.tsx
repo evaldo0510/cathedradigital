@@ -104,7 +104,44 @@ const ReadingJournal: React.FC = () => {
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
           <History className="w-3 h-3" /> Memória da Alma
-        </div>
+      </div>
+
+      {/* Streak and Goals */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto w-full">
+        <Card className="bg-primary/[0.03] border-primary/10 rounded-[2rem] overflow-hidden shadow-soft">
+          <CardContent className="p-8 flex items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center relative">
+              <Icons.Zap className="w-8 h-8 text-primary" />
+              <div className="absolute inset-0 rounded-full border border-primary/20 animate-ping opacity-20" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-1">Sequência Atual</p>
+              <h3 className="text-3xl font-display text-primary">{streak} {streak === 1 ? 'Dia' : 'Dias'}</h3>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-secondary/[0.03] border-secondary/10 rounded-[2rem] overflow-hidden shadow-soft">
+          <CardContent className="p-8 flex items-center gap-6">
+            <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
+              <Icons.Target className="w-8 h-8 text-secondary" />
+            </div>
+            <div className="flex-1">
+              <div className="flex justify-between items-end mb-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Meta Semanal</p>
+                <span className="text-xs font-bold text-secondary">{daysActiveThisWeek}/{weeklyGoal}</span>
+              </div>
+              <div className="h-2 w-full bg-secondary/10 rounded-full overflow-hidden">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.min(100, (daysActiveThisWeek / weeklyGoal) * 100)}%` }}
+                  className="h-full bg-secondary"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
         <h1 className="text-4xl md:text-5xl font-display text-primary">Diário de Jornada</h1>
         <p className="text-muted-foreground font-serif italic">"Guarda o que viste, para que não se apague do teu coração."</p>
       </div>
