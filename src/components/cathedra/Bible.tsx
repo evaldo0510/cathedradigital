@@ -598,6 +598,17 @@ const Bible: React.FC = () => {
             </Button>
           </div>
           <div className="flex items-center gap-2">
+            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => navigate(lastReadMark.url)}
+                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+              >
+                <Icons.History className="w-4 h-4" />
+                <span className="hidden sm:inline">Continuar de onde parei</span>
+              </Button>
+            )}
             <ReadingControlPanel />
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
