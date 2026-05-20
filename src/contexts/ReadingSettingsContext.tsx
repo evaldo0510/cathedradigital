@@ -129,7 +129,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       const { error } = await supabase
         .from('profiles')
         .update({
-          reading_settings: updated
+          reading_settings: updated as any
         })
         .eq('id', user.id);
 
@@ -147,7 +147,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       await supabase
         .from('profiles')
         .update({
-          reading_settings: defaultSettings
+          reading_settings: defaultSettings as any
         })
         .eq('id', user.id);
       refreshProfile();
