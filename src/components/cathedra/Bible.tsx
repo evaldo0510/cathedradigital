@@ -386,7 +386,8 @@ const Bible: React.FC = () => {
         content_id: selectedBook.abbr,
         chapter: next,
         label: `${selectedBook.name} ${next}`,
-        url: `/bible?book=${selectedBook.abbr}&ch=${next}`
+        url: `/bible?book=${selectedBook.abbr}&ch=${next}`,
+        is_last_read: true
       });
     }
   }, [selectedBook, selectedChapter, saveLastRead]);
@@ -734,10 +735,22 @@ const Bible: React.FC = () => {
                           <div className="flex items-start gap-3">
                             <sup className="text-[0.6em] font-bold text-primary mt-1.5 select-none opacity-60">{v.number}</sup>
                             <div className="flex-1" onClick={() => {
-                              setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
-                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
-                              localStorage.setItem('cathedra_last_bible_verse', v.number.toString());
+                              const vNum = v.number;
+                              setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
+                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
+                              localStorage.setItem('cathedra_last_bible_verse', vNum.toString());
                               localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+                              
+                              // Seamless auto-save on verse click/selection
+                              saveLastRead({
+                                content_type: 'bible',
+                                content_id: selectedBook.abbr,
+                                chapter: selectedChapter,
+                                position: vNum,
+                                label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
+                                url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
+                                is_last_read: true
+                              });
                             }}>
                               <span className="cursor-pointer">{v.text}</span>
                               {relatedP && (

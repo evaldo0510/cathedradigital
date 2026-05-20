@@ -23,7 +23,10 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
 
   // Calculo discreto de maturidade baseado em XP
   const xp = profile?.xp || 0;
-  const level = Math.floor(xp / 1000) + 1;
+  // Degrees: I, II, III, IV, V... based on XP
+  const romanDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+  const degreeIndex = Math.floor(xp / 1000);
+  const currentDegree = romanDegrees[degreeIndex] || `X+${degreeIndex - 9}`;
   const progressToNextLevel = (xp % 1000) / 10; 
 
   // Prioridade de retomada
@@ -32,20 +35,26 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
   if (!primaryResume && (!history || history.length === 0)) return null;
 
   return (
-    <div className="space-y-8">
-      {/* Visual Progress - Discreto */}
-      <div className="flex items-center justify-between px-2">
-        <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/40">Continuidade Espiritual</h3>
-        <div className="flex items-center gap-2">
-          <div className="h-1 w-24 bg-border/20 rounded-full overflow-hidden">
+    <div className="space-y-12">
+      {/* Visual Progress - Minimalista e Nobre */}
+      <div className="flex flex-col items-center gap-6">
+        <div className="flex items-center gap-8 w-full">
+           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
+           <h3 className="text-premium-tiny font-black uppercase tracking-[0.6em] text-primary/30">Caminho de Maturidade</h3>
+           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/10 to-transparent" />
+        </div>
+        
+        <div className="flex items-center gap-6">
+          <span className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Grau {currentDegree}</span>
+          <div className="h-[2px] w-32 bg-border/10 rounded-full overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(5, progressToNextLevel)}%` }}
-              className="h-full bg-secondary/40"
-              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="h-full bg-secondary/30"
+              transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
-          <span className="text-[10px] font-bold text-secondary/60 uppercase tracking-widest">Grau {level}</span>
+          <span className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Grau {romanDegrees[degreeIndex + 1] || '?'}</span>
         </div>
       </div>
 
@@ -115,18 +124,25 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
             {history.map((item: any, idx: number) => (
               <motion.div
                 key={item.id || idx}
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -4, borderColor: 'rgba(var(--secondary), 0.3)' }}
                 onClick={() => navigate(item.route)}
-                className="flex-shrink-0 w-64 p-5 rounded-3xl bg-card border border-border/40 cursor-pointer group transition-all hover:border-secondary/30 shadow-sm"
+                className="flex-shrink-0 w-72 p-6 rounded-[2rem] bg-card border border-border/40 cursor-pointer group transition-all shadow-sm hover:shadow-premium"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-2xl bg-muted/30 flex items-center justify-center text-muted-foreground group-hover:text-secondary transition-colors">
-                     <Icons.History size={18} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest truncate">{item.title || item.route?.split('/').pop() || 'Atividade'}</p>
-                    <p className="text-[10px] text-muted-foreground/40 truncate mt-1">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
+                       <Icons.History size={14} />
+                    </div>
+                    <span className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-tighter">
                       {formatDistanceToNow(new Date(item.visited_at), { addSuffix: true, locale: ptBR })}
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black text-primary/60 uppercase tracking-widest truncate">
+                      {item.title || item.route?.split('/').pop()?.replace(/-/g, ' ') || 'Peregrinação'}
+                    </p>
+                    <p className="text-xs font-serif italic text-muted-foreground/60 truncate">
+                      Retomar leitura profunda
                     </p>
                   </div>
                 </div>
