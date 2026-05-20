@@ -679,6 +679,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.BIBLIOTECA} element={<PageTransition><AuthGuard><BibliotecaPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.MODULES_GUIDE} element={<PageTransition><ModulesGuidePage /></PageTransition>} />
                   <Route path={AppRoute.TRANSPARENCY} element={<PageTransition><TransparencyPage /></PageTransition>} />
+                  <Route path={AppRoute.JORNADA_GUIADA} element={<PageTransition><AuthGuard><GuidedReadingPage /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.OFFLINE} element={<PageTransition><OfflinePage /></PageTransition>} />
                   <Route path={AppRoute.CACHE_MANAGER} element={<PageTransition><CacheManager /></PageTransition>} />
                   <Route path={AppRoute.DIARIO} element={<PageTransition><AuthGuard><SpiritualJournalPage /></AuthGuard></PageTransition>} />
