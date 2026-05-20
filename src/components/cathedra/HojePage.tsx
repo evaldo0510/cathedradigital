@@ -111,7 +111,7 @@ const HojePage: React.FC = () => {
   }, [hour, lang]);
 
   const nextUp = useMemo(() => {
-    // Simplified nextUp logic for clean UI
+    // Return last read mark for quick access
     if (activeJourney) return {
       type: 'journey',
       label: activeJourney.title,

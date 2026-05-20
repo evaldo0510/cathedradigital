@@ -485,6 +485,15 @@ const Catechism: React.FC = () => {
                 <span className="hidden sm:inline">Continuar de onde parei</span>
               </Button>
             )}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate('/diario')}
+              className="rounded-full flex items-center gap-2 border-primary/10 hover:bg-primary/5"
+            >
+              <Icons.Layout className="w-4 h-4 text-primary" />
+              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Meu Diário</span>
+            </Button>
             <ReadingControlPanel />
             <Button 
               variant="outline" 
@@ -493,7 +502,7 @@ const Catechism: React.FC = () => {
               className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
             >
               <Icons.Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Logos IA</span>
+              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Logos IA</span>
             </Button>
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
