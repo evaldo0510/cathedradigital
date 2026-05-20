@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import HeroBackground from "./hero/HeroBackground";
 import HeroContent from "./hero/HeroContent";
+import HeroParticles from "./hero/HeroParticles";
 import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
 interface HeroSectionProps {
