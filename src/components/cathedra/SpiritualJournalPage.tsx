@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
+import StudyJournal from './StudyJournal';
 
 interface JournalEntry {
   id: string;
@@ -27,6 +28,8 @@ const MOODS = [
   { id: 'hope', icon: Icons.Sparkles, label: 'Esperança' },
   { id: 'struggle', icon: Icons.ShieldQuestion, label: 'Luta' },
 ];
+
+type JournalTab = 'reflection' | 'study';
 
 const SpiritualJournalPage = () => {
   const { user } = useAuth();
