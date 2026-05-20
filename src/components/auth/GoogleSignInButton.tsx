@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Icons } from '@/constants';
-import { lovable } from '@/integrations/lovable/index';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
@@ -28,17 +28,20 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
   const handleSignIn = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.origin,
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
       });
       
-      if (result.error) {
+      if (error) {
         toast({
           title: 'Erro na autenticação',
           description: 'Não foi possível entrar com Google. Tente novamente.',
           variant: 'destructive',
         });
-      } else if (!result.redirected && onSuccess) {
+      } else if (onSuccess) {
         onSuccess();
       }
     } catch (error) {

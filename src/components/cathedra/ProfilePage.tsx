@@ -565,6 +565,33 @@ const ProfilePage: React.FC = () => {
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
       </div>
+
+      <div className="premium-card p-8 space-y-6">
+        <div className="flex items-center gap-2 mb-1">
+          <Icons.ShieldCheck className="w-4 h-4 text-primary" />
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Segurança da Conta</h2>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-foreground">Vincular Conta Google</p>
+              <p className="text-premium-tiny text-muted-foreground">
+                Adicione o Google como método de acesso sem perder seus dados atuais.
+              </p>
+            </div>
+            <GoogleSignInButton 
+              text="Vincular Google" 
+              className="bg-background hover:bg-muted text-foreground border-border"
+              onSuccess={() => toast.success('Conta Google vinculada com sucesso!')}
+            />
+          </div>
+          
+          <p className="text-[10px] text-muted-foreground text-center italic">
+            * Ao vincular, você poderá entrar usando tanto seu e-mail/senha quanto sua conta Google.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
