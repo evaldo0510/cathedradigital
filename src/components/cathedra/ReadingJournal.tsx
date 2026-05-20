@@ -13,7 +13,9 @@ import {
   Calendar,
   Filter,
   ArrowRight,
-  Bookmark
+  Bookmark,
+  Zap,
+  Target
 } from 'lucide-react';
 import { useReadingMarks, ReadingMark } from '@/hooks/useReadingMarks';
 import { useNotes, UserNote } from '@/hooks/useNotes';
