@@ -24,7 +24,7 @@ interface SEOHeadProps {
 }
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
-const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-image.png';
+const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png';
 
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
   const { data: seoSettings } = useSEO();
@@ -33,18 +33,29 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   const displayTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   const displayDescription = description || seoSettings?.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica.';
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
+  
   const getDynamicImage = (title?: string) => {
+    // If a specific image is provided for the page, use it
     if (image) return image;
+    
+    // Check if we have a global custom OG image in settings
     if (seoSettings?.og_image_url) return seoSettings.og_image_url;
     
-    // Dynamic OG image generator fallback
-    const encodedTitle = encodeURIComponent(title || siteTitle);
-    // Using a reliable placeholder service for dynamic text-based OG images
-    return `https://placehold.jp/32/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital`;
+    // Generate a dynamic image URL with "cache" (stable hash/parameters)
+    const pageTitle = title || siteTitle;
+    const encodedTitle = encodeURIComponent(pageTitle);
+    
+    // Cache buster based on version or month to ensure stability but allow updates
+    const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7); // yyyy-mm
+    
+    // Primary dynamic service (placehold.jp is used as a generator here)
+    // We can use a more "premium" look by styling it
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const displayImage = getDynamicImage(title);
   const twitterHandle = seoSettings?.twitter_handle || '@cathedradigital';
+
   
   const url = `${BASE_URL}${path}`;
 
@@ -141,13 +152,22 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta property="og:url" content={url} />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
+      
+      {/* Multiple OG images for fallback support */}
       <meta property="og:image" content={displayImage} />
+      {image && image !== DEFAULT_OG_IMAGE && <meta property="og:image" content={DEFAULT_OG_IMAGE} />}
+      {!image && <meta property="og:image" content={DEFAULT_OG_IMAGE} />}
+      
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={twitterHandle} />
       <meta name="twitter:title" content={displayTitle} />
       <meta name="twitter:description" content={displayDescription} />
       <meta name="twitter:image" content={displayImage} />
+      <meta name="twitter:image:alt" content={displayTitle} />
+
 
       {breadcrumbLD && (
         <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>

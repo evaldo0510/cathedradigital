@@ -77,8 +77,10 @@ const SEOVerificationPage = () => {
   const getDynamicImage = (title: string, customImage?: string) => {
     if (customImage) return customImage;
     const encodedTitle = encodeURIComponent(title);
-    return `https://placehold.jp/32/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital`;
+    const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7);
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
+
 
   return (
     <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
