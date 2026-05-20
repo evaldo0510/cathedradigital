@@ -4,8 +4,10 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Mail, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Mail, CheckCircle2, ArrowRight, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
 
 interface ComingSoonItem {
   label: string;
@@ -46,19 +48,57 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    const trimmedEmail = email.trim();
+    
+    if (!trimmedEmail) {
+      toast.error("Por favor, insira um e-mail.");
+      return;
+    }
+
+    if (!validateEmail(trimmedEmail)) {
+      toast.error("Por favor, insira um e-mail válido.");
+      return;
+    }
 
     setLoading(true);
-    // Simulating API call
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-      toast.success("Interesse registrado com sucesso. Você será notificado das novidades.");
-      setEmail('');
-    }, 1000);
+    
+    try {
+      const { error } = await supabase
+        .from('coming_soon_leads')
+        .insert([{ email: trimmedEmail }]);
+
+      if (error) {
+        if (error.code === '23505') {
+          toast.info("Você já está na nossa lista de espera. Obrigado pelo interesse!");
+          setSubmitted(true); // Already registered
+        } else {
+          throw error;
+        }
+      } else {
+        setSubmitted(true);
+        toast.success("Interesse registrado com sucesso. Você será notificado das novidades.");
+        setEmail('');
+      }
+    } catch (err) {
+      console.error('Error registering lead:', err);
+      toast.error("Erro ao registrar interesse. Tente novamente em instantes.");
+    } finally {
+      setLoading(true);
+      // Brief artificial delay for better UX feel
+      setTimeout(() => setLoading(false), 500);
+    }
   };
+
 
   return (
     <section className={cn("space-y-16", className)}>
