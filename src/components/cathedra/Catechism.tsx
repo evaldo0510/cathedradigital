@@ -268,6 +268,14 @@ const Catechism: React.FC = () => {
     return () => window.removeEventListener('open-logos-ai' as any, handleOpenAI);
   }, []);
 
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
+
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
