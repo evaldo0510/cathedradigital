@@ -930,11 +930,14 @@ export type Database = {
           is_premium: boolean
           journey_reminder_time: string | null
           last_action_at: string | null
+          last_active_at: string | null
           last_notified_at: string | null
           last_visit: string | null
           level: number | null
+          max_streak: number | null
           movimento_pastoral: string | null
           name: string
+          notification_settings: Json | null
           paroquia: string | null
           preferred_reminder_time: string | null
           program_duration: number | null
@@ -960,11 +963,14 @@ export type Database = {
           is_premium?: boolean
           journey_reminder_time?: string | null
           last_action_at?: string | null
+          last_active_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
+          max_streak?: number | null
           movimento_pastoral?: string | null
           name?: string
+          notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
@@ -990,11 +996,14 @@ export type Database = {
           is_premium?: boolean
           journey_reminder_time?: string | null
           last_action_at?: string | null
+          last_active_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
           level?: number | null
+          max_streak?: number | null
           movimento_pastoral?: string | null
           name?: string
+          notification_settings?: Json | null
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
