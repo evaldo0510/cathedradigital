@@ -100,6 +100,15 @@ export const useDashboardData = (user: User | null) => {
         history: history.data || []
       };
 
+      if (lastRead.data) {
+        results.primaryResume = {
+          type: lastRead.data.content_type,
+          label: lastRead.data.label,
+          route: lastRead.data.url,
+          subtitle: 'Retomar de onde parei'
+        };
+      }
+
       if (lastJourney.data) {
         const { data: steps } = await supabase.from('journey_steps').select('id, title').eq('journey_id', lastJourney.data.journey_id).order('step_order', { ascending: true });
         const currentIndex = steps?.findIndex(s => s.id === lastJourney.data.step_id) ?? -1;
