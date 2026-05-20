@@ -305,6 +305,15 @@ const AppLayout: React.FC = () => {
   }, []);
 
   const toggleSpeak = useCallback(() => {
+    // Block speech if Total Silence is active
+    if (localStorage.getItem('cathedra_reading_settings')) {
+      const settings = JSON.parse(localStorage.getItem('cathedra_reading_settings') || '{}');
+      if (settings.totalSilence) {
+        toast.info("Silêncio Total ativo. Desative para ouvir.");
+        return;
+      }
+    }
+
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);

@@ -7,6 +7,7 @@ import { AppRoute, User } from '../../types';
 import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -26,6 +27,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   const currentPath = location.pathname;
   const { lang, t } = useLang();
   const [cacheCount, setCacheCount] = useState<number | null>(null);
+  const { settings } = useReadingSettings();
 
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
@@ -155,20 +157,22 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               </Button>
             </div>
 
-            <div className="flex gap-2">
-              <Button 
-                variant={isSpeaking ? "default" : "outline"}
-                size="sm"
-                onClick={onToggleSpeak} 
-                className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  !isSpeaking ? 'bg-muted' : ''
-                }`}
-                aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
-              >
-                {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
-              </Button>
-            </div>
+            {!settings.totalSilence && (
+              <div className="flex gap-2">
+                <Button 
+                  variant={isSpeaking ? "default" : "outline"}
+                  size="sm"
+                  onClick={onToggleSpeak} 
+                  className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                    !isSpeaking ? 'bg-muted' : ''
+                  }`}
+                  aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
+                >
+                  {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
+                  <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
+                </Button>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-1 mt-1">
               {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (

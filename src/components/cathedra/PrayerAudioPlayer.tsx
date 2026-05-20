@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface PrayerAudioPlayerProps {
   prayers: { label: string; text: string }[];
@@ -12,6 +13,7 @@ interface PrayerAudioPlayerProps {
  * Uses the Web Speech Synthesis API — no external dependencies.
  */
 const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant = 'light' }) => {
+  const { settings } = useReadingSettings();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [rate, setRate] = useState(0.85);
@@ -91,6 +93,8 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
   const btnClass = isDark
     ? 'bg-secondary/20 text-secondary border-secondary/20 hover:bg-secondary/30'
     : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
+
+  if (settings.totalSilence) return null;
 
   return (
     <div className={`rounded-full border p-4 space-y-3 ${bgClass}`}>

@@ -240,7 +240,7 @@ const ReadingControlPanel: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold">Silêncio Total</p>
-                  <p className="text-[10px] text-muted-foreground italic">Oculta inclusive loaders e skeletons</p>
+                  <p className="text-[10px] text-muted-foreground italic">Oculta inclusive loaders/skeletons e desativa todos os áudios</p>
                 </div>
                 <input
                   type="checkbox"

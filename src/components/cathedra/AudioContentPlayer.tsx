@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { Loader2, Play, Pause, Headphones, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
 
 interface AudioContentPlayerProps {
@@ -28,6 +29,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isPremium } = useAuth();
+  const { settings } = useReadingSettings();
 
   useEffect(() => {
     // Cleanup audio URL on unmount
@@ -113,6 +115,8 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
       setIsPlaying(false);
     }
   };
+
+  if (settings.totalSilence) return null;
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>

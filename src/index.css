@@ -161,14 +161,31 @@
   
   .total-silence .animate-pulse,
   .total-silence .animate-spin,
-  .total-silence .skeleton {
+  .total-silence .animate-bounce,
+  .total-silence .animate-ping,
+  .total-silence [class*="animate-"],
+  .total-silence .skeleton,
+  .total-silence .loading-spinner,
+  .total-silence .loading-overlay {
     display: none !important;
   }
   
   .total-silence .sacred-skeleton,
-  .total-silence .home-skeleton {
+  .total-silence .home-skeleton,
+  .total-silence [data-sidebar="menu-skeleton"],
+  .total-silence [data-testid*="skeleton"] {
     visibility: hidden !important;
     opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* Audio exclusion in total silence */
+  .total-silence .audio-control,
+  .total-silence .audio-player,
+  .total-silence button:has(.lucide-headphones),
+  .total-silence button:has(.lucide-volume-2),
+  .total-silence .audio-button-container {
+    display: none !important;
   }
 
 

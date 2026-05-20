@@ -7,6 +7,7 @@ import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface AppHeaderProps {
   user: any;
@@ -28,6 +29,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useLang();
+  const { settings } = useReadingSettings();
   
   const isMainPage = [
     AppRoute.DASHBOARD,
@@ -242,15 +244,17 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             </select>
           </div>
 
-          <Button
-            variant={isSpeaking ? "default" : "outline"}
-            size="icon"
-            onClick={onToggleSpeak}
-            className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
-            title={isSpeaking ? t('audio_stop') : t('audio_read')}
-            aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
-            {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
-          </Button>
+          {!settings.totalSilence && (
+            <Button
+              variant={isSpeaking ? "default" : "outline"}
+              size="icon"
+              onClick={onToggleSpeak}
+              className={`hidden sm:flex lg:hidden ${isSpeaking ? 'animate-pulse' : ''}`}
+              title={isSpeaking ? t('audio_stop') : t('audio_read')}
+              aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}>
+              {isSpeaking ? <Icons.Stop className="w-4 h-4" /> : <Icons.Volume2 className="w-4 h-4" />}
+            </Button>
+          )}
 
           <Button
             variant="outline"
