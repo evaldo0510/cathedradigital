@@ -137,12 +137,23 @@ const AdminSeoTab: React.FC = () => {
         <div className="md:col-span-2 space-y-6">
           <Card className="border-border/50 shadow-sm overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/50">
-              <div className="flex items-center gap-2 text-primary">
-                <Globe className="w-5 h-5" />
-                <div>
-                  <CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CardTitle>
-                  <CardDescription>Gerencie meta tags, títulos e indexação global.</CardDescription>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-primary">
+                  <Globe className="w-5 h-5" />
+                  <div>
+                    <CardTitle className="text-lg font-serif">Configurações Técnicas de SEO</CardTitle>
+                    <CardDescription>Gerencie meta tags, títulos e indexação global.</CardDescription>
+                  </div>
                 </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full gap-2 border-primary/20 hover:bg-primary/5"
+                  onClick={() => navigate(AppRoute.SEO_VERIFY)}
+                >
+                  <Eye className="w-4 h-4" />
+                  Auditoria de Metadados
+                </Button>
               </div>
             </CardHeader>
             <CardContent className="p-6 space-y-6">
