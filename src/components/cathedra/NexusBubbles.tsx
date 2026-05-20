@@ -150,11 +150,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           isSelected={open}
           isSuggested={isSuggested}
           size={size}
-          onClick={() => {
-            if (navigateOnClick) {
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+            } else if (navigateOnClick) {
               navigate(`${AppRoute.TEMAS}/${tag.slug}`);
             }
           }} 
+
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
