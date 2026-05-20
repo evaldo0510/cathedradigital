@@ -18,6 +18,8 @@ import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
+import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 const SPIRITUAL_GUIDANCE = [
