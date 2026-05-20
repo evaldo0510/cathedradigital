@@ -32,6 +32,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { ArrowLeft, History } from 'lucide-react';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -549,6 +550,17 @@ const Bible: React.FC = () => {
               <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
               <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
             </div>
+            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => navigate(lastReadMark.url)}
+                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+              >
+                <History className="w-4 h-4" />
+                <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Voltar ao ponto salvo</span>
+              </Button>
+            )}
           </div>
 
         {/* Highlighted verse indicator (when ?v= is active) */}

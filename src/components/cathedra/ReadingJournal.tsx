@@ -82,7 +82,7 @@ const ReadingJournal: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 space-y-8 min-h-screen pb-32">
-      <SEOHead title="Diário & Histórico | Cathedra" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." />
+      <SEOHead title="Diário & Histórico | Cathedra" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." path="/diario" />
       
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
