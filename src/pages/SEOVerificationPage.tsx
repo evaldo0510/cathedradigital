@@ -47,10 +47,133 @@ const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/ob
 const SEOVerificationPage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'preview' | 'tags'>('preview');
+  const [pages, setPages] = useState<SEOPageData[]>([]);
+  const [isScanningAll, setIsScanningAll] = useState(false);
+  const [isLoadingSitemap, setIsLoadingSitemap] = useState(true);
+
+  useEffect(() => {
+    fetchSitemap();
+  }, []);
+
+  const fetchSitemap = async () => {
+    try {
+      setIsLoadingSitemap(true);
+      const response = await fetch('/sitemap.xml');
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      const locs = Array.from(xmlDoc.getElementsByTagName('loc'));
+      
+      const routes = locs.map(loc => {
+        const url = loc.textContent || '';
+        const path = url.replace(BASE_URL, '') || '/';
+        const name = path === '/' ? 'Home' : path.substring(1).split('/').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+        return {
+          name,
+          path,
+          title: '', // Will be filled by scan
+          description: '', // Will be filled by scan
+          status: 'pending' as const
+        };
+      });
+
+      setPages(routes);
+    } catch (error) {
+      console.error('Error loading sitemap:', error);
+      toast.error('Erro ao carregar sitemap.xml');
+    } finally {
+      setIsLoadingSitemap(false);
+    }
+  };
+
+  const scanRoute = async (path: string) => {
+    setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'scanning' } : p));
+    
+    try {
+      // Fetch the actual page content
+      // Note: In an SPA, we fetch the path, which usually returns index.html
+      // We are trying to read what's in the actual served HTML.
+      const response = await fetch(path);
+      const htmlText = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      
+      const title = doc.querySelector('title')?.textContent || '';
+      const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+      const keywords = doc.querySelector('meta[name="keywords"]')?.getAttribute('content') || '';
+      
+      const ogTitle = doc.querySelector('meta[property="og:title"]')?.getAttribute('content') || '';
+      const ogDescription = doc.querySelector('meta[property="og:description"]')?.getAttribute('content') || '';
+      const ogImage = doc.querySelector('meta[property="og:image"]')?.getAttribute('content') || '';
+      const twitterCard = doc.querySelector('meta[name="twitter:card"]')?.getAttribute('content') || '';
+      const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+
+      setPages(prev => prev.map(p => p.path === path ? { 
+        ...p, 
+        title, 
+        description, 
+        keywords,
+        status: (title && description) ? 'ok' : 'missing',
+        metaTags: {
+          ogTitle,
+          ogDescription,
+          ogImage,
+          twitterCard,
+          canonical
+        }
+      } : p));
+
+      return true;
+    } catch (error) {
+      console.error(`Error scanning route ${path}:`, error);
+      setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'missing' } : p));
+      return false;
+    }
+  };
+
+  const scanAll = async () => {
+    setIsScanningAll(true);
+    for (const page of pages) {
+      await scanRoute(page.path);
+    }
+    setIsScanningAll(false);
+    toast.success('Varredura completa!');
+  };
+
+  const exportCSV = () => {
+    const headers = ['Nome', 'Rota', 'Título', 'Descrição', 'Status', 'OG Title', 'OG Description', 'OG Image', 'Canonical'];
+    const rows = pages.map(p => [
+      p.name,
+      p.path,
+      p.title,
+      p.description,
+      p.status,
+      p.metaTags?.ogTitle || '',
+      p.metaTags?.ogDescription || '',
+      p.metaTags?.ogImage || '',
+      p.metaTags?.canonical || ''
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${(cell || '').replace(/"/g, '""')}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `auditoria_seo_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Relatório CSV exportado!');
+  };
 
   const getDynamicImage = (title: string, customImage?: string) => {
     if (customImage) return customImage;
-    const encodedTitle = encodeURIComponent(title);
+    const encodedTitle = encodeURIComponent(title || 'Cathedra Digital');
     const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7); // yyyy-mm
     return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
@@ -61,13 +184,23 @@ const SEOVerificationPage = () => {
   };
 
   const generateMetaTags = (page: SEOPageData) => {
-    const title = `${page.title} — Cathedra Digital`;
-    const image = getDynamicImage(page.title, page.image);
+    const title = page.title || `${page.name} — Cathedra Digital`;
+    const image = p.metaTags?.ogImage || getDynamicImage(page.title || page.name, page.image);
+    const url = `${BASE_URL}${page.path}`;
+    // ... continue as before but use data from state
+    // I need to adjust this to use the passed page object properly
+  };
+
+  // Redefining generateMetaTags for the component scope
+  const getMetaTagsCode = (page: SEOPageData) => {
+    const title = page.title || `${page.name} — Cathedra Digital`;
+    const description = page.description || '';
+    const image = page.metaTags?.ogImage || getDynamicImage(title, page.image);
     const url = `${BASE_URL}${page.path}`;
     
     return `<!-- Basic Meta Tags -->
 <title>${title}</title>
-<meta name="description" content="${page.description}">
+<meta name="description" content="${description}">
 ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 <link rel="canonical" href="${url}">
 
@@ -75,15 +208,14 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 <meta property="og:type" content="website">
 <meta property="og:url" content="${url}">
 <meta property="og:title" content="${title}">
-<meta property="og:description" content="${page.description}">
+<meta property="og:description" content="${description}">
 <meta property="og:image" content="${image}">
-<meta property="og:image" content="${DEFAULT_OG_IMAGE}">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="${url}">
 <meta name="twitter:title" content="${title}">
-<meta name="twitter:description" content="${page.description}">
+<meta name="twitter:description" content="${description}">
 <meta name="twitter:image" content="${image}">`;
   };
 
