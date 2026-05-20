@@ -90,7 +90,7 @@ const cardVariants = {
 
 const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [journeys, setJourneys] = useState<any[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
   const [stepsCountMap, setStepsCountMap] = useState<Record<string, number>>({});
