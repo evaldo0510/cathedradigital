@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
+import { SpiritualContinuity } from './SpiritualContinuity';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -95,7 +96,7 @@ const HojePage: React.FC = () => {
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  const { isLoading: loadingStats } = useDashboardData(user as any);
+  const { nextUp, isLoading: loadingStats } = useDashboardData(user as any);
 
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
@@ -112,17 +113,6 @@ const HojePage: React.FC = () => {
     return lang === 'pt' ? 'Boa noite' : 'Good evening';
   }, [hour, lang]);
 
-  const nextUp = useMemo(() => {
-    if (enhancedRec) return enhancedRec;
-    
-    if (activeJourney) return {
-      type: 'journey',
-      title: activeJourney.title,
-      subtitle: 'Continuar Jornada',
-      route: journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`
-    };
-    return null;
-  }, [enhancedRec, activeJourney, journeyStep]);
 
   if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
@@ -161,48 +151,15 @@ const HojePage: React.FC = () => {
         </motion.div>
 
 
-        {/* PRÓXIMO PASSO - RECOMENDAÇÃO DINÂMICA */}
-        {nextUp && (
-          <motion.section 
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-4xl mx-auto w-full"
-          >
-            <div 
-              onClick={() => navigate(nextUp.route)}
-              className="p-12 md:p-16 rounded-[4rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.02] transition-all duration-1000 cursor-pointer group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-16 opacity-[0.01] group-hover:opacity-[0.03] transition-opacity duration-1000">
-                <Icons.Sparkles className="w-48 h-48 text-primary" />
-              </div>
-              
-              <div className="space-y-10 relative z-10 text-center">
-                <div className="flex flex-col items-center gap-4">
-                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/20">
-                    VIA SAPIENTIAE
-                  </span>
-                  <div className="w-px h-8 bg-primary/10" />
-                </div>
-                
-                <div className="space-y-4">
-                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-display text-primary leading-tight">{nextUp.title}</h3>
-                  <p className="text-xl text-primary/40 font-serif italic">{nextUp.subtitle}</p>
-                </div>
-                
-                {nextUp && 'description' in nextUp && (
-                  <p className="text-base leading-relaxed text-muted-foreground/60 max-w-2xl mx-auto font-serif italic">
-                    {(nextUp as any).description}
-                  </p>
-                )}
-                
-                <div className="pt-8 flex flex-col items-center gap-4 text-primary/30 font-black uppercase tracking-[0.4em] text-[9px] group-hover:text-primary transition-colors duration-1000">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary animate-pulse" />
-                  <span>Proseguir</span>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-        )}
+        {/* CONTINUIDADE ESPIRITUAL - RETOMADA DINÂMICA */}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="max-w-6xl mx-auto w-full"
+        >
+          <SpiritualContinuity data={useDashboardData(user as any).nextUp} isLoading={loadingStats} profile={profile} />
+        </motion.section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           <div className="lg:col-span-8 stack-spacing">
