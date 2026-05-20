@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import { Loader2, Play, Pause, Headphones, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
 
 interface AudioContentPlayerProps {
