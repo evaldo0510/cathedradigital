@@ -148,14 +148,29 @@ const JornadaStepPage: React.FC = () => {
       }
 
       setCompleted(true);
-      confetti({
-        particleCount: 150,
-        spread: 90,
-        origin: { y: 0.7 },
-        colors: ['#d4af37', '#e8c547', '#b8860b', '#8B5CF6', '#4ECDC4'],
-      });
     } catch (err) {
       console.error('Failed to complete step:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveReflection = async () => {
+    if (!user || !reflection.trim()) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase.from('reading_reflections').insert([{
+        user_id: user.id,
+        reading_type: 'journey',
+        content: reflection.trim(),
+        context_id: `journey_${journeyId}_step_${stepId}`
+      }]);
+
+      if (error) throw error;
+      toast.success("Reflexão salva no seu perfil.");
+    } catch (err) {
+      console.error('Failed to save reflection:', err);
+      toast.error("Erro ao salvar reflexão.");
     } finally {
       setSaving(false);
     }
