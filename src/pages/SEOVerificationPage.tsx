@@ -71,8 +71,8 @@ const SEOVerificationPage = () => {
         return {
           name,
           path,
-          title: '', // Will be filled by scan
-          description: '', // Will be filled by scan
+          title: '', 
+          description: '', 
           status: 'pending' as const
         };
       });
@@ -90,9 +90,6 @@ const SEOVerificationPage = () => {
     setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'scanning' } : p));
     
     try {
-      // Fetch the actual page content
-      // Note: In an SPA, we fetch the path, which usually returns index.html
-      // We are trying to read what's in the actual served HTML.
       const response = await fetch(path);
       const htmlText = await response.text();
       const parser = new DOMParser();
@@ -133,6 +130,7 @@ const SEOVerificationPage = () => {
 
   const scanAll = async () => {
     setIsScanningAll(true);
+    // Scan in sequence to avoid overloading
     for (const page of pages) {
       await scanRoute(page.path);
     }
@@ -141,7 +139,7 @@ const SEOVerificationPage = () => {
   };
 
   const exportCSV = () => {
-    const headers = ['Nome', 'Rota', 'Título', 'Descrição', 'Status', 'OG Title', 'OG Description', 'OG Image', 'Canonical'];
+    const headers = ['Nome', 'Rota', 'Título', 'Descrição', 'Status', 'OG Title', 'OG Description', 'OG Image', 'Twitter Card', 'Canonical'];
     const rows = pages.map(p => [
       p.name,
       p.path,
@@ -151,6 +149,7 @@ const SEOVerificationPage = () => {
       p.metaTags?.ogTitle || '',
       p.metaTags?.ogDescription || '',
       p.metaTags?.ogImage || '',
+      p.metaTags?.twitterCard || '',
       p.metaTags?.canonical || ''
     ]);
 
@@ -183,11 +182,6 @@ const SEOVerificationPage = () => {
     toast.success(`${label} copiado!`);
   };
 
-  const generateMetaTags = (page: SEOPageData) => {
-    return getMetaTagsCode(page);
-  };
-
-  // Redefining generateMetaTags for the component scope
   const getMetaTagsCode = (page: SEOPageData) => {
     const title = page.title || `${page.name} — Cathedra Digital`;
     const description = page.description || '';
@@ -209,6 +203,27 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="${url}">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${description}">
+<meta name="twitter:image" content="${image}">`;
+  };
+
+  const getSocialTagsOnly = (page: SEOPageData, type: 'facebook' | 'twitter') => {
+    const title = page.title || `${page.name} — Cathedra Digital`;
+    const description = page.description || '';
+    const image = page.metaTags?.ogImage || getDynamicImage(title, page.image);
+    const url = `${BASE_URL}${page.path}`;
+
+    if (type === 'facebook') {
+      return `<meta property="og:type" content="website">
+<meta property="og:url" content="${url}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description}">
+<meta property="og:image" content="${image}">`;
+    }
+
+    return `<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="${url}">
 <meta name="twitter:title" content="${title}">
 <meta name="twitter:description" content="${description}">
@@ -313,7 +328,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
                   {page.status === 'pending' && <Badge variant="secondary">Pendente</Badge>}
                   {page.status === 'missing' && <Badge variant="destructive">Incompleto</Badge>}
-                  {page.status === 'scanning' && <Badge className="animate-pulse">Varendo...</Badge>}
+                  {page.status === 'scanning' && <Badge className="animate-pulse">Varrendo...</Badge>}
                 </div>
                 <div className="flex gap-2">
                   <Button 
@@ -348,10 +363,10 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
                               </div>
                               <div className="text-[20px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-tight mb-1">
-                                {page.title} — Cathedra Digital
+                                {page.title || 'Título não detectado'} — Cathedra Digital
                               </div>
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] line-clamp-2">
-                                {page.description}
+                                {page.description || 'Descrição não detectada. Execute o Scan para ler os metadados reais da página.'}
                               </div>
                             </div>
                           </div>
@@ -360,8 +375,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                             <div className="p-3 bg-muted/30 rounded-lg border border-border/30">
                               <div className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Title Length</div>
                               <div className="flex items-center justify-between">
-                                <span className="font-mono text-lg">{page.title.length + 18}</span>
-                                {page.title.length + 18 <= 60 ? (
+                                <span className="font-mono text-lg">{(page.title?.length || 0) + 18}</span>
+                                {(page.title?.length || 0) + 18 <= 60 && (page.title?.length || 0) > 0 ? (
                                   <CheckCircle2 className="w-4 h-4 text-green-500" />
                                 ) : (
                                   <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -372,8 +387,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                             <div className="p-3 bg-muted/30 rounded-lg border border-border/30">
                               <div className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Desc Length</div>
                               <div className="flex items-center justify-between">
-                                <span className="font-mono text-lg">{page.description.length}</span>
-                                {page.description.length <= 160 ? (
+                                <span className="font-mono text-lg">{page.description?.length || 0}</span>
+                                {(page.description?.length || 0) <= 160 && (page.description?.length || 0) >= 120 ? (
                                   <CheckCircle2 className="w-4 h-4 text-green-500" />
                                 ) : (
                                   <AlertCircle className="w-4 h-4 text-amber-500" />
@@ -392,44 +407,61 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
                               <Share2 className="w-3 h-3" /> Facebook / WhatsApp
                             </div>
-                            <Badge variant="secondary" className="text-[9px]">Cache Active</Badge>
+                            <Button 
+                              variant="ghost" 
+                              size="xs" 
+                              className="h-6 px-2 text-[10px] gap-1"
+                              onClick={() => copyToClipboard(getSocialTagsOnly(page, 'facebook'), 'Tags Facebook')}
+                            >
+                              <Copy className="w-3 h-3" /> Copiar Tags
+                            </Button>
                           </div>
                           <div className="border border-border/50 rounded-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-md">
                             <div className="aspect-[1.91/1] relative group">
                               <img 
-                                src={getDynamicImage(page.title, page.image)} 
+                                src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
                                 alt="OG Preview" 
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute top-2 right-2 flex gap-1">
-                                <Button size="icon" variant="secondary" className="h-7 w-7 rounded-full opacity-80" onClick={() => window.open(getDynamicImage(page.title, page.image), '_blank')}>
+                                <Button size="icon" variant="secondary" className="h-7 w-7 rounded-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
                                   <ImageIcon className="h-3.5 w-3.5" />
                                 </Button>
                               </div>
                             </div>
                             <div className="p-3 border-t border-border/50 bg-[#f2f3f5] dark:bg-[#242526]">
                               <div className="text-[11px] text-muted-foreground uppercase truncate tracking-tight">CATHEDRADIGITAL.COM.BR</div>
-                              <div className="text-sm font-bold truncate mt-0.5">{page.title} — Cathedra Digital</div>
-                              <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{page.description}</div>
+                              <div className="text-sm font-bold truncate mt-0.5">{page.title || page.name} — Cathedra Digital</div>
+                              <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{page.description || 'Descrição não disponível'}</div>
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-1">
-                            <Twitter className="w-3 h-3" /> Twitter Card (Large)
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-1">
+                              <Twitter className="w-3 h-3" /> Twitter Card (Large)
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="xs" 
+                              className="h-6 px-2 text-[10px] gap-1"
+                              onClick={() => copyToClipboard(getSocialTagsOnly(page, 'twitter'), 'Tags Twitter')}
+                            >
+                              <Copy className="w-3 h-3" /> Copiar Tags
+                            </Button>
                           </div>
                           <div className="border border-border/40 rounded-2xl overflow-hidden bg-white dark:bg-[#15202b] shadow-sm">
                             <div className="aspect-[1.91/1] bg-muted">
                               <img 
-                                src={getDynamicImage(page.title, page.image)} 
+                                src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
                                 alt="Twitter Preview" 
                                 className="w-full h-full object-cover"
                               />
                             </div>
                             <div className="p-3 border-t border-border/20">
-                              <div className="text-sm font-bold truncate">{page.title}</div>
-                              <div className="text-[13px] text-muted-foreground line-clamp-2 mt-0.5">{page.description}</div>
+                              <div className="text-sm font-bold truncate">{page.title || page.name}</div>
+                              <div className="text-[13px] text-muted-foreground line-clamp-2 mt-0.5">{page.description || 'Descrição não disponível'}</div>
                               <div className="text-xs text-muted-foreground mt-1 flex items-center">
                                 <Globe className="w-3 h-3 mr-1 opacity-50" />
                                 cathedradigital.com.br
@@ -448,14 +480,14 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       <CardTitle className="text-sm">Generated HTML Tags</CardTitle>
                       <CardDescription className="text-xs">Paste these into your CMS or manual header if needed.</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => copyToClipboard(generateMetaTags(page), 'Tags HTML')}>
+                    <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
                       <Copy className="w-4 h-4 mr-2" />
                       Copiar Código
                     </Button>
                   </CardHeader>
                   <CardContent className="p-0">
                     <pre className="p-6 bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
-                      {generateMetaTags(page)}
+                      {getMetaTagsCode(page)}
                     </pre>
                   </CardContent>
                 </Card>
@@ -480,12 +512,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Home).
               </p>
               <p>
-                <strong>3. Limpeza Manual:</strong> Se você alterou o título e a imagem não atualizou nas redes sociais, use o "Facebook Sharing Debugger" e clique em "Scrape Again".
+                <strong>3. Auditoria Real:</strong> Use o botão <strong>Scan</strong> para ler o HTML que está sendo servido atualmente para cada rota. Isso valida se o <code>react-helmet-async</code> está configurado corretamente para aquela página.
               </p>
-              <div className="flex gap-3 pt-4">
-                <Button variant="outline" size="sm" onClick={() => window.open('https://cards-dev.twitter.com/validator', '_blank')}>Twitter Validator</Button>
-                <Button variant="outline" size="sm" onClick={() => window.open('https://www.linkedin.com/post-inspector/', '_blank')}>LinkedIn Inspector</Button>
-              </div>
             </CardContent>
           </Card>
         </div>
