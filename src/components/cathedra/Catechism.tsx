@@ -403,26 +403,26 @@ const Catechism: React.FC = () => {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
         <BackToThemeBanner />
         {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+          <Button onClick={() => navigate('/')} className="mb-6 flex items-center gap-1.5 text-xs text-primary hover:underline">
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
           </Button>
         )}
-        <div className="flex items-center gap-4">
+        
+        <div className="flex items-center gap-4 mb-8">
           <Button 
             onClick={goBack} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="p-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
             aria-label="Voltar para o Sumário"
           >
-            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
+            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </Button>
 
           <Button 
             onClick={goToExplorer} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="px-4 py-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             title="Explorar por Temas"
           >
             <Icons.Search className="w-4 h-4 text-primary" />
@@ -431,9 +431,10 @@ const Catechism: React.FC = () => {
 
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
+            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
+
           <div className="flex items-center gap-2">
             <ReadingControlPanel />
             <Button 
@@ -494,50 +495,76 @@ const Catechism: React.FC = () => {
 
         </div>
 
-        {/* Cross references */}
-        {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-          <CrossReferencePanel
-            type="catechism"
-            bibleRefs={crossRefs}
-            documents={docsRefs}
-            onNavigateToBible={handleNavigateToBible}
-            onNavigateToDoc={handleNavigateToDoc}
-          />
-        )}
+        <div className="flex flex-col xl:flex-row gap-12 items-start mt-12">
+          {/* Elegant Side Navigation for paragraphs (Desktop) */}
+          <aside className="reader-navigation-aside">
+            <div className="space-y-4">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
+              <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => jumpToParagraph(p)}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
+                      ${currentParagraph === p 
+                        ? 'bg-primary text-white shadow-soft' 
+                        : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                  >
+                    <span className="opacity-50 text-[10px] w-8">§{p}</span>
+                    <span className="truncate text-left flex-1">Parágrafo {p}</span>
+                    {paragraphsRead.has(p) && (
+                      <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
+                    )}
+                  </button>
+                ))}
+              </nav>
+            </div>
+          </aside>
 
-        <div className="bg-card border border-border rounded-premium p-6 md:p-10 space-y-12">
-          <div className="flex flex-col gap-10">
-            {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-              <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={paragraphsRead} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} />
-            ))}
+          <div className="flex-1 w-full space-y-8">
+            <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
+              <div className="p-8 md:p-16 lg:p-20">
+                <div className="space-y-16">
+                  {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                    <LazyParagraph 
+                      key={p} 
+                      paragraph={p} 
+                      currentParagraph={currentParagraph}
+                      paragraphsRead={paragraphsRead}
+                      isFavorite={isFavorite}
+                      toggleFavorite={toggleFavorite}
+                      handleNavigateToBible={handleNavigateToBible}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Cross References & Docs - Below the reader for focus */}
+            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+              <div className="w-full max-w-[72ch] mx-auto">
+                <CrossReferencePanel 
+                  type="catechism"
+                  bibleRefs={crossRefs} 
+                  documents={docsRefs}
+                  onNavigateToBible={handleNavigateToBible}
+                  onNavigateToDoc={handleNavigateToDoc}
+                />
+              </div>
+            )}
+            
+            <LogosAI 
+              isOpen={showLogosAI} 
+              onClose={() => setShowLogosAI(false)} 
+              context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+              type="catechism"
+            />
           </div>
         </div>
-
-        {/* Quick nav - Anchor links to jump between paragraphs */}
-        <div className="flex flex-wrap gap-2 justify-center py-6 border-t border-border mt-8">
-          <span className="w-full text-center text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2">Saltar para Parágrafo</span>
-          {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
-            <Button key={p} 
-              onClick={() => jumpToParagraph(p)}
-              className={`w-10 h-10 rounded-full text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110 z-10' : 
-                paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
-                'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
-              }`}>
-              {p}
-              {paragraphsRead.has(p) && <Icons.Check className="w-2 h-2 absolute top-1 right-1" />}
-            </Button>
-          ))}
-        </div>
-        <LogosAI 
-          isOpen={showLogosAI} 
-          onClose={() => setShowLogosAI(false)} 
-          context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
-          type="catechism"
-        />
       </div>
     );
   }
+
 
   // Section selection
   if (viewMode === 'sections' && selectedPart) {

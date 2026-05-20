@@ -30,34 +30,39 @@ const ReadingControlPanel: React.FC = () => {
             <span className="hidden sm:inline">Configurações</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-64 p-4 space-y-4" align="end">
-          <DropdownMenuLabel className="px-0 pt-0 text-premium-tiny font-black uppercase tracking-widest">Aparência do Texto</DropdownMenuLabel>
+        <DropdownMenuContent className="w-80 p-6 space-y-8 rounded-[2rem] shadow-premium-hover border-border/40" align="end">
+          <div className="text-center space-y-1">
+            <DropdownMenuLabel className="px-0 pt-0 text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Sanctuarium Scriptis</DropdownMenuLabel>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-widest italic">Ajustes de Leitura</p>
+          </div>
           
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Temas</p>
-            <div className="grid grid-cols-4 gap-2">
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Temas Atmosféricos</p>
+            <div className="grid grid-cols-4 gap-4">
               {themes.map((t) => (
                 <button
                   key={t.id}
                   onClick={() => updateSettings({ theme: t.id as any })}
-                  className={`w-full aspect-square rounded-full border-2 ${t.color} ${
-                    settings.theme === t.id ? 'ring-2 ring-primary ring-offset-2' : ''
+                  className={`w-full aspect-square rounded-full border-2 transition-all duration-300 ${t.color} ${
+                    settings.theme === t.id ? 'ring-4 ring-primary/20 ring-offset-2 scale-110' : 'hover:scale-105 opacity-80 hover:opacity-100'
                   }`}
                   title={t.label}
-                />
+                >
+                   {settings.theme === t.id && <Icons.Check className={`w-4 h-4 mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
+                </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Tamanho da Fonte</p>
-            <div className="flex bg-muted rounded-full p-1">
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Escala Tipográfica</p>
+            <div className="flex bg-muted/50 rounded-full p-1.5 gap-1">
               {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
                 <button
                   key={s}
                   onClick={() => updateSettings({ fontSize: s })}
-                  className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                    settings.fontSize === s ? 'bg-background shadow-soft' : 'text-muted-foreground'
+                  className={`flex-1 py-2 text-xs font-bold rounded-full transition-all ${
+                    settings.fontSize === s ? 'bg-background text-primary shadow-soft scale-105' : 'text-muted-foreground/60 hover:text-primary hover:bg-background/40'
                   }`}
                 >
                   {s === 'small' ? 'A' : s === 'medium' ? 'A+' : s === 'large' ? 'A++' : 'A+++'}
@@ -66,58 +71,76 @@ const ReadingControlPanel: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Tipografia</p>
-            <div className="flex bg-muted rounded-full p-1">
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Estilo & Ritmo</p>
+            <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => updateSettings({ fontFamily: 'serif' })}
-                className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                  settings.fontFamily === 'serif' ? 'bg-background shadow-soft' : 'text-muted-foreground'
+                className={`flex items-center justify-center gap-2 py-3 rounded-2xl border transition-all font-serif ${
+                  settings.fontFamily === 'serif' ? 'bg-primary/5 border-primary/30 text-primary shadow-soft' : 'bg-muted/30 border-transparent text-muted-foreground hover:bg-muted/50'
                 }`}
               >
-                Serifada
+                <Icons.Feather className="w-4 h-4" /> Serifada
               </button>
               <button
                 onClick={() => updateSettings({ fontFamily: 'sans' })}
-                className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                  settings.fontFamily === 'sans' ? 'bg-background shadow-soft' : 'text-muted-foreground'
+                className={`flex items-center justify-center gap-2 py-3 rounded-2xl border transition-all ${
+                  settings.fontFamily === 'sans' ? 'bg-primary/5 border-primary/30 text-primary shadow-soft' : 'bg-muted/30 border-transparent text-muted-foreground hover:bg-muted/50'
                 }`}
               >
-                Sem Serifa
+                <Icons.Type className="w-4 h-4" /> Sem Serifa
               </button>
+            </div>
+            
+            <div className="flex bg-muted/50 rounded-full p-1.5 gap-1">
+              {(['snug', 'normal', 'relaxed'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => updateSettings({ lineHeight: l })}
+                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${
+                    settings.lineHeight === l ? 'bg-background text-primary shadow-soft scale-105' : 'text-muted-foreground/60 hover:text-primary hover:bg-background/40'
+                  }`}
+                >
+                  {l === 'snug' ? 'Compacto' : l === 'normal' ? 'Padrão' : 'Silencioso'}
+                </button>
+              ))}
             </div>
           </div>
 
-          <DropdownMenuSeparator />
+          <DropdownMenuSeparator className="bg-border/20" />
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-xs font-bold">Silêncio Visual</p>
-                <p className="text-[10px] text-muted-foreground">Oculta distrações laterais</p>
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Ambiente</p>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Silêncio Visual</p>
+                  <p className="text-[10px] text-muted-foreground italic">Foco total no sagrado</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.visualSilence}
+                  onChange={(e) => updateSettings({ visualSilence: e.target.checked })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
               </div>
-              <input
-                type="checkbox"
-                checked={settings.visualSilence}
-                onChange={(e) => updateSettings({ visualSilence: e.target.checked })}
-                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-            </div>
 
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <p className="text-xs font-bold">Reduzir Animações</p>
-                <p className="text-[10px] text-muted-foreground">Movimento mais calmo</p>
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Modo Contemplativo</p>
+                  <p className="text-[10px] text-muted-foreground italic">Suaviza cores e sombras</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.contemplativeMode}
+                  onChange={(e) => updateSettings({ contemplativeMode: e.target.checked })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
               </div>
-              <input
-                type="checkbox"
-                checked={settings.reduceAnimations}
-                onChange={(e) => updateSettings({ reduceAnimations: e.target.checked })}
-                className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
             </div>
           </div>
         </DropdownMenuContent>
+
       </DropdownMenu>
     </div>
   );

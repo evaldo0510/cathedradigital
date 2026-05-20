@@ -500,6 +500,23 @@
 .font-family-serif .reader-text { font-family: 'Merriweather', serif; }
 .font-family-sans .reader-text { font-family: 'Inter', sans-serif; }
 
+.line-height-snug .reader-text { line-height: 1.5; }
+.line-height-normal .reader-text { line-height: 1.7; }
+.line-height-relaxed .reader-text { line-height: 2.0; }
+
+.reader-container {
+  @apply max-w-[72ch] mx-auto px-4 sm:px-8 py-10 md:py-20;
+}
+
+.reader-section-header {
+  @apply mb-12 border-b border-border/20 pb-8;
+}
+
+.reader-navigation-aside {
+  @apply hidden xl:flex flex-col gap-4 sticky top-32 w-64 -ml-72 self-start;
+}
+
+
 .line-height-snug .reader-text { line-height: 1.4; }
 .line-height-normal .reader-text { line-height: 1.7; }
 .line-height-relaxed .reader-text { line-height: 2.1; }
