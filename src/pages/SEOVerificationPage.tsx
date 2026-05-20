@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,10 @@ import {
   Globe,
   Twitter,
   Facebook,
-  Code
+  Code,
+  Download,
+  Loader2,
+  FileText
 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useNavigate } from 'react-router-dom';
@@ -28,9 +31,15 @@ interface SEOPageData {
   description: string;
   image?: string;
   keywords?: string;
+  status?: 'pending' | 'ok' | 'missing' | 'scanning';
+  metaTags?: {
+    ogTitle?: string;
+    ogDescription?: string;
+    ogImage?: string;
+    twitterCard?: string;
+    canonical?: string;
+  };
 }
-
-// Removed SEO_PAGES constant as we will load it from sitemap.xml
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
 const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png';
