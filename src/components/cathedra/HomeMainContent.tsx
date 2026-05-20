@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { HomeCard } from './HomeCard';
 import HomeMainDoors from './HomeMainDoors';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare, History, BookOpen } from 'lucide-react';
-import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
-
+import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
 
 interface HomeMainContentProps {
   user: any;
@@ -19,54 +17,38 @@ interface HomeMainContentProps {
 const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
-  const [history, setHistory] = useState<string[]>([]);
+  const logosInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const savedMessages = localStorage.getItem('cathedra_logos_messages');
-    if (savedMessages) {
-      const messages = JSON.parse(savedMessages);
-      // Get unique user messages, last 5
-      const userQuestions = messages
-        .filter((m: any) => m.role === 'user')
-        .map((m: any) => m.content)
-        .reverse();
-      const uniqueQuestions = Array.from(new Set(userQuestions)).slice(0, 5) as string[];
-      setHistory(uniqueQuestions);
-    }
-  }, []);
-
-  const dayOfYear = useMemo(() => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), 0, 0);
-    return Math.floor((now.getTime() - start.getTime()) / 86400000);
-  }, []);
-
-  const handleLogosSearch = (e?: React.FormEvent, customQuery?: string) => {
-    if (e) e.preventDefault();
-    const queryToUse = customQuery || logosQuery;
-    
-    if (queryToUse.trim()) {
-      let finalQuery = queryToUse;
-      
-      // Contextual summarization logic
-      if (queryToUse === 'Resumir leitura atual') {
-        const verse = DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
-        const reflection = DAILY_REFLECTIONS[dayOfYear % DAILY_REFLECTIONS.length];
-        finalQuery = `Por favor, faça um resumo espiritual e contextual deste versículo e reflexão de hoje: "${verse.text}" (${verse.ref}). Reflexão: "${reflection}"`;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Shortcut Alt+L for Logos IA
+      if (e.altKey && e.key.toLowerCase() === 'l') {
+        e.preventDefault();
+        logosInputRef.current?.focus();
+        logosInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+    };
 
-      // Save to local chat history so it appears in the chat bubble too
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleLogosSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    
+    if (logosQuery.trim()) {
+      // Save to local chat history
       const savedMessages = localStorage.getItem('cathedra_logos_messages');
       const messages = savedMessages ? JSON.parse(savedMessages) : [];
       const newMessage = {
         id: Date.now().toString(),
         role: 'user',
-        content: finalQuery,
+        content: logosQuery,
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
       
-      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(finalQuery)}`);
+      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
     }
   };
 
@@ -74,7 +56,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   return (
     <div className="app-container stack-spacing pb-32">
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
-      <section className="space-y-16">
+      <section className="space-y-12 md:space-y-16">
         <div className="flex items-center gap-10">
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
@@ -87,7 +69,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
 
-      {/* LOGOS IA INTEGRADA */}
+      {/* LOGOS IA INTEGRADA - ACESSO ÚNICO E MINIMALISTA */}
       <section className="space-y-12">
         <div className="flex items-center gap-10">
           <div className="h-px flex-1 bg-border/30" />
@@ -98,85 +80,53 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         
         <HomeCard
-          className="p-10 md:p-16 lg:p-20 flex flex-col items-center gap-12 group relative overflow-hidden border-border/10"
+          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover"
         >
-          <div className="relative z-10 w-20 h-20 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
-            <Sparkles className="w-10 h-10" strokeWidth={1.5} />
+          <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
+            <Sparkles className="w-8 h-8" strokeWidth={1} />
           </div>
           
-          <div className="relative z-10 space-y-4 text-center max-w-2xl">
-            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
-            <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">
-              "A inteligência a serviço da fé, guiada pela Tradição viva da Igreja."
+          <div className="relative z-10 space-y-3 text-center max-w-2xl">
+            <h3 className="text-2xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed font-serif italic max-w-md mx-auto">
+              "A inteligência a serviço da fé."
             </p>
           </div>
 
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
             <div className="relative group/input">
               <Input
+                ref={logosInputRef}
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
-                placeholder="Pergunte sobre a Bíblia, Santos ou Teologia..."
-                className="h-16 pl-14 pr-32 rounded-premium border-border/20 bg-primary/[0.01] focus:bg-white transition-all text-lg placeholder:text-muted-foreground/30 font-serif italic"
+                placeholder="Pergunte sobre a fé..."
+                className="h-14 pl-12 pr-28 rounded-premium border-border/20 bg-background/50 focus:bg-background transition-all text-base placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
+                aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20" />
+              <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
               <button 
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 group/btn"
+                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 group/btn shadow-premium"
               >
-                Perguntar
+                Consultar
                 <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
             
-            <div className="mt-8 space-y-6 w-full">
-              {history.length > 0 && (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-primary/30 px-2">
-                    <History className="w-3 h-3" strokeWidth={1.5} />
-                    Consultas Recentes
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {history.map((item, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => handleLogosSearch(undefined, item)}
-                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-premium-sm hover:bg-white hover:shadow-soft"
-                      >
-                        {item.length > 35 ? item.slice(0, 35) + '...' : item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-primary/30 px-2">
-                  <BookOpen className="w-3 h-3" strokeWidth={1.5} />
-                  Sugestões de Contemplação
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {['Resumir leitura atual', 'Quem foi São Bento?', 'O que é a Graça?'].map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      type="button"
-                      onClick={() => handleLogosSearch(undefined, suggestion)}
-                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors px-3 py-1.5 border border-border/20 rounded-full hover:border-primary/20"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
+            <div className="mt-4 flex justify-center">
+              <div className="flex items-center gap-2 text-[8px] font-bold uppercase tracking-widest text-primary/20 px-2">
+                <kbd className="px-1.5 py-0.5 rounded bg-muted/50 border border-border/40">Alt</kbd>
+                <span>+</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-muted/50 border border-border/40">L</kbd>
+                <span className="ml-1">Atalho rápido</span>
               </div>
             </div>
           </form>
         </HomeCard>
-
       </section>
 
       {/* EM BREVE */}
-      <ComingSoonSection className="pt-24" />
+      <ComingSoonSection className="pt-16 md:pt-24" />
 
     </div>
   );
