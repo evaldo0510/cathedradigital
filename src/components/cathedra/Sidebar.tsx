@@ -27,6 +27,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   const currentPath = location.pathname;
   const { lang, t } = useLang();
   const [cacheCount, setCacheCount] = useState<number | null>(null);
+  const { settings } = useReadingSettings();
 
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
