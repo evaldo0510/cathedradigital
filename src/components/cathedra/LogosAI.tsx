@@ -61,83 +61,98 @@ const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClos
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, x: 300 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 300 }}
-          className="fixed right-0 top-0 bottom-0 w-full sm:w-[400px] bg-card border-l border-border z-[200] shadow-premium-hover flex flex-col"
-        >
-          <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <Icons.Search className="w-4 h-4 text-white" />
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-background/60 backdrop-blur-sm z-[190]"
+          />
+          <motion.div
+            initial={{ opacity: 0, x: 400 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 400 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed right-0 top-0 bottom-0 w-full sm:w-[450px] bg-card border-l border-border/10 z-[200] shadow-2xl flex flex-col"
+          >
+            <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/30">
+                  <Icons.Sparkles className="w-6 h-6" strokeWidth={0.5} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
+                  <p className="text-[10px] text-muted-foreground/40 uppercase font-black tracking-widest mt-1">Mestre Contemplativo</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary">Logos IA</h3>
-                <p className="text-[10px] text-muted-foreground uppercase font-medium">Sabedoria Contextual</p>
-              </div>
+              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/20 hover:text-primary transition-colors">
+                <Icons.ArrowDown className="w-5 h-5 rotate-[-90deg]" strokeWidth={1} />
+              </Button>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
-              <Icons.ArrowDown className="w-4 h-4 rotate-[-90deg]" />
-            </Button>
-          </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
-            {history.length === 0 && !selectedText && (
-              <div className="text-center py-12 space-y-4">
-                <Icons.Sparkles className="w-12 h-12 text-primary/20 mx-auto" />
-                <p className="text-sm text-muted-foreground font-serif italic">
-                  "No princípio era o Verbo..."<br/>
-                  Como posso ajudar na sua contemplação hoje?
+            <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-10 scrollbar-hide">
+              {history.length === 0 && !selectedText && (
+                <div className="text-center py-20 space-y-8">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/10 mx-auto animate-pulse" />
+                  <p className="text-lg text-muted-foreground/40 font-serif italic leading-relaxed max-w-[280px] mx-auto">
+                    "O silêncio é a primeira língua de Deus."<br/>
+                    <span className="text-sm uppercase tracking-widest font-black mt-4 block">Como posso iluminar sua jornada?</span>
+                  </p>
+                </div>
+              )}
+
+              {history.map((msg, i) => (
+                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700`}>
+                  <div className={`max-w-[90%] p-6 md:p-8 rounded-[2rem] text-base leading-relaxed ${
+                    msg.role === 'user' 
+                      ? 'bg-primary text-primary-foreground shadow-premium' 
+                      : 'bg-muted/30 border border-border/5 font-serif italic text-foreground/80'
+                  }`}>
+                    {msg.content}
+                  </div>
+                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/10 px-4">
+                    {msg.role === 'user' ? 'Peregrino' : 'Logos'}
+                  </span>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="flex justify-start animate-in fade-in duration-500">
+                  <div className="bg-muted/20 p-6 rounded-[2rem] flex gap-3">
+                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
+                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-8 md:p-10 border-t border-border/5 bg-muted/[0.02]">
+              <form onSubmit={handleQuery} className="relative group">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Busque por luz e entendimento..."
+                  className="w-full bg-background/50 border border-border/10 rounded-full py-5 px-8 pr-16 text-base focus:bg-background focus:ring-1 focus:ring-primary/5 outline-none transition-all placeholder:text-muted-foreground/20 font-serif italic"
+                />
+                <button 
+                  type="submit"
+                  disabled={isLoading}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-30 shadow-premium"
+                >
+                  <Icons.ArrowDown className="w-5 h-5 rotate-[-90deg]" />
+                </button>
+              </form>
+              <div className="mt-8 flex flex-col items-center gap-2">
+                <p className="text-[8px] text-muted-foreground/20 uppercase tracking-[0.4em] text-center font-bold">
+                  Sempre em comunhão com o Magistério
                 </p>
               </div>
-            )}
-
-            {history.map((msg, i) => (
-              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-4 rounded-premium text-sm leading-relaxed ${
-                  msg.role === 'user' 
-                    ? 'bg-primary text-white' 
-                    : 'bg-muted border border-border/40 font-serif'
-                }`}>
-                  {msg.content}
-                </div>
-              </div>
-            ))}
-
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-muted p-4 rounded-premium flex gap-2">
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.2s]" />
-                  <div className="w-2 h-2 bg-primary/40 rounded-full animate-bounce [animation-delay:0.4s]" />
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="p-6 border-t border-border bg-muted/30">
-            <form onSubmit={handleQuery} className="relative">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Pergunte sobre o texto..."
-                className="w-full bg-card border border-border rounded-full py-3 px-5 pr-12 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
-              />
-              <button 
-                type="submit"
-                disabled={isLoading}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-transform disabled:opacity-50"
-              >
-                <Icons.ArrowDown className="w-4 h-4 rotate-[-90deg]" />
-              </button>
-            </form>
-            <p className="text-[10px] text-center mt-4 text-muted-foreground uppercase tracking-widest">
-              Logos IA pode cometer erros. Consulte sempre o Magistério.
-            </p>
-          </div>
-        </motion.div>
+            </div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
