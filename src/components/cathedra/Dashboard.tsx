@@ -218,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.18}>
-        <SpiritualContinuity data={nextUp} isLoading={isLoading} />
+        <SpiritualContinuity data={nextUp} isLoading={isLoading} profile={profile} />
       </FadeUp>
 
       {!spiritualProfile && (
