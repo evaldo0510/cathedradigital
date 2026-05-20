@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { HomeCard } from './HomeCard';
 import HomeMainDoors from './HomeMainDoors';
+import RitualDoDia from './RitualDoDia';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
