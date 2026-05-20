@@ -75,9 +75,10 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   // Sync with profile if available
   useEffect(() => {
     if (profile?.reading_settings && Object.keys(profile.reading_settings).length > 0) {
+      const remoteSettings = profile.reading_settings as any;
       setSettings(prev => ({
         ...prev,
-        ...(profile.reading_settings as any)
+        ...remoteSettings
       }));
     }
     setIsLoading(false);
@@ -148,6 +149,19 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     } else {
       root.classList.remove('full-screen-mode');
     }
+
+  useEffect(() => {
+    const handleToggle = (e: any) => {
+      const newValue = e.detail;
+      updateSettings({ totalSilence: newValue });
+      toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+        description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+        icon: newValue ? "🤫" : "🔊"
+      });
+    };
+    window.addEventListener('toggle-total-silence', handleToggle);
+    return () => window.removeEventListener('toggle-total-silence', handleToggle);
+  }, [updateSettings]);
 
   }, [settings]);
 
