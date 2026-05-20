@@ -305,6 +305,15 @@ const Catechism: React.FC = () => {
               setCurrentParagraph(p);
               localStorage.setItem('cathedra_last_catechism_para', p.toString());
               localStorage.setItem('cathedra_last_catechism_scroll', window.scrollY.toString());
+              
+              // Auto-save progress
+              saveLastRead({
+                content_type: 'catechism',
+                content_id: 'CIC',
+                paragraph: p,
+                label: `Catecismo §${p}`,
+                url: `/catechism?p=${p}`
+              });
             }
           }
         });
