@@ -184,11 +184,7 @@ const SEOVerificationPage = () => {
   };
 
   const generateMetaTags = (page: SEOPageData) => {
-    const title = page.title || `${page.name} — Cathedra Digital`;
-    const image = p.metaTags?.ogImage || getDynamicImage(page.title || page.name, page.image);
-    const url = `${BASE_URL}${page.path}`;
-    // ... continue as before but use data from state
-    // I need to adjust this to use the passed page object properly
+    return getMetaTagsCode(page);
   };
 
   // Redefining generateMetaTags for the component scope
