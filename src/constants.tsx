@@ -470,9 +470,11 @@ export const Icons = {
   Facebook: IconsInternal.Facebook,
   Twitter: IconsInternal.Twitter,
   Youtube: IconsInternal.Youtube,
+  Printer: IconsInternal.Printer,
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe, 
   Apple: IconsInternal.Smartphone,
+
 };
 
 // Runtime Consistency Check
