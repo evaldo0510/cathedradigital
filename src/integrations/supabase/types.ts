@@ -937,6 +937,8 @@ export type Database = {
           paroquia: string | null
           preferred_reminder_time: string | null
           program_duration: number | null
+          ritual_reminder_time: string | null
+          ritual_silent_mode: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
@@ -962,6 +964,8 @@ export type Database = {
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
+          ritual_reminder_time?: string | null
+          ritual_silent_mode?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
@@ -987,6 +991,8 @@ export type Database = {
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
+          ritual_reminder_time?: string | null
+          ritual_silent_mode?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
@@ -1142,6 +1148,36 @@ export type Database = {
           position?: number | null
           updated_at?: string
           url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ritual_progress: {
+        Row: {
+          completed: boolean
+          created_at: string
+          date: string
+          id: string
+          progress_percent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          date?: string
+          id?: string
+          progress_percent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          date?: string
+          id?: string
+          progress_percent?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
