@@ -30,7 +30,7 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
     return (
       <motion.button
         ref={ref as any}
-        whileTap={{ scale: 0.96 }}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
         className={cn(
           variantStyles[variant],
           sizeMap[size],
