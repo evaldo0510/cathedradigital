@@ -251,6 +251,17 @@ const Catechism: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { settings } = useReadingSettings();
+  const [logosAIContext, setLogosAIContext] = useState('');
+
+  useEffect(() => {
+    const handleOpenAI = (e: any) => {
+      if (e.detail?.context) setLogosAIContext(e.detail.context);
+      setShowLogosAI(true);
+    };
+    window.addEventListener('open-logos-ai' as any, handleOpenAI);
+    return () => window.removeEventListener('open-logos-ai' as any, handleOpenAI);
+  }, []);
+
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
