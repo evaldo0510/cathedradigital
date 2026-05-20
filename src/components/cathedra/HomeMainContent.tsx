@@ -18,15 +18,24 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
+  const logosCardRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Shortcut Alt+L for Logos IA
       if (e.altKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();
-        logosInputRef.current?.focus();
-        logosInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (logosCardRef.current) {
+          logosCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          logosCardRef.current.classList.add('ring-4', 'ring-primary/20', 'scale-[1.01]');
+          setTimeout(() => {
+            logosCardRef.current?.classList.remove('ring-4', 'ring-primary/20', 'scale-[1.01]');
+            logosInputRef.current?.focus();
+          }, 400);
+        }
       }
+
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -80,7 +89,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         
         <HomeCard
-          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover"
+          ref={logosCardRef}
+          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none"
+
         >
           <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
             <Sparkles className="w-8 h-8" strokeWidth={1} />
