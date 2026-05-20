@@ -28,14 +28,14 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
       className="relative z-10 max-w-5xl text-center px-4 flex flex-col items-center justify-center min-h-[60vh]"
     >
-      {/* Subtle Visual Anchor - Replacement for Avatar */}
+      {/* Subtle Visual Anchor */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: EASE }}
-      className="mb-8 md:mb-12"
+        className="mb-8 md:mb-12"
       >
-        <div className="px-5 py-1.5 rounded-full border border-primary/5 bg-primary/[0.01] text-[9px] font-bold uppercase tracking-[0.4em] text-primary/25">
+        <div className="premium-tag">
           Santuário Digital
         </div>
       </motion.div>
