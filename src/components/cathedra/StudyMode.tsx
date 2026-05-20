@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import { callColloquium } from '@/services/aiService';
+import SEOHead from '@/components/SEOHead';
 import logosAvatarImg from '@/assets/logos-avatar.png';
 import logosAquinasImg from '@/assets/logos-aquinas.png';
 import logosColloquiumImg from '@/assets/logos-colloquium.png';
