@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     {
       name: 'seo-headers',
-      configureServer(server) {
+      configureServer(server: any) {
         server.middlewares.use((req: any, res: any, next: any) => {
           if (req.url === '/sitemap.xml') {
             res.setHeader('Content-Type', 'application/xml');
@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => ({
           next();
         });
       },
-      configurePreviewServer(server) {
+      configurePreviewServer(server: any) {
         server.middlewares.use((req: any, res: any, next: any) => {
           if (req.url === '/sitemap.xml') {
             res.setHeader('Content-Type', 'application/xml');
