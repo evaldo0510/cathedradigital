@@ -159,9 +159,27 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
         icon: newValue ? "🤫" : "🔊"
       });
     };
+    
+    const handleKeyboardShortcut = (e: KeyboardEvent) => {
+      // Alt + S or Option + S
+      if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        const newValue = !settings.totalSilence;
+        updateSettings({ totalSilence: newValue });
+        toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+          description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+          icon: newValue ? "🤫" : "🔊"
+        });
+      }
+    };
+
     window.addEventListener('toggle-total-silence', handleToggle);
-    return () => window.removeEventListener('toggle-total-silence', handleToggle);
-  }, [updateSettings]);
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => {
+      window.removeEventListener('toggle-total-silence', handleToggle);
+      window.removeEventListener('keydown', handleKeyboardShortcut);
+    };
+  }, [updateSettings, settings.totalSilence]);
 
   }, [settings]);
 
