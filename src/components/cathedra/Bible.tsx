@@ -698,7 +698,6 @@ const Bible: React.FC = () => {
       </div>
     );
   }
-  }
 
   // Chapter selection view
   if (viewMode === 'chapters' && selectedBook) {
