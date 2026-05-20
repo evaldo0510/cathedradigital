@@ -252,14 +252,33 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         <div className="bg-muted/30 p-4 rounded-xl border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <RefreshCcw className="w-5 h-5 text-primary" />
+              <RefreshCcw className={`w-5 h-5 text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
             </div>
             <div>
-              <h3 className="font-medium">Status do Cache Dinâmico</h3>
-              <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente (v={new Date().toISOString().substring(0, 7)}).</p>
+              <h3 className="font-medium">Auditoria de Rotas ({pages.length})</h3>
+              <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={scanAll}
+              disabled={isScanningAll || isLoadingSitemap}
+            >
+              {isScanningAll ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
+              Varrer Todas
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={exportCSV}
+              disabled={pages.length === 0}
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Exportar CSV
+            </Button>
+            <div className="h-8 w-[1px] bg-border mx-2 hidden md:block" />
             <Button 
               variant={activeTab === 'preview' ? 'default' : 'outline'} 
               size="sm" 
@@ -280,14 +299,32 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
         </div>
 
         <div className="grid grid-cols-1 gap-12">
-          {SEO_PAGES.map((page) => (
+          {isLoadingSitemap ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+              <p className="text-muted-foreground">Carregando rotas do sitemap...</p>
+            </div>
+          ) : pages.map((page) => (
             <div key={page.path} className="space-y-4">
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-3">
                   <h2 className="text-2xl font-serif font-bold">{page.name}</h2>
                   <Badge variant="outline" className="font-mono">{page.path}</Badge>
+                  {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
+                  {page.status === 'pending' && <Badge variant="secondary">Pendente</Badge>}
+                  {page.status === 'missing' && <Badge variant="destructive">Incompleto</Badge>}
+                  {page.status === 'scanning' && <Badge className="animate-pulse">Varendo...</Badge>}
                 </div>
                 <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => scanRoute(page.path)}
+                    disabled={page.status === 'scanning'}
+                  >
+                    <RefreshCcw className={`w-3.5 h-3.5 mr-2 ${page.status === 'scanning' ? 'animate-spin' : ''}`} />
+                    Scan
+                  </Button>
                   <Button variant="ghost" size="sm" onClick={() => window.open(`${BASE_URL}${page.path}`, '_blank')}>
                     <ExternalLink className="w-4 h-4" />
                   </Button>
