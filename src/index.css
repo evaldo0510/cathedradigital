@@ -97,6 +97,18 @@
     --ring: 60 100% 50%;
     --muted-foreground: 0 0% 90%;
   }
+
+  /* Spacing and Contrast Settings */
+  [data-line-spacing="tight"] .reader-text { line-height: 1.4 !important; }
+  [data-line-spacing="normal"] .reader-text { line-height: 1.7 !important; }
+  [data-line-spacing="wide"] .reader-text { line-height: 2.2 !important; }
+
+  [data-letter-spacing="tight"] .reader-text { letter-spacing: -0.02em !important; }
+  [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
+  [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
+
+  .contrast-soft .reader-text { filter: contrast(0.9) brightness(1.05); }
+  .contrast-high .reader-text { filter: contrast(1.2) saturate(1.1); }
 }
 
 @layer base {

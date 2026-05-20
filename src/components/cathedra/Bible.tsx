@@ -692,7 +692,7 @@ const Bible: React.FC = () => {
                     <Button variant="outline" onClick={() => window.location.reload()}>Recarregar</Button>
                   </div>
                 ) : (
-                  <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} text-foreground/90 transition-all duration-300 reader-text`}>
+                  <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} text-foreground/90 transition-all duration-300 reader-text`}>
 
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];

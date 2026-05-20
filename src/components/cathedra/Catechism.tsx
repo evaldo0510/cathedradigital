@@ -143,7 +143,7 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   const { settings } = useReadingSettings();
 
   return (
-    <div className={`reader-text text-foreground/90 leading-[2] font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>
+    <div className={`reader-text text-foreground/90 font-size-${settings.fontSize} font-family-${settings.fontFamily} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover

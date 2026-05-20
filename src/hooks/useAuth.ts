@@ -20,6 +20,7 @@ export interface Profile {
   avatar_url: string | null;
   xp?: number;
   streak?: number;
+  max_streak?: number;
   level?: number;
   last_visit?: string;
   completed_books?: string[];
