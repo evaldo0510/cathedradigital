@@ -302,12 +302,17 @@ const MagisteriumViewer: React.FC = () => {
           <Icons.ChevronUp className="w-4 h-4 mr-2" /> Topo do Documento
         </Button>
       </div>
-      <LogosAI 
-        isOpen={showLogosAI} 
-        onClose={() => setShowLogosAI(false)} 
-        context={`Documento do Magistério: ${content.title}`}
-        type="magisterium"
-      />
+      {showLogosAI && (
+        <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <LogosAI 
+            isOpen={showLogosAI} 
+            onClose={() => setShowLogosAI(false)} 
+            context={`Documento do Magistério: ${content.title}`}
+            type="magisterium"
+            variant="integrated"
+          />
+        </div>
+      )}
     </div>
   );
 };
