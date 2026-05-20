@@ -1080,6 +1080,51 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_marks: {
+        Row: {
+          chapter: number | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          is_last_read: boolean | null
+          label: string | null
+          paragraph: number | null
+          position: number | null
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          chapter?: number | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          is_last_read?: boolean | null
+          label?: string | null
+          paragraph?: number | null
+          position?: number | null
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          chapter?: number | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          is_last_read?: boolean | null
+          label?: string | null
+          paragraph?: number | null
+          position?: number | null
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       saints: {
         Row: {
           bible_refs: Json | null

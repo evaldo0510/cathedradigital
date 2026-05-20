@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -30,6 +30,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -124,7 +125,9 @@ const Bible: React.FC = () => {
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
   const { settings, updateSettings } = useReadingSettings();
+  const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [showLogosAI, setShowLogosAI] = useState(false);
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -345,8 +348,17 @@ const Bible: React.FC = () => {
       setSelectedChapter(next);
       setHighlightedVerse(null);
       localStorage.setItem('cathedra_last_bible_scroll', '0');
+      
+      // Auto-save progress
+      saveLastRead({
+        content_type: 'bible',
+        content_id: selectedBook.abbr,
+        chapter: next,
+        label: `${selectedBook.name} ${next}`,
+        url: `/bible?book=${selectedBook.abbr}&ch=${next}`
+      });
     }
-  }, [selectedBook, selectedChapter]);
+  }, [selectedBook, selectedChapter, saveLastRead]);
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
@@ -380,6 +392,14 @@ const Bible: React.FC = () => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [viewMode, selectedBook, navigateChapter]);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   useEffect(() => {
     if (viewMode === 'reading' && !isLoading && verses.length > 0) {
@@ -578,6 +598,17 @@ const Bible: React.FC = () => {
             </Button>
           </div>
           <div className="flex items-center gap-2">
+            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => navigate(lastReadMark.url)}
+                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+              >
+                <Icons.History className="w-4 h-4" />
+                <span className="hidden sm:inline">Continuar de onde parei</span>
+              </Button>
+            )}
             <ReadingControlPanel />
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
@@ -667,7 +698,7 @@ const Bible: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
-                              <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} />
+                              <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
                         </div>

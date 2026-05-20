@@ -18,6 +18,8 @@ import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
+import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 const SPIRITUAL_GUIDANCE = [
@@ -153,6 +155,8 @@ const Magisterium: React.FC = () => {
   const navigate = useNavigate();
   useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
+  const { saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -160,6 +164,14 @@ const Magisterium: React.FC = () => {
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   const filteredDocs = useMemo(() => {
     return DOCS_LIST.filter(doc => {
@@ -176,6 +188,14 @@ const Magisterium: React.FC = () => {
     setTimeout(() => {
       setSelectedGuidance(item);
       setIsTransitioning(false);
+      
+      // Auto-save progress
+      saveLastRead({
+        content_type: 'magisterium',
+        content_id: item.id,
+        label: `Guia: ${item.theme}`,
+        url: `/magisterium?topic=${item.id}`
+      });
     }, 300);
   };
 
@@ -192,6 +212,22 @@ const Magisterium: React.FC = () => {
           <Icons.Scroll className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
+        
+        <div className="absolute right-4 top-4 flex items-center gap-2">
+          {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={() => navigate(lastReadMark.url)}
+              className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+            >
+              <Icons.History className="w-4 h-4" />
+              <span className="hidden sm:inline">Continuar de onde parei</span>
+            </Button>
+          )}
+          <ReadingControlPanel />
+        </div>
+
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
       </div>

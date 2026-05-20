@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
@@ -14,6 +14,7 @@ import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 
 const MagisteriumViewer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +27,17 @@ const MagisteriumViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { settings } = useReadingSettings();
+  const { saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   useEffect(() => {
     const fetchDoc = async () => {
@@ -76,11 +87,33 @@ const MagisteriumViewer: React.FC = () => {
   // Auto-save scroll position
   useEffect(() => {
     const handleScroll = () => {
-      if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+      if (id && content) {
+        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+        
+        // Throttled DB save would be better, but for now we'll save on certain intervals
+        // For simplicity, we save when the effect runs or on scroll end
+      }
     };
+    
+    // Save to DB on unmount or every few seconds
+    const interval = setInterval(() => {
+      if (id && content) {
+        saveLastRead({
+          content_type: 'magisterium',
+          content_id: id,
+          label: content.title,
+          url: window.location.pathname + window.location.search,
+          position: window.scrollY
+        });
+      }
+    }, 10000); // every 10s
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [id]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
+  }, [id, content, saveLastRead]);
 
   // Restore scroll position
   useEffect(() => {
@@ -188,6 +221,17 @@ const MagisteriumViewer: React.FC = () => {
         </div>
         
         <div className="flex items-center gap-2">
+          {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={() => navigate(lastReadMark.url)}
+              className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+            >
+              <Icons.History className="w-4 h-4" />
+              <span className="hidden sm:inline">Continuar de onde parei</span>
+            </Button>
+          )}
           <AudioButton variant="outline" className="rounded-full h-10 w-10 p-0" />
           <ReadingControlPanel />
           <Button 

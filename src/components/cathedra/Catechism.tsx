@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 import BackToThemeBanner from './BackToThemeBanner';
 import SEOHead from '@/components/SEOHead';
@@ -15,7 +15,6 @@ import DeepContentSection from './DeepContentSection';
 import MagisteriumPopover from './MagisteriumPopover';
 import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
 import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
-
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -30,6 +29,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
 import ReadingMark from './ReadingMark';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 
@@ -225,7 +225,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
               <Icons.Sparkles className="w-4 h-4" />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
-            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} />
+            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
@@ -255,6 +255,8 @@ const Catechism: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { settings } = useReadingSettings();
+  const { marks, saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
 
   useEffect(() => {
@@ -265,6 +267,14 @@ const Catechism: React.FC = () => {
     window.addEventListener('open-logos-ai' as any, handleOpenAI);
     return () => window.removeEventListener('open-logos-ai' as any, handleOpenAI);
   }, []);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -303,6 +313,15 @@ const Catechism: React.FC = () => {
               setCurrentParagraph(p);
               localStorage.setItem('cathedra_last_catechism_para', p.toString());
               localStorage.setItem('cathedra_last_catechism_scroll', window.scrollY.toString());
+              
+              // Auto-save progress
+              saveLastRead({
+                content_type: 'catechism',
+                content_id: 'CIC',
+                paragraph: p,
+                label: `Catecismo §${p}`,
+                url: `/catechism?p=${p}`
+              });
             }
           }
         });
@@ -455,6 +474,17 @@ const Catechism: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={() => navigate(lastReadMark.url)}
+                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+              >
+                <Icons.History className="w-4 h-4" />
+                <span className="hidden sm:inline">Continuar de onde parei</span>
+              </Button>
+            )}
             <ReadingControlPanel />
             <Button 
               variant="outline" 

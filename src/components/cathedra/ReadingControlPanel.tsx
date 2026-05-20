@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -10,9 +11,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const ReadingControlPanel: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
+  const { marks } = useReadingMarks();
+  const [includeNotes, setIncludeNotes] = useState(true);
 
   const themes = [
     { id: 'paper', label: 'Papel', color: 'bg-[#F8F5EE] border-[#E8E2D2]' },
@@ -151,9 +155,27 @@ const ReadingControlPanel: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 space-y-3">
+                <div className="flex items-center gap-2 px-1">
+                  <Checkbox 
+                    id="include-notes" 
+                    checked={includeNotes} 
+                    onCheckedChange={(checked) => setIncludeNotes(!!checked)}
+                    className="rounded-full"
+                  />
+                  <label htmlFor="include-notes" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground cursor-pointer">
+                    Incluir minhas anotações
+                  </label>
+                </div>
                 <Button 
-                  onClick={() => window.print()}
+                  onClick={() => {
+                    if (includeNotes) {
+                      document.body.classList.add('print-with-notes');
+                    } else {
+                      document.body.classList.remove('print-with-notes');
+                    }
+                    window.print();
+                  }}
                   variant="outline"
                   className="w-full rounded-2xl flex items-center justify-center gap-2 py-6 border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all"
                 >
