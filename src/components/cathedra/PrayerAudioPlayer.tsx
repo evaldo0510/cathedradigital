@@ -94,6 +94,8 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
     ? 'bg-secondary/20 text-secondary border-secondary/20 hover:bg-secondary/30'
     : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
 
+  if (settings.totalSilence) return null;
+
   return (
     <div className={`rounded-full border p-4 space-y-3 ${bgClass}`}>
       <div className="flex items-center justify-between">
