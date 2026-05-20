@@ -286,12 +286,12 @@ const Bible: React.FC = () => {
     }
 
     // 2. Auto-resume from last saved point if no specific params
-    if (shouldAutoResume) {
+    if (shouldAutoResume && user) {
       const autoResume = async () => {
         const { data } = await supabase
           .from('reading_marks')
           .select('*')
-          .eq('user_id', user?.id)
+          .eq('user_id', user.id)
           .eq('content_type', 'bible')
           .eq('is_last_read', true)
           .maybeSingle();
@@ -304,15 +304,19 @@ const Bible: React.FC = () => {
             setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
             setSelectedBook(found);
             setSelectedChapter(data.chapter);
+            if (data.position) {
+              setHighlightedVerse(data.position);
+              localStorage.setItem('cathedra_last_bible_verse', data.position.toString());
+            }
             setViewMode('reading');
-            toast.info(`Retornando a ${found.name} ${data.chapter}`, {
-              description: 'Sua leitura foi retomada de onde você parou.',
+            toast.info(`Retomando: ${found.name} ${data.chapter}`, {
+              description: 'Continuando sua jornada espiritual de onde parou.',
               duration: 3000
             });
           }
         }
       };
-      if (user) autoResume();
+      autoResume();
       setShouldAutoResume(false);
     }
   }, [searchParams, allBooks, user, shouldAutoResume]);
