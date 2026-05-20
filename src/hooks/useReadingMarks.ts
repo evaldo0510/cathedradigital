@@ -113,7 +113,7 @@ export function useReadingMarks() {
       .eq('is_last_read', true);
 
     // 2. Insert new one
-    await addMark({ ...mark, is_last_read: true, label: `Última leitura: ${mark.label || mark.content_id}` });
+    await addMark({ ...mark, is_last_read: true });
   }, [user, addMark]);
 
   const getLastRead = useCallback(async () => {
