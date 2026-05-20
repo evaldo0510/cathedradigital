@@ -19,7 +19,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
 
   if (isLoading || !data) return null;
 
-  const { nextBible, nextCatechism, nextJourney, lastReflection, lastJournal, history } = data;
+  const { nextBible, nextCatechism, nextJourney, lastReflection, lastJournal, history, primaryResume: dashboardPrimary } = data;
 
   // Calculo discreto de maturidade baseado em XP
   const xp = profile?.xp || 0;
@@ -29,8 +29,8 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
   const currentDegree = romanDegrees[degreeIndex] || `X+${degreeIndex - 9}`;
   const progressToNextLevel = (xp % 1000) / 10; 
 
-  // Prioridade de retomada
-  const primaryResume = nextJourney || nextBible || nextCatechism;
+  // Prioridade de retomada: use a marca de leitura exata se disponível, senão caia nos calculados
+  const primaryResume = dashboardPrimary || nextJourney || nextBible || nextCatechism;
 
   if (!primaryResume && (!history || history.length === 0)) return null;
 
