@@ -482,25 +482,31 @@ const Bible: React.FC = () => {
     const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
-        {/* Back to Theme */}
-        <BackToThemeBanner />
-        {/* Back to Dashboard */}
-        {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </Button>
-        )}
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </Button>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
-            <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
+      <div className="max-w-4xl mx-auto pb-24 px-4 sm:px-6">
+        <SEOHead 
+          title={`${selectedBook.name} ${selectedChapter} | Bíblia Sagrada`}
+          description={`Leia ${selectedBook.name}, capítulo ${selectedChapter}.`}
+          path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+        />
+        <div className={`mx-auto space-y-8 transition-all duration-500`}>
+          {/* Back to Theme */}
+          <BackToThemeBanner />
+          {/* Back to Dashboard */}
+          {fromDashboard && (
+            <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+              <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+            </Button>
+          )}
+          {/* Header */}
+          <div className="flex items-center gap-4">
+            <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+              <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+            </Button>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
+              <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
+            </div>
           </div>
-        </div>
 
         {/* Highlighted verse indicator (when ?v= is active) */}
         {highlightedVerse && (
