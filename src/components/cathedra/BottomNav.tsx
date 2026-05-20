@@ -48,31 +48,29 @@ interface BottomNavItemProps {
 
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
   <Button 
+    variant="ghost"
     onClick={(e) => { onRipple(e); onClick(); }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 outline-none transition-colors ${
-      isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
+    className={`flex flex-col items-center justify-center gap-1.5 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-500 shadow-none border-none hover:bg-transparent ${
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary/40'
     }`}
   >
-
-    <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
+    <div className={`transition-all duration-700 ${isActive ? 'scale-110 -translate-y-1' : 'active:scale-95'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5 sm:w-5 sm:h-5`,
-        size: undefined,
-        strokeWidth: 2,
-        fill: isActive ? 'currentColor' : 'none'
+        className: `w-5 h-5`,
+        strokeWidth: 1.2,
       })}
     </div>
-    <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
-      isActive ? 'opacity-100' : 'opacity-60'
+    <span className={`text-[8px] font-black uppercase tracking-[0.2em] leading-none transition-all duration-700 ${
+      isActive ? 'opacity-100 tracking-[0.3em]' : 'opacity-0 translate-y-2'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-premium" />
+      <div className="absolute top-1 right-1/2 translate-x-4 w-1 h-1 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_hsla(var(--secondary)/0.5)]" />
     )}
   </Button>
 );
@@ -98,8 +96,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom bottom-nav">
-      <div className="flex items-stretch h-16 px-1">
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-3xl border-t border-primary/5 safe-area-bottom bottom-nav">
+      <div className="flex items-stretch h-20 px-4">
         {items.map((item: any) => (
           <BottomNavItem 
             key={item.label}

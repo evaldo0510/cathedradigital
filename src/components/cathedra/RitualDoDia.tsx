@@ -184,27 +184,28 @@ const RitualDoDia: React.FC = () => {
   return (
     <HomeCard
       as={motion.div}
-      initial={isSilent ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      initial={isSilent ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={isSilent ? { duration: 0 } : { duration: 0.8 }}
-      className={`relative overflow-hidden border-border/10 shadow-premium ${isSilent ? 'font-serif' : ''}`}
+      transition={isSilent ? { duration: 0 } : { duration: 1.5, ease: [0.2, 0.8, 0.2, 1] }}
+      className={`relative overflow-hidden border-border/5 shadow-premium group ${isSilent ? 'font-serif' : ''}`}
     >
-      <div className="relative z-10 p-8 md:p-12 lg:p-16 space-y-12">
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
+      
+      <div className="relative z-10 p-10 md:p-16 lg:p-24 space-y-16">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-border/10 pb-10">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-primary/40" strokeWidth={1.5} />
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-10 border-b border-border/5 pb-16">
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center">
+                <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1.2} />
               </div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">
-                Ritual do Dia
+              <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/20">
+                ORATIO ET CONTEMPLATIO
               </span>
             </div>
-            <h2 className="text-3xl md:text-4xl font-display text-primary tracking-tight flex items-center gap-3">
-              <Map className="w-6 h-6 text-secondary/40" />
-              Caminho de Santidade
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight">
+              Ritual do Dia
             </h2>
           </div>
           <div className="flex flex-col items-start md:items-end gap-2">
@@ -307,16 +308,16 @@ const RitualDoDia: React.FC = () => {
           <section className="space-y-6 max-w-2xl">
             <div className="flex items-center gap-3">
               <BookOpen className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30">I. Palavra de Deus</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10">I. Lectio Divina</span>
             </div>
             <div 
-              className={`group cursor-pointer transition-all duration-700 ${progress >= 25 ? 'opacity-40 grayscale' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={`group cursor-pointer transition-all duration-1000 ${progress >= 25 ? 'opacity-30 grayscale' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
               onClick={() => handleProgress(25)}
             >
-              <blockquote className="text-2xl md:text-3xl font-serif italic leading-relaxed text-primary/90">
+              <blockquote className="text-3xl md:text-4xl lg:text-5xl font-serif italic leading-relaxed text-primary/80 selection:bg-primary/5">
                 "{ritual.verse.text}"
               </blockquote>
-              <p className="mt-4 text-xs font-bold text-primary/40 uppercase tracking-[0.2em]">
+              <p className="mt-6 text-[10px] font-black text-primary/20 uppercase tracking-[0.4em]">
                 — {ritual.verse.ref}
               </p>
             </div>
@@ -329,45 +330,45 @@ const RitualDoDia: React.FC = () => {
               <Sparkles className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
             </div>
             <div 
-              className={`group cursor-pointer transition-all duration-700 ${progress >= 50 ? 'opacity-40' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={`group cursor-pointer transition-all duration-1000 ${progress >= 50 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
               onClick={() => handleProgress(50)}
             >
-              <p className="text-lg md:text-xl leading-relaxed text-foreground/80 font-serif italic">
+              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-foreground/60 font-serif italic selection:bg-primary/5">
                 {ritual.reflection}
               </p>
             </div>
           </section>
 
           {/* 3. Catechism */}
-          <section className="space-y-6 max-w-2xl border-l border-border/10 pl-8">
+          <section className="space-y-8 max-w-2xl border-l border-border/5 pl-12 py-4">
             <div className="flex items-center gap-3">
-              <Book className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30">III. Catecismo</span>
+              <Book className="w-4 h-4 text-primary/10" strokeWidth={1.2} />
+              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10">III. Traditio Sancta</span>
             </div>
             <div 
-              className={`group cursor-pointer transition-all duration-700 ${progress >= 75 ? 'opacity-40' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={`group cursor-pointer transition-all duration-1000 ${progress >= 75 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
               onClick={() => handleProgress(75)}
             >
-              <p className="text-base leading-relaxed text-foreground/70 font-sans tracking-wide">
+              <p className="text-lg md:text-xl leading-relaxed text-foreground/50 font-serif tracking-tight selection:bg-primary/5">
                 {ritual.catechism.text}
               </p>
-              <p className="mt-3 text-[10px] font-bold text-primary/40 uppercase tracking-widest">
-                CIC §{ritual.catechism.number}
+              <p className="mt-4 text-[9px] font-black text-primary/20 uppercase tracking-[0.4em]">
+                Catechismus §{ritual.catechism.number}
               </p>
             </div>
           </section>
 
           {/* 4. Prayer */}
-          <section className="space-y-8 max-w-2xl mx-auto text-center py-10 bg-primary/[0.01] rounded-3xl border border-primary/[0.03]">
-            <div className="flex flex-col items-center gap-4">
-              <Heart className="w-5 h-5 text-primary/20" strokeWidth={1.5} />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30">IV. Oração Breve</span>
+          <section className="space-y-12 max-w-3xl mx-auto text-center py-20 bg-primary/[0.005] rounded-[3rem] border border-primary/[0.02]">
+            <div className="flex flex-col items-center gap-6">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/10 animate-pulse" />
+              <span className="text-[9px] font-black uppercase tracking-[0.8em] text-primary/20">IV. Oratio</span>
             </div>
             <div 
-              className={`group cursor-pointer transition-all duration-700 px-8 ${progress >= 100 ? 'opacity-40' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={`group cursor-pointer transition-all duration-1000 px-12 ${progress >= 100 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
               onClick={() => handleProgress(100)}
             >
-              <p className="text-xl md:text-2xl leading-relaxed text-primary/80 font-serif italic">
+              <p className="text-3xl md:text-4xl lg:text-5xl leading-tight text-primary/70 font-serif italic selection:bg-primary/5">
                 {ritual.prayer}
               </p>
             </div>
