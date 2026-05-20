@@ -13,6 +13,7 @@ interface PrayerAudioPlayerProps {
  * Uses the Web Speech Synthesis API — no external dependencies.
  */
 const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant = 'light' }) => {
+  const { settings } = useReadingSettings();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [rate, setRate] = useState(0.85);
