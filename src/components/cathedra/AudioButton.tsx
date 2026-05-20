@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import { Button } from '@/components/ui/button';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface AudioButtonProps {
   className?: string;
@@ -10,6 +11,7 @@ interface AudioButtonProps {
 
 const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'outline' }) => {
   const { t } = useLang();
+  const { settings } = useReadingSettings();
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
