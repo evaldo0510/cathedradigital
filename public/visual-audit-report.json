@@ -1,698 +1,54 @@
 {
-  "timestamp": "2026-05-20T04:02:02.267Z",
-  "total_violations": 105,
+  "timestamp": "2026-05-20T04:02:41.607Z",
+  "total_violations": 13,
   "violations": [
     {
-      "file": "src/components/cathedra/Dashboard.tsx",
-      "line": 201,
-      "pattern": "Non-standard Radius",
-      "match": "<div className={`w-14 h-14 rounded-3xl bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>",
-      "suggestion": "rounded-premium"
-    },
-    {
-      "file": "src/components/cathedra/SpiritualJournalPage.tsx",
-      "line": 117,
-      "pattern": "Non-standard Radius",
-      "match": "className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${",
-      "suggestion": "rounded-premium"
-    },
-    {
-      "file": "src/components/cathedra/GlobalSearchPage.tsx",
-      "line": 66,
-      "pattern": "Non-standard Radius",
-      "match": "<div className=\"w-16 h-16 rounded-3xl bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500\">",
-      "suggestion": "rounded-premium"
-    },
-    {
-      "file": "src/components/cathedra/NexusBubbles.tsx",
-      "line": 150,
-      "pattern": "Non-standard Radius",
-      "match": "<div className=\"w-14 h-14 rounded-3xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5\">",
-      "suggestion": "rounded-premium"
-    },
-    {
-      "file": "src/pages/SEOVerificationPage.tsx",
-      "line": 453,
-      "pattern": "Non-standard Shadow",
-      "match": "<Card className=\"overflow-hidden border-border/50 shadow-lg\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/pages/landing/BenefitsSection.tsx",
-      "line": 83,
-      "pattern": "Non-standard Shadow",
-      "match": "<motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className=\"relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-lg\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/landing/FeedbackWidget.tsx",
-      "line": 57,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-2xl rounded-full p-6 overflow-hidden\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/landing/FeedbackWidget.tsx",
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
       "line": 119,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-2xl font-bold uppercase tracking-widest text-premium-tiny min-w-0\"",
-      "suggestion": "shadow-premium"
+      "pattern": "Non-standard Radius",
+      "match": "<div className=\"p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono\">",
+      "suggestion": "rounded-premium"
     },
     {
-      "file": "src/components/cathedra/AZFaithPage.tsx",
-      "line": 174,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'",
-      "suggestion": "shadow-premium"
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
+      "line": 122,
+      "pattern": "Non-standard Radius",
+      "match": "<div className=\"p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono\">",
+      "suggestion": "rounded-premium"
     },
     {
-      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
-      "line": 255,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
-      "line": 290,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
-      "line": 359,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/pages/landing/InstitutionalVideoSection.tsx",
-      "line": 398,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/WhatsAppButton.tsx",
-      "line": 21,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"fixed bottom-6 left-6 z-[200] w-14 h-14 bg-background border border-border text-foreground rounded-full flex items-center justify-center shadow-2xl group\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/WebhookSimulator.tsx",
-      "line": 134,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"rounded-full bg-primary hover:bg-primary/90 px-8 h-12 shadow-lg shadow-primary/20 gap-2 min-w-[200px]\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/A11ySettingsPanel.tsx",
-      "line": 57,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-2xl z-[201] p-8 flex flex-col\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
-      "line": 39,
-      "pattern": "Non-standard Shadow",
-      "match": "className={`w-full max-w-lg mx-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all shadow-lg group ${",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
-      "line": 92,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-2xl shadow-black/[0.02]\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioIntro.tsx",
-      "line": 118,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary border-primary text-white shadow-lg'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Bible.tsx",
-      "line": 783,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioConclusio.tsx",
-      "line": 85,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl shadow-black/[0.02]\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioStep.tsx",
-      "line": 83,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary border-primary text-white shadow-lg'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/lectio/LectioStep.tsx",
-      "line": 102,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] relative overflow-hidden\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ViaCrucis.tsx",
-      "line": 106,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-2xl shadow-black/[0.02] relative overflow-hidden\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/AquinasOpera.tsx",
-      "line": 340,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/LogosChat.tsx",
-      "line": 164,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-lg font-black uppercase tracking-widest text-premium-tiny min-w-0\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/AboutPage.tsx",
-      "line": 144,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/AboutPage.tsx",
-      "line": 148,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-lg border-4 border-background\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 38,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-2xl\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 146,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 298,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={() => setStep('mystery')} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 313,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"bg-white/[0.04] rounded-[2.5rem] p-10 border border-white/[0.06] relative shadow-2xl\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 326,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={() => setStep('decade')} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 381,
-      "pattern": "Non-standard Shadow",
-      "match": "}} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Rosary.tsx",
-      "line": 441,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12  shadow-2xl shadow-black/50\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/DevDataInspector.tsx",
-      "line": 41,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-2xl hover:scale-105 transition-all border border-white/20\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/DevDataInspector.tsx",
-      "line": 53,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"absolute bottom-14 right-0 w-80 bg-card border border-border rounded-full shadow-2xl overflow-hidden \"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/CheckoutPage.tsx",
-      "line": 192,
-      "pattern": "Non-standard Shadow",
-      "match": "<Card className=\"border-2 border-primary shadow-2xl rounded-[2.5rem] overflow-hidden\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/CheckoutPage.tsx",
-      "line": 333,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/DogmasPage.tsx",
-      "line": 328,
-      "pattern": "Non-standard Shadow",
-      "match": "category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/UpgradePage.tsx",
-      "line": 138,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"h-16 px-10 rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/AppHeader.tsx",
-      "line": 161,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-premium shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/AppHeader.tsx",
-      "line": 219,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"h-10 px-4 sm:px-6 shadow-lg active:scale-95\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/SplashScreen.tsx",
-      "line": 65,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-24 h-24 md:w-32 md:h-32 rounded-premium overflow-hidden border-[3px] border-secondary/50 shadow-2xl bg-primary\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Catechism.tsx",
-      "line": 523,
-      "pattern": "Non-standard Shadow",
-      "match": "currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' :",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/LogosAI.tsx",
-      "line": 68,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"fixed right-0 top-0 bottom-0 w-full sm:w-[400px] bg-card border-l border-border z-[200] shadow-2xl flex flex-col\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/CookieConsent.tsx",
-      "line": 45,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-[400px] z-[300] bg-background  border border-border p-6 rounded-full shadow-2xl\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/LiturgicalCalendarPage.tsx",
-      "line": 433,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"bg-card border border-border rounded-premium overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/CommunityPage.tsx",
-      "line": 407,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={() => setShowNewPost(true)} className=\"rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/BubbleTag.tsx",
-      "line": 156,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/BreviaryPage.tsx",
-      "line": 206,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/CommandCenter.tsx",
-      "line": 368,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative w-full max-w-xl bg-card border border-border rounded-full shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/SpiritualQuiz.tsx",
-      "line": 370,
-      "pattern": "Non-standard Shadow",
-      "match": "className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/JornadasPage.tsx",
-      "line": 327,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-primary hover:bg-primary/90 text-white font-black text-premium-tiny sm:text-premium-tiny uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-lg shadow-primary/20 group\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/JornadasPage.tsx",
-      "line": 512,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-premium text-premium-tiny font-black uppercase tracking-widest flex items-center gap-1 shadow-lg\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Certamen.tsx",
-      "line": 156,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={shareResult} className=\"px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/TemasPage.tsx",
-      "line": 147,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 p-2 sm:p-3 rounded-premium border border-border/40 shadow-premium-hover sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/TemasPage.tsx",
-      "line": 163,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/JornadaStepPage.tsx",
-      "line": 353,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"font-bold text-premium-tiny uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-lg\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ReadingModeToggle.tsx",
-      "line": 12,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"fixed bottom-24 right-4 lg:bottom-6 lg:right-6 z-50 p-3 rounded-full bg-card border border-border shadow-lg hover:shadow-premium-hover transition-all group\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ProConversionBanner.tsx",
-      "line": 83,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-lg\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/LiturgiaPage.tsx",
-      "line": 252,
-      "pattern": "Non-standard Shadow",
-      "match": "<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className=\"bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/LiturgiaPage.tsx",
-      "line": 260,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-20 h-20 rounded-premium overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10\"><img src={saintsToday[0].image} alt={saintsToday[0].name} className=\"w-full h-full object-cover rounded-full\" /></div>",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/GuidedJourney.tsx",
-      "line": 114,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative w-full max-w-2xl bg-card border border-border shadow-2xl rounded-[2rem] p-8 md:p-12\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/QuickModals.tsx",
-      "line": 217,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"relative w-full max-w-lg bg-card border border-border rounded-premium shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200\" onClick={e => e.stopPropagation()}>",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/DeepContentSection.tsx",
-      "line": 75,
-      "pattern": "Non-standard Shadow",
-      "match": "} ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ProShowcase.tsx",
-      "line": 29,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ProShowcase.tsx",
-      "line": 75,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-lg transition-all\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/NexusBubbles.tsx",
-      "line": 147,
-      "pattern": "Non-standard Shadow",
-      "match": "<PopoverContent data-testid=\"nexus-popover\" className=\"w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-2xl z-[100] bg-card/95 backdrop-blur-xl\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/NexusBubbles.tsx",
-      "line": 467,
-      "pattern": "Non-standard Shadow",
-      "match": "className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/NexusBubbles.tsx",
-      "line": 477,
-      "pattern": "Non-standard Shadow",
-      "match": "className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/SecurityAuditPage.tsx",
-      "line": 110,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PricingPage.tsx",
-      "line": 59,
-      "pattern": "Non-standard Shadow",
-      "match": "<Card className=\"h-full rounded-premium border-border/50 bg-card shadow-lg\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PricingPage.tsx",
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
       "line": 125,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-full h-12 rounded-full font-bold bg-primary text-primary-foreground shadow-lg shadow-primary/20\"",
-      "suggestion": "shadow-premium"
+      "pattern": "Non-standard Radius",
+      "match": "<div className=\"p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono\">",
+      "suggestion": "rounded-premium"
     },
     {
-      "file": "src/components/cathedra/QuickDonation.tsx",
-      "line": 124,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-full h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/GlossaryPage.tsx",
-      "line": 192,
-      "pattern": "Non-standard Shadow",
-      "match": "category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/GlossaryPage.tsx",
-      "line": 252,
-      "pattern": "Non-standard Shadow",
-      "match": "isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/GlossaryPage.tsx",
-      "line": 332,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PWAInstallPrompt.tsx",
-      "line": 69,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:bottom-8 md:w-80 bg-background border border-primary/20 p-4 rounded-premium shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-4 duration-300\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 45,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-lg\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 197,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 md:p-12 space-y-8  shadow-2xl shadow-black/50\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 240,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={() => setPhase('mystery')} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 257,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button onClick={() => setPhase('decade')} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 314,
-      "pattern": "Non-standard Shadow",
-      "match": "}} className=\"w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 398,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/[0.02]\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 482,
-      "pattern": "Non-standard Shadow",
-      "match": "key === todayKey ? 'bg-primary/5 border-primary/30 shadow-lg' : 'bg-card border-border hover:border-primary/30'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Saints.tsx",
-      "line": 256,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Saints.tsx",
-      "line": 416,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-full shadow-lg shadow-primary/20 flex items-center gap-3 mx-auto\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/Saints.tsx",
-      "line": 522,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/SaintDetail.tsx",
-      "line": 88,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/SaintDetail.tsx",
-      "line": 326,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-lg shadow-primary/20 group/btn transition-all\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PoenitentiaPage.tsx",
-      "line": 78,
-      "pattern": "Non-standard Shadow",
-      "match": "? 'bg-primary border-primary text-primary-foreground shadow-2xl scale-[1.05] z-10'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PoenitentiaPage.tsx",
-      "line": 79,
-      "pattern": "Non-standard Shadow",
-      "match": ": 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-lg'",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PoenitentiaPage.tsx",
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
       "line": 135,
-      "pattern": "Non-standard Shadow",
-      "match": "<div className=\"bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-2xl shadow-primary/20 relative\">",
-      "suggestion": "shadow-premium"
+      "pattern": "Non-standard Radius",
+      "match": "<div className=\"h-20 bg-primary/5 rounded-xl border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono\">",
+      "suggestion": "rounded-premium"
     },
     {
-      "file": "src/components/cathedra/OfflineModeToggle.tsx",
-      "line": 13,
-      "pattern": "Non-standard Shadow",
-      "match": "className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-lg hover:shadow-premium-hover transition-all group flex items-center gap-2 ${",
-      "suggestion": "shadow-premium"
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
+      "line": 138,
+      "pattern": "Non-standard Radius",
+      "match": "<div className=\"h-10 bg-primary/5 rounded-xl border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono\">",
+      "suggestion": "rounded-premium"
     },
     {
-      "file": "src/components/cathedra/NotesPanel.tsx",
-      "line": 64,
+      "file": "src/components/cathedra/DesignSystemGuide.tsx",
+      "line": 191,
       "pattern": "Non-standard Shadow",
-      "match": "<div className=\"absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-2xl z-50 p-4 space-y-3\">",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/ProfilePage.tsx",
-      "line": 212,
-      "pattern": "Non-standard Shadow",
-      "match": "className=\"bg-card border-2 border-primary rounded-full p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4\"",
-      "suggestion": "shadow-premium"
-    },
-    {
-      "file": "src/components/cathedra/PartnersPage.tsx",
-      "line": 210,
-      "pattern": "Non-standard Shadow",
-      "match": "<Button size=\"lg\" className=\"rounded-full px-8 gap-2 shadow-lg shadow-primary/20\">",
+      "match": "<p className=\"text-sm\"><strong>Sombras:</strong> Nunca usar <code>shadow-md/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>",
       "suggestion": "shadow-premium"
     },
     {
       "file": "src/pages/landing/BenefitsSection.tsx",
       "line": 64,
       "pattern": "Hardcoded Card BG",
-      "match": "<motion.div variants={fadeUp} initial=\"hidden\" whileInView=\"visible\" viewport={{ once: true }} custom={i} className=\"space-y-3 p-6 rounded-premium bg-white/5 border border-white/10 cursor-pointer h-full\">",
+      "match": "<motion.div variants={fadeUp} initial=\"hidden\" whileInView=\"visible\" viewport={{ once: true }} custom={i} className=\"space-y-3 p-6 rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full\">",
       "suggestion": "premium-card"
     },
     {
@@ -710,31 +66,31 @@
       "suggestion": "premium-card"
     },
     {
-      "file": "src/components/cathedra/PrayerPage.tsx",
-      "line": 171,
-      "pattern": "Hardcoded Card BG",
-      "match": "<Button onClick={onClose} className=\"p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all\">",
-      "suggestion": "premium-card"
-    },
-    {
       "file": "src/components/cathedra/Rosary.tsx",
       "line": 424,
       "pattern": "Hardcoded Card BG",
-      "match": "<Button onClick={() => { setIsPraying(false); }} className=\"p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all\">",
+      "match": "<Button onClick={() => { setIsPraying(false); }} className=\"p-3 rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all\">",
+      "suggestion": "premium-card"
+    },
+    {
+      "file": "src/components/cathedra/PrayerPage.tsx",
+      "line": 171,
+      "pattern": "Hardcoded Card BG",
+      "match": "<Button onClick={onClose} className=\"p-2 rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all\">",
       "suggestion": "premium-card"
     },
     {
       "file": "src/components/cathedra/PrayerAudioPlayer.tsx",
       "line": 113,
       "pattern": "Hardcoded Card BG",
-      "match": ": (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')",
+      "match": ": (isDark ? 'bg-card/50 text-secondary/40' : 'bg-card text-muted-foreground')",
       "suggestion": "premium-card"
     },
     {
       "file": "src/components/cathedra/SplashScreen.tsx",
       "line": 94,
       "pattern": "Hardcoded Card BG",
-      "match": "<motion.div className=\"absolute bottom-12 w-32 h-0.5 bg-white/5 rounded-premium overflow-hidden\">",
+      "match": "<motion.div className=\"absolute bottom-12 w-32 h-0.5 bg-card/50 rounded-premium overflow-hidden\">",
       "suggestion": "premium-card"
     }
   ],
