@@ -188,6 +188,14 @@ const Magisterium: React.FC = () => {
     setTimeout(() => {
       setSelectedGuidance(item);
       setIsTransitioning(false);
+      
+      // Auto-save progress
+      saveLastRead({
+        content_type: 'magisterium',
+        content_id: item.id,
+        label: `Guia: ${item.theme}`,
+        url: `/magisterium?topic=${item.id}`
+      });
     }, 300);
   };
 
