@@ -7,10 +7,9 @@ import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
 interface HeroSectionProps {
   onStart: () => void;
-  onAbout: () => void;
 }
 
-const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
+const HeroSection = ({ onStart }: HeroSectionProps) => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ 
     target: heroRef, 
@@ -29,7 +28,6 @@ const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
         heroScale={1} 
         heroY={heroY} 
         onStart={onStart} 
-        onAbout={onAbout} 
       />
       <div className="sr-only">Rolar para baixo para explorar o santuário digital</div>
       <HeroScrollIndicator />

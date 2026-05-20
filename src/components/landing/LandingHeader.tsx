@@ -36,7 +36,6 @@ const LandingHeader = () => {
     { name: "Bíblia", href: AppRoute.BIBLE },
     { name: "Catecismo", href: AppRoute.CATECHISM },
     { name: "Magistério", href: AppRoute.MAGISTERIUM },
-    { name: "Sobre", href: AppRoute.ABOUT },
   ];
 
   const handleNavClick = (href: string) => {

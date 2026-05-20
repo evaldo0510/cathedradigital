@@ -10,7 +10,7 @@ import { LangContext } from "@/contexts/LangContext";
 import HomeMainContent from "@/components/cathedra/HomeMainContent";
 
 // Lazy-load secondary components
-const LogosChat = lazy(() => import("@/components/cathedra/LogosChat"));
+
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
 
 
@@ -82,7 +82,7 @@ const Index = () => {
         {JSON.stringify(websiteSchema)}
       </script>
 
-      <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
+      <HeroSection onStart={handleStart} />
 
       <main id="main-content" className="w-full flex flex-col items-center outline-none pt-24 md:pt-32 pb-32 md:pb-48" tabIndex={-1}>
         <Suspense fallback={<SectionSkeleton />}>
@@ -95,7 +95,6 @@ const Index = () => {
         </Suspense>
 
         <Suspense fallback={null}>
-          <LogosChat />
           <CookieConsent />
         </Suspense>
 

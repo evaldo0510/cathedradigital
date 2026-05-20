@@ -1,15 +1,9 @@
-import React, { lazy, Suspense, useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import { Icons } from '@/constants';
 import { HomeCard } from './HomeCard';
-import { HomeButton } from './HomeButton';
-import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
-import { SectionSkeleton } from './HomeSkeletons';
 import { ComingSoonSection } from './ComingSoon';
-import { VisualSilenceControls } from './VisualSilenceControls';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare, History, BookOpen } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
@@ -78,20 +72,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
 
   return (
-    <div className="app-container stack-spacing pb-64">
-      {/* SILÊNCIO VISUAL - CONTROLES */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-            Atmosfera Contemplativa
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        
-        <VisualSilenceControls />
-      </section>
-
+    <div className="app-container stack-spacing pb-32">
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-16">
         <div className="flex items-center gap-10">
@@ -105,19 +86,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeMainDoors t={t} />
       </section>
 
-      {/* RITUAL DO DIA - NÚCLEO DE LEITURA/CONTEMPLAÇÃO */}
-      <section className="space-y-12">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
-            Ritual do Dia
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        <div className="max-w-4xl mx-auto w-full">
-          <RitualDoDia />
-        </div>
-      </section>
 
       {/* LOGOS IA INTEGRADA */}
       <section className="space-y-12">
@@ -210,12 +178,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* EM BREVE */}
       <ComingSoonSection className="pt-24" />
 
-      {/* FOOTER QUOTE */}
-      <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
-        <p className="text-sm font-serif italic max-w-sm mx-auto leading-relaxed">
-          "A beleza salvará o mundo." — Dostoievski
-        </p>
-      </div>
     </div>
   );
 };

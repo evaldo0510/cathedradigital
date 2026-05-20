@@ -35,7 +35,6 @@ describe('Visual Consistency & Accessibility Audit', () => {
           heroOpacity={mockMotionValue(1)} 
           heroY={mockMotionValue(0)} 
           onStart={() => {}} 
-          onAbout={() => {}} 
         />
       </BrowserRouter>
     );
@@ -52,7 +51,6 @@ describe('Visual Consistency & Accessibility Audit', () => {
           heroOpacity={mockMotionValue(1)} 
           heroY={mockMotionValue(0)} 
           onStart={() => {}} 
-          onAbout={() => {}} 
         />
       </BrowserRouter>
     );

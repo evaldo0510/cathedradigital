@@ -17,10 +17,9 @@ interface HeroContentProps {
   heroScale?: number;
   heroY: MotionValue<number>;
   onStart: () => void;
-  onAbout: () => void;
 }
 
-const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: HeroContentProps) => {
+const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContentProps) => {
   const navigate = useNavigate();
 
   return (
@@ -81,13 +80,6 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
           >
             Entrar no Santuário
           </HomeButton>
-          
-          <button
-            onClick={onAbout}
-            className="text-[10px] tracking-[0.2em] font-bold uppercase text-primary/40 hover:text-primary/60 transition-colors duration-500"
-          >
-            Apresentação
-          </button>
         </div>
 
         {/* Elegant Minimal Signature */}
