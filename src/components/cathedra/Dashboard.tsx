@@ -13,6 +13,7 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
+import { SpiritualContinuity } from './SpiritualContinuity';
 
 interface DashboardProps {
   user: User | null;
