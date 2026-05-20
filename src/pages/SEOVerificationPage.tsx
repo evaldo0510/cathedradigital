@@ -501,10 +501,16 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       <CardTitle className="text-sm">Generated HTML Tags</CardTitle>
                       <CardDescription className="text-xs">Paste these into your CMS or manual header if needed.</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copiar Código
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copiar Código
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => downloadHTML(page)}>
+                        <Download className="w-4 h-4 mr-2" />
+                        Baixar HTML
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="p-0">
                     <pre className="p-6 bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
