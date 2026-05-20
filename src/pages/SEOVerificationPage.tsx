@@ -182,7 +182,11 @@ const SEOVerificationPage = () => {
 
   const scanAll = async () => {
     setIsScanningAll(true);
-    // Scan in sequence to avoid overloading
+    if (scanMode === 'render') {
+      toast.info('Modo Renderização JS ativo. A varredura será mais lenta para processar os metadados dinâmicos.');
+    }
+    
+    // Scan in sequence to avoid overloading with iframes
     for (const page of pages) {
       await scanRoute(page.path);
     }
