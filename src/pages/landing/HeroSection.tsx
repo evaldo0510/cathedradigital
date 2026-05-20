@@ -7,10 +7,9 @@ import HeroScrollIndicator from "./hero/HeroScrollIndicator";
 
 interface HeroSectionProps {
   onStart: () => void;
-  onAbout: () => void;
 }
 
-const HeroSection = ({ onStart, onAbout }: HeroSectionProps) => {
+const HeroSection = ({ onStart }: HeroSectionProps) => {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ 
     target: heroRef, 
