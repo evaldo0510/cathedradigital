@@ -65,6 +65,19 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
   return (
     <div className="app-container stack-spacing pb-32">
+      {/* RITUAL DO DIA - EXPERIÊNCIA DIÁRIA */}
+      <section className="space-y-12 md:space-y-16">
+        <div className="flex items-center gap-10">
+          <div className="h-px flex-1 bg-border/30" />
+          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+            Ritual do Dia
+          </h2>
+          <div className="h-px flex-1 bg-border/30" />
+        </div>
+        
+        <RitualDoDia />
+      </section>
+
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-12 md:space-y-16">
         <div className="flex items-center gap-10">
