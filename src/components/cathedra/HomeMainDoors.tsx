@@ -72,7 +72,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12", className)}>
         {doors.map((door, idx) => {
           const isActive = location.pathname.startsWith(door.route);
           
