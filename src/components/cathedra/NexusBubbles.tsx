@@ -165,20 +165,26 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         </div>
         
         <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto scrollbar-none">
+          {/* Path Navigation */}
+          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-2">
+            <button 
+              onClick={() => setOpen(false)}
+              className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+            >
+              Nexus
+            </button>
+            <Icons.ChevronRight className="w-2.5 h-2.5 text-muted-foreground/30" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded-full">
+              {tag.label}
+            </span>
+          </div>
+
           {/* Elegant Map Header */}
           <div className="flex flex-col gap-1 items-center justify-center text-center pb-4 border-b border-border/10">
             <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/30">NEXUS THEOLOGICUM</span>
             <p className="text-xs text-muted-foreground font-serif italic">Conexões essenciais entre Escritura e Tradição</p>
           </div>
 
-          {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-40">
-            <div className="flex gap-2">
-              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
-              <span>Source: {metrics.source || 'pending'}</span>
-            </div>
-            <span>Query: "{tag.label}"</span>
-          </div>
 
           {status === 'loading' ? (
             <div className="space-y-4 py-2">
@@ -262,7 +268,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="space-y-1.5 group/content p-2 rounded-full hover:bg-primary/5 transition-colors cursor-pointer"
+                                className="space-y-1.5 group/content p-3 rounded-3xl hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
                                 onClick={() => link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
