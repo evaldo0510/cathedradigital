@@ -27,7 +27,17 @@ const MagisteriumViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { settings } = useReadingSettings();
+  const { saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   useEffect(() => {
     const fetchDoc = async () => {
