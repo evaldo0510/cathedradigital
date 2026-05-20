@@ -3,12 +3,13 @@ import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
 
 /**
- * Script to validate sitemap.xml and legacy redirects.
+ * Script to validate sitemap.xml, robots.txt and legacy redirects.
  * Also compares sitemap entries with AppRoute enum from AST.
  * Generates an artifact report on mismatch.
  */
 
 const SITEMAP_PATH = path.join(process.cwd(), 'public', 'sitemap.xml');
+const ROBOTS_PATH = path.join(process.cwd(), 'public', 'robots.txt');
 const REDIRECTS_PATH = path.join(process.cwd(), 'public', '_redirects');
 const REPORT_PATH = path.join(process.cwd(), 'sitemap-validation-report.json');
 const BASE_URL = 'https://www.cathedradigital.com.br';
@@ -71,12 +72,39 @@ function validateSitemapContent() {
     hasErrors = true;
   }
 
+  // Check for enhanced sitemap tags
+  if (!content.includes('<changefreq>') || !content.includes('<priority>')) {
+    console.error('❌ Sitemap missing <changefreq> or <priority> tags');
+    hasErrors = true;
+  }
+
   if (hasErrors) {
-    console.error('❌ Sitemap is out of sync with AppRoute enum!');
+    console.error('❌ Sitemap validation failed!');
     process.exit(1);
   }
 
   console.log(`✅ Sitemap validation passed! Found ${sitemapUrls.length} synchronized routes.`);
+}
+
+function validateRobotsTxt() {
+  console.log('🔍 Validating robots.txt...');
+  if (!fs.existsSync(ROBOTS_PATH)) {
+    console.error('❌ robots.txt not found!');
+    process.exit(1);
+  }
+
+  const content = fs.readFileSync(ROBOTS_PATH, 'utf-8');
+  if (!content.includes(`Sitemap: ${BASE_URL}/sitemap.xml`)) {
+    console.error('❌ robots.txt missing sitemap link or using wrong domain');
+    process.exit(1);
+  }
+
+  if (!content.includes('Disallow: /admin')) {
+    console.error('❌ robots.txt not blocking /admin');
+    process.exit(1);
+  }
+
+  console.log('✅ robots.txt validation passed!');
 }
 
 function validateRedirects() {
@@ -126,5 +154,7 @@ function validateRedirects() {
 }
 
 validateSitemapContent();
+validateRobotsTxt();
 validateRedirects();
 process.exit(0);
+
