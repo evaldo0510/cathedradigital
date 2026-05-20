@@ -487,13 +487,14 @@ const Bible: React.FC = () => {
   if (viewMode === 'reading' && selectedBook) {
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-4xl mx-auto pb-24 px-4 sm:px-6">
+      <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
         <SEOHead 
           title={`${selectedBook.name} ${selectedChapter} | Bíblia Sagrada`}
           description={`Leia ${selectedBook.name}, capítulo ${selectedChapter}.`}
           path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
         />
-        <div className={`mx-auto space-y-8 transition-all duration-500`}>
+        <div className="mx-auto transition-all duration-500">
+
           {/* Back to Theme */}
           <BackToThemeBanner />
           {/* Back to Dashboard */}
@@ -582,24 +583,36 @@ const Bible: React.FC = () => {
         </div>
 
 
-        {/* Content */}
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start">
-          {/* Cross References Panel - Top on mobile, Side on desktop */}
-          {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
-            <div className="w-full lg:col-span-4 lg:sticky lg:top-24 order-1 lg:order-2">
-              <CrossReferencePanel 
-                type="bible"
-                cicParagraphs={crossRefs} 
-                documents={docsRefs}
-                onNavigateToCIC={handleNavigateToCIC}
-                onNavigateToDoc={handleNavigateToDoc}
-              />
+        {/* Content with Side Nav */}
+        <div className="flex flex-col xl:flex-row gap-12 items-start mt-12">
+          {/* Elegant Side Navigation for Chapters (Desktop) */}
+          <aside className="reader-navigation-aside">
+            <div className="space-y-4">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
+              <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+                {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                  <button
+                    key={ch}
+                    onClick={() => selectChapter(ch)}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
+                      ${selectedChapter === ch 
+                        ? 'bg-primary text-white shadow-soft' 
+                        : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                  >
+                    <span className="opacity-50 text-[10px] w-4">{ch}</span>
+                    <span>Capítulo {ch}</span>
+                    {chaptersRead[selectedBook.abbr]?.has(ch) && (
+                      <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
+                    )}
+                  </button>
+                ))}
+              </nav>
             </div>
-          )}
+          </aside>
 
-          <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
-            <Card className="border-border/40 shadow-soft overflow-hidden bg-card">
-              <CardContent className="p-6 md:p-8">
+          <div className="flex-1 w-full space-y-8">
+            <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
+              <div className="p-8 md:p-16 lg:p-20">
                 {isLoading ? (
                   <BibleChapterSkeleton />
                 ) : bibleError ? (
@@ -609,6 +622,7 @@ const Bible: React.FC = () => {
                   </div>
                 ) : (
                   <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} text-foreground/90 transition-all duration-300 reader-text`}>
+
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
@@ -635,8 +649,22 @@ const Bible: React.FC = () => {
                     })}
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+
+            {/* Cross References Panel - Below the text for focused reading */}
+            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+              <div className="w-full max-w-[72ch] mx-auto">
+                <CrossReferencePanel 
+                  type="bible"
+                  cicParagraphs={crossRefs} 
+                  documents={docsRefs}
+                  onNavigateToCIC={handleNavigateToCIC}
+                  onNavigateToDoc={handleNavigateToDoc}
+                />
+              </div>
+            )}
+
 
             {/* Deep Content Section for famous Bible Chapters */}
             {selectedBook.abbr === 'Jo' && selectedChapter === 3 && (
