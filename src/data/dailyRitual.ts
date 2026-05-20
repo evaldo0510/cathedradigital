@@ -46,15 +46,21 @@ export const DAILY_RITUALS: DailyRitual[] = [
 
 export const DAILY_VERSES = [
   { text: 'Sede misericordiosos como vosso Pai é misericordioso.', ref: 'Lc 6,36' },
-// ... keep existing code
-  { text: 'Tu és o meu Deus, em Ti confio.', ref: 'Sl 31,14' },
-  { text: 'Quem nos separará do amor de Cristo?', ref: 'Rm 8,35' },
+  { text: 'Eu sou o caminho, a verdade e a vida.', ref: 'Jo 14,6' },
+  { text: 'Vinde a mim todos vós que estais cansados e eu vos aliviarei.', ref: 'Mt 11,28' },
+  { text: 'Não tenhais medo, eu venci o mundo.', ref: 'Jo 16,33' },
+  { text: 'Amai-vos uns aos outros como eu vos amei.', ref: 'Jo 15,12' },
+  { text: 'Tudo posso naquele que me fortalece.', ref: 'Fl 4,13' },
+  { text: 'O Senhor é meu pastor, nada me faltará.', ref: 'Sl 23,1' },
+  { text: 'Buscai primeiro o Reino de Deus e a sua justiça.', ref: 'Mt 6,33' },
+  { text: 'Porque Deus amou o mundo de tal maneira que deu o seu Filho unigénito.', ref: 'Jo 3,16' },
+  { text: 'A fé é a certeza daquilo que esperamos e a prova das coisas que não vemos.', ref: 'Hb 11,1' },
 ];
 
 export const DAILY_REFLECTIONS = [
   'Hoje, acolha a misericórdia divina como dom gratuito. Deixe que ela transforme os seus julgamentos em compaixão.',
-// ... keep existing code
-  { text: 'A fé sem obras é morta. Que suas ações hoje falem mais alto que suas palavras sobre o que você crê.', ref: 'Tg 2,17' },
-  { text: 'O segredo da felicidade está em buscar primeiro o Reino de Deus. O resto será acrescentado.', ref: 'Mt 6,33' },
-  { text: 'A cruz que você carrega hoje é o seu caminho de glória amanhã. Una seus sofrimentos aos de Jesus.', ref: 'Mt 16,24' },
+  'O caminho de Cristo não é uma estrada fácil, mas é a única que conduz à plenitude. Caminhe com confiança.',
+  'Nos momentos de cansaço, lembre-se: Jesus não pede que sejamos fortes sozinhos. Ele carrega conosco o peso do dia.',
+  'O medo paralisa, mas a fé liberta. Confie n\'Aquele que já venceu todas as batalhas por você.',
+  'O amor verdadeiro não é sentimento passageiro; é decisão diária de entregar-se ao próximo como Cristo se entregou.',
 ];
