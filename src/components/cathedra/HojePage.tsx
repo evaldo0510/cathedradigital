@@ -12,7 +12,7 @@ import HomeMainDoors from './HomeMainDoors';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
-import { DashboardSkeleton } from '@/components/cathedra/HomeSkeletons';
+import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from '@/components/cathedra/DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 
