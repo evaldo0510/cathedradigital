@@ -345,8 +345,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                               size="xs"
                                               onClick={(e) => {
                                                 e.stopPropagation();
-                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
-                                                setOpen(false);
+                                                handlePushTag(matchingTag);
                                               }}
                                             />
                                           );
@@ -364,6 +363,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   })}
                 </div>
               )}
+
 
               {/* Related Themes (The "Map" feeling) */}
               <div className="pt-10 space-y-6 border-t border-border/5">
