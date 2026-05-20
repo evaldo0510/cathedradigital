@@ -79,6 +79,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <RitualDoDia />
       </section>
 
+      {/* CONTINUAR LEITURA */}
+      <ReadingProgressSection />
+
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-12 md:space-y-16">
         <div className="flex items-center gap-10">
@@ -105,19 +108,17 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           ref={logosCardRef}
-          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none"
-
+          className="p-10 md:p-16 flex flex-col items-center gap-12 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/5 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none bg-card"
         >
-          <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
-            <Sparkles className="w-8 h-8" strokeWidth={1} />
+          <div className="relative z-10 w-20 h-20 rounded-premium bg-primary/[0.01] border border-border/10 flex items-center justify-center text-primary/30 group-hover:scale-105 transition-transform duration-1000">
+            <Sparkles className="w-10 h-10" strokeWidth={0.5} />
           </div>
           
-          <div className="relative z-10 space-y-3 text-center max-w-2xl">
-            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
-            <p className="text-base text-muted-foreground leading-relaxed font-serif italic max-w-md mx-auto opacity-40">
-              "A inteligência a serviço da fé."
+          <div className="relative z-10 space-y-4 text-center max-w-2xl">
+            <h3 className="text-4xl font-display font-medium text-primary tracking-tight">Mentor Espiritual</h3>
+            <p className="text-lg text-muted-foreground/40 leading-relaxed font-serif italic max-w-md mx-auto">
+              "A inteligência a serviço da contemplação."
             </p>
-
           </div>
 
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
@@ -126,26 +127,26 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 ref={logosInputRef}
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
-                placeholder="Pergunte sobre a fé..."
-                className="h-14 pl-12 pr-28 rounded-premium border-border/20 bg-background/50 focus:bg-background transition-all text-base placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
+                placeholder="Busque por luz e entendimento..."
+                className="h-16 pl-14 pr-32 rounded-premium border-border/10 bg-background/30 focus:bg-background transition-all text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/5"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+              <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10" />
               <button 
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 group/btn shadow-premium"
+                className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-3 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-[0.3em] hover:brightness-110 transition-all flex items-center gap-3 group/btn shadow-premium"
               >
                 Consultar
-                <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
             
-            <div className="mt-4 flex justify-center">
-              <div className="flex items-center gap-2 text-[8px] font-bold uppercase tracking-widest text-primary/20 px-2">
-                <kbd className="px-1.5 py-0.5 rounded bg-muted/50 border border-border/40">Alt</kbd>
+            <div className="mt-6 flex justify-center">
+              <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 px-2">
+                <kbd className="px-2 py-1 rounded bg-muted/30 border border-border/10">Alt</kbd>
                 <span>+</span>
-                <kbd className="px-1.5 py-0.5 rounded bg-muted/50 border border-border/40">L</kbd>
-                <span className="ml-1">Atalho rápido</span>
+                <kbd className="px-2 py-1 rounded bg-muted/30 border border-border/10">L</kbd>
+                <span className="ml-2">Atalho para o Logos</span>
               </div>
             </div>
           </form>
@@ -153,7 +154,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* EM BREVE */}
-      <ComingSoonSection className="pt-16 md:pt-24" />
+      <ComingSoonSection className="pt-24 md:pt-32 opacity-40 hover:opacity-100 transition-opacity duration-1000" />
 
     </div>
   );
