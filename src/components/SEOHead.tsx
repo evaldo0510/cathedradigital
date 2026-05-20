@@ -37,10 +37,10 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     if (image) return image;
     if (seoSettings?.og_image_url) return seoSettings.og_image_url;
     
-    // Generate a dynamic placeholder if no specific image is provided
-    // Using a high-quality placeholder with the title
+    // Dynamic OG image generator fallback
     const encodedTitle = encodeURIComponent(title || siteTitle);
-    return `https://images.unsplash.com/photo-1548625361-098586f3876d?q=80&w=1200&h=630&auto=format&fit=crop&txt=${encodedTitle}&txt-size=64&txt-align=middle,center&txt-color=ffffff&bg=000000`;
+    // Using a reliable placeholder service for dynamic text-based OG images
+    return `https://placehold.jp/32/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital`;
   };
 
   const displayImage = getDynamicImage(title);
