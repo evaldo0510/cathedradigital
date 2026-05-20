@@ -25,6 +25,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import LogosAI from './LogosAI';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -117,7 +119,9 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const [fontSizeIdx, setFontSizeIdx] = useState(1);
+  const { settings, updateSettings } = useReadingSettings();
+  const [showLogosAI, setShowLogosAI] = useState(false);
+  const [logosAIContext, setLogosAIContext] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
