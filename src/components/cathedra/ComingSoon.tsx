@@ -116,22 +116,22 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
         <div className="h-px flex-1 bg-border/30" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {items.map((item, idx) => (
           <motion.div
             key={idx}
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 1, delay: idx * 0.1 }}
             viewport={{ once: true }}
-            className="p-8 rounded-premium border border-border/10 bg-card/[0.02] flex flex-col items-center text-center gap-6 group hover:bg-card/[0.05] transition-all cursor-default"
+            className="flex flex-col items-center text-center gap-6 group cursor-default"
           >
-            <div className="w-10 h-10 rounded-premium-sm bg-muted/20 flex items-center justify-center text-muted-foreground/20 group-hover:scale-105 transition-transform duration-500">
-              <item.icon className="w-5 h-5" strokeWidth={1} />
+            <div className="w-12 h-12 rounded-premium bg-primary/[0.01] border border-border/5 flex items-center justify-center text-primary/10 group-hover:text-primary/30 group-hover:border-primary/10 transition-all duration-1000">
+              <item.icon className="w-5 h-5" strokeWidth={0.5} />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-[9px] font-bold uppercase tracking-[0.3em] text-foreground/20">{item.label}</h3>
-              <p className="text-[9px] text-muted-foreground/20 leading-relaxed italic">{item.description}</p>
+            <div className="space-y-3">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/20 group-hover:text-primary/40 transition-colors">{item.label}</h3>
+              <p className="text-[9px] text-muted-foreground/10 leading-relaxed font-serif italic group-hover:text-muted-foreground/30 transition-colors">{item.description}</p>
             </div>
           </motion.div>
         ))}
