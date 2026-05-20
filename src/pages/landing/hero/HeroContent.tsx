@@ -5,10 +5,10 @@ import { HomeButton } from "@/components/cathedra/HomeButton";
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 10 },
   visible: { 
     opacity: 1, y: 0,
-    transition: { duration: 0.8, ease: EASE }
+    transition: { duration: 1.2, ease: EASE }
   },
 };
 
