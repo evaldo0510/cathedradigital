@@ -14,6 +14,7 @@ import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
+import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
@@ -102,6 +103,7 @@ const HojePage: React.FC = () => {
   const journeyProgress = activeJourneyData?.progress || { completed: 0, total: 0 };
   
   const { data: recommendedJourney } = useRecommendedJourney(user?.id, profile, userLevel, !!activeJourney);
+  const { data: enhancedRec, isLoading: loadingRec } = useEnhancedRecommendations();
 
   const hour = new Date().getHours();
   const greeting = useMemo(() => {
@@ -111,17 +113,18 @@ const HojePage: React.FC = () => {
   }, [hour, lang]);
 
   const nextUp = useMemo(() => {
-    // Return last read mark for quick access
+    if (enhancedRec) return enhancedRec;
+    
     if (activeJourney) return {
       type: 'journey',
-      label: activeJourney.title,
+      title: activeJourney.title,
       subtitle: 'Continuar Jornada',
       route: journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`
     };
     return null;
-  }, [activeJourney, journeyStep]);
+  }, [enhancedRec, activeJourney, journeyStep]);
 
-  if (loadingStats || loadingJourney) return <DashboardSkeleton />;
+  if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
@@ -169,6 +172,51 @@ const HojePage: React.FC = () => {
             </div>
           </div>
         </motion.div>
+
+        {/* PRÓXIMO PASSO - RECOMENDAÇÃO DINÂMICA */}
+        {nextUp && (
+          <motion.section 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-4xl mx-auto w-full"
+          >
+            <div 
+              onClick={() => navigate(nextUp.route)}
+              className="p-8 md:p-12 rounded-[3rem] border border-primary/10 bg-primary/[0.02] hover:bg-primary/[0.05] transition-all cursor-pointer group relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
+                <Icons.Sparkles className="w-32 h-32 text-primary" />
+              </div>
+              
+              <div className="space-y-6 relative z-10">
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 rounded-full bg-primary/10 text-[10px] font-bold uppercase tracking-widest text-primary">
+                    Recomendação para Você
+                  </span>
+                  <span className="text-[10px] font-medium text-muted-foreground/60 italic uppercase tracking-widest">
+                    Baseado em sua leitura
+                  </span>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-3xl md:text-4xl font-display text-primary">{nextUp.title}</h3>
+                  <p className="text-lg text-primary/60 font-serif italic">{nextUp.subtitle}</p>
+                </div>
+                
+                {nextUp && 'description' in nextUp && (
+                  <p className="text-sm leading-relaxed text-muted-foreground max-w-xl">
+                    {(nextUp as any).description}
+                  </p>
+                )}
+                
+                <div className="pt-4 flex items-center gap-3 text-primary font-bold uppercase tracking-widest text-[10px]">
+                  <span>Continuar Jornada</span>
+                  <Icons.ArrowRight className="w-3 h-3 group-hover:translate-x-2 transition-transform" />
+                </div>
+              </div>
+            </div>
+          </motion.section>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           <div className="lg:col-span-8 stack-spacing">

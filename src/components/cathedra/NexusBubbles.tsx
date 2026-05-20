@@ -164,9 +164,15 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </Button>
         </div>
         
-        <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
+        <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto scrollbar-none">
+          {/* Elegant Map Header */}
+          <div className="flex flex-col gap-1 items-center justify-center text-center pb-4 border-b border-border/10">
+            <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/30">NEXUS THEOLOGICUM</span>
+            <p className="text-xs text-muted-foreground font-serif italic">Conexões essenciais entre Escritura e Tradição</p>
+          </div>
+
           {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
+          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-[8px] font-black uppercase tracking-widest opacity-40">
             <div className="flex gap-2">
               <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
               <span>Source: {metrics.source || 'pending'}</span>
@@ -217,12 +223,13 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 </motion.div>
               )}
               
-              {content.length > 0 ? (
+              {content.length > 0 && (
                 <div className="space-y-6">
                   {[
                     { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-3.5 h-3.5" /> },
                     { id: 'catechism', label: 'Catecismo', icon: <Church className="w-3.5 h-3.5" /> },
                     { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-3.5 h-3.5" /> },
+                    { id: 'saint', label: 'Santos', icon: <Sparkles className="w-3.5 h-3.5" /> },
                     { id: 'journey', label: 'Jornadas', icon: <Flame className="w-3.5 h-3.5" /> },
                   ].map((category) => {
                     const categoryContent = content.filter(c => c.type === category.id);
@@ -283,7 +290,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                               emoji={matchingTag.emoji}
                                               index={i}
                                               size="xs"
-                                              onClick={() => {
+                                              onClick={(e) => {
+                                                e.stopPropagation();
                                                 navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
                                                 setOpen(false);
                                               }}
@@ -302,7 +310,22 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     );
                   })}
                 </div>
-              ) : !logosInsight && status === 'success' && (
+              )}
+
+              {/* Related Themes (The "Map" feeling) */}
+              <div className="pt-8 space-y-4 border-t border-border/10">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30 flex items-center gap-2">
+                  <div className="h-[1px] w-4 bg-border/40" />
+                  MAPA DE CONEXÕES
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {allThemes?.filter(t => t.category === tag.category && t.id !== tag.id).slice(0, 5).map((t, i) => (
+                    <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick />
+                  ))}
+                </div>
+              </div>
+
+              {!logosInsight && status === 'success' && content.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
                   <div className="w-16 h-16 rounded-premium bg-muted/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
@@ -370,230 +393,100 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           label: t.name,
           emoji: t.emoji || '⛪',
           category: t.category || 'Geral'
-        }));
+        })) as Tag[];
         setTags(mappedTags);
       }
       setLoading(false);
     };
+
     fetchTags();
   }, []);
 
-  const [activeFilter, setActiveFilter] = useState<string>(() => {
-    return localStorage.getItem('nexus_bubbles_filter') || 'all';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('nexus_bubbles_filter', activeFilter);
-  }, [activeFilter]);
-
-  const categories = {
-    fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
-    dores: { label: 'Dores', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
-    divino: { label: 'Mistério', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
-    vida: { label: 'Vida', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
-  };
-
-  const profileSuggestedTags = useMemo(() => {
-    if (!profileId || !tags.length) return [];
-    const profile = PROFILES[profileId];
-    if (!profile) return [];
-
-    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
-    return tags.filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase()))).slice(0, 8);
-  }, [profileId, tags]);
+  const categories = useMemo(() => {
+    const cats = [...new Set(tags.map(t => t.category))];
+    return cats.sort();
+  }, [tags]);
 
   const filteredTags = useMemo(() => {
-    let result = tags;
-    if (searchQuery) {
-      const q = normalizeText(searchQuery);
-      return result.filter(t => 
-        normalizeText(t.label).includes(q) || 
-        normalizeText(t.category).includes(q)
-      );
-    }
-    
-    if (activeFilter !== 'all') {
-      result = result.filter(t => t.category?.toLowerCase() === activeFilter.toLowerCase());
-    }
-    return result;
-  }, [tags, searchQuery, activeFilter]);
+    if (!searchQuery.trim()) return tags;
+    const query = normalizeText(searchQuery);
+    return tags.filter(t => normalizeText(t.label).includes(query));
+  }, [tags, searchQuery]);
 
-  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0, filteredRef);
-  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0, suggestedRef);
+  // Priority grouping for better visualization
+  const priorityGroups = useMemo(() => {
+    const suggested = tags.filter(t => t.priorityGroup === 'suggested');
+    const essential = tags.filter(t => t.priorityGroup === 'essential');
+    return { suggested, essential };
+  }, [tags]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-10">
-        <Loader2 className="w-6 h-6 animate-spin text-primary/40" />
-      </div>
-    );
-  }
+  const { handleKeyDown } = useRovingTabindex(filteredTags.length);
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/40 pb-4">
-        <div className="flex flex-col text-center sm:text-left">
-          <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/70">
-            Nexus Theologicus
-          </span>
-          <span className="text-premium-tiny text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
-        </div>
-        
-        <div className="relative group/search max-w-[140px] md:max-w-[200px]">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
-          <input 
-            type="text"
-            placeholder="Buscar tema..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-8 pl-8 pr-8 bg-card border border-border/50 rounded-full text-premium-tiny focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
-            aria-label="Buscar tema no Nexus"
-
-          />
-          {searchQuery && (
-            <Button 
-              onClick={() => setSearchQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
-            >
-              <X className="w-2.5 h-2.5 text-muted-foreground" />
-            </Button>
-          )}
-        </div>
-      </div>
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-        <Button
-          onClick={() => setActiveFilter('all')}
-          aria-pressed={activeFilter === 'all'}
-          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
-        >
-          Todos
-        </Button>
-
-        {Object.entries(categories).map(([key, cat]) => (
-          <Button
-            key={key}
-            onClick={() => setActiveFilter(key)}
-            aria-pressed={activeFilter === key}
-            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
-          >
-
-            {cat.icon}
-            {cat.label}
-          </Button>
-        ))}
+    <div className="space-y-12">
+      <div className="relative group max-w-md mx-auto">
+        <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <input 
+          type="text" 
+          placeholder="Buscar temas e conexões..." 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-12 pl-12 pr-4 rounded-full bg-card border border-border/40 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all text-sm outline-none"
+        />
       </div>
 
-      <div className="space-y-6">
-        <AnimatePresence mode="wait">
-          {searchQuery || activeFilter !== 'all' ? (
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-3"
-              key="filtered"
+      <div className="space-y-16">
+        {searchQuery.trim() ? (
+          <div className="space-y-6">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 text-center">Resultados da Busca</h3>
+            <div 
+              ref={filteredRef}
+              className="flex flex-wrap justify-center gap-3"
             >
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-premium-tiny font-bold text-muted-foreground uppercase tracking-widest">
-                  {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
-                </p>
-                {searchQuery && activeFilter !== 'all' && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-premium-tiny text-primary/60 font-medium italic">Pesquisando globalmente</span>
-                    <Button 
-                      onClick={() => setActiveFilter('all')}
-                      className="text-premium-tiny font-black uppercase tracking-tighter text-primary hover:underline"
-                    >
-                      Limpar Filtro
-                    </Button>
+              {filteredTags.map((tag, i) => (
+                <TagBubble 
+                  key={tag.id} 
+                  tag={tag} 
+                  index={i} 
+                  profileId={profileId}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            {categories.map((cat, idx) => {
+              const catTags = tags.filter(t => t.category === cat);
+              return (
+                <section key={cat} className="space-y-6">
+                  <div className="flex items-center gap-6">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">{cat}</h3>
+                    <div className="h-px flex-1 bg-border/20" />
                   </div>
-                )}
-              </div>
-              <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
-                {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
-                  <div key={tag.slug} role="listitem">
-                    <TagBubble 
-                      tag={tag} 
-                      index={i} 
-                      tabIndex={filteredActiveIndex === i ? 0 : -1}
-                      onKeyDown={(e) => handleFilteredKeyDown(e, i)}
-                      profileId={profileId}
-                    />
-                  </div>
-                )) : (
-                  <p className="text-premium-tiny text-muted-foreground italic">Nenhum tema encontrado.</p>
-                )}
-              </div>
-            </motion.div>
-          ) : (
-            <div key="default" className="space-y-6">
-              {/* Profile Suggestions */}
-              {profileId && profileSuggestedTags.length > 0 && (
-                <motion.div 
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-soft relative overflow-hidden"
-                >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-premium  -mr-8 -mt-8" />
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-premium bg-secondary/20 flex items-center justify-center">
-                      <Heart className="w-3 h-3 text-secondary" />
-                    </div>
-                    <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary">
-                      Sugeridos para sua Jornada
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5" role="list" ref={suggestedRef}>
-                    {profileSuggestedTags.map((tag, i) => (
-                      <div key={tag.slug} role="listitem">
-                        <TagBubble 
-                          tag={tag} 
-                          index={i} 
-                          isSuggested 
-                          tabIndex={suggestedActiveIndex === i ? 0 : -1}
-                          onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
-                          profileId={profileId}
-                        />
-                      </div>
+                  <div className="flex flex-wrap gap-3">
+                    {catTags.map((tag, i) => (
+                      <TagBubble 
+                        key={tag.id} 
+                        tag={tag} 
+                        index={i} 
+                        profileId={profileId}
+                      />
                     ))}
                   </div>
-                </motion.div>
-              )}
-
-              {/* Categorized Tags */}
-              <div className="grid grid-cols-1 gap-5">
-                {Object.entries(categories).map(([key, category]) => {
-                  const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
-                  if (categoryTags.length === 0) return null;
-
-                  return (
-                    <motion.div key={key} layout className="space-y-2.5">
-                      <Button
-                        onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
-                        className="flex items-center gap-1.5 group w-full"
-                      >
-                        {category.icon}
-                        <span className="text-premium-tiny font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
-                          {category.label}
-                        </span>
-                        <div className="h-px flex-1 bg-border/40" />
-                        <span className="text-premium-tiny font-black text-muted-foreground/40">{categoryTags.length} temas</span>
-                      </Button>
-                      <div className="flex flex-wrap gap-1.5" role="list">
-                        {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
-                          <div key={tag.slug} role="listitem">
-                            <TagBubble tag={tag} index={i} profileId={profileId} />
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </AnimatePresence>
+                </section>
+              );
+            })}
+          </>
+        )}
       </div>
+
+      {!loading && filteredTags.length === 0 && (
+        <div className="text-center py-20 space-y-4">
+          <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+          <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -29,6 +29,9 @@ export interface Profile {
   diocese?: string;
   paroquia?: string;
   movimento_pastoral?: string;
+  reading_settings?: Record<string, any>;
+  journey_reminder_time?: string;
+  weekly_goal?: number;
   _sensitive?: SensitiveData;
 }
 
