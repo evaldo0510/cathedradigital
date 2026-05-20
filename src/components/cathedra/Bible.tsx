@@ -30,7 +30,6 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
-import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { History, LayoutPanelLeft } from 'lucide-react';
