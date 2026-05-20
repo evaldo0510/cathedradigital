@@ -3,7 +3,7 @@ import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
 
 /**
- * Script to generate sitemap.xml dynamically from AppRoute enum in src/types.ts using AST.
+ * Script to generate sitemap.xml and robots.txt dynamically from AppRoute enum in src/types.ts using AST.
  * Only public routes are included.
  */
 
@@ -41,9 +41,35 @@ function generateSitemap() {
   
   xml += '</urlset>';
   
-  const outputPath = path.join(process.cwd(), 'public', 'sitemap.xml');
-  fs.writeFileSync(outputPath, xml);
-  console.log(`✅ Sitemap generated with ${publicRoutes.length} routes at ${outputPath} using AST.`);
+  const sitemapPath = path.join(process.cwd(), 'public', 'sitemap.xml');
+  fs.writeFileSync(sitemapPath, xml);
+  console.log(`✅ Sitemap generated with ${publicRoutes.length} routes at ${sitemapPath} using AST.`);
+
+  // Generate robots.txt
+  const robotsTxt = `User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /profile
+Disallow: /favorites
+Disallow: /vendedor
+Disallow: /transactions
+Disallow: /a11y-audit
+Disallow: /security-audit
+Disallow: /catechism/integrity
+Disallow: /catechism/health
+Disallow: /catechism/verify
+Disallow: /offline
+Disallow: /cache-manager
+Disallow: /diario
+Disallow: /diagnostics
+Disallow: /upgrade
+
+Sitemap: ${BASE_URL}/sitemap.xml
+`;
+  const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
+  fs.writeFileSync(robotsPath, robotsTxt);
+  console.log(`✅ robots.txt generated at ${robotsPath}`);
 }
 
 generateSitemap();
