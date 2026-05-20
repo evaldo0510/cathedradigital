@@ -129,6 +129,7 @@ const Bible: React.FC = () => {
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [lastReadMark, setLastReadMark] = useState<any>(null);
+  const [shouldAutoResume, setShouldAutoResume] = useState(true);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -220,72 +221,101 @@ const Bible: React.FC = () => {
   ], []);
   const totalBooksRead = useMemo(() => allBooks.filter(b => completedBooks.has(b.abbr)).length, [allBooks, completedBooks]);
   const overallProgress = Math.round((totalBooksRead / 73) * 100);
-  // Handle deep-link from Catechism cross-references or Theme Page
+  // Handle deep-link or auto-resume
   useEffect(() => {
     const bookParam = searchParams.get('book');
     const chParam = searchParams.get('ch');
     const refParam = searchParams.get('ref');
 
-    if (refParam) {
-      // Handle "Book Chapter,Verse" or "Book Chapter" format
-      const match = refParam.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123\s]+)\s+(\d+)(?:[,.:]\s*(\d+)(?:[-–]\d+)?)?$/);
-      if (match) {
-        const bookNameOrAbbr = match[1].trim();
-        const ch = parseInt(match[2]);
-        const vs = match[3] ? parseInt(match[3]) : null;
+    // 1. If we have a specific ref or book/ch, use that
+    if (refParam || (bookParam && chParam)) {
+      setShouldAutoResume(false); // User clicked a specific link, don't auto-resume
+      
+      if (refParam) {
+        // Handle "Book Chapter,Verse" or "Book Chapter" format
+        const match = refParam.match(/^([a-zA-ZáéíóúÁÉÍÓÚ123\s]+)\s+(\d+)(?:[,.:]\s*(\d+)(?:[-–]\d+)?)?$/);
+        if (match) {
+          const bookNameOrAbbr = match[1].trim();
+          const ch = parseInt(match[2]);
+          const vs = match[3] ? parseInt(match[3]) : null;
 
-        const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
-        const found = allBooksList.find(b => 
-          b.abbr.toLowerCase() === bookNameOrAbbr.toLowerCase() || 
-          b.name.toLowerCase() === bookNameOrAbbr.toLowerCase()
-        );
+          const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+          const found = allBooksList.find(b => 
+            b.abbr.toLowerCase() === bookNameOrAbbr.toLowerCase() || 
+            b.name.toLowerCase() === bookNameOrAbbr.toLowerCase()
+          );
 
-        if (found) {
-          const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === found.abbr);
-          setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
-          setSelectedBook(found);
-          setSelectedChapter(ch);
-          if (vs) setHighlightedVerse(vs);
-          setViewMode('reading');
-          return;
+          if (found) {
+            const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === found.abbr);
+            setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+            setSelectedBook(found);
+            setSelectedChapter(ch);
+            if (vs) setHighlightedVerse(vs);
+            setViewMode('reading');
+            return;
+          }
         }
       }
-    }
 
-    if (bookParam) {
-      const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
-      const found = allBooksList.find(b => b.abbr === bookParam);
-      if (found) {
-        const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === bookParam);
-        setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
-        setSelectedBook(found);
-        if (chParam) {
-          const ch = parseInt(chParam);
-          if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
-            setSelectedChapter(ch);
-            setViewMode('reading');
-            // Verse highlight via ?v= (with safe parsing + invalid fallback)
-            const rawV = searchParams.get('v') ?? searchParams.get('verse');
-            if (rawV !== null) {
-              const v = parseVerseParam(rawV);
-              if (v !== null) {
-                setHighlightedVerse(v);
-              } else {
-                setHighlightedVerse(null);
-                toast.warning(`Versículo "${rawV}" inválido`, {
-                  description: `Mostrando o capítulo ${found.name} ${ch} sem destaque.`,
-                });
+      if (bookParam) {
+        const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+        const found = allBooksList.find(b => b.abbr === bookParam);
+        if (found) {
+          const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === bookParam);
+          setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+          setSelectedBook(found);
+          if (chParam) {
+            const ch = parseInt(chParam);
+            if (!isNaN(ch) && ch >= 1 && ch <= found.chapters) {
+              setSelectedChapter(ch);
+              setViewMode('reading');
+              const rawV = searchParams.get('v') ?? searchParams.get('verse');
+              if (rawV !== null) {
+                const v = parseVerseParam(rawV);
+                if (v !== null) setHighlightedVerse(v);
               }
+            } else {
+              setViewMode('chapters');
             }
           } else {
             setViewMode('chapters');
           }
-        } else {
-          setViewMode('chapters');
         }
       }
+      return;
     }
-  }, [searchParams, allBooks]);
+
+    // 2. Auto-resume from last saved point if no specific params
+    if (shouldAutoResume) {
+      const autoResume = async () => {
+        const { data } = await supabase
+          .from('reading_marks')
+          .select('*')
+          .eq('user_id', user?.id)
+          .eq('content_type', 'bible')
+          .eq('is_last_read', true)
+          .maybeSingle();
+
+        if (data && data.content_id && data.chapter) {
+          const allBooksList = [...getAllBooks('Antigo Testamento'), ...getAllBooks('Novo Testamento')];
+          const found = allBooksList.find(b => b.abbr === data.content_id);
+          if (found) {
+            const isNT = getAllBooks('Novo Testamento').some(b => b.abbr === found.abbr);
+            setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
+            setSelectedBook(found);
+            setSelectedChapter(data.chapter);
+            setViewMode('reading');
+            toast.info(`Retornando a ${found.name} ${data.chapter}`, {
+              description: 'Sua leitura foi retomada de onde você parou.',
+              duration: 3000
+            });
+          }
+        }
+      };
+      if (user) autoResume();
+      setShouldAutoResume(false);
+    }
+  }, [searchParams, allBooks, user, shouldAutoResume]);
 
   const filteredCategories = useMemo(() => {
     const categories = BIBLE_CATEGORIES[testament];
