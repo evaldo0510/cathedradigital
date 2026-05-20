@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
+    "build": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-sitemap.ts && bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -19,7 +19,8 @@
 
     "test:report": "bun run scripts/generate-test-report.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts",
-    "test:system-audit": "bun run scripts/audit-visual-system.ts"
+    "test:system-audit": "bun run scripts/audit-visual-system.ts",
+    "test:sitemap": "bun run scripts/validate-sitemap.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
