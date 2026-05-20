@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
@@ -14,6 +14,7 @@ import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 
 const MagisteriumViewer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
