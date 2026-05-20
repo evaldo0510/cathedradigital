@@ -27,6 +27,7 @@ import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import CommandCenter from './components/cathedra/CommandCenter';
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import OfflineModeToggle from './components/cathedra/OfflineModeToggle';
@@ -744,10 +745,12 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <ReadingSettingsProvider>
-              <BrowserRouter>
-                {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-                <AppLayout />
-              </BrowserRouter>
+              <TooltipProvider>
+                <BrowserRouter>
+                  {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+                  <AppLayout />
+                </BrowserRouter>
+              </TooltipProvider>
             </ReadingSettingsProvider>
           </AuthProvider>
         </QueryClientProvider>
