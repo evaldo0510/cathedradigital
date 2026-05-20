@@ -98,6 +98,8 @@ jobs:
 
       - name: Run CI Validation Scripts
         run: |
+          echo "Running validate-sitemap..."
+          bun run scripts/validate-sitemap.ts > scripts/logs/validate-sitemap.log 2>&1 || (echo "Sitemap validation failed!" && cat scripts/logs/validate-sitemap.log && exit 1)
           echo "Running validate-catechism..."
           bun run scripts/validate-catechism.ts > scripts/logs/validate-catechism.log 2>&1
           echo "Running security-audit..."
@@ -109,19 +111,39 @@ jobs:
       - name: Run Tests with Coverage
         run: bun run test -- --coverage
         
-      - name: Summary of Coverage
-        if: github.event_name == 'pull_request'
+      - name: Summary of Coverage and SEO
+        if: github.event_name == 'pull_request' && always()
         continue-on-error: true
         run: |
+          echo "### 📊 CI Summary" > pr_comment.md
+          
           if [ -f coverage/coverage-summary.json ]; then
             REPORT=$(cat coverage/coverage-summary.json | jq -r '.total | "Statements: \(.statements.pct)%\nLines: \(.lines.pct)%\nFunctions: \(.functions.pct)%\nBranches: \(.branches.pct)%"')
-            echo "### 📊 Test Coverage Summary" > pr_comment.md
+            echo "#### 🧪 Test Coverage" >> pr_comment.md
             echo "$REPORT" >> pr_comment.md
-            echo "" >> pr_comment.md
-            echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
           else
-            echo "### ⚠️ Coverage report not found" > pr_comment.md
+            echo "#### 🧪 Test Coverage: ⚠️ Report not found" >> pr_comment.md
           fi
+
+          echo "" >> pr_comment.md
+
+          if [ -f sitemap-validation-report.json ]; then
+            STATUS=$(jq -r '.status' sitemap-validation-report.json)
+            ROBOTS_STATUS=$(jq -r '.robotsValidation.status' sitemap-validation-report.json)
+            echo "#### 🌐 SEO & Sitemap Validation" >> pr_comment.md
+            if [ "$STATUS" == "success" ] && [ "$ROBOTS_STATUS" == "success" ]; then
+              echo "✅ Sitemap and Robots.txt are synchronized." >> pr_comment.md
+            else
+              echo "❌ SEO Validation Issues Found!" >> pr_comment.md
+              # Extract summary from log if failed
+              if [ -f scripts/logs/validate-sitemap.log ]; then
+                sed -n '/--- CI SUMMARY START ---/,/--- CI SUMMARY END ---/p' scripts/logs/validate-sitemap.log >> pr_comment.md
+              fi
+            fi
+          fi
+          
+          echo "" >> pr_comment.md
+          echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
 
       - name: Comment on PR
         uses: marocchino/sticky-pull-request-comment@v2
@@ -138,6 +160,7 @@ jobs:
             coverage/
             scripts/logs/
             test-results.json
+            sitemap-validation-report.json
 
   e2e-tests:
     name: 🎭 Playwright E2E Tests

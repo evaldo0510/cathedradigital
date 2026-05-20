@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
+import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
 
 /**
  * Script to validate sitemap.xml, robots.txt and legacy redirects.
@@ -94,13 +94,50 @@ function validateRobotsTxt() {
   }
 
   const content = fs.readFileSync(ROBOTS_PATH, 'utf-8');
-  if (!content.includes(`Sitemap: ${BASE_URL}/sitemap.xml`)) {
-    console.error('❌ robots.txt missing sitemap link or using wrong domain');
-    process.exit(1);
+  const allRoutes = extractRoutesFromTypesAST();
+  const expectedPrivateRoutes = getPrivateRoutes(allRoutes).sort();
+
+  // Extract Disallow entries
+  const disallowRegex = /Disallow:\s*(\/\S*)/g;
+  const currentDisallows: string[] = [];
+  let match;
+  while ((match = disallowRegex.exec(content)) !== null) {
+    currentDisallows.push(match[1]);
+  }
+  currentDisallows.sort();
+
+  const missingDisallows = expectedPrivateRoutes.filter(r => !currentDisallows.includes(r));
+  const extraDisallows = currentDisallows.filter(r => !expectedPrivateRoutes.includes(r));
+
+  let hasErrors = false;
+
+  if (missingDisallows.length > 0) {
+    console.error('❌ Missing private routes in robots.txt Disallow list:');
+    missingDisallows.forEach(r => console.error(`   - ${r}`));
+    hasErrors = true;
   }
 
-  if (!content.includes('Disallow: /admin')) {
-    console.error('❌ robots.txt not blocking /admin');
+  if (extraDisallows.length > 0) {
+    console.error('❌ Extra Disallow entries in robots.txt (not marked as private):');
+    extraDisallows.forEach(r => console.error(`   - ${r}`));
+    hasErrors = true;
+  }
+
+  if (!content.includes(`Sitemap: ${BASE_URL}/sitemap.xml`)) {
+    console.error('❌ robots.txt missing sitemap link or using wrong domain');
+    hasErrors = true;
+  }
+
+  const report = JSON.parse(fs.readFileSync(REPORT_PATH, 'utf-8'));
+  report.robotsValidation = {
+    status: hasErrors ? 'failure' : 'success',
+    missingDisallows,
+    extraDisallows
+  };
+  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
+
+  if (hasErrors) {
+    console.error('❌ robots.txt validation failed!');
     process.exit(1);
   }
 
@@ -156,5 +193,38 @@ function validateRedirects() {
 validateSitemapContent();
 validateRobotsTxt();
 validateRedirects();
+
+// Generate a summary for CI comment if there were errors
+const report = JSON.parse(fs.readFileSync(REPORT_PATH, 'utf-8'));
+if (report.status === 'failure' || report.robotsValidation?.status === 'failure') {
+  console.log('\n--- CI SUMMARY START ---');
+  console.log('## SEO Validation Failed ❌');
+  
+  if (report.status === 'failure') {
+    console.log('\n### Sitemap Issues');
+    if (report.missingRoutes.length > 0) {
+      console.log('Missing routes in sitemap:');
+      report.missingRoutes.forEach((r: string) => console.log(`- \`${r}\``));
+    }
+    if (report.extraRoutes.length > 0) {
+      console.log('Extra routes in sitemap:');
+      report.extraRoutes.forEach((r: string) => console.log(`- \`${r}\``));
+    }
+  }
+  
+  if (report.robotsValidation?.status === 'failure') {
+    console.log('\n### Robots.txt Issues');
+    if (report.robotsValidation.missingDisallows.length > 0) {
+      console.log('Missing Disallow entries:');
+      report.robotsValidation.missingDisallows.forEach((r: string) => console.log(`- \`${r}\``));
+    }
+    if (report.robotsValidation.extraDisallows.length > 0) {
+      console.log('Extra Disallow entries:');
+      report.robotsValidation.extraDisallows.forEach((r: string) => console.log(`- \`${r}\``));
+    }
+  }
+  console.log('\n--- CI SUMMARY END ---');
+}
+
 process.exit(0);
 
