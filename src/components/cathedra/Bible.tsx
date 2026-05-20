@@ -489,19 +489,19 @@ const Bible: React.FC = () => {
           path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
         />
         <div className={`mx-auto space-y-8 transition-all duration-500`}>
-        {/* Back to Theme */}
-        <BackToThemeBanner />
-        {/* Back to Dashboard */}
-        {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </Button>
-        )}
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-          </Button>
+          {/* Back to Theme */}
+          <BackToThemeBanner />
+          {/* Back to Dashboard */}
+          {fromDashboard && (
+            <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+              <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
+            </Button>
+          )}
+          {/* Header */}
+          <div className="flex items-center gap-4">
+            <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+              <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+            </Button>
           <div className="flex-1 min-w-0">
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
             <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
