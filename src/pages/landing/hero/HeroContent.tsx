@@ -1,10 +1,6 @@
 import { motion, MotionValue } from "framer-motion";
-import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import logosAvatar from "@/assets/logos-avatar.png";
 import { HomeButton } from "@/components/cathedra/HomeButton";
-import { Icons } from "@/constants";
-import { AppRoute } from "@/types";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
