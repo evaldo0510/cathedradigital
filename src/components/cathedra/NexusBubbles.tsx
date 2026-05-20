@@ -420,7 +420,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
     return { suggested, essential };
   }, [tags]);
 
-  const { rovingProps: filteredRoving } = useRovingTabindex(filteredTags.length);
+  const { handleKeyDown } = useRovingTabindex(filteredTags.length);
 
   return (
     <div className="space-y-12">
