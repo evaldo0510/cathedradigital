@@ -1,32 +1,43 @@
 import fs from 'fs';
 import path from 'path';
+import ts from 'typescript';
 
 /**
- * Script to generate sitemap.xml dynamically from AppRoute enum in src/types.ts.
+ * Script to generate sitemap.xml dynamically from AppRoute enum in src/types.ts using AST.
  * Only public routes are included.
  */
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
 
-function extractRoutesFromTypes() {
+function extractRoutesFromTypesAST() {
   const typesPath = path.join(process.cwd(), 'src', 'types.ts');
-  const content = fs.readFileSync(typesPath, 'utf-8');
-  
-  // Extract enum AppRoute values using regex
-  // Match lines like: HOME = '/',
-  const routeRegex = /[A-Z0-0_]+\s*=\s*'([^']+)'/g;
+  const sourceFile = ts.createSourceFile(
+    'types.ts',
+    fs.readFileSync(typesPath, 'utf-8'),
+    ts.ScriptTarget.Latest,
+    true
+  );
+
   const routes: string[] = [];
-  let match;
   
-  while ((match = routeRegex.exec(content)) !== null) {
-    const route = match[1];
-    // Skip routes with parameters (e.g. /santos/:id) and admin/private routes
-    if (!route.includes(':') && 
-        !route.startsWith('/admin') && 
-        !['/login', '/checkout', '/profile', '/favorites', '/checkout/result', '/vendedor', '/transactions', '/a11y-audit', '/security-audit', '/catechism/integrity', '/catechism/health', '/catechism/verify', '/offline', '/cache-manager', '/diario', '/diagnostics', '/upgrade'].includes(route)) {
-      routes.push(route);
+  function visit(node: ts.Node) {
+    if (ts.isEnumDeclaration(node) && node.name.text === 'AppRoute') {
+      node.members.forEach(member => {
+        if (member.initializer && ts.isStringLiteral(member.initializer)) {
+          const route = member.initializer.text;
+          // Skip routes with parameters (e.g. /santos/:id) and admin/private routes
+          if (!route.includes(':') && 
+              !route.startsWith('/admin') && 
+              !['/login', '/checkout', '/profile', '/favorites', '/checkout/result', '/vendedor', '/transactions', '/a11y-audit', '/security-audit', '/catechism/integrity', '/catechism/health', '/catechism/verify', '/offline', '/cache-manager', '/diario', '/diagnostics', '/upgrade'].includes(route)) {
+            routes.push(route);
+          }
+        }
+      });
     }
+    ts.forEachChild(node, visit);
   }
+
+  visit(sourceFile);
   
   // Ensure home is first and unique
   return Array.from(new Set(['/', ...routes])).sort((a, b) => {
@@ -37,7 +48,7 @@ function extractRoutesFromTypes() {
 }
 
 function generateSitemap() {
-  const publicRoutes = extractRoutesFromTypes();
+  const publicRoutes = extractRoutesFromTypesAST();
   const lastmod = new Date().toISOString().split('T')[0];
   
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -69,7 +80,7 @@ function generateSitemap() {
   
   const outputPath = path.join(process.cwd(), 'public', 'sitemap.xml');
   fs.writeFileSync(outputPath, xml);
-  console.log(`✅ Sitemap generated with ${publicRoutes.length} routes at ${outputPath}`);
+  console.log(`✅ Sitemap generated with ${publicRoutes.length} routes at ${outputPath} using AST.`);
 }
 
 generateSitemap();
