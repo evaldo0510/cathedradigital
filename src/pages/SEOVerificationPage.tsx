@@ -50,6 +50,7 @@ const SEOVerificationPage = () => {
   const [pages, setPages] = useState<SEOPageData[]>([]);
   const [isScanningAll, setIsScanningAll] = useState(false);
   const [isLoadingSitemap, setIsLoadingSitemap] = useState(true);
+  const [scanMode, setScanMode] = useState<'static' | 'render'>('static');
 
   useEffect(() => {
     fetchSitemap();
@@ -90,10 +91,18 @@ const SEOVerificationPage = () => {
     setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'scanning' } : p));
     
     try {
-      const response = await fetch(path);
-      const htmlText = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, 'text/html');
+      let doc: Document;
+
+      if (scanMode === 'render') {
+        // Dynamic Render Mode: use iframe to wait for JS execution
+        doc = await performDynamicRender(path);
+      } else {
+        // Static Mode: fast fetch of the raw HTML
+        const response = await fetch(path);
+        const htmlText = await response.text();
+        const parser = new DOMParser();
+        doc = parser.parseFromString(htmlText, 'text/html');
+      }
       
       const title = doc.querySelector('title')?.textContent || '';
       const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || '';
@@ -128,9 +137,56 @@ const SEOVerificationPage = () => {
     }
   };
 
+  const performDynamicRender = (path: string): Promise<Document> => {
+    return new Promise((resolve, reject) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = path;
+      document.body.appendChild(iframe);
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error('Timeout rendering page'));
+      }, 15000); // 15s timeout for heavy pages
+
+      const cleanup = () => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+        clearTimeout(timeout);
+      };
+
+      iframe.onload = () => {
+        // Wait a bit for React/Helmet to update the head
+        setTimeout(() => {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDoc) {
+              // Clone the document to avoid reference issues after iframe removal
+              const docClone = document.implementation.createHTMLDocument();
+              docClone.documentElement.innerHTML = iframeDoc.documentElement.innerHTML;
+              cleanup();
+              resolve(docClone);
+            } else {
+              cleanup();
+              reject(new Error('Could not access iframe content'));
+            }
+          } catch (e) {
+            cleanup();
+            reject(e);
+          }
+        }, 2000); // Give 2s for JS to run and SEOHead to inject tags
+      };
+    });
+  };
+
   const scanAll = async () => {
     setIsScanningAll(true);
-    // Scan in sequence to avoid overloading
+    if (scanMode === 'render') {
+      toast.info('Modo Renderização JS ativo. A varredura será mais lenta para processar os metadados dinâmicos.');
+    }
+    
+    // Scan in sequence to avoid overloading with iframes
     for (const page of pages) {
       await scanRoute(page.path);
     }
@@ -289,7 +345,26 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex bg-muted rounded-lg p-1 mr-2 border border-border/50">
+              <Button 
+                variant={scanMode === 'static' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 text-xs px-3"
+                onClick={() => setScanMode('static')}
+              >
+                Rápido (HTML)
+              </Button>
+              <Button 
+                variant={scanMode === 'render' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 text-xs px-3"
+                onClick={() => setScanMode('render')}
+              >
+                Render (JS)
+              </Button>
+            </div>
+            
             <Button 
               variant="outline" 
               size="sm" 
@@ -343,7 +418,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
                   {page.status === 'pending' && <Badge variant="secondary">Pendente</Badge>}
                   {page.status === 'missing' && <Badge variant="destructive">Incompleto</Badge>}
-                  {page.status === 'scanning' && <Badge className="animate-pulse">Varrendo...</Badge>}
+                  {page.status === 'scanning' && (
+                    <Badge className="animate-pulse bg-primary/20 text-primary border-primary/30">
+                      {scanMode === 'render' ? 'Renderizando...' : 'Varrendo...'}
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button 
