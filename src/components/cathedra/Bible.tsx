@@ -382,6 +382,20 @@ const Bible: React.FC = () => {
   }, [viewMode, selectedBook, navigateChapter]);
 
   useEffect(() => {
+    if (viewMode === 'reading' && !isLoading && verses.length > 0) {
+      const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
+      const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
+      
+      if (savedScroll && !searchParams.get('v')) {
+        setTimeout(() => {
+          window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          if (savedVerse) setHighlightedVerse(parseInt(savedVerse));
+        }, 800);
+      }
+    }
+  }, [viewMode, isLoading, verses.length]);
+
+  useEffect(() => {
 
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
