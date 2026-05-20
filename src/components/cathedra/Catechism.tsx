@@ -31,6 +31,7 @@ import LogosAI from './LogosAI';
 import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { toast } from 'sonner';
 
 
 
@@ -258,6 +259,7 @@ const Catechism: React.FC = () => {
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
+  const [shouldAutoResume, setShouldAutoResume] = useState(true);
 
   useEffect(() => {
     const handleOpenAI = (e: any) => {
@@ -365,16 +367,40 @@ const Catechism: React.FC = () => {
     }
   }, []);
 
-  // Handle deep-link from Bible cross-references (?p=1324)
+  // Handle deep-link or auto-resume
   useEffect(() => {
     const p = searchParams.get('p');
     if (p) {
+      setShouldAutoResume(false);
       const num = parseInt(p);
       if (!isNaN(num) && num >= 1 && num <= 2865) {
         navigateToParagraph(num);
       }
+      return;
     }
-  }, [searchParams]);
+
+    if (shouldAutoResume && user) {
+      const autoResume = async () => {
+        const { data } = await supabase
+          .from('reading_marks')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('content_type', 'catechism')
+          .eq('is_last_read', true)
+          .maybeSingle();
+
+        if (data && data.paragraph) {
+          navigateToParagraph(data.paragraph);
+          toast.info(`Retornando ao parágrafo §${data.paragraph}`, {
+            description: 'Sua leitura foi retomada de onde você parou.',
+            duration: 3000
+          });
+        }
+      };
+      autoResume();
+      setShouldAutoResume(false);
+    }
+  }, [searchParams, user, shouldAutoResume]);
 
   const navigateToParagraph = useCallback((num: number) => {
     for (const part of CIC_SECTIONS) {

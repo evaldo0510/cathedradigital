@@ -164,14 +164,51 @@ const Magisterium: React.FC = () => {
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [shouldAutoResume, setShouldAutoResume] = useState(true);
 
   useEffect(() => {
+    const topicParam = new URLSearchParams(window.location.search).get('topic');
+    const docParam = new URLSearchParams(window.location.search).get('doc');
+
+    if (topicParam || docParam) {
+      setShouldAutoResume(false);
+      if (topicParam) {
+        const found = SPIRITUAL_GUIDANCE.find(g => g.id === topicParam);
+        if (found) setSelectedGuidance(found);
+      }
+      return;
+    }
+
     const fetchLastRead = async () => {
-      const lr = await getLastRead();
-      setLastReadMark(lr);
+      const { data: authData } = await supabase.auth.getUser();
+      const user = authData?.user;
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('reading_marks')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('content_type', 'magisterium')
+        .eq('is_last_read', true)
+        .maybeSingle();
+
+      if (data) {
+        setLastReadMark(data);
+        if (shouldAutoResume && data.content_id) {
+          const found = SPIRITUAL_GUIDANCE.find(g => g.id === data.content_id);
+          if (found) {
+            setSelectedGuidance(found);
+            toast.info(`Retornando ao tema: ${found.theme}`, {
+              description: 'Sua leitura foi retomada de onde você parou.',
+              duration: 3000
+            });
+          }
+        }
+      }
+      setShouldAutoResume(false);
     };
     fetchLastRead();
-  }, [getLastRead]);
+  }, [shouldAutoResume]);
 
   const filteredDocs = useMemo(() => {
     return DOCS_LIST.filter(doc => {
