@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
+import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
 
 /**
  * Script to generate sitemap.xml and robots.txt dynamically from AppRoute enum in src/types.ts using AST.
- * Only public routes are included.
+ * Only public routes are included in sitemap.
+ * Robots.txt Disallow list is derived from private routes.
  */
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
@@ -12,6 +13,7 @@ const BASE_URL = 'https://www.cathedradigital.com.br';
 function generateSitemap() {
   const allRoutes = extractRoutesFromTypesAST();
   const publicRoutes = getPublicRoutes(allRoutes);
+  const privateRoutes = getPrivateRoutes(allRoutes);
   const lastmod = new Date().toISOString().split('T')[0];
   
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -46,30 +48,19 @@ function generateSitemap() {
   console.log(`✅ Sitemap generated with ${publicRoutes.length} routes at ${sitemapPath} using AST.`);
 
   // Generate robots.txt
-  const robotsTxt = `User-agent: *
-Allow: /
-Disallow: /admin
-Disallow: /checkout
-Disallow: /profile
-Disallow: /favorites
-Disallow: /vendedor
-Disallow: /transactions
-Disallow: /a11y-audit
-Disallow: /security-audit
-Disallow: /catechism/integrity
-Disallow: /catechism/health
-Disallow: /catechism/verify
-Disallow: /offline
-Disallow: /cache-manager
-Disallow: /diario
-Disallow: /diagnostics
-Disallow: /upgrade
-
-Sitemap: ${BASE_URL}/sitemap.xml
-`;
+  let robotsTxt = `User-agent: *\nAllow: /\n`;
+  
+  // Sort and deduplicate private routes for robots.txt
+  const disallowList = Array.from(new Set(privateRoutes)).sort();
+  disallowList.forEach(route => {
+    robotsTxt += `Disallow: ${route}\n`;
+  });
+  
+  robotsTxt += `\nSitemap: ${BASE_URL}/sitemap.xml\n`;
+  
   const robotsPath = path.join(process.cwd(), 'public', 'robots.txt');
   fs.writeFileSync(robotsPath, robotsTxt);
-  console.log(`✅ robots.txt generated at ${robotsPath}`);
+  console.log(`✅ robots.txt generated with ${disallowList.length} disallowed routes at ${robotsPath}`);
 }
 
 generateSitemap();
