@@ -137,6 +137,33 @@ const ReadingControlPanel: React.FC = () => {
                   className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
                 />
               </div>
+
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Modo Tela Cheia</p>
+                  <p className="text-[10px] text-muted-foreground italic">Foco absoluto e silêncio</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.fullScreen}
+                  onChange={(e) => updateSettings({ fullScreen: e.target.checked })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
+              </div>
+
+              <div className="pt-2">
+                <Button 
+                  onClick={() => window.print()}
+                  variant="outline"
+                  className="w-full rounded-2xl flex items-center justify-center gap-2 py-6 border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all"
+                >
+                  <Icons.Printer className="w-4 h-4" />
+                  <div className="text-left">
+                    <p className="text-xs font-bold">Imprimir ou PDF</p>
+                    <p className="text-[10px] text-muted-foreground">Layout premium otimizado</p>
+                  </div>
+                </Button>
+              </div>
             </div>
           </div>
         </DropdownMenuContent>
