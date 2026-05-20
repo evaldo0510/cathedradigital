@@ -1173,6 +1173,36 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_reflections: {
+        Row: {
+          content: string | null
+          context_id: string | null
+          created_at: string
+          id: string
+          reading_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          context_id?: string | null
+          created_at?: string
+          id?: string
+          reading_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          context_id?: string | null
+          created_at?: string
+          id?: string
+          reading_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ritual_progress: {
         Row: {
           completed: boolean
