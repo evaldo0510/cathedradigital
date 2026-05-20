@@ -403,26 +403,26 @@ const Catechism: React.FC = () => {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
         <BackToThemeBanner />
         {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
+          <Button onClick={() => navigate('/')} className="mb-6 flex items-center gap-1.5 text-xs text-primary hover:underline">
             <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
           </Button>
         )}
-        <div className="flex items-center gap-4">
+        
+        <div className="flex items-center gap-4 mb-8">
           <Button 
             onClick={goBack} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="p-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
             aria-label="Voltar para o Sumário"
           >
-            <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Sumário</span>
+            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
           </Button>
 
           <Button 
             onClick={goToExplorer} 
-            className="px-3 py-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
+            className="px-4 py-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
             title="Explorar por Temas"
           >
             <Icons.Search className="w-4 h-4 text-primary" />
@@ -431,9 +431,10 @@ const Catechism: React.FC = () => {
 
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
+            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
+
           <div className="flex items-center gap-2">
             <ReadingControlPanel />
             <Button 
