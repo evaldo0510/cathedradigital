@@ -69,10 +69,11 @@ const Index = () => {
       <LandingHeader />
       
       <SEOHead
-        title="Cathedra Digital | Portal de Espiritualidade e Sabedoria Católica"
-        description="Aprofunde sua fé católica com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente."
+        title="Cathedra Digital | Portal de Espiritualidade Minimalista"
+        description="Aprofunde sua fé com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente no portal espiritual inteligente."
         path="/"
-        keywords="bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade católica"
+        keywords="bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade minimalista, portal católico premium"
+        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png"
         breadcrumbs={[
           { name: "Home", path: "/" }
         ]}

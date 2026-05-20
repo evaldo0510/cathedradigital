@@ -33,7 +33,17 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   const displayTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   const displayDescription = description || seoSettings?.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica.';
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
-  const displayImage = image || seoSettings?.og_image_url || DEFAULT_OG_IMAGE;
+  const getDynamicImage = (title?: string) => {
+    if (image) return image;
+    if (seoSettings?.og_image_url) return seoSettings.og_image_url;
+    
+    // Dynamic OG image generator fallback
+    const encodedTitle = encodeURIComponent(title || siteTitle);
+    // Using a reliable placeholder service for dynamic text-based OG images
+    return `https://placehold.jp/32/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital`;
+  };
+
+  const displayImage = getDynamicImage(title);
   const twitterHandle = seoSettings?.twitter_handle || '@cathedradigital';
   
   const url = `${BASE_URL}${path}`;
