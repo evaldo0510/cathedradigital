@@ -11,6 +11,7 @@ interface CathedraCardProps extends HTMLMotionProps<"div"> {
 
 const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
       sm: 'p-5 sm:p-6',
