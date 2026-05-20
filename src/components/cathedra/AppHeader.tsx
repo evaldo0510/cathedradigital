@@ -47,14 +47,17 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border/10 bg-background/80 backdrop-blur-2xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="app-container flex items-center justify-between h-20 sm:h-24">
-        <div className="flex items-center gap-6 sm:gap-10 min-w-0">
-          <div className="flex lg:hidden items-center gap-3 sm:gap-4 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <Icons.Logo className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105" variant="blue" />
+    <header className="border-b border-border/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+      <div className="app-container flex items-center justify-between h-24 sm:h-28">
+        <div className="flex items-center gap-8 sm:gap-12 min-w-0">
+          <div className="flex items-center gap-4 sm:gap-5 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
+            <div className="relative">
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
+              <Icons.Logo className="w-10 h-10 sm:w-14 sm:h-14 flex-shrink-0 transition-all duration-700 group-hover:scale-105 relative z-10" variant="blue" />
+            </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.2em] text-primary leading-none truncate">Cathedra</span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-secondary/60 mt-1 truncate">{t('digital')}</span>
+              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.3em] text-primary leading-none truncate group-hover:tracking-[0.35em] transition-all duration-700">Cathedra</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary/40 mt-1.5 truncate">Digitalis</span>
             </div>
           </div>
           

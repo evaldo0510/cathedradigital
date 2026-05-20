@@ -127,48 +127,50 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
+    <div className="flex flex-col items-center w-full min-h-screen pt-24 md:pt-40 pb-64 monastic-sanctuary">
       <SEOHead 
-        title={`Ritual do Dia - ${new Date().toLocaleDateString('pt-BR')} | Cathedra Digital`} 
-        description="Sua caminhada de fé diária guiada pela sabedoria. Acompanhe a liturgia, reflexões teológicas e o santo do dia com progresso persistente e minimalismo espiritual." 
+        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
+        description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
         path="/hoje" 
         image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-hoje.png"
-        keywords="ritual do dia, leitura diária católica, liturgia diária, santo do dia hoje, meditação guiada, progresso espiritual persistente"
+        keywords="mosteiro digital, ritual diário, cathedra digital, silêncio espiritual, contemplação"
         breadcrumbs={[
-          { name: "Home", path: "/" },
-          { name: "Ritual do Dia", path: "/hoje" }
+          { name: "Sanctuarium", path: "/hoje" }
         ]}
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
       <div className="app-container stack-spacing">
-        {/* HERO SECTION */}
+        {/* HERO SECTION - MONASTIC WELCOME */}
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center space-y-16 max-w-5xl mx-auto"
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          transition={{ duration: 2.5, ease: [0.2, 0.8, 0.2, 1] }}
+          className="text-center space-y-24 max-w-6xl mx-auto"
         >
-          <div className="space-y-8">
-            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30">
-              {greeting}, {profile?.name?.split(' ')[0] || 'fiel'}
-            </p>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-display text-primary leading-[1.05] tracking-tight">
-              Sua jornada espiritual <br />
-              <span className="text-secondary italic font-serif">guiada pela Sabedoria.</span>
+          <div className="space-y-12">
+            <div className="flex flex-col items-center gap-6">
+              <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+              <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
+                {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
+              </p>
+            </div>
+            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
+              Silêncio <br />
+              <span className="text-secondary/60 italic font-serif">da Alma.</span>
             </h1>
           </div>
           
-          <div className="flex items-center justify-center gap-8 flex-wrap">
+          <div className="flex items-center justify-center gap-10 flex-wrap opacity-40 hover:opacity-100 transition-opacity duration-1000">
              {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
-                <Icons.Zap className="w-4 h-4 text-primary" />
-                <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.streak} {profile?.streak === 1 ? 'Dia' : 'Dias'}</span>
+              <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
+                <Icons.Zap className="w-3.5 h-3.5 text-primary/40" />
+                <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.streak} {profile?.streak === 1 ? 'Dies' : 'Dies'}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-3.5 rounded-full bg-primary/[0.03] border border-primary/10 transition-all hover:bg-primary/[0.06]">
-              <Icons.Star className="w-4 h-4 text-secondary" />
-              <span className="text-premium-tiny font-bold text-primary uppercase tracking-widest">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
+              <Icons.Star className="w-3.5 h-3.5 text-secondary/40" />
+              <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </motion.div>
@@ -182,36 +184,34 @@ const HojePage: React.FC = () => {
           >
             <div 
               onClick={() => navigate(nextUp.route)}
-              className="p-8 md:p-12 rounded-[3rem] border border-primary/10 bg-primary/[0.02] hover:bg-primary/[0.05] transition-all cursor-pointer group relative overflow-hidden"
+              className="p-12 md:p-16 rounded-[4rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.02] transition-all duration-1000 cursor-pointer group relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
-                <Icons.Sparkles className="w-32 h-32 text-primary" />
+              <div className="absolute top-0 right-0 p-16 opacity-[0.01] group-hover:opacity-[0.03] transition-opacity duration-1000">
+                <Icons.Sparkles className="w-48 h-48 text-primary" />
               </div>
               
-              <div className="space-y-6 relative z-10">
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 rounded-full bg-primary/10 text-[10px] font-bold uppercase tracking-widest text-primary">
-                    Recomendação para Você
+              <div className="space-y-10 relative z-10 text-center">
+                <div className="flex flex-col items-center gap-4">
+                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/20">
+                    VIA SAPIENTIAE
                   </span>
-                  <span className="text-[10px] font-medium text-muted-foreground/60 italic uppercase tracking-widest">
-                    Baseado em sua leitura
-                  </span>
+                  <div className="w-px h-8 bg-primary/10" />
                 </div>
                 
-                <div className="space-y-2">
-                  <h3 className="text-3xl md:text-4xl font-display text-primary">{nextUp.title}</h3>
-                  <p className="text-lg text-primary/60 font-serif italic">{nextUp.subtitle}</p>
+                <div className="space-y-4">
+                  <h3 className="text-4xl md:text-5xl lg:text-6xl font-display text-primary leading-tight">{nextUp.title}</h3>
+                  <p className="text-xl text-primary/40 font-serif italic">{nextUp.subtitle}</p>
                 </div>
                 
                 {nextUp && 'description' in nextUp && (
-                  <p className="text-sm leading-relaxed text-muted-foreground max-w-xl">
+                  <p className="text-base leading-relaxed text-muted-foreground/60 max-w-2xl mx-auto font-serif italic">
                     {(nextUp as any).description}
                   </p>
                 )}
                 
-                <div className="pt-4 flex items-center gap-3 text-primary font-bold uppercase tracking-widest text-[10px]">
-                  <span>Continuar Jornada</span>
-                  <Icons.ArrowRight className="w-3 h-3 group-hover:translate-x-2 transition-transform" />
+                <div className="pt-8 flex flex-col items-center gap-4 text-primary/30 font-black uppercase tracking-[0.4em] text-[9px] group-hover:text-primary transition-colors duration-1000">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary animate-pulse" />
+                  <span>Proseguir</span>
                 </div>
               </div>
             </div>
