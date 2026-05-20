@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cathedradigital.lovable.app/sitemap.xml
+Sitemap: https://www.cathedradigital.com.br/sitemap.xml
