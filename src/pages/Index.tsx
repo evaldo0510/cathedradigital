@@ -95,7 +95,6 @@ const Index = () => {
         </Suspense>
 
         <Suspense fallback={null}>
-          <LogosChat />
           <CookieConsent />
         </Suspense>
 
