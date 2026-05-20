@@ -182,6 +182,21 @@ const SEOVerificationPage = () => {
     toast.success(`${label} copiado!`);
   };
 
+  const downloadHTML = (page: SEOPageData) => {
+    const content = getMetaTagsCode(page);
+    const fileName = `seo-tags-${page.name.toLowerCase().replace(/\s+/g, '-') || 'page'}.html`;
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Tags HTML baixadas!');
+  };
+
   const getMetaTagsCode = (page: SEOPageData) => {
     const title = page.title || `${page.name} — Cathedra Digital`;
     const description = page.description || '';
