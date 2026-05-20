@@ -18,6 +18,8 @@ import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
 import { useRovingTabindex } from './TabUtils';
+import Relatio from './Relatio';
+
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
@@ -400,8 +402,21 @@ const TemaDetailPage = () => {
             </div>
           </div>
 
+          <Relatio 
+            context={{
+              type: 'theme',
+              id: selectedTag?.id,
+              tags: [selectedTag?.label || '', selectedTag?.category || '', 'Tema Espiritual']
+            }}
+            onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&chapter=${ch}`)}
+            onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
+            onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
+            className="mb-8"
+          />
+
           <Button 
             onClick={handleLoadInsight}
+
             disabled={loadingLogos || !!logosInsight}
             className="rounded-full h-14 px-8 bg-primary text-primary-foreground font-black uppercase tracking-widest shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all group overflow-hidden relative"
           >

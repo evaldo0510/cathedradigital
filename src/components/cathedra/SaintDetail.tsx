@@ -5,8 +5,10 @@ import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
+import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
+
 import { AppRoute } from '@/types';
 import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -299,6 +301,27 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </section>
         )}
 
+        {/* Relatio: Intelligent Contextual Connections */}
+        <Relatio 
+          context={{
+            type: 'saint',
+            id: saint.id,
+            tags: [...(saint.virtues || []), ...(saint.patronOf || []), saint.name, 'Saints', 'Espiritualidade']
+          }}
+          onNavigateToBible={(abbr, ch) => {
+            navigate(`/bible?book=${abbr}&chapter=${ch}`);
+            onClose();
+          }}
+          onNavigateToCIC={(p) => {
+            navigate(`/catechism?p=${p}`);
+            onClose();
+          }}
+          onNavigateToDoc={(docId) => {
+            navigate(`/magisterium/${docId}`);
+            onClose();
+          }}
+        />
+
         {/* Suggested Journey */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
@@ -328,6 +351,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
+
 
       </div>
     </motion.div>
