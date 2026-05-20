@@ -126,7 +126,7 @@ const ReadingJournal: React.FC = () => {
         <Card className="bg-secondary/[0.03] border-secondary/10 rounded-[2rem] overflow-hidden shadow-soft">
           <CardContent className="p-8 flex items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
-              <Icons.Target className="w-8 h-8 text-secondary" />
+              <Target className="w-8 h-8 text-secondary" />
             </div>
             <div className="flex-1">
               <div className="flex justify-between items-end mb-2">
