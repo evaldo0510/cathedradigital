@@ -483,7 +483,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
       {!loading && filteredTags.length === 0 && (
         <div className="text-center py-20 space-y-4">
-          <Icons.SearchX className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+          <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
           <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
         </div>
       )}
