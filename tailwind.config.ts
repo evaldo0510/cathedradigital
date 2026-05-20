@@ -70,19 +70,18 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
-        'premium': '2.5rem', // Definitive radius for all major cards
-        'premium-lg': '3rem',
-        'premium-sm': '1.5rem',
-        '3xl': '1.75rem',
-        '4xl': '2.25rem',
+        'premium': '2rem', // Consolidated definitive radius
+        'premium-lg': '2.5rem',
+        'premium-sm': '1.25rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
         'full': '9999px',
       },
       boxShadow: {
-        'premium': '0 10px 40px -10px rgba(0, 0, 0, 0.03), 0 0 1px 0 rgba(0, 0, 0, 0.05)',
-        'premium-hover': '0 30px 60px -15px rgba(0, 0, 0, 0.08), 0 0 1px 0 rgba(0, 0, 0, 0.1)',
-        'premium-active': '0 5px 15px -5px rgba(0, 0, 0, 0.05)',
-        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.02)',
-        'gold': '0 10px 30px -5px rgba(212, 175, 55, 0.1)',
+        'premium': '0 10px 40px -10px rgba(0, 0, 0, 0.04)', // Refined, less complex
+        'premium-hover': '0 25px 50px -12px rgba(0, 0, 0, 0.07)', // Subtler
+        'premium-active': '0 5px 15px -5px rgba(0, 0, 0, 0.04)',
+        'soft': '0 4px 15px -2px rgba(0, 0, 0, 0.02)',
         'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.01)',
       },
       keyframes: {
