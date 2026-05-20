@@ -181,28 +181,52 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         </div>
         
         <div className="p-10 space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs */}
+          {/* Path Navigation - Monastic Breadcrumbs with History */}
           <nav className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
             <button 
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setNavHistory([tag]);
+              }}
               className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-2 group"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-border group-hover:bg-primary/40 transition-colors" />
               Cathedra
             </button>
             <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Nexus</span>
-            <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary bg-primary/[0.03] px-3 py-1 rounded-full border border-primary/5">
-              {tag.label}
-            </span>
+            <button 
+              onClick={() => handlePopTag(0)}
+              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all ${navHistory.length === 1 ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'}`}
+            >
+              Nexus
+            </button>
+            
+            {navHistory.map((hTag, idx) => (
+              <React.Fragment key={hTag.id}>
+                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+                <button 
+                  onClick={() => handlePopTag(idx)}
+                  disabled={idx === navHistory.length - 1}
+                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full border transition-all ${
+                    idx === navHistory.length - 1 
+                      ? 'text-primary bg-primary/[0.03] border-primary/5' 
+                      : 'text-muted-foreground/40 border-transparent hover:text-primary hover:bg-primary/5'
+                  }`}
+                >
+                  {hTag.label}
+                </button>
+              </React.Fragment>
+            ))}
           </nav>
 
           {/* Elegant Map Header */}
           <header className="flex flex-col gap-2 items-center justify-center text-center py-4">
             <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/20">SENTIERO DI SAPIENZA</span>
-            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">Mapeando as conexões vivas da Fé e da Tradição</p>
+            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
+              {navHistory.length > 1 ? `Explorando conexões de ${currentTag.label}` : 'Mapeando as conexões vivas da Fé e da Tradição'}
+            </p>
           </header>
+
 
 
           {status === 'loading' ? (
