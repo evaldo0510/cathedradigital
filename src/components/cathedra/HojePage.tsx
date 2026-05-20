@@ -113,17 +113,6 @@ const HojePage: React.FC = () => {
     return lang === 'pt' ? 'Boa noite' : 'Good evening';
   }, [hour, lang]);
 
-  const nextUp = useMemo(() => {
-    if (enhancedRec) return enhancedRec;
-    
-    if (activeJourney) return {
-      type: 'journey',
-      title: activeJourney.title,
-      subtitle: 'Continuar Jornada',
-      route: journeyStep ? `/jornadas/${activeJourney.id}/step?step=${journeyStep.id}` : `/jornadas/${activeJourney.id}/complete`
-    };
-    return null;
-  }, [enhancedRec, activeJourney, journeyStep]);
 
   if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
