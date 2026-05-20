@@ -124,7 +124,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
                      <Icons.History size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest truncate">{item.title || 'Atividade'}</p>
+                    <p className="text-[10px] font-bold text-primary/70 uppercase tracking-widest truncate">{item.title || item.route?.split('/').pop() || 'Atividade'}</p>
                     <p className="text-[10px] text-muted-foreground/40 truncate mt-1">
                       {formatDistanceToNow(new Date(item.visited_at), { addSuffix: true, locale: ptBR })}
                     </p>
