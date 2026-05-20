@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /checkout
+Disallow: /profile
+Disallow: /favorites
+Disallow: /vendedor
+Disallow: /transactions
+Disallow: /a11y-audit
+Disallow: /security-audit
+Disallow: /catechism/integrity
+Disallow: /catechism/health
+Disallow: /catechism/verify
+Disallow: /offline
+Disallow: /cache-manager
+Disallow: /diario
+Disallow: /diagnostics
+Disallow: /upgrade
 
 Sitemap: https://www.cathedradigital.com.br/sitemap.xml
