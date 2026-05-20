@@ -7,6 +7,7 @@ import GoogleSignInButton from '../auth/GoogleSignInButton';
 
 import { useNotifications } from '@/hooks/useNotifications';
 import { useLang } from '@/hooks/useLang';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface AppHeaderProps {
   user: any;
