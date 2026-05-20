@@ -11,6 +11,7 @@ import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
+import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Saint = Tables<'saints'>;
@@ -21,6 +22,7 @@ type Journey = Tables<'journeys'>;
 
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
+  useAutoFocus();
   const [query, setQuery] = useState('');
   const tagsRef = React.useRef<HTMLDivElement>(null);
 

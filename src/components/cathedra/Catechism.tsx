@@ -29,6 +29,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
+import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 
 
@@ -241,6 +242,7 @@ type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
   const navigate = useNavigate();
+  useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('parts');
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);

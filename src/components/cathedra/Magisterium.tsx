@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 const SPIRITUAL_GUIDANCE = [
   {
@@ -150,6 +151,7 @@ const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
   const navigate = useNavigate();
+  useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
