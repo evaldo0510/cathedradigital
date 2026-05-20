@@ -82,7 +82,7 @@ const Index = () => {
         {JSON.stringify(websiteSchema)}
       </script>
 
-      <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
+      <HeroSection onStart={handleStart} />
 
       <main id="main-content" className="w-full flex flex-col items-center outline-none pt-24 md:pt-32 pb-32 md:pb-48" tabIndex={-1}>
         <Suspense fallback={<SectionSkeleton />}>
