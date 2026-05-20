@@ -116,13 +116,13 @@ const DesignSystemGuide: React.FC = () => {
             <CathedraCard padding="lg" className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Containers & Grids</h3>
               <div className="space-y-4">
-                <div className="p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
+                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
                   .app-container (max-width: 1280px)
                 </div>
-                <div className="p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
+                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
                   .premium-grid (gap-14)
                 </div>
-                <div className="p-4 bg-muted/10 rounded-xl border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
+                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
                   .responsive-grid (gap-12)
                 </div>
               </div>
@@ -132,10 +132,10 @@ const DesignSystemGuide: React.FC = () => {
             <CathedraCard padding="lg" className="space-y-8">
               <h3 className="text-xl font-serif font-bold text-primary">Ritmo Vertical</h3>
               <div className="space-y-4">
-                <div className="h-20 bg-primary/5 rounded-xl border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
+                <div className="h-20 bg-primary/5 rounded-premium-sm border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
                   .section-spacing (py-56)
                 </div>
-                <div className="h-10 bg-primary/5 rounded-xl border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
+                <div className="h-10 bg-primary/5 rounded-premium-sm border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
                   .stack-spacing (space-y-16)
                 </div>
               </div>
