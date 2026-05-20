@@ -381,28 +381,6 @@ const AppLayout: React.FC = () => {
   }, [isSpeaking]);
 
 
-  // Handle Keyboard Shortcut for Total Silence
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Shortcut: Alt + S or Option + S for Total Silence
-      if (e.altKey && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        const stored = localStorage.getItem('cathedra_reading_settings');
-        if (stored) {
-          const settings = JSON.parse(stored);
-          const newValue = !settings.totalSilence;
-          
-          // We need a way to trigger the update from ReadingSettingsContext
-          // Since we are in App.tsx which is a child of ReadingSettingsProvider in many architectures,
-          // but here AppLayout is inside. Wait, let's check provider location.
-          window.dispatchEvent(new CustomEvent('toggle-total-silence', { detail: newValue }));
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   useEffect(() => {
     if (navigator.onLine) {
