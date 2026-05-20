@@ -54,8 +54,8 @@ const Index = () => {
       <LandingHeader />
       
       <SEOHead
-        title="Bíblia, Catecismo e Tradição Católica"
-        description="Aprofunde sua fé católica com o Logos IA, Bíblia Sagrada, Catecismo da Igreja, vidas dos santos e liturgia diária. Tudo gratuito."
+        title="Cathedra Digital | Leitura Diária & Logos IA"
+        description="Aprofunde sua fé com o Portal Cathedra: Bíblia, Catecismo e Magistério. Use a Logos IA para resumos contextuais e siga sua Leitura Diária com progresso persistente."
         path="/"
       />
 

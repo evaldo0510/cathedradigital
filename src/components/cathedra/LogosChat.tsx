@@ -14,14 +14,25 @@ interface Message {
 const LogosChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: 'Bem-vindo ao Logos IA. Em que posso auxiliá-lo em sua oração ou reflexão hoje?',
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = localStorage.getItem('cathedra_logos_messages');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }));
+    }
+    return [
+      {
+        id: '1',
+        role: 'assistant',
+        content: 'Bem-vindo ao Logos IA. Em que posso auxiliá-lo em sua oração ou reflexão hoje?',
+        timestamp: new Date(),
+      },
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cathedra_logos_messages', JSON.stringify(messages));
+  }, [messages]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
