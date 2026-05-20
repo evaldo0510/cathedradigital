@@ -502,11 +502,11 @@ const Bible: React.FC = () => {
             <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
               <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
             </Button>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
-            <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
+              <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
+            </div>
           </div>
-        </div>
 
         {/* Highlighted verse indicator (when ?v= is active) */}
         {highlightedVerse && (
