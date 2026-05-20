@@ -32,7 +32,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { ArrowLeft, History } from 'lucide-react';
+import { History } from 'lucide-react';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
