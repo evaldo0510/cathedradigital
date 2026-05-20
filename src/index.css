@@ -184,8 +184,22 @@
   .total-silence .audio-player,
   .total-silence button:has(.lucide-headphones),
   .total-silence button:has(.lucide-volume-2),
-  .total-silence .audio-button-container {
+  .total-silence button:has(.lucide-volume-x),
+  .total-silence .audio-button-container,
+  .total-silence [data-audio-player] {
     display: none !important;
+  }
+
+  /* Ensure essential controls are still visible and layout is stable */
+  .total-silence .essential-control {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Prevent layout collapse when loaders are hidden */
+  .total-silence .min-h-screen {
+    min-height: 100vh !important;
   }
 
 
