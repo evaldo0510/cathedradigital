@@ -166,6 +166,34 @@ const ReadingControlPanel: React.FC = () => {
               </div>
             </div>
           </div>
+          
+          <DropdownMenuSeparator className="bg-border/20" />
+          
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Marcas de Leitura</p>
+            <div className="max-h-40 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {(() => {
+                const marks = JSON.parse(localStorage.getItem('cathedra_reading_marks') || '{}');
+                const entries = Object.entries(marks);
+                if (entries.length === 0) return <p className="text-[10px] text-muted-foreground italic text-center py-2">Nenhuma marca recente</p>;
+                return entries.map(([key, mark]: [string, any]) => (
+                  <button
+                    key={key}
+                    onClick={() => window.location.href = mark.url}
+                    className="w-full text-left p-2.5 rounded-xl bg-muted/20 hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icons.Bookmark className="w-3 h-3 text-primary/40 group-hover:text-primary transition-colors" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-bold truncate">{mark.label}</p>
+                        <p className="text-[9px] text-muted-foreground">{new Date(mark.timestamp).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </button>
+                ));
+              })()}
+            </div>
+          </div>
         </DropdownMenuContent>
 
       </DropdownMenu>
