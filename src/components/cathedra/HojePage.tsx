@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
+import { SpiritualContinuity } from './SpiritualContinuity';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
