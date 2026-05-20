@@ -322,7 +322,8 @@ const Catechism: React.FC = () => {
                 content_id: 'CIC',
                 paragraph: p,
                 label: `Catecismo §${p}`,
-                url: `/catechism?p=${p}`
+                url: `/catechism?p=${p}`,
+                is_last_read: true
               });
             }
           }

@@ -286,12 +286,12 @@ const Bible: React.FC = () => {
     }
 
     // 2. Auto-resume from last saved point if no specific params
-    if (shouldAutoResume) {
+    if (shouldAutoResume && user) {
       const autoResume = async () => {
         const { data } = await supabase
           .from('reading_marks')
           .select('*')
-          .eq('user_id', user?.id)
+          .eq('user_id', user.id)
           .eq('content_type', 'bible')
           .eq('is_last_read', true)
           .maybeSingle();
@@ -304,15 +304,19 @@ const Bible: React.FC = () => {
             setTestament(isNT ? 'Novo Testamento' : 'Antigo Testamento');
             setSelectedBook(found);
             setSelectedChapter(data.chapter);
+            if (data.position) {
+              setHighlightedVerse(data.position);
+              localStorage.setItem('cathedra_last_bible_verse', data.position.toString());
+            }
             setViewMode('reading');
-            toast.info(`Retornando a ${found.name} ${data.chapter}`, {
-              description: 'Sua leitura foi retomada de onde você parou.',
+            toast.info(`Retomando: ${found.name} ${data.chapter}`, {
+              description: 'Continuando sua jornada espiritual de onde parou.',
               duration: 3000
             });
           }
         }
       };
-      if (user) autoResume();
+      autoResume();
       setShouldAutoResume(false);
     }
   }, [searchParams, allBooks, user, shouldAutoResume]);
@@ -386,7 +390,8 @@ const Bible: React.FC = () => {
         content_id: selectedBook.abbr,
         chapter: next,
         label: `${selectedBook.name} ${next}`,
-        url: `/bible?book=${selectedBook.abbr}&ch=${next}`
+        url: `/bible?book=${selectedBook.abbr}&ch=${next}`,
+        is_last_read: true
       });
     }
   }, [selectedBook, selectedChapter, saveLastRead]);
@@ -437,11 +442,19 @@ const Bible: React.FC = () => {
       const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
       const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
       
-      if (savedScroll && !searchParams.get('v')) {
-        setTimeout(() => {
-          window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
-          if (savedVerse) setHighlightedVerse(parseInt(savedVerse));
-        }, 800);
+      // Better resume: only if no specific verse in URL
+      if (!searchParams.get('v') && !searchParams.get('verse')) {
+        if (savedScroll && parseInt(savedScroll) > 100) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          }, 300);
+        } else if (savedVerse) {
+          const vNum = parseInt(savedVerse);
+          setTimeout(() => {
+            const el = document.getElementById(`v${vNum}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 400);
+        }
       }
     }
   }, [viewMode, isLoading, verses.length]);
@@ -734,10 +747,22 @@ const Bible: React.FC = () => {
                           <div className="flex items-start gap-3">
                             <sup className="text-[0.6em] font-bold text-primary mt-1.5 select-none opacity-60">{v.number}</sup>
                             <div className="flex-1" onClick={() => {
-                              setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
-                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
-                              localStorage.setItem('cathedra_last_bible_verse', v.number.toString());
+                              const vNum = v.number;
+                              setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
+                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
+                              localStorage.setItem('cathedra_last_bible_verse', vNum.toString());
                               localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+                              
+                              // Seamless auto-save on verse click/selection
+                              saveLastRead({
+                                content_type: 'bible',
+                                content_id: selectedBook.abbr,
+                                chapter: selectedChapter,
+                                position: vNum,
+                                label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
+                                url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
+                                is_last_read: true
+                              });
                             }}>
                               <span className="cursor-pointer">{v.text}</span>
                               {relatedP && (
