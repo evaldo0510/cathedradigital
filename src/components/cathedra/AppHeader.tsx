@@ -150,7 +150,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               aria-expanded={showNotifs}>
               <Icons.Message className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-premium-tiny font-black flex items-center justify-center rounded-full border-2 border-background shadow-md">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-premium-tiny font-black flex items-center justify-center rounded-full border-2 border-background shadow-premium">
                   {unreadCount}
                 </span>
               )}
@@ -158,7 +158,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
           
           {showNotifs && user && (
-            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-2xl shadow-2xl z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
+            <div className="absolute top-full right-4 mt-4 w-80 bg-card border border-border rounded-premium shadow-premium-hover z-[150] overflow-hidden animate-in fade-in zoom-in duration-300">
               <div className="p-5 border-b border-border flex items-center justify-between bg-muted/30">
                 <h3 className="text-premium-tiny font-black uppercase tracking-widest text-primary">{t('notifications')}</h3>
                 <Button variant="ghost" size="xs" onClick={markAllRead} className="h-auto p-1 text-premium-tiny font-black uppercase tracking-widest text-secondary hover:opacity-70">{t('clear')}</Button>
@@ -216,7 +216,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               </div>
               <Button 
                 onClick={() => navigate(AppRoute.LOGIN)} 
-                className="h-10 px-4 sm:px-6 shadow-lg active:scale-95"
+                className="h-10 px-4 sm:px-6 shadow-premium active:scale-95"
               >
                 {t('enter')}
               </Button>

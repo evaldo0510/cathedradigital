@@ -132,7 +132,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeCard
           className="p-10 md:p-16 lg:p-20 flex flex-col items-center gap-12 group relative overflow-hidden border-border/10"
         >
-          <div className="relative z-10 w-20 h-20 rounded-2xl bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
+          <div className="relative z-10 w-20 h-20 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
             <Sparkles className="w-10 h-10" strokeWidth={1.5} />
           </div>
           
@@ -149,12 +149,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Pergunte sobre a Bíblia, Santos ou Teologia..."
-                className="h-16 pl-14 pr-32 rounded-2xl border-border/20 bg-primary/[0.01] focus:bg-white transition-all text-lg placeholder:text-muted-foreground/30 font-serif italic"
+                className="h-16 pl-14 pr-32 rounded-premium border-border/20 bg-primary/[0.01] focus:bg-white transition-all text-lg placeholder:text-muted-foreground/30 font-serif italic"
               />
               <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20" />
               <button 
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 group/btn"
+                className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-2 group/btn"
               >
                 Perguntar
                 <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
@@ -174,7 +174,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                         key={i}
                         type="button"
                         onClick={() => handleLogosSearch(undefined, item)}
-                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-xl hover:bg-white hover:shadow-sm"
+                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-premium-sm hover:bg-white hover:shadow-soft"
                       >
                         {item.length > 35 ? item.slice(0, 35) + '...' : item}
                       </button>

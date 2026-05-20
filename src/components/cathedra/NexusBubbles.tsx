@@ -144,10 +144,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-2xl z-[100] bg-card/95 backdrop-blur-xl">
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-premium-hover z-[100] bg-card/95 backdrop-blur-xl">
         <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-8 border-b border-border/20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
+            <div className="w-14 h-14 rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
               {getTagIcon(tag.emoji, "w-7 h-7")}
             </div>
             <div>
@@ -157,7 +157,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </div>
           <Button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/10 group border-none"
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-premium-hover shadow-primary/10 group border-none"
             title="Estudo Completo"
           >
             <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
@@ -166,7 +166,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         
         <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
           {/* Diagnostic Panel (Mini) */}
-          <div className="p-2 rounded-2xl bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
+          <div className="p-2 rounded-premium bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
             <div className="flex gap-2">
               <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
               <span>Source: {metrics.source || 'pending'}</span>
@@ -177,17 +177,17 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           {status === 'loading' ? (
             <div className="space-y-4 py-2">
               <div className="flex gap-2">
-                <div className="w-8 h-8 rounded-2xl bg-muted animate-pulse" />
+                <div className="w-8 h-8 rounded-premium bg-muted animate-pulse" />
                 <div className="flex-1 space-y-2">
                   <div className="h-3 bg-muted rounded animate-pulse w-full" />
                   <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
                 </div>
               </div>
-              <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
+              <div className="h-32 bg-muted/20 rounded-premium animate-pulse w-full" />
               <p className="text-premium-tiny text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
           ) : status === 'error' && content.length === 0 ? (
-            <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
+            <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-premium border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
               <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
               <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
@@ -196,7 +196,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           ) : (
             <>
               {status === 'error' && content.length > 0 && (
-                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-2xl text-premium-tiny font-bold flex items-center gap-2 mb-2">
+                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-premium text-premium-tiny font-bold flex items-center gap-2 mb-2">
                   <Info className="w-3 h-3" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
                 </div>
               )}
@@ -206,7 +206,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-secondary/5 rounded-full p-4 border border-secondary/10 relative overflow-hidden group"
                 >
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-2xl  -mr-6 -mt-6" />
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-premium  -mr-6 -mt-6" />
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-3.5 h-3.5 text-secondary" />
                     <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
@@ -304,8 +304,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 </div>
               ) : !logosInsight && status === 'success' && (
                 <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-2xl bg-muted/20 flex items-center justify-center relative">
-                    <div className="absolute inset-0 rounded-2xl border border-primary/10 animate-ping opacity-20" />
+                  <div className="w-16 h-16 rounded-premium bg-muted/20 flex items-center justify-center relative">
+                    <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
                     <Search className="w-8 h-8 text-muted-foreground/30" />
                   </div>
                   <div className="space-y-1">
@@ -464,7 +464,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         <Button
           onClick={() => setActiveFilter('all')}
           aria-pressed={activeFilter === 'all'}
-          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
         >
           Todos
         </Button>
@@ -474,7 +474,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             key={key}
             onClick={() => setActiveFilter(key)}
             aria-pressed={activeFilter === key}
-            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
           >
 
             {cat.icon}
@@ -532,11 +532,11 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 <motion.div 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-sm relative overflow-hidden"
+                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-soft relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-2xl  -mr-8 -mt-8" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-premium  -mr-8 -mt-8" />
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-2xl bg-secondary/20 flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-premium bg-secondary/20 flex items-center justify-center">
                       <Heart className="w-3 h-3 text-secondary" />
                     </div>
                     <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary">

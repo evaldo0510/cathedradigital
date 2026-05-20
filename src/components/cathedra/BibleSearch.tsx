@@ -67,7 +67,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       {loading && (
         <div className="space-y-2 py-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-16 bg-muted rounded-2xl animate-pulse" />
+            <div key={i} className="h-16 bg-muted rounded-premium animate-pulse" />
           ))}
         </div>
       )}

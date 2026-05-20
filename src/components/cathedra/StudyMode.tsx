@@ -339,7 +339,7 @@ const StudyMode: React.FC = () => {
           { name: "Logos IA", path: "/estudo" }
         ]}
       />
-      <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+      <div className="w-24 h-24 rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
         <Shield className="w-12 h-12 text-primary" />
       </div>
       
@@ -350,7 +350,7 @@ const StudyMode: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-sm space-y-6">
+      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-soft space-y-6">
         <p className="text-sm text-foreground/80 leading-relaxed">
           O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
         </p>

@@ -135,7 +135,7 @@ const AdminSeoTab: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-500 pb-20">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
-          <Card className="border-border/50 shadow-sm overflow-hidden">
+          <Card className="border-border/50 shadow-soft overflow-hidden">
             <CardHeader className="bg-muted/30 border-b border-border/50">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-primary">
@@ -271,15 +271,15 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-sm">
+          <Card className="border-border/50 shadow-soft">
             <CardHeader>
               <CardTitle className="text-lg font-serif">Simulação de Google Snippet</CardTitle>
               <CardDescription>Como seu site aparece nos resultados de busca.</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
-              <div className="bg-background border border-border/50 rounded-2xl p-6 shadow-inner space-y-2">
+              <div className="bg-background border border-border/50 rounded-premium p-6 shadow-inner space-y-2">
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="w-5 h-5 bg-muted rounded-2xl flex items-center justify-center overflow-hidden">
+                  <div className="w-5 h-5 bg-muted rounded-premium flex items-center justify-center overflow-hidden">
                     <Globe className="w-3 h-3 text-muted-foreground" />
                   </div>
                   <div className="text-premium-small text-[#202124]">
@@ -298,7 +298,7 @@ const AdminSeoTab: React.FC = () => {
         </div>
 
         <div className="space-y-6">
-          <Card className="border-border/50 shadow-sm h-fit">
+          <Card className="border-border/50 shadow-soft h-fit">
             <CardHeader className="bg-muted/10 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-2">
                 <LineChart className="w-4 h-4 text-primary" /> GA4 Debug Status
@@ -335,7 +335,7 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-sm h-fit">
+          <Card className="border-border/50 shadow-soft h-fit">
             <CardHeader className="bg-amber-500/5 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-amber-600" /> Validação NAP & Local SEO
@@ -377,7 +377,7 @@ const AdminSeoTab: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="bg-black/90 text-amber-400 p-3 rounded-2xl text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
+                <div className="bg-black/90 text-amber-400 p-3 rounded-premium text-premium-tiny font-mono overflow-x-auto max-h-[150px] no-scrollbar shadow-inner border border-amber-500/20">
                   <pre>
 {JSON.stringify({
   "@context": "https://schema.org",
@@ -422,21 +422,21 @@ const AdminSeoTab: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-sm h-fit">
+          <Card className="border-border/50 shadow-soft h-fit">
             <CardHeader className="bg-primary/5 border-b border-border/50">
               <CardTitle className="text-md font-serif flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-primary" /> IA SEO Insights
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-              <div className="p-3 bg-muted/50 rounded-2xl border border-border/50 text-premium-small leading-relaxed">
+              <div className="p-3 bg-muted/50 rounded-premium border border-border/50 text-premium-small leading-relaxed">
                 <p className="font-bold text-primary mb-1">Dica Local:</p>
                 "Adicionar o bairro ao endereço ajuda no posicionamento do Google Maps."
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 shadow-sm h-fit bg-muted/20">
+          <Card className="border-border/50 shadow-soft h-fit bg-muted/20">
             <CardContent className="p-4 space-y-3">
               <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary">
                 <Info className="w-3 h-3" /> Links Úteis

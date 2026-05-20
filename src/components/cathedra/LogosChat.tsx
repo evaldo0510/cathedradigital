@@ -83,12 +83,12 @@ const LogosChat = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-xl rounded-full flex flex-col overflow-hidden"
+            className="absolute bottom-16 right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-premium-hover rounded-full flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-4 border-b border-border bg-background flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-2xl bg-secondary flex items-center justify-center">
+                <div className="w-8 h-8 rounded-premium bg-secondary flex items-center justify-center">
                   <Sparkles className="w-4 h-4 text-primary" />
                 </div>
                 <div>
@@ -124,7 +124,7 @@ const LogosChat = () => {
                 ))}
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="bg-muted/30 px-4 py-2 rounded-2xl flex gap-1 items-center">
+                    <div className="bg-muted/30 px-4 py-2 rounded-premium flex gap-1 items-center">
                       <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                       <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                       <span className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -161,7 +161,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-lg font-black uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-primary text-primary-foreground rounded-full shadow-premium font-black uppercase tracking-widest text-premium-tiny min-w-0"
       >
         <Sparkles className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>

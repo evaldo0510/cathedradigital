@@ -57,7 +57,7 @@ const ReadingControlPanel: React.FC = () => {
                   key={s}
                   onClick={() => updateSettings({ fontSize: s })}
                   className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                    settings.fontSize === s ? 'bg-background shadow-sm' : 'text-muted-foreground'
+                    settings.fontSize === s ? 'bg-background shadow-soft' : 'text-muted-foreground'
                   }`}
                 >
                   {s === 'small' ? 'A' : s === 'medium' ? 'A+' : s === 'large' ? 'A++' : 'A+++'}
@@ -72,7 +72,7 @@ const ReadingControlPanel: React.FC = () => {
               <button
                 onClick={() => updateSettings({ fontFamily: 'serif' })}
                 className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                  settings.fontFamily === 'serif' ? 'bg-background shadow-sm' : 'text-muted-foreground'
+                  settings.fontFamily === 'serif' ? 'bg-background shadow-soft' : 'text-muted-foreground'
                 }`}
               >
                 Serifada
@@ -80,7 +80,7 @@ const ReadingControlPanel: React.FC = () => {
               <button
                 onClick={() => updateSettings({ fontFamily: 'sans' })}
                 className={`flex-1 py-1 text-xs font-bold rounded-full transition-all ${
-                  settings.fontFamily === 'sans' ? 'bg-background shadow-sm' : 'text-muted-foreground'
+                  settings.fontFamily === 'sans' ? 'bg-background shadow-soft' : 'text-muted-foreground'
                 }`}
               >
                 Sem Serifa

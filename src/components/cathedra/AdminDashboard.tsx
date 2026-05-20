@@ -409,7 +409,7 @@ const AdminDashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-2xl border border-destructive/20">
+      <div className="flex flex-col items-center justify-center p-12 text-center bg-destructive/10 rounded-premium border border-destructive/20">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
         <h2 className="text-xl font-bold mb-2">Erro ao carregar dados</h2>
         <p className="text-muted-foreground">{error}</p>
@@ -695,7 +695,7 @@ const AdminDashboard: React.FC = () => {
                         <span className="opacity-70">{s.label}</span>
                         <span className="tabular-nums">{s.count}</span>
                       </div>
-                      <div className="h-1 w-full bg-muted/30 rounded-2xl overflow-hidden">
+                      <div className="h-1 w-full bg-muted/30 rounded-premium overflow-hidden">
                         <div 
                           className={`h-full ${s.color} transition-all duration-1000`} 
                           style={{ width: `${users.length > 0 ? (s.count / users.length) * 100 : 0}%` }}
@@ -716,11 +716,11 @@ const AdminDashboard: React.FC = () => {
               </CardHeader>
               <CardContent className="px-3 pb-3 pt-1">
                 <div className="mt-2 grid grid-cols-2 gap-4 w-full">
-                  <div className="text-center p-2 rounded-2xl bg-primary/5 border border-primary/10">
+                  <div className="text-center p-2 rounded-premium bg-primary/5 border border-primary/10">
                     <div className="text-lg font-black">{users.filter(u => u.is_premium).length}</div>
                     <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Assinantes</div>
                   </div>
-                  <div className="text-center p-2 rounded-2xl bg-muted/20 border border-border/10">
+                  <div className="text-center p-2 rounded-premium bg-muted/20 border border-border/10">
                     <div className="text-lg font-black opacity-60">{users.length - users.filter(u => u.is_premium).length}</div>
                     <div className="text-premium-tiny font-black uppercase tracking-widest opacity-50">Gratuitos</div>
                   </div>
@@ -747,7 +747,7 @@ const AdminDashboard: React.FC = () => {
               <CardContent className="px-3 pb-3 pt-1 space-y-3">
                 {recentJournal.length > 0 ? (
                   recentJournal.map((entry) => (
-                    <div key={entry.id} className="p-2.5 rounded-2xl bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
+                    <div key={entry.id} className="p-2.5 rounded-premium bg-muted/20 border border-border/10 space-y-1.5 hover:bg-muted/30 transition-colors">
                       <div className="flex items-center justify-between text-premium-tiny font-bold">
                         <span className="text-primary truncate max-w-[120px]">{entry.profiles?.name || 'Anônimo'}</span>
                         <span className="text-muted-foreground opacity-60">{new Date(entry.created_at).toLocaleDateString('pt-BR')}</span>
@@ -838,7 +838,7 @@ const AdminDashboard: React.FC = () => {
             <Card className="border-primary/20 bg-primary/5 animate-pulse">
               <CardHeader>
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-primary/10 rounded-2xl">
+                  <div className="p-2 bg-primary/10 rounded-premium">
                     <Shield className="w-5 h-5 text-primary animate-spin" />
                   </div>
                   <div>

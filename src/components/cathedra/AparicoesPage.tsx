@@ -44,7 +44,7 @@ const AparicoesPage: React.FC = () => {
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
           </Button>
-          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-md" loading="lazy" />
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-premium" loading="lazy" />
         </div>
 
         {/* Quick facts */}
@@ -55,7 +55,7 @@ const AparicoesPage: React.FC = () => {
             { label: 'Festa Litúrgica', value: selectedApparition.liturgicalFeast },
             { label: 'Status', value: selectedApparition.approved ? 'Aprovada pela Igreja' : 'Em análise' },
           ].map(fact => (
-            <div key={fact.label} className="p-3 rounded-2xl bg-card border border-border">
+            <div key={fact.label} className="p-3 rounded-premium bg-card border border-border">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
               <p className="text-xs font-semibold text-foreground">{fact.value}</p>
             </div>
@@ -63,7 +63,7 @@ const AparicoesPage: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-muted rounded-2xl">
+        <div className="flex gap-1 p-1 bg-muted rounded-premium">
           {[
             { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
             { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
@@ -74,7 +74,7 @@ const AparicoesPage: React.FC = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
-                activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                activeTab === tab.id ? 'bg-card text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {tab.icon}
@@ -164,7 +164,7 @@ const AparicoesPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
           <Icons.Heart className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Aparições Marianas</span>
         </div>
@@ -179,7 +179,7 @@ const AparicoesPage: React.FC = () => {
         {APPARITIONS.map((a, i) => (
           <React.Fragment key={a.id}>
             <div className="flex flex-col items-center gap-1">
-              <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-sm" loading="lazy" />
+              <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-soft" loading="lazy" />
               <span className="text-premium-tiny font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (
@@ -234,7 +234,7 @@ const AparicoesPage: React.FC = () => {
       </div>
 
       {/* Catechism reference */}
-      <div className="bg-card border border-border rounded-2xl p-6 text-center space-y-3">
+      <div className="bg-card border border-border rounded-premium p-6 text-center space-y-3">
         <Icons.Cross className="w-6 h-6 text-primary mx-auto" />
         <h3 className="font-serif font-bold text-foreground">Fundamentação no Catecismo</h3>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">

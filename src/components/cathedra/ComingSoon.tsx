@@ -58,7 +58,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             viewport={{ once: true }}
             className="p-8 rounded-premium border border-border/10 bg-card/[0.02] flex flex-col items-center text-center gap-6 group hover:bg-card/[0.05] transition-all cursor-default"
           >
-            <div className="w-10 h-10 rounded-xl bg-muted/20 flex items-center justify-center text-muted-foreground/20 group-hover:scale-105 transition-transform duration-500">
+            <div className="w-10 h-10 rounded-premium-sm bg-muted/20 flex items-center justify-center text-muted-foreground/20 group-hover:scale-105 transition-transform duration-500">
               <item.icon className="w-5 h-5" strokeWidth={1} />
             </div>
             <div className="space-y-2">

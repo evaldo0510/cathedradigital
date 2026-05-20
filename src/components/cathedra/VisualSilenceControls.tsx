@@ -47,7 +47,7 @@ export const VisualSilenceControls: React.FC = () => {
           whileTap={{ scale: 0.98 }}
           onClick={() => updateSettings({ [control.id]: !control.active } as any)}
           className={`
-            relative p-6 rounded-2xl border text-left transition-all duration-300
+            relative p-6 rounded-premium border text-left transition-all duration-300
             ${control.active 
               ? 'bg-primary border-primary text-primary-foreground shadow-premium' 
               : 'bg-card/50 border-border/40 text-foreground/70 hover:border-primary/20 hover:bg-card'}

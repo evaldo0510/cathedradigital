@@ -54,13 +54,13 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-2xl z-[201] p-8 flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-8 flex flex-col"
             role="dialog"
             aria-labelledby="a11y-title"
           >
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                <div className="p-2 rounded-premium-sm bg-primary/10 text-primary">
                   <Icons.ShieldCheck className="w-5 h-5" />
                 </div>
                 <h2 id="a11y-title" className="text-xl font-serif font-bold text-primary">Acessibilidade</h2>
@@ -149,7 +149,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
               <section className="space-y-4 pt-4">
                 <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
-                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+                <div className="p-4 rounded-premium bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">
                     <Icons.Info className="w-3.5 h-3.5" />
                     <span>Otimização para NVDA & VoiceOver</span>

@@ -72,7 +72,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
-              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}
+              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-premium'}`}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className={`p-2 rounded-full ${
@@ -121,7 +121,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-2xl bg-muted/30 border border-dashed border-border/50 text-center">
+                  <div className="py-4 px-2 rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
                     <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>

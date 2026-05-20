@@ -150,13 +150,13 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       aria-pressed={isSelected}
       aria-label={`${ariaLabel || `Tema: ${label}`}${isSelected ? ' (Selecionado)' : ''}${isSuggested ? ' (Sugerido)' : ''}`}
       className={`
-        relative rounded-full border transition-all shadow-sm flex items-center group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
+        relative rounded-full border transition-all shadow-soft flex items-center group/tag focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none
         ${sizeClasses[size]}
         ${isSelected 
-          ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-lg scale-105' 
+          ? 'border-primary bg-primary/15 ring-4 ring-primary/5 text-primary shadow-premium scale-105' 
           : isSuggested
             ? 'border-secondary/50 bg-secondary/10 hover:border-secondary/80 hover:bg-secondary/20 text-secondary hover:scale-105'
-            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-md text-foreground/80 hover:scale-105 hover:text-foreground'
+            : 'border-border bg-card hover:border-primary/60 hover:bg-primary/5 hover:shadow-premium text-foreground/80 hover:scale-105 hover:text-foreground'
         }
         ${className}
       `}

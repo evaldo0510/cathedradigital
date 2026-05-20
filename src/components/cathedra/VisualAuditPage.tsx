@@ -139,7 +139,7 @@ const VisualAuditPage: React.FC = () => {
               <input 
                 type="text"
                 placeholder="Filtrar arquivos..."
-                className="w-full bg-muted/20 border border-border/10 rounded-xl py-2 pl-10 pr-4 text-sm outline-none focus:border-primary/50"
+                className="w-full bg-muted/20 border border-border/10 rounded-premium-sm py-2 pl-10 pr-4 text-sm outline-none focus:border-primary/50"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               />

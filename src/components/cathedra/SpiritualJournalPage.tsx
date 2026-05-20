@@ -114,7 +114,7 @@ const SpiritualJournalPage = () => {
                 <button
                   key={m.id}
                   onClick={() => setMood(m.id)}
-                  className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${
+                  className={`flex flex-col items-center gap-4 p-6 rounded-premium border transition-all duration-700 ${
                     mood === m.id 
                       ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
                       : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
@@ -175,7 +175,7 @@ const SpiritualJournalPage = () => {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-primary/5 text-secondary flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
                       {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
                     </div>
                     <div>

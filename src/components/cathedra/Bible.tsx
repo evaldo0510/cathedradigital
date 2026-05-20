@@ -539,7 +539,7 @@ const Bible: React.FC = () => {
         )}
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-2xl border border-border shadow-sm">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-premium border border-border shadow-soft">
           <div className="flex items-center gap-2">
             <AudioButton variant="default" className="px-6" />
             <ShareButton
@@ -598,7 +598,7 @@ const Bible: React.FC = () => {
           )}
 
           <div className={`${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'lg:col-span-8' : 'lg:col-span-12'} w-full space-y-6 order-2 lg:order-1`}>
-            <Card className="border-border/40 shadow-sm overflow-hidden bg-card">
+            <Card className="border-border/40 shadow-soft overflow-hidden bg-card">
               <CardContent className="p-6 md:p-8">
                 {isLoading ? (
                   <BibleChapterSkeleton />
@@ -780,7 +780,7 @@ const Bible: React.FC = () => {
             onClick={() => setTestament(t)}
             className={`px-6 py-4 rounded-full font-bold transition-all border-2 text-sm
               ${testament === t 
-                ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]' 
+                ? 'bg-primary border-primary text-white shadow-premium shadow-primary/20 scale-[1.02]' 
                 : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
           >
             {t}
@@ -822,10 +822,10 @@ const Bible: React.FC = () => {
                       className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-full border transition-all relative overflow-hidden group aspect-square
                         ${isRead 
                           ? 'bg-primary/5 border-primary/20 text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-sm'}`}
+                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-soft'}`}
                     >
                       {isRead && (
-                        <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-sm">
+                        <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-soft">
                           <Icons.CheckCircle2 className="w-2.5 h-2.5" />
                         </div>
                       )}

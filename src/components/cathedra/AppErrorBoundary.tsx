@@ -36,7 +36,7 @@ class AppErrorBoundary extends Component<Props, State> {
           <div className="flex flex-col gap-3 w-full max-w-xs">
             <Button
               onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-xl focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              className="px-8 py-3 bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium-hover focus-visible:ring-4 focus-visible:ring-primary outline-none"
             >
               Tentar Novamente
             </Button>
