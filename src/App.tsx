@@ -18,6 +18,7 @@ import { toast } from 'sonner';
 // Core UI components (not lazy to ensure layout is instant)
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
+import { ReadingSettingsProvider } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
 import PageTransition from './components/PageTransition';
