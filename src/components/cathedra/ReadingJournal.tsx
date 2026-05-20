@@ -110,36 +110,44 @@ const ReadingJournal: React.FC = () => {
 
       {/* Streak and Goals */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto w-full">
-        <Card className="bg-primary/[0.03] border-primary/10 rounded-[2rem] overflow-hidden shadow-soft">
-          <CardContent className="p-8 flex items-center gap-6">
-            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center relative">
-              <Zap className="w-8 h-8 text-primary" />
+        <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-soft group hover:bg-primary/[0.05] transition-all">
+          <CardContent className="p-10 flex flex-col items-center text-center gap-4">
+            <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center relative">
+              <Zap className="w-10 h-10 text-primary group-hover:scale-110 transition-transform" />
               <div className="absolute inset-0 rounded-full border border-primary/20 animate-ping opacity-20" />
             </div>
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-1">Sequência Atual</p>
-              <h3 className="text-3xl font-display text-primary">{streak} {streak === 1 ? 'Dia' : 'Dias'}</h3>
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 mb-2">Sequência de Graça</p>
+              <h3 className="text-5xl font-display text-primary">{streak}</h3>
+              <p className="text-xs font-bold text-primary/60 mt-1 uppercase tracking-widest">{streak === 1 ? 'Dia' : 'Dias'} Consecutivos</p>
+            </div>
+            <div className="pt-4 border-t border-primary/5 w-full">
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Recorde: {profile?.max_streak || streak} dias</p>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary/[0.03] border-secondary/10 rounded-[2rem] overflow-hidden shadow-soft">
-          <CardContent className="p-8 flex items-center gap-6">
-            <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
-              <Target className="w-8 h-8 text-secondary" />
+        <Card className="bg-secondary/[0.03] border-secondary/10 rounded-[3rem] overflow-hidden shadow-soft group hover:bg-secondary/[0.05] transition-all">
+          <CardContent className="p-10 flex flex-col items-center gap-6">
+            <div className="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center">
+              <Target className="w-10 h-10 text-secondary group-hover:rotate-12 transition-transform" />
             </div>
-            <div className="flex-1">
-              <div className="flex justify-between items-end mb-2">
-                <p className="text-[10px] font-black uppercase tracking-widest text-secondary/40">Meta Semanal</p>
-                <span className="text-xs font-bold text-secondary">{daysActiveThisWeek}/{weeklyGoal}</span>
-              </div>
-              <div className="h-2 w-full bg-secondary/10 rounded-full overflow-hidden">
+            <div className="w-full text-center">
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/40 mb-2">Meta da Semana</p>
+              <h3 className="text-4xl font-display text-secondary">{daysActiveThisWeek} de {weeklyGoal}</h3>
+              <p className="text-xs font-bold text-secondary/60 mt-1 uppercase tracking-widest">Dias Ativos</p>
+            </div>
+            <div className="w-full space-y-2">
+              <div className="h-3 w-full bg-secondary/10 rounded-full overflow-hidden p-0.5">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${Math.min(100, (daysActiveThisWeek / weeklyGoal) * 100)}%` }}
-                  className="h-full bg-secondary"
+                  className="h-full bg-secondary rounded-full shadow-lg shadow-secondary/20"
                 />
               </div>
+              <p className="text-[9px] font-black uppercase tracking-widest text-secondary/30 text-center">
+                {daysActiveThisWeek >= weeklyGoal ? 'Meta alcançada!' : `Faltam ${weeklyGoal - daysActiveThisWeek} dias`}
+              </p>
             </div>
           </CardContent>
         </Card>

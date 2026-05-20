@@ -11,8 +11,14 @@ interface ReadingSettings {
   reduceAnimations: boolean;
   highContrast: boolean;
   contemplativeMode: boolean;
-  lineHeight: 'relaxed' | 'snug' | 'normal';
   fullScreen: boolean;
+  lineSpacing: 'tight' | 'normal' | 'wide';
+  letterSpacing: 'tight' | 'normal' | 'wide';
+  contrast: 'normal' | 'soft' | 'high';
+  reminders: {
+    enabled: boolean;
+    time: string;
+  };
   shortcuts: {
     bible: string;
     catechism: string;
@@ -37,7 +43,13 @@ const defaultSettings: ReadingSettings = {
   reduceAnimations: false,
   highContrast: false,
   contemplativeMode: false,
-  lineHeight: 'relaxed',
+  lineSpacing: 'normal',
+  letterSpacing: 'normal',
+  contrast: 'normal',
+  reminders: {
+    enabled: false,
+    time: '08:00',
+  },
   fullScreen: false,
   shortcuts: {
     bible: 'b',
@@ -88,6 +100,16 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.remove('reading-night');
       root.classList.remove('dark');
     }
+
+    // Apply Contrast
+    root.classList.remove('contrast-soft', 'contrast-high');
+    if (settings.contrast !== 'normal') {
+      root.classList.add(`contrast-${settings.contrast}`);
+    }
+
+    // Apply Spacing
+    root.setAttribute('data-line-spacing', settings.lineSpacing);
+    root.setAttribute('data-letter-spacing', settings.letterSpacing);
     
     if (settings.visualSilence) {
       root.classList.add('visual-silence');
@@ -129,7 +151,10 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       const { error } = await supabase
         .from('profiles')
         .update({
-          reading_settings: updated as any
+          reading_settings: updated as any,
+          notification_settings: {
+            daily_reminder: updated.reminders
+          }
         })
         .eq('id', user.id);
 

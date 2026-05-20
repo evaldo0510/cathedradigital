@@ -96,22 +96,91 @@ const ReadingControlPanel: React.FC = () => {
               </button>
             </div>
             
-            <div className="flex bg-muted/50 rounded-full p-1.5 gap-1">
-              {(['snug', 'normal', 'relaxed'] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => updateSettings({ lineHeight: l })}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-full transition-all ${
-                    settings.lineHeight === l ? 'bg-background text-primary shadow-soft scale-105' : 'text-muted-foreground/60 hover:text-primary hover:bg-background/40'
-                  }`}
-                >
-                  {l === 'snug' ? 'Compacto' : l === 'normal' ? 'Padrão' : 'Silencioso'}
-                </button>
-              ))}
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Espaçamento de Linha</p>
+                <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+                  {(['tight', 'normal', 'wide'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => updateSettings({ lineSpacing: l })}
+                      className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${
+                        settings.lineSpacing === l ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                      }`}
+                    >
+                      {l === 'tight' ? 'Snug' : l === 'normal' ? 'Std' : 'Wide'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Espaçamento de Letra</p>
+                <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+                  {(['tight', 'normal', 'wide'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => updateSettings({ letterSpacing: l })}
+                      className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${
+                        settings.letterSpacing === l ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                      }`}
+                    >
+                      {l === 'tight' ? 'Tight' : l === 'normal' ? 'Std' : 'Wide'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Contraste</p>
+                <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+                  {(['soft', 'normal', 'high'] as const).map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => updateSettings({ contrast: c })}
+                      className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${
+                        settings.contrast === c ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                      }`}
+                    >
+                      {c === 'soft' ? 'Suave' : c === 'normal' ? 'Padrão' : 'Alto'}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
           <DropdownMenuSeparator className="bg-border/20" />
+
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Lembretes & Hábito</p>
+            <div className="p-4 rounded-3xl bg-muted/20 border border-border/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Lembrete Diário</p>
+                  <p className="text-[10px] text-muted-foreground italic">Constância espiritual</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.reminders?.enabled}
+                  onChange={(e) => updateSettings({ reminders: { ...settings.reminders, enabled: e.target.checked } })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
+              </div>
+              
+              {settings.reminders?.enabled && (
+                <div className="flex items-center justify-between pt-2 border-t border-border/5">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Horário</p>
+                  <input 
+                    type="time" 
+                    value={settings.reminders.time}
+                    onChange={(e) => updateSettings({ reminders: { ...settings.reminders, time: e.target.value } })}
+                    className="bg-transparent text-xs font-bold text-primary border-none focus:ring-0 cursor-pointer"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
 
           <div className="space-y-4">
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Ambiente</p>
