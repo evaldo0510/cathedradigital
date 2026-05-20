@@ -10,9 +10,10 @@ import { ptBR } from 'date-fns/locale';
 interface SpiritualContinuityProps {
   data: any;
   isLoading?: boolean;
+  profile?: any;
 }
 
-export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, isLoading }) => {
+export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, isLoading, profile }) => {
   const navigate = useNavigate();
   const { t } = useLang();
 
