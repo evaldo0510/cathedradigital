@@ -5,9 +5,10 @@ import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
 import StaggeredList from './StaggeredList';
-import CrossReferencePanel from './CrossReferencePanel';
+import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
 import { getBibleCrossRefs, CIC_TO_BIBLE, BIBLE_TO_CIC, getBibleDocs } from '@/data/cross-references';
+
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -787,17 +788,34 @@ const Bible: React.FC = () => {
             </div>
 
             {/* Cross References Panel - Below the text for focused reading */}
-            {showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) && (
+            {/* Relatio: Intelligent Contextual Connections */}
+            {!isLoading && !bibleError && (
               <div className="w-full max-w-[72ch] mx-auto">
-                <CrossReferencePanel 
-                  type="bible"
-                  cicParagraphs={crossRefs} 
-                  documents={docsRefs}
+                <Relatio 
+                  context={{
+                    type: 'bible',
+                    id: `bible-${selectedBook.abbr}-${selectedChapter}`,
+                    abbr: selectedBook.abbr,
+                    chapter: selectedChapter,
+                    tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
+                  }}
+                  onNavigateToBible={(abbr, ch) => {
+                    const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
+                      .flatMap(cat => cat.books)
+                      .find(b => b.abbr === abbr);
+                    if (book) {
+                      setSelectedBook(book);
+                      setSelectedChapter(ch);
+                      setViewMode('reading');
+                      window.scrollTo(0, 0);
+                    }
+                  }}
                   onNavigateToCIC={handleNavigateToCIC}
                   onNavigateToDoc={handleNavigateToDoc}
                 />
               </div>
             )}
+
 
 
             {/* Deep Content Section for famous Bible Chapters */}
