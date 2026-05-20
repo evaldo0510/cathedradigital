@@ -300,7 +300,19 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                       }
                                     </div>
                                   )}
-                                </div>
+                  {/* Related Themes (The "Map" feeling) */}
+                  <div className="pt-8 space-y-4">
+                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30 flex items-center gap-2">
+                      <div className="h-[1px] w-4 bg-border/40" />
+                      TEMAS CONECTADOS
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {allThemes?.filter(t => t.category === tag.category && t.id !== tag.id).slice(0, 4).map((t, i) => (
+                        <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick />
+                      ))}
+                    </div>
+                  </div>
+                </div>
                               </motion.div>
                             );
                           })}
