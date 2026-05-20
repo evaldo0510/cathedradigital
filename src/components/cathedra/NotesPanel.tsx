@@ -32,7 +32,11 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
 
   const handleSave = async () => {
     if (!newNote.trim()) return;
-    await addNote(contentId, newNote, selectedColor);
+    await addNote(contentId, newNote, selectedColor, {
+      book_abbr: contentType === 'bible' ? contentId : undefined,
+      chapter: contentType === 'bible' ? parseInt(contentId.split('_')[1] || '0') : undefined,
+      paragraph: contentType === 'catechism' ? parseInt(contentId) : undefined,
+    });
     setNewNote('');
   };
 
