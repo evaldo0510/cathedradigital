@@ -28,14 +28,14 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
       className="relative z-10 max-w-5xl text-center px-4 flex flex-col items-center justify-center min-h-[60vh]"
     >
-      {/* Subtle Visual Anchor - Replacement for Avatar */}
+      {/* Subtle Visual Anchor */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: EASE }}
-      className="mb-8 md:mb-12"
+        className="mb-8 md:mb-12"
       >
-        <div className="px-5 py-1.5 rounded-full border border-primary/5 bg-primary/[0.01] text-[9px] font-bold uppercase tracking-[0.4em] text-primary/25">
+        <div className="premium-tag">
           Santuário Digital
         </div>
       </motion.div>
@@ -70,12 +70,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.4 }}
-        className="flex flex-col items-center gap-10"
+        className="flex flex-col items-center gap-12"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
           <HomeButton
             size="lg"
-            className="px-12 py-7 text-[10px] tracking-[0.25em] font-bold uppercase rounded-full shadow-xl shadow-primary/5 hover:shadow-primary/10 transition-all duration-1000 active:scale-95"
+            variant="primary"
             onClick={onStart}
             aria-label="Entrar no santuário digital"
           >

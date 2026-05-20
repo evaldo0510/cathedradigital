@@ -12,16 +12,16 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
     const paddingMap = {
       none: '',
-      sm: 'p-4 sm:p-6',
+      sm: 'p-5 sm:p-6',
       md: 'p-6 sm:p-8',
-      lg: 'p-8 sm:p-12',
-      xl: 'p-10 sm:p-16 lg:p-20',
+      lg: 'p-8 sm:p-10',
+      xl: 'p-10 sm:p-14 lg:p-16',
     };
 
     const variantStyles = {
       default: 'premium-card',
       interactive: 'premium-card-interactive',
-      outline: 'bg-transparent border border-border/60 rounded-premium',
+      outline: 'bg-transparent border border-border/30 rounded-premium',
       glass: 'bg-background/40 backdrop-blur-xl border border-white/10 rounded-premium shadow-premium',
     };
 

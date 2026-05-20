@@ -171,11 +171,11 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-primary/5 pt-12 lg:pt-20 pb-24 lg:pb-16 px-6 sm:px-10 md:px-12 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
+    <footer className="mt-auto w-full border-t border-border/10 pt-16 lg:pt-24 pb-24 lg:pb-16 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
+      <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
       
-      <div className="max-w-[1100px] mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-24 mb-16">
+      <div className="app-container relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-20 mb-16">
           
           <div className="flex flex-col gap-6">
              <div className="flex items-center gap-4">
