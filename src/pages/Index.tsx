@@ -54,9 +54,13 @@ const Index = () => {
       <LandingHeader />
       
       <SEOHead
-        title="Cathedra Digital | Leitura Diária & Logos IA"
-        description="Aprofunde sua fé com o Portal Cathedra: Bíblia, Catecismo e Magistério. Use a Logos IA para resumos contextuais e siga sua Leitura Diária com progresso persistente."
+        title="Cathedra Digital | Portal de Espiritualidade e Sabedoria Católica"
+        description="Aprofunde sua fé católica com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente."
         path="/"
+        keywords="bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade católica"
+        breadcrumbs={[
+          { name: "Home", path: "/" }
+        ]}
       />
 
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
