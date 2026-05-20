@@ -928,6 +928,7 @@ export type Database = {
           estado: string | null
           id: string
           is_premium: boolean
+          journey_reminder_time: string | null
           last_action_at: string | null
           last_notified_at: string | null
           last_visit: string | null
@@ -937,12 +938,14 @@ export type Database = {
           paroquia: string | null
           preferred_reminder_time: string | null
           program_duration: number | null
+          reading_settings: Json | null
           ritual_reminder_time: string | null
           ritual_silent_mode: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
+          weekly_goal: number | null
           xp: number | null
         }
         Insert: {
@@ -955,6 +958,7 @@ export type Database = {
           estado?: string | null
           id: string
           is_premium?: boolean
+          journey_reminder_time?: string | null
           last_action_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
@@ -964,12 +968,14 @@ export type Database = {
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
+          reading_settings?: Json | null
           ritual_reminder_time?: string | null
           ritual_silent_mode?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
+          weekly_goal?: number | null
           xp?: number | null
         }
         Update: {
@@ -982,6 +988,7 @@ export type Database = {
           estado?: string | null
           id?: string
           is_premium?: boolean
+          journey_reminder_time?: string | null
           last_action_at?: string | null
           last_notified_at?: string | null
           last_visit?: string | null
@@ -991,12 +998,14 @@ export type Database = {
           paroquia?: string | null
           preferred_reminder_time?: string | null
           program_duration?: number | null
+          reading_settings?: Json | null
           ritual_reminder_time?: string | null
           ritual_silent_mode?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
+          weekly_goal?: number | null
           xp?: number | null
         }
         Relationships: []
