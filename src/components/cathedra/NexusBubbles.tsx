@@ -188,41 +188,40 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         
         <div className="p-10 space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
           {/* Path Navigation - Monastic Breadcrumbs with History */}
-          <nav className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
-            <button 
-              onClick={() => {
-                setOpen(false);
-                setNavHistory([tag]);
-              }}
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-2 group"
-            >
-              <div className="w-1.5 h-1.5 rounded-full bg-border group-hover:bg-primary/40 transition-colors" />
-              Cathedra
-            </button>
-            <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+          <nav className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
             <button 
               onClick={() => handlePopTag(0)}
-              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all ${navHistory.length === 1 ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'}`}
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-1 group"
             >
+              <Icons.Logo className="w-3 h-3 opacity-20 group-hover:opacity-100 transition-opacity" />
               Nexus
             </button>
             
             {navHistory.map((hTag, idx) => (
-              <React.Fragment key={hTag.id}>
-                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+              <React.Fragment key={`${hTag.id}-${idx}`}>
+                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/10 flex-shrink-0" />
                 <button 
                   onClick={() => handlePopTag(idx)}
                   disabled={idx === navHistory.length - 1}
-                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full border transition-all ${
+                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-full border transition-all ${
                     idx === navHistory.length - 1 
-                      ? 'text-primary bg-primary/[0.03] border-primary/5' 
-                      : 'text-muted-foreground/40 border-transparent hover:text-primary hover:bg-primary/5'
+                      ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-soft' 
+                      : 'text-muted-foreground/30 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
                   }`}
                 >
                   {hTag.label}
                 </button>
               </React.Fragment>
             ))}
+            
+            {navHistory.length > 1 && (
+              <button 
+                onClick={() => handlePopTag(navHistory.length - 2)}
+                className="ml-auto text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 hover:text-secondary flex items-center gap-1 pl-4"
+              >
+                <Icons.ArrowDown className="w-3 h-3 rotate-90" /> Voltar
+              </button>
+            )}
           </nav>
 
           {/* Elegant Map Header */}

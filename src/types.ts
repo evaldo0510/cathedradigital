@@ -73,6 +73,7 @@ export enum AppRoute {
   DIARIO = '/diario',
   SEO_VERIFY = '/admin/seo-verify',
 
+  JORNADA_GUIADA = '/jornada-guiada',
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'
 }

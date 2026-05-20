@@ -32,6 +32,7 @@ const ProfilePage: React.FC = () => {
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(true);
+  const [reminderTime, setReminderTime] = useState('08:00');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -40,6 +41,7 @@ const ProfilePage: React.FC = () => {
   const [diocese, setDiocese] = useState('');
   const [paroquia, setParoquia] = useState('');
   const [movimentoPastoral, setMovimentoPastoral] = useState('');
+  const [weeklyGoal, setWeeklyGoal] = useState(7);
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
   const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef<number | null>(null);
@@ -55,6 +57,8 @@ const ProfilePage: React.FC = () => {
       setWhatsappNumber((profile as any).whatsapp_number || '');
       setWhatsappEnabled((profile as any).whatsapp_enabled || false);
       setPushEnabled((profile as any).push_enabled ?? true);
+      setReminderTime((profile as any).ritual_reminder_time || '08:00');
+      setWeeklyGoal((profile as any).weekly_goal || 7);
       supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral').eq('id', profile.id).single()
         .then(({ data }) => {
           setBio((data as any)?.bio || '');
@@ -162,6 +166,8 @@ const ProfilePage: React.FC = () => {
         whatsapp_number: whatsappNumber,
         whatsapp_enabled: whatsappEnabled,
         push_enabled: pushEnabled,
+        ritual_reminder_time: reminderTime,
+        weekly_goal: weeklyGoal,
         estado: estado || null,
         diocese: diocese || null,
         paroquia: paroquia || null,
@@ -393,6 +399,42 @@ const ProfilePage: React.FC = () => {
               </div>
             </motion.div>
           )}
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Clock className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Horário do Ritual</p>
+              </div>
+              <p className="text-premium-tiny text-muted-foreground">Sua jornada diária começa aqui.</p>
+            </div>
+            <input 
+              type="time" 
+              value={reminderTime}
+              onChange={e => setReminderTime(e.target.value)}
+              className="bg-transparent text-sm font-bold text-primary border-none focus:ring-0"
+            />
+          </div>
+          
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Star className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Meta Semanal</p>
+              </div>
+              <p className="text-premium-tiny text-muted-foreground">Dias de leitura por semana.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-primary">{weeklyGoal} dias</span>
+              <input 
+                type="range" 
+                min="1" 
+                max="7" 
+                value={weeklyGoal}
+                onChange={e => setWeeklyGoal(parseInt(e.target.value))}
+                className="w-24 h-2 bg-muted rounded-full accent-primary"
+              />
+            </div>
+          </div>
         </div>
       </div>
 

@@ -11,9 +11,17 @@ interface LogosAIProps {
   isOpen: boolean;
   onClose: () => void;
   type?: 'bible' | 'catechism' | 'magisterium';
+  variant?: 'drawer' | 'integrated';
 }
 
-const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClose, type = 'bible' }) => {
+const LogosAI: React.FC<LogosAIProps> = ({ 
+  context, 
+  selectedText, 
+  isOpen, 
+  onClose, 
+  type = 'bible',
+  variant = 'drawer'
+}) => {
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +65,83 @@ const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClos
       setIsLoading(false);
     }
   };
+
+  if (variant === 'integrated') {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="my-12 overflow-hidden"
+          >
+            <div className="premium-card bg-primary/[0.01] border-primary/5 p-12 md:p-16 space-y-12">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <div className="w-12 h-12 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40">
+                    <Icons.Sparkles className="w-6 h-6" strokeWidth={0.5} />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Logos IA</h4>
+                    <p className="text-sm font-serif italic text-primary/60">Mentor Contemplativo</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full text-muted-foreground/30 hover:text-primary">
+                  <Icons.X className="w-4 h-4" />
+                </Button>
+              </div>
+
+              <div className="space-y-10">
+                {history.map((msg, i) => (
+                  <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}>
+                    <div className={`max-w-[85%] text-lg leading-relaxed ${
+                      msg.role === 'user' 
+                        ? 'text-primary/60 font-medium' 
+                        : 'text-foreground/80 font-serif italic'
+                    }`}>
+                      {msg.role === 'assistant' && <span className="text-primary/10 mr-2 text-2xl font-serif">“</span>}
+                      {msg.content}
+                      {msg.role === 'assistant' && <span className="text-primary/10 ml-2 text-2xl font-serif">”</span>}
+                    </div>
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="flex gap-2 opacity-20">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.2s]" />
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce [animation-delay:0.4s]" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <form onSubmit={handleQuery} className="relative group max-w-2xl mx-auto pt-8 border-t border-primary/5">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Peça clareza ao Mentor..."
+                  className="w-full bg-transparent border-none text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/10"
+                />
+                <div className="flex justify-center mt-6">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading || !query.trim()}
+                    className="rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground h-12 px-8 text-[10px] font-black uppercase tracking-[0.3em] transition-all"
+                  >
+                    Buscar Luz
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
 
   return (
     <AnimatePresence>

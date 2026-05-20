@@ -69,7 +69,7 @@ export const ReadingProgressSection: React.FC = () => {
         <div className="absolute bottom-0 left-0 w-full h-1 bg-border/5">
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: '40%' }} // Dummy progress for now
+            animate={{ width: lastRead.position ? `${Math.min(lastRead.position, 100)}%` : '5%' }} 
             className="h-full bg-primary/20"
           />
         </div>
