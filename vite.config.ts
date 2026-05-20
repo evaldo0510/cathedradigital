@@ -16,6 +16,35 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
+    {
+      name: 'seo-headers',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/sitemap.xml') {
+            res.setHeader('Content-Type', 'application/xml');
+            res.setHeader('Cache-Control', 'public, max-age=3600');
+          }
+          if (req.url === '/robots.txt') {
+            res.setHeader('Content-Type', 'text/plain');
+            res.setHeader('Cache-Control', 'public, max-age=3600');
+          }
+          next();
+        });
+      },
+      configurePreviewServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/sitemap.xml') {
+            res.setHeader('Content-Type', 'application/xml');
+            res.setHeader('Cache-Control', 'public, max-age=3600');
+          }
+          if (req.url === '/robots.txt') {
+            res.setHeader('Content-Type', 'text/plain');
+            res.setHeader('Cache-Control', 'public, max-age=3600');
+          }
+          next();
+        });
+      }
+    },
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',
@@ -23,52 +52,7 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'robots.txt', 'logos-avatar.png', 'logos-aquinas.png', 'logos-colloquium.png'],
       manifest: {
-        name: 'Cathedra Digital',
-        short_name: 'Cathedra',
-        description: 'Sanctum Teologicum — Bíblia, Catecismo, Magistério e oração',
-        theme_color: '#0A192F',
-        background_color: '#0A192F',
-        display: 'standalone',
-        orientation: 'portrait',
-        lang: 'pt-BR',
-        categories: ['education', 'books', 'lifestyle'],
-        icons: [
-          {
-            src: 'icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'icon-maskable.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable'
-          }
-        ],
-        shortcuts: [
-          {
-            name: 'Bíblia Sagrada',
-            short_name: 'Bíblia',
-            url: '/biblia',
-            icons: [{ src: 'icon-192.png', sizes: '192x192' }]
-          },
-          {
-            name: 'Orações',
-            short_name: 'Oração',
-            url: '/oracao',
-            icons: [{ src: 'icon-192.png', sizes: '192x192' }]
-          },
-          {
-            name: 'Catecismo',
-            short_name: 'Catecismo',
-            url: '/catecismo',
-            icons: [{ src: 'icon-192.png', sizes: '192x192' }]
-          }
+...
         ]
       },
     }),
