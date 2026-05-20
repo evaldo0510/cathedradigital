@@ -372,10 +372,21 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {allThemes?.filter(t => t.category === tag.category && t.id !== tag.id).slice(0, 5).map((t, i) => (
-                    <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick className="opacity-60 hover:opacity-100 transition-opacity" />
+                  {allThemes?.filter(t => t.category === currentTag.category && t.id !== currentTag.id).slice(0, 5).map((t, i) => (
+                    <TagBubble 
+                      key={t.id} 
+                      tag={t} 
+                      index={i} 
+                      size="xs" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePushTag(t);
+                      }}
+                      className="opacity-60 hover:opacity-100 transition-opacity" 
+                    />
                   ))}
                 </div>
+
               </div>
 
               {!logosInsight && status === 'success' && content.length === 0 && (
