@@ -205,7 +205,10 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
-            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
+            <Button onClick={() => {
+              toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` });
+              // Contextual AI trigger removed from heart button to avoid confusion, but keeping the structure
+            }} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
