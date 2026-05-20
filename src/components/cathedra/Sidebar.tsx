@@ -49,61 +49,37 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       ]
     }] : []),
     {
-      label: 'Navegação',
+      label: 'Núcleo Sagrado',
       items: [
         { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
-        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
-        { label: t('themes'), path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
-        { label: t('explore'), path: AppRoute.BIBLIOTECA, icon: <Icons.Compass className="w-5 h-5" /> },
-        { label: 'Busca Global', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
-        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
+        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
+        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
+        { label: 'Logos IA', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
       ]
     },
     {
       label: 'Devocionário',
       items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
-        { label: 'Explorar Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-5 h-5" /> },
         { label: t('liturgy'), path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
         { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
-        { label: t('via_crucis') || 'Via Sacra', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
-        { label: t('confession') || 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Flame className="w-5 h-5" /> },
-        { label: t('lectio_divina') || 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Lectio className="w-5 h-5" /> },
-        { label: t('breviary') || 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5" /> },
-        { label: t('litanies') || 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.MessageCircle className="w-5 h-5" /> },
+        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
       ]
     },
     {
-      label: 'Formação',
+      label: 'Em Breve',
       items: [
-        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5" />, pro: false },
-        { label: t('magisterium') || 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: t('encyclopedia') || 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-5 h-5" /> },
-        { label: t('dogmas') || 'Dogmas da Fé', path: AppRoute.DOGMAS, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: t('apparitions') || 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-5 h-5" /> },
-        { label: t('az_faith') || 'A–Z da Fé', path: AppRoute.AZ_FAITH, icon: <Icons.AZ className="w-5 h-5" /> },
-        { label: t('popes') || 'Os Papas', path: AppRoute.POPES, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: t('aquinas') || 'Obras de Aquino', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-5 h-5" /> },
+        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
+        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
+        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5 opacity-40" /> },
       ]
     },
     {
       label: t('digital'),
       items: [
         { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: t('partners') || 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Handshake className="w-5 h-5" /> },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.HelpCircle className="w-5 h-5" /> },
-        { 
-          label: 'Redefinir Onboarding', 
-          path: AppRoute.ONBOARDING, 
-          icon: <Icons.Compass className="w-5 h-5" />,
-          onClick: () => {
-            localStorage.removeItem('cathedra_onboarding_done');
-          }
-        },
+        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
         { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: <Icons.Library className="w-5 h-5" /> },
       ]
     }
