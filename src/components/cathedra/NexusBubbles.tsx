@@ -229,6 +229,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-3.5 h-3.5" /> },
                     { id: 'catechism', label: 'Catecismo', icon: <Church className="w-3.5 h-3.5" /> },
                     { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-3.5 h-3.5" /> },
+                    { id: 'saint', label: 'Santos', icon: <Sparkles className="w-3.5 h-3.5" /> },
                     { id: 'journey', label: 'Jornadas', icon: <Flame className="w-3.5 h-3.5" /> },
                   ].map((category) => {
                     const categoryContent = content.filter(c => c.type === category.id);
