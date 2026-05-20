@@ -23,7 +23,7 @@ interface SEOHeadProps {
   image?: string;
 }
 
-const BASE_URL = 'https://cathedradigital.lovable.app';
+const BASE_URL = 'https://www.cathedradigital.com.br';
 const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-image.png';
 
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
