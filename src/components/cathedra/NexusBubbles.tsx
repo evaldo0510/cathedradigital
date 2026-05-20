@@ -443,7 +443,6 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             <div 
               ref={filteredRef}
               className="flex flex-wrap justify-center gap-3"
-              {...filteredRoving}
             >
               {filteredTags.map((tag, i) => (
                 <TagBubble 
