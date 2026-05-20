@@ -6,6 +6,8 @@ interface ReadingSettings {
   theme: 'paper' | 'sepia' | 'dark' | 'night';
   visualSilence: boolean; // Hides non-essential UI
   reduceAnimations: boolean;
+  highContrast: boolean;
+  contemplativeMode: boolean;
   lineHeight: 'relaxed' | 'snug' | 'normal';
 }
 
@@ -21,6 +23,8 @@ const defaultSettings: ReadingSettings = {
   theme: 'paper',
   visualSilence: false,
   reduceAnimations: false,
+  highContrast: false,
+  contemplativeMode: false,
   lineHeight: 'relaxed',
 };
 
@@ -45,6 +49,25 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     } else {
       root.classList.remove('visual-silence');
     }
+
+    if (settings.highContrast) {
+      root.classList.add('high-contrast');
+    } else {
+      root.classList.remove('high-contrast');
+    }
+
+    if (settings.contemplativeMode) {
+      root.classList.add('contemplative-mode');
+    } else {
+      root.classList.remove('contemplative-mode');
+    }
+
+    if (settings.reduceAnimations) {
+      root.classList.add('reduce-animations');
+    } else {
+      root.classList.remove('reduce-animations');
+    }
+
   }, [settings]);
 
   const updateSettings = (newSettings: Partial<ReadingSettings>) => {
