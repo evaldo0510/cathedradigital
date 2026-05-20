@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'seo-headers',
       configureServer(server) {
-        server.middlewares.use((req, res, next) => {
+        server.middlewares.use((req: any, res: any, next: any) => {
           if (req.url === '/sitemap.xml') {
             res.setHeader('Content-Type', 'application/xml');
             res.setHeader('Cache-Control', 'public, max-age=3600');
@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => ({
         });
       },
       configurePreviewServer(server) {
-        server.middlewares.use((req, res, next) => {
+        server.middlewares.use((req: any, res: any, next: any) => {
           if (req.url === '/sitemap.xml') {
             res.setHeader('Content-Type', 'application/xml');
             res.setHeader('Cache-Control', 'public, max-age=3600');
