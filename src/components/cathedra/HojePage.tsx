@@ -96,7 +96,7 @@ const HojePage: React.FC = () => {
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  const { isLoading: loadingStats } = useDashboardData(user as any);
+  const { nextUp, isLoading: loadingStats } = useDashboardData(user as any);
 
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
