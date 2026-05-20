@@ -86,13 +86,14 @@ export const useDashboardData = (user: User | null) => {
     queryFn: async () => {
       if (!userId) return null;
       
-      const [lastBible, lastCatechism, lastJourney, lastReflection, lastJournal, history] = await Promise.all([
+      const [lastBible, lastCatechism, lastJourney, lastReflection, lastJournal, history, lastRead] = await Promise.all([
         (supabase as any).from('bible_chapters_read').select('book_abbr, chapter').eq('user_id', userId).order('read_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('catechism_paragraphs_read').select('paragraph').eq('user_id', userId).order('read_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId).order('completed_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('reading_reflections').select('content, reading_type, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('spiritual_journal').select('content, mood, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('user_history').select('*').eq('user_id', userId).order('visited_at', { ascending: false }).limit(5),
+        supabase.from('reading_marks').select('*').eq('user_id', userId).eq('is_last_read', true).order('updated_at', { ascending: false }).limit(1).maybeSingle(),
       ]);
 
       const results: any = {
