@@ -59,4 +59,38 @@ test.describe('Social Links E2E', () => {
       expect(['Instagram', 'Youtube', 'Whatsapp']).toContain(label);
     }
   });
+  test('Instagram button on About page triggers analytics event', async ({ page }) => {
+    // Capture console logs to verify analytics
+    const consoleLogs: string[] = [];
+    page.on('console', msg => {
+      if (msg.text().includes('[Analytics]')) {
+        consoleLogs.push(msg.text());
+      }
+    });
+
+    await page.goto('/sobre');
+    
+    // Find the Instagram link in the social media section of the About page
+    const instagramLink = page.locator('#redes-sociais a[aria-label="Instagram"]');
+    await expect(instagramLink).toBeVisible();
+
+    // Click it (we need to handle the new tab if it opens, but we just want to check the click event here)
+    // We can use a promise to wait for the event if we want to be very precise, 
+    // but checking the logs after click should work.
+    await instagramLink.click();
+
+    // The event should look like: [Analytics] Event: social_link_click { platform: 'Instagram', url: 'https://www.instagram.com/cathedradigital/' }
+    const expectedUrl = 'https://www.instagram.com/cathedradigital/';
+    
+    // Give it a small timeout to process the log
+    await page.waitForTimeout(500);
+
+    const eventLogged = consoleLogs.some(log => 
+      log.includes('social_link_click') && 
+      log.includes('Instagram') && 
+      log.includes(expectedUrl)
+    );
+
+    expect(eventLogged).toBe(true);
+  });
 });
