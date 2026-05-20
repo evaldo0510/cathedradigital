@@ -33,10 +33,9 @@ const LandingHeader = () => {
   }, []);
 
   const navLinks = [
-    { name: "Funcionalidades", href: "#features" },
-    { name: "Como Funciona", href: "#how-it-works" },
-    { name: "Depoimentos", href: "#testimonials" },
-    { name: "Planos", href: "#pricing" },
+    { name: "Bíblia", href: AppRoute.BIBLE },
+    { name: "Catecismo", href: AppRoute.CATECHISM },
+    { name: "Magistério", href: AppRoute.MAGISTERIUM },
     { name: "Sobre", href: AppRoute.ABOUT },
   ];
 

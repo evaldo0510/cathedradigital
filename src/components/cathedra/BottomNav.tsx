@@ -91,9 +91,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   const items = [
     { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
-    { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
-    { label: t('explore'), icon: <Icons.Compass />, route: AppRoute.BIBLIOTECA },
-    { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
+    { label: t('bible'), icon: <Icons.Bible />, route: AppRoute.BIBLE },
+    { label: t('catechism'), icon: <Icons.Catechism />, route: AppRoute.CATECHISM },
+    { label: 'Logos', icon: <Icons.Search />, route: AppRoute.BUSCAR },
     { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
   ];
 
