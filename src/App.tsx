@@ -743,10 +743,12 @@ const App: React.FC = () => {
       <AppErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <BrowserRouter>
-              {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-              <AppLayout />
-            </BrowserRouter>
+            <ReadingSettingsProvider>
+              <BrowserRouter>
+                {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+                <AppLayout />
+              </BrowserRouter>
+            </ReadingSettingsProvider>
           </AuthProvider>
         </QueryClientProvider>
       </AppErrorBoundary>
