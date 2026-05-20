@@ -93,4 +93,25 @@ test.describe('Social Links E2E', () => {
 
     expect(eventLogged).toBe(true);
   });
+
+  test('Instagram button on About page opens correct URL in a new tab using multi-tab context', async ({ page, context }) => {
+    await page.goto('/sobre');
+
+    const instagramLink = page.locator('#redes-sociais a[aria-label="Instagram"]');
+    await expect(instagramLink).toBeVisible();
+
+    // Start waiting for the new page (tab) before clicking
+    const pagePromise = context.waitForEvent('page');
+    
+    await instagramLink.click();
+    
+    const newPage = await pagePromise;
+    await newPage.waitForLoadState();
+
+    const expectedUrl = 'https://www.instagram.com/cathedradigital/';
+    expect(newPage.url()).toBe(expectedUrl);
+    
+    // Cleanup the new page
+    await newPage.close();
+  });
 });
