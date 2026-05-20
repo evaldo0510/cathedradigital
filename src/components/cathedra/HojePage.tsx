@@ -249,8 +249,6 @@ const HojePage: React.FC = () => {
         </div>
       </div>
     </div>
-      </div>
-    </div>
   );
 };
 
