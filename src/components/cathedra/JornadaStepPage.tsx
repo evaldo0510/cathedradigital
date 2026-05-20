@@ -304,7 +304,7 @@ const JornadaStepPage: React.FC = () => {
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border shadow-sm'
+                      ? 'bg-card border border-b-0 border-border shadow-soft'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
                   } ${isLocked ? 'opacity-70' : ''}`}
                 >
@@ -350,7 +350,7 @@ const JornadaStepPage: React.FC = () => {
                               </p>
                               <Button 
                                 size="sm" 
-                                className="font-bold text-premium-tiny uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-lg"
+                                className="font-bold text-premium-tiny uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   navigate(AppRoute.PRICING);

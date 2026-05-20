@@ -325,7 +325,7 @@ const DogmasPage: React.FC = () => {
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => setCategory(cat)}
             className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
-              category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+              category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
           </Button>

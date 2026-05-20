@@ -214,7 +214,7 @@ const ModalShell: React.FC<{ title: string; onClose: () => void; children: React
       aria-labelledby="modal-title"
     >
       <div className="absolute inset-0 bg-black/60 " onClick={onClose} aria-hidden="true" />
-      <div className="relative w-full max-w-lg bg-card border border-border rounded-premium shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-premium shadow-premium-hover p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 id="modal-title" className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
           <Button 

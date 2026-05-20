@@ -61,7 +61,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
             {registerBenefits.map((benefit, i) => (
               <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
-                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-premium bg-white/5 border border-white/10 cursor-pointer h-full">
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full">
                   <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-8 h-8 rounded-premium bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </motion.div>
@@ -80,7 +80,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
         </div>
 
         <div className="relative hidden lg:block">
-          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-lg">
+          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-premium">
             <motion.img
               src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=40&w=600"
               alt="Devoção católica"

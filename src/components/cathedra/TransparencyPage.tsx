@@ -102,7 +102,7 @@ const TransparencyPage: React.FC = () => {
                 trackEvent('social_link_click', { platform: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP });
                 window.open(SOCIAL_LINKS.WHATSAPP, '_blank');
               }}
-              className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-sm gap-3"
+              className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-soft gap-3"
             >
               <Icons.MessageSquare className="w-4 h-4" />
               Suporte WhatsApp

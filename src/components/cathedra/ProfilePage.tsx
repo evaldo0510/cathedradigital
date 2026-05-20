@@ -209,7 +209,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
-              className="bg-card border-2 border-primary rounded-full p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
+              className="bg-card border-2 border-primary rounded-full p-8 shadow-premium-hover text-center pointer-events-auto max-w-sm mx-4"
             >
               <motion.div
                 animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
@@ -361,7 +361,7 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium border border-primary/20 shadow-sm">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium border border-primary/20 shadow-soft">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />

@@ -36,7 +36,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       {/* Daily suggestion card */}
       <motion.button
         onClick={() => onPassageChange(dailyPassage.ref)}
-        className={`w-full max-w-lg mx-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all shadow-lg group ${
+        className={`w-full max-w-lg mx-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all shadow-premium group ${
           selectedPassage === dailyPassage.ref
             ? 'bg-primary border-primary text-primary-foreground shadow-primary/20'
             : 'bg-card border-border hover:border-primary/30 hover:shadow-premium-hover'
@@ -89,7 +89,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
       {/* Select passage */}
       <motion.div 
-        className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-2xl shadow-black/[0.02]"
+        className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-premium-hover shadow-black/[0.02]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.6 }}
@@ -104,7 +104,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               value={selectedPassage}
               onChange={e => onPassageChange(e.target.value)}
               placeholder="Ex: Jo 1,1-18 ou Sl 23..."
-              className="w-full px-6 py-4 rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
+              className="w-full px-6 py-4 rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft"
             />
           </div>
 
@@ -115,7 +115,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
                 onClick={() => onPassageChange(p.ref)}
                 className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
                   selectedPassage === p.ref
-                    ? 'bg-primary border-primary text-white shadow-lg'
+                    ? 'bg-primary border-primary text-white shadow-premium'
                     : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
                 }`}
               >

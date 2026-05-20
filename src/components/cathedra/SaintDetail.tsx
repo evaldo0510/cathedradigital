@@ -85,7 +85,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       initial={{ scale: 0.9, y: 20 }}
       animate={{ scale: 1, y: 0 }}
       exit={{ scale: 0.9, y: 20 }}
-      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative"
+      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-premium-hover border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
       <Button 
@@ -304,7 +304,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
+          className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-soft"
         >
           <div className="flex items-center gap-5">
             <div className="w-14 h-14 rounded-premium bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
@@ -323,7 +323,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               navigate(`/jornadas/${suggestedJourney.id}`);
               onClose();
             }}
-            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-lg shadow-primary/20 group/btn transition-all"
+            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-premium shadow-primary/20 group/btn transition-all"
           >
             Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>

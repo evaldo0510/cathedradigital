@@ -215,13 +215,13 @@ const AquinasOpera: React.FC = () => {
         <div className="flex items-center justify-center gap-2 p-1 bg-muted rounded-premium w-fit mx-auto">
           <Button
             onClick={() => setActiveTab('concepts')}
-            className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
           >
             10 Conceitos
           </Button>
           <Button
             onClick={() => setActiveTab('suma')}
-            className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Suma Teológica
           </Button>
@@ -337,7 +337,7 @@ const AquinasOpera: React.FC = () => {
               <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
               <Button
                 onClick={handleStartAquinasChat}
-                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-lg shadow-primary/20"
+                className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-premium shadow-primary/20"
               >
                 <Icons.Brain className="w-5 h-5" />
                 Interagir com Logos (Modo Aquino)

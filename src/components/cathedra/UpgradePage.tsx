@@ -135,7 +135,7 @@ const UpgradePage: React.FC = () => {
         >
           <Button 
             size="lg"
-            className="h-16 px-10 rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
+            className="h-16 px-10 rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
             onClick={() => navigate(AppRoute.CHECKOUT)}
             disabled={isPremium}
           >

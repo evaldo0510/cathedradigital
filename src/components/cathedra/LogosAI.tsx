@@ -65,7 +65,7 @@ const LogosAI: React.FC<LogosAIProps> = ({ context, selectedText, isOpen, onClos
           initial={{ opacity: 0, x: 300 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 300 }}
-          className="fixed right-0 top-0 bottom-0 w-full sm:w-[400px] bg-card border-l border-border z-[200] shadow-2xl flex flex-col"
+          className="fixed right-0 top-0 bottom-0 w-full sm:w-[400px] bg-card border-l border-border z-[200] shadow-premium-hover flex flex-col"
         >
           <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
             <div className="flex items-center gap-3">

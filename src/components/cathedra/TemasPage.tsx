@@ -144,7 +144,7 @@ const TemasPage = () => {
         </header>
 
         <div className="space-y-4 sm:space-y-8">
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 p-2 sm:p-3 rounded-premium border border-border/40 shadow-premium-hover sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-2xl hover:border-primary/20 group/nav">
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 p-2 sm:p-3 rounded-premium border border-border/40 shadow-premium-hover sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-premium-hover hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
               value={searchQuery}
@@ -160,7 +160,7 @@ const TemasPage = () => {
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
                     whitespace-nowrap px-3 sm:px-5 py-2 sm:py-2.5 rounded-full sm:rounded-full text-premium-tiny sm:text-premium-tiny font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
-                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-105' 
+                      ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
                     }
                   `)}

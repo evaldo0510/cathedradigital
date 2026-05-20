@@ -72,7 +72,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
-              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}
+              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-premium'}`}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className={`p-2 rounded-full ${

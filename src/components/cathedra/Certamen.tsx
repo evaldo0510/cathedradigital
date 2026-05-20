@@ -153,7 +153,7 @@ const Certamen: React.FC = () => {
               <RotateCcw className="w-4 h-4" />
               Tentar Novamente
             </Button>
-            <Button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <Button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-premium shadow-primary/20">
               <Share2 className="w-4 h-4" />
               Compartilhar Resultado
             </Button>
@@ -197,7 +197,7 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-8 space-y-6 shadow-sm">
+      <div className="bg-card border border-border rounded-premium p-8 space-y-6 shadow-soft">
         <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 

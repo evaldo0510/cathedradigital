@@ -63,7 +63,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       />
       <div ref={ref} className="space-y-12 max-w-4xl mx-auto pb-24 px-4 sm:px-6">
         <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="w-16 h-16 rounded-premium bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
             <Icons.Search className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl md:text-5xl font-bold font-serif text-foreground">Logos IA</h1>

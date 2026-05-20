@@ -404,7 +404,7 @@ const CommunityPage: React.FC = () => {
                 isSearching={isSearchPending}
                 className="flex-1"
               />
-              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20">
+              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-premium shadow-primary/20">
                 <Icons.Plus className="w-4 h-4" /> Nova Discussão
               </Button>
             </div>

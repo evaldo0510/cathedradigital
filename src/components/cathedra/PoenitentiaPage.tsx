@@ -75,8 +75,8 @@ const PoenitentiaPage: React.FC = () => {
             onClick={() => setActiveStep(i)}
             className={`p-6 rounded-[2rem] border text-left transition-all relative overflow-hidden group ${
               activeStep === i 
-                ? 'bg-primary border-primary text-primary-foreground shadow-2xl scale-[1.05] z-10' 
-                : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-lg'
+                ? 'bg-primary border-primary text-primary-foreground shadow-premium-hover scale-[1.05] z-10' 
+                : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-premium'
             }`}
           >
             <div className={`text-premium-tiny font-black opacity-40 uppercase tracking-widest mb-2 ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
@@ -116,7 +116,7 @@ const PoenitentiaPage: React.FC = () => {
           )}
 
           {activeStep === 0 && (
-            <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-sm">
+            <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-soft">
               <Icons.BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
               <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
@@ -132,7 +132,7 @@ const PoenitentiaPage: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
               </div>
-              <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-2xl shadow-primary/20 relative">
+              <div className="bg-primary text-primary-foreground p-10 md:p-14 rounded-[3rem] border border-primary/10 shadow-premium-hover shadow-primary/20 relative">
                 <Icons.Sparkles className="absolute -top-3 -right-3 w-10 h-10 text-white/20 rotate-12" />
                 <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
                   "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."

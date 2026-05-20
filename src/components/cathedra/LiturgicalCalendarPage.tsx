@@ -405,7 +405,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                 >
                   <div className={`
                     w-full h-full rounded-full flex flex-col items-center justify-center gap-0.5 border
-                    ${info.rank === 'solenidade' ? 'border-primary/20 bg-primary/5 shadow-sm' : 'border-transparent'}
+                    ${info.rank === 'solenidade' ? 'border-primary/20 bg-primary/5 shadow-soft' : 'border-transparent'}
                     ${colorStyle?.bg}
                   `}>
                     <span className={`text-xs md:text-sm font-bold ${isToday ? 'text-primary' : colorStyle?.text}`}>
@@ -430,7 +430,7 @@ const LiturgicalCalendarPage: React.FC = () => {
         <div className="space-y-6">
           <AnimatePresence mode="wait">
             {selectedDay ? (
-              <div className="bg-card border border-border rounded-premium overflow-hidden shadow-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="bg-card border border-border rounded-premium overflow-hidden shadow-premium animate-in fade-in slide-in-from-bottom-4 duration-300">
                 {selectedSaint ? (
                   <div className="relative h-48 group">
                     <SacredImage src={selectedSaint.image} alt={selectedSaint.name} className="w-full h-full" />

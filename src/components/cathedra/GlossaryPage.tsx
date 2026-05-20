@@ -189,7 +189,7 @@ const GlossaryPage: React.FC = () => {
           {categories.map(cat => (
             <Button key={cat} onClick={() => setCategory(cat)}
               className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
-                category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+                category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
             </Button>
@@ -249,7 +249,7 @@ const GlossaryPage: React.FC = () => {
             return (
               <div key={term.id} id={`term-${term.id}`}
                 className={`bg-card border rounded-full overflow-hidden transition-all ${
-                  isExpanded ? 'border-primary/40 shadow-lg' : 'border-border hover:border-primary/30'
+                  isExpanded ? 'border-primary/40 shadow-premium' : 'border-border hover:border-primary/30'
                 }`}>
                 <Button
                   onClick={() => setExpandedId(isExpanded ? null : term.id)}
@@ -329,7 +329,7 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <Button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
                           >
                             <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}

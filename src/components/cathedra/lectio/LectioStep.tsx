@@ -37,7 +37,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-6 px-2">
-        <Button variant="outline" size="icon" onClick={onBack} className="rounded-full shadow-sm self-start md:self-center">
+        <Button variant="outline" size="icon" onClick={onBack} className="rounded-full shadow-soft self-start md:self-center">
           <ArrowLeft className="w-6 h-6 text-foreground" />
         </Button>
         <div className="flex-1 space-y-1">
@@ -52,7 +52,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             title={`Lectio Divina — ${selectedPassage}`}
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
-          <div className="flex items-center gap-3 px-5 py-3 rounded-premium bg-card border border-border shadow-sm">
+          <div className="flex items-center gap-3 px-5 py-3 rounded-premium bg-card border border-border shadow-soft">
             <Timer className="w-4 h-4 text-primary/60" />
             <span className="font-mono text-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>
@@ -80,7 +80,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
               onClick={() => onStepChange(step.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all whitespace-nowrap border ${
                 step.id === currentStep 
-                  ? 'bg-primary border-primary text-white shadow-lg' 
+                  ? 'bg-primary border-primary text-white shadow-premium' 
                   : i <= stepIndex ? 'bg-card border-border text-foreground/80' : 'bg-transparent border-transparent text-muted-foreground/40'
               }`}
             >
@@ -99,7 +99,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
           transition={{ duration: 0.4 }}
-          className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-2xl shadow-black/[0.02] relative overflow-hidden"
+          className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-10 shadow-premium-hover shadow-black/[0.02] relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 p-12 opacity-[0.02] pointer-events-none">
             <activeStep.icon className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
@@ -167,7 +167,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
                   onChange={e => onNotesChange({ ...notes, [activeStep.id]: e.target.value })}
                   rows={6}
                   placeholder="Deixe a alma falar... Escreva aqui suas reflexões, luzes e resoluções."
-                  className="w-full px-8 py-8 rounded-[2rem] border border-border bg-background text-lg md:text-xl font-serif text-foreground resize-none focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm leading-relaxed"
+                  className="w-full px-8 py-8 rounded-[2rem] border border-border bg-background text-lg md:text-xl font-serif text-foreground resize-none focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft leading-relaxed"
                 />
               </div>
             </div>

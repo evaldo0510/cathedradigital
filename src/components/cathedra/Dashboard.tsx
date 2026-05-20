@@ -194,11 +194,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5 rounded-[2.5rem]"
             >
               {door.suggested && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-sm">
+                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
                   <Icons.Star className="w-3 h-3 fill-current" />
                 </div>
               )}
-              <div className={`w-14 h-14 rounded-3xl bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
+              <div className={`w-14 h-14 rounded-premium bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
                 <door.icon className="w-7 h-7" strokeWidth={1.25} />
               </div>
               <div className="space-y-3">

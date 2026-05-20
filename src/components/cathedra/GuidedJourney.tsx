@@ -111,7 +111,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-2xl bg-card border border-border shadow-2xl rounded-[2rem] p-8 md:p-12"
+        className="relative w-full max-w-2xl bg-card border border-border shadow-premium-hover rounded-[2rem] p-8 md:p-12"
       >
         <Button 
           onClick={onClose}

@@ -40,7 +40,7 @@ const HomeStats: React.FC<HomeStatsProps> = ({ stats, t }) => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: idx * 0.1 }}
-          className="p-3 rounded-full bg-card border border-border/50 shadow-sm text-center space-y-1 hover:border-primary/20 transition-colors"
+          className="p-3 rounded-full bg-card border border-border/50 shadow-soft text-center space-y-1 hover:border-primary/20 transition-colors"
         >
           <div className="flex justify-center text-primary/40 mb-1" aria-hidden="true">{item.icon}</div>
           <p className="text-xl font-black text-foreground tabular-nums leading-none">{item.value}</p>

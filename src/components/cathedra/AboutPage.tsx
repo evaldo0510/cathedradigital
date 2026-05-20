@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => (
               rel="noopener noreferrer"
               aria-label={social.label}
               onClick={() => trackEvent('social_link_click', { platform: social.label, url: social.url })}
-              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-sm transition-all hover:shadow-premium hover:-translate-y-1 ${social.color} group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-soft transition-all hover:shadow-premium hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
@@ -141,11 +141,11 @@ const AboutPage: React.FC = () => (
     <div className="pt-16 border-t border-border/40">
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-2xl overflow-hidden group">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-premium-hover overflow-hidden group">
             <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
-            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-lg border-4 border-background">
+            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-premium border-4 border-background">
               <Icons.Feather className="w-5 h-5" />
             </div>
           </div>

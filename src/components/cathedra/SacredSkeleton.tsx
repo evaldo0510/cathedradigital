@@ -19,7 +19,7 @@ export const PageHeaderSkeleton: React.FC = () => (
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-56 rounded-premium bg-muted/30 border border-border/40 shadow-sm" />
+      <Card key={i} className="h-56 rounded-premium bg-muted/30 border border-border/40 shadow-soft" />
     ))}
   </div>
 );

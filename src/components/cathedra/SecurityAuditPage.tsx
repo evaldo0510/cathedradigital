@@ -107,7 +107,7 @@ const SecurityAuditPage = () => {
               <Button 
                 variant="destructive" 
                 onClick={handleRollback}
-                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-lg shadow-red-500/10"
+                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-premium shadow-red-500/10"
               >
                 Copiar SQL de Rollback
               </Button>

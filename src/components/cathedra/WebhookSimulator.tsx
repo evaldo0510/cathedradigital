@@ -131,7 +131,7 @@ const WebhookSimulator: React.FC = () => {
           <Button 
             onClick={runSimulation} 
             disabled={loading}
-            className="rounded-full bg-primary hover:bg-primary/90 px-8 h-12 shadow-lg shadow-primary/20 gap-2 min-w-[200px]"
+            className="rounded-full bg-primary hover:bg-primary/90 px-8 h-12 shadow-premium shadow-primary/20 gap-2 min-w-[200px]"
           >
             {loading ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
             Executar Simulação

@@ -171,7 +171,7 @@ const AZFaithPage: React.FC = () => {
                     onClick={() => handleTermClick(term)}
                     className={`px-8 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-soft
                       ${isActive
-                        ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-premium ring-4 ring-primary/10'
                         : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-premium'
                       }`}
                   >

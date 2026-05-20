@@ -66,7 +66,7 @@ export const PWAInstallPrompt = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:bottom-8 md:w-80 bg-background border border-primary/20 p-4 rounded-premium shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
+    <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-8 md:bottom-8 md:w-80 bg-background border border-primary/20 p-4 rounded-premium shadow-premium-hover z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
       <Button 
         onClick={handleDismiss}
         className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"

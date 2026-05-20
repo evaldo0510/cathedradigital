@@ -121,7 +121,7 @@ const QuickDonation: React.FC = () => {
               <Button
                 onClick={handleDonate}
                 disabled={loading || !amount}
-                className="w-full h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-lg shadow-secondary/20 transition-all"
+                className="w-full h-9 rounded-full text-premium-tiny font-black uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium shadow-secondary/20 transition-all"
               >
                 {loading ? 'Processando...' : `Doar agora ${amount ? `R$ ${amount}` : ''}`}
               </Button>

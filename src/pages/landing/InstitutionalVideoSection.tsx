@@ -252,7 +252,7 @@ const InstitutionalVideoSection = () => {
             className="relative group"
           >
             <Button 
-              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-lg cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
+              className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-premium cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
               aria-label="Abrir vídeo de apresentação da Catedra Digital"
             >
@@ -287,7 +287,7 @@ const InstitutionalVideoSection = () => {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-lg group/btn overflow-hidden relative"
+                  className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-premium group/btn overflow-hidden relative"
                 >
                   <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-premium" />
                   <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
@@ -356,7 +356,7 @@ const InstitutionalVideoSection = () => {
               initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.9, y: 20, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-2xl border border-white/10"
+              className="relative w-full max-w-6xl aspect-video bg-black rounded-[32px] overflow-hidden shadow-premium-hover border border-white/10"
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
@@ -395,7 +395,7 @@ const InstitutionalVideoSection = () => {
                 <Button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-lg"
+                  className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-premium"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
                   <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />

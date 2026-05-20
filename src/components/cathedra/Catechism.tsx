@@ -520,7 +520,7 @@ const Catechism: React.FC = () => {
             <Button key={p} 
               onClick={() => jumpToParagraph(p)}
               className={`w-10 h-10 rounded-full text-xs font-bold transition-all relative ${
-                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110 z-10' : 
+                currentParagraph === p ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110 z-10' : 
                 paragraphsRead.has(p) ? 'bg-primary/10 border-primary/30 text-primary' :
                 'bg-card border border-border text-muted-foreground hover:border-primary/50 hover:text-primary'
               }`}>

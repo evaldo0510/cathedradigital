@@ -324,7 +324,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <p className="text-premium-tiny text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
                           size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-premium-tiny sm:text-premium-tiny uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-lg shadow-primary/20 group"
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-premium-tiny sm:text-premium-tiny uppercase tracking-[0.15em] px-3 sm:px-5 h-8 sm:h-9 rounded-full sm:rounded-full shadow-premium shadow-primary/20 group"
                         >
                           Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
@@ -509,7 +509,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                         {isComplete && (
-                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-premium text-premium-tiny font-black uppercase tracking-widest flex items-center gap-1 shadow-lg">
+                          <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2.5 py-1 rounded-premium text-premium-tiny font-black uppercase tracking-widest flex items-center gap-1 shadow-premium">
                             <Icons.Check className="w-3 h-3" /> Concluída
                           </div>
                         )}

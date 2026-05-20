@@ -42,7 +42,7 @@ const YOUTUBE_IDS: Record<MysteryKey, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-lg">
+  <div className="w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-premium">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
@@ -168,7 +168,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-4 sticky top-0 z-10 bg-inherit/80 ">
-        <Button onClick={onClose} className="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+        <Button onClick={onClose} className="p-2 rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
           <ArrowLeft className="w-5 h-5 text-secondary/70" />
         </Button>
         <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/40">{data.title}</span>
@@ -194,7 +194,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
 
       {/* Content */}
       <div className="flex-1 flex items-start justify-center p-6">
-        <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 md:p-12 space-y-8  shadow-2xl shadow-black/50">
+        <div className="w-full max-w-xl bg-white/[0.03] border border-white/[0.06] rounded-[2.5rem] p-8 md:p-12 space-y-8  shadow-premium-hover shadow-black/50">
           {/* Audio Player — works in background */}
           <PrayerAudioPlayer
             variant="dark"
@@ -237,7 +237,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   </div>
                 )}
               </div>
-              <Button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              <Button onClick={() => setPhase('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
                 Iniciar 1º Mistério
               </Button>
             </div>
@@ -254,7 +254,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-secondary/10 rotate-12" />
                 <p className="text-xl text-secondary/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
               </div>
-              <Button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              <Button onClick={() => setPhase('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
                 Rezar a Dezena
               </Button>
             </div>
@@ -311,7 +311,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
-              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+              }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
                 {currentMystery < 4 ? 'Próximo Mistério' : 'Concluir Rosário'}
               </Button>
             </div>
@@ -395,7 +395,7 @@ const PrayerPage: React.FC = () => {
       >
         {/* Main Content — Today's Rosary */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/[0.02]">
+          <div className="group relative overflow-hidden bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-premium-hover shadow-black/[0.02]">
             <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
               <todayData.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
             </div>
@@ -479,7 +479,7 @@ const PrayerPage: React.FC = () => {
                   key={key}
                   onClick={() => setPrayingMystery(key)}
                   className={`group relative flex items-center gap-5 p-6 rounded-full border transition-all hover:shadow-premium-hover hover:-translate-y-1 ${
-                    key === todayKey ? 'bg-primary/5 border-primary/30 shadow-lg' : 'bg-card border-border hover:border-primary/30'
+                    key === todayKey ? 'bg-primary/5 border-primary/30 shadow-premium' : 'bg-card border-border hover:border-primary/30'
                   }`}
                 >
                   <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-transform group-hover:scale-110 ${val.color}`}>
@@ -508,7 +508,7 @@ const PrayerPage: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <div className="bg-card border border-border rounded-[2rem] p-8 shadow-sm space-y-6">
+          <div className="bg-card border border-border rounded-[2rem] p-8 shadow-soft space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                 <BookOpen className="w-5 h-5" />

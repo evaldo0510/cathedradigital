@@ -304,7 +304,7 @@ const CacheManager: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="rounded-premium border-border/40 shadow-sm overflow-hidden group hover:shadow-premium transition-all">
+                  <Card className="rounded-premium border-border/40 shadow-soft overflow-hidden group hover:shadow-premium transition-all">
                     <CardContent className="p-5 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>

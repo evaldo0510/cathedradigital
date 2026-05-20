@@ -207,7 +207,7 @@ const PartnersPage: React.FC = () => {
             
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="rounded-full px-8 gap-2 shadow-lg shadow-primary/20">
+                <Button size="lg" className="rounded-full px-8 gap-2 shadow-premium shadow-primary/20">
                   <Icons.Plus className="w-4 h-4" /> Tornar-se um Parceiro
                 </Button>
               </DialogTrigger>

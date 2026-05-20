@@ -79,7 +79,7 @@ const CommunitySection = () => {
               viewport={{ once: true }}
               custom={i + 3}
               whileHover={{ y: -10 }}
-              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-sm hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
+              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-soft hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">

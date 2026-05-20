@@ -82,7 +82,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
       {/* Reflections summary */}
       {notesWritten.length > 0 && (
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-2xl shadow-black/[0.02]"
+          className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-8 shadow-premium-hover shadow-black/[0.02]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
@@ -141,7 +141,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         />
         <Button
           onClick={onRestart}
-          className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-sm"
+          className="flex items-center gap-2 px-8 py-4 rounded-full bg-card border border-border text-premium-tiny font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-soft"
         >
           <RotateCcw className="w-4 h-4" /> Nova Lectio
         </Button>

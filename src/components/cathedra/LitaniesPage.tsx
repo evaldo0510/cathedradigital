@@ -239,7 +239,7 @@ const LitaniesPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
         <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm self-start md:self-center">
+          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft self-start md:self-center">
             <ArrowLeft className="w-6 h-6 text-foreground" />
           </Button>
           <div className="space-y-1">
@@ -299,7 +299,7 @@ const LitaniesPage: React.FC = () => {
           value={searchQuery} 
           onChange={e => setSearchQuery(e.target.value)} 
           placeholder="Buscar por título ou categoria..."
-          className="w-full pl-12 pr-4 py-4 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm" 
+          className="w-full pl-12 pr-4 py-4 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft" 
         />
       </div>
 

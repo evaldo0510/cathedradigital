@@ -80,7 +80,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-lg"
+        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-premium"
       >
         {/* Dismiss */}
         <Button

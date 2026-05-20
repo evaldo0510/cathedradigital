@@ -174,7 +174,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                         key={i}
                         type="button"
                         onClick={() => handleLogosSearch(undefined, item)}
-                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-premium-sm hover:bg-white hover:shadow-sm"
+                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-premium-sm hover:bg-white hover:shadow-soft"
                       >
                         {item.length > 35 ? item.slice(0, 35) + '...' : item}
                       </button>

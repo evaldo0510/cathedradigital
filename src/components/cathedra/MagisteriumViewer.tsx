@@ -184,7 +184,7 @@ const MagisteriumViewer: React.FC = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 shadow-sm"
+        className="bg-card border border-border rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 shadow-soft"
       >
         <div 
           ref={contentRef}

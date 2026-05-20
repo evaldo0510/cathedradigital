@@ -96,7 +96,7 @@ const ReadingCard: React.FC<{
     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
     <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-3">
-        <div className="p-2.5 rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">{icon}</div>
+        <div className="p-2.5 rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-soft">{icon}</div>
         <div>
           <h2 className="text-premium-tiny font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
           <p className="text-premium-tiny font-bold text-secondary/60 uppercase tracking-[0.2em] mt-0.5">{reference}</p>
@@ -107,7 +107,7 @@ const ReadingCard: React.FC<{
     <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-3 pt-6 border-t border-border/40">
       <Button variant="ghost" size="sm" className="rounded-full h-11 px-6 hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-4 h-4 mr-2" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-sm" onClick={onReflect}><Icons.Lectio className="w-4 h-4 mr-2 text-secondary" /> Lectio Divina</Button>
+      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-11 px-8 bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-soft" onClick={onReflect}><Icons.Lectio className="w-4 h-4 mr-2 text-secondary" /> Lectio Divina</Button>
     </div>
   </motion.div>
 );
@@ -249,7 +249,7 @@ const LiturgiaPage: React.FC = () => {
                 </div>
               )}
 
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-2xl">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-10 text-center space-y-6 shadow-premium-hover">
                 <Icons.Zap className="w-8 h-8 text-secondary mx-auto" />
                 <p className="text-premium-tiny font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
                 <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
@@ -257,7 +257,7 @@ const LiturgiaPage: React.FC = () => {
 
               {saintsToday.length > 0 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-8 flex flex-col items-center text-center space-y-4">
-                  <div className="w-20 h-20 rounded-premium overflow-hidden border-2 border-secondary p-1 shadow-lg shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
+                  <div className="w-20 h-20 rounded-premium overflow-hidden border-2 border-secondary p-1 shadow-premium shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
                   <div className="space-y-1">
                     <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
                     <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>

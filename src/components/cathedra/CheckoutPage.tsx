@@ -189,7 +189,7 @@ const CheckoutPage: React.FC = () => {
           </div>
 
           {/* Plan card */}
-          <Card className="border-2 border-primary shadow-2xl rounded-[2.5rem] overflow-hidden">
+          <Card className="border-2 border-primary shadow-premium-hover rounded-[2.5rem] overflow-hidden">
             <CardHeader className="text-center bg-primary/5 pb-10 pt-12 space-y-4">
               <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
@@ -330,7 +330,7 @@ const CheckoutPage: React.FC = () => {
                   onClick={() => setDonationAmount(val)}
                   className={`px-5 py-2.5 rounded-full text-sm font-bold border transition-all ${
                     donationAmount === val
-                      ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
+                      ? 'bg-primary text-primary-foreground border-primary shadow-premium shadow-primary/20'
                       : 'bg-background text-foreground border-border hover:border-primary/50'
                   }`}
                 >

@@ -367,7 +367,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
+        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-premium`}
       >
         <div className="text-center space-y-3">
           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
@@ -430,7 +430,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-sm text-center"
+        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-soft text-center"
       >
         <div className="space-y-3">
           <span className="text-4xl block">🧠</span>
@@ -460,7 +460,7 @@ const SpiritualQuiz: React.FC = () => {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
+      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-soft"
     >
       <div className="space-y-1">
         <div className="flex items-center justify-between">

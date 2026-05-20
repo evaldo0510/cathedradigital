@@ -114,7 +114,7 @@ const SpiritualJournalPage = () => {
                 <button
                   key={m.id}
                   onClick={() => setMood(m.id)}
-                  className={`flex flex-col items-center gap-4 p-6 rounded-3xl border transition-all duration-700 ${
+                  className={`flex flex-col items-center gap-4 p-6 rounded-premium border transition-all duration-700 ${
                     mood === m.id 
                       ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
                       : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'

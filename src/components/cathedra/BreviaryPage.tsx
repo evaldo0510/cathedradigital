@@ -203,7 +203,7 @@ const BreviaryPage: React.FC = () => {
         <p className="text-premium-tiny font-black uppercase tracking-[0.25em] text-muted-foreground mb-3">Hora sugerida agora</p>
         <Button
           onClick={() => setSelectedHora(suggestedHora as Hora)}
-          className="px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-lg hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
+          className="px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-2 mx-auto"
         >
           {HORAS.find(h => h.id === suggestedHora)?.icon} Rezar {HORAS.find(h => h.id === suggestedHora)?.title}
         </Button>

@@ -135,7 +135,7 @@ const ModulesGuidePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
           >
-            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-sm hover:shadow-premium-hover rounded-premium overflow-hidden group">
+            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-soft hover:shadow-premium-hover rounded-premium overflow-hidden group">
               <CardHeader className="pb-4">
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 rounded-full ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>

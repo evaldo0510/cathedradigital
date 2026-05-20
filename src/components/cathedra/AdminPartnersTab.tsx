@@ -217,7 +217,7 @@ const AdminPartnersTab: React.FC = () => {
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
                   <CardHeader className="flex flex-row items-start justify-between pb-3">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-premium bg-white flex items-center justify-center overflow-hidden border p-1 shadow-sm">
+                      <div className="w-12 h-12 rounded-premium bg-white flex items-center justify-center overflow-hidden border p-1 shadow-soft">
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (

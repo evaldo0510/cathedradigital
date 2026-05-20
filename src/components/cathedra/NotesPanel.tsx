@@ -61,7 +61,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-2xl z-50 p-4 space-y-3">
+        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}

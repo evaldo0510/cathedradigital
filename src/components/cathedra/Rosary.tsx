@@ -35,7 +35,7 @@ const YOUTUBE_IDS: Record<MysterySet, string> = {
 };
 
 const YouTubePlayer: React.FC<{ videoId: string; title: string }> = ({ videoId, title }) => (
-  <div className="w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-2xl">
+  <div className="w-full aspect-video rounded-premium overflow-hidden border border-border bg-black shadow-premium-hover">
     <iframe
       src={`https://www.youtube.com/embed/${videoId}?rel=0`}
       title={title}
@@ -143,7 +143,7 @@ const Rosary: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {(Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => (
             <Button key={key} onClick={() => setSelectedSet(key)}
-              className="text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+              className="text-left p-8 md:p-10 rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
               <div className={`absolute top-0 right-0 p-8 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
                 <val.icon className="w-48 h-48 -mr-12 -mt-12 rotate-12" />
               </div>
@@ -199,7 +199,7 @@ const Rosary: React.FC = () => {
       <div className="max-w-4xl mx-auto space-y-10 pb-12">
         <div className="flex flex-col md:flex-row md:items-center gap-6 justify-between">
           <div className="flex items-center gap-6">
-            <Button onClick={() => setSelectedSet(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-sm">
+            <Button onClick={() => setSelectedSet(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft">
               <ArrowLeft className="w-6 h-6 text-foreground" />
             </Button>
             <div className="space-y-1">
@@ -219,7 +219,7 @@ const Rosary: React.FC = () => {
           <div className="md:col-span-2 grid gap-4">
             <h3 className="text-xl font-serif font-bold px-2">Mistérios e Meditações</h3>
             {set.mysteries.map((m, i) => (
-              <div key={i} className="p-6 md:p-8 rounded-premium bg-card border border-border shadow-sm hover:shadow-premium transition-shadow">
+              <div key={i} className="p-6 md:p-8 rounded-premium bg-card border border-border shadow-soft hover:shadow-premium transition-shadow">
                 <div className="flex items-start gap-6">
                   <div className="w-12 h-12 rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
                   <div className="space-y-3">
@@ -235,7 +235,7 @@ const Rosary: React.FC = () => {
           </div>
           
           <div className="space-y-6">
-            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-sm space-y-4">
+            <div className="p-8 rounded-[2rem] bg-card border border-border shadow-soft space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                   <Activity className="w-5 h-5" />
@@ -295,7 +295,7 @@ const Rosary: React.FC = () => {
             ))}
           </div>
           <p className="text-xs text-secondary/40 text-center font-serif italic max-w-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <Button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          <Button onClick={() => setStep('mystery')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Iniciar 1º Mistério
           </Button>
         </div>
@@ -310,7 +310,7 @@ const Rosary: React.FC = () => {
             <h3 className="text-3xl font-serif font-bold text-secondary leading-tight">{mystery.title}</h3>
             <p className="text-sm text-secondary/60 font-bold tracking-wide">{mystery.scripture}</p>
           </div>
-          <div className="bg-white/[0.04] rounded-[2.5rem] p-10 border border-white/[0.06] relative shadow-2xl">
+          <div className="bg-white/[0.04] rounded-[2.5rem] p-10 border border-white/[0.06] relative shadow-premium-hover">
             <Icons.Feather className="absolute -top-3 -right-3 w-8 h-8 text-secondary/10 rotate-12" />
             <p className="text-xl text-secondary/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
           </div>
@@ -323,7 +323,7 @@ const Rosary: React.FC = () => {
               size="sm"
             />
           </div>
-          <Button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          <Button onClick={() => setStep('decade')} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Rezar a Dezena
           </Button>
         </div>
@@ -378,7 +378,7 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-lg shadow-primary/20">
+          }} className="w-full py-4 bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             {currentMystery < 4 ? `Próximo Mistério` : 'Concluir Rosário'}
           </Button>
         </div>
@@ -421,7 +421,7 @@ const Rosary: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
       <div className="flex items-center justify-between p-6 sticky top-0 z-10 bg-inherit/80 ">
-        <Button onClick={() => { setIsPraying(false); }} className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
+        <Button onClick={() => { setIsPraying(false); }} className="p-3 rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
           <ArrowLeft className="w-5 h-5 text-secondary/70" />
         </Button>
         <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary/40">{set.name}</span>
@@ -438,7 +438,7 @@ const Rosary: React.FC = () => {
             </div>
           )}
           
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12  shadow-2xl shadow-black/50">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-8 md:p-12  shadow-premium-hover shadow-black/50">
             {renderStep()}
           </div>
         </div>

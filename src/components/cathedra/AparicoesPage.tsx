@@ -74,7 +74,7 @@ const AparicoesPage: React.FC = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
-                activeTab === tab.id ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                activeTab === tab.id ? 'bg-card text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {tab.icon}
@@ -179,7 +179,7 @@ const AparicoesPage: React.FC = () => {
         {APPARITIONS.map((a, i) => (
           <React.Fragment key={a.id}>
             <div className="flex flex-col items-center gap-1">
-              <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-sm" loading="lazy" />
+              <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-soft" loading="lazy" />
               <span className="text-premium-tiny font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (

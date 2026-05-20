@@ -54,7 +54,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-2xl z-[201] p-8 flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-8 flex flex-col"
             role="dialog"
             aria-labelledby="a11y-title"
           >

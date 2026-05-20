@@ -25,7 +25,7 @@ const ProGate: React.FC<ProGateProps> = ({ isPremium, isLoggedIn, onLogin, child
         Este recurso requer uma assinatura PRO. {!isLoggedIn && 'Faça login primeiro.'}
       </p>
       
-      <div className="bg-card border border-border p-6 rounded-premium max-w-sm w-full space-y-4 shadow-sm">
+      <div className="bg-card border border-border p-6 rounded-premium max-w-sm w-full space-y-4 shadow-soft">
         
         {!isLoggedIn ? (
           <Button onClick={onLogin} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all">

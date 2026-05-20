@@ -82,7 +82,7 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-2">
-        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-sm gap-2">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-soft gap-2">
           <ArrowLeft className="w-5 h-5 text-foreground" />
           <span className="text-premium-tiny font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </Button>
@@ -103,7 +103,7 @@ const ViaCrucis: React.FC = () => {
       </div>
 
       {/* Station content */}
-      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-2xl shadow-black/[0.02] relative overflow-hidden">
+      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
           <Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>

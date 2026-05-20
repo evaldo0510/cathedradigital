@@ -144,10 +144,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-2xl z-[100] bg-card/95 backdrop-blur-xl">
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-premium-hover z-[100] bg-card/95 backdrop-blur-xl">
         <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-8 border-b border-border/20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
+            <div className="w-14 h-14 rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
               {getTagIcon(tag.emoji, "w-7 h-7")}
             </div>
             <div>
@@ -464,7 +464,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
         <Button
           onClick={() => setActiveFilter('all')}
           aria-pressed={activeFilter === 'all'}
-          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
         >
           Todos
         </Button>
@@ -474,7 +474,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
             key={key}
             onClick={() => setActiveFilter(key)}
             aria-pressed={activeFilter === key}
-            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
           >
 
             {cat.icon}
@@ -532,7 +532,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
                 <motion.div 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-sm relative overflow-hidden"
+                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-soft relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-premium  -mr-8 -mt-8" />
                   <div className="flex items-center gap-2">

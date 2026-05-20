@@ -270,7 +270,7 @@ const AdminThemesTab = () => {
                 key={theme.id}
                 onClick={() => setSelectedTheme(theme)}
                 className={`w-full group text-left p-4 rounded-full border transition-all cursor-pointer relative ${
-                  selectedTheme?.id === theme.id ? 'bg-primary/5 border-primary/30 shadow-sm' : 'bg-card border-border hover:border-primary/20'
+                  selectedTheme?.id === theme.id ? 'bg-primary/5 border-primary/30 shadow-soft' : 'bg-card border-border hover:border-primary/20'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">

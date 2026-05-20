@@ -26,7 +26,7 @@ const ProShowcase: React.FC = () => {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
-      className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-lg"
+      className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-premium"
     >
       {/* Decorative glows */}
       <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-premium  pointer-events-none" />
@@ -72,7 +72,7 @@ const ProShowcase: React.FC = () => {
         <div className="flex flex-col items-center gap-3 pt-2">
           <Button
             onClick={() => navigate(AppRoute.PRICING)}
-            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-lg transition-all"
+            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
           >
             <Crown className="w-4 h-4" /> Conheça o PRO
             <ArrowRight className="w-4 h-4" />

@@ -9,7 +9,7 @@ const ReadingModeToggle: React.FC = () => {
   return (
     <Button
       onClick={toggle}
-      className="fixed bottom-24 right-4 lg:bottom-6 lg:right-6 z-50 p-3 rounded-full bg-card border border-border shadow-lg hover:shadow-premium-hover transition-all group"
+      className="fixed bottom-24 right-4 lg:bottom-6 lg:right-6 z-50 p-3 rounded-full bg-card border border-border shadow-premium hover:shadow-premium-hover transition-all group"
       title={isNight ? 'Modo diurno' : 'Modo leitura noturna'}
     >
       {isNight ? (

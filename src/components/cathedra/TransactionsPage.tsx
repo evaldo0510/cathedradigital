@@ -560,9 +560,9 @@ const TransactionsPage: React.FC = () => {
       </Card>
 
       <div className="flex items-center justify-center gap-6 mt-4">
-        <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || loading} className="rounded-full px-6 shadow-sm">Anterior</Button>
+        <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || loading} className="rounded-full px-6 shadow-soft">Anterior</Button>
         <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Página {page} de {Math.ceil(totalCount / pageSize) || 1}</span>
-        <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= totalCount || loading} className="rounded-full px-6 shadow-sm">Próxima</Button>
+        <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= totalCount || loading} className="rounded-full px-6 shadow-soft">Próxima</Button>
       </div>
 
       {/* CSV PREVIEW DIALOG */}
