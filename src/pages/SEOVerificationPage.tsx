@@ -418,7 +418,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
                   {page.status === 'pending' && <Badge variant="secondary">Pendente</Badge>}
                   {page.status === 'missing' && <Badge variant="destructive">Incompleto</Badge>}
-                  {page.status === 'scanning' && <Badge className="animate-pulse">Varrendo...</Badge>}
+                  {page.status === 'scanning' && (
+                    <Badge className="animate-pulse bg-primary/20 text-primary border-primary/30">
+                      {scanMode === 'render' ? 'Renderizando...' : 'Varrendo...'}
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button 
