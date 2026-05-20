@@ -130,17 +130,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         
         <HomeCard
-          className="p-8 md:p-16 lg:p-20 flex flex-col items-center gap-12 group relative overflow-hidden"
+          className="p-10 md:p-16 lg:p-20 flex flex-col items-center gap-12 group relative overflow-hidden border-border/10"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
-          
-          <div className="relative z-10 w-20 h-20 rounded-2xl bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700 shadow-premium">
+          <div className="relative z-10 w-20 h-20 rounded-2xl bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
             <Sparkles className="w-10 h-10" strokeWidth={1.5} />
           </div>
           
           <div className="relative z-10 space-y-4 text-center max-w-2xl">
             <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
-            <p className="text-lg text-primary/60 leading-relaxed font-serif italic">
+            <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">
               "A inteligência a serviço da fé, guiada pela Tradição viva da Igreja."
             </p>
           </div>
