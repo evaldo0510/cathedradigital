@@ -30,11 +30,28 @@ import SEOHead from '@/components/SEOHead';
 
 const ReadingJournal: React.FC = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const { marks, deleteMark } = useReadingMarks();
   const { notes, deleteNote, updateNote } = useNotes('all'); // All notes
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('history');
+  
+  const weeklyGoal = profile?.weekly_goal || 5;
+  const streak = profile?.streak || 0;
+  
+  // Calculate this week's progress (mock for now or derive from marks/notes)
+  const daysActiveThisWeek = useMemo(() => {
+    // Simple logic: unique days in history/notes this week
+    const now = new Date();
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const markDates = marks.map(m => new Date(m.updated_at).toISOString().split('T')[0]);
+    const noteDates = notes.map(n => new Date(n.created_at).toISOString().split('T')[0]);
+    const allDates = [...new Set([...markDates, ...noteDates])];
+    
+    return allDates.filter(d => new Date(d) >= startOfWeek).length;
+  }, [marks, notes]);
   
   const filteredMarks = useMemo(() => {
     return marks.filter(m => 
