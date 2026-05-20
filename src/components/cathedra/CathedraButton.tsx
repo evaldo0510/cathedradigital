@@ -12,6 +12,7 @@ interface CathedraButtonProps extends HTMLMotionProps<"button"> {
 
 const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
     const sizeMap = {
       sm: 'px-6 h-10 text-[9.5px]',
       md: 'px-8 h-14 text-[10.5px]',
