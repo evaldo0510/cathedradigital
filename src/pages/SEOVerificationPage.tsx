@@ -91,10 +91,18 @@ const SEOVerificationPage = () => {
     setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'scanning' } : p));
     
     try {
-      const response = await fetch(path);
-      const htmlText = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, 'text/html');
+      let doc: Document;
+
+      if (scanMode === 'render') {
+        // Dynamic Render Mode: use iframe to wait for JS execution
+        doc = await performDynamicRender(path);
+      } else {
+        // Static Mode: fast fetch of the raw HTML
+        const response = await fetch(path);
+        const htmlText = await response.text();
+        const parser = new DOMParser();
+        doc = parser.parseFromString(htmlText, 'text/html');
+      }
       
       const title = doc.querySelector('title')?.textContent || '';
       const description = doc.querySelector('meta[name="description"]')?.getAttribute('content') || '';
@@ -127,6 +135,49 @@ const SEOVerificationPage = () => {
       setPages(prev => prev.map(p => p.path === path ? { ...p, status: 'missing' } : p));
       return false;
     }
+  };
+
+  const performDynamicRender = (path: string): Promise<Document> => {
+    return new Promise((resolve, reject) => {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = path;
+      document.body.appendChild(iframe);
+
+      const timeout = setTimeout(() => {
+        cleanup();
+        reject(new Error('Timeout rendering page'));
+      }, 15000); // 15s timeout for heavy pages
+
+      const cleanup = () => {
+        if (document.body.contains(iframe)) {
+          document.body.removeChild(iframe);
+        }
+        clearTimeout(timeout);
+      };
+
+      iframe.onload = () => {
+        // Wait a bit for React/Helmet to update the head
+        setTimeout(() => {
+          try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (iframeDoc) {
+              // Clone the document to avoid reference issues after iframe removal
+              const docClone = document.implementation.createHTMLDocument();
+              docClone.documentElement.innerHTML = iframeDoc.documentElement.innerHTML;
+              cleanup();
+              resolve(docClone);
+            } else {
+              cleanup();
+              reject(new Error('Could not access iframe content'));
+            }
+          } catch (e) {
+            cleanup();
+            reject(e);
+          }
+        }, 2000); // Give 2s for JS to run and SEOHead to inject tags
+      };
+    });
   };
 
   const scanAll = async () => {
