@@ -29,6 +29,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
+import ReadingMark from './ReadingMark';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 
@@ -224,6 +225,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
               <Icons.Sparkles className="w-4 h-4" />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
+            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} />
           </div>
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
@@ -300,6 +302,7 @@ const Catechism: React.FC = () => {
             if (!isNaN(p)) {
               setCurrentParagraph(p);
               localStorage.setItem('cathedra_last_catechism_para', p.toString());
+              localStorage.setItem('cathedra_last_catechism_scroll', window.scrollY.toString());
             }
           }
         });
@@ -402,6 +405,22 @@ const Catechism: React.FC = () => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
+
+    // Auto-restore scroll on first load
+    useEffect(() => {
+      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
+      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
+      
+      if (savedScroll && savedPara && !searchParams.get('p')) {
+        const para = parseInt(savedPara);
+        if (para >= start && para <= end) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          }, 500);
+        }
+      }
+    }, [start, end]);
+
     return (
       <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
         <BackToThemeBanner />
