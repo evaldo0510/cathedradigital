@@ -173,7 +173,9 @@
   .total-silence .sacred-skeleton,
   .total-silence .home-skeleton,
   .total-silence [data-sidebar="menu-skeleton"],
-  .total-silence [data-testid*="skeleton"] {
+  .total-silence [data-testid*="skeleton"],
+  .total-silence [class*="Skeleton"] {
+    display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
@@ -186,7 +188,8 @@
   .total-silence button:has(.lucide-volume-2),
   .total-silence button:has(.lucide-volume-x),
   .total-silence .audio-button-container,
-  .total-silence [data-audio-player] {
+  .total-silence [data-audio-player],
+  .total-silence [class*="AudioContentPlayer"] {
     display: none !important;
   }
 
