@@ -126,13 +126,14 @@ const HojePage: React.FC = () => {
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
       <SEOHead 
-        title="Ritual do Dia | Sua Caminhada de Fé" 
-        description="Acompanhe sua caminhada de fé diária com o Ritual do Dia: versículos, reflexões e o santo de hoje. Mantenha sua constância espiritual com progresso persistente." 
+        title={`Ritual do Dia - ${new Date().toLocaleDateString('pt-BR')} | Cathedra Digital`} 
+        description="Sua caminhada de fé diária guiada pela sabedoria. Acompanhe a liturgia, reflexões teológicas e o santo do dia com progresso persistente e minimalismo espiritual." 
         path="/hoje" 
-        keywords="ritual do dia, leitura diária, santo do dia, meditação católica, progresso espiritual"
+        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-hoje.png"
+        keywords="ritual do dia, leitura diária católica, liturgia diária, santo do dia hoje, meditação guiada, progresso espiritual persistente"
         breadcrumbs={[
           { name: "Home", path: "/" },
-          { name: "Hoje", path: "/hoje" }
+          { name: "Ritual do Dia", path: "/hoje" }
         ]}
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
