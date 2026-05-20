@@ -26,6 +26,9 @@ import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import ReadingControlPanel from './ReadingControlPanel';
+import LogosAI from './LogosAI';
 
 
 
@@ -135,8 +138,10 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
+  const { settings } = useReadingSettings();
+
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl font-serif prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2">
+    <div className={`reader-text text-foreground/90 leading-[2] font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover
@@ -230,6 +235,8 @@ const Catechism: React.FC = () => {
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const [showLogosAI, setShowLogosAI] = useState(false);
+  const { settings } = useReadingSettings();
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
@@ -400,13 +407,25 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
-          {(crossRefs.length > 0 || docsRefs.length > 0) && (
-            <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Catecismo & Documentos">
-              <Icons.Cross className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <ReadingControlPanel />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+            >
+              <Icons.Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Logos IA</span>
             </Button>
-          )}
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
+              <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Catecismo & Documentos">
+                <Icons.Cross className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Section navigator */}
