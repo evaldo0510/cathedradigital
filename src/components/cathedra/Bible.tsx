@@ -26,10 +26,6 @@ import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
-import LogosAI from './LogosAI';
-
-
-type BibleBook = { name: string; abbr: string; chapters: number };
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
 
