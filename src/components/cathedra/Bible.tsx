@@ -482,7 +482,13 @@ const Bible: React.FC = () => {
     const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className={`mx-auto space-y-6 transition-all duration-500 ${showCrossRefs && (crossRefs.length > 0 || docsRefs.length > 0) ? 'max-w-3xl lg:max-w-6xl' : 'max-w-3xl'}`}>
+      <div className="max-w-4xl mx-auto pb-24 px-4 sm:px-6">
+        <SEOHead 
+          title={`${selectedBook.name} ${selectedChapter} | Bíblia Sagrada`}
+          description={`Leia ${selectedBook.name}, capítulo ${selectedChapter}.`}
+          path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
+        />
+        <div className={`mx-auto space-y-8 transition-all duration-500`}>
         {/* Back to Theme */}
         <BackToThemeBanner />
         {/* Back to Dashboard */}
