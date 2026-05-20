@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface PrayerAudioPlayerProps {
   prayers: { label: string; text: string }[];
