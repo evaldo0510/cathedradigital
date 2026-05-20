@@ -932,6 +932,7 @@ export type Database = {
           last_action_at: string | null
           last_active_at: string | null
           last_notified_at: string | null
+          last_reminder_sent_at: string | null
           last_visit: string | null
           level: number | null
           max_streak: number | null
@@ -965,6 +966,7 @@ export type Database = {
           last_action_at?: string | null
           last_active_at?: string | null
           last_notified_at?: string | null
+          last_reminder_sent_at?: string | null
           last_visit?: string | null
           level?: number | null
           max_streak?: number | null
@@ -998,6 +1000,7 @@ export type Database = {
           last_action_at?: string | null
           last_active_at?: string | null
           last_notified_at?: string | null
+          last_reminder_sent_at?: string | null
           last_visit?: string | null
           level?: number | null
           max_streak?: number | null
@@ -2018,6 +2021,39 @@ export type Database = {
           },
         ]
       }
+      weekly_goals_history: {
+        Row: {
+          achieved_count: number
+          completed: boolean | null
+          created_at: string
+          goal_count: number
+          id: string
+          updated_at: string
+          user_id: string
+          week_start_date: string
+        }
+        Insert: {
+          achieved_count: number
+          completed?: boolean | null
+          created_at?: string
+          goal_count: number
+          id?: string
+          updated_at?: string
+          user_id: string
+          week_start_date: string
+        }
+        Update: {
+          achieved_count?: number
+          completed?: boolean | null
+          created_at?: string
+          goal_count?: number
+          id?: string
+          updated_at?: string
+          user_id?: string
+          week_start_date?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       public_profiles: {
@@ -2084,6 +2120,7 @@ export type Database = {
       }
     }
     Functions: {
+      check_daily_reminders: { Args: never; Returns: undefined }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       search_community_posts_fuzzy: {
