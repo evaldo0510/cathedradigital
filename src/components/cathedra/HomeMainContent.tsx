@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react';
-import { motion } from 'framer-motion';
+import React, { lazy, Suspense, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
@@ -9,6 +9,10 @@ import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
 import { SectionSkeleton } from './HomeSkeletons';
 import { ComingSoonSection } from './ComingSoon';
+import { VisualSilenceControls } from './VisualSilenceControls';
+import { Input } from '@/components/ui/input';
+import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
+
 
 interface HomeMainContentProps {
   user: any;
@@ -19,9 +23,31 @@ interface HomeMainContentProps {
 
 const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
   const navigate = useNavigate();
+  const [logosQuery, setLogosQuery] = useState('');
+
+  const handleLogosSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (logosQuery.trim()) {
+      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
+    }
+  };
+
 
   return (
     <div className="app-container stack-spacing pb-64">
+      {/* SILÊNCIO VISUAL - CONTROLES */}
+      <section className="space-y-10">
+        <div className="flex items-center gap-10">
+          <div className="h-px flex-1 bg-border/30" />
+          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+            Atmosfera Contemplativa
+          </h2>
+          <div className="h-px flex-1 bg-border/30" />
+        </div>
+        
+        <VisualSilenceControls />
+      </section>
+
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-16">
         <div className="flex items-center gap-10">
@@ -60,29 +86,53 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         </div>
         
         <HomeCard
-          onClick={() => onNavigate(AppRoute.BUSCAR)}
-          className="p-12 md:p-20 lg:p-24 flex flex-col items-center text-center gap-12 group relative overflow-hidden"
+          className="p-8 md:p-16 lg:p-20 flex flex-col items-center gap-12 group relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
           
-          <div className="relative z-10 w-24 h-24 rounded-3xl bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform duration-700 shadow-premium">
-            <Icons.Search className="w-12 h-12" />
+          <div className="relative z-10 w-20 h-20 rounded-2xl bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-700 shadow-premium">
+            <Sparkles className="w-10 h-10" strokeWidth={1.5} />
           </div>
           
-          <div className="relative z-10 space-y-6 max-w-2xl">
-            <h3 className="text-4xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
-            <p className="text-xl text-primary/60 leading-relaxed font-serif italic">
+          <div className="relative z-10 space-y-4 text-center max-w-2xl">
+            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Mestre Contemplativo</h3>
+            <p className="text-lg text-primary/60 leading-relaxed font-serif italic">
               "A inteligência a serviço da fé, guiada pela Tradição viva da Igreja."
             </p>
-            <p className="text-base text-muted-foreground/60 leading-relaxed max-w-xl mx-auto">
-              Aprofunde-se na Palavra, no Catecismo e nos Documentos do Magistério com o auxílio do Logos.
-            </p>
           </div>
-          
-          <HomeButton variant="primary" onClick={() => onNavigate(AppRoute.BUSCAR)} className="min-w-[240px] relative z-10">
-            Iniciar Diálogo Espiritual
-          </HomeButton>
+
+          <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
+            <div className="relative group/input">
+              <Input
+                value={logosQuery}
+                onChange={(e) => setLogosQuery(e.target.value)}
+                placeholder="Pergunte sobre a Bíblia, Santos ou Teologia..."
+                className="h-16 pl-14 pr-32 rounded-2xl border-primary/10 bg-primary/[0.02] focus:bg-white transition-all text-lg placeholder:text-muted-foreground/30 font-serif italic"
+              />
+              <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/30" />
+              <button 
+                type="submit"
+                className="absolute right-3 top-1/2 -translate-y-1/2 px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:bg-primary/90 transition-colors flex items-center gap-2 group/btn"
+              >
+                Perguntar
+                <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            </div>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              {['Resumir leitura atual', 'Quem foi São Bento?', 'O que é a Graça?'].map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => setLogosQuery(suggestion)}
+                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors px-3 py-1.5 border border-border/20 rounded-full hover:border-primary/20"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </form>
         </HomeCard>
+
       </section>
 
       {/* EM BREVE */}
