@@ -616,6 +616,21 @@ const Bible: React.FC = () => {
           <div className="flex-1 w-full space-y-8">
             <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
               <div className="p-8 md:p-16 lg:p-20">
+                {/* Auto-restore scroll position */}
+                {useEffect(() => {
+                  if (!isLoading && verses.length > 0) {
+                    const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
+                    const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
+                    
+                    if (savedScroll && !searchParams.get('v')) {
+                      setTimeout(() => {
+                        window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+                        if (savedVerse) setHighlightedVerse(parseInt(savedVerse));
+                      }, 500);
+                    }
+                  }
+                }, [isLoading, verses.length])}
+
                 {isLoading ? (
                   <BibleChapterSkeleton />
                 ) : bibleError ? (
