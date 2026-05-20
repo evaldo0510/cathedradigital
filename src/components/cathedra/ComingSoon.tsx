@@ -45,8 +45,10 @@ const items: ComingSoonItem[] = [
 
 export const ComingSoonSection: React.FC<{ className?: string }> = ({ className }) => {
   const [email, setEmail] = useState('');
+  const [interestType, setInterestType] = useState('all');
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
 
   const validateEmail = (email: string) => {
     return String(email)
@@ -72,10 +74,14 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
     setLoading(true);
     
-    try {
-      const { error } = await supabase
-        .from('coming_soon_leads')
-        .insert([{ email: trimmedEmail }]);
+      try {
+        const { error } = await supabase
+          .from('coming_soon_leads')
+          .insert([{ 
+            email: trimmedEmail,
+            interest_type: interestType 
+          }]);
+
 
       if (error) {
         if (error.code === '23505') {
@@ -141,7 +147,9 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
           </div>
 
           {!submitted ? (
-            <form onSubmit={handleSubmit} className="w-full flex flex-col sm:flex-row gap-3">
+            <form onSubmit={handleSubmit} className="w-full space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+
               <div className="relative flex-1">
                 <Input
                   type="email"
@@ -165,7 +173,28 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                   </span>
                 )}
               </Button>
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-2">
+                <p className="w-full text-[9px] uppercase tracking-widest text-primary/30 mb-1">Interesse principal:</p>
+                {['Geral', 'Jornadas', 'Comunidade', 'Quiz'].map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setInterestType(type.toLowerCase())}
+                    className={cn(
+                      "px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest transition-all border",
+                      interestType === type.toLowerCase() 
+                        ? "bg-primary/10 border-primary/20 text-primary shadow-sm" 
+                        : "bg-transparent border-border/10 text-muted-foreground/40 hover:border-primary/10"
+                    )}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
             </form>
+
           ) : (
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
