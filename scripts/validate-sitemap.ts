@@ -5,10 +5,12 @@ import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
 /**
  * Script to validate sitemap.xml and legacy redirects.
  * Also compares sitemap entries with AppRoute enum from AST.
+ * Generates an artifact report on mismatch.
  */
 
 const SITEMAP_PATH = path.join(process.cwd(), 'public', 'sitemap.xml');
 const REDIRECTS_PATH = path.join(process.cwd(), 'public', '_redirects');
+const REPORT_PATH = path.join(process.cwd(), 'sitemap-validation-report.json');
 const BASE_URL = 'https://www.cathedradigital.com.br';
 
 function validateSitemapContent() {
@@ -37,6 +39,23 @@ function validateSitemapContent() {
   // Compare
   const missingInSitemap = expectedRoutes.filter(r => !sitemapUrls.includes(r));
   const extraInSitemap = sitemapUrls.filter(r => !expectedRoutes.includes(r));
+
+  const report = {
+    timestamp: new Date().toISOString(),
+    status: (missingInSitemap.length === 0 && extraInSitemap.length === 0) ? 'success' : 'failure',
+    summary: {
+      totalInApp: expectedRoutes.length,
+      totalInSitemap: sitemapUrls.length,
+      missingCount: missingInSitemap.length,
+      extraCount: extraInSitemap.length
+    },
+    missingRoutes: missingInSitemap,
+    extraRoutes: extraInSitemap
+  };
+
+  // Always save report
+  fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2));
+  console.log(`📝 Validation report saved to ${REPORT_PATH}`);
 
   let hasErrors = false;
 
