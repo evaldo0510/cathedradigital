@@ -1,15 +1,9 @@
-import React, { lazy, Suspense, useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
-import { Icons } from '@/constants';
 import { HomeCard } from './HomeCard';
-import { HomeButton } from './HomeButton';
-import RitualDoDia from './RitualDoDia';
 import HomeMainDoors from './HomeMainDoors';
-import { SectionSkeleton } from './HomeSkeletons';
 import { ComingSoonSection } from './ComingSoon';
-import { VisualSilenceControls } from './VisualSilenceControls';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare, History, BookOpen } from 'lucide-react';
 import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
