@@ -1,6 +1,6 @@
-import fs from 'fs';
-import { execSync } from 'child_process';
-import path from 'path';
+const fs = require('fs');
+const { execSync } = require('child_process');
+const path = require('path');
 
 const VIOLATION_PATTERNS = [
   { name: 'Non-standard Radius', pattern: 'rounded-(xl|2xl|3xl)', suggestion: 'rounded-premium' },
@@ -9,7 +9,7 @@ const VIOLATION_PATTERNS = [
 ];
 
 function runAudit() {
-  const violations: any[] = [];
+  const violations = [];
   
   VIOLATION_PATTERNS.forEach(({ name, pattern, suggestion }) => {
     try {
@@ -39,6 +39,11 @@ function runAudit() {
     violations,
     status: violations.length === 0 ? 'conforme' : 'pendente'
   };
+
+  // Ensure public directory exists
+  if (!fs.existsSync('public')) {
+    fs.mkdirSync('public');
+  }
 
   fs.writeFileSync('public/visual-audit-report.json', JSON.stringify(report, null, 2));
   console.log(`Audit complete. Found ${violations.length} violations.`);
