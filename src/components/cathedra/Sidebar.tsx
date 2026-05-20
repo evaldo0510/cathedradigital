@@ -51,7 +51,6 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     {
       label: 'Núcleo Sagrado',
       items: [
-        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
@@ -59,28 +58,27 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       ]
     },
     {
-      label: 'Devocionário',
+      label: 'Biblioteca & Oração',
       items: [
+        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('liturgy'), path: AppRoute.LITURGIA, icon: <Icons.Liturgy className="w-5 h-5" /> },
         { label: t('rosary') || 'Santo Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
         { label: t('prayers'), path: AppRoute.ORACAO, icon: <Icons.Volume2 className="w-5 h-5" /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
+      ]
+    },
+    {
+      label: 'Contemplação',
+      items: [
+        { label: 'Jornadas Espirituais', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
+        { label: 'Diário de Fé', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5" /> },
       ]
     },
     {
       label: 'Em Breve',
       items: [
-        { label: t('journeys'), path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
-        { label: t('community'), path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
-        { label: 'Quiz da Fé', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5 opacity-40" /> },
-      ]
-    },
-    {
-      label: t('digital'),
-      items: [
-        { label: t('about') || 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: t('profile'), path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5" /> },
-        { label: 'Cache Local', path: AppRoute.CACHE_MANAGER, icon: <Icons.Library className="w-5 h-5" /> },
+        { label: 'Comunidade Ativa', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
+        { label: 'Formação & Quizzes', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5 opacity-40" /> },
+        { label: 'Painel do Peregrino', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5 opacity-40" /> },
       ]
     }
   ];

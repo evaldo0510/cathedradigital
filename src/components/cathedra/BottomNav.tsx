@@ -90,9 +90,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
     { label: t('bible'), icon: <Icons.Bible />, route: AppRoute.BIBLE },
     { label: t('catechism'), icon: <Icons.Catechism />, route: AppRoute.CATECHISM },
+    { label: 'Magistério', icon: <Icons.ScrollText />, route: AppRoute.MAGISTERIUM },
     { label: 'Logos', icon: <Icons.Search />, route: AppRoute.BUSCAR },
     { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
   ];
