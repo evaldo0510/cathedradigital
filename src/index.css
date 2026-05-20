@@ -154,6 +154,24 @@
     }
   }
 
+  .total-silence * {
+    transition: none !important;
+    animation: none !important;
+  }
+  
+  .total-silence .animate-pulse,
+  .total-silence .animate-spin,
+  .total-silence .skeleton {
+    display: none !important;
+  }
+  
+  .total-silence .sacred-skeleton,
+  .total-silence .home-skeleton {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+
   input, select, textarea {
     font-size: 16px !important;
   }
