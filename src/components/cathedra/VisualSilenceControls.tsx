@@ -2,7 +2,7 @@ import React from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Icons } from '@/constants';
 import { motion } from 'framer-motion';
-import { EyeOff, ZapOff, Contrast, Compass } from 'lucide-react';
+import { EyeOff, ZapOff, Contrast, Compass, VolumeX } from 'lucide-react';
 
 export const VisualSilenceControls: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
@@ -14,6 +14,13 @@ export const VisualSilenceControls: React.FC = () => {
       icon: EyeOff,
       active: settings.visualSilence,
       description: 'Oculta elementos de navegação e distrações'
+    },
+    {
+      id: 'totalSilence',
+      label: 'Silêncio Total',
+      icon: VolumeX,
+      active: settings.totalSilence,
+      description: 'Remove sons e loaders para foco máximo'
     },
     {
       id: 'reduceAnimations',

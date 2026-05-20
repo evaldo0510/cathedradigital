@@ -9,6 +9,7 @@ interface ReadingSettings {
   theme: 'paper' | 'sepia' | 'dark' | 'night';
   visualSilence: boolean; // Hides non-essential UI
   reduceAnimations: boolean;
+  totalSilence: boolean; // Removes all sounds and even more UI (loaders/skeletons)
   highContrast: boolean;
   contemplativeMode: boolean;
   fullScreen: boolean;
@@ -41,6 +42,7 @@ const defaultSettings: ReadingSettings = {
   theme: 'paper',
   visualSilence: false,
   reduceAnimations: false,
+  totalSilence: false,
   highContrast: false,
   contemplativeMode: false,
   lineSpacing: 'normal',
@@ -133,6 +135,12 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('reduce-animations');
     } else {
       root.classList.remove('reduce-animations');
+    }
+
+    if (settings.totalSilence) {
+      root.classList.add('total-silence');
+    } else {
+      root.classList.remove('total-silence');
     }
 
     if (settings.fullScreen) {

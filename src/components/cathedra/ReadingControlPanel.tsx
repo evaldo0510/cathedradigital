@@ -237,6 +237,19 @@ const ReadingControlPanel: React.FC = () => {
                 />
               </div>
 
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Silêncio Total</p>
+                  <p className="text-[10px] text-muted-foreground italic">Oculta inclusive loaders e skeletons</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.totalSilence}
+                  onChange={(e) => updateSettings({ totalSilence: e.target.checked })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
+              </div>
+
 
               <div className="pt-2 space-y-3">
                 <div className="flex items-center gap-2 px-1">
