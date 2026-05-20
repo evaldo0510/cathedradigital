@@ -4,6 +4,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
@@ -423,16 +424,36 @@ const JornadaStepPage: React.FC = () => {
       {/* Fixed Bottom Action */}
       <div className="flex-shrink-0 border-t border-border/50 bg-background  px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="max-w-2xl mx-auto">
-          {!completed ? (
+          <div className="flex gap-2">
+            {!completed && (
+              <Button
+                onClick={handleSaveReflection}
+                disabled={saving || !reflection.trim()}
+                variant="outline"
+                className="flex-1 rounded-full h-14 text-premium-tiny uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+              >
+                {saving ? (
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-premium animate-spin" />
+                ) : (
+                  <><Icons.Save className="w-4 h-4 mr-2" /> Salvar</>
+                )}
+              </Button>
+            )}
+            
             <Button
-              onClick={completeStep}
+              onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
               disabled={saving}
-              className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3"
+              className={`${completed ? 'w-full' : 'flex-[2]'} h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3`}
             >
               {saving ? (
                 <>
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-premium animate-spin" />
                   Salvando...
+                </>
+              ) : completed ? (
+                <>
+                  <Icons.ArrowLeft className="w-5 h-5" />
+                  Voltar à Jornada
                 </>
               ) : (
                 <>
@@ -441,19 +462,13 @@ const JornadaStepPage: React.FC = () => {
                 </>
               )}
             </Button>
-          ) : (
-            <div className="flex gap-3">
+          </div>
+          {completed && nextStep && (
+            <div className="mt-3">
               <Button
-                onClick={() => navigate(`/jornadas/${journeyId}`)}
-                className="flex-1 h-14 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] hover:bg-secondary/80 transition-all flex items-center justify-center gap-2"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Voltar à Jornada
-              </Button>
-              {nextStep && (
-                <Button
-                  onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                  className="flex-1 h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
+                className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+
                 >
                   Próxima Etapa
                   <Icons.ChevronRight className="w-4 h-4" />
