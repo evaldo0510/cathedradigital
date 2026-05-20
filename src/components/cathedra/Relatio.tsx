@@ -163,15 +163,22 @@ const Relatio: React.FC<RelatioProps> = ({
                     className="group cursor-pointer"
                     onClick={() => {
                       if (item.type === 'bible') {
-                        const [abbr, chapter] = (item.title || '').split(' ');
-                        onNavigateToBible?.(abbr, parseInt(chapter) || 1);
+                        const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
+                        const chapter = item.metadata?.chapter;
+                        if (abbr && chapter) {
+                          onNavigateToBible?.(abbr, chapter);
+                        } else {
+                          const [parsedAbbr, parsedChapter] = (item.title || '').split(' ');
+                          onNavigateToBible?.(parsedAbbr, parseInt(parsedChapter) || 1);
+                        }
                       } else if (item.type === 'catechism') {
-                        const p = parseInt(item.title.match(/\d+/)?.[0] || '0');
+                        const p = item.metadata?.paragraph || parseInt(item.title.match(/\d+/)?.[0] || '0');
                         if (p) onNavigateToCIC?.(p);
                       } else if (item.type === 'magisterium') {
                         onNavigateToDoc?.(item.id);
                       }
                     }}
+
                   >
                     <Card className="p-4 bg-card border border-border/40 group-hover:border-primary/30 transition-all rounded-premium shadow-sm">
                       <div className="flex gap-3">
