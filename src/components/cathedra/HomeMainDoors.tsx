@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons } from '@/constants';
@@ -20,6 +20,8 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { settings } = useReadingSettings();
+  const doorRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   
   const doors = [
     {
@@ -52,13 +54,26 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
         const key = e.key.toLowerCase();
-        const door = doors.find(d => d.shortcut.toLowerCase() === key);
-        if (door) {
+        const doorIdx = doors.findIndex(d => d.shortcut.toLowerCase() === key);
+        
+        if (doorIdx !== -1) {
           e.preventDefault();
-          handleNavigate(door.route);
+          const element = doorRefs.current[doorIdx];
+          if (element) {
+            element.focus();
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Add a visual temporary highlight
+            element.classList.add('ring-4', 'ring-primary/40', 'scale-105');
+            setTimeout(() => {
+              element.classList.remove('ring-4', 'ring-primary/40', 'scale-105');
+              handleNavigate(doors[doorIdx].route);
+            }, 600);
+          }
         }
       }
     };
+
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -80,6 +95,8 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
             <Tooltip key={idx}>
               <TooltipTrigger asChild>
                 <motion.div
+                  ref={el => doorRefs.current[idx] = el}
+
                   whileHover={{ y: -8 }}
                   whileTap={{ scale: 0.995 }}
                   onClick={() => handleNavigate(door.route)}
