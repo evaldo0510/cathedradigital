@@ -78,20 +78,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
 
   return (
-    <div className="app-container stack-spacing pb-64">
-      {/* SILÊNCIO VISUAL - CONTROLES */}
-      <section className="space-y-10">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-            Atmosfera Contemplativa
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        
-        <VisualSilenceControls />
-      </section>
-
+    <div className="app-container stack-spacing pb-32">
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-16">
         <div className="flex items-center gap-10">
@@ -105,19 +92,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <HomeMainDoors t={t} />
       </section>
 
-      {/* RITUAL DO DIA - NÚCLEO DE LEITURA/CONTEMPLAÇÃO */}
-      <section className="space-y-12">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
-            Ritual do Dia
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        <div className="max-w-4xl mx-auto w-full">
-          <RitualDoDia />
-        </div>
-      </section>
 
       {/* LOGOS IA INTEGRADA */}
       <section className="space-y-12">
