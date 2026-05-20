@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
@@ -11,7 +11,8 @@ import { SectionSkeleton } from './HomeSkeletons';
 import { ComingSoonSection } from './ComingSoon';
 import { VisualSilenceControls } from './VisualSilenceControls';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare, History, Search } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, History, Search, BookOpen } from 'lucide-react';
+import { DAILY_VERSES, DAILY_REFLECTIONS } from '@/data/dailyRitual';
 
 
 interface HomeMainContentProps {
@@ -40,21 +41,38 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
     }
   }, []);
 
-  const handleLogosSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (logosQuery.trim()) {
+  const dayOfYear = useMemo(() => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), 0, 0);
+    return Math.floor((now.getTime() - start.getTime()) / 86400000);
+  }, []);
+
+  const handleLogosSearch = (e?: React.FormEvent, customQuery?: string) => {
+    if (e) e.preventDefault();
+    const queryToUse = customQuery || logosQuery;
+    
+    if (queryToUse.trim()) {
+      let finalQuery = queryToUse;
+      
+      // Contextual summarization logic
+      if (queryToUse === 'Resumir leitura atual') {
+        const verse = DAILY_VERSES[dayOfYear % DAILY_VERSES.length];
+        const reflection = DAILY_REFLECTIONS[dayOfYear % DAILY_REFLECTIONS.length];
+        finalQuery = `Por favor, faça um resumo espiritual e contextual deste versículo e reflexão de hoje: "${verse.text}" (${verse.ref}). Reflexão: "${reflection}"`;
+      }
+
       // Save to local chat history so it appears in the chat bubble too
       const savedMessages = localStorage.getItem('cathedra_logos_messages');
       const messages = savedMessages ? JSON.parse(savedMessages) : [];
       const newMessage = {
         id: Date.now().toString(),
         role: 'user',
-        content: logosQuery,
+        content: finalQuery,
         timestamp: new Date().toISOString()
       };
       localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
       
-      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
+      navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(finalQuery)}`);
     }
   };
 
