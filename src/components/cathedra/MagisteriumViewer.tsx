@@ -13,6 +13,8 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
+import Relatio from './Relatio';
+
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 
@@ -293,6 +295,21 @@ const MagisteriumViewer: React.FC = () => {
       </div>
 
 
+      {content && (
+        <div className="w-full max-w-[72ch] mx-auto mb-12">
+          <Relatio 
+            context={{
+              type: 'magisterium',
+              id: id,
+              tags: [content.title, 'Magisterio', 'Tradicao', 'Igreja']
+            }}
+            onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&chapter=${ch}`)}
+            onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
+            onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
+          />
+        </div>
+      )}
+
       <div className="mt-12 flex justify-center">
         <Button 
           variant="outline" 
@@ -302,6 +319,7 @@ const MagisteriumViewer: React.FC = () => {
           <Icons.ChevronUp className="w-4 h-4 mr-2" /> Topo do Documento
         </Button>
       </div>
+
       {showLogosAI && (
         <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <LogosAI 
