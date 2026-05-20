@@ -70,12 +70,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.4 }}
-        className="flex flex-col items-center gap-10"
+        className="flex flex-col items-center gap-12"
       >
-        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
           <HomeButton
             size="lg"
-            className="px-12 py-7 text-[10px] tracking-[0.25em] font-bold uppercase rounded-full shadow-xl shadow-primary/5 hover:shadow-primary/10 transition-all duration-1000 active:scale-95"
+            variant="primary"
             onClick={onStart}
             aria-label="Entrar no santuário digital"
           >
