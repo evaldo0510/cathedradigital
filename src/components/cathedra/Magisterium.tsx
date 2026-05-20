@@ -212,6 +212,22 @@ const Magisterium: React.FC = () => {
           <Icons.Scroll className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
         </div>
+        
+        <div className="absolute right-4 top-4 flex items-center gap-2">
+          {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              onClick={() => navigate(lastReadMark.url)}
+              className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+            >
+              <Icons.History className="w-4 h-4" />
+              <span className="hidden sm:inline">Continuar de onde parei</span>
+            </Button>
+          )}
+          <ReadingControlPanel />
+        </div>
+
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
       </div>
