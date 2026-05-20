@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
+import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
 interface CathedraButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -11,6 +12,7 @@ interface CathedraButtonProps extends HTMLMotionProps<"button"> {
 
 const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
     const sizeMap = {
       sm: 'px-6 h-10 text-[9.5px]',
       md: 'px-8 h-14 text-[10.5px]',
@@ -28,7 +30,7 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
     return (
       <motion.button
         ref={ref as any}
-        whileTap={{ scale: 0.96 }}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
         className={cn(
           variantStyles[variant],
           sizeMap[size],

@@ -20,9 +20,9 @@
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 11% / 0.08;
-    --input: 222 47% 11% / 0.08;
-    --ring: 222 47% 11%;
+    --border: 222 47% 11% / 0.05;
+    --input: 222 47% 11% / 0.05;
+    --ring: 222 47% 11% / 0.1;
     --radius: 0.75rem;
     --sidebar-background: 45 42% 98%;
     --sidebar-foreground: 222 47% 11%;
@@ -312,20 +312,20 @@
   /* Design System Tokens - Unified Source of Truth */
   :root {
     --card-radius: 2rem;
-    --card-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
-    --card-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.07);
+    --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
+    --card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
     --btn-radius: 9999px;
-    --layout-max-width: 1280px;
+    --layout-max-width: 1100px; /* Reduced for better reading comfort */
   }
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/10 shadow-premium transition-all duration-700 relative overflow-hidden;
+    @apply bg-card border border-border/5 shadow-premium transition-all duration-1000 relative overflow-hidden;
     border-radius: var(--card-radius);
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:border-primary/5 hover:-translate-y-0.5 active:scale-[0.995] active:translate-y-0;
+    @apply premium-card cursor-pointer hover:border-primary/10 active:scale-[0.995];
     box-shadow: var(--card-shadow);
   }
 
@@ -398,6 +398,16 @@
 /* Page transitions */
 .page-enter {
   animation: fadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.reduce-animations .page-enter {
+  animation: fadeIn 0.1s linear forwards;
+}
+
+.reduce-animations * {
+  transition-duration: 0.1s !important;
+  animation-duration: 0.1s !important;
+  animation-iteration-count: 1 !important;
 }
 
 @keyframes fadeIn {

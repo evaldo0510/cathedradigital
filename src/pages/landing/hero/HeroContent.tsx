@@ -32,10 +32,13 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: EASE }}
-        className="mb-8 md:mb-12"
+        className="mb-12 md:mb-20"
       >
-        <div className="premium-tag">
-          Santuário Digital
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-px h-12 bg-primary/10" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">
+            Mosteiro Digital
+          </p>
         </div>
       </motion.div>
 
@@ -44,10 +47,10 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-8 md:mb-10"
+        className="mb-12 md:mb-16"
       >
-        <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-display font-medium text-primary leading-[1.1] md:leading-[0.95] tracking-tight">
-          Nem toda prisão <br className="md:hidden" /> é <span className="text-secondary/40 italic font-serif font-light">visível</span>
+        <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-medium text-primary leading-[1.1] md:leading-[0.9] tracking-tighter">
+          Silêncio <br /> <span className="text-secondary/20 italic font-serif font-light">&</span> Profundidade
         </h1>
       </motion.div>
 
@@ -57,10 +60,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-xl mx-auto font-serif text-lg md:text-xl text-foreground/30 italic leading-relaxed mb-12 md:mb-16"
+        className="max-w-xl mx-auto font-serif text-xl md:text-2xl text-foreground/20 italic leading-relaxed mb-16 md:mb-24"
       >
-        Silêncio e profundidade. <br />
-        Uma jornada guiada pela Tradição.
+        A jornada espiritual guiada pela Tradição.
       </motion.p>
 
       {/* CTAs - Simplified and Focused */}

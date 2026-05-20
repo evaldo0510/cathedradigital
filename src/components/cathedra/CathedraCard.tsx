@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
+import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
 interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
@@ -10,6 +11,7 @@ interface CathedraCardProps extends HTMLMotionProps<"div"> {
 
 const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
       sm: 'p-5 sm:p-6',
@@ -34,9 +36,9 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
           hover && !variant.includes('interactive') && 'hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500',
           className
         )}
-        initial={props.initial || { opacity: 0, y: 15 }}
+        initial={settings.reduceAnimations ? { opacity: 1, y: 0 } : (props.initial || { opacity: 0, y: 15 })}
         animate={props.animate || { opacity: 1, y: 0 }}
-        transition={props.transition || { duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.6, ease: [0.22, 1, 0.36, 1] })}
         {...props}
       >
         {children}
