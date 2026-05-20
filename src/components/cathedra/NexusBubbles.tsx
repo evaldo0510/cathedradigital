@@ -39,12 +39,14 @@ interface TagBubbleProps {
   isSuggested?: boolean;
   tabIndex?: number;
   onKeyDown?: (e: React.KeyboardEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
   className?: string;
   profileId?: ProfileId | null;
   navigateOnClick?: boolean;
   priorityGroup?: string;
   size?: 'xs' | 'sm' | 'md';
 }
+
 
 export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
   const navigate = useNavigate();
