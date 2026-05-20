@@ -21,6 +21,11 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
 
   const { nextBible, nextCatechism, nextJourney, lastReflection, lastJournal, history } = data;
 
+  // Calculo discreto de maturidade baseado em XP
+  const xp = profile?.xp || 0;
+  const level = Math.floor(xp / 1000) + 1;
+  const progressToNextLevel = (xp % 1000) / 10; 
+
   // Prioridade de retomada
   const primaryResume = nextJourney || nextBible || nextCatechism;
 
@@ -35,12 +40,12 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
           <div className="h-1 w-24 bg-border/20 rounded-full overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
-              animate={{ width: '65%' }} // Exemplo: Valor vindo de algum cálculo de maturidade
+              animate={{ width: `${Math.max(5, progressToNextLevel)}%` }}
               className="h-full bg-secondary/40"
               transition={{ duration: 1.5, ease: "easeOut" }}
             />
           </div>
-          <span className="text-[10px] font-bold text-secondary/60 uppercase tracking-widest">Maturidade II</span>
+          <span className="text-[10px] font-bold text-secondary/60 uppercase tracking-widest">Grau {level}</span>
         </div>
       </div>
 
