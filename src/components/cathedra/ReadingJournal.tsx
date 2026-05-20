@@ -127,30 +127,70 @@ const ReadingJournal: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-secondary/[0.03] border-secondary/10 rounded-[3rem] overflow-hidden shadow-soft group hover:bg-secondary/[0.05] transition-all">
-          <CardContent className="p-10 flex flex-col items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center">
-              <Target className="w-10 h-10 text-secondary group-hover:rotate-12 transition-transform" />
-            </div>
-            <div className="w-full text-center">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/40 mb-2">Meta da Semana</p>
-              <h3 className="text-4xl font-display text-secondary">{daysActiveThisWeek} de {weeklyGoal}</h3>
-              <p className="text-xs font-bold text-secondary/60 mt-1 uppercase tracking-widest">Dias Ativos</p>
-            </div>
-            <div className="w-full space-y-2">
-              <div className="h-3 w-full bg-secondary/10 rounded-full overflow-hidden p-0.5">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${Math.min(100, (daysActiveThisWeek / weeklyGoal) * 100)}%` }}
-                  className="h-full bg-secondary rounded-full shadow-lg shadow-secondary/20"
-                />
+        <div className="md:col-span-1">
+          <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-soft group hover:bg-secondary/[0.04] transition-all duration-1000">
+            <CardContent className="p-12 flex flex-col items-center gap-10">
+              <div className="w-24 h-24 rounded-full bg-secondary/5 flex items-center justify-center relative">
+                <Target className={`w-12 h-12 text-secondary/60 group-hover:rotate-12 transition-transform duration-700 ${daysActiveThisWeek >= weeklyGoal ? 'animate-bounce' : ''}`} />
+                {daysActiveThisWeek >= weeklyGoal && (
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 bg-secondary text-white p-2 rounded-full shadow-lg"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                  </motion.div>
+                )}
               </div>
-              <p className="text-[9px] font-black uppercase tracking-widest text-secondary/30 text-center">
-                {daysActiveThisWeek >= weeklyGoal ? 'Meta alcançada!' : `Faltam ${weeklyGoal - daysActiveThisWeek} dias`}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="w-full text-center space-y-4">
+                <p className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/30">Meta da Semana</p>
+                <h3 className="text-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-2xl opacity-20">/ {weeklyGoal}</span></h3>
+                <p className="text-sm font-serif italic text-secondary/60">Dias em contemplação</p>
+              </div>
+              <div className="w-full space-y-4">
+                <div className="h-2 w-full bg-secondary/5 rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min(100, (daysActiveThisWeek / weeklyGoal) * 100)}%` }}
+                    transition={{ duration: 1.5, ease: [0.2, 0.8, 0.2, 1] }}
+                    className="h-full bg-secondary/40 rounded-full shadow-premium"
+                  />
+                </div>
+                
+                {/* Histórico Semanal Detalhado */}
+                <div className="pt-6 flex justify-between px-2">
+                  {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map((day, i) => {
+                    const today = new Date();
+                    const dayDate = new Date(today.setDate(today.getDate() - today.getDay() + i));
+                    const dateStr = dayDate.toISOString().split('T')[0];
+                    const isActive = [...marks, ...notes].some(item => 
+                      new Date(item.created_at || (item as any).updated_at).toISOString().split('T')[0] === dateStr
+                    );
+                    const isToday = i === new Date().getDay();
+                    
+                    return (
+                      <div key={i} className="flex flex-col items-center gap-3">
+                        <span className={`text-[8px] font-black uppercase tracking-widest ${isToday ? 'text-secondary' : 'text-secondary/20'}`}>{day}</span>
+                        <div className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-700 ${
+                          isActive 
+                            ? 'bg-secondary/20 border-secondary/20 text-secondary' 
+                            : 'bg-transparent border-secondary/5 text-secondary/10'
+                        } ${isToday ? 'ring-2 ring-secondary/20 ring-offset-2' : ''}`}>
+                          {isActive && <CheckCircle2 className="w-3.5 h-3.5" />}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-secondary/20 text-center pt-4">
+                  {daysActiveThisWeek >= weeklyGoal ? 'Propósito cumprido!' : `Siga firme por mais ${weeklyGoal - daysActiveThisWeek} dias.`}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
       </div>
         <h1 className="text-4xl md:text-5xl font-display text-primary">Diário de Jornada</h1>
         <p className="text-muted-foreground font-serif italic">"Guarda o que viste, para que não se apague do teu coração."</p>
