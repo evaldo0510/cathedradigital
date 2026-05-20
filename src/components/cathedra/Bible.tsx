@@ -348,8 +348,17 @@ const Bible: React.FC = () => {
       setSelectedChapter(next);
       setHighlightedVerse(null);
       localStorage.setItem('cathedra_last_bible_scroll', '0');
+      
+      // Auto-save progress
+      saveLastRead({
+        content_type: 'bible',
+        content_id: selectedBook.abbr,
+        chapter: next,
+        label: `${selectedBook.name} ${next}`,
+        url: `/bible?book=${selectedBook.abbr}&ch=${next}`
+      });
     }
-  }, [selectedBook, selectedChapter]);
+  }, [selectedBook, selectedChapter, saveLastRead]);
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
     navigate(`/catechism?p=${paragraph}`);
