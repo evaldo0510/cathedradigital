@@ -112,6 +112,8 @@ const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAudit
 const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
+const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
+
 
 
 const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
@@ -611,6 +613,7 @@ const AppLayout: React.FC = () => {
                   <Route path={AppRoute.MAGISTERIUM_DOC} element={<PageTransition><AuthGuard><MagisteriumViewer /></AuthGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_AUDIT} element={<PageTransition><AdminGuard><VisualAuditPage /></AdminGuard></PageTransition>} />
                   <Route path={AppRoute.VISUAL_REGRESSION} element={<PageTransition><AdminGuard><VisualRegressionDashboard /></AdminGuard></PageTransition>} />
+                  <Route path={AppRoute.SEO_VERIFY} element={<PageTransition><AdminGuard><SEOVerificationPage /></AdminGuard></PageTransition>} />
 
 
                   <Route path={AppRoute.LITURGIA} element={<PageTransition><AuthGuard><LiturgiaPage /></AuthGuard></PageTransition>} />
