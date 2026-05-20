@@ -313,6 +313,27 @@ export type Database = {
           },
         ]
       }
+      coming_soon_leads: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          interest_type: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          interest_type?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          interest_type?: string | null
+        }
+        Relationships: []
+      }
       community_likes: {
         Row: {
           created_at: string
