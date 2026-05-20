@@ -113,6 +113,7 @@ const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
+const GuidedReadingPage = lazy(() => import('./pages/GuidedReading'));
 
 
 
