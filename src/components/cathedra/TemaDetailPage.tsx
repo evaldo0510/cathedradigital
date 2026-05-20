@@ -18,6 +18,8 @@ import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import { TagBubble } from './NexusBubbles';
 import { useRovingTabindex } from './TabUtils';
+import Relatio from './Relatio';
+
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
 
