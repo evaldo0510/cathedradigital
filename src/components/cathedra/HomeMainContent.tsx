@@ -90,7 +90,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           ref={logosCardRef}
-          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none"
+          className="p-8 md:p-12 lg:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none"
 
         >
           <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/40 group-hover:scale-105 transition-transform duration-700">
