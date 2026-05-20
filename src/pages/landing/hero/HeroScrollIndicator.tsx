@@ -5,17 +5,17 @@ const HeroScrollIndicator = () => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    transition={{ delay: 4 }}
+    transition={{ delay: 2, duration: 1 }}
     className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
   >
     <motion.div
       animate={{ 
-        y: [0, 12, 0],
-        opacity: [0.2, 0.5, 0.2]
+        y: [0, 8, 0],
+        opacity: [0.1, 0.3, 0.1]
       }}
       transition={{ 
         repeat: Infinity, 
-        duration: 3, 
+        duration: 4, 
         ease: "easeInOut" 
       }}
       className="flex flex-col items-center gap-2"
