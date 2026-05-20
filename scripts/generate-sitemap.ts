@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import ts from 'typescript';
+import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
 
 /**
  * Script to generate sitemap.xml dynamically from AppRoute enum in src/types.ts using AST.
@@ -9,46 +9,9 @@ import ts from 'typescript';
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
 
-function extractRoutesFromTypesAST() {
-  const typesPath = path.join(process.cwd(), 'src', 'types.ts');
-  const sourceFile = ts.createSourceFile(
-    'types.ts',
-    fs.readFileSync(typesPath, 'utf-8'),
-    ts.ScriptTarget.Latest,
-    true
-  );
-
-  const routes: string[] = [];
-  
-  function visit(node: ts.Node) {
-    if (ts.isEnumDeclaration(node) && node.name.text === 'AppRoute') {
-      node.members.forEach(member => {
-        if (member.initializer && ts.isStringLiteral(member.initializer)) {
-          const route = member.initializer.text;
-          // Skip routes with parameters (e.g. /santos/:id) and admin/private routes
-          if (!route.includes(':') && 
-              !route.startsWith('/admin') && 
-              !['/login', '/checkout', '/profile', '/favorites', '/checkout/result', '/vendedor', '/transactions', '/a11y-audit', '/security-audit', '/catechism/integrity', '/catechism/health', '/catechism/verify', '/offline', '/cache-manager', '/diario', '/diagnostics', '/upgrade'].includes(route)) {
-            routes.push(route);
-          }
-        }
-      });
-    }
-    ts.forEachChild(node, visit);
-  }
-
-  visit(sourceFile);
-  
-  // Ensure home is first and unique
-  return Array.from(new Set(['/', ...routes])).sort((a, b) => {
-    if (a === '/') return -1;
-    if (b === '/') return 1;
-    return a.localeCompare(b);
-  });
-}
-
 function generateSitemap() {
-  const publicRoutes = extractRoutesFromTypesAST();
+  const allRoutes = extractRoutesFromTypesAST();
+  const publicRoutes = getPublicRoutes(allRoutes);
   const lastmod = new Date().toISOString().split('T')[0];
   
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
