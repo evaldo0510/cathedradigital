@@ -438,11 +438,19 @@ const Bible: React.FC = () => {
       const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
       const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
       
-      if (savedScroll && !searchParams.get('v')) {
-        setTimeout(() => {
-          window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
-          if (savedVerse) setHighlightedVerse(parseInt(savedVerse));
-        }, 800);
+      // Better resume: only if no specific verse in URL
+      if (!searchParams.get('v') && !searchParams.get('verse')) {
+        if (savedScroll && parseInt(savedScroll) > 100) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          }, 300);
+        } else if (savedVerse) {
+          const vNum = parseInt(savedVerse);
+          setTimeout(() => {
+            const el = document.getElementById(`v${vNum}`);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 400);
+        }
       }
     }
   }, [viewMode, isLoading, verses.length]);
