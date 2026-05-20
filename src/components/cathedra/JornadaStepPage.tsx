@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion, Lock } from 'lucide-react';
+import { ArrowLeft, Check, BookOpen, Hand, PenLine, Sparkles, Clock, ChevronDown, X, ShieldQuestion, Lock, Save, ChevronRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import { Textarea } from '@/components/ui/textarea';
@@ -435,7 +435,7 @@ const JornadaStepPage: React.FC = () => {
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-premium animate-spin" />
                 ) : (
-                  <><Icons.Save className="w-4 h-4 mr-2" /> Salvar</>
+                  <><Save className="w-4 h-4 mr-2" /> Salvar</>
                 )}
               </Button>
             )}
@@ -452,7 +452,7 @@ const JornadaStepPage: React.FC = () => {
                 </>
               ) : completed ? (
                 <>
-                  <Icons.ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-5 h-5" />
                   Voltar à Jornada
                 </>
               ) : (
@@ -470,7 +470,7 @@ const JornadaStepPage: React.FC = () => {
                 className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
               >
                 Próxima Etapa
-                <Icons.ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </div>
           )}
