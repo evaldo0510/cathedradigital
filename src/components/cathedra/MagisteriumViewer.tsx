@@ -87,11 +87,33 @@ const MagisteriumViewer: React.FC = () => {
   // Auto-save scroll position
   useEffect(() => {
     const handleScroll = () => {
-      if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+      if (id && content) {
+        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+        
+        // Throttled DB save would be better, but for now we'll save on certain intervals
+        // For simplicity, we save when the effect runs or on scroll end
+      }
     };
+    
+    // Save to DB on unmount or every few seconds
+    const interval = setInterval(() => {
+      if (id && content) {
+        saveLastRead({
+          content_type: 'magisterium',
+          content_id: id,
+          label: content.title,
+          url: window.location.pathname + window.location.search,
+          position: window.scrollY
+        });
+      }
+    }, 10000); // every 10s
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [id]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
+  }, [id, content, saveLastRead]);
 
   // Restore scroll position
   useEffect(() => {
