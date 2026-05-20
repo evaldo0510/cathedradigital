@@ -208,6 +208,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
           </Tabs>
         )}
+      </div>
 
         {!hasQuery && (
           <div className="text-center py-12 text-muted-foreground">
