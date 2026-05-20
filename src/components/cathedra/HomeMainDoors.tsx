@@ -137,8 +137,9 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
                 </div>
               </TooltipContent>
             </Tooltip>
-      })}
-    </div>
+          );
+        })}
+      </div>
   );
 };
 
