@@ -229,43 +229,38 @@ const HojePage: React.FC = () => {
             </section>
           </div>
 
-          <aside className="lg:col-span-4 stack-spacing">
-            {/* EM BREVE - EVOLUÇÃO FUTURA */}
-            <section className="space-y-12">
-              <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
-                  Em Breve
-                </h2>
-                <div className="h-px flex-1 bg-border/30" />
+          <aside className="lg:col-span-4 space-y-16">
+            {/* FRASES DO DIA - CONTEMPLAÇÃO */}
+            <div className="pt-12 px-8 text-center bg-primary/[0.01] rounded-[4rem] p-16 border border-primary/5 transition-all hover:bg-primary/[0.02] duration-1000">
+               <Icons.Quote className="w-10 h-10 text-secondary/10 mx-auto mb-10" />
+               <p className="text-2xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
+                {todayQuote}
+              </p>
+            </div>
+
+            {/* EM BREVE - DISCRETO */}
+            <section className="pt-24 opacity-20 hover:opacity-100 transition-opacity duration-1000">
+              <div className="flex items-center gap-6 mb-10">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">Futuro</span>
+                <div className="h-px flex-1 bg-primary/5" />
               </div>
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-4">
                 {[
-                  { title: 'Jornadas de Fé', icon: <Icons.Journeys />, label: 'Formação' },
-                  { title: 'Comunidade Contemplativa', icon: <Icons.Users />, label: 'Social' },
-                  { title: 'Certamen (Quiz Avançado)', icon: <Icons.Trophy />, label: 'Desafio' },
-                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity />, label: 'Progresso' },
+                  { title: 'Jornadas de Fé', icon: <Icons.Journeys /> },
+                  { title: 'Comunidade Contemplativa', icon: <Icons.Users /> },
+                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity /> },
                 ].map((item) => (
-                  <div key={item.title} className="p-6 rounded-[2rem] border border-border/20 bg-muted/20 opacity-60 flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary/40">
-                      {React.cloneElement(item.icon as React.ReactElement, { className: 'w-6 h-6' })}
+                  <div key={item.title} className="flex items-center gap-4 group cursor-default">
+                    <div className="text-primary/10 group-hover:text-primary/30 transition-colors">
+                      {React.cloneElement(item.icon as React.ReactElement, { className: 'w-4 h-4', strokeWidth: 1 })}
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/20 mb-1">{item.label}</p>
-                      <h4 className="text-sm font-bold text-primary/60">{item.title}</h4>
-                    </div>
+                    <h4 className="text-[10px] font-bold text-primary/10 uppercase tracking-widest group-hover:text-primary/30 transition-colors">{item.title}</h4>
                   </div>
                 ))}
               </div>
             </section>
-
-            {/* FRASES DO DIA */}
-            <div className="pt-12 px-8 text-center bg-primary/[0.02] rounded-[3rem] p-12 border border-border/10">
-               <Icons.Quote className="w-8 h-8 text-secondary/20 mx-auto mb-6" />
-               <p className="text-lg text-primary/60 font-serif italic leading-relaxed">
-                {todayQuote}
-              </p>
-            </div>
           </aside>
+
         </div>
       </div>
     </div>
