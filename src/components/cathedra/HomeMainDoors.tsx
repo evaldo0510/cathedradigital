@@ -80,7 +80,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
     <TooltipProvider>
       <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
         {doors.map((door, idx) => {
-          const isActive = location.pathname === door.route;
+          const isActive = location.pathname.startsWith(door.route);
           
           return (
             <Tooltip key={idx}>
