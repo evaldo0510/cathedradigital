@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -10,9 +11,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const ReadingControlPanel: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
+  const { marks } = useReadingMarks();
+  const [includeNotes, setIncludeNotes] = useState(true);
 
   const themes = [
     { id: 'paper', label: 'Papel', color: 'bg-[#F8F5EE] border-[#E8E2D2]' },
