@@ -99,7 +99,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0 app-header-actions">
           <Button
             variant="outline"
             size="icon"
