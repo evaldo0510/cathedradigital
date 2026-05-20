@@ -164,26 +164,29 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </Button>
         </div>
         
-        <div className="p-8 space-y-8 max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation */}
-          <div className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-2">
+        <div className="p-10 space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
+          {/* Path Navigation - Monastic Breadcrumbs */}
+          <nav className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
             <button 
               onClick={() => setOpen(false)}
-              className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-2 group"
             >
-              Nexus
+              <div className="w-1.5 h-1.5 rounded-full bg-border group-hover:bg-primary/40 transition-colors" />
+              Cathedra
             </button>
-            <Icons.ChevronRight className="w-2.5 h-2.5 text-muted-foreground/30" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/5 px-2 py-0.5 rounded-full">
+            <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Nexus</span>
+            <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary bg-primary/[0.03] px-3 py-1 rounded-full border border-primary/5">
               {tag.label}
             </span>
-          </div>
+          </nav>
 
           {/* Elegant Map Header */}
-          <div className="flex flex-col gap-1 items-center justify-center text-center pb-4 border-b border-border/10">
-            <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/30">NEXUS THEOLOGICUM</span>
-            <p className="text-xs text-muted-foreground font-serif italic">Conexões essenciais entre Escritura e Tradição</p>
-          </div>
+          <header className="flex flex-col gap-2 items-center justify-center text-center py-4">
+            <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/20">SENTIERO DI SAPIENZA</span>
+            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">Mapeando as conexões vivas da Fé e da Tradição</p>
+          </header>
 
 
           {status === 'loading' ? (
@@ -214,16 +217,19 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               )}
               {logosInsight && (
                 <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-secondary/5 rounded-full p-4 border border-secondary/10 relative overflow-hidden group"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2 }}
+                  className="bg-primary/[0.01] rounded-[2.5rem] p-8 border border-primary/[0.03] relative overflow-hidden group"
                 >
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-premium  -mr-6 -mt-6" />
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="w-3.5 h-3.5 text-secondary" />
-                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/[0.01] rounded-full -mr-16 -mt-16 blur-3xl" />
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-5 h-5 rounded-full bg-primary/5 flex items-center justify-center">
+                      <Sparkles className="w-2.5 h-2.5 text-primary/40" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Contemplação Logos</span>
                   </div>
-                  <p className="text-premium-small text-foreground/90 leading-relaxed italic font-serif">
+                  <p className="text-base text-foreground/70 leading-relaxed italic font-serif text-center px-4">
                     "{logosInsight}"
                   </p>
                 </motion.div>
@@ -319,14 +325,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               )}
 
               {/* Related Themes (The "Map" feeling) */}
-              <div className="pt-8 space-y-4 border-t border-border/10">
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30 flex items-center gap-2">
-                  <div className="h-[1px] w-4 bg-border/40" />
-                  MAPA DE CONEXÕES
-                </span>
-                <div className="flex flex-wrap gap-2">
+              <div className="pt-10 space-y-6 border-t border-border/5">
+                <div className="flex flex-col items-center gap-2">
+                  <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/20">RADIUS COGNITIONIS</span>
+                  <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
+                </div>
+                <div className="flex flex-wrap justify-center gap-3">
                   {allThemes?.filter(t => t.category === tag.category && t.id !== tag.id).slice(0, 5).map((t, i) => (
-                    <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick />
+                    <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick className="opacity-60 hover:opacity-100 transition-opacity" />
                   ))}
                 </div>
               </div>
