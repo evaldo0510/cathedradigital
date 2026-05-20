@@ -211,6 +211,17 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
             }} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
+            <Button 
+              onClick={() => {
+                // We need a way to trigger LogosAI from here. 
+                // Since LogosAI state is in the parent Catechism component, we should pass a callback.
+                (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }));
+              }} 
+              className="p-2 rounded-full hover:bg-primary/10 transition-all text-muted-foreground hover:text-primary"
+              title="Perguntar ao Logos IA"
+            >
+              <Icons.Sparkles className="w-4 h-4" />
+            </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
           </div>
         </div>
