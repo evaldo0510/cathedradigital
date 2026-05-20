@@ -341,7 +341,26 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex bg-muted rounded-lg p-1 mr-2 border border-border/50">
+              <Button 
+                variant={scanMode === 'static' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 text-xs px-3"
+                onClick={() => setScanMode('static')}
+              >
+                Rápido (HTML)
+              </Button>
+              <Button 
+                variant={scanMode === 'render' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 text-xs px-3"
+                onClick={() => setScanMode('render')}
+              >
+                Render (JS)
+              </Button>
+            </div>
+            
             <Button 
               variant="outline" 
               size="sm" 
