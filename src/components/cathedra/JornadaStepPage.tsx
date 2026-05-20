@@ -468,12 +468,10 @@ const JornadaStepPage: React.FC = () => {
               <Button
                 onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
                 className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-
-                >
-                  Próxima Etapa
-                  <Icons.ChevronRight className="w-4 h-4" />
-                </Button>
-              )}
+              >
+                Próxima Etapa
+                <Icons.ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
           )}
         </div>
