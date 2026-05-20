@@ -9,6 +9,9 @@ import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 import SEOHead from '@/components/SEOHead';
 import AudioButton from './AudioButton';
+import ReadingControlPanel from './ReadingControlPanel';
+import LogosAI from './LogosAI';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 const MagisteriumViewer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +22,8 @@ const MagisteriumViewer: React.FC = () => {
   const [content, setContent] = useState<{ title: string; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showLogosAI, setShowLogosAI] = useState(false);
+  const { settings } = useReadingSettings();
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -160,6 +165,16 @@ const MagisteriumViewer: React.FC = () => {
         
         <div className="flex items-center gap-2">
           <AudioButton variant="outline" className="rounded-full h-10 w-10 p-0" />
+          <ReadingControlPanel />
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowLogosAI(!showLogosAI)}
+            className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+          >
+            <Icons.Sparkles className="w-4 h-4" />
+            <span className="hidden sm:inline">Logos IA</span>
+          </Button>
           <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()}>
             <Icons.Download className="w-4 h-4" />
           </Button>
@@ -173,11 +188,11 @@ const MagisteriumViewer: React.FC = () => {
       >
         <div 
           ref={contentRef}
-          className="prose prose-slate dark:prose-invert max-w-none 
+          className={`prose prose-slate dark:prose-invert max-w-none reader-text
+            font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight}
             prose-headings:font-serif prose-headings:text-primary 
-            prose-p:font-serif prose-p:text-foreground/90 prose-p:leading-[1.8]
             prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
-            prose-strong:text-primary prose-strong:font-bold"
+            prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
         >
           <ReactMarkdown>{processedText}</ReactMarkdown>
         </div>
@@ -192,6 +207,12 @@ const MagisteriumViewer: React.FC = () => {
           <Icons.ChevronUp className="w-4 h-4 mr-2" /> Topo do Documento
         </Button>
       </div>
+      <LogosAI 
+        isOpen={showLogosAI} 
+        onClose={() => setShowLogosAI(false)} 
+        context={`Documento do Magistério: ${content.title}`}
+        type="magisterium"
+      />
     </div>
   );
 };

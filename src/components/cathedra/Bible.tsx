@@ -25,7 +25,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
-
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import ReadingControlPanel from './ReadingControlPanel';
+import LogosAI from './LogosAI';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -117,7 +119,9 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const [fontSizeIdx, setFontSizeIdx] = useState(1);
+  const { settings, updateSettings } = useReadingSettings();
+  const [showLogosAI, setShowLogosAI] = useState(false);
+  const [logosAIContext, setLogosAIContext] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
@@ -479,7 +483,6 @@ const Bible: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
-    const fs = FONT_SIZES[fontSizeIdx];
     const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
       <div className="max-w-4xl mx-auto pb-24 px-4 sm:px-6">
@@ -555,15 +558,7 @@ const Bible: React.FC = () => {
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            {/* Font size */}
-            <div className="flex items-center bg-card border border-border rounded-2xl overflow-hidden">
-              {FONT_SIZES.map((f, i) => (
-                <Button key={f.label} onClick={() => setFontSizeIdx(i)}
-                  className={`px-2.5 py-1.5 text-xs font-bold transition-all ${fontSizeIdx === i ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                  {f.label}
-                </Button>
-              ))}
-            </div>
+            <ReadingControlPanel />
             {(crossRefs.length > 0 || docsRefs.length > 0) && (
               <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
@@ -572,10 +567,15 @@ const Bible: React.FC = () => {
                 <span className="text-xs font-bold">{crossRefs.length + docsRefs.length}</span>
               </Button>
             )}
-            <ShareButton 
-              title={selectedBook.name} 
-              text={`Lendo ${selectedBook.name} na Cathedra: Digital Sanctuarium`} 
-            />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+            >
+              <Icons.Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Logos IA</span>
+            </Button>
           </div>
         </div>
 
@@ -606,13 +606,17 @@ const Bible: React.FC = () => {
                     <Button variant="outline" onClick={() => window.location.reload()}>Recarregar</Button>
                   </div>
                 ) : (
-                  <div className={`font-serif ${fs.size} ${fs.leading} text-foreground/90 transition-all duration-300`}>
+                  <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} text-foreground/90 transition-all duration-300 reader-text`}>
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
                         <span key={v.number} 
                           id={`v${v.number}`}
-                          onClick={() => setHighlightedVerse(v.number === highlightedVerse ? null : v.number)}
+                          onClick={() => {
+                            setHighlightedVerse(v.number === highlightedVerse ? null : v.number);
+                            setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
+                            setShowLogosAI(true);
+                          }}
                           className={`inline transition-colors duration-300 cursor-pointer rounded px-0.5
                             ${highlightedVerse === v.number ? 'bg-primary/20 ring-1 ring-primary/30' : 'hover:bg-muted/50'}`}>
                           <sup className="text-[0.6em] font-bold text-primary mr-1 select-none">{v.number}</sup>
@@ -695,6 +699,12 @@ const Bible: React.FC = () => {
             )}
           </div>
         </div>
+        <LogosAI 
+          isOpen={showLogosAI} 
+          onClose={() => setShowLogosAI(false)} 
+          context={logosAIContext}
+          type="bible"
+        />
         </div>
       </div>
     );

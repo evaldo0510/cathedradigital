@@ -26,6 +26,9 @@ import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
 import CatechismOfflineFallback from './CatechismOfflineFallback';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import ReadingControlPanel from './ReadingControlPanel';
+import LogosAI from './LogosAI';
 
 
 
@@ -135,8 +138,10 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
+  const { settings } = useReadingSettings();
+
   return (
-    <div className="reader-text text-foreground/90 leading-[2] text-lg md:text-xl font-serif prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2">
+    <div className={`reader-text text-foreground/90 leading-[2] font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover
@@ -200,8 +205,22 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         <div className="flex items-center gap-2">
           <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
           <div className="flex items-center gap-1">
-            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
+            <Button onClick={() => {
+              toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` });
+              // Contextual AI trigger removed from heart button to avoid confusion, but keeping the structure
+            }} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
               <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
+            </Button>
+            <Button 
+              onClick={() => {
+                // We need a way to trigger LogosAI from here. 
+                // Since LogosAI state is in the parent Catechism component, we should pass a callback.
+                (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }));
+              }} 
+              className="p-2 rounded-full hover:bg-primary/10 transition-all text-muted-foreground hover:text-primary"
+              title="Perguntar ao Logos IA"
+            >
+              <Icons.Sparkles className="w-4 h-4" />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
           </div>
@@ -230,6 +249,19 @@ const Catechism: React.FC = () => {
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
+  const [showLogosAI, setShowLogosAI] = useState(false);
+  const { settings } = useReadingSettings();
+  const [logosAIContext, setLogosAIContext] = useState('');
+
+  useEffect(() => {
+    const handleOpenAI = (e: any) => {
+      if (e.detail?.context) setLogosAIContext(e.detail.context);
+      setShowLogosAI(true);
+    };
+    window.addEventListener('open-logos-ai' as any, handleOpenAI);
+    return () => window.removeEventListener('open-logos-ai' as any, handleOpenAI);
+  }, []);
+
   const isAutoScrolling = React.useRef(false);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user } = useAuth();
@@ -400,13 +432,25 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
           </div>
-          {(crossRefs.length > 0 || docsRefs.length > 0) && (
-            <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-              className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-              title="Catecismo & Documentos">
-              <Icons.Cross className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <ReadingControlPanel />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+            >
+              <Icons.Sparkles className="w-4 h-4" />
+              <span className="hidden sm:inline">Logos IA</span>
             </Button>
-          )}
+            {(crossRefs.length > 0 || docsRefs.length > 0) && (
+              <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
+                className={`p-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
+                title="Catecismo & Documentos">
+                <Icons.Cross className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Section navigator */}
@@ -483,6 +527,12 @@ const Catechism: React.FC = () => {
             </Button>
           ))}
         </div>
+        <LogosAI 
+          isOpen={showLogosAI} 
+          onClose={() => setShowLogosAI(false)} 
+          context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+          type="catechism"
+        />
       </div>
     );
   }
