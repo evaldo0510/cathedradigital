@@ -29,6 +29,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useLang();
+  const { settings } = useReadingSettings();
   
   const isMainPage = [
     AppRoute.DASHBOARD,
