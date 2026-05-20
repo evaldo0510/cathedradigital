@@ -33,6 +33,7 @@ type JournalTab = 'reflection' | 'study';
 
 const SpiritualJournalPage = () => {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState<JournalTab>('reflection');
   const [content, setContent] = useState('');
   const [mood, setMood] = useState('peace');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
