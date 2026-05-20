@@ -316,7 +316,7 @@ const RitualDoDia: React.FC = () => {
               <Sparkles className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
             </div>
             <div 
-              className={`group cursor-pointer transition-all duration-700 ${progress >= 50 ? 'opacity-40' : 'opacity-100'}`}
+              className={`group cursor-pointer transition-all duration-700 ${progress >= 50 ? 'opacity-40' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
               onClick={() => handleProgress(50)}
             >
               <p className="text-lg md:text-xl leading-relaxed text-foreground/80 font-serif italic">
