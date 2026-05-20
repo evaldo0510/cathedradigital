@@ -196,7 +196,7 @@ const RitualDoDia: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
-                {isSilent ? <VolumeX className="w-4 h-4 text-primary/40" /> : <Sparkles className="w-4 h-4 text-primary/40" strokeWidth={1} />}
+                <BookOpen className="w-4 h-4 text-primary/40" strokeWidth={1.5} />
               </div>
               <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40">
                 Ritual do Dia
@@ -223,6 +223,16 @@ const RitualDoDia: React.FC = () => {
             )}
             
             <div className="flex items-center gap-2 mt-2">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className={`w-8 h-8 rounded-full transition-colors ${isSilent ? 'text-primary' : 'text-primary/30 hover:text-primary'}`}
+                onClick={() => updateSettings(!isSilent, reminderTime)}
+                title={isSilent ? "Desativar Modo Silencioso" : "Ativar Modo Silencioso"}
+              >
+                {isSilent ? <VolumeX className="w-4 h-4" /> : <Sparkles className="w-4 h-4" strokeWidth={1} />}
+              </Button>
+
               <Button 
                 variant="ghost" 
                 size="icon" 
