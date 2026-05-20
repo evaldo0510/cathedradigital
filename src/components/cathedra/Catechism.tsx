@@ -225,7 +225,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
               <Icons.Sparkles className="w-4 h-4" />
             </Button>
             <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
-            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} />
+            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
