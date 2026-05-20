@@ -50,6 +50,7 @@ const SEOVerificationPage = () => {
   const [pages, setPages] = useState<SEOPageData[]>([]);
   const [isScanningAll, setIsScanningAll] = useState(false);
   const [isLoadingSitemap, setIsLoadingSitemap] = useState(true);
+  const [scanMode, setScanMode] = useState<'static' | 'render'>('static');
 
   useEffect(() => {
     fetchSitemap();
