@@ -8,18 +8,37 @@ import { GuidedReadingFlow } from '@/components/cathedra/GuidedReadingFlow';
 import AppHeader from '@/components/cathedra/AppHeader';
 import SEOHead from '@/components/SEOHead';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useLang } from '@/hooks/useLang';
+import { useReadingMode } from '@/hooks/useReadingMode';
 
 const GuidedReadingPage: React.FC = () => {
   const navigate = useNavigate();
   const { settings } = useReadingSettings();
+  const { user, signOut } = useAuth();
+  const { lang, setLang } = useLang();
+  const { isNight, toggle } = useReadingMode();
+
+  const handleToggleSidebar = () => {
+    // Implement or dispatch event if needed
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-1000">
-      <AppHeader />
+      <AppHeader 
+        user={user}
+        isDark={isNight}
+        onToggleDark={toggle}
+        lang={lang}
+        onChangeLang={setLang}
+        onSignOut={signOut}
+        onOpenSidebar={handleToggleSidebar}
+      />
       
       <SEOHead 
-        title="Jornada de Leitura Guiada | Cathedra Digital"
+        title="Jornada de Leitura Guiada"
         description="Uma experiência contemplativa e organizada para sua leitura espiritual diária."
+        path="/jornada-guiada"
       />
 
       <main className="app-container py-32 md:py-48 flex flex-col items-center">
