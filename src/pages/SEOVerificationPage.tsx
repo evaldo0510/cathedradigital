@@ -358,8 +358,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   <Button variant="ghost" size="sm" onClick={() => window.open(`${BASE_URL}${page.path}`, '_blank')}>
                     <ExternalLink className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')}>
-                    <Copy className="w-4 h-4" title="Copiar Link" />
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')} title="Copiar Link">
+                    <Copy className="w-4 h-4" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')} title="Copiar Tags HTML">
                     <Code className="w-4 h-4" />
