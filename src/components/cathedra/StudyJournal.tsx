@@ -205,7 +205,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           {format(new Date(note.created_at), "d 'de' MMM, yy", { locale: ptBR })}
         </span>
         <Button variant="ghost" size="sm" className="h-7 text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
-          Ver Contexto <Icons.ArrowUpRight className="ml-1 w-3 h-3" />
+          Ver Contexto <Icons.ArrowRight className="ml-1 w-3 h-3" />
         </Button>
       </div>
     </motion.div>
