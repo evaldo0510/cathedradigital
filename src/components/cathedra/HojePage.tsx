@@ -12,8 +12,9 @@ import HomeMainDoors from './HomeMainDoors';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
-import { DashboardSkeleton } from './DashboardSkeleton';
-import DevDataInspector from './DevDataInspector';
+import { DashboardSkeleton } from '@/components/cathedra/HomeSkeletons';
+import DevDataInspector from '@/components/cathedra/DevDataInspector';
+import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 
 const LITURGICAL_QUOTES = [
   '"Sede misericordiosos como vosso Pai é misericordioso." — Lc 6,36',
