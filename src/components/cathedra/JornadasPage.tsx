@@ -225,9 +225,61 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   return (
     <>
     <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
-    <div className="app-container py-12 md:py-24 space-y-24 md:space-y-40">
+    <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
       <div ref={ref} className="desktop-layout">
-        <div className="desktop-main space-y-16">
+        <div className="desktop-main space-y-12">
+          
+          {/* Journey Reminder Settings */}
+          {user && (
+            <div className="flex justify-end">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="rounded-full gap-2 text-[10px] font-black uppercase tracking-widest border-primary/20 hover:bg-primary/5">
+                    <Icons.Bell className="w-3.5 h-3.5" /> Lembrete de Jornada
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="font-display text-2xl text-primary">Lembrete de Jornada</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-4 space-y-6">
+                    <div className="space-y-3">
+                      <label className="text-xs font-bold uppercase tracking-widest text-primary/60">Horário Preferencial</label>
+                      <div className="flex gap-2">
+                        <Input 
+                          type="time" 
+                          defaultValue={profile?.journey_reminder_time || "07:00"}
+                          id="journey-time"
+                          className="font-mono"
+                        />
+                        <Button 
+                          onClick={async () => {
+                            const time = (document.getElementById('journey-time') as HTMLInputElement).value;
+                            const { error } = await supabase
+                              .from('profiles')
+                              .update({ journey_reminder_time: time })
+                              .eq('id', user.id);
+                            
+                            if (!error) {
+                              toast.success("Lembrete configurado para " + time);
+                            } else {
+                              toast.error("Erro ao salvar lembrete");
+                            }
+                          }}
+                          className="bg-primary text-[10px] font-bold uppercase tracking-widest"
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground font-serif italic">
+                        Receba uma notificação no horário escolhido para manter sua constância.
+                      </p>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
       {/* Header */}
       <motion.div 
         className="text-center space-y-8 max-w-3xl mx-auto"
