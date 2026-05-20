@@ -155,6 +155,8 @@ const Magisterium: React.FC = () => {
   const navigate = useNavigate();
   useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
+  const { saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -162,6 +164,14 @@ const Magisterium: React.FC = () => {
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const fetchLastRead = async () => {
+      const lr = await getLastRead();
+      setLastReadMark(lr);
+    };
+    fetchLastRead();
+  }, [getLastRead]);
 
   const filteredDocs = useMemo(() => {
     return DOCS_LIST.filter(doc => {
