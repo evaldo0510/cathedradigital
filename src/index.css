@@ -471,6 +471,31 @@
   opacity: 1;
 }
 
+/* Focused Reading Mode - Hides everything except content */
+.full-screen-mode .app-header,
+.full-screen-mode .bottom-nav,
+.full-screen-mode .sidebar,
+.full-screen-mode .cathedral-footer,
+.full-screen-mode .sidebar-trigger {
+  display: none !important;
+}
+
+.full-screen-mode main {
+  padding-top: 2rem !important;
+  padding-bottom: 4rem !important;
+}
+
+.full-screen-mode .reading-controls-floating {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.full-screen-mode:hover .reading-controls-floating {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .visual-silence .hero-decorative-elements,
 .visual-silence .coming-soon-badge,
 .visual-silence .footer-quote {
@@ -488,6 +513,17 @@
   scroll-behavior: auto !important;
 }
 
+/* Micro-rhythms for contemplation */
+.monastic-entry {
+  animation: monasticFadeIn 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes monasticFadeIn {
+  0% { opacity: 0; filter: blur(10px); }
+  30% { opacity: 0.1; filter: blur(5px); }
+  100% { opacity: 1; filter: blur(0); }
+}
+
 /* Contemplative Mode */
 .contemplative-mode {
   filter: sepia(0.08) contrast(0.96) brightness(1.02);
@@ -497,6 +533,7 @@
 .contemplative-mode .shadow-premium-hover {
   box-shadow: 0 8px 30px rgba(0,0,0,0.01) !important;
 }
+
 
 /* Monastic Sanctuary Layer */
 .monastic-sanctuary {

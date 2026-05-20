@@ -148,32 +148,18 @@ const HojePage: React.FC = () => {
           transition={{ duration: 2.5, ease: [0.2, 0.8, 0.2, 1] }}
           className="text-center space-y-24 max-w-6xl mx-auto"
         >
-          <div className="space-y-12">
-            <div className="flex flex-col items-center gap-6">
-              <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-              <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
-                {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
-              </p>
-            </div>
-            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
-              Silêncio <br />
-              <span className="text-secondary/60 italic font-serif">da Alma.</span>
-            </h1>
+          <div className="flex flex-col items-center gap-6">
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+            <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
+              {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
+            </p>
           </div>
-          
-          <div className="flex items-center justify-center gap-10 flex-wrap opacity-40 hover:opacity-100 transition-opacity duration-1000">
-             {(profile?.streak || 0) > 0 && (
-              <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
-                <Icons.Zap className="w-3.5 h-3.5 text-primary/40" />
-                <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.streak} {profile?.streak === 1 ? 'Dies' : 'Dies'}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-4 px-10 py-4 rounded-full bg-primary/[0.01] border border-primary/5 transition-all hover:bg-primary/[0.03]">
-              <Icons.Star className="w-3.5 h-3.5 text-secondary/40" />
-              <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.3em]">{profile?.xp || 0} XP</span>
-            </div>
-          </div>
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
+            Mosteiro <br />
+            <span className="text-secondary/60 italic font-serif">Digital.</span>
+          </h1>
         </motion.div>
+
 
         {/* PRÓXIMO PASSO - RECOMENDAÇÃO DINÂMICA */}
         {nextUp && (
@@ -243,43 +229,38 @@ const HojePage: React.FC = () => {
             </section>
           </div>
 
-          <aside className="lg:col-span-4 stack-spacing">
-            {/* EM BREVE - EVOLUÇÃO FUTURA */}
-            <section className="space-y-12">
-              <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
-                  Em Breve
-                </h2>
-                <div className="h-px flex-1 bg-border/30" />
+          <aside className="lg:col-span-4 space-y-16">
+            {/* FRASES DO DIA - CONTEMPLAÇÃO */}
+            <div className="pt-12 px-8 text-center bg-primary/[0.01] rounded-[4rem] p-16 border border-primary/5 transition-all hover:bg-primary/[0.02] duration-1000">
+               <Icons.Quote className="w-10 h-10 text-secondary/10 mx-auto mb-10" />
+               <p className="text-2xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
+                {todayQuote}
+              </p>
+            </div>
+
+            {/* EM BREVE - DISCRETO */}
+            <section className="pt-24 opacity-20 hover:opacity-100 transition-opacity duration-1000">
+              <div className="flex items-center gap-6 mb-10">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">Futuro</span>
+                <div className="h-px flex-1 bg-primary/5" />
               </div>
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 gap-4">
                 {[
-                  { title: 'Jornadas de Fé', icon: <Icons.Journeys />, label: 'Formação' },
-                  { title: 'Comunidade Contemplativa', icon: <Icons.Users />, label: 'Social' },
-                  { title: 'Certamen (Quiz Avançado)', icon: <Icons.Trophy />, label: 'Desafio' },
-                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity />, label: 'Progresso' },
+                  { title: 'Jornadas de Fé', icon: <Icons.Journeys /> },
+                  { title: 'Comunidade Contemplativa', icon: <Icons.Users /> },
+                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity /> },
                 ].map((item) => (
-                  <div key={item.title} className="p-6 rounded-[2rem] border border-border/20 bg-muted/20 opacity-60 flex items-center gap-4 group">
-                    <div className="w-12 h-12 rounded-premium-sm bg-primary/5 flex items-center justify-center text-primary/40">
-                      {React.cloneElement(item.icon as React.ReactElement, { className: 'w-6 h-6' })}
+                  <div key={item.title} className="flex items-center gap-4 group cursor-default">
+                    <div className="text-primary/10 group-hover:text-primary/30 transition-colors">
+                      {React.cloneElement(item.icon as React.ReactElement, { className: 'w-4 h-4', strokeWidth: 1 })}
                     </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/20 mb-1">{item.label}</p>
-                      <h4 className="text-sm font-bold text-primary/60">{item.title}</h4>
-                    </div>
+                    <h4 className="text-[10px] font-bold text-primary/10 uppercase tracking-widest group-hover:text-primary/30 transition-colors">{item.title}</h4>
                   </div>
                 ))}
               </div>
             </section>
-
-            {/* FRASES DO DIA */}
-            <div className="pt-12 px-8 text-center bg-primary/[0.02] rounded-[3rem] p-12 border border-border/10">
-               <Icons.Quote className="w-8 h-8 text-secondary/20 mx-auto mb-6" />
-               <p className="text-lg text-primary/60 font-serif italic leading-relaxed">
-                {todayQuote}
-              </p>
-            </div>
           </aside>
+
         </div>
       </div>
     </div>

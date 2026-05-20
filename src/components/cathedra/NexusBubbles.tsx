@@ -39,6 +39,7 @@ interface TagBubbleProps {
   isSuggested?: boolean;
   tabIndex?: number;
   onKeyDown?: (e: React.KeyboardEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
   className?: string;
   profileId?: ProfileId | null;
   navigateOnClick?: boolean;
@@ -46,7 +47,9 @@ interface TagBubbleProps {
   size?: 'xs' | 'sm' | 'md';
 }
 
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
+
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -55,6 +58,55 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
+  
+  // Navigation stack for context-to-context breadcrumbs
+  const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
+
+  const currentTag = navHistory[navHistory.length - 1];
+
+  const fetchContentForTag = async (targetTag: Tag) => {
+    const startTime = performance.now();
+    setMetrics({ startTime });
+    setStatus('loading');
+    setErrorDetails(null);
+    setContent([]);
+    setLogosInsight(null);
+    
+    try {
+      const uniqueResults = await fetchNexusTagContent(targetTag);
+      setContent(uniqueResults);
+
+      // IA Fetch
+      try {
+        const result = await getSpiritualInsight(targetTag.label, undefined, profileId);
+        if (!result.error && result.content) {
+          setLogosInsight(result.content);
+        }
+      } catch (iaErr) {
+        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
+      }
+
+      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
+      setStatus('success');
+    } catch (e: any) {
+      console.error(`[Nexus Diagnostic] Error fetching ${targetTag.label}:`, e);
+      setErrorDetails(e.message || 'Erro desconhecido');
+      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
+      setStatus('error');
+    }
+  };
+
+  const handlePushTag = (newTag: Tag) => {
+    setNavHistory(prev => [...prev, newTag]);
+    fetchContentForTag(newTag);
+  };
+
+  const handlePopTag = (index: number) => {
+    const newHistory = navHistory.slice(0, index + 1);
+    setNavHistory(newHistory);
+    fetchContentForTag(newHistory[newHistory.length - 1]);
+  };
+
 
   const { data: allThemes } = useQuery({
     queryKey: ['tags'],
@@ -72,40 +124,6 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
-  const fetchContent = async () => {
-    if (content.length > 0 || status === 'loading') return;
-    const startTime = performance.now();
-    setMetrics({ startTime });
-    setStatus('loading');
-    setErrorDetails(null);
-    
-    const normalizedTag = normalizeText(tag.label);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
-    
-    try {
-      const uniqueResults = await fetchNexusTagContent(tag);
-      setContent(uniqueResults);
-
-      // IA Fetch
-      try {
-        const result = await getSpiritualInsight(tag.label, undefined, profileId);
-        if (!result.error && result.content) {
-          setLogosInsight(result.content);
-        }
-      } catch (iaErr) {
-        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
-      }
-
-      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
-      setStatus('success');
-    } catch (e: any) {
-      console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
-      setErrorDetails(e.message || 'Erro desconhecido');
-      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
-      setStatus('error');
-    }
-  };
-
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
@@ -121,8 +139,9 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         return;
       }
       setOpen(val);
-      if (val) fetchContent();
+      if (val) fetchContentForTag(tag);
     }}>
+
       <PopoverTrigger asChild>
         <BubbleTag
           label={tag.label}
@@ -131,11 +150,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           isSelected={open}
           isSuggested={isSuggested}
           size={size}
-          onClick={() => {
-            if (navigateOnClick) {
+          onClick={(e) => {
+            if (onClick) {
+              onClick(e);
+            } else if (navigateOnClick) {
               navigate(`${AppRoute.TEMAS}/${tag.slug}`);
             }
           }} 
+
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
@@ -165,28 +187,52 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         </div>
         
         <div className="p-10 space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs */}
+          {/* Path Navigation - Monastic Breadcrumbs with History */}
           <nav className="flex items-center gap-3 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
             <button 
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                setNavHistory([tag]);
+              }}
               className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-2 group"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-border group-hover:bg-primary/40 transition-colors" />
               Cathedra
             </button>
             <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
-            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Nexus</span>
-            <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary bg-primary/[0.03] px-3 py-1 rounded-full border border-primary/5">
-              {tag.label}
-            </span>
+            <button 
+              onClick={() => handlePopTag(0)}
+              className={`text-[9px] font-black uppercase tracking-[0.2em] transition-all ${navHistory.length === 1 ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'}`}
+            >
+              Nexus
+            </button>
+            
+            {navHistory.map((hTag, idx) => (
+              <React.Fragment key={hTag.id}>
+                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/20" />
+                <button 
+                  onClick={() => handlePopTag(idx)}
+                  disabled={idx === navHistory.length - 1}
+                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-full border transition-all ${
+                    idx === navHistory.length - 1 
+                      ? 'text-primary bg-primary/[0.03] border-primary/5' 
+                      : 'text-muted-foreground/40 border-transparent hover:text-primary hover:bg-primary/5'
+                  }`}
+                >
+                  {hTag.label}
+                </button>
+              </React.Fragment>
+            ))}
           </nav>
 
           {/* Elegant Map Header */}
           <header className="flex flex-col gap-2 items-center justify-center text-center py-4">
             <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/20">SENTIERO DI SAPIENZA</span>
-            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">Mapeando as conexões vivas da Fé e da Tradição</p>
+            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
+              {navHistory.length > 1 ? `Explorando conexões de ${currentTag.label}` : 'Mapeando as conexões vivas da Fé e da Tradição'}
+            </p>
           </header>
+
 
 
           {status === 'loading' ? (
@@ -204,11 +250,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           ) : status === 'error' && content.length === 0 ? (
             <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-premium border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
-              <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-              <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
-              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
-            </div>
-          ) : (
+            <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
+            <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
+            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
+          </div>
+        ) : (
+
             <>
               {status === 'error' && content.length > 0 && (
                 <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-premium text-premium-tiny font-bold flex items-center gap-2 mb-2">
@@ -304,8 +351,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                               size="xs"
                                               onClick={(e) => {
                                                 e.stopPropagation();
-                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
-                                                setOpen(false);
+                                                handlePushTag(matchingTag);
                                               }}
                                             />
                                           );
@@ -324,6 +370,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 </div>
               )}
 
+
               {/* Related Themes (The "Map" feeling) */}
               <div className="pt-10 space-y-6 border-t border-border/5">
                 <div className="flex flex-col items-center gap-2">
@@ -331,10 +378,21 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                   <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {allThemes?.filter(t => t.category === tag.category && t.id !== tag.id).slice(0, 5).map((t, i) => (
-                    <TagBubble key={t.id} tag={t} index={i} size="xs" navigateOnClick className="opacity-60 hover:opacity-100 transition-opacity" />
+                  {allThemes?.filter(t => t.category === currentTag.category && t.id !== currentTag.id).slice(0, 5).map((t, i) => (
+                    <TagBubble 
+                      key={t.id} 
+                      tag={t} 
+                      index={i} 
+                      size="xs" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePushTag(t);
+                      }}
+                      className="opacity-60 hover:opacity-100 transition-opacity" 
+                    />
                   ))}
                 </div>
+
               </div>
 
               {!logosInsight && status === 'success' && content.length === 0 && (
