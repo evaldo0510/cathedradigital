@@ -150,6 +150,15 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
             <p className="text-xs text-muted-foreground italic text-center py-2">Nenhuma anotação ainda.</p>
           )}
         </div>
+      {notes.length > 0 && (
+        <div className="notes-panel-print hidden">
+          {notes.map(note => (
+            <div key={note.id} className="mb-2">
+              <span className="text-[8pt] text-gray-500">{new Date(note.created_at).toLocaleDateString()} — </span>
+              {note.note_text}
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
