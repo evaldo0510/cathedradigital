@@ -26,6 +26,11 @@ const RitualDoDia: React.FC = () => {
     localStorage.setItem(`cathedra_daily_progress_${today}`, newVal.toString());
   };
 
+  const resetProgress = () => {
+    setProgress(0);
+    localStorage.removeItem(`cathedra_daily_progress_${today}`);
+  };
+
   const dayOfYear = useMemo(() => {
     const now = new Date();
     const start = new Date(now.getFullYear(), 0, 0);
@@ -57,15 +62,23 @@ const RitualDoDia: React.FC = () => {
               </span>
             </div>
             {progress > 0 && (
-              <div className="flex items-center gap-2 mt-2">
-                <div className="h-1 w-24 bg-border/20 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progress}%` }}
-                    className="h-full bg-secondary"
-                  />
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-1 w-24 bg-border/20 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress}%` }}
+                      className="h-full bg-secondary"
+                    />
+                  </div>
+                  <span className="text-[8px] font-bold text-secondary uppercase tracking-widest">{progress}%</span>
                 </div>
-                <span className="text-[8px] font-bold text-secondary uppercase tracking-widest">{progress}%</span>
+                <button 
+                  onClick={resetProgress}
+                  className="text-[8px] font-bold text-muted-foreground/40 hover:text-secondary uppercase tracking-widest border-b border-transparent hover:border-secondary/20 transition-all"
+                >
+                  Recomeçar
+                </button>
               </div>
             )}
           </div>

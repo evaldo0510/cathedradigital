@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
@@ -11,7 +11,7 @@ import { SectionSkeleton } from './HomeSkeletons';
 import { ComingSoonSection } from './ComingSoon';
 import { VisualSilenceControls } from './VisualSilenceControls';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, History, Search } from 'lucide-react';
 
 
 interface HomeMainContentProps {
@@ -24,10 +24,36 @@ interface HomeMainContentProps {
 const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
+
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('cathedra_logos_messages');
+    if (savedMessages) {
+      const messages = JSON.parse(savedMessages);
+      // Get unique user messages, last 5
+      const userQuestions = messages
+        .filter((m: any) => m.role === 'user')
+        .map((m: any) => m.content)
+        .reverse();
+      const uniqueQuestions = Array.from(new Set(userQuestions)).slice(0, 5) as string[];
+      setHistory(uniqueQuestions);
+    }
+  }, []);
 
   const handleLogosSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (logosQuery.trim()) {
+      // Save to local chat history so it appears in the chat bubble too
+      const savedMessages = localStorage.getItem('cathedra_logos_messages');
+      const messages = savedMessages ? JSON.parse(savedMessages) : [];
+      const newMessage = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: logosQuery,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
+      
       navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(logosQuery)}`);
     }
   };
@@ -118,17 +144,49 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              {['Resumir leitura atual', 'Quem foi São Bento?', 'O que é a Graça?'].map((suggestion) => (
-                <button
-                  key={suggestion}
-                  type="button"
-                  onClick={() => setLogosQuery(suggestion)}
-                  className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors px-3 py-1.5 border border-border/20 rounded-full hover:border-primary/20"
-                >
-                  {suggestion}
-                </button>
-              ))}
+            <div className="mt-8 space-y-6 w-full">
+              {history.length > 0 && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-primary/30 px-2">
+                    <History className="w-3 h-3" strokeWidth={1.5} />
+                    Consultas Recentes
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {history.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          setLogosQuery(item);
+                          navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(item)}`);
+                        }}
+                        className="text-[10px] font-medium text-primary/50 hover:text-primary transition-all px-4 py-2 bg-primary/[0.03] border border-primary/5 rounded-xl hover:bg-white hover:shadow-sm"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest text-primary/30 px-2">
+                  <Search className="w-3 h-3" strokeWidth={1.5} />
+                  Sugestões
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {['Resumir leitura atual', 'Quem foi São Bento?', 'O que é a Graça?'].map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      onClick={() => setLogosQuery(suggestion)}
+                      className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-colors px-3 py-1.5 border border-border/20 rounded-full hover:border-primary/20"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </form>
         </HomeCard>
