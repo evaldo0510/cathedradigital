@@ -5,7 +5,7 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useAuth } from '@/hooks/useAuth';
 
 interface NotesPanelProps {
-  contentType: 'magisterium' | 'catechism';
+  contentType: 'magisterium' | 'catechism' | 'bible';
   contentId: string;
   contentLabel?: string;
 }
