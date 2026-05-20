@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 import {
   Tooltip,
@@ -18,6 +19,7 @@ interface HomeMainDoorsProps {
 const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { settings } = useReadingSettings();
   
   const doors = [
     {
@@ -25,7 +27,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A Palavra de Deus.',
       icon: Icons.Bible,
       route: AppRoute.BIBLE,
-      shortcut: 'B',
+      shortcut: settings.shortcuts.bible,
       tooltip: 'Explore as Sagradas Escrituras em profundidade.'
     },
     {
@@ -33,7 +35,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A base da doutrina.',
       icon: Icons.Catechism,
       route: AppRoute.CATECHISM,
-      shortcut: 'C',
+      shortcut: settings.shortcuts.catechism,
       tooltip: 'Aprofunde seu conhecimento na doutrina da Igreja.'
     },
     {
@@ -41,7 +43,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A voz da Igreja.',
       icon: Icons.Magisterium,
       route: AppRoute.MAGISTERIUM,
-      shortcut: 'M',
+      shortcut: settings.shortcuts.magisterium,
       tooltip: 'Documentos, encíclicas e a Tradição Viva.'
     },
     {
@@ -49,14 +51,14 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'O auxílio inteligente.',
       icon: Icons.Brain,
       route: AppRoute.BUSCAR,
-      shortcut: 'L',
+      shortcut: settings.shortcuts.logos,
       tooltip: 'Diálogo espiritual e esclarecimento com IA.'
     },
   ];
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey) {
+      if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
         const key = e.key.toLowerCase();
         const door = doors.find(d => d.shortcut.toLowerCase() === key);
         if (door) {
@@ -72,6 +74,8 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
 
   const handleNavigate = (route: string) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Add a flag to auto-focus the content on the next page
+    sessionStorage.setItem('cathedra_auto_focus', 'true');
     navigate(route);
   };
 
