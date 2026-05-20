@@ -28,7 +28,6 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
         heroScale={1} 
         heroY={heroY} 
         onStart={onStart} 
-        onAbout={onAbout} 
       />
       <div className="sr-only">Rolar para baixo para explorar o santuário digital</div>
       <HeroScrollIndicator />
