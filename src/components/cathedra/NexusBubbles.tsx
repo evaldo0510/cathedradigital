@@ -220,11 +220,12 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           ) : status === 'error' && content.length === 0 ? (
             <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-premium border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
-              <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-              <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
-              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
-            </div>
-          ) : (
+            <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
+            <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
+            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
+          </div>
+        ) : (
+
             <>
               {status === 'error' && content.length > 0 && (
                 <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-premium text-premium-tiny font-bold flex items-center gap-2 mb-2">
