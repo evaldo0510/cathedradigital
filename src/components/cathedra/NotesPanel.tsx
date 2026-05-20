@@ -150,6 +150,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
             <p className="text-xs text-muted-foreground italic text-center py-2">Nenhuma anotação ainda.</p>
           )}
         </div>
+      )}
       {notes.length > 0 && (
         <div className="notes-panel-print hidden">
           {notes.map(note => (
