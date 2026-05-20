@@ -1,15 +1,18 @@
 import fs from 'fs';
 import path from 'path';
+import { extractRoutesFromTypesAST, getPublicRoutes } from './utils';
 
 /**
  * Script to validate sitemap.xml and legacy redirects.
+ * Also compares sitemap entries with AppRoute enum from AST.
  */
 
 const SITEMAP_PATH = path.join(process.cwd(), 'public', 'sitemap.xml');
 const REDIRECTS_PATH = path.join(process.cwd(), 'public', '_redirects');
+const BASE_URL = 'https://www.cathedradigital.com.br';
 
-function validateSitemap() {
-  console.log('🔍 Validating sitemap.xml...');
+function validateSitemapContent() {
+  console.log('🔍 Validating sitemap.xml against AppRoute enum...');
   if (!fs.existsSync(SITEMAP_PATH)) {
     console.error('❌ Sitemap file not found!');
     process.exit(1);
@@ -17,22 +20,44 @@ function validateSitemap() {
 
   const content = fs.readFileSync(SITEMAP_PATH, 'utf-8');
   
-  // Basic XML structure check
-  if (!content.startsWith('<?xml') || !content.includes('<urlset') || !content.includes('</urlset>')) {
-    console.error('❌ Invalid XML structure in sitemap.xml');
+  // Extract URLs from sitemap
+  const urlRegex = /<loc>(https:\/\/www\.cathedradigital\.com\.br[^<]*)<\/loc>/g;
+  const sitemapUrls: string[] = [];
+  let match;
+  while ((match = urlRegex.exec(content)) !== null) {
+    const url = match[1];
+    const path = url.replace(BASE_URL, '') || '/';
+    sitemapUrls.push(path);
+  }
+
+  // Get expected routes from AST
+  const allRoutes = extractRoutesFromTypesAST();
+  const expectedRoutes = getPublicRoutes(allRoutes);
+
+  // Compare
+  const missingInSitemap = expectedRoutes.filter(r => !sitemapUrls.includes(r));
+  const extraInSitemap = sitemapUrls.filter(r => !expectedRoutes.includes(r));
+
+  let hasErrors = false;
+
+  if (missingInSitemap.length > 0) {
+    console.error('❌ Missing routes in sitemap:');
+    missingInSitemap.forEach(r => console.error(`   - ${r}`));
+    hasErrors = true;
+  }
+
+  if (extraInSitemap.length > 0) {
+    console.error('❌ Extra routes in sitemap (not in AppRoute or private):');
+    extraInSitemap.forEach(r => console.error(`   - ${r}`));
+    hasErrors = true;
+  }
+
+  if (hasErrors) {
+    console.error('❌ Sitemap is out of sync with AppRoute enum!');
     process.exit(1);
   }
 
-  // Check for essential routes
-  const essentialRoutes = ['https://www.cathedradigital.com.br', '/hoje', '/bible', '/catechism'];
-  essentialRoutes.forEach(route => {
-    if (!content.includes(route)) {
-      console.error(`❌ Missing essential route in sitemap: ${route}`);
-      process.exit(1);
-    }
-  });
-
-  console.log('✅ Sitemap validation passed!');
+  console.log(`✅ Sitemap validation passed! Found ${sitemapUrls.length} synchronized routes.`);
 }
 
 function validateRedirects() {
@@ -66,12 +91,21 @@ function validateRedirects() {
     }
   });
 
+  // Check for essential legacy redirects
+  const essentialRedirects = ['/dashboard', '/biblia', '/catecismo', '/curso-pch'];
+  essentialRedirects.forEach(route => {
+    if (!content.includes(route)) {
+      console.error(`❌ Missing essential legacy redirect: ${route}`);
+      errorCount++;
+    }
+  });
+
   if (errorCount > 0) {
     process.exit(1);
   }
   console.log('✅ Redirects validation passed!');
 }
 
-validateSitemap();
+validateSitemapContent();
 validateRedirects();
 process.exit(0);
