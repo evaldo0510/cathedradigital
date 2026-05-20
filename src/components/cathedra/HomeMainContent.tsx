@@ -184,12 +184,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* EM BREVE */}
       <ComingSoonSection className="pt-24" />
 
-      {/* FOOTER QUOTE */}
-      <div className="pt-32 text-center opacity-20 hover:opacity-40 transition-opacity duration-1000">
-        <p className="text-sm font-serif italic max-w-sm mx-auto leading-relaxed">
-          "A beleza salvará o mundo." — Dostoievski
-        </p>
-      </div>
     </div>
   );
 };
