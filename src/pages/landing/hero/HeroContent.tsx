@@ -1,7 +1,10 @@
 import { motion, MotionValue } from "framer-motion";
 import { ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import logosAvatar from "@/assets/logos-avatar.png";
 import { HomeButton } from "@/components/cathedra/HomeButton";
+import { Icons } from "@/constants";
+import { AppRoute } from "@/types";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
@@ -22,6 +25,7 @@ interface HeroContentProps {
 }
 
 const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: HeroContentProps) => {
+  const navigate = useNavigate();
   const scrollToVideo = () => {
     document.getElementById('video')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -101,10 +105,26 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.8 }}
-          className="w-full max-w-sm flex flex-col gap-3"
+          transition={{ delay: 0.6 }}
+          className="w-full flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-4"
         >
-          {/* Quick access options removed for minimalism */}
+          {[
+            { label: 'Bíblia', icon: Icons.Bible, route: AppRoute.BIBLE },
+            { label: 'Catecismo', icon: Icons.Catechism, route: AppRoute.CATECHISM },
+            { label: 'Magistério', icon: Icons.Magisterium, route: AppRoute.MAGISTERIUM },
+            { label: 'Logos IA', icon: Icons.Search, route: AppRoute.BUSCAR },
+          ].map((item) => (
+            <button
+              key={item.label}
+              onClick={() => navigate(item.route)}
+              className="flex items-center gap-2.5 px-5 py-2.5 rounded-2xl border border-border/5 bg-background/50 hover:bg-background hover:border-primary/10 transition-all duration-500 group"
+            >
+              <item.icon className="w-3.5 h-3.5 text-primary/30 group-hover:text-primary transition-colors duration-500" strokeWidth={1.5} />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors duration-500">
+                {item.label}
+              </span>
+            </button>
+          ))}
         </motion.div>
 
         <div className="flex items-center gap-3 opacity-40">
