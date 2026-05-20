@@ -26,6 +26,8 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
     window.dispatchEvent(new CustomEvent('toggle-audio'));
   };
 
+  if (settings.totalSilence) return null;
+
   return (
     <Button 
       onClick={toggle}
