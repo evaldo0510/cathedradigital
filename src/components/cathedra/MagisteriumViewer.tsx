@@ -140,14 +140,14 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto pb-20 px-4 sm:px-6">
+    <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
         path={`/magisterium/${id}`}
       />
 
-      <div className="sticky top-0 z-30 bg-background  py-4 mb-8 border-b border-border flex items-center justify-between gap-4">
+      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md py-4 mb-12 border-b border-border flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <Button 
             variant="ghost" 
@@ -175,28 +175,43 @@ const MagisteriumViewer: React.FC = () => {
             <Icons.Sparkles className="w-4 h-4" />
             <span className="hidden sm:inline">Logos IA</span>
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()}>
-            <Icons.Download className="w-4 h-4" />
+          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()} title="Imprimir / PDF">
+            <Icons.Printer className="w-4 h-4" />
           </Button>
         </div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-card border border-border rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 shadow-soft"
-      >
-        <div 
-          ref={contentRef}
-          className={`prose prose-slate dark:prose-invert max-w-none reader-text
-            font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight}
-            prose-headings:font-serif prose-headings:text-primary 
-            prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
-            prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
+      <div className="flex flex-col xl:flex-row gap-12 items-start">
+        {/* Elegant side navigation for documents can be implemented if the text has anchors. 
+            For now, we'll keep the side column for balance and potential future TOC. */}
+        <aside className="reader-navigation-aside">
+          <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
+            <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
+            <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
+            <p className="text-xs text-muted-foreground italic text-center leading-relaxed">"O Magistério não está acima da Palavra de Deus, mas ao seu serviço." (Dei Verbum, 10)</p>
+          </div>
+        </aside>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 w-full"
         >
-          <ReactMarkdown>{processedText}</ReactMarkdown>
-        </div>
-      </motion.div>
+          <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
+            <div 
+              ref={contentRef}
+              className={`p-8 md:p-16 lg:p-24 prose prose-slate dark:prose-invert max-w-none reader-text
+                font-size-${settings.fontSize} font-family-${settings.fontFamily} line-height-${settings.lineHeight}
+                prose-headings:font-serif prose-headings:text-primary 
+                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
+                prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
+            >
+              <ReactMarkdown>{processedText}</ReactMarkdown>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
 
       <div className="mt-12 flex justify-center">
         <Button 
