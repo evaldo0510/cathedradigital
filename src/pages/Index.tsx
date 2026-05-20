@@ -10,7 +10,7 @@ import { LangContext } from "@/contexts/LangContext";
 import HomeMainContent from "@/components/cathedra/HomeMainContent";
 
 // Lazy-load secondary components
-const LogosChat = lazy(() => import("@/components/cathedra/LogosChat"));
+
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
 
 
