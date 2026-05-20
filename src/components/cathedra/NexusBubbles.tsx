@@ -55,40 +55,27 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
+  
+  // Navigation stack for context-to-context breadcrumbs
+  const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
 
-  const { data: allThemes } = useQuery({
-    queryKey: ['tags'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('themes').select('*').order('name');
-      if (error) throw error;
-      return (data || []).map((t: any) => ({
-        id: t.id,
-        label: t.name,
-        slug: t.slug,
-        emoji: t.emoji || '⛪',
-        category: t.category || 'Geral'
-      })) as Tag[];
-    },
-    staleTime: 1000 * 60 * 30, // 30 minutes
-  });
+  const currentTag = navHistory[navHistory.length - 1];
 
-  const fetchContent = async () => {
-    if (content.length > 0 || status === 'loading') return;
+  const fetchContentForTag = async (targetTag: Tag) => {
     const startTime = performance.now();
     setMetrics({ startTime });
     setStatus('loading');
     setErrorDetails(null);
-    
-    const normalizedTag = normalizeText(tag.label);
-    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
+    setContent([]);
+    setLogosInsight(null);
     
     try {
-      const uniqueResults = await fetchNexusTagContent(tag);
+      const uniqueResults = await fetchNexusTagContent(targetTag);
       setContent(uniqueResults);
 
       // IA Fetch
       try {
-        const result = await getSpiritualInsight(tag.label, undefined, profileId);
+        const result = await getSpiritualInsight(targetTag.label, undefined, profileId);
         if (!result.error && result.content) {
           setLogosInsight(result.content);
         }
@@ -99,12 +86,24 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
       setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
       setStatus('success');
     } catch (e: any) {
-      console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
+      console.error(`[Nexus Diagnostic] Error fetching ${targetTag.label}:`, e);
       setErrorDetails(e.message || 'Erro desconhecido');
       setMetrics(prev => ({ ...prev, endTime: performance.now() }));
       setStatus('error');
     }
   };
+
+  const handlePushTag = (newTag: Tag) => {
+    setNavHistory(prev => [...prev, newTag]);
+    fetchContentForTag(newTag);
+  };
+
+  const handlePopTag = (index: number) => {
+    const newHistory = navHistory.slice(0, index + 1);
+    setNavHistory(newHistory);
+    fetchContentForTag(newHistory[newHistory.length - 1]);
+  };
+
 
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
