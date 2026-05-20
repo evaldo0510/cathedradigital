@@ -745,10 +745,12 @@ const App: React.FC = () => {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <ReadingSettingsProvider>
-              <BrowserRouter>
-                {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-                <AppLayout />
-              </BrowserRouter>
+              <TooltipProvider>
+                <BrowserRouter>
+                  {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+                  <AppLayout />
+                </BrowserRouter>
+              </TooltipProvider>
             </ReadingSettingsProvider>
           </AuthProvider>
         </QueryClientProvider>
