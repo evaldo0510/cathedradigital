@@ -183,12 +183,12 @@ const ReadingControlPanel: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Ambiente</p>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Ambiente & Silêncio</p>
             <div className="space-y-2">
               <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold">Silêncio Visual</p>
-                  <p className="text-[10px] text-muted-foreground italic">Foco total no sagrado</p>
+                  <p className="text-[10px] text-muted-foreground italic">Reduz poluição visual</p>
                 </div>
                 <input
                   type="checkbox"
@@ -201,7 +201,7 @@ const ReadingControlPanel: React.FC = () => {
               <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
                 <div className="space-y-0.5">
                   <p className="text-xs font-bold">Modo Contemplativo</p>
-                  <p className="text-[10px] text-muted-foreground italic">Suaviza cores e sombras</p>
+                  <p className="text-[10px] text-muted-foreground italic">Cores mais quentes e suaves</p>
                 </div>
                 <input
                   type="checkbox"
@@ -213,8 +213,8 @@ const ReadingControlPanel: React.FC = () => {
 
               <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
                 <div className="space-y-0.5">
-                  <p className="text-xs font-bold">Modo Tela Cheia</p>
-                  <p className="text-[10px] text-muted-foreground italic">Foco absoluto e silêncio</p>
+                  <p className="text-xs font-bold">Modo de Leitura Focada</p>
+                  <p className="text-[10px] text-muted-foreground italic">Esconde menus e distrações</p>
                 </div>
                 <input
                   type="checkbox"
@@ -223,6 +223,20 @@ const ReadingControlPanel: React.FC = () => {
                   className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
                 />
               </div>
+
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-muted/20 border border-transparent hover:border-border/20 transition-all">
+                <div className="space-y-0.5">
+                  <p className="text-xs font-bold">Reduzir Animações</p>
+                  <p className="text-[10px] text-muted-foreground italic">Para uma navegação instantânea</p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.reduceAnimations}
+                  onChange={(e) => updateSettings({ reduceAnimations: e.target.checked })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
+              </div>
+
 
               <div className="pt-2 space-y-3">
                 <div className="flex items-center gap-2 px-1">
