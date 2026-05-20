@@ -328,6 +328,17 @@ const StudyMode: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-12">
+      <SEOHead 
+        title="Logos IA | Inteligência Teológica Minimalista" 
+        description="Consulte a Logos IA para resumos teológicos, conexões bíblicas e suporte espiritual baseado na Tradição e no Magistério da Igreja Católica." 
+        path="/estudo"
+        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
+        keywords="logos ia, inteligência artificial católica, estudo bíblico ia, catecismo ia, teologia católica digital"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Logos IA", path: "/estudo" }
+        ]}
+      />
       <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
         <Shield className="w-12 h-12 text-primary" />
       </div>
