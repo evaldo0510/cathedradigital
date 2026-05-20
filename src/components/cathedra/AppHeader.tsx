@@ -74,12 +74,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
               {[
                 { label: t('home'), route: AppRoute.HOJE },
-                { label: t('encyclopedia'), route: AppRoute.ENCYCLOPEDIA },
-                { label: t('journeys'), route: AppRoute.JORNADAS },
-                { label: t('explore'), route: AppRoute.BIBLIOTECA },
-                { label: t('themes'), route: AppRoute.TEMAS },
-                { label: t('community'), route: AppRoute.COMMUNITY },
-                { label: t('profile'), route: AppRoute.PROFILE },
+                { label: t('bible'), route: AppRoute.BIBLE },
+                { label: t('catechism'), route: AppRoute.CATECHISM },
+                { label: 'Magistério', route: AppRoute.MAGISTERIUM },
+                { label: 'Logos IA', route: AppRoute.BUSCAR },
               ].map(item => (
                 <Button 
                   key={item.route} 
