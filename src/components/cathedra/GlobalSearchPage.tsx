@@ -50,21 +50,48 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   return (
     <>
       <SEOHead title="Busca Global" description="Pesquise santos, glossário, discussões, temas e jornadas em um só lugar." path="/buscar" />
-      <div ref={ref} className="space-y-6 max-w-2xl mx-auto pb-24 px-2 sm:px-4">
-        <motion.div className="text-center space-y-3 pt-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <Icons.Search className="w-8 h-8 mx-auto text-primary" />
-          <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Busca Global</h1>
-          <p className="text-muted-foreground font-serif italic text-sm">Encontre tudo em um só lugar</p>
+      <div ref={ref} className="space-y-12 max-w-4xl mx-auto pb-24 px-4 sm:px-6">
+        <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+            <Icons.Search className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold font-serif text-foreground">Logos IA</h1>
+          <p className="text-muted-foreground font-serif italic text-lg max-w-lg mx-auto">
+            "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
+          </p>
         </motion.div>
 
-        <FuzzySearchInput
-          value={query}
-          onChange={setQuery}
-          placeholder="Buscar santos, termos, discussões, temas, jornadas…"
-          isSearching={anyPending}
-          size="lg"
-          className="max-w-xl mx-auto"
-        />
+        {/* LOGOS IA CHAT INTERFACE */}
+        <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12 shadow-premium space-y-8">
+           <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icons.Sparkles className="w-4 h-4 text-primary" />
+                 </div>
+                 <h2 className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
+              </p>
+           </div>
+           
+           <FuzzySearchInput
+            value={query}
+            onChange={setQuery}
+            placeholder="Qual é a sua dúvida espiritual hoje?"
+            isSearching={anyPending}
+            size="lg"
+            className="max-w-none"
+          />
+        </div>
+
+        <div className="space-y-6">
+          <div className="flex items-center gap-8">
+            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+              Resultados da Pesquisa
+            </h2>
+            <div className="h-px flex-1 bg-border/30" />
+          </div>
 
         {isAllEmpty && (
           <motion.div 
