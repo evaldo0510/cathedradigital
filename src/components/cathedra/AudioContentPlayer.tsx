@@ -29,6 +29,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isPremium } = useAuth();
+  const { settings } = useReadingSettings();
 
   useEffect(() => {
     // Cleanup audio URL on unmount
