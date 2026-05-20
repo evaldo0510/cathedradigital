@@ -9,6 +9,13 @@ interface ReadingSettings {
   highContrast: boolean;
   contemplativeMode: boolean;
   lineHeight: 'relaxed' | 'snug' | 'normal';
+  shortcuts: {
+    bible: string;
+    catechism: string;
+    magisterium: string;
+    logos: string;
+  };
+  logosHistoryLimit: number;
 }
 
 interface ReadingSettingsContextType {
@@ -26,6 +33,13 @@ const defaultSettings: ReadingSettings = {
   highContrast: false,
   contemplativeMode: false,
   lineHeight: 'relaxed',
+  shortcuts: {
+    bible: 'b',
+    catechism: 'c',
+    magisterium: 'm',
+    logos: 'l',
+  },
+  logosHistoryLimit: 20,
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);

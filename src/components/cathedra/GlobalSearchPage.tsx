@@ -11,6 +11,7 @@ import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
+import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 
 type Saint = Tables<'saints'>;
@@ -21,6 +22,7 @@ type Journey = Tables<'journeys'>;
 
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
+  useAutoFocus();
   const [query, setQuery] = useState('');
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
@@ -49,7 +51,16 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   return (
     <>
-      <SEOHead title="Busca Global" description="Pesquise santos, glossário, discussões, temas e jornadas em um só lugar." path="/buscar" />
+      <SEOHead 
+        title="Logos IA | Sabedoria Teológica e Espiritual" 
+        description="Pesquise e dialogue com a Logos IA sobre a Bíblia, Catecismo e Magistério. O seu assistente inteligente para aprofundamento na fé católica." 
+        path="/buscar" 
+        keywords="logos ia, busca teológica, assistente espiritual, bíblia, catecismo, magistério"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Logos IA", path: "/buscar" }
+        ]}
+      />
       <div ref={ref} className="space-y-12 max-w-4xl mx-auto pb-24 px-4 sm:px-6">
         <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">

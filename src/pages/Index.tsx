@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense, useContext } from "react";
+import { useEffect, useState, lazy, Suspense, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
@@ -19,6 +19,21 @@ const Index = () => {
   const { user, profile, loading } = useAuth();
   const { t } = useContext(LangContext);
   const [isJourneyOpen, setIsJourneyOpen] = useState(false);
+
+  const websiteSchema = useMemo(() => ({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Cathedra Digital",
+    "url": "https://www.cathedradigital.com.br",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://www.cathedradigital.com.br/buscar?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }), []);
 
 
   useEffect(() => {
@@ -54,10 +69,17 @@ const Index = () => {
       <LandingHeader />
       
       <SEOHead
-        title="Cathedra Digital | Leitura Diária & Logos IA"
-        description="Aprofunde sua fé com o Portal Cathedra: Bíblia, Catecismo e Magistério. Use a Logos IA para resumos contextuais e siga sua Leitura Diária com progresso persistente."
+        title="Cathedra Digital | Portal de Espiritualidade e Sabedoria Católica"
+        description="Aprofunde sua fé católica com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente."
         path="/"
+        keywords="bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade católica"
+        breadcrumbs={[
+          { name: "Home", path: "/" }
+        ]}
       />
+      <script type="application/ld+json">
+        {JSON.stringify(websiteSchema)}
+      </script>
 
       <HeroSection onStart={handleStart} onAbout={() => navigate(AppRoute.ABOUT)} />
 

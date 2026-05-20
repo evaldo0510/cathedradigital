@@ -125,7 +125,16 @@ const HojePage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-background pt-16 md:pt-32 pb-64">
-      <SEOHead title="Hoje - Sua Jornada Espiritual" description="Acompanhe sua caminhada de fé diária." path="/hoje" />
+      <SEOHead 
+        title="Ritual do Dia | Sua Caminhada de Fé" 
+        description="Acompanhe sua caminhada de fé diária com o Ritual do Dia: versículos, reflexões e o santo de hoje. Mantenha sua constância espiritual com progresso persistente." 
+        path="/hoje" 
+        keywords="ritual do dia, leitura diária, santo do dia, meditação católica, progresso espiritual"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Hoje", path: "/hoje" }
+        ]}
+      />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
       
       <div className="app-container stack-spacing">

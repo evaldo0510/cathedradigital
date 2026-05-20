@@ -28,6 +28,7 @@ import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
+import { useAutoFocus } from '@/hooks/useAutoFocus';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -108,6 +109,7 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   const navigate = useNavigate();
+  useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>('books');
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);

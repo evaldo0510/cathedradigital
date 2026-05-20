@@ -4,6 +4,9 @@ import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useLang } from '@/hooks/useLang';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { ShortcutInput } from './ShortcutInput';
+import { Slider } from '@/components/ui/slider';
 
 interface A11ySettingsPanelProps {
   isOpen: boolean;
@@ -23,6 +26,16 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
   onToggleHighContrast
 }) => {
   const { t } = useLang();
+  const { settings, updateSettings } = useReadingSettings();
+
+  const handleShortcutChange = (key: keyof typeof settings.shortcuts, newValue: string) => {
+    updateSettings({
+      shortcuts: {
+        ...settings.shortcuts,
+        [key]: newValue
+      }
+    });
+  };
 
   return (
     <AnimatePresence>
@@ -88,7 +101,53 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
 
-              <section className="space-y-4">
+              <section className="space-y-6 pt-4">
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Atalhos de Teclado</h3>
+                <div className="grid gap-3">
+                  <ShortcutInput 
+                    label="Bíblia" 
+                    value={settings.shortcuts.bible} 
+                    onChange={(val) => handleShortcutChange('bible', val)} 
+                  />
+                  <ShortcutInput 
+                    label="Catecismo" 
+                    value={settings.shortcuts.catechism} 
+                    onChange={(val) => handleShortcutChange('catechism', val)} 
+                  />
+                  <ShortcutInput 
+                    label="Magistério" 
+                    value={settings.shortcuts.magisterium} 
+                    onChange={(val) => handleShortcutChange('magisterium', val)} 
+                  />
+                  <ShortcutInput 
+                    label="Logos IA" 
+                    value={settings.shortcuts.logos} 
+                    onChange={(val) => handleShortcutChange('logos', val)} 
+                  />
+                </div>
+              </section>
+
+              <section className="space-y-6 pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30">Histórico Logos IA</h3>
+                  <span className="text-xs font-bold text-primary">{settings.logosHistoryLimit} itens</span>
+                </div>
+                <div className="px-2">
+                  <Slider 
+                    value={[settings.logosHistoryLimit]} 
+                    min={5} 
+                    max={50} 
+                    step={5} 
+                    onValueChange={(val) => updateSettings({ logosHistoryLimit: val[0] })}
+                    className="py-4"
+                  />
+                  <p className="text-[10px] text-muted-foreground leading-relaxed italic mt-2">
+                    Define quantas consultas recentes serão mantidas em sua memória local.
+                  </p>
+                </div>
+              </section>
+
+              <section className="space-y-4 pt-4">
                 <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
                 <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">

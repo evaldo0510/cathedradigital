@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Book, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface Message {
   id: string;
@@ -14,11 +15,15 @@ interface Message {
 const LogosChat = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
+  const { settings } = useReadingSettings();
+  
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem('cathedra_logos_messages');
     if (saved) {
       const parsed = JSON.parse(saved);
-      return parsed.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }));
+      // Enforce limit on load
+      const limited = parsed.slice(-settings.logosHistoryLimit);
+      return limited.map((m: any) => ({ ...m, timestamp: new Date(m.timestamp) }));
     }
     return [
       {
@@ -31,8 +36,9 @@ const LogosChat = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('cathedra_logos_messages', JSON.stringify(messages));
-  }, [messages]);
+    const limitedMessages = messages.slice(-settings.logosHistoryLimit);
+    localStorage.setItem('cathedra_logos_messages', JSON.stringify(limitedMessages));
+  }, [messages, settings.logosHistoryLimit]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
