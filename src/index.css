@@ -560,7 +560,7 @@
 
 /* --- Premium Print --- */
 @media print {
-  header, footer, nav, button, .no-print, .reader-navigation-aside, .logos-ai-chat {
+  header, footer, nav, .bottom-nav, .no-print, .reader-navigation-aside, .logos-ai-chat, .floating-action-button, .app-header-actions, .premium-tag, .reader-navigation-aside, .reading-controls, button:not(.print-include) {
     display: none !important;
   }
   
@@ -588,6 +588,21 @@
   h1, h2, h3 {
     color: #0F172A !important;
     page-break-after: avoid;
+  }
+
+  /* Show notes only when requested */
+  .notes-panel-print {
+    display: none;
+  }
+  
+  .print-with-notes .notes-panel-print {
+    display: block !important;
+    margin: 10pt 0 20pt 20pt !important;
+    padding: 10pt !important;
+    border-left: 2pt solid #D4AF37 !important;
+    font-style: italic !important;
+    background: #F9F9F9 !important;
+    page-break-inside: avoid;
   }
 
   p {
