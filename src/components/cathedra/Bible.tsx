@@ -125,7 +125,9 @@ const Bible: React.FC = () => {
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
   const { settings, updateSettings } = useReadingSettings();
+  const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [showLogosAI, setShowLogosAI] = useState(false);
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
