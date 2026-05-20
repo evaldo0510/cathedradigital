@@ -255,6 +255,8 @@ const Catechism: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { settings } = useReadingSettings();
+  const { marks, saveLastRead, getLastRead } = useReadingMarks();
+  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
 
   useEffect(() => {
