@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { fetchNexusTagContent, TagContent } from '@/lib/nexusContent';
-import { getBibleCrossRefs, getCatechismCrossRefs } from '@/data/cross-references';
+import { BIBLE_TO_CIC, CIC_TO_BIBLE, getBibleDocs, getCatechismDocs } from '@/data/cross-references';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
@@ -36,15 +36,27 @@ const Relatio: React.FC<RelatioProps> = ({
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Hardcoded refs based on context
+  // Unified static references based on context
   const staticRefs = React.useMemo(() => {
+    const refs: {
+      cicParagraphs: number[];
+      bibleRefs: { abbr: string; chapter: number; verse?: number; label: string }[];
+      documents: { id: string; name: string; label: string }[];
+    } = {
+      cicParagraphs: [],
+      bibleRefs: [],
+      documents: []
+    };
+
     if (context.type === 'bible' && context.abbr && context.chapter) {
-      return getBibleCrossRefs(context.abbr, context.chapter);
+      refs.cicParagraphs = BIBLE_TO_CIC[`${context.abbr}:${context.chapter}`] || [];
+      refs.documents = getBibleDocs(context.abbr, context.chapter);
+    } else if (context.type === 'catechism' && context.paragraph) {
+      refs.bibleRefs = CIC_TO_BIBLE[context.paragraph] || [];
+      refs.documents = getCatechismDocs(context.paragraph);
     }
-    if (context.type === 'catechism' && context.paragraph) {
-      return getCatechismCrossRefs(context.paragraph);
-    }
-    return null;
+
+    return refs;
   }, [context]);
 
   useEffect(() => {
@@ -76,11 +88,11 @@ const Relatio: React.FC<RelatioProps> = ({
     fetchRelated();
   }, [context.tags, context.id]);
 
-  const hasAnyConnections = (staticRefs && (
-    (staticRefs.cicParagraphs?.length ?? 0) > 0 || 
-    (staticRefs.bibleRefs?.length ?? 0) > 0 || 
-    (staticRefs.documents?.length ?? 0) > 0
-  )) || connections.length > 0;
+  const hasAnyConnections = 
+    staticRefs.cicParagraphs.length > 0 || 
+    staticRefs.bibleRefs.length > 0 || 
+    staticRefs.documents.length > 0 || 
+    connections.length > 0;
 
   if (!hasAnyConnections) return null;
 
@@ -115,12 +127,12 @@ const Relatio: React.FC<RelatioProps> = ({
             className="space-y-6"
           >
             {/* Hardcoded Cross References (Nexus Theologicus) */}
-            {staticRefs && (
+            {(staticRefs.cicParagraphs.length > 0 || staticRefs.bibleRefs.length > 0 || staticRefs.documents.length > 0) && (
               <div className="flex flex-wrap gap-2">
-                {staticRefs.cicParagraphs?.map(p => (
+                {staticRefs.cicParagraphs.map(p => (
                   <CatechismPopover key={`static-cic-${p}`} paragraph={p} onNavigate={onNavigateToCIC} />
                 ))}
-                {staticRefs.bibleRefs?.map((ref, i) => (
+                {staticRefs.bibleRefs.map((ref, i) => (
                   <BibleVersePopover 
                     key={`static-bible-${i}`} 
                     abbr={ref.abbr} 
@@ -130,7 +142,7 @@ const Relatio: React.FC<RelatioProps> = ({
                     onNavigate={onNavigateToBible} 
                   />
                 ))}
-                {staticRefs.documents?.map((doc, i) => (
+                {staticRefs.documents.map((doc, i) => (
                   <MagisteriumPopover 
                     key={`static-doc-${i}`} 
                     documentName={doc.name} 
@@ -165,8 +177,8 @@ const Relatio: React.FC<RelatioProps> = ({
                       <div className="flex gap-3">
                         <div className="w-8 h-8 rounded-premium bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
                           {item.type === 'bible' && <Icons.Cross className="w-4 h-4" />}
-                          {item.type === 'catechism' && <Icons.Shield className="w-4 h-4" />}
-                          {item.type === 'magisterium' && <Icons.ScrollText className="w-4 h-4" />}
+                          {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" />}
+                          {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" />}
                           {item.type === 'journey' && <Icons.Compass className="w-4 h-4" />}
                         </div>
                         <div className="min-w-0">
