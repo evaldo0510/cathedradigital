@@ -33,9 +33,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, ease: EASE }}
-        className="mb-12"
+      className="mb-8 md:mb-12"
       >
-        <div className="px-6 py-2 rounded-full border border-primary/5 bg-primary/[0.02] text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">
+        <div className="px-5 py-1.5 rounded-full border border-primary/5 bg-primary/[0.01] text-[9px] font-bold uppercase tracking-[0.4em] text-primary/25">
           Santuário Digital
         </div>
       </motion.div>
@@ -45,10 +45,10 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-4 mb-10"
+        className="mb-8 md:mb-10"
       >
-        <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-medium text-primary leading-[0.95] tracking-tight">
-          Nem toda prisão <br/> é <span className="text-secondary/50 italic font-serif font-light">visível</span>
+        <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-display font-medium text-primary leading-[1.1] md:leading-[0.95] tracking-tight">
+          Nem toda prisão <br className="md:hidden" /> é <span className="text-secondary/40 italic font-serif font-light">visível</span>
         </h1>
       </motion.div>
 
@@ -57,37 +57,46 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout }: He
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.3 }}
-        className="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed mb-16"
+        transition={{ delay: 0.2 }}
+        className="max-w-xl mx-auto font-serif text-lg md:text-xl text-foreground/30 italic leading-relaxed mb-12 md:mb-16"
       >
-        Silêncio, profundidade e clareza. <br className="hidden md:block" />
-        Uma jornada espiritual guiada pela Tradição e inteligência contemplativa.
+        Silêncio e profundidade. <br />
+        Uma jornada guiada pela Tradição.
       </motion.p>
 
-      {/* Primary CTA - Simplified and Focused */}
+      {/* CTAs - Simplified and Focused */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.5 }}
-        className="flex flex-col items-center gap-12"
+        transition={{ delay: 0.4 }}
+        className="flex flex-col items-center gap-10"
       >
-        <HomeButton
-          size="lg"
-          className="px-16 py-8 text-xs tracking-[0.3em] font-black uppercase rounded-full shadow-2xl shadow-primary/10 hover:shadow-primary/20 transition-all duration-700 active:scale-95"
-          onClick={onStart}
-          aria-label="Entrar no santuário digital"
-        >
-          Entrar no Santuário
-        </HomeButton>
+        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
+          <HomeButton
+            size="lg"
+            className="px-12 py-7 text-[10px] tracking-[0.25em] font-bold uppercase rounded-full shadow-xl shadow-primary/5 hover:shadow-primary/10 transition-all duration-1000 active:scale-95"
+            onClick={onStart}
+            aria-label="Entrar no santuário digital"
+          >
+            Entrar no Santuário
+          </HomeButton>
+          
+          <button
+            onClick={onAbout}
+            className="text-[10px] tracking-[0.2em] font-bold uppercase text-primary/40 hover:text-primary/60 transition-colors duration-500"
+          >
+            Apresentação
+          </button>
+        </div>
 
         {/* Elegant Minimal Signature */}
-        <div className="flex items-center gap-6 opacity-20">
-          <span className="w-12 h-px bg-primary" />
-          <p className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary">
-            Cathedra Digital
+        <div className="flex items-center gap-4 opacity-10">
+          <span className="w-8 h-px bg-primary" />
+          <p className="text-[8px] font-bold uppercase tracking-[0.5em] text-primary">
+            Cathedra
           </p>
-          <span className="w-12 h-px bg-primary" />
+          <span className="w-8 h-px bg-primary" />
         </div>
       </motion.div>
     </motion.div>
