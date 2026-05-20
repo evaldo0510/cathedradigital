@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /a11y-audit
 Disallow: /admin
+Disallow: /admin/seo-verify
 Disallow: /admin/visual-audit
 Disallow: /admin/visual-regression
 Disallow: /cache-manager

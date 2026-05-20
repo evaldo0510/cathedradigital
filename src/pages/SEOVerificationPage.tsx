@@ -182,6 +182,21 @@ const SEOVerificationPage = () => {
     toast.success(`${label} copiado!`);
   };
 
+  const downloadHTML = (page: SEOPageData) => {
+    const content = getMetaTagsCode(page);
+    const fileName = `seo-tags-${page.name.toLowerCase().replace(/\s+/g, '-') || 'page'}.html`;
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Tags HTML baixadas!');
+  };
+
   const getMetaTagsCode = (page: SEOPageData) => {
     const title = page.title || `${page.name} — Cathedra Digital`;
     const description = page.description || '';
@@ -343,8 +358,14 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   <Button variant="ghost" size="sm" onClick={() => window.open(`${BASE_URL}${page.path}`, '_blank')}>
                     <ExternalLink className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')}>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')} title="Copiar Link">
                     <Copy className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')} title="Copiar Tags HTML">
+                    <Code className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => downloadHTML(page)} title="Baixar Tags HTML">
+                    <Download className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
@@ -480,10 +501,16 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       <CardTitle className="text-sm">Generated HTML Tags</CardTitle>
                       <CardDescription className="text-xs">Paste these into your CMS or manual header if needed.</CardDescription>
                     </div>
-                    <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
-                      <Copy className="w-4 h-4 mr-2" />
-                      Copiar Código
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
+                        <Copy className="w-4 h-4 mr-2" />
+                        Copiar Código
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => downloadHTML(page)}>
+                        <Download className="w-4 h-4 mr-2" />
+                        Baixar HTML
+                      </Button>
+                    </div>
                   </CardHeader>
                   <CardContent className="p-0">
                     <pre className="p-6 bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
