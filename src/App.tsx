@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
-import { ReadingSettingsProvider } from './contexts/ReadingSettingsContext';
+import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
 import PageTransition from './components/PageTransition';
@@ -79,6 +79,7 @@ const LoadingFallback = () => (
 const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
   const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
+  const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   
