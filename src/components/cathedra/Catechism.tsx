@@ -33,12 +33,11 @@ import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
 
-
-
-
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
+  const settingsContext = useReadingSettings();
+  const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
@@ -83,7 +82,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
-
   if (data?.status === 'error_402') {
     return (
       <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-premium p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
@@ -116,7 +114,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
-  // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
   if (data?.status === 'not_cached') {
     return (
       <div className="reader-text py-4 space-y-3">
@@ -140,9 +137,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
       </div>
     );
   }
-
-  const settingsContext = useReadingSettings();
-  const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
 
   return (
     <div className={`reader-text text-foreground/90 font-size-${settings.fontSize} font-family-${settings.fontFamily} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>

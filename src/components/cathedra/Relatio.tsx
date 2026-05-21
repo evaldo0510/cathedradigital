@@ -37,12 +37,7 @@ const Relatio: React.FC<RelatioProps> = ({
   onNavigateToDoc,
   className 
 }) => {
-  let contextSettings;
-  try {
-    contextSettings = useReadingSettings();
-  } catch (e) {
-    // Graceful fallback for tests or missing provider
-  }
+  const contextSettings = useReadingSettings();
   const settings = contextSettings?.settings || { relatio: { enabled: true } };
   const { user } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
