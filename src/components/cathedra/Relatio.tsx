@@ -37,7 +37,8 @@ const Relatio: React.FC<RelatioProps> = ({
   onNavigateToDoc,
   className 
 }) => {
-  const { settings } = useReadingSettings();
+  const contextSettings = useReadingSettings();
+  const settings = contextSettings?.settings || { relatio: { enabled: true } };
   const { user } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [connections, setConnections] = useState<(TagContent & { reason?: string })[]>([]);
