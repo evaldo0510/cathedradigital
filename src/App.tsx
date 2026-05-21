@@ -46,15 +46,16 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy loaded routes
+// Lazy loaded routes with better naming
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
+const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
