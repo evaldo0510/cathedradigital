@@ -133,7 +133,6 @@ const AppLayout: React.FC = () => {
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
         <ReadingSettingsProvider>
-          <TooltipProvider>
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
@@ -192,7 +191,6 @@ const AppLayout: React.FC = () => {
             <CommandCenter />
             <PWAInstallPrompt />
             <OfflineIndicator />
-          </TooltipProvider>
         </ReadingSettingsProvider>
       </LangContext.Provider>
     </div>
@@ -236,7 +234,5 @@ const App: React.FC = () => {
     </AppProviders>
   );
 };
-
-export default App;
 
 export default App;
