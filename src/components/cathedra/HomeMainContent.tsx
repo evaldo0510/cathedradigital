@@ -17,7 +17,7 @@ interface HomeMainContentProps {
   t: (key: string) => string;
 }
 
-const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavigate, t }) => {
+const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, profile, onNavigate, t }) => {
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
@@ -158,6 +158,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
     </div>
   );
-};
+});
+HomeMainContent.displayName = 'HomeMainContent';
 
 export default HomeMainContent;
