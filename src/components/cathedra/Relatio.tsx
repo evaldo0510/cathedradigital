@@ -261,15 +261,17 @@ const Relatio: React.FC<RelatioProps> = ({
                           </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center justify-between">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
-                                {item.type === 'bible' ? 'Escritura' : 
-                                 item.type === 'catechism' ? 'Catecismo' : 
-                                 item.type === 'magisterium' ? 'Magistério' : 
-                                 item.type === 'saint' ? 'Santos' : 'Jornada'}
-                              </p>
-                              <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-primary/5 text-primary/40 uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                {item.reason}
-                              </span>
+                              <div className="flex flex-col">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+                                  {item.type === 'bible' ? 'Escritura' : 
+                                   item.type === 'catechism' ? 'Catecismo' : 
+                                   item.type === 'magisterium' ? 'Magistério' : 
+                                   item.type === 'saint' ? 'Santos' : 'Jornada'}
+                                </p>
+                                <span className="text-[8px] text-muted-foreground/50 uppercase tracking-tighter opacity-70 mt-0.5">
+                                  {item.reason}
+                                </span>
+                              </div>
                             </div>
                             <h4 className="text-sm font-bold font-serif truncate mt-0.5">{item.title}</h4>
                             <p className="text-xs text-muted-foreground line-clamp-1 mt-1 font-serif italic">
