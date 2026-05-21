@@ -53,7 +53,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: 'Logos IA', path: AppRoute.BUSCAR, icon: <Icons.Sparkles className="w-5 h-5" /> },
+        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles className="w-5 h-5" /> },
       ]
     },
     {
