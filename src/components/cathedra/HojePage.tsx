@@ -96,7 +96,7 @@ const HojePage: React.FC = () => {
   const { data: allSaintsToday = [], isLoading: loadingSaints } = useSaintsToday();
   const { data: officialSaint } = useOfficialSaint();
   
-  const { nextUp, isLoading: loadingStats } = useDashboardData(user as any);
+  const { nextUp, isLoading: loadingStats } = useDashboardData(user as any || null);
 
   const { data: activeJourneyData, isLoading: loadingJourney } = useActiveJourney(user?.id);
   const activeJourney = activeJourneyData?.journey || null;
@@ -158,7 +158,7 @@ const HojePage: React.FC = () => {
           transition={{ duration: 1, delay: 0.2 }}
           className="max-w-6xl mx-auto w-full"
         >
-          <SpiritualContinuity data={useDashboardData(user as any).nextUp} isLoading={loadingStats} profile={profile} />
+          <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">

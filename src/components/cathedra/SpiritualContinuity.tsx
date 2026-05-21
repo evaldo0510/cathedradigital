@@ -110,7 +110,15 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
 
           {(lastReflection || lastJournal) && (
             <div className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-tighter pt-4">
-              {formatDistanceToNow(new Date(lastReflection?.date || lastJournal?.date), { addSuffix: true, locale: ptBR })}
+              {(() => {
+                const date = lastReflection?.date || lastJournal?.date;
+                if (!date) return '';
+                try {
+                  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ptBR });
+                } catch (e) {
+                  return '';
+                }
+              })()}
             </div>
           )}
         </HomeCard>
@@ -134,7 +142,14 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
                        <Icons.History size={14} />
                     </div>
                     <span className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-tighter">
-                      {formatDistanceToNow(new Date(item.visited_at), { addSuffix: true, locale: ptBR })}
+                      {(() => {
+                        if (!item.visited_at) return '';
+                        try {
+                          return formatDistanceToNow(new Date(item.visited_at), { addSuffix: true, locale: ptBR });
+                        } catch (e) {
+                          return '';
+                        }
+                      })()}
                     </span>
                   </div>
                   <div className="space-y-1">
