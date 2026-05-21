@@ -62,6 +62,7 @@ describe('RitualDoDia Regression', () => {
   });
 
   it('is resilient to null profile values', () => {
-    expect(screen.getByText(/Oratio et Contemplatio/i)).toBeDefined();
+    render(<RitualDoDia />, { wrapper });
+    expect(screen.getByText(/ORATIO ET CONTEMPLATIO/i)).toBeDefined();
   });
 });
