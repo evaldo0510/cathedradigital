@@ -98,7 +98,7 @@ const Relatio: React.FC<RelatioProps> = ({
       }
     };
     loadContext();
-  }, [user, relatioConfig.relevanceByProgress]);
+  }, [user, (relatioConfig as any).relevanceByProgress]);
 
   useEffect(() => {
     const fetchRelated = async () => {
