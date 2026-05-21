@@ -21,6 +21,7 @@ import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const SPIRITUAL_GUIDANCE = [
   {
