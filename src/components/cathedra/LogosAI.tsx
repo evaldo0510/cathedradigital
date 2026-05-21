@@ -162,14 +162,16 @@ const LogosAI: React.FC<LogosAIProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: settings.reduceAnimations ? 0.1 : 0.4 }}
             onClick={onClose}
             className="fixed inset-0 bg-background/60 backdrop-blur-sm z-[190]"
           />
           <motion.div
-            initial={{ opacity: 0, x: 400 }}
+            initial={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 400 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            exit={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
+            transition={springConfig}
+
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-2xl flex flex-col"
           >
             <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
