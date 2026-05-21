@@ -235,7 +235,11 @@ const App: React.FC = () => {
   
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
-    try { sessionStorage.setItem('cathedra_splash_shown', '1'); } catch {}
+    try { 
+      sessionStorage.setItem('cathedra_splash_shown', '1'); 
+    } catch (error) {
+      console.error('Failed to set splash screen flag:', error);
+    }
   }, []);
 
   return (
