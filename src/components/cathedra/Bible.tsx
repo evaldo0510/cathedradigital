@@ -557,10 +557,11 @@ const Bible: React.FC = () => {
             }
             setIsLoading(false);
           });
-        };
-      };
+        });
+      });
     }
-  }, [viewMode, selectedBook, selectedChapter, bibleCache];
+  }, [viewMode, selectedBook, selectedChapter, bibleCache]);
+
 
 
   // Auto-scroll to highlighted verse when verses are loaded.
