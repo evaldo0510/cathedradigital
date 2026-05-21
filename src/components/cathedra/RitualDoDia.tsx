@@ -179,7 +179,7 @@ const RitualDoDia: React.FC = () => {
 
   const ritual = DAILY_RITUALS[dayOfYear % DAILY_RITUALS.length] || DAILY_RITUALS[0];
 
-  const audioText = `Versículo: ${ritual.verse.text} (${ritual.verse.ref}). Reflexão: ${ritual.reflection}. Catecismo: ${ritual.catechism.text}. Oração: ${ritual.prayer}`;
+  const audioText = ritual ? `Versículo: ${ritual.verse?.text || ''} (${ritual.verse?.ref || ''}). Reflexão: ${ritual.reflection || ''}. Catecismo: ${ritual.catechism?.text || ''}. Oração: ${ritual.prayer || ''}` : '';
 
   return (
     <HomeCard
@@ -315,11 +315,12 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
             >
               <blockquote className="text-3xl md:text-4xl lg:text-5xl font-serif italic leading-relaxed text-primary/80 selection:bg-primary/5">
-                "{ritual.verse.text}"
+                "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-6 text-[10px] font-black text-primary/20 uppercase tracking-[0.4em]">
-                — {ritual.verse.ref}
+                — {ritual?.verse?.ref || ''}
               </p>
+
             </div>
           </section>
 
@@ -350,11 +351,12 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(75)}
             >
               <p className="text-lg md:text-xl leading-relaxed text-foreground/50 font-serif tracking-tight selection:bg-primary/5">
-                {ritual.catechism.text}
+                {ritual?.catechism?.text || ''}
               </p>
               <p className="mt-4 text-[9px] font-black text-primary/20 uppercase tracking-[0.4em]">
-                Catechismus §{ritual.catechism.number}
+                Catechismus §{ritual?.catechism?.number || ''}
               </p>
+
             </div>
           </section>
 
@@ -369,8 +371,9 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(100)}
             >
               <p className="text-3xl md:text-4xl lg:text-5xl leading-tight text-primary/70 font-serif italic selection:bg-primary/5">
-                {ritual.prayer}
+                {ritual?.prayer || ''}
               </p>
+
             </div>
           </section>
         </div>

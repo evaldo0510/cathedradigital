@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-sitemap.ts && bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
+    "build": "bun run typecheck && bun run lint && bun run scripts/generate-sitemap.ts && bun run scripts/validate-sitemap.ts && bun run scripts/validate-catechism.ts && bun run scripts/security-audit.ts && vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
