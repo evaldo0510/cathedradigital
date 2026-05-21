@@ -101,6 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* LOGOS IA INTEGRADA - ACESSO ÚNICO E MINIMALISTA */}
       <section className="space-y-12">
         <div className="flex items-center gap-10">
+
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
             Logos IA
