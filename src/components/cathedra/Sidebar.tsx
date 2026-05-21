@@ -45,29 +45,24 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       label: t('admin'),
       items: [
         { label: t('admin'), path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Auditoria Visual', path: AppRoute.VISUAL_AUDIT, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Regressão Visual', path: AppRoute.VISUAL_REGRESSION, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-
       ]
     }] : []),
     {
-      label: 'Núcleo Sagrado',
+      label: 'Portal Sagrado',
       items: [
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: 'Logos IA', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-5 h-5" /> },
+        { label: 'Logos IA', path: AppRoute.BUSCAR, icon: <Icons.Sparkles className="w-5 h-5" /> },
       ]
     },
     {
       label: 'Em Breve',
       items: [
-        { label: 'Jornadas Espirituais', path: '#', icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
-        { label: 'Comunidade Ativa', path: '#', icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
+        { label: 'Jornadas', path: '#', icon: <Icons.Journeys className="w-5 h-5 opacity-20" /> },
+        { label: 'Comunidade', path: '#', icon: <Icons.Users className="w-5 h-5 opacity-20" /> },
       ]
     }
-
-
   ];
 
   const handleNav = (item: string | { path: string; onClick?: () => void }) => {
@@ -80,12 +75,12 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   return (
     <>
       <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
-        <div className="mb-10 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav(AppRoute.HOJE)}>
+        <div className="mb-12 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav('/')}>
           <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
-          <div className="space-y-1">
-            <h1 className="text-xl font-display font-medium tracking-[0.1em] text-primary leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[10px] font-bold uppercase text-secondary/60 tracking-[0.4em]">
-              Digital Sanctuarium
+          <div className="space-y-0.5">
+            <h1 className="text-xl font-display font-medium tracking-[0.2em] text-primary leading-none uppercase">CATHEDRA</h1>
+            <p className="text-[8px] font-bold uppercase text-primary/20 tracking-[0.5em]">
+              Sanctuarium
             </p>
           </div>
         </div>

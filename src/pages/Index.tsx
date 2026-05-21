@@ -41,7 +41,6 @@ const Index = () => {
       if (profile?.role === 'admin') {
         navigate(AppRoute.ADMIN, { replace: true });
       }
-      // REMOVED: redirecting to /hoje. The Home is now a contemplative portal for everyone.
     }
   }, [user, profile, loading, navigate]);
 
@@ -80,7 +79,7 @@ const Index = () => {
 
       <HeroSection onStart={handleStart} />
 
-      <main id="main-content" className="w-full flex flex-col items-center outline-none pt-24 md:pt-32 pb-32 md:pb-48" tabIndex={-1}>
+      <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
         <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
           <HomeMainContent 
             user={user} 
@@ -93,7 +92,6 @@ const Index = () => {
         <Suspense fallback={null}>
           <CookieConsent />
         </Suspense>
-
       </main>
     </div>
   );

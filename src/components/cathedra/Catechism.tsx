@@ -32,6 +32,7 @@ import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
@@ -669,135 +670,102 @@ const Catechism: React.FC = () => {
   // Section selection
   if (viewMode === 'sections' && selectedPart) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
-          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+      <ContemplativeLayout
+        subtitle={`${selectedPart.part}`}
+        title={`${selectedPart.title}`}
+        maxW="max-w-6xl"
+      >
+        <div className="space-y-16">
+          <Button 
+            variant="ghost" 
+            onClick={goBack}
+            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+          >
+            <Icons.ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Partes
           </Button>
-          <div>
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-3xl font-serif font-bold text-foreground">{selectedPart.title}</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {selectedPart.sections.map(sec => (
+              <motion.button 
+                key={sec.id} 
+                whileHover={{ x: 8 }}
+                onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+                className="text-left p-10 md:p-12 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group flex flex-col gap-6"
+              >
+                <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h3>
+                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
+                </div>
+              </motion.button>
+            ))}
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {selectedPart.sections.map(sec => (
-            <Button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
-              <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-            </Button>
-          ))}
-        </div>
-      </div>
+      </ContemplativeLayout>
     );
   }
 
-  // Parts overview
   return (
-    <>
-    <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online. Estude a doutrina católica organizada por partes, seções e parágrafos." path="/catechism" keywords="catecismo online, catecismo da igreja católica, doutrina católica, CIC" breadcrumbs={[{ name: "Home", path: "/" }, { name: "Catecismo", path: "/catechism" }]} />
-    <motion.div
-      className="max-w-5xl mx-auto space-y-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.4 }}
+    <ContemplativeLayout
+      subtitle="Codex Fidei"
+      title="Catecismo da Igreja Católica"
+      maxW="max-w-6xl"
     >
-      <motion.div 
-        className="text-center space-y-3"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.Cross className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Codex Fidei</span>
-        </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Catecismo da Igreja Católica</h1>
-        <p className="text-muted-foreground font-serif italic">2.865 parágrafos organizados em 4 partes fundamentais.</p>
-        <div className="max-w-xs mx-auto pt-4">
-          <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-2">
-            <span>Seu Progresso</span>
-            <span>{Math.round((paragraphsRead.size / 2865) * 100)}%</span>
-          </div>
-          <div className="h-1.5 w-full bg-muted rounded-premium overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${(paragraphsRead.size / 2865) * 100}%` }}
-              className="h-full bg-primary"
-            />
-          </div>
-        </div>
-      </motion.div>
+      <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" />
       
-      {user?.role === 'admin' && (
-        <div className="flex justify-center">
-          <Button 
-            onClick={() => navigate('/catechism/integrity')}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500/10 text-orange-600 border border-orange-500/20 text-premium-tiny font-black uppercase tracking-widest hover:bg-orange-500/20 transition-all"
-          >
-            <Icons.Activity className="w-3.5 h-3.5" /> Painel de Integridade (Admin)
-          </Button>
-        </div>
-      )}
-
-
-      {/* Suggestion Card */}
-      {nextUnreadParagraph && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <div 
-            onClick={() => navigateToParagraph(nextUnreadParagraph)}
-            className="max-w-md mx-auto p-4 rounded-full border border-primary/20 bg-primary/5 cursor-pointer hover:border-primary/40 transition-all flex items-center justify-between group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-colors">
-                <Icons.Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">Continuar Formação</p>
-                <h3 className="text-sm font-bold text-foreground">Sugerido: §{nextUnreadParagraph}</h3>
-              </div>
-            </div>
-            <Icons.ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+      <div className="space-y-24">
+        {/* Search & Suggested */}
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-border/5 pb-12">
+          <div className="relative group w-full md:w-96">
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+            <input
+              value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              placeholder="Ir para o parágrafo..."
+              className="w-full pl-14 pr-24 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background transition-all font-serif italic text-lg"
+            />
+            <Button onClick={handleSearch} variant="ghost" className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">
+              Ir
+            </Button>
           </div>
-        </motion.div>
-      )}
 
-      {/* Search by paragraph */}
-      <div className="max-w-md mx-auto">
-        <div className="relative">
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSearch()}
-            placeholder="Buscar por número do parágrafo (ex: 1324)..."
-            className="w-full pl-11 pr-20 py-3 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-          <Button onClick={handleSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-foreground text-background rounded-full text-xs font-bold">
-            Ir
-          </Button>
+          {nextUnreadParagraph && (
+            <button 
+              onClick={() => navigateToParagraph(nextUnreadParagraph)}
+              className="group flex items-center gap-4 text-left px-8 py-4 rounded-full bg-primary/[0.02] border border-primary/10 hover:border-primary/20 transition-all"
+            >
+              <Icons.Sparkles className="w-4 h-4 text-secondary/40 group-hover:text-secondary transition-colors" />
+              <div>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-primary/30">Continuar Formação</p>
+                <p className="text-sm font-bold text-primary">Sugerido: §{nextUnreadParagraph}</p>
+              </div>
+            </button>
+          )}
+        </div>
+
+        {/* Parts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {CIC_SECTIONS.map(part => (
+            <motion.button 
+              key={part.part} 
+              whileHover={{ y: -8 }}
+              onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
+              className="text-left p-12 md:p-16 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group flex flex-col gap-8"
+            >
+              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20">
+                <Icons.Logo className="w-6 h-6" />
+              </div>
+              <div className="space-y-4">
+                <span className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.5em]">{part.part}</span>
+                <h2 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h2>
+                <p className="text-sm text-muted-foreground/40 font-serif italic">{part.sections.length} seções doutrinárias</p>
+              </div>
+            </motion.button>
+          ))}
         </div>
       </div>
-
-      {/* Parts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {CIC_SECTIONS.map(part => (
-          <Button key={part.part} onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-            className="text-left p-5 md:p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-            <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{part.part}</span>
-            <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground mt-3 group-hover:text-primary transition-colors">{part.title}</h2>
-            <p className="text-sm text-muted-foreground mt-2">{part.sections.length} seções</p>
-            <div className="flex flex-wrap gap-1 mt-4">
-              {part.sections.map(s => (
-                <span key={s.id} className="px-2 py-1 bg-secondary text-secondary-foreground rounded-full text-premium-tiny font-bold">{s.title.split(' ').slice(0, 3).join(' ')}</span>
-              ))}
-            </div>
-          </Button>
-        ))}
-      </div>
-    </motion.div>
-    </>
+    </ContemplativeLayout>
   );
 };
 

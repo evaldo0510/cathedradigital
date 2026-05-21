@@ -159,7 +159,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 400 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full sm:w-[450px] bg-card border-l border-border/10 z-[200] shadow-2xl flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-2xl flex flex-col"
           >
             <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -189,10 +189,10 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {history.map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700`}>
-                  <div className={`max-w-[90%] p-6 md:p-8 rounded-[2rem] text-base leading-relaxed ${
+                  <div className={`max-w-[90%] p-8 md:p-10 rounded-premium-lg text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 
-                      : 'bg-muted/30 border border-border/5 font-serif italic text-foreground/80'
+                      : 'bg-card border border-border/5 font-serif italic text-foreground/80'
                   }`}>
                     {msg.content}
                   </div>
@@ -204,7 +204,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {isLoading && (
                 <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/20 p-6 rounded-[2rem] flex gap-3">
+                  <div className="bg-muted/10 p-6 rounded-premium-lg flex gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />

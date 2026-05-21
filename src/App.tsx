@@ -52,7 +52,7 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 
@@ -147,12 +147,8 @@ const AppLayout: React.FC = () => {
               user={authUserAdapter} 
               isDark={isDark} 
               onToggleDark={() => setIsDark(!isDark)}
-              isHighContrast={isHighContrast}
-              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
               lang={lang}
               onChangeLang={setLangState}
-              isSpeaking={isSpeaking}
-              onToggleSpeak={toggleSpeak}
               onSignOut={signOut}
               onOpenSidebar={() => setIsSidebarOpen(true)}
             />
@@ -174,12 +170,11 @@ const AppLayout: React.FC = () => {
                 <AnimatePresence mode="wait">
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<Index />} />
-                    <Route path="/hoje" element={<HojePage />} />
                     <Route path="/bible" element={<Bible />} />
                     <Route path="/catechism" element={<Catechism />} />
                     <Route path="/magisterium" element={<Magisterium />} />
                     <Route path="/buscar" element={<GlobalSearchPage />} />
-                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/hoje')} />} />
+                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/')} />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
