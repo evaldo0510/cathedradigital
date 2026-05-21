@@ -125,7 +125,7 @@ const AppLayout: React.FC = () => {
       joinedAt: new Date().toISOString(), // Mocking missing fields
       progress: 0,
       stats: { streak: profile.streak || 0, xp: profile.xp || 0 }
-    } as any;
+    };
   }, [profile]);
 
   return (
