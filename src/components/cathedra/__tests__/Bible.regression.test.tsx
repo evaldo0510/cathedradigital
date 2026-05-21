@@ -8,8 +8,8 @@ import { AuthContext } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
 
-// Mock Supabase with chainable methods
-const createMockSupabase = () => {
+// Mock Supabase - hoisted, so we can't use helper functions from outside
+vi.mock('@/integrations/supabase/client', () => {
   const chain = {
     select: vi.fn(() => chain),
     eq: vi.fn(() => chain),
@@ -21,20 +21,18 @@ const createMockSupabase = () => {
   };
   
   return {
-    auth: {
-      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
-      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
-    },
-    from: vi.fn(() => chain),
-    functions: {
-      invoke: vi.fn(() => Promise.resolve({ data: null, error: null })),
-    },
+    supabase: {
+      auth: {
+        onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
+        getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+      },
+      from: vi.fn(() => chain),
+      functions: {
+        invoke: vi.fn(() => Promise.resolve({ data: null, error: null })),
+      },
+    }
   };
-};
-
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: createMockSupabase(),
-}));
+});
 
 const mockAuthContext = {
   user: { id: 'test-user' },
