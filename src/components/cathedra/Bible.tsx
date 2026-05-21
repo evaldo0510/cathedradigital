@@ -499,7 +499,7 @@ const Bible: React.FC = () => {
       setBibleError('');
       setVerses([]);
 
-      // 2) Check IndexedDB cache, then direct DB, then fetch
+      // 2 Check IndexedDB cache, then direct DB, then fetch
       import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
         getCachedBibleChapter(selectedBook.abbr, selectedChapter).then(async (idbCached) => {
           if (idbCached?.verses?.length > 0) {
@@ -539,7 +539,7 @@ const Bible: React.FC = () => {
             return;
           }
 
-          // 5) Fetch from edge function (Only as fallback)
+          // 5 Fetch from edge function (Only as fallback)
           supabase.functions.invoke('bible-text', {
             body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
           }).then(({ data, error }) => {
@@ -557,10 +557,10 @@ const Bible: React.FC = () => {
             }
             setIsLoading(false);
           });
-        });
-      });
+        };
+      };
     }
-  }, [viewMode, selectedBook, selectedChapter, bibleCache]);
+  }, [viewMode, selectedBook, selectedChapter, bibleCache];
 
 
   // Auto-scroll to highlighted verse when verses are loaded.
@@ -1039,6 +1039,6 @@ const Bible: React.FC = () => {
       </div>
     </ContemplativeLayout>
   );
-};
+;
 
 export default Bible;
