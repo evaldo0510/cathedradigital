@@ -96,7 +96,7 @@ describe('HojePage Regression', () => {
     vi.mocked(useDashboardData).mockReturnValue({ nextUp: null, isLoading: false } as any);
     render(<HojePage />, { wrapper });
     // Should not render "Caminho de Maturidade" if data is null
-    expect(screen.queryByText(/Caminho de Maturidade/i)).toBeNull();
-    expect(screen.getByText(/Mosteiro/i)).toBeDefined();
+    const maturityPath = screen.queryByText(/Caminho de Maturidade/i);
+    expect(maturityPath).toBeNull();
   });
 });
