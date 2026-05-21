@@ -173,12 +173,12 @@ const AppLayout: React.FC = () => {
   }, [profile]);
 
   return (
-    <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-      <ScrollToTop />
-      <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
+    <AuthProvider>
+      <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+          <ScrollToTop />
+          <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
             <AppHeader 
-
               user={authUserAdapter} 
               isDark={isDark} 
               onToggleDark={toggleDark}
@@ -191,7 +191,6 @@ const AppLayout: React.FC = () => {
             <CathedralSidebar 
               user={authUserAdapter}
               onClose={handleCloseSidebar}
-
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
@@ -223,7 +222,6 @@ const AppLayout: React.FC = () => {
               <A11ySettingsPanel 
                 isOpen={showA11ySettings} 
                 onClose={handleCloseA11y}
-
                 isDark={isDark}
                 onToggleDark={toggleDark}
                 isHighContrast={isHighContrast}
@@ -233,9 +231,10 @@ const AppLayout: React.FC = () => {
               <PWAInstallPrompt />
             </Suspense>
             <OfflineIndicator />
-      </LangContext.Provider>
-      </div>
-    </MotionConfig>
+          </LangContext.Provider>
+        </div>
+      </MotionConfig>
+    </AuthProvider>
   );
 };
 
@@ -245,13 +244,11 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <AuthProvider>
-              <ReadingSettingsProvider>
-                <TooltipProvider>
-                  {children}
-                </TooltipProvider>
-              </ReadingSettingsProvider>
-            </AuthProvider>
+            <ReadingSettingsProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </ReadingSettingsProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </Sentry.ErrorBoundary>
