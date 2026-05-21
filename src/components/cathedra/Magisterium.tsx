@@ -211,6 +211,21 @@ const Magisterium: React.FC = () => {
     fetchLastRead();
   }, [shouldAutoResume]);
 
+  const MemoizedRelatio = useMemo(() => {
+    if (activeTab !== 'guidance' || !selectedGuidance) return null;
+    return (
+      <Relatio 
+        context={{ 
+          type: 'magisterium', 
+          id: selectedGuidance.id,
+          tags: [selectedGuidance.theme, 'Magistério']
+        }}
+        onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&ch=${ch}`)}
+        onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
+      />
+    );
+  }, [activeTab, selectedGuidance, navigate]);
+
   const filteredDocs = useMemo(() => {
     return DOCS_LIST.filter(doc => {
       const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
