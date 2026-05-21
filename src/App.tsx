@@ -192,11 +192,12 @@ const AppLayout: React.FC = () => {
               </Suspense>
             </main>
 
-            <BottomNav user={authUserAdapter} onOpenSidebar={() => setIsSidebarOpen(true)} />
+            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
             <CathedralFooter />
             <A11ySettingsPanel 
               isOpen={showA11ySettings} 
-              onClose={() => setShowA11ySettings(false)}
+              onClose={handleCloseA11y}
+
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
