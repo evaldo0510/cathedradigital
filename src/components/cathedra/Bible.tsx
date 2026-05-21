@@ -137,6 +137,7 @@ const Bible: React.FC = () => {
   const { user, profile } = useAuth();
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
 
+
   // Track chapters read
   const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
 
