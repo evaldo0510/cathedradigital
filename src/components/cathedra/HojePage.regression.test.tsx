@@ -82,4 +82,16 @@ describe('HojePage Regression', () => {
     expect(screen.getByText(/Digital/i)).toBeDefined();
     expect(screen.getByText(/Ritual de Hoje/i)).toBeDefined();
   });
+
+  it('is resilient to empty saints data', () => {
+    vi.mocked(useSaintsToday).mockReturnValue({ data: [], isLoading: false } as any);
+    render(<HojePage />, { wrapper });
+    expect(screen.getByText(/Mosteiro/i)).toBeDefined();
+  });
+
+  it('is resilient to null dashboard data', () => {
+    vi.mocked(useDashboardData).mockReturnValue({ nextUp: null, isLoading: false } as any);
+    render(<HojePage />, { wrapper });
+    expect(screen.getByText(/Caminho de Maturidade/i)).toBeDefined();
+  });
 });
