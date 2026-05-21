@@ -8,7 +8,7 @@ import { ReadingProgressSection } from './ReadingProgressSection';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
-import { GuidedReadingFlow } from './GuidedReadingFlow';
+
 
 interface HomeMainContentProps {
   user: any;
@@ -83,8 +83,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* CONTINUAR LEITURA */}
       <ReadingProgressSection />
 
-
-      {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
+      {/* NÚCLEO PRINCIPAL - BIBLIOTECA ESPIRITUAL */}
       <section className="space-y-12 md:space-y-16">
         <div className="flex items-center gap-10">
           <div className="h-px flex-1 bg-border/30" />
@@ -98,10 +97,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
 
-      {/* LOGOS IA INTEGRADA - ACESSO ÚNICO E MINIMALISTA */}
+      {/* LOGOS IA INTEGRADA */}
       <section className="space-y-12">
         <div className="flex items-center gap-10">
-
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
             Logos IA
@@ -123,7 +121,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
               "A inteligência a serviço da contemplação."
             </p>
           </div>
-
 
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
             <div className="relative group/input">
@@ -158,7 +155,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* EM BREVE */}
-      <ComingSoonSection className="pt-24 md:pt-32 opacity-40 hover:opacity-100 transition-opacity duration-1000" />
+      <ComingSoonSection className="pt-24 md:pt-32 opacity-60 hover:opacity-100 transition-opacity duration-1000" />
 
     </div>
   );

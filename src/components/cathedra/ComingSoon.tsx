@@ -107,7 +107,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
         <div className="h-px flex-1 bg-border/30" />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
         {items.map((item, idx) => (
           <motion.div
             key={idx}
@@ -166,24 +166,6 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
               </Button>
               </div>
               
-              <div className="flex flex-wrap justify-center gap-2">
-                <p className="w-full text-[9px] uppercase tracking-widest text-primary/30 mb-1">Interesse principal:</p>
-                {['Geral', 'Jornadas', 'Comunidade', 'Quiz'].map((type) => (
-                  <button
-                    key={type}
-                    type="button"
-                    onClick={() => setInterestType(type.toLowerCase())}
-                    className={cn(
-                      "px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest transition-all border",
-                      interestType === type.toLowerCase() 
-                        ? "bg-primary/10 border-primary/20 text-primary shadow-sm" 
-                        : "bg-transparent border-border/10 text-muted-foreground/40 hover:border-primary/10"
-                    )}
-                  >
-                    {type}
-                  </button>
-                ))}
-              </div>
             </form>
 
           ) : (
