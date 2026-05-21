@@ -33,6 +33,9 @@ describe('Route Regression Tests', () => {
     vi.clearAllMocks();
     sessionStorage.clear();
     localStorage.clear();
+    // Mock scrollTo which is missing in JSDOM
+    window.scrollTo = vi.fn();
+    Element.prototype.scrollTo = vi.fn();
   });
 
   const routes = [
