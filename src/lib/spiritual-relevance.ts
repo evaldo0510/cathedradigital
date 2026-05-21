@@ -37,7 +37,6 @@ async function fetchLastReading(userId: string) {
 
     if (error || !data) return null;
 
-    // Fetch tags if possible or rely on content ID matching
     return {
       type: data.content_type || 'unknown',
       title: data.label || data.content_id || 'Leitura Recente',
@@ -64,29 +63,29 @@ export function rankConnections(
     let reason = 'Tradição Conectada';
 
     // 1. Match with current content tags (primary)
-    const currentMatches = item.metadata?.tags?.filter((t: string) => currentContextTags.includes(t)).length || 0;
+    const itemTags = item.metadata?.tags || [];
+    const currentMatches = itemTags.filter((t: string) => currentContextTags.includes(t)).length || 0;
     score += currentMatches * 10;
     if (currentMatches > 0) reason = 'Contexto Similar';
 
     // 2. Match with user psychology (virtues/traits)
     if (context.psychology?.traits) {
-      const traitMatches = item.metadata?.tags?.filter((t: string) => 
+      const traitMatches = itemTags.filter((t: string) => 
         context.psychology?.traits?.[t.toLowerCase()]
       ).length || 0;
       score += traitMatches * 5;
       if (traitMatches > 0 && score < 15) reason = 'Inclinação Espiritual';
     }
 
-    // 3. Match with last reading tags (if we had tags for it)
+    // 3. Continuity bonus
     if (context.lastReading) {
-      // Very basic continuity bonus
       score += 3;
       if (reason === 'Tradição Conectada') reason = 'Continuidade da Leitura';
     }
 
     // 4. Match with dominant emotion (virtue alignment)
     if (context.psychology?.dominant_emotion) {
-      const emotionMatch = item.metadata?.tags?.some((t: string) => 
+      const emotionMatch = itemTags.some((t: string) => 
         t.toLowerCase() === context.psychology?.dominant_emotion?.toLowerCase()
       );
       if (emotionMatch) {
