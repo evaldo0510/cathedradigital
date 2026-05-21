@@ -327,5 +327,3 @@ const Magisterium: React.FC = () => {
 };
 
 export default Magisterium;
-
-export default Magisterium;
