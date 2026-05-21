@@ -892,7 +892,8 @@ const Bible: React.FC = () => {
             />
           </div>
         )}
-      </ContemplativeLayout>
+          </div>
+        </ContemplativeLayout>
     );
   }
 
