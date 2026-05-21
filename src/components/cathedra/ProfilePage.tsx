@@ -598,7 +598,8 @@ const ProfilePage: React.FC = () => {
           </p>
         </div>
           </div>
-        </ContemplativeLayout>
+        </div>
+      </ContemplativeLayout>
     );
   };
 
