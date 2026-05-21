@@ -32,10 +32,12 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
   const springConfig = useMemo(() => ({
-    type: settings.reduceAnimations ? 'just' : 'spring',
+    type: settings.reduceAnimations ? 'tween' : 'spring',
+    duration: settings.reduceAnimations ? 0.05 : undefined,
     damping: 25,
     stiffness: 200
   }), [settings.reduceAnimations]);
+
 
   useEffect(() => {
     if (selectedText) {
