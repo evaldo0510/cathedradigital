@@ -65,12 +65,14 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     }
   ];
 
-  const handleNav = (item: string | { path: string; onClick?: () => void }) => {
+  const handleNav = useCallback((item: string | { path: string; onClick?: () => void }) => {
     const path = typeof item === 'string' ? item : item.path;
     if (typeof item !== 'string' && item.onClick) item.onClick();
-    navigate(path);
-    onClose?.();
-  };
+    if (path !== '#') {
+      navigate(path);
+      onClose?.();
+    }
+  }, [navigate, onClose]);
 
   return (
     <>
@@ -99,7 +101,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
                       onTouchStart={() => prefetchRoute(item.path)}
                       aria-current={currentPath === item.path ? 'page' : undefined}
                       className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
-                        ${currentPath === item.path
+                        ${currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path))
                           ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
                           : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
                     >
@@ -170,18 +172,18 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
               {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (
                 <Button
                   key={l}
+                  variant="ghost"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                   aria-label={`Mudar idioma para ${l.toUpperCase()}`}
                   aria-pressed={lang === l}
-                  className={`px-2 py-1 text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                  className={`px-3 py-1.5 h-auto text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                     lang === l 
-                      ? 'bg-primary text-white border-primary' 
+                      ? 'bg-primary text-white border-primary shadow-sm' 
                       : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
                   }`}
                 >
                   {l}
                 </Button>
-
               ))}
             </div>
           </div>

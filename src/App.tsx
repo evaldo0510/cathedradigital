@@ -95,7 +95,10 @@ const LoadingFallback = () => (
 
 const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
-  const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
+  const [lang, setLangState] = useState<Language>(() => {
+    const stored = localStorage.getItem('cathedra_lang');
+    return (stored as Language) || 'pt';
+  });
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -146,7 +149,7 @@ const AppLayout: React.FC = () => {
       isPremium: profile.is_premium,
       role: (profile.role as 'pilgrim' | 'scholar' | 'admin') || 'pilgrim',
       email: profile._sensitive?.email || '',
-      joinedAt: new Date().toISOString(), // Mocking missing fields
+      joinedAt: new Date().toISOString(),
       progress: {
         streak: profile.streak || 0,
         totalMinutesRead: 0,
@@ -233,7 +236,7 @@ const AppLayout: React.FC = () => {
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HelmetProvider>
-      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<div />} />}>
+      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
