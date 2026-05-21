@@ -272,8 +272,8 @@ const Relatio: React.FC<RelatioProps> = ({
                                  item.type === 'magisterium' ? 'Magistério' : 
                                  item.type === 'saint' ? 'Santos' : 'Jornada'}
                               </p>
-                              <span className="text-[8px] text-muted-foreground/40 uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">
-                                {suggestedReason}
+                              <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-primary/5 text-primary/40 uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                {item.reason}
                               </span>
                             </div>
                             <h4 className="text-sm font-bold font-serif truncate mt-0.5">{item.title}</h4>
