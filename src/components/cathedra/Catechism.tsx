@@ -670,28 +670,39 @@ const Catechism: React.FC = () => {
   // Section selection
   if (viewMode === 'sections' && selectedPart) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
-          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
+      <ContemplativeLayout
+        subtitle={`${selectedPart.part}`}
+        title={`${selectedPart.title}`}
+        maxW="max-w-6xl"
+      >
+        <div className="space-y-16">
+          <Button 
+            variant="ghost" 
+            onClick={goBack}
+            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+          >
+            <Icons.ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Partes
           </Button>
-          <div>
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-3xl font-serif font-bold text-foreground">{selectedPart.title}</h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {selectedPart.sections.map(sec => (
+              <motion.button 
+                key={sec.id} 
+                whileHover={{ x: 8 }}
+                onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+                className="text-left p-10 md:p-12 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group flex flex-col gap-6"
+              >
+                <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h3>
+                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
+                </div>
+              </motion.button>
+            ))}
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {selectedPart.sections.map(sec => (
-            <Button key={sec.id} onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
-              <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">Seção {sec.id}</span>
-              <h3 className="text-lg font-serif font-bold text-foreground mt-2 group-hover:text-primary transition-colors">{sec.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-            </Button>
-          ))}
-        </div>
-      </div>
+      </ContemplativeLayout>
     );
   }
 
