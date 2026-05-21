@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { AuthContext } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -50,15 +51,17 @@ const queryClient = new QueryClient({
 
 const renderBible = () => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuthContext as any}>
-          <ReadingSettingsProvider>
-            <Bible />
-          </ReadingSettingsProvider>
-        </AuthContext.Provider>
-      </BrowserRouter>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthContext.Provider value={mockAuthContext as any}>
+            <ReadingSettingsProvider>
+              <Bible />
+            </ReadingSettingsProvider>
+          </AuthContext.Provider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
