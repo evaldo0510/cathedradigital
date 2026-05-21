@@ -174,12 +174,11 @@ const AppLayout: React.FC = () => {
                 <AnimatePresence mode="wait">
                   <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<Index />} />
-                    <Route path="/hoje" element={<HojePage />} />
                     <Route path="/bible" element={<Bible />} />
                     <Route path="/catechism" element={<Catechism />} />
                     <Route path="/magisterium" element={<Magisterium />} />
                     <Route path="/buscar" element={<GlobalSearchPage />} />
-                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/hoje')} />} />
+                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/')} />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>

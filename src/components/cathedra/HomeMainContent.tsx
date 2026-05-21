@@ -66,7 +66,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
 
   return (
-    <div className="app-container stack-spacing pb-32">
+    <div className="app-container max-w-5xl mx-auto space-y-32 pb-48">
       {/* RITUAL DO DIA - EXPERIÊNCIA DIÁRIA */}
       <section className="space-y-12 md:space-y-16">
         <div className="flex items-center gap-10">
@@ -84,13 +84,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       <ReadingProgressSection />
 
       {/* NÚCLEO PRINCIPAL - BIBLIOTECA ESPIRITUAL */}
-      <section className="space-y-12 md:space-y-16">
+      <section className="space-y-16">
         <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+          <div className="h-px flex-1 bg-border/20" />
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/40 whitespace-nowrap">
             Biblioteca Digital
           </h2>
-          <div className="h-px flex-1 bg-border/30" />
+          <div className="h-px flex-1 bg-border/20" />
         </div>
         
         <HomeMainDoors t={t} />

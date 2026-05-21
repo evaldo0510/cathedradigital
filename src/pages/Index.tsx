@@ -41,7 +41,6 @@ const Index = () => {
       if (profile?.role === 'admin') {
         navigate(AppRoute.ADMIN, { replace: true });
       }
-      // REMOVED: redirecting to /hoje. The Home is now a contemplative portal for everyone.
     }
   }, [user, profile, loading, navigate]);
 

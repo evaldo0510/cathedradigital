@@ -1,28 +1,29 @@
-Refinar a experiência emocional do Cathedra para transmitir acolhimento, profundidade e serenidade através de um design contemplativo e silencioso.
+The consolidation of Cathedra Digital will focus on creating a premium, minimalist, and contemplative spiritual experience.
 
-### Mudanças Propostas
+### Technical Consolidation
+- Streamline `App.tsx` by removing redundant routes and simplifying the layout structure.
+- Consolidate providers and ensure consistent state management.
+- Remove unused or experimental components to reduce bundle size and complexity.
 
-#### 1. Transições e Ritmo (PageTransition)
-- Aumentar a duração das transições de página de 0.8s para 1.2s para um ritmo mais calmo.
-- Ajustar o easing para um movimento mais orgânico e suave.
-- Adicionar uma micro-interação de "respiração" visual durante o carregamento de conteúdos.
+### Home Page Transformation (Contemplative Portal)
+- Redesign the Home to be a silent, guided journey.
+- Maintain only: Hero, Ritual of the Day, Continue Reading, Bible, Catechism, Magisterium, Logos AI, and an elegant "Coming Soon" section.
+- Remove all visual clutter, duplicate modules, and excessive information cards.
 
-#### 2. Silêncio Visual e Contemplação (index.css)
-- Refinar a classe `.visual-silence` para ocultar elementos periféricos não essenciais de forma mais agressiva.
-- Expandir o `.contemplative-mode` com filtros de cor mais quentes e suaves, reduzindo o brilho de elementos puramente brancos.
-- Aumentar o `line-height` padrão para textos de leitura (`reader-text`) para 1.8.
-- Reduzir o ruído visual em `premium-card` removendo bordas desnecessárias e usando sombras baseadas na profundidade (shadow-depth).
+### Design System & UI Refinement
+- Standardize all UI elements (cards, buttons, grids) for a premium look.
+- Increase whitespace (respiro visual) and ensure perfect alignments.
+- Apply a "silent premium" aesthetic with refined shadows, borders, and typography.
 
-#### 3. Integração do Relatio (Relatio.tsx)
-- Tornar as sugestões do Relatio ainda mais discretas, com transições de fade mais lentas ao aparecerem.
-- Ajustar a tipografia das conexões para serem mais harmoniosas com o texto principal.
+### Premium Reading Experience
+- Refactor Bible, Catechism, and Magisterium views for maximum focus.
+- Implement comfortable reading widths and refined typography.
+- Minimize distractions during study and contemplation.
 
-#### 4. Paleta e Tipografia (sacredPalette.ts e tailwind.config.ts)
-- Introduzir variações de cores "serenas" que se adaptam ao contexto litúrgico de forma menos saturada.
-- Ajustar o espaçamento entre letras (letter-spacing) para títulos para transmitir "direção espiritual".
+### Logos IA Integration
+- Redesign the Logos IA interface to act as a spiritual mentor rather than a chatbot.
+- Seamlessly integrate it into the content flow.
 
-### Detalhes Técnicos
-- Edição em `src/components/PageTransition.tsx` para novos tempos de animação.
-- Edição em `src/index.css` para novos tokens de design e classes utilitárias de silêncio.
-- Edição em `src/components/cathedra/Relatio.tsx` para suavizar a entrada de conexões.
-- Edição em `tailwind.config.ts` para novos valores de transição e sombras.
+### Verification
+- Run typechecks and linting to ensure technical stability.
+- Visual review of the "monastic" digital experience.
