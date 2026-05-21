@@ -75,8 +75,8 @@
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 0%;
     --secondary-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
+    --border: 0 0% 0% / 0.2;
+    --input: 0 0% 0% / 0.1;
     --ring: 0 0% 0%;
     --muted-foreground: 0 0% 10%;
     --shadow-premium: none;
@@ -325,7 +325,15 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/30 max-w-[70ch] mx-auto text-foreground;
+    @apply selection:bg-primary/20 max-w-[70ch] mx-auto text-foreground;
+    font-variant-numeric: oldstyle-nums;
+    font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Specific Reader Container */
+  .reader-container {
+    @apply w-full max-w-[85ch] mx-auto px-6 py-12 md:py-24;
   }
 }
 
@@ -393,7 +401,7 @@
     --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
     --card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
     --btn-radius: 9999px;
-    --layout-max-width: 1100px; /* Reduced for better reading comfort */
+    --layout-max-width: 800px; /* Reduced for better reading comfort */
   }
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
