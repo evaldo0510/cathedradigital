@@ -49,8 +49,8 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-12 md:mb-16"
       >
-        <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-medium text-primary leading-[1.1] md:leading-[0.9] tracking-tighter">
-          Silêncio <br /> <span className="text-secondary/20 italic font-serif font-light">&</span> Profundidade
+        <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-display font-medium text-primary leading-tight tracking-tighter">
+          Cathedra
         </h1>
       </motion.div>
 
