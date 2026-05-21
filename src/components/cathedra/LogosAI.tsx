@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { LogosChatSkeleton } from './Skeletons';
 
 interface LogosAIProps {
   context?: string;
@@ -13,6 +15,7 @@ interface LogosAIProps {
   type?: 'bible' | 'catechism' | 'magisterium';
   variant?: 'drawer' | 'integrated';
 }
+
 
 const LogosAI: React.FC<LogosAIProps> = ({ 
   context, 
