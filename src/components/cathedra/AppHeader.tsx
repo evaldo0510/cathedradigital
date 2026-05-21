@@ -49,17 +49,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const [showNotifs, setShowNotifs] = useState(false);
 
   return (
-    <header className="border-b border-border/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
-      <div className="app-container flex items-center justify-between h-24 sm:h-28">
-        <div className="flex items-center gap-8 sm:gap-12 min-w-0">
-          <div className="flex items-center gap-4 sm:gap-5 cursor-pointer group min-w-0 focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOJE)} onClick={() => navigate(AppRoute.HOJE)}>
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-700" />
-              <Icons.Logo className="w-10 h-10 sm:w-14 sm:h-14 flex-shrink-0 transition-all duration-700 group-hover:scale-105 relative z-10" variant="blue" />
-            </div>
+    <header className="border-b border-border/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+      <div className="app-container flex items-center justify-between h-20 sm:h-24">
+        <div className="flex items-center gap-8 min-w-0">
+          <div className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
+            <Icons.Logo className="w-10 h-10 transition-all duration-700 group-hover:scale-105" variant="blue" />
             <div className="flex flex-col min-w-0">
-              <span className="text-xl sm:text-2xl font-display font-medium uppercase tracking-[0.3em] text-primary leading-none truncate group-hover:tracking-[0.35em] transition-all duration-700">Cathedra</span>
-              <span className="text-[9px] font-black uppercase tracking-[0.5em] text-secondary/40 mt-1.5 truncate">Digitalis</span>
+              <span className="text-xl font-display font-medium uppercase tracking-[0.4em] text-primary leading-none group-hover:tracking-[0.45em] transition-all duration-1000">Cathedra</span>
             </div>
           </div>
           
@@ -68,97 +64,67 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               variant="outline"
               size="sm"
               onClick={() => navigate(-1)}
-              className="h-10 sm:h-12 px-4 sm:px-6"
+              className="h-10 px-4 rounded-full border-border/10 hover:bg-primary/5"
             >
-              <Icons.ChevronLeft className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
-              <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline-block">{t('back')}</span>
+              <Icons.ChevronLeft className="w-4 h-4" />
+              <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
             </Button>
           )}
 
           {isDashboard && (
-            <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
+            <nav className="hidden xl:flex items-center gap-2 border-l border-border/10 pl-8 ml-4">
               {[
                 { label: t('bible'), route: AppRoute.BIBLE },
                 { label: t('catechism'), route: AppRoute.CATECHISM },
                 { label: 'Magistério', route: AppRoute.MAGISTERIUM },
-                { label: 'Logos IA', route: AppRoute.BUSCAR },
+                { label: 'Logos', route: AppRoute.BUSCAR },
               ].map(item => (
                 <Button 
                   key={item.route} 
                   variant="ghost"
                   size="sm"
                   onClick={() => navigate(item.route)}
-                  className={`px-5 py-3 h-auto text-[10px] font-bold uppercase tracking-[0.35em] transition-all whitespace-nowrap relative group shadow-none border-none ${
-                    pathname === item.route ? 'text-primary bg-primary/[0.04] rounded-full' : 'text-muted-foreground/50 hover:text-primary'
+                  className={`px-4 py-2 h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
+                    pathname === item.route ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'
                   }`}
-                  aria-label={item.label}
-                  aria-current={pathname === item.route ? 'page' : undefined}
                 >
                   {item.label}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-primary transition-all ${pathname === item.route ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                  {pathname === item.route && (
+                    <motion.div layoutId="nav-active" className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+                  )}
                 </Button>
-
               ))}
             </nav>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-4 flex-shrink-0 app-header-actions">
+        <div className="flex items-center gap-3 sm:gap-4">
           <Button
             variant="outline"
             size="icon"
-            onClick={() => {
-              localStorage.removeItem('cathedra_onboarding_done');
-              navigate("/");
-
-            }}
-            className="w-10 h-10 sm:w-12 sm:h-12"
-            title={t('ecosystem_guide') || "Guia do Ecossistema"}>
-            <Icons.Compass className="w-5 h-5" />
+            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10"
+          >
+            <Icons.Search className="w-5 h-5 opacity-40" />
           </Button>
 
           <Button
             variant="outline"
             size="icon"
             onClick={onToggleDark}
-            className="w-10 h-10 sm:w-12 sm:h-12 flex lg:hidden"
-            aria-label="Alternar tema">
-            {isDark ? <Icons.Sun className="w-5 h-5" /> : <Icons.Moon className="w-5 h-5" />}
-          </Button>
-
-          <Button
-            variant={isHighContrast ? "default" : "outline"}
-            size="icon"
-            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
-            className={`w-10 h-10 sm:w-12 sm:h-12 hidden sm:flex ${isHighContrast ? 'ring-2 ring-primary ring-offset-1' : ''}`}
-            aria-label="Configurações de Acessibilidade">
-            <Icons.ShieldCheck className="w-5 h-5" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-            aria-label={t('search') || "Buscar"}
-            className="w-10 h-10 sm:w-12 sm:h-12"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10"
           >
-            <Icons.Search className="w-5 h-5" />
+            {isDark ? <Icons.Sun className="w-5 h-5 opacity-40" /> : <Icons.Moon className="w-5 h-5 opacity-40" />}
           </Button>
 
           {user && (
             <Button
-              variant={showNotifs ? "default" : "outline"}
+              variant="outline"
               size="icon"
-              onClick={() => setShowNotifs(!showNotifs)}
-              className="relative w-10 h-10 sm:w-12 sm:h-12"
-              aria-label={showNotifs ? t('close_notifications') : t('notifications_unread')}
-              aria-expanded={showNotifs}>
-              <Icons.Message className="w-5 h-5" />
-              {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-premium-tiny font-black flex items-center justify-center rounded-full border-2 border-background shadow-premium">
-                  {unreadCount}
-                </span>
-              )}
+              onClick={() => navigate(AppRoute.PROFILE)}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10"
+            >
+              <Icons.User className="w-5 h-5 opacity-40" />
             </Button>
           )}
           
