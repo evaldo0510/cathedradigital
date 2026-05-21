@@ -77,10 +77,8 @@ const LoadingFallback = () => (
 );
 
 const AppLayout: React.FC = () => {
+  const { settings, updateSettings } = useReadingSettings();
   const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_theme') === 'dark');
-  const [isHighContrast, setIsHighContrast] = useState(() => localStorage.getItem('cathedra_high_contrast') === 'true');
-  const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   
@@ -88,13 +86,16 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) root.classList.add('dark'); else root.classList.remove('dark');
-    if (isHighContrast) root.classList.add('high-contrast'); else root.classList.remove('high-contrast');
-    localStorage.setItem('cathedra_theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('cathedra_high_contrast', isHighContrast ? 'true' : 'false');
-  }, [isDark, isHighContrast]);
+  const isDark = settings.theme === 'dark' || settings.theme === 'night';
+  const isHighContrast = settings.highContrast;
+
+  const toggleDark = useCallback(() => {
+    updateSettings({ theme: isDark ? 'paper' : 'dark' });
+  }, [isDark, updateSettings]);
+
+  const toggleHighContrast = useCallback(() => {
+    updateSettings({ highContrast: !isHighContrast });
+  }, [isHighContrast, updateSettings]);
 
   const toggleSpeak = useCallback(() => {
     if (window.speechSynthesis.speaking) {
@@ -188,9 +189,9 @@ const AppLayout: React.FC = () => {
               isOpen={showA11ySettings} 
               onClose={() => setShowA11ySettings(false)}
               isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
-              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              onToggleHighContrast={toggleHighContrast}
             />
             <CommandCenter />
             <PWAInstallPrompt />
