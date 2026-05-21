@@ -99,6 +99,11 @@ const AppLayout: React.FC = () => {
     updateSettings({ highContrast: !isHighContrast });
   }, [isHighContrast, updateSettings]);
 
+  const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
+  const handleCloseSidebar = useCallback(() => setIsSidebarOpen(false), []);
+  const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
+  const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
+
   const toggleSpeak = useCallback(() => {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -113,6 +118,7 @@ const AppLayout: React.FC = () => {
       window.speechSynthesis.speak(utterance);
     }
   }, [lang]);
+
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
   const authUserAdapter = useMemo(() => {
