@@ -120,11 +120,22 @@ const AppLayout: React.FC = () => {
       name: profile.name,
       avatar: profile.avatar_url,
       isPremium: profile.is_premium,
-      role: profile.role,
+      role: (profile.role as any) || 'pilgrim',
       email: profile._sensitive?.email || '',
       joinedAt: new Date().toISOString(), // Mocking missing fields
-      progress: 0,
-      stats: { streak: profile.streak || 0, xp: profile.xp || 0 }
+      progress: {
+        streak: profile.streak || 0,
+        totalMinutesRead: 0,
+        completedBooks: [],
+        xp: profile.xp || 0,
+        level: 1,
+        badges: []
+      },
+      stats: {
+        versesSaved: 0,
+        studiesPerformed: 0,
+        daysActive: profile.streak || 0
+      }
     };
   }, [profile]);
 
