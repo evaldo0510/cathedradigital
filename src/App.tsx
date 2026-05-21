@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
-import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
+// A11ySettingsPanel lazy loaded below
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
@@ -29,11 +29,9 @@ import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import CommandCenter from './components/cathedra/CommandCenter';
-import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import OfflineModeToggle from './components/cathedra/OfflineModeToggle';
-import SplashScreen from './components/cathedra/SplashScreen';
-import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
+const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
+const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
+const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -208,17 +206,19 @@ const AppLayout: React.FC = () => {
 
             <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
             <CathedralFooter />
-            <A11ySettingsPanel 
-              isOpen={showA11ySettings} 
-              onClose={handleCloseA11y}
+            <Suspense fallback={null}>
+              <A11ySettingsPanel 
+                isOpen={showA11ySettings} 
+                onClose={handleCloseA11y}
 
-              isDark={isDark}
-              onToggleDark={toggleDark}
-              isHighContrast={isHighContrast}
-              onToggleHighContrast={toggleHighContrast}
-            />
-            <CommandCenter />
-            <PWAInstallPrompt />
+                isDark={isDark}
+                onToggleDark={toggleDark}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={toggleHighContrast}
+              />
+              <CommandCenter />
+              <PWAInstallPrompt />
+            </Suspense>
             <OfflineIndicator />
       </LangContext.Provider>
       </div>
