@@ -112,6 +112,22 @@ const AppLayout: React.FC = () => {
     }
   }, [lang]);
 
+  // Adapter to convert Profile to User if needed, or just cast if compatible
+  const authUserAdapter = useMemo(() => {
+    if (!profile) return null;
+    return {
+      id: profile.id,
+      name: profile.name,
+      avatar: profile.avatar_url,
+      isPremium: profile.is_premium,
+      role: profile.role,
+      email: profile._sensitive?.email || '',
+      joinedAt: new Date().toISOString(), // Mocking missing fields
+      progress: 0,
+      stats: { streak: profile.streak || 0, xp: profile.xp || 0 }
+    } as any;
+  }, [profile]);
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <ScrollToTop />
@@ -119,7 +135,7 @@ const AppLayout: React.FC = () => {
         <ReadingSettingsProvider>
           <TooltipProvider>
             <AppHeader 
-              user={profile} 
+              user={authUserAdapter} 
               isDark={isDark} 
               onToggleDark={() => setIsDark(!isDark)}
               isHighContrast={isHighContrast}
@@ -133,7 +149,7 @@ const AppLayout: React.FC = () => {
             />
             
             <CathedralSidebar 
-              user={profile}
+              user={authUserAdapter}
               onClose={() => setIsSidebarOpen(false)}
               isDark={isDark}
               onToggleDark={() => setIsDark(!isDark)}
@@ -163,7 +179,7 @@ const AppLayout: React.FC = () => {
               </Suspense>
             </main>
 
-            <BottomNav user={profile} onOpenSidebar={() => setIsSidebarOpen(true)} />
+            <BottomNav user={authUserAdapter} onOpenSidebar={() => setIsSidebarOpen(true)} />
             <CathedralFooter />
             <A11ySettingsPanel 
               isOpen={showA11ySettings} 
