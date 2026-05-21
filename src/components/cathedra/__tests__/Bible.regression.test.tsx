@@ -8,27 +8,32 @@ import { AuthContext } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
 
-// Mock Supabase
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
+// Mock Supabase with chainable methods
+const createMockSupabase = () => {
+  const chain = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    contains: vi.fn(() => chain),
+    order: vi.fn(() => chain),
+    limit: vi.fn(() => chain),
+    maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+    then: vi.fn((cb) => cb({ data: [], error: null })),
+  };
+  
+  return {
     auth: {
       onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
       getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
     },
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          order: vi.fn(() => ({
-            then: vi.fn((cb) => cb({ data: [], error: null })),
-          })),
-          maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
-        })),
-      })),
-    })),
+    from: vi.fn(() => chain),
     functions: {
       invoke: vi.fn(() => Promise.resolve({ data: null, error: null })),
     },
-  },
+  };
+};
+
+vi.mock('@/integrations/supabase/client', () => ({
+  supabase: createMockSupabase(),
 }));
 
 const mockAuthContext = {
