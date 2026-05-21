@@ -28,16 +28,23 @@ jobs:
         bun run typecheck > tsc_output.log 2>&1
         RESULT=$?
         cat tsc_output.log
-        exit $RESULT
+        if [ $RESULT -ne 0 ]; then
+          echo "::error::Typecheck failed. Check tsc_output.log in artifacts."
+          exit $RESULT
+        fi
 
     - name: Lint
       id: lint
       run: |
         echo "Running eslint..."
+        # We allow warnings to not fail the build for now, but capture all output
         bun run lint > eslint_output.log 2>&1
         RESULT=$?
         cat eslint_output.log
-        exit $RESULT
+        if [ $RESULT -ne 0 ]; then
+          echo "::error::Lint failed. Check eslint_output.log in artifacts."
+          exit $RESULT
+        fi
 
     - name: Generate SEO Files
       run: |
@@ -45,20 +52,23 @@ jobs:
         bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1
         RESULT=$?
         cat sitemap_gen.log
-        exit $RESULT
+        if [ $RESULT -ne 0 ]; then
+          echo "::error::Sitemap generation failed."
+          exit $RESULT
+        fi
 
     - name: Validations
       run: |
         EXIT_CODE=0
         
         echo "Validating sitemap..."
-        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || { cat sitemap_val.log; EXIT_CODE=1; }
+        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || { cat sitemap_val.log; EXIT_CODE=1; echo "::error::Sitemap validation failed."; }
         
         echo "Validating catechism..."
-        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || { cat catechism_val.log; EXIT_CODE=1; }
+        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || { cat catechism_val.log; EXIT_CODE=1; echo "::error::Catechism validation failed."; }
         
         echo "Running security audit..."
-        bun run scripts/security-audit.ts > security_audit.log 2>&1 || { cat security_audit.log; EXIT_CODE=1; }
+        bun run scripts/security-audit.ts > security_audit.log 2>&1 || { cat security_audit.log; EXIT_CODE=1; echo "::error::Security audit failed."; }
         
         exit $EXIT_CODE
 
@@ -68,7 +78,10 @@ jobs:
         bun run build > build_output.log 2>&1
         RESULT=$?
         cat build_output.log
-        exit $RESULT
+        if [ $RESULT -ne 0 ]; then
+          echo "::error::Vite build failed. Check build_output.log in artifacts."
+          exit $RESULT
+        fi
 
     - name: Upload Logs as Artifacts
       if: always()
