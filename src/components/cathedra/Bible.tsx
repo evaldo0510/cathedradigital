@@ -371,6 +371,7 @@ const Bible: React.FC = () => {
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
+    setViewMode('reading');
   };
 
   const MemoizedRelatio = useMemo(() => {
@@ -388,8 +389,6 @@ const Bible: React.FC = () => {
       />
     );
   }, [selectedBook, selectedChapter, showCrossRefs, handleNavigateToCIC, handleNavigateToDoc]);
-    setViewMode('reading');
-  };
 
   const goBack = () => {
     if (viewMode === 'reading') setViewMode('chapters');
