@@ -399,6 +399,7 @@
   .premium-card {
     @apply bg-card border border-border/5 shadow-premium transition-all duration-1000 relative overflow-hidden;
     border-radius: var(--card-radius);
+    transition-duration: 1.2s; /* Slower, more graceful transitions */
   }
   
   .premium-card-interactive {
