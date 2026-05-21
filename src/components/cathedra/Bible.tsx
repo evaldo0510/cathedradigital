@@ -33,7 +33,8 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { History, LayoutPanelLeft, Compass } from 'lucide-react';
+import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
+import ContemplativeLayout from './ContemplativeLayout';
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
