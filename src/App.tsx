@@ -124,6 +124,8 @@ const AppLayout: React.FC = () => {
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
 
   const toggleSpeak = useCallback(() => {
+    if (settings.totalSilence) return;
+    
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
