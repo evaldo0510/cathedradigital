@@ -16,7 +16,7 @@ import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
-// Core UI components (not lazy to ensure layout is instant)
+// Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
 import { ReadingSettingsProvider } from './contexts/ReadingSettingsContext';
@@ -46,77 +46,16 @@ const queryClient = new QueryClient({
   },
 });
 
+// Lazy loaded routes
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
-const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
-const Rosary = lazy(() => import('./components/cathedra/Rosary'));
-const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
-const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
-const Certamen = lazy(() => import('./components/cathedra/Certamen'));
-const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
-const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
-const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
-const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
-const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
-const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
-const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
-const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
-const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
-const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
-const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
-const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
-const OnboardingPage = lazy(() => import('./components/cathedra/OnboardingPage'));
-const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
-const AchievementsPage = lazy(() => import('./components/cathedra/AchievementsPage'));
-const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResultPage'));
-const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
-const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
-const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
-const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage'));
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
-const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
-const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
-const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
-const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
-const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const Index = lazy(() => import('./pages/Index'));
-const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
-const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
-const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
-const DiagnosticsPage = lazy(() => import('./components/cathedra/DiagnosticsPage'));
-const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
-const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
-const EncyclopediaPage = lazy(() => import('./components/cathedra/EncyclopediaPage'));
-const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
-const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
-const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
-const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
-const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
-const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
-const CatechismExplorer = lazy(() => import('./pages/CatechismExplorer'));
-const CatechismHealthCheck = lazy(() => import('./components/cathedra/CatechismHealthCheck'));
-const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
-const SecurityAuditPage = lazy(() => import('./components/cathedra/SecurityAuditPage'));
-const SellerDashboard = lazy(() => import('./components/cathedra/SellerDashboard'));
-const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
-const VisualRegressionDashboard = lazy(() => import('./components/cathedra/VisualRegressionDashboard'));
-const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
-const GuidedReadingPage = lazy(() => import('./pages/GuidedReading'));
-const CatechismDebug = lazy(() => import('./components/cathedra/CatechismDebug'));
-const CatechismIntegrity = lazy(() => import('./components/cathedra/CatechismIntegrity'));
-const CatechismVerification = lazy(() => import('./components/cathedra/CatechismVerification'));
-const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
-const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
-const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
-const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
-const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
-const SpiritualJournalPage = lazy(() => import('./components/cathedra/ReadingJournal'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
@@ -131,10 +70,9 @@ const LoadingFallback = () => (
       <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
       <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
     </div>
-    <div className="w-full max-w-sm space-y-4">
+    <div className="w-full max-sm space-y-4">
       <SkeletonBar w="w-3/4 mx-auto" h="h-5" />
       <SkeletonBar w="w-full" h="h-3" className="opacity-50" />
-      <SkeletonBar w="w-5/6 mx-auto" h="h-3" className="opacity-40" />
     </div>
   </div>
 );
@@ -144,7 +82,10 @@ const AppLayout: React.FC = () => {
   const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_theme') === 'dark');
   const [isHighContrast, setIsHighContrast] = useState(() => localStorage.getItem('cathedra_high_contrast') === 'true');
   const [showA11ySettings, setShowA11ySettings] = useState(false);
-  const { user, profile, loading } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  
+  const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -156,14 +97,53 @@ const AppLayout: React.FC = () => {
     localStorage.setItem('cathedra_high_contrast', isHighContrast ? 'true' : 'false');
   }, [isDark, isHighContrast]);
 
+  const toggleSpeak = useCallback(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    } else {
+      const content = document.getElementById('main-content')?.innerText || '';
+      if (!content) return;
+      const utterance = new SpeechSynthesisUtterance(content.substring(0, 5000));
+      utterance.lang = lang === 'pt' ? 'pt-BR' : 'en-US';
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  }, [lang]);
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
         <ReadingSettingsProvider>
           <TooltipProvider>
-            <AppHeader onOpenA11y={() => setShowA11ySettings(true)} />
-            <CathedralSidebar />
+            <AppHeader 
+              user={profile} 
+              isDark={isDark} 
+              onToggleDark={() => setIsDark(!isDark)}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              lang={lang}
+              onChangeLang={setLangState}
+              isSpeaking={isSpeaking}
+              onToggleSpeak={toggleSpeak}
+              onSignOut={signOut}
+              onOpenSidebar={() => setIsSidebarOpen(true)}
+            />
+            
+            <CathedralSidebar 
+              user={profile}
+              onClose={() => setIsSidebarOpen(false)}
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              isSpeaking={isSpeaking}
+              onToggleSpeak={toggleSpeak}
+              onSignOut={signOut}
+            />
+
             <main id="main-content" className="pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
               <Suspense fallback={<LoadingFallback />}>
                 <AnimatePresence mode="wait">
@@ -175,16 +155,24 @@ const AppLayout: React.FC = () => {
                     <Route path="/study" element={<StudyMode />} />
                     <Route path="/saints" element={<Saints />} />
                     <Route path="/magisterium" element={<Magisterium />} />
-                    <Route path="/auth" element={<Auth />} />
+                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/hoje')} />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </AnimatePresence>
               </Suspense>
             </main>
-            <BottomNav />
+
+            <BottomNav user={profile} onOpenSidebar={() => setIsSidebarOpen(true)} />
             <CathedralFooter />
-            <A11ySettingsPanel open={showA11ySettings} onOpenChange={setShowA11ySettings} />
+            <A11ySettingsPanel 
+              isOpen={showA11ySettings} 
+              onClose={() => setShowA11ySettings(false)}
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+            />
             <CommandCenter />
             <PWAInstallPrompt />
             <OfflineIndicator />
