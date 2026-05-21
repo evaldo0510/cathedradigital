@@ -40,8 +40,8 @@ async function fetchLastReading(userId: string) {
 
     return {
       type: data.content_type || 'unknown',
-      title: data.content_id || 'Leitura Recente',
-      tags: (data.metadata as any)?.tags || []
+      title: data.label || data.content_id || 'Leitura Recente',
+      tags: [] // Since we don't have tags in reading_marks directly, we could fetch them, but for now we'll match by ID if needed
     };
   } catch (err) {
     console.error('Error fetching last reading for relevance:', err);
