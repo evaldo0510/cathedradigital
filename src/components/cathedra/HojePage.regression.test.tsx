@@ -8,6 +8,8 @@ import { AuthProvider } from '@/hooks/useAuth';
 import { LangContext } from '@/contexts/LangContext';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { HelmetProvider } from 'react-helmet-async';
+
 
 
 // Mock Supabase
@@ -54,18 +56,21 @@ const queryClient = new QueryClient({
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ReadingSettingsProvider>
-          <TooltipProvider>
-            <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
-              {children}
-            </LangContext.Provider>
-          </TooltipProvider>
-        </ReadingSettingsProvider>
-      </AuthProvider>
+      <HelmetProvider>
+        <AuthProvider>
+          <ReadingSettingsProvider>
+            <TooltipProvider>
+              <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
+                {children}
+              </LangContext.Provider>
+            </TooltipProvider>
+          </ReadingSettingsProvider>
+        </AuthProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   </BrowserRouter>
 );
+
 
 
 describe('HojePage Regression', () => {
