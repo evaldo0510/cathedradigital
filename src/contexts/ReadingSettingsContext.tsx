@@ -167,39 +167,9 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     } else {
       root.classList.remove('full-screen-mode');
     }
-
-  useEffect(() => {
-    const handleToggle = (e: any) => {
-      const newValue = e.detail;
-      updateSettings({ totalSilence: newValue });
-      toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
-        description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
-        icon: newValue ? "🤫" : "🔊"
-      });
-    };
-    
-    const handleKeyboardShortcut = (e: KeyboardEvent) => {
-      // Alt + S or Option + S
-      if (e.altKey && e.key.toLowerCase() === 's') {
-        e.preventDefault();
-        const newValue = !settings.totalSilence;
-        updateSettings({ totalSilence: newValue });
-        toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
-          description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
-          icon: newValue ? "🤫" : "🔊"
-        });
-      }
-    };
-
-    window.addEventListener('toggle-total-silence', handleToggle);
-    window.addEventListener('keydown', handleKeyboardShortcut);
-    return () => {
-      window.removeEventListener('toggle-total-silence', handleToggle);
-      window.removeEventListener('keydown', handleKeyboardShortcut);
-    };
-  }, [updateSettings, settings.totalSilence]);
-
   }, [settings]);
+
+
 
   const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
     const updated = { ...settings, ...newSettings };
@@ -236,6 +206,38 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       refreshProfile();
     }
   }, [user, refreshProfile]);
+
+  useEffect(() => {
+    const handleToggle = (e: any) => {
+      const newValue = e.detail;
+      updateSettings({ totalSilence: newValue });
+      toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+        description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+        icon: newValue ? "🤫" : "🔊"
+      });
+    };
+    
+    const handleKeyboardShortcut = (e: KeyboardEvent) => {
+      // Alt + S or Option + S
+      if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        const newValue = !settings.totalSilence;
+        updateSettings({ totalSilence: newValue });
+        toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+          description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+          icon: newValue ? "🤫" : "🔊"
+        });
+      }
+    };
+
+    window.addEventListener('toggle-total-silence', handleToggle);
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => {
+      window.removeEventListener('toggle-total-silence', handleToggle);
+      window.removeEventListener('keydown', handleKeyboardShortcut);
+    };
+  }, [updateSettings, settings.totalSilence]);
+
 
   return (
     <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>

@@ -4,6 +4,8 @@ import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { setSentryUser } from '@/lib/sentry';
+
 
 export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
 
@@ -176,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const requestId = ++authRequestId.current;
     console.log('Syncing auth state, request ID:', requestId, 'User:', currentUser?.id);
     setUser(currentUser);
+    setSentryUser(currentUser ? { id: currentUser.id, email: currentUser.email } : null);
     setLoading(true);
 
     if (!currentUser) {
@@ -184,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
+
 
     try {
       console.log('Fetching profile for:', currentUser.id);

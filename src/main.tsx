@@ -3,6 +3,10 @@ import App from "./App.tsx";
 import "./index.css";
 import { prefetchCoreModules } from "./lib/prefetch";
 import { registerSW } from 'virtual:pwa-register';
+import { initSentry } from "./lib/sentry";
+
+initSentry();
+
 
 // Guard: unregister service workers in preview/iframe contexts
 const isInIframe = (() => {

@@ -1,6 +1,8 @@
 import { Button } from '@/components/ui/button';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
+import * as Sentry from "@sentry/react";
+
 
 interface Props {
   children: ReactNode;
@@ -21,7 +23,9 @@ class AppErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    Sentry.captureException(error, { extra: errorInfo as any });
   }
+
 
   public render() {
     if (this.state.hasError) {
