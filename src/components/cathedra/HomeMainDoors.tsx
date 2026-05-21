@@ -110,7 +110,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
                   role="button"
                   aria-label={`${door.label}: ${door.description}`}
                   className={cn(
-                    "relative p-10 md:p-14 lg:p-20 rounded-premium border border-border/10 bg-card flex flex-col items-center text-center gap-12 cursor-pointer group transition-all focus-visible:ring-4 focus-visible:ring-primary/5 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/10 hover:bg-primary/[0.005] active:scale-[0.99]",
+                    "relative p-10 md:p-14 lg:p-16 rounded-premium border border-border/10 bg-card flex flex-col items-center text-center gap-10 cursor-pointer group transition-all focus-visible:ring-4 focus-visible:ring-primary/5 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/10 hover:bg-primary/[0.005] active:scale-[0.99]",
                     isActive && "border-primary/20 bg-primary/[0.01] shadow-premium-hover ring-1 ring-primary/5"
                   )}
                 >

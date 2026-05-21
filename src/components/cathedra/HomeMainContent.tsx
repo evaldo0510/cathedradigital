@@ -83,18 +83,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* CONTINUAR LEITURA */}
       <ReadingProgressSection />
 
-      {/* JORNADA GUIADA - NOVO FOCO CONTEMPLATIVO */}
-      <section className="space-y-12 md:space-y-16">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-            Jornada de Leitura
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        
-        <GuidedReadingFlow />
-      </section>
 
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-12 md:space-y-16">
@@ -113,6 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* LOGOS IA INTEGRADA - ACESSO ÚNICO E MINIMALISTA */}
       <section className="space-y-12">
         <div className="flex items-center gap-10">
+
           <div className="h-px flex-1 bg-border/30" />
           <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
             Logos IA
@@ -122,18 +111,19 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           ref={logosCardRef}
-          className="p-10 md:p-16 flex flex-col items-center gap-12 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/5 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none bg-card"
+          className="p-10 md:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/5 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none bg-card"
         >
-          <div className="relative z-10 w-20 h-20 rounded-premium bg-primary/[0.01] border border-border/10 flex items-center justify-center text-primary/30 group-hover:scale-105 transition-transform duration-1000">
-            <Sparkles className="w-10 h-10" strokeWidth={0.5} />
+          <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.01] border border-border/10 flex items-center justify-center text-primary/30 group-hover:scale-105 transition-transform duration-1000">
+            <Sparkles className="w-8 h-8" strokeWidth={0.5} />
           </div>
           
-          <div className="relative z-10 space-y-4 text-center max-w-2xl">
-            <h3 className="text-4xl font-display font-medium text-primary tracking-tight">Mentor Espiritual</h3>
-            <p className="text-lg text-muted-foreground/40 leading-relaxed font-serif italic max-w-md mx-auto">
+          <div className="relative z-10 space-y-3 text-center max-w-2xl">
+            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Logos IA</h3>
+            <p className="text-base text-muted-foreground/40 leading-relaxed font-serif italic max-w-md mx-auto">
               "A inteligência a serviço da contemplação."
             </p>
           </div>
+
 
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full max-w-xl">
             <div className="relative group/input">

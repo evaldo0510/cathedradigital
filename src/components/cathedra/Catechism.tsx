@@ -607,9 +607,10 @@ const Catechism: React.FC = () => {
             </div>
           </aside>
 
-          <div className="flex-1 w-full space-y-8">
-            <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
-              <div className="p-8 md:p-16 lg:p-20">
+          <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
+            <div className="reader-container bg-card/30 backdrop-blur-sm border border-border/5 shadow-premium overflow-hidden rounded-3xl relative transition-all duration-1000">
+              <div className="p-8 md:p-16">
+
                 <div className="space-y-16">
                   {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
                     <LazyParagraph 

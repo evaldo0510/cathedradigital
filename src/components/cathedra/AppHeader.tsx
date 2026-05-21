@@ -110,7 +110,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             size="icon"
             onClick={() => {
               localStorage.removeItem('cathedra_onboarding_done');
-              navigate(AppRoute.ONBOARDING);
+              navigate("/");
+
             }}
             className="w-10 h-10 sm:w-12 sm:h-12"
             title={t('ecosystem_guide') || "Guia do Ecossistema"}>

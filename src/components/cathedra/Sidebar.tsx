@@ -64,12 +64,11 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       label: 'Em Breve',
       items: [
         { label: 'Jornadas Espirituais', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
-        { label: 'Diário de Fé', path: AppRoute.DIARIO, icon: <Icons.PenLine className="w-5 h-5 opacity-40" /> },
         { label: 'Comunidade Ativa', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
-        { label: 'Quiz Avançado', path: AppRoute.CERTAMEN, icon: <Icons.Trophy className="w-5 h-5 opacity-40" /> },
         { label: 'Painel do Peregrino', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5 opacity-40" /> },
       ]
     }
+
 
   ];
 
