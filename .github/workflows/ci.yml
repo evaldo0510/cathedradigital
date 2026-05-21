@@ -22,7 +22,35 @@ jobs:
       run: bun install
 
     - name: Typecheck
-      run: bun run typecheck
+      run: |
+        bun run typecheck > tsc_output.log 2>&1 || (cat tsc_output.log && exit 1)
 
     - name: Lint
-      run: bun run lint
+      run: |
+        bun run lint > eslint_output.log 2>&1 || (cat eslint_output.log && exit 1)
+
+    - name: Generate SEO Files
+      run: |
+        bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1 || (cat sitemap_gen.log && exit 1)
+
+    - name: Validations
+      run: |
+        echo "Validating sitemap..."
+        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || (cat sitemap_val.log && exit 1)
+        echo "Validating catechism..."
+        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || (cat catechism_val.log && exit 1)
+        echo "Running security audit..."
+        bun run scripts/security-audit.ts > security_audit.log 2>&1 || (cat security_audit.log && exit 1)
+
+    - name: Build
+      run: |
+        bun run build > build_output.log 2>&1 || (cat build_output.log && exit 1)
+
+    - name: Upload Logs as Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ci-logs
+        path: |
+          *.log
+          scripts/logs/*.log
