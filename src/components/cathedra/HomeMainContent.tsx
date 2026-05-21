@@ -157,8 +157,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         <ComingSoonSection className="opacity-40 hover:opacity-100 transition-opacity duration-1000" />
       </section>
     </div>
-
-    </div>
   );
 };
 
