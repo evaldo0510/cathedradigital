@@ -374,6 +374,14 @@ const Bible: React.FC = () => {
     setViewMode('reading');
   };
 
+  const handleNavigateToCIC = useCallback((paragraph: number) => {
+    navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
+  const handleNavigateToDoc = useCallback((docId: string) => {
+    navigate(`/magisterium?doc=${docId}`);
+  }, [navigate]);
+
   const MemoizedRelatio = useMemo(() => {
     if (!selectedBook || !selectedChapter || !showCrossRefs) return null;
     return (
@@ -389,6 +397,7 @@ const Bible: React.FC = () => {
       />
     );
   }, [selectedBook, selectedChapter, showCrossRefs, handleNavigateToCIC, handleNavigateToDoc]);
+
 
   const goBack = () => {
     if (viewMode === 'reading') setViewMode('chapters');
@@ -415,13 +424,6 @@ const Bible: React.FC = () => {
     }
   }, [selectedBook, selectedChapter, saveLastRead]);
 
-  const handleNavigateToCIC = useCallback((paragraph: number) => {
-    navigate(`/catechism?p=${paragraph}`);
-  }, [navigate]);
-
-  const handleNavigateToDoc = useCallback((docId: string) => {
-    navigate(`/magisterium?doc=${docId}`);
-  }, [navigate]);
 
   // In-memory cache with IndexedDB persistence for offline access
   const bibleCache = useMemo(() => {

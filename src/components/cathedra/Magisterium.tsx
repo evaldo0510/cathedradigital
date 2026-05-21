@@ -8,6 +8,7 @@ import SacredImage from './SacredImage';
 import DeepContentSection from './DeepContentSection';
 import { toast } from 'sonner';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import Relatio from './Relatio';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
