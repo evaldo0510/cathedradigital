@@ -49,12 +49,11 @@ const queryClient = new QueryClient({
 // Lazy loaded routes
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
-const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
-const Saints = lazy(() => import('./components/cathedra/Saints'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -178,9 +177,8 @@ const AppLayout: React.FC = () => {
                     <Route path="/hoje" element={<HojePage />} />
                     <Route path="/bible" element={<Bible />} />
                     <Route path="/catechism" element={<Catechism />} />
-                    <Route path="/study" element={<StudyMode />} />
-                    <Route path="/saints" element={<Saints />} />
                     <Route path="/magisterium" element={<Magisterium />} />
+                    <Route path="/buscar" element={<GlobalSearchPage />} />
                     <Route path="/auth" element={<Auth onSuccess={() => navigate('/hoje')} />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
@@ -212,17 +210,15 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<div />} />}>
-        <AppErrorBoundary>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              <AuthProvider>
-                <TooltipProvider>
-                  {children}
-                </TooltipProvider>
-              </AuthProvider>
-            </BrowserRouter>
-          </QueryClientProvider>
-        </AppErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <AuthProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </AuthProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
       </Sentry.ErrorBoundary>
     </HelmetProvider>
   );

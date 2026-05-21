@@ -53,7 +53,6 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     {
       label: 'Núcleo Sagrado',
       items: [
-        { label: t('home'), path: AppRoute.HOJE, icon: <Icons.Home className="w-5 h-5" /> },
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
@@ -63,9 +62,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     {
       label: 'Em Breve',
       items: [
-        { label: 'Jornadas Espirituais', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
-        { label: 'Comunidade Ativa', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
-        { label: 'Painel do Peregrino', path: AppRoute.PROFILE, icon: <Icons.User className="w-5 h-5 opacity-40" /> },
+        { label: 'Jornadas Espirituais', path: '#', icon: <Icons.Journeys className="w-5 h-5 opacity-40" /> },
+        { label: 'Comunidade Ativa', path: '#', icon: <Icons.Users className="w-5 h-5 opacity-40" /> },
       ]
     }
 

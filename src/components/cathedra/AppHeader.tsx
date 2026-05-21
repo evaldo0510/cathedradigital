@@ -78,7 +78,6 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           {isDashboard && (
             <nav className="hidden 2xl:flex items-center gap-2 border-l border-border/40 pl-8 ml-4 min-w-0">
               {[
-                { label: t('home'), route: AppRoute.HOJE },
                 { label: t('bible'), route: AppRoute.BIBLE },
                 { label: t('catechism'), route: AppRoute.CATECHISM },
                 { label: 'Magistério', route: AppRoute.MAGISTERIUM },
