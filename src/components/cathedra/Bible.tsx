@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -30,7 +30,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
-const LogosAI = React.lazy(() => import('./LogosAI'));
+const LogosAI = lazy(() => import('./LogosAI'));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
@@ -371,6 +371,23 @@ const Bible: React.FC = () => {
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
+  };
+
+  const MemoizedRelatio = useMemo(() => {
+    if (!selectedBook || !selectedChapter || !showCrossRefs) return null;
+    return (
+      <Relatio 
+        context={{ 
+          type: 'bible', 
+          abbr: selectedBook.abbr, 
+          chapter: selectedChapter,
+          tags: [selectedBook.name, 'Bíblia']
+        }}
+        onNavigateToCIC={handleNavigateToCIC}
+        onNavigateToDoc={handleNavigateToDoc}
+      />
+    );
+  }, [selectedBook, selectedChapter, showCrossRefs, handleNavigateToCIC, handleNavigateToDoc]);
     setViewMode('reading');
   };
 

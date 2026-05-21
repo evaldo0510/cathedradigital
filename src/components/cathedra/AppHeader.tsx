@@ -28,7 +28,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const isDashboard = pathname === '/';
 
   return (
-    <header className="border-b border-border/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)]">
+    <header className="border-b border-border/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color]">
       <div className="app-container flex items-center justify-between h-20 sm:h-24">
         <div className="flex items-center gap-8 min-w-0">
           <div className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>

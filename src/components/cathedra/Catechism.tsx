@@ -376,6 +376,21 @@ const Catechism: React.FC = () => {
     }
   }, [viewMode, currentParagraph, markParagraphRead]);
 
+  const MemoizedRelatio = useMemo(() => {
+    if (viewMode !== 'reading' || !showCrossRefs) return null;
+    return (
+      <Relatio 
+        context={{ 
+          type: 'catechism', 
+          paragraph: currentParagraph,
+          tags: ['Catecismo', 'CIC']
+        }}
+        onNavigateToBible={handleNavigateToBible}
+        onNavigateToDoc={handleNavigateToDoc}
+      />
+    );
+  }, [viewMode, showCrossRefs, currentParagraph, handleNavigateToBible, handleNavigateToDoc]);
+
   const jumpToParagraph = useCallback((p: number) => {
     setCurrentParagraph(p);
     isAutoScrolling.current = true;

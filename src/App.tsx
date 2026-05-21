@@ -95,7 +95,14 @@ const LoadingFallback = () => (
 
 const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
-  const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
+  const [lang, setLangState] = useState<Language>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_lang');
+      return (stored as Language) || 'pt';
+    } catch {
+      return 'pt';
+    }
+  });
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -108,8 +115,8 @@ const AppLayout: React.FC = () => {
   const isHighContrast = settings.highContrast;
 
   const toggleDark = useCallback(() => {
-    updateSettings({ theme: isDark ? 'paper' : 'dark' });
-  }, [isDark, updateSettings]);
+    updateSettings({ theme: settings.theme === 'dark' || settings.theme === 'night' ? 'paper' : 'dark' });
+  }, [settings.theme, updateSettings]);
 
   const toggleHighContrast = useCallback(() => {
     updateSettings({ highContrast: !isHighContrast });
@@ -121,6 +128,8 @@ const AppLayout: React.FC = () => {
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
 
   const toggleSpeak = useCallback(() => {
+    if (settings.totalSilence) return;
+    
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
@@ -133,7 +142,7 @@ const AppLayout: React.FC = () => {
       utterance.onend = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
     }
-  }, [lang]);
+  }, [lang, settings.totalSilence]);
 
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
@@ -146,7 +155,7 @@ const AppLayout: React.FC = () => {
       isPremium: profile.is_premium,
       role: (profile.role as 'pilgrim' | 'scholar' | 'admin') || 'pilgrim',
       email: profile._sensitive?.email || '',
-      joinedAt: new Date().toISOString(), // Mocking missing fields
+      joinedAt: new Date().toISOString(),
       progress: {
         streak: profile.streak || 0,
         totalMinutesRead: 0,
@@ -164,12 +173,12 @@ const AppLayout: React.FC = () => {
   }, [profile]);
 
   return (
-    <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-      <ScrollToTop />
-      <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
+    <AuthProvider>
+      <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+          <ScrollToTop />
+          <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
             <AppHeader 
-
               user={authUserAdapter} 
               isDark={isDark} 
               onToggleDark={toggleDark}
@@ -182,7 +191,6 @@ const AppLayout: React.FC = () => {
             <CathedralSidebar 
               user={authUserAdapter}
               onClose={handleCloseSidebar}
-
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
@@ -214,7 +222,6 @@ const AppLayout: React.FC = () => {
               <A11ySettingsPanel 
                 isOpen={showA11ySettings} 
                 onClose={handleCloseA11y}
-
                 isDark={isDark}
                 onToggleDark={toggleDark}
                 isHighContrast={isHighContrast}
@@ -224,25 +231,24 @@ const AppLayout: React.FC = () => {
               <PWAInstallPrompt />
             </Suspense>
             <OfflineIndicator />
-      </LangContext.Provider>
-      </div>
-    </MotionConfig>
+          </LangContext.Provider>
+        </div>
+      </MotionConfig>
+    </AuthProvider>
   );
 };
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HelmetProvider>
-      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<div />} />}>
+      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <AuthProvider>
-              <ReadingSettingsProvider>
-                <TooltipProvider>
-                  {children}
-                </TooltipProvider>
-              </ReadingSettingsProvider>
-            </AuthProvider>
+            <ReadingSettingsProvider>
+              <TooltipProvider>
+                {children}
+              </TooltipProvider>
+            </ReadingSettingsProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </Sentry.ErrorBoundary>
