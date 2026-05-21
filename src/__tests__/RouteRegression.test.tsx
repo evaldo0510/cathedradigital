@@ -1,7 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import React from 'react';
+import React, { Suspense } from 'react';
 import App from '../App';
+
+// Mock lazy components to avoid actual file loading in tests
+vi.mock('../pages/Index', () => ({ default: () => <div data-testid="home-page">Home Page</div> }));
+vi.mock('../components/cathedra/Bible', () => ({ default: () => <div data-testid="bible-page">Bible Page</div> }));
+vi.mock('../components/cathedra/Catechism', () => ({ default: () => <div data-testid="catechism-page">Catechism Page</div> }));
+vi.mock('../components/cathedra/Magisterium', () => ({ default: () => <div data-testid="magisterium-page">Magisterium Page</div> }));
+vi.mock('../components/cathedra/LogosAI', () => ({ default: () => <div data-testid="logos-page">Logos AI</div> }));
+vi.mock('../components/cathedra/Auth', () => ({ default: () => <div data-testid="auth-page">Auth Page</div> }));
+vi.mock('../components/cathedra/ProfilePage', () => ({ default: () => <div data-testid="profile-page">Profile Page</div> }));
+vi.mock('../components/cathedra/GlobalSearchPage', () => ({ default: () => <div data-testid="search-page">Search Page</div> }));
+vi.mock('../components/cathedra/CommandCenter', () => ({ default: () => <div data-testid="command-center">Command Center</div> }));
+vi.mock('../components/cathedra/PWAInstallPrompt', () => ({ PWAInstallPrompt: () => <div data-testid="pwa-prompt">PWA Prompt</div> }));
+vi.mock('../components/cathedra/A11ySettingsPanel', () => ({ default: () => <div data-testid="a11y-panel">A11y Panel</div> }));
+
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
