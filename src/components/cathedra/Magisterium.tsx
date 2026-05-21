@@ -22,6 +22,7 @@ import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
 import ContemplativeLayout from './ContemplativeLayout';
 
 const SPIRITUAL_GUIDANCE = [
@@ -154,6 +155,7 @@ const DOCS_LIST = [
 const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
+  useRenderPerf('Magisterium', 15);
   const navigate = useNavigate();
   useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();

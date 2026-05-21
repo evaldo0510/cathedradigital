@@ -31,6 +31,7 @@ import LogosAI from './LogosAI';
 import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
 
@@ -240,6 +241,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
 type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
+  useRenderPerf('Catechism', 15);
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
