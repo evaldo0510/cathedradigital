@@ -26,7 +26,14 @@ interface ReadingSettings {
     magisterium: string;
     logos: string;
   };
-  logosHistoryLimit: number;
+  relatio: {
+    enabled: boolean;
+    intensity: 'subtle' | 'standard' | 'deep';
+    showBible: boolean;
+    showCatechism: boolean;
+    showMagisterium: boolean;
+    showSaints: boolean;
+  };
 }
 
 interface ReadingSettingsContextType {
@@ -60,6 +67,14 @@ const defaultSettings: ReadingSettings = {
     logos: 'l',
   },
   logosHistoryLimit: 20,
+  relatio: {
+    enabled: true,
+    intensity: 'standard',
+    showBible: true,
+    showCatechism: true,
+    showMagisterium: true,
+    showSaints: true,
+  },
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);

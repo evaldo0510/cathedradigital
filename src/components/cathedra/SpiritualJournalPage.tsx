@@ -29,7 +29,7 @@ const MOODS = [
   { id: 'struggle', icon: Icons.ShieldQuestion, label: 'Luta' },
 ];
 
-type JournalTab = 'reflection' | 'study';
+type JournalTab = 'reflection' | 'study' | 'relatio';
 
 const SpiritualJournalPage = () => {
   const { user } = useAuth();
@@ -123,6 +123,13 @@ const SpiritualJournalPage = () => {
             className={`rounded-full px-8 py-6 h-12 text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
           >
             <Icons.BookOpen className="w-4 h-4 mr-2" /> Estudo e Leitura
+          </Button>
+          <Button
+            variant={activeTab === 'relatio' ? 'primary' : 'ghost'}
+            onClick={() => setActiveTab('relatio')}
+            className={`rounded-full px-8 py-6 h-12 text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
+          >
+            <Icons.Sparkles className="w-4 h-4 mr-2" /> Conexões Salvas
           </Button>
         </div>
       </div>
@@ -243,8 +250,78 @@ const SpiritualJournalPage = () => {
           >
             <StudyJournal />
           </motion.div>
+        ) : (
+          <motion.div
+            key="relatio"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-4xl mx-auto w-full space-y-12"
+          >
+            <div className="flex items-center gap-10">
+              <div className="h-px flex-1 bg-border/40" />
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+                Relatio Favoritos
+              </h2>
+              <div className="h-px flex-1 bg-border/40" />
+            </div>
+
+            <RelatioFavoritesList />
+          </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+};
+
+const RelatioFavoritesList = () => {
+  const { favorites, removeFavorite } = useFavorites();
+  const relatioFavs = favorites.filter(f => f.type === 'relatio');
+
+  if (relatioFavs.length === 0) {
+    return (
+      <div className="text-center py-20 opacity-30">
+        <Icons.Sparkles className="w-12 h-12 mx-auto mb-4 stroke-1" />
+        <p className="font-serif italic text-lg">Nenhuma conexão salva ainda.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 gap-6">
+      {relatioFavs.map((fav) => (
+        <motion.div
+          key={fav.id}
+          layout
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-card p-6 rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
+        >
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icons.Sparkles className="w-3 h-3 text-primary" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Relatio</span>
+                <span className="text-[10px] text-muted-foreground opacity-40">
+                  {format(new Date(fav.timestamp), "d 'de' MMM", { locale: ptBR })}
+                </span>
+              </div>
+              <h3 className="text-lg font-serif font-bold text-primary">{fav.title}</h3>
+              <p className="text-sm text-muted-foreground italic line-clamp-2">"{fav.content}"</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => removeFavorite(fav.id)}
+              className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+            >
+              <Icons.Trash className="w-4 h-4" />
+            </Button>
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { fetchNexusTagContent, TagContent } from '@/lib/nexusContent';
@@ -9,6 +9,9 @@ import MagisteriumPopover from './MagisteriumPopover';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useFavorites } from '@/hooks/useFavorites';
+import { toast } from 'sonner';
 
 interface RelatioProps {
   context: {
@@ -32,12 +35,24 @@ const Relatio: React.FC<RelatioProps> = ({
   onNavigateToDoc,
   className 
 }) => {
+  const { settings } = useReadingSettings();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [connections, setConnections] = useState<TagContent[]>([]);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  // Relatio Settings Destructuring with fallbacks
+  const relatioConfig = settings.relatio || {
+    enabled: true,
+    intensity: 'standard',
+    showBible: true,
+    showCatechism: true,
+    showMagisterium: true,
+    showSaints: true,
+  };
+
   // Unified static references based on context
-  const staticRefs = React.useMemo(() => {
+  const staticRefs = useMemo(() => {
     const refs: {
       cicParagraphs: number[];
       bibleRefs: { abbr: string; chapter: number; verse?: number; label: string }[];
@@ -48,36 +63,66 @@ const Relatio: React.FC<RelatioProps> = ({
       documents: []
     };
 
+    if (!relatioConfig.enabled) return refs;
+
     if (context.type === 'bible' && context.abbr && context.chapter) {
-      refs.cicParagraphs = BIBLE_TO_CIC[`${context.abbr}:${context.chapter}`] || [];
-      refs.documents = getBibleDocs(context.abbr, context.chapter);
+      if (relatioConfig.showCatechism) {
+        refs.cicParagraphs = BIBLE_TO_CIC[`${context.abbr}:${context.chapter}`] || [];
+      }
+      if (relatioConfig.showMagisterium) {
+        refs.documents = getBibleDocs(context.abbr, context.chapter);
+      }
     } else if (context.type === 'catechism' && context.paragraph) {
-      refs.bibleRefs = CIC_TO_BIBLE[context.paragraph] || [];
-      refs.documents = getCatechismDocs(context.paragraph);
+      if (relatioConfig.showBible) {
+        refs.bibleRefs = CIC_TO_BIBLE[context.paragraph] || [];
+      }
+      if (relatioConfig.showMagisterium) {
+        refs.documents = getCatechismDocs(context.paragraph);
+      }
     }
 
     return refs;
-  }, [context]);
+  }, [context, relatioConfig]);
 
   useEffect(() => {
     const fetchRelated = async () => {
-      if (!context.tags || context.tags.length === 0) return;
+      if (!relatioConfig.enabled || !context.tags || context.tags.length === 0) return;
       
       setLoading(true);
       try {
-        // Fetch for the first 2 tags to keep it relevant but broad enough
-        const tagPromises = context.tags.slice(0, 2).map(tag => 
+        // Intensity determines how many tags we look at and how many results we show
+        const tagCount = relatioConfig.intensity === 'subtle' ? 1 : relatioConfig.intensity === 'deep' ? 4 : 2;
+        const resultLimit = relatioConfig.intensity === 'subtle' ? 3 : relatioConfig.intensity === 'deep' ? 12 : 6;
+
+        const tagPromises = context.tags.slice(0, tagCount).map(tag => 
           fetchNexusTagContent({ label: tag, slug: tag.toLowerCase() })
         );
         const results = await Promise.all(tagPromises);
         const all = results.flat();
         
-        // Filter out current content if ID matches
-        const filtered = all.filter(item => item.id !== context.id);
+        // Apply type filters from settings
+        let filtered = all.filter(item => {
+          if (item.id === context.id) return false;
+          if (item.type === 'bible' && !relatioConfig.showBible) return false;
+          if (item.type === 'catechism' && !relatioConfig.showCatechism) return false;
+          if (item.type === 'magisterium' && !relatioConfig.showMagisterium) return false;
+          if (item.type === 'saint' && !relatioConfig.showSaints) return false;
+          return true;
+        });
+
+        // Deduplication based on ID and content similarity (simple heuristic)
+        const seen = new Set();
+        const unique: TagContent[] = [];
+        for (const item of filtered) {
+          const key = `${item.type}:${item.title}`;
+          if (!seen.has(item.id) && !seen.has(key)) {
+            seen.add(item.id);
+            seen.add(key);
+            unique.push(item);
+          }
+        }
         
-        // Remove duplicates and limit
-        const unique = Array.from(new Map(filtered.map(item => [item.id, item])).values());
-        setConnections(unique.slice(0, 6));
+        setConnections(unique.slice(0, resultLimit));
       } catch (error) {
         console.error('Error fetching Relatio connections:', error);
       } finally {
@@ -86,7 +131,7 @@ const Relatio: React.FC<RelatioProps> = ({
     };
 
     fetchRelated();
-  }, [context.tags, context.id]);
+  }, [context.tags, context.id, relatioConfig]);
 
   const hasAnyConnections = 
     staticRefs.cicParagraphs.length > 0 || 
@@ -94,7 +139,7 @@ const Relatio: React.FC<RelatioProps> = ({
     staticRefs.documents.length > 0 || 
     connections.length > 0;
 
-  if (!hasAnyConnections) return null;
+  if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
     <div className={cn("mt-12 space-y-6", className)}>
@@ -108,14 +153,16 @@ const Relatio: React.FC<RelatioProps> = ({
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Conexões na Tradição</p>
           </div>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => setIsVisible(!isVisible)}
-          className="text-muted-foreground hover:text-primary transition-colors text-premium-tiny uppercase tracking-widest font-black"
-        >
-          {isVisible ? 'Ocultar' : 'Revelar'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setIsVisible(!isVisible)}
+            className="text-muted-foreground hover:text-primary transition-colors text-premium-tiny uppercase tracking-widest font-black"
+          >
+            {isVisible ? 'Ocultar' : 'Revelar'}
+          </Button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -126,7 +173,7 @@ const Relatio: React.FC<RelatioProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="space-y-6"
           >
-            {/* Hardcoded Cross References (Nexus Theologicus) */}
+            {/* Static References */}
             {(staticRefs.cicParagraphs.length > 0 || staticRefs.bibleRefs.length > 0 || staticRefs.documents.length > 0) && (
               <div className="flex flex-wrap gap-2">
                 {staticRefs.cicParagraphs.map(p => (
@@ -153,56 +200,90 @@ const Relatio: React.FC<RelatioProps> = ({
               </div>
             )}
 
-            {/* Dynamic Intelligent Connections */}
+            {/* Dynamic Connections */}
             {connections.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {connections.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    whileHover={{ scale: 1.01 }}
-                    className="group cursor-pointer"
-                    onClick={() => {
-                      if (item.type === 'bible') {
-                        const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
-                        const chapter = item.metadata?.chapter;
-                        if (abbr && chapter) {
-                          onNavigateToBible?.(abbr, chapter);
-                        } else {
-                          const [parsedAbbr, parsedChapter] = (item.title || '').split(' ');
-                          onNavigateToBible?.(parsedAbbr, parseInt(parsedChapter) || 1);
-                        }
-                      } else if (item.type === 'catechism') {
-                        const p = item.metadata?.paragraph || parseInt(item.title.match(/\d+/)?.[0] || '0');
-                        if (p) onNavigateToCIC?.(p);
-                      } else if (item.type === 'magisterium') {
-                        onNavigateToDoc?.(item.id);
-                      }
-                    }}
+                {connections.map((item) => {
+                  const isFav = isFavorite('relatio', item.title);
+                  
+                  // Heuristic for why suggested
+                  const suggestedReason = item.metadata?.is_theme_content ? 'Tema Relacionado' : 
+                                         item.metadata?.tags?.some((t: string) => context.tags?.includes(t)) ? 'Contexto Similar' : 
+                                         'Tradição Conectada';
 
-                  >
-                    <Card className="p-4 bg-card border border-border/40 group-hover:border-primary/30 transition-all rounded-premium shadow-sm">
-                      <div className="flex gap-3">
-                        <div className="w-8 h-8 rounded-premium bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                          {item.type === 'bible' && <Icons.Cross className="w-4 h-4" />}
-                          {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" />}
-                          {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" />}
-                          {item.type === 'journey' && <Icons.Compass className="w-4 h-4" />}
+                  return (
+                    <motion.div
+                      key={item.id}
+                      whileHover={{ scale: 1.01 }}
+                      className="group relative"
+                    >
+                      <Card 
+                        className="p-4 bg-card border border-border/40 group-hover:border-primary/30 transition-all rounded-premium shadow-sm cursor-pointer"
+                        onClick={() => {
+                          if (item.type === 'bible') {
+                            const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
+                            const chapter = item.metadata?.chapter;
+                            if (abbr && chapter) {
+                              onNavigateToBible?.(abbr, chapter);
+                            } else {
+                              const [parsedAbbr, parsedChapter] = (item.title || '').split(' ');
+                              onNavigateToBible?.(parsedAbbr, parseInt(parsedChapter) || 1);
+                            }
+                          } else if (item.type === 'catechism') {
+                            const p = item.metadata?.paragraph || parseInt(item.title.match(/\d+/)?.[0] || '0');
+                            if (p) onNavigateToCIC?.(p);
+                          } else if (item.type === 'magisterium') {
+                            onNavigateToDoc?.(item.id);
+                          }
+                        }}
+                      >
+                        <div className="flex gap-3">
+                          <div className="w-8 h-8 rounded-premium bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+                            {item.type === 'bible' && <Icons.Cross className="w-4 h-4" />}
+                            {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" />}
+                            {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" />}
+                            {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-4 h-4" />}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+                                {item.type === 'bible' ? 'Escritura' : 
+                                 item.type === 'catechism' ? 'Catecismo' : 
+                                 item.type === 'magisterium' ? 'Magistério' : 
+                                 item.type === 'saint' ? 'Santos' : 'Jornada'}
+                              </p>
+                              <span className="text-[8px] text-muted-foreground/40 uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">
+                                {suggestedReason}
+                              </span>
+                            </div>
+                            <h4 className="text-sm font-bold font-serif truncate mt-0.5">{item.title}</h4>
+                            <p className="text-xs text-muted-foreground line-clamp-1 mt-1 font-serif italic">
+                              {item.content_text.replace(/[#*]/g, '')}
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
-                            {item.type === 'bible' ? 'Escritura' : 
-                             item.type === 'catechism' ? 'Catecismo' : 
-                             item.type === 'magisterium' ? 'Magistério' : 'Jornada'}
-                          </p>
-                          <h4 className="text-sm font-bold font-serif truncate mt-0.5">{item.title}</h4>
-                          <p className="text-xs text-muted-foreground line-clamp-1 mt-1 font-serif italic">
-                            {item.content_text.replace(/[#*]/g, '')}
-                          </p>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
+                      </Card>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute top-2 right-2 p-1 h-auto opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-primary/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite({
+                            type: 'relatio',
+                            title: item.title,
+                            content: item.content_text,
+                          });
+                          toast.success(isFav ? 'Removido dos favoritos' : 'Conexão salva nos favoritos', {
+                            description: item.title
+                          });
+                        }}
+                      >
+                        <Icons.Star className={cn("w-3 h-3", isFav ? "fill-primary text-primary" : "text-muted-foreground")} />
+                      </Button>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
 
