@@ -10,7 +10,7 @@ const pageVariants = {
 
 const pageTransition = {
   duration: 1.2,
-  ease: [0.25, 0.1, 0.25, 1], // More contemplative, slower ease
+  ease: [0.25, 0.1, 0.25, 1] as any, // More contemplative, slower ease
 };
 
 const fastTransition = {
