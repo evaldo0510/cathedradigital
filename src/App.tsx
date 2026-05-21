@@ -120,7 +120,7 @@ const AppLayout: React.FC = () => {
       name: profile.name,
       avatar: profile.avatar_url,
       isPremium: profile.is_premium,
-      role: (profile.role as any) || 'pilgrim',
+      role: (profile.role as 'pilgrim' | 'scholar' | 'admin') || 'pilgrim',
       email: profile._sensitive?.email || '',
       joinedAt: new Date().toISOString(), // Mocking missing fields
       progress: {
