@@ -34,6 +34,7 @@ interface ReadingSettings {
     showCatechism: boolean;
     showMagisterium: boolean;
     showSaints: boolean;
+    relevanceByProgress: boolean;
   };
 }
 
@@ -75,6 +76,7 @@ const defaultSettings: ReadingSettings = {
     showCatechism: true,
     showMagisterium: true,
     showSaints: true,
+    relevanceByProgress: true,
   },
 };
 
