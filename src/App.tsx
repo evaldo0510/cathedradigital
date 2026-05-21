@@ -144,8 +144,8 @@ const AppLayout: React.FC = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
-        <ReadingSettingsProvider>
             <AppHeader 
+
               user={authUserAdapter} 
               isDark={isDark} 
               onToggleDark={toggleDark}
@@ -197,7 +197,6 @@ const AppLayout: React.FC = () => {
             <CommandCenter />
             <PWAInstallPrompt />
             <OfflineIndicator />
-        </ReadingSettingsProvider>
       </LangContext.Provider>
     </div>
   );
@@ -210,9 +209,11 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
-              <TooltipProvider>
-                {children}
-              </TooltipProvider>
+              <ReadingSettingsProvider>
+                <TooltipProvider>
+                  {children}
+                </TooltipProvider>
+              </ReadingSettingsProvider>
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
