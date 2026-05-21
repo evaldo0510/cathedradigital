@@ -98,13 +98,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-3xl border-t border-primary/5 safe-area-bottom bottom-nav">
       <div className="flex items-stretch h-20 px-4">
-        {items.map((item: any) => (
+        {items.map((item: any, i: number) => (
           <BottomNavItem 
-            key={item.label}
+            key={item.label + i}
             label={item.label}
             icon={item.icon}
             route={item.route || ''}
-            isActive={item.route ? currentPath.startsWith(item.route) : false}
+            isActive={item.route ? currentPath === item.route || (item.route !== '/' && currentPath.startsWith(item.route)) : false}
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);

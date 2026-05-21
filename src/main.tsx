@@ -38,7 +38,11 @@ if (isPreviewHost || isInIframe) {
   });
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 
 // Prefetch core modules after initial render
 prefetchCoreModules();
