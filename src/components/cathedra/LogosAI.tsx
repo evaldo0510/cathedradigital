@@ -25,16 +25,24 @@ const LogosAI: React.FC<LogosAIProps> = ({
   type = 'bible',
   variant = 'drawer'
 }) => {
+  const { settings } = useReadingSettings();
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+
+  const springConfig = useMemo(() => ({
+    type: settings.reduceAnimations ? 'just' : 'spring',
+    damping: 25,
+    stiffness: 200
+  }), [settings.reduceAnimations]);
 
   useEffect(() => {
     if (selectedText) {
       setQuery(`Explique o significado de: "${selectedText}"`);
     }
   }, [selectedText]);
+
 
   const handleQuery = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
