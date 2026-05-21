@@ -13,6 +13,7 @@ import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
+import ContemplativeLayout from './ContemplativeLayout';
 
 type Saint = Tables<'saints'>;
 type GlossaryRow = Tables<'glossary'>;
