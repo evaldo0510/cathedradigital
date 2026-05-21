@@ -30,7 +30,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
-import LogosAI from './LogosAI';
+const LogosAI = React.lazy(() => import('./LogosAI'));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
