@@ -29,6 +29,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
   const springConfig = useMemo(() => {
@@ -71,7 +72,25 @@ const LogosAI: React.FC<LogosAIProps> = ({
       
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
       setResponse(assistantMsg);
-      setHistory(prev => [...prev, { role: 'assistant', content: assistantMsg }]);
+      
+      // Simulate typing for premium feel
+      setIsTyping(true);
+      const words = assistantMsg.split(' ');
+      let currentText = '';
+      
+      setHistory(prev => [...prev, { role: 'assistant', content: '' }]);
+      
+      for (let i = 0; i < words.length; i++) {
+        currentText += (i === 0 ? '' : ' ') + words[i];
+        const textToSet = currentText; // closure
+        setHistory(prev => {
+          const next = [...prev];
+          next[next.length - 1] = { role: 'assistant', content: textToSet };
+          return next;
+        });
+        await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 40));
+      }
+      setIsTyping(false);
     } catch (err) {
       console.error('Logos IA Error:', err);
       toast.error('Erro ao conectar com Logos IA');
@@ -121,7 +140,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </div>
                 ))}
 
-                {isLoading && (
+                {(isLoading || isTyping) && (
                   <div className="flex justify-start">
                     <div className="flex gap-2 opacity-20">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" />
@@ -143,7 +162,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div className="flex justify-center mt-6">
                   <Button 
                     type="submit" 
-                    disabled={isLoading || !query.trim()}
+                    disabled={isLoading || isTyping || !query.trim()}
                     className="rounded-full bg-primary/5 text-primary hover:bg-primary hover:text-primary-foreground h-12 px-8 text-[10px] font-black uppercase tracking-[0.3em] transition-all"
                   >
                     Buscar Luz
@@ -218,7 +237,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               ))}
 
-              {isLoading && (
+              {(isLoading || isTyping) && (
                 <div className="flex justify-start animate-in fade-in duration-500">
                   <div className="bg-muted/10 p-6 rounded-premium-lg flex gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
@@ -240,7 +259,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 />
                 <button 
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || isTyping}
                   className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all disabled:opacity-30"
                 >
                   <Icons.ArrowRight className="w-5 h-5" />
