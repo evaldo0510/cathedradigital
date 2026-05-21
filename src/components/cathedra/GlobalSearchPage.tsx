@@ -14,6 +14,8 @@ import { useRovingTabindex } from './TabUtils';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
 import ContemplativeLayout from './ContemplativeLayout';
+import { ListSkeleton } from './SacredSkeleton';
+
 
 type Saint = Tables<'saints'>;
 type GlossaryRow = Tables<'glossary'>;
@@ -109,7 +111,13 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <div className="h-px flex-1 bg-border/30" />
           </div>
 
-        {isAllEmpty && (
+        {anyPending && (
+          <div className="mt-8">
+            <ListSkeleton count={4} />
+          </div>
+        )}
+
+        {isAllEmpty && !anyPending && (
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
@@ -122,6 +130,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </div>
           </motion.div>
         )}
+
 
         {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-6">

@@ -46,15 +46,16 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy loaded routes
+// Lazy loaded routes with better naming
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
+const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
   ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
@@ -98,6 +99,11 @@ const AppLayout: React.FC = () => {
     updateSettings({ highContrast: !isHighContrast });
   }, [isHighContrast, updateSettings]);
 
+  const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
+  const handleCloseSidebar = useCallback(() => setIsSidebarOpen(false), []);
+  const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
+  const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
+
   const toggleSpeak = useCallback(() => {
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -112,6 +118,7 @@ const AppLayout: React.FC = () => {
       window.speechSynthesis.speak(utterance);
     }
   }, [lang]);
+
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
   const authUserAdapter = useMemo(() => {
@@ -152,12 +159,13 @@ const AppLayout: React.FC = () => {
               lang={lang}
               onChangeLang={setLangState}
               onSignOut={signOut}
-              onOpenSidebar={() => setIsSidebarOpen(true)}
+              onOpenSidebar={handleOpenSidebar}
             />
             
             <CathedralSidebar 
               user={authUserAdapter}
-              onClose={() => setIsSidebarOpen(false)}
+              onClose={handleCloseSidebar}
+
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
@@ -184,11 +192,12 @@ const AppLayout: React.FC = () => {
               </Suspense>
             </main>
 
-            <BottomNav user={authUserAdapter} onOpenSidebar={() => setIsSidebarOpen(true)} />
+            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
             <CathedralFooter />
             <A11ySettingsPanel 
               isOpen={showA11ySettings} 
-              onClose={() => setShowA11ySettings(false)}
+              onClose={handleCloseA11y}
+
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
