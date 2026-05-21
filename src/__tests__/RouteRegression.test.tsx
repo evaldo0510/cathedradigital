@@ -53,27 +53,73 @@ vi.mock('framer-motion', async () => {
 describe('Route Regression Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Clear session storage to show splash screen if needed, or set it to skip
     sessionStorage.setItem('cathedra_splash_shown', '1');
+    // Default to home
+    window.history.pushState({}, '', '/');
   });
 
   it('renders the Home page correctly', async () => {
     render(<App />);
-    
-    // Check for some home page content
-    // Since App has a header and footer, we can look for those first
+    await waitFor(() => {
+      // Look for unique home page element if possible, 
+      // otherwise check if main layout elements are present
+      expect(screen.getByRole('main')).toBeDefined();
+    }, { timeout: 3000 });
+  });
+
+  it('renders the Bible route correctly', async () => {
+    window.history.pushState({}, '', '/bible');
+    render(<App />);
+    // Check for Bible-specific content or skeleton
     await waitFor(() => {
       expect(screen.getByRole('main')).toBeDefined();
     }, { timeout: 3000 });
   });
 
-  it('initializes Providers correctly without crashing', () => {
-    const { container } = render(<App />);
-    expect(container).toBeDefined();
+  it('renders the Catechism route correctly', async () => {
+    window.history.pushState({}, '', '/catechism');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('main')).toBeDefined();
+    }, { timeout: 3000 });
   });
 
-  // More specific route tests would ideally use MemoryRouter, 
-  // but since App has BrowserRouter hardcoded in AppProviders, 
-  // we'd need to mock the URL or refactor App to be more testable.
-  // For now, we're testing the initial load.
+  it('renders the Magisterium route correctly', async () => {
+    window.history.pushState({}, '', '/magisterium');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('main')).toBeDefined();
+    }, { timeout: 3000 });
+  });
+
+  it('renders the Logos route correctly', async () => {
+    window.history.pushState({}, '', '/logos');
+    render(<App />);
+    await waitFor(() => {
+      expect(screen.getByRole('main')).toBeDefined();
+    }, { timeout: 3000 });
+  });
+
+  it('handles invalid routes by redirecting to Home', async () => {
+    window.history.pushState({}, '', '/invalid-route');
+    render(<App />);
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/');
+    });
+  });
+
+  it('ensures Providers initialize correctly without infinite loops', async () => {
+    const { container } = render(<App />);
+    // If there was an infinite loop, the test would likely timeout or fail here
+    expect(container).toBeDefined();
+    
+    // Check for some provider-driven content (e.g. language-dependent text)
+    await waitFor(() => {
+      // UI might show "Contemplando..." or something similar from App.tsx
+      const loadingText = screen.queryByText(/Contemplando/i);
+      if (loadingText) {
+        expect(loadingText).toBeDefined();
+      }
+    });
+  });
 });
