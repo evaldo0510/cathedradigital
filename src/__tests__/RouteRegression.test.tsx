@@ -123,6 +123,15 @@ describe('Route Regression Tests', () => {
     });
   });
 
+  it('ensures compatibility with React.StrictMode', () => {
+    render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    );
+    expect(screen.getByRole('main')).toBeDefined();
+  });
+
   it('ensures Providers initialize correctly without infinite loops', async () => {
     const { container } = render(<App />);
     // If there was an infinite loop, the test would likely timeout or fail here
