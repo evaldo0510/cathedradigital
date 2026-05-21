@@ -52,7 +52,7 @@ const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
-const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 
