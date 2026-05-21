@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRe
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
 import { AppRoute, Language } from './types';
@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
-import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
+// A11ySettingsPanel lazy loaded below
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
@@ -29,11 +29,12 @@ import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import ProGate from './components/cathedra/ProGate';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import CommandCenter from './components/cathedra/CommandCenter';
+const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
+const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
+const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
+
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import OfflineModeToggle from './components/cathedra/OfflineModeToggle';
 import SplashScreen from './components/cathedra/SplashScreen';
-import { PWAInstallPrompt } from './components/cathedra/PWAInstallPrompt';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,14 +66,26 @@ const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; c
 SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-500">
-    <div className="relative mb-8">
-      <div className="w-16 h-16 rounded-2xl bg-primary/10 animate-pulse border-2 border-primary/20" />
-      <div className="absolute inset-0 w-16 h-16 rounded-2xl border-t-2 border-primary animate-spin" />
+  <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-1000">
+    <div className="relative mb-12">
+      <div className="w-16 h-16 rounded-full bg-primary/[0.03] border border-primary/5 animate-pulse" />
+      <div className="absolute inset-0 w-16 h-16 rounded-full border-t-2 border-primary/20 animate-spin [animation-duration:3s]" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-1.5 h-1.5 rounded-full bg-primary/20 animate-pulse" />
+      </div>
     </div>
-    <div className="w-full max-sm space-y-4">
-      <SkeletonBar w="w-3/4 mx-auto" h="h-5" />
-      <SkeletonBar w="w-full" h="h-3" className="opacity-50" />
+    <div className="space-y-6 w-full max-w-sm">
+      <div className="h-0.5 w-full bg-primary/5 rounded-full overflow-hidden">
+        <motion.div 
+          className="h-full bg-primary/20"
+          initial={{ width: "0%" }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 text-center">
+        Contemplando...
+      </p>
     </div>
   </div>
 );
@@ -148,7 +161,8 @@ const AppLayout: React.FC = () => {
   }, [profile]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+    <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
             <AppHeader 
@@ -184,6 +198,7 @@ const AppLayout: React.FC = () => {
                     <Route path="/catechism" element={<Catechism />} />
                     <Route path="/magisterium" element={<Magisterium />} />
                     <Route path="/buscar" element={<GlobalSearchPage />} />
+                    <Route path="/logos" element={<LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} />} />
                     <Route path="/auth" element={<Auth onSuccess={() => navigate('/')} />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
@@ -194,20 +209,23 @@ const AppLayout: React.FC = () => {
 
             <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
             <CathedralFooter />
-            <A11ySettingsPanel 
-              isOpen={showA11ySettings} 
-              onClose={handleCloseA11y}
+            <Suspense fallback={null}>
+              <A11ySettingsPanel 
+                isOpen={showA11ySettings} 
+                onClose={handleCloseA11y}
 
-              isDark={isDark}
-              onToggleDark={toggleDark}
-              isHighContrast={isHighContrast}
-              onToggleHighContrast={toggleHighContrast}
-            />
-            <CommandCenter />
-            <PWAInstallPrompt />
+                isDark={isDark}
+                onToggleDark={toggleDark}
+                isHighContrast={isHighContrast}
+                onToggleHighContrast={toggleHighContrast}
+              />
+              <CommandCenter />
+              <PWAInstallPrompt />
+            </Suspense>
             <OfflineIndicator />
       </LangContext.Provider>
-    </div>
+      </div>
+    </MotionConfig>
   );
 };
 
