@@ -167,6 +167,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     } else {
       root.classList.remove('full-screen-mode');
     }
+  }, [settings]);
 
   useEffect(() => {
     const handleToggle = (e: any) => {
@@ -199,7 +200,6 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     };
   }, [updateSettings, settings.totalSilence]);
 
-  }, [settings]);
 
   const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
     const updated = { ...settings, ...newSettings };
