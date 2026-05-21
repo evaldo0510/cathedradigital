@@ -38,10 +38,12 @@ const Relatio: React.FC<RelatioProps> = ({
   className 
 }) => {
   const { settings } = useReadingSettings();
+  const { user } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [connections, setConnections] = useState<TagContent[]>([]);
+  const [connections, setConnections] = useState<(TagContent & { reason?: string })[]>([]);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [spiritualContext, setSpiritualContext] = useState<SpiritualContext | null>(null);
 
   // Relatio Settings Destructuring with fallbacks
   const relatioConfig = settings.relatio || {
@@ -51,6 +53,7 @@ const Relatio: React.FC<RelatioProps> = ({
     showCatechism: true,
     showMagisterium: true,
     showSaints: true,
+    relevanceByProgress: true,
   };
 
   // Unified static references based on context
@@ -87,6 +90,16 @@ const Relatio: React.FC<RelatioProps> = ({
   }, [context, relatioConfig]);
 
   useEffect(() => {
+    const loadContext = async () => {
+      if (user && relatioConfig.relevanceByProgress) {
+        const ctx = await getSpiritualContext(user.id);
+        setSpiritualContext(ctx);
+      }
+    };
+    loadContext();
+  }, [user, relatioConfig.relevanceByProgress]);
+
+  useEffect(() => {
     const fetchRelated = async () => {
       if (!relatioConfig.enabled || !context.tags || context.tags.length === 0) return;
       
@@ -112,19 +125,24 @@ const Relatio: React.FC<RelatioProps> = ({
           return true;
         });
 
-        // Deduplication based on ID and content similarity (simple heuristic)
-        const seen = new Set();
-        const unique: TagContent[] = [];
-        for (const item of filtered) {
-          const key = `${item.type}:${item.title}`;
-          if (!seen.has(item.id) && !seen.has(key)) {
-            seen.add(item.id);
-            seen.add(key);
-            unique.push(item);
-          }
+        // Advanced Deduplication
+        const unique = deduplicateRelatio(filtered);
+        
+        // Advanced Ranking if enabled
+        let ranked: (TagContent & { reason?: string })[] = unique;
+        if (relatioConfig.relevanceByProgress && spiritualContext) {
+          ranked = rankConnections(unique, spiritualContext, context.tags);
+        } else {
+          // Fallback simple reason assignment
+          ranked = unique.map(item => ({
+            ...item,
+            reason: item.metadata?.is_theme_content ? 'Tema Relacionado' : 
+                   item.metadata?.tags?.some((t: string) => context.tags?.includes(t)) ? 'Contexto Similar' : 
+                   'Tradição Conectada'
+          }));
         }
         
-        setConnections(unique.slice(0, resultLimit));
+        setConnections(ranked.slice(0, resultLimit));
       } catch (error) {
         console.error('Error fetching Relatio connections:', error);
       } finally {
@@ -133,7 +151,7 @@ const Relatio: React.FC<RelatioProps> = ({
     };
 
     fetchRelated();
-  }, [context.tags, context.id, relatioConfig]);
+  }, [context.tags, context.id, relatioConfig, spiritualContext]);
 
   const hasAnyConnections = 
     staticRefs.cicParagraphs.length > 0 || 
