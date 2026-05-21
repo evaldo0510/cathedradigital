@@ -26,6 +26,7 @@ interface ReadingSettings {
     magisterium: string;
     logos: string;
   };
+  logosHistoryLimit: number;
   relatio: {
     enabled: boolean;
     intensity: 'subtle' | 'standard' | 'deep';
