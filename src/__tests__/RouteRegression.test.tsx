@@ -34,14 +34,19 @@ Object.defineProperty(window, 'speechSynthesis', {
 
 // Mock Framer Motion to avoid animation issues in tests
 vi.mock('framer-motion', async () => {
-  const actual = await vi.importActual('framer-motion');
   return {
-    ...actual,
     motion: {
-      ...actual.motion,
       div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+      section: ({ children, ...props }: any) => <section {...props}>{children}</section>,
+      header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
+      main: ({ children, ...props }: any) => <main {...props}>{children}</main>,
+      nav: ({ children, ...props }: any) => <nav {...props}>{children}</nav>,
+      button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+      span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+      p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
     },
     AnimatePresence: ({ children }: any) => <>{children}</>,
+    MotionConfig: ({ children }: any) => <>{children}</>,
   };
 });
 
