@@ -66,58 +66,56 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
 
 
   return (
-    <div className="app-container max-w-5xl mx-auto space-y-32 pb-48">
+    <div className="w-full max-w-5xl mx-auto space-y-32 md:space-y-48 pb-64 px-6">
       {/* RITUAL DO DIA - EXPERIÊNCIA DIÁRIA */}
-      <section className="space-y-12 md:space-y-16">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+      <section className="space-y-16 animate-in fade-in duration-1000 delay-300 fill-mode-both">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-px h-12 bg-primary/10" />
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
             Ritual do Dia
           </h2>
-          <div className="h-px flex-1 bg-border/30" />
         </div>
         
         <RitualDoDia />
       </section>
 
       {/* CONTINUAR LEITURA */}
-      <ReadingProgressSection />
+      <section className="animate-in fade-in duration-1000 delay-500 fill-mode-both">
+        <ReadingProgressSection />
+      </section>
 
       {/* NÚCLEO PRINCIPAL - BIBLIOTECA ESPIRITUAL */}
-      <section className="space-y-16">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/20" />
-          <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/40 whitespace-nowrap">
+      <section className="space-y-20 animate-in fade-in duration-1000 delay-700 fill-mode-both">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-px h-12 bg-primary/10" />
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
             Biblioteca Digital
           </h2>
-          <div className="h-px flex-1 bg-border/20" />
         </div>
         
         <HomeMainDoors t={t} />
       </section>
 
-
       {/* LOGOS IA INTEGRADA */}
-      <section className="space-y-12">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+      <section className="space-y-16 animate-in fade-in duration-1000 delay-1000 fill-mode-both">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-px h-12 bg-primary/10" />
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
             Logos IA
           </h2>
-          <div className="h-px flex-1 bg-border/30" />
         </div>
         
         <HomeCard
           ref={logosCardRef}
-          className="p-10 md:p-16 flex flex-col items-center gap-10 group relative overflow-hidden border-border/10 focus-within:ring-4 focus-within:ring-primary/5 focus-within:border-primary/20 transition-all shadow-premium hover:shadow-premium-hover outline-none bg-card"
+          className="p-12 md:p-24 flex flex-col items-center gap-12 group relative overflow-hidden border-border/5 shadow-premium hover:shadow-premium-hover transition-all duration-1000 bg-card/30 backdrop-blur-sm"
         >
-          <div className="relative z-10 w-16 h-16 rounded-premium bg-primary/[0.01] border border-border/10 flex items-center justify-center text-primary/30 group-hover:scale-105 transition-transform duration-1000">
-            <Sparkles className="w-8 h-8" strokeWidth={0.5} />
+          <div className="relative z-10 w-20 h-20 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-105 transition-transform duration-1000">
+            <Sparkles className="w-10 h-10" strokeWidth={0.5} />
           </div>
           
-          <div className="relative z-10 space-y-3 text-center max-w-2xl">
-            <h3 className="text-3xl font-display font-medium text-primary tracking-tight">Logos IA</h3>
-            <p className="text-base text-muted-foreground/40 leading-relaxed font-serif italic max-w-md mx-auto">
+          <div className="relative z-10 space-y-4 text-center max-w-2xl">
+            <h3 className="text-4xl font-display font-medium text-primary tracking-tight">Logos</h3>
+            <p className="text-lg text-muted-foreground/40 leading-relaxed font-serif italic max-w-md mx-auto">
               "A inteligência a serviço da contemplação."
             </p>
           </div>
@@ -129,21 +127,21 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Busque por luz e entendimento..."
-                className="h-16 pl-14 pr-32 rounded-premium border-border/10 bg-background/30 focus:bg-background transition-all text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/5"
+                className="h-20 pl-16 pr-36 rounded-full border-border/10 bg-background/50 focus:bg-background transition-all text-xl placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/5"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <MessageSquare className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10" />
+              <MessageSquare className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-primary/10" />
               <button 
                 type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-3 rounded-premium-sm bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-[0.3em] hover:brightness-110 transition-all flex items-center gap-3 group/btn shadow-premium"
+                className="absolute right-3 top-1/2 -translate-y-1/2 px-8 py-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-[0.3em] hover:brightness-110 transition-all flex items-center gap-3 group/btn shadow-premium"
               >
                 Consultar
                 <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
             
-            <div className="mt-6 flex justify-center">
-              <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 px-2">
+            <div className="mt-8 flex justify-center opacity-20 hover:opacity-100 transition-opacity duration-700">
+              <div className="flex items-center gap-2 text-[8px] font-bold uppercase tracking-[0.4em] text-primary/40">
                 <kbd className="px-2 py-1 rounded bg-muted/30 border border-border/10">Alt</kbd>
                 <span>+</span>
                 <kbd className="px-2 py-1 rounded bg-muted/30 border border-border/10">L</kbd>
@@ -155,7 +153,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* EM BREVE */}
-      <ComingSoonSection className="pt-24 md:pt-32 opacity-60 hover:opacity-100 transition-opacity duration-1000" />
+      <section className="animate-in fade-in duration-1000 delay-1000 fill-mode-both">
+        <ComingSoonSection className="opacity-40 hover:opacity-100 transition-opacity duration-1000" />
+      </section>
+    </div>
 
     </div>
   );
