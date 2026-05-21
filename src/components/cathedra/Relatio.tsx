@@ -226,7 +226,6 @@ const Relatio: React.FC<RelatioProps> = ({
                 {connections.map((item) => {
                   const isFav = isFavorite('relatio', item.title);
                   
-
                   return (
                     <motion.div
                       key={item.id}
