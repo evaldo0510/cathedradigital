@@ -74,4 +74,21 @@ describe('SpiritualContinuity Regression', () => {
     render(<SpiritualContinuity data={mockData} />, { wrapper });
     expect(screen.getByText(/Caminho de Maturidade/i)).toBeDefined();
   });
-});
+
+  it('is resilient to null profile (XP calculation)', () => {
+    const mockData = {
+      nextBible: { label: 'Gênesis 1', subtitle: 'Bíblia', route: '/bible/1/1', type: 'bible' },
+      history: []
+    };
+    render(<SpiritualContinuity data={mockData} profile={null} />, { wrapper });
+    expect(screen.getByText(/Grau I/i)).toBeDefined();
+  });
+
+  it('is resilient to undefined data properties', () => {
+    const mockData = {
+      nextBible: undefined,
+      history: undefined
+    };
+    const { container } = render(<SpiritualContinuity data={mockData} />, { wrapper });
+    expect(container.firstChild).toBeNull();
+  });
