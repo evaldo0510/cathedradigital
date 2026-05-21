@@ -33,6 +33,9 @@ const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 
+import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+
+
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 
@@ -190,21 +193,19 @@ const AppLayout: React.FC = () => {
             />
 
             <main id="main-content" className="pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
-              <Suspense fallback={<LoadingFallback />}>
-                <AnimatePresence mode="wait">
-                  <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/bible" element={<Bible />} />
-                    <Route path="/catechism" element={<Catechism />} />
-                    <Route path="/magisterium" element={<Magisterium />} />
-                    <Route path="/buscar" element={<GlobalSearchPage />} />
-                    <Route path="/logos" element={<LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} />} />
-                    <Route path="/auth" element={<Auth onSuccess={() => navigate('/')} />} />
-                    <Route path="/profile" element={<ProfilePage />} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                  </Routes>
-                </AnimatePresence>
-              </Suspense>
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
+                  <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
+                  <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
+                  <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
+                  <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
+                  <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+                  <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+                  <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+              </AnimatePresence>
             </main>
 
             <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />

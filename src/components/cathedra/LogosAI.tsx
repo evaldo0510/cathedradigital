@@ -31,6 +31,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
+
 
   const springConfig = useMemo(() => {
     if (settings.reduceAnimations) {
@@ -126,7 +128,19 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </div>
 
               <div className="space-y-10">
-                {history.map((msg, i) => (
+                {history.length > visibleMessages && (
+                  <div className="flex justify-center pb-4">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setVisibleMessages(prev => prev + 10)}
+                      className="text-[9px] font-black uppercase tracking-widest text-primary/30 hover:text-primary"
+                    >
+                      Carregar mensagens anteriores
+                    </Button>
+                  </div>
+                )}
+                {history.slice(-visibleMessages).map((msg, i) => (
                   <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}>
                     <div className={`max-w-[85%] text-lg leading-relaxed ${
                       msg.role === 'user' 
@@ -222,7 +236,19 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               )}
 
-              {history.map((msg, i) => (
+              {history.length > visibleMessages && (
+                <div className="flex justify-center pb-8">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setVisibleMessages(prev => prev + 10)}
+                    className="text-[9px] font-black uppercase tracking-widest text-primary/30 hover:text-primary"
+                  >
+                    Ver histórico anterior
+                  </Button>
+                </div>
+              )}
+              {history.slice(-visibleMessages).map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
                   <div className={`max-w-[90%] p-8 md:p-10 rounded-premium-lg text-base leading-relaxed ${
                     msg.role === 'user' 
