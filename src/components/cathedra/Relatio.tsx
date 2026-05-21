@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useAuth } from '@/hooks/useAuth';
+import { getSpiritualContext, rankConnections, deduplicateRelatio, SpiritualContext } from '@/lib/spiritual-relevance';
 import { toast } from 'sonner';
 
 interface RelatioProps {
