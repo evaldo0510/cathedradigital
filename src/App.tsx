@@ -133,7 +133,6 @@ const AppLayout: React.FC = () => {
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
         <ReadingSettingsProvider>
-          <TooltipProvider>
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
@@ -192,10 +191,29 @@ const AppLayout: React.FC = () => {
             <CommandCenter />
             <PWAInstallPrompt />
             <OfflineIndicator />
-          </TooltipProvider>
         </ReadingSettingsProvider>
       </LangContext.Provider>
     </div>
+  );
+};
+
+const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <HelmetProvider>
+      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<div />} />}>
+        <AppErrorBoundary>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <AuthProvider>
+                <TooltipProvider>
+                  {children}
+                </TooltipProvider>
+              </AuthProvider>
+            </BrowserRouter>
+          </QueryClientProvider>
+        </AppErrorBoundary>
+      </Sentry.ErrorBoundary>
+    </HelmetProvider>
   );
 };
 
@@ -203,26 +221,17 @@ const App: React.FC = () => {
   const [showSplash, setShowSplash] = useState(() => {
     try { return !sessionStorage.getItem('cathedra_splash_shown'); } catch { return true; }
   });
+  
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
     try { sessionStorage.setItem('cathedra_splash_shown', '1'); } catch {}
   }, []);
 
   return (
-    <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<div />} />}>
-      <HelmetProvider>
-        <AppErrorBoundary>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              <AuthProvider>
-                {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-                <AppLayout />
-              </AuthProvider>
-            </BrowserRouter>
-          </QueryClientProvider>
-        </AppErrorBoundary>
-      </HelmetProvider>
-    </Sentry.ErrorBoundary>
+    <AppProviders>
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      <AppLayout />
+    </AppProviders>
   );
 };
 
