@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
@@ -23,71 +26,171 @@ jobs:
 
     - name: Typecheck
       id: typecheck
+      continue-on-error: true
       run: |
         echo "Running tsc --noEmit..."
-        bun run typecheck > tsc_output.log 2>&1
+        bun run typecheck > typecheck.log 2>&1
         RESULT=$?
-        cat tsc_output.log
-        if [ $RESULT -ne 0 ]; then
-          echo "::error::Typecheck failed. Check tsc_output.log in artifacts."
-          exit $RESULT
-        fi
+        cat typecheck.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
     - name: Lint
       id: lint
+      continue-on-error: true
       run: |
-        echo "Running eslint..."
-        # We allow warnings to not fail the build for now, but capture all output
-        bun run lint > eslint_output.log 2>&1
+        echo "Running eslint with max-warnings 0..."
+        bun run lint --max-warnings 0 --format json --output-file eslint-report.json > lint.log 2>&1 || true
+        # Run again for human readable log if failed or just use the log we captured
+        bun run lint --max-warnings 0 > lint.log 2>&1
         RESULT=$?
-        cat eslint_output.log
-        if [ $RESULT -ne 0 ]; then
-          echo "::error::Lint failed. Check eslint_output.log in artifacts."
-          exit $RESULT
-        fi
+        cat lint.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
     - name: Generate SEO Files
+      id: sitemap_gen
+      continue-on-error: true
       run: |
-        echo "Generating sitemap and robots.txt..."
+        echo "Generating sitemap..."
         bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1
         RESULT=$?
         cat sitemap_gen.log
-        if [ $RESULT -ne 0 ]; then
-          echo "::error::Sitemap generation failed."
-          exit $RESULT
-        fi
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-    - name: Validations
+    - name: Validate Sitemap
+      id: sitemap_val
+      continue-on-error: true
       run: |
-        EXIT_CODE=0
-        
-        echo "Validating sitemap..."
-        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || { cat sitemap_val.log; EXIT_CODE=1; echo "::error::Sitemap validation failed."; }
-        
-        echo "Validating catechism..."
-        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || { cat catechism_val.log; EXIT_CODE=1; echo "::error::Catechism validation failed."; }
-        
-        echo "Running security audit..."
-        bun run scripts/security-audit.ts > security_audit.log 2>&1 || { cat security_audit.log; EXIT_CODE=1; echo "::error::Security audit failed."; }
-        
-        exit $EXIT_CODE
+        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1
+        RESULT=$?
+        cat sitemap_val.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
+
+    - name: Validate Catechism
+      id: catechism_val
+      continue-on-error: true
+      run: |
+        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1
+        RESULT=$?
+        cat catechism_val.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
+
+    - name: Security Audit
+      id: security_audit
+      continue-on-error: true
+      run: |
+        bun run scripts/security-audit.ts > security_audit.log 2>&1
+        RESULT=$?
+        cat security_audit.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
     - name: Build
+      id: build
+      continue-on-error: true
       run: |
-        echo "Running vite build..."
-        bun run build > build_output.log 2>&1
+        bun run build > build.log 2>&1
         RESULT=$?
-        cat build_output.log
-        if [ $RESULT -ne 0 ]; then
-          echo "::error::Vite build failed. Check build_output.log in artifacts."
-          exit $RESULT
-        fi
+        cat build.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-    - name: Upload Logs as Artifacts
+    - name: Upload Typecheck Log
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: ci-logs
+        name: typecheck-log
+        path: typecheck.log
+
+    - name: Upload Lint Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: lint-artifacts
         path: |
-          *.log
-          scripts/logs/*.log
+          lint.log
+          eslint-report.json
+
+    - name: Upload Sitemap Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: sitemap-logs
+        path: |
+          sitemap_gen.log
+          sitemap_val.log
+
+    - name: Upload Validation Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: validation-logs
+        path: |
+          catechism_val.log
+          security_audit.log
+
+    - name: Upload Build Log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-log
+        path: build.log
+
+    - name: PR Summary
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { 
+            typecheck, lint, sitemap_gen, sitemap_val, catechism_val, security_audit, build 
+          } = {
+            typecheck: '${{ steps.typecheck.outputs.status }}',
+            lint: '${{ steps.lint.outputs.status }}',
+            sitemap_gen: '${{ steps.sitemap_gen.outputs.status }}',
+            sitemap_val: '${{ steps.sitemap_val.outputs.status }}',
+            catechism_val: '${{ steps.catechism_val.outputs.status }}',
+            security_audit: '${{ steps.security_audit.outputs.status }}',
+            build: '${{ steps.build.outputs.status }}'
+          };
+          
+          const getIcon = (status) => status === '0' ? '✅' : '❌';
+          const getStatusText = (status) => status === '0' ? 'Success' : 'Failed';
+          
+          const summary = `
+          ### 🚀 CI Build Summary
+          | Step | Status |
+          | :--- | :--- |
+          | Typecheck | ${getIcon(typecheck)} ${getStatusText(typecheck)} |
+          | Lint | ${getIcon(lint)} ${getStatusText(lint)} |
+          | Sitemap Generation | ${getIcon(sitemap_gen)} ${getStatusText(sitemap_gen)} |
+          | Sitemap Validation | ${getIcon(sitemap_val)} ${getStatusText(sitemap_val)} |
+          | Catechism Validation | ${getIcon(catechism_val)} ${getStatusText(catechism_val)} |
+          | Security Audit | ${getIcon(security_audit)} ${getStatusText(security_audit)} |
+          | Vite Build | ${getIcon(build)} ${getStatusText(build)} |
+          
+          Logs and reports are available in the Actions artifacts.
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+    - name: Final Check
+      run: |
+        if [ "${{ steps.typecheck.outputs.status }}" != "0" ] || \
+           [ "${{ steps.lint.outputs.status }}" != "0" ] || \
+           [ "${{ steps.sitemap_gen.outputs.status }}" != "0" ] || \
+           [ "${{ steps.sitemap_val.outputs.status }}" != "0" ] || \
+           [ "${{ steps.catechism_val.outputs.status }}" != "0" ] || \
+           [ "${{ steps.security_audit.outputs.status }}" != "0" ] || \
+           [ "${{ steps.build.outputs.status }}" != "0" ]; then
+          echo "One or more CI steps failed."
+          exit 1
+        fi
