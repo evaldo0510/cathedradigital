@@ -285,7 +285,65 @@ const ReadingControlPanel: React.FC = () => {
             </div>
           </div>
           
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Conexões Relatio</p>
+            <div className="p-4 rounded-3xl bg-muted/20 border border-border/10 space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-bold">Ativar Relatio</p>
+                <input
+                  type="checkbox"
+                  checked={settings.relatio?.enabled}
+                  onChange={(e) => updateSettings({ relatio: { ...settings.relatio, enabled: e.target.checked } })}
+                  className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+                />
+              </div>
+
+              {settings.relatio?.enabled && (
+                <div className="space-y-4 pt-2 border-t border-border/5">
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Intensidade</p>
+                    <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+                      {(['subtle', 'standard', 'deep'] as const).map((i) => (
+                        <button
+                          key={i}
+                          onClick={() => updateSettings({ relatio: { ...settings.relatio, intensity: i } })}
+                          className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${
+                            settings.relatio.intensity === i ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                          }`}
+                        >
+                          {i === 'subtle' ? 'Sutil' : i === 'standard' ? 'Normal' : 'Profunda'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                    {[
+                      { id: 'showBible', label: 'Bíblia' },
+                      { id: 'showCatechism', label: 'Catecismo' },
+                      { id: 'showMagisterium', label: 'Magistério' },
+                      { id: 'showSaints', label: 'Santos' },
+                    ].map((source) => (
+                      <div key={source.id} className="flex items-center gap-2">
+                        <Checkbox 
+                          id={`relatio-${source.id}`} 
+                          checked={(settings.relatio as any)[source.id]} 
+                          onCheckedChange={(checked) => updateSettings({ relatio: { ...settings.relatio, [source.id]: !!checked } })}
+                          className="w-3 h-3 rounded-sm"
+                        />
+                        <label htmlFor={`relatio-${source.id}`} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 cursor-pointer">
+                          {source.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           <DropdownMenuSeparator className="bg-border/20" />
+
           
           <div className="space-y-4">
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Marcas de Leitura</p>
