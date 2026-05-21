@@ -22,29 +22,53 @@ jobs:
       run: bun install
 
     - name: Typecheck
+      id: typecheck
       run: |
-        bun run typecheck > tsc_output.log 2>&1 || (cat tsc_output.log && exit 1)
+        echo "Running tsc --noEmit..."
+        bun run typecheck > tsc_output.log 2>&1
+        RESULT=$?
+        cat tsc_output.log
+        exit $RESULT
 
     - name: Lint
+      id: lint
       run: |
-        bun run lint > eslint_output.log 2>&1 || (cat eslint_output.log && exit 1)
+        echo "Running eslint..."
+        bun run lint > eslint_output.log 2>&1
+        RESULT=$?
+        cat eslint_output.log
+        exit $RESULT
 
     - name: Generate SEO Files
       run: |
-        bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1 || (cat sitemap_gen.log && exit 1)
+        echo "Generating sitemap and robots.txt..."
+        bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1
+        RESULT=$?
+        cat sitemap_gen.log
+        exit $RESULT
 
     - name: Validations
       run: |
+        EXIT_CODE=0
+        
         echo "Validating sitemap..."
-        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || (cat sitemap_val.log && exit 1)
+        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1 || { cat sitemap_val.log; EXIT_CODE=1; }
+        
         echo "Validating catechism..."
-        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || (cat catechism_val.log && exit 1)
+        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1 || { cat catechism_val.log; EXIT_CODE=1; }
+        
         echo "Running security audit..."
-        bun run scripts/security-audit.ts > security_audit.log 2>&1 || (cat security_audit.log && exit 1)
+        bun run scripts/security-audit.ts > security_audit.log 2>&1 || { cat security_audit.log; EXIT_CODE=1; }
+        
+        exit $EXIT_CODE
 
     - name: Build
       run: |
-        bun run build > build_output.log 2>&1 || (cat build_output.log && exit 1)
+        echo "Running vite build..."
+        bun run build > build_output.log 2>&1
+        RESULT=$?
+        cat build_output.log
+        exit $RESULT
 
     - name: Upload Logs as Artifacts
       if: always()
