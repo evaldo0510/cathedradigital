@@ -2,7 +2,10 @@ import * as React from "react";
 import { CathedraButton } from "./CathedraButton";
 import { type ButtonProps } from "@/components/ui/button";
 
-export interface HomeButtonProps extends ButtonProps {}
+export interface HomeButtonProps extends ButtonProps {
+  // Keeping this interface to allow future extensions
+  _member?: never;
+}
 
 const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
   ({ variant, size, children, className, ...props }, ref) => {

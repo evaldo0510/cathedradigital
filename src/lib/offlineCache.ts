@@ -99,7 +99,9 @@ export async function deleteFromStore(storeName: string, key: string): Promise<v
     const store = tx.objectStore(storeName);
     store.delete(key);
     window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
-  } catch {}
+  } catch (e) {
+    console.error('Failed to delete from store:', e);
+  }
 }
 
 export async function getAllFromStore(storeName: string): Promise<CacheEntry[]> {
@@ -127,7 +129,9 @@ export async function clearAllCaches(): Promise<void> {
     });
     localStorage.removeItem('cathedra_last_sync');
     window.dispatchEvent(new CustomEvent('cathedra_cache_updated'));
-  } catch {}
+  } catch (e) {
+    console.error('Failed to clear caches:', e);
+  }
 }
 
 // ─── Import / Export ───

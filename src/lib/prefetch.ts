@@ -101,5 +101,7 @@ export async function prefetchEssentialContent() {
       const { fetchCatechismParagraph } = await import('@/hooks/useCatechismParagraph');
       if (p < 2865) await fetchCatechismParagraph(p + 1);
     }
-  } catch {}
+    } catch (e) {
+      console.warn('Prefetch error for last catechism paragraph:', e);
+    }
 }
