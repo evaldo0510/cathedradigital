@@ -883,15 +883,18 @@ const Bible: React.FC = () => {
         </div>
         {showLogosAI && (
           <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <LogosAI 
-              isOpen={showLogosAI} 
-              onClose={() => setShowLogosAI(false)} 
-              context={logosAIContext}
-              type="bible"
-              variant="integrated"
-            />
+            <React.Suspense fallback={<BibleChapterSkeleton />}>
+              <LogosAI 
+                isOpen={showLogosAI} 
+                onClose={() => setShowLogosAI(false)} 
+                context={logosAIContext}
+                type="bible"
+                variant="integrated"
+              />
+            </React.Suspense>
           </div>
         )}
+
           </div>
         </ContemplativeLayout>
     );
