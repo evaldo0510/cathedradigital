@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
   type = 'bible',
   variant = 'drawer'
 }) => {
+  useRenderPerf('LogosAI', 15);
   const { settings } = useReadingSettings();
   const [query, setQuery] = useState('');
   const [response, setResponse] = useState('');

@@ -33,6 +33,7 @@ import NotesPanel from './NotesPanel';
 const LogosAI = lazy(() => import('./LogosAI'));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
 
@@ -114,6 +115,7 @@ const FONT_SIZES = [
 ];
 
 const Bible: React.FC = () => {
+  useRenderPerf('Bible', 15);
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
