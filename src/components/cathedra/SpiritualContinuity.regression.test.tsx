@@ -92,3 +92,4 @@ describe('SpiritualContinuity Regression', () => {
     const { container } = render(<SpiritualContinuity data={mockData} />, { wrapper });
     expect(container.firstChild).toBeNull();
   });
+});
