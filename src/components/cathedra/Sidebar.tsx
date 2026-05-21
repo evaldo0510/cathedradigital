@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';

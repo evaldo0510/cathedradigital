@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef, useLayoutEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
@@ -111,8 +111,8 @@ const AppLayout: React.FC = () => {
   const isHighContrast = settings.highContrast;
 
   const toggleDark = useCallback(() => {
-    updateSettings({ theme: isDark ? 'paper' : 'dark' });
-  }, [isDark, updateSettings]);
+    updateSettings({ theme: settings.theme === 'dark' || settings.theme === 'night' ? 'paper' : 'dark' });
+  }, [settings.theme, updateSettings]);
 
   const toggleHighContrast = useCallback(() => {
     updateSettings({ highContrast: !isHighContrast });
@@ -136,7 +136,7 @@ const AppLayout: React.FC = () => {
       utterance.onend = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
     }
-  }, [lang]);
+  }, [lang, settings.totalSilence]);
 
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
