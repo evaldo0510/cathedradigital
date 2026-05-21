@@ -332,12 +332,12 @@ const Catechism: React.FC = () => {
 
     return () => observer.disconnect();
   }, [viewMode]);
-  
+
   const [startPara, endPara] = useMemo(() => {
     if (viewMode === 'reading' && selectedSection) {
       return selectedSection.paragraphs;
     }
-    return [0, 0];
+    return [1, 2865];
   }, [viewMode, selectedSection]);
 
   // Auto-restore scroll on first load
@@ -500,7 +500,7 @@ const Catechism: React.FC = () => {
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
+            <p className="text-sm text-muted-foreground">§{startPara} — §{endPara}</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -590,7 +590,7 @@ const Catechism: React.FC = () => {
             <div className="space-y-4">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
               <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
-                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <button
                     key={p}
                     onClick={() => jumpToParagraph(p)}
@@ -615,7 +615,7 @@ const Catechism: React.FC = () => {
               <div className="p-8 md:p-16">
 
                 <div className="space-y-16">
-                  {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                  {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                     <LazyParagraph 
                       key={p} 
                       paragraph={p} 
