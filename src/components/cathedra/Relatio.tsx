@@ -122,7 +122,7 @@ const Relatio: React.FC<RelatioProps> = ({
         const all = results.flat();
         
         // Apply type filters from settings
-        let filtered = all.filter(item => {
+        const filtered = all.filter(item => {
           if (item.id === context.id) return false;
           if (item.type === 'bible' && (relatioConfig as any).showBible === false) return false;
           if (item.type === 'catechism' && (relatioConfig as any).showCatechism === false) return false;
