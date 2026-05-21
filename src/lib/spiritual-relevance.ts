@@ -27,10 +27,9 @@ export async function getSpiritualContext(userId: string): Promise<SpiritualCont
 
 async function fetchLastReading(userId: string) {
   try {
-    // Check reading marks for the latest entry
     const { data, error } = await supabase
       .from('reading_marks')
-      .select('*')
+      .select('content_type, label, content_id')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(1)
@@ -38,10 +37,11 @@ async function fetchLastReading(userId: string) {
 
     if (error || !data) return null;
 
+    // Fetch tags if possible or rely on content ID matching
     return {
       type: data.content_type || 'unknown',
       title: data.label || data.content_id || 'Leitura Recente',
-      tags: [] // Since we don't have tags in reading_marks directly, we could fetch them, but for now we'll match by ID if needed
+      tags: [] 
     };
   } catch (err) {
     console.error('Error fetching last reading for relevance:', err);
@@ -77,13 +77,11 @@ export function rankConnections(
       if (traitMatches > 0 && score < 15) reason = 'Inclinação Espiritual';
     }
 
-    // 3. Match with last reading tags
-    if (context.lastReading?.tags) {
-      const readingMatches = item.metadata?.tags?.filter((t: string) => 
-        context.lastReading?.tags.includes(t)
-      ).length || 0;
-      score += readingMatches * 8;
-      if (readingMatches > 0 && score < 20) reason = 'Continuidade da Leitura';
+    // 3. Match with last reading tags (if we had tags for it)
+    if (context.lastReading) {
+      // Very basic continuity bonus
+      score += 3;
+      if (reason === 'Tradição Conectada') reason = 'Continuidade da Leitura';
     }
 
     // 4. Match with dominant emotion (virtue alignment)
