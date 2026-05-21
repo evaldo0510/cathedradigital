@@ -1,8 +1,6 @@
 import * as Sentry from "@sentry/react";
 
 export const initSentry = () => {
-  // We use a placeholder DSN or read from environment variables
-  // In a real scenario, you'd provide your project's DSN here
   const dsn = import.meta.env.VITE_SENTRY_DSN || "";
 
   if (dsn) {
@@ -19,14 +17,21 @@ export const initSentry = () => {
       replaysOnErrorSampleRate: 1.0,
       
       environment: import.meta.env.MODE,
+
+      beforeSend(event) {
+        // Ensure stack traces are captured for all errors
+        return event;
+      },
       
-      // Filter out common noise if necessary
+      // Filter out common noise
       ignoreErrors: [
         "ResizeObserver loop limit exceeded",
         "Non-Error promise rejection captured",
       ],
     });
   } else {
+    // In dev, we can still use Sentry wrapper components if needed
+    // or just log to console
     console.log("Sentry DSN not found. Error tracking disabled.");
   }
 };

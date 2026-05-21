@@ -9,6 +9,9 @@ import { LangContext } from '@/contexts/LangContext';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { HelmetProvider } from 'react-helmet-async';
+import { useSaintsToday } from '@/hooks/useSaints';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 
 
 
@@ -81,5 +84,19 @@ describe('HojePage Regression', () => {
     expect(screen.getByText(/Mosteiro/i)).toBeDefined();
     expect(screen.getByText(/Digital/i)).toBeDefined();
     expect(screen.getByText(/Ritual de Hoje/i)).toBeDefined();
+  });
+
+  it('is resilient to empty saints data', () => {
+    vi.mocked(useSaintsToday).mockReturnValue({ data: [], isLoading: false } as any);
+    render(<HojePage />, { wrapper });
+    expect(screen.getByText(/Mosteiro/i)).toBeDefined();
+  });
+
+  it('is resilient to null dashboard data', () => {
+    vi.mocked(useDashboardData).mockReturnValue({ nextUp: null, isLoading: false } as any);
+    render(<HojePage />, { wrapper });
+    // Should not render "Caminho de Maturidade" if data is null
+    const maturityPath = screen.queryByText(/Caminho de Maturidade/i);
+    expect(maturityPath).toBeNull();
   });
 });

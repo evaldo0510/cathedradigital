@@ -23,28 +23,47 @@ class AppErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
-    Sentry.captureException(error, { extra: errorInfo as any });
+    Sentry.captureException(error, { 
+      extra: { 
+        componentStack: errorInfo.componentStack,
+        ...errorInfo 
+      } 
+    });
   }
-
 
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-center p-8 bg-background space-y-6">
-          <Icons.History className="w-16 h-16 text-primary opacity-20" />
-          <h1 className="text-3xl font-serif font-bold text-foreground">Santuário em Manutenção</h1>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Pedimos desculpas, mas algo deu errado ao carregar o aplicativo. 
-            Nossa equipe técnica já foi notificada.
-          </p>
-          <div className="flex flex-col gap-3 w-full max-w-xs">
+        <div className="flex flex-col items-center justify-center min-h-screen text-center p-8 bg-background space-y-8 animate-in fade-in duration-700">
+          <div className="relative">
+            <div className="w-24 h-24 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
+              <Icons.History className="w-10 h-10 text-primary/20" />
+            </div>
+          </div>
+
+          <div className="space-y-4 max-w-lg mx-auto">
+            <h1 className="text-4xl md:text-5xl font-display text-primary tracking-tight">
+              Santuário em <span className="italic font-serif text-secondary/60">Manutenção</span>
+            </h1>
+            <p className="text-sm font-serif italic text-muted-foreground leading-relaxed">
+              Pedimos desculpas, peregrino. Algo interrompeu sua jornada espiritual. 
+              Nossos guardiões técnicos já foram alertados para restaurar o caminho.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-4 w-full max-w-xs pt-8">
             <Button
-              onClick={() => window.location.reload()}
-              className="px-8 py-3 bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium-hover focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              onClick={() => {
+                this.setState({ hasError: false });
+                window.location.reload();
+              }}
+              className="rounded-full bg-primary/90 hover:bg-primary text-primary-foreground h-14 text-[10px] font-black uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
             >
               Tentar Novamente
             </Button>
+            
             <Button
+              variant="ghost"
               onClick={async () => {
                 localStorage.clear();
                 sessionStorage.clear();
@@ -56,11 +75,10 @@ class AppErrorBoundary extends Component<Props, State> {
                 } catch (e) {}
                 window.location.href = '/';
               }}
-              className="px-8 py-3 bg-muted text-primary rounded-full text-premium-tiny font-black uppercase tracking-widest hover:bg-muted/80 transition-all border border-border focus-visible:ring-4 focus-visible:ring-primary outline-none"
+              className="text-[9px] font-bold text-muted-foreground/40 hover:text-primary uppercase tracking-widest"
             >
               Limpar Dados e Reiniciar
             </Button>
-
           </div>
         </div>
       );
