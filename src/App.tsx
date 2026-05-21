@@ -32,6 +32,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
+import { useRenderPerf } from './hooks/useRenderPerf';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
 
@@ -94,6 +95,7 @@ const LoadingFallback = () => (
 );
 
 const AppLayout: React.FC = () => {
+  useRenderPerf('AppLayout', 10);
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
   const [showA11ySettings, setShowA11ySettings] = useState(false);

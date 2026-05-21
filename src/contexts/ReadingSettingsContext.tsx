@@ -93,11 +93,16 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   // Sync with profile if available
   useEffect(() => {
     if (profile?.reading_settings && Object.keys(profile.reading_settings).length > 0) {
-      const remoteSettings = profile.reading_settings as any;
-      setSettings(prev => ({
-        ...prev,
-        ...remoteSettings
-      }));
+      const remoteSettings = profile.reading_settings as ReadingSettings;
+      
+      // Only update if there are actual changes to avoid render loops
+      setSettings(prev => {
+        const hasChanges = Object.keys(remoteSettings).some(
+          key => JSON.stringify((remoteSettings as any)[key]) !== JSON.stringify((prev as any)[key])
+        );
+        if (!hasChanges) return prev;
+        return { ...prev, ...remoteSettings };
+      });
     }
     setIsLoading(false);
   }, [profile?.reading_settings]);
