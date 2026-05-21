@@ -371,7 +371,16 @@ const Bible: React.FC = () => {
 
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
+    setViewMode('reading');
   };
+
+  const handleNavigateToCIC = useCallback((paragraph: number) => {
+    navigate(`/catechism?p=${paragraph}`);
+  }, [navigate]);
+
+  const handleNavigateToDoc = useCallback((docId: string) => {
+    navigate(`/magisterium?doc=${docId}`);
+  }, [navigate]);
 
   const MemoizedRelatio = useMemo(() => {
     if (!selectedBook || !selectedChapter || !showCrossRefs) return null;
@@ -388,8 +397,7 @@ const Bible: React.FC = () => {
       />
     );
   }, [selectedBook, selectedChapter, showCrossRefs, handleNavigateToCIC, handleNavigateToDoc]);
-    setViewMode('reading');
-  };
+
 
   const goBack = () => {
     if (viewMode === 'reading') setViewMode('chapters');
@@ -416,13 +424,6 @@ const Bible: React.FC = () => {
     }
   }, [selectedBook, selectedChapter, saveLastRead]);
 
-  const handleNavigateToCIC = useCallback((paragraph: number) => {
-    navigate(`/catechism?p=${paragraph}`);
-  }, [navigate]);
-
-  const handleNavigateToDoc = useCallback((docId: string) => {
-    navigate(`/magisterium?doc=${docId}`);
-  }, [navigate]);
 
   // In-memory cache with IndexedDB persistence for offline access
   const bibleCache = useMemo(() => {
@@ -499,7 +500,7 @@ const Bible: React.FC = () => {
       setBibleError('');
       setVerses([]);
 
-      // 2) Check IndexedDB cache, then direct DB, then fetch
+      // 2 Check IndexedDB cache, then direct DB, then fetch
       import('@/lib/offlineCache').then(({ getCachedBibleChapter, cacheBibleChapter }) => {
         getCachedBibleChapter(selectedBook.abbr, selectedChapter).then(async (idbCached) => {
           if (idbCached?.verses?.length > 0) {
@@ -539,7 +540,7 @@ const Bible: React.FC = () => {
             return;
           }
 
-          // 5) Fetch from edge function (Only as fallback)
+          // 5 Fetch from edge function (Only as fallback)
           supabase.functions.invoke('bible-text', {
             body: { abbrev: selectedBook.abbr, chapter: selectedChapter }
           }).then(({ data, error }) => {
@@ -561,6 +562,7 @@ const Bible: React.FC = () => {
       });
     }
   }, [viewMode, selectedBook, selectedChapter, bibleCache]);
+
 
 
   // Auto-scroll to highlighted verse when verses are loaded.

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
@@ -95,14 +95,7 @@ const LoadingFallback = () => (
 
 const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
-  const [lang, setLangState] = useState<Language>(() => {
-    try {
-      const stored = localStorage.getItem('cathedra_lang');
-      return (stored as Language) || 'pt';
-    } catch {
-      return 'pt';
-    }
-  });
+  const { lang, setLang, t } = useContext(LangContext);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -173,82 +166,93 @@ const AppLayout: React.FC = () => {
   }, [profile]);
 
   return (
-    <AuthProvider>
-      <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-          <ScrollToTop />
-          <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
-            <AppHeader 
-              user={authUserAdapter} 
-              isDark={isDark} 
-              onToggleDark={toggleDark}
-              lang={lang}
-              onChangeLang={setLangState}
-              onSignOut={signOut}
-              onOpenSidebar={handleOpenSidebar}
-            />
-            
-            <CathedralSidebar 
-              user={authUserAdapter}
-              onClose={handleCloseSidebar}
-              isDark={isDark}
-              onToggleDark={toggleDark}
-              isHighContrast={isHighContrast}
-              onToggleHighContrast={toggleHighContrast}
-              isSpeaking={isSpeaking}
-              onToggleSpeak={toggleSpeak}
-              onSignOut={signOut}
-            />
+    <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <ScrollToTop />
+        <AppHeader 
+          user={authUserAdapter} 
+          isDark={isDark} 
+          onToggleDark={toggleDark}
+          lang={lang}
+          onChangeLang={setLang}
+          onSignOut={signOut}
+          onOpenSidebar={handleOpenSidebar}
+        />
+        
+        <CathedralSidebar 
+          user={authUserAdapter}
+          onClose={handleCloseSidebar}
+          isDark={isDark}
+          onToggleDark={toggleDark}
+          isHighContrast={isHighContrast}
+          onToggleHighContrast={toggleHighContrast}
+          isSpeaking={isSpeaking}
+          onToggleSpeak={toggleSpeak}
+          onSignOut={signOut}
+        />
 
-            <main id="main-content" className="pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
-              <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
-                  <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
-                  <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
-                  <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
-                  <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
-                  <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
-                  <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
-                  <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </AnimatePresence>
-            </main>
+        <main id="main-content" className="pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
+              <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
+              <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
+              <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
+              <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
+              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+              <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </AnimatePresence>
+        </main>
 
-            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
-            <CathedralFooter />
-            <Suspense fallback={null}>
-              <A11ySettingsPanel 
-                isOpen={showA11ySettings} 
-                onClose={handleCloseA11y}
-                isDark={isDark}
-                onToggleDark={toggleDark}
-                isHighContrast={isHighContrast}
-                onToggleHighContrast={toggleHighContrast}
-              />
-              <CommandCenter />
-              <PWAInstallPrompt />
-            </Suspense>
-            <OfflineIndicator />
-          </LangContext.Provider>
-        </div>
-      </MotionConfig>
-    </AuthProvider>
+        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        <CathedralFooter />
+        <Suspense fallback={null}>
+          <A11ySettingsPanel 
+            isOpen={showA11ySettings} 
+            onClose={handleCloseA11y}
+            isDark={isDark}
+            onToggleDark={toggleDark}
+            isHighContrast={isHighContrast}
+            onToggleHighContrast={toggleHighContrast}
+          />
+          <CommandCenter />
+          <PWAInstallPrompt />
+        </Suspense>
+        <OfflineIndicator />
+      </div>
+    </MotionConfig>
   );
 };
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const stored = localStorage.getItem('cathedra_lang');
+      return (stored as Language) || 'pt';
+    } catch {
+      return 'pt';
+    }
+  });
+
+  const t = useCallback((k: string) => UI_TRANSLATIONS[lang]?.[k] || k, [lang]);
+
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <ReadingSettingsProvider>
-              <TooltipProvider>
-                {children}
-              </TooltipProvider>
-            </ReadingSettingsProvider>
+            <AuthProvider>
+              <ReadingSettingsProvider>
+                <TooltipProvider>
+                  <LangContext.Provider value={{ lang, setLang, t }}>
+                    {children}
+                  </LangContext.Provider>
+                </TooltipProvider>
+              </ReadingSettingsProvider>
+            </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </Sentry.ErrorBoundary>

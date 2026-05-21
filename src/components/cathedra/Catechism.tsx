@@ -376,6 +376,14 @@ const Catechism: React.FC = () => {
     }
   }, [viewMode, currentParagraph, markParagraphRead]);
 
+  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
+    navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  }, [navigate]);
+
+  const handleNavigateToDoc = useCallback((docId: string) => {
+    navigate(`/magisterium?doc=${docId}`);
+  }, [navigate]);
+
   const MemoizedRelatio = useMemo(() => {
     if (viewMode !== 'reading' || !showCrossRefs) return null;
     return (
@@ -390,6 +398,7 @@ const Catechism: React.FC = () => {
       />
     );
   }, [viewMode, showCrossRefs, currentParagraph, handleNavigateToBible, handleNavigateToDoc]);
+
 
   const jumpToParagraph = useCallback((p: number) => {
     setCurrentParagraph(p);
@@ -460,13 +469,6 @@ const Catechism: React.FC = () => {
     }
   };
 
-  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
-    navigate(`/bible?book=${abbr}&ch=${chapter}`);
-  }, [navigate]);
-
-  const handleNavigateToDoc = useCallback((docId: string) => {
-    navigate(`/magisterium?doc=${docId}`);
-  }, [navigate]);
 
   const goBack = () => {
     if (viewMode === 'reading') { setViewMode('sections'); setSelectedSection(null); }
