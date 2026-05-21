@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
@@ -96,8 +96,12 @@ const LoadingFallback = () => (
 const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
   const [lang, setLangState] = useState<Language>(() => {
-    const stored = localStorage.getItem('cathedra_lang');
-    return (stored as Language) || 'pt';
+    try {
+      const stored = localStorage.getItem('cathedra_lang');
+      return (stored as Language) || 'pt';
+    } catch {
+      return 'pt';
+    }
   });
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
