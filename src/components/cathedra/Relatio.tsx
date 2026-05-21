@@ -226,10 +226,6 @@ const Relatio: React.FC<RelatioProps> = ({
                 {connections.map((item) => {
                   const isFav = isFavorite('relatio', item.title);
                   
-                  // Heuristic for why suggested
-                  const suggestedReason = item.metadata?.is_theme_content ? 'Tema Relacionado' : 
-                                         item.metadata?.tags?.some((t: string) => context.tags?.includes(t)) ? 'Contexto Similar' : 
-                                         'Tradição Conectada';
 
                   return (
                     <motion.div
