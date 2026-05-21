@@ -79,18 +79,15 @@ describe('Route Regression Tests', () => {
   it('renders the Home page correctly', async () => {
     render(<App />);
     await waitFor(() => {
-      // Look for unique home page element if possible, 
-      // otherwise check if main layout elements are present
-      expect(screen.getByRole('main')).toBeDefined();
+      expect(screen.getByTestId('home-page')).toBeDefined();
     }, { timeout: 3000 });
   });
 
   it('renders the Bible route correctly', async () => {
     window.history.pushState({}, '', '/bible');
     render(<App />);
-    // Check for Bible-specific content or skeleton
     await waitFor(() => {
-      expect(screen.getByRole('main')).toBeDefined();
+      expect(screen.getByTestId('bible-page')).toBeDefined();
     }, { timeout: 3000 });
   });
 
@@ -98,7 +95,7 @@ describe('Route Regression Tests', () => {
     window.history.pushState({}, '', '/catechism');
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByRole('main')).toBeDefined();
+      expect(screen.getByTestId('catechism-page')).toBeDefined();
     }, { timeout: 3000 });
   });
 
@@ -106,7 +103,7 @@ describe('Route Regression Tests', () => {
     window.history.pushState({}, '', '/magisterium');
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByRole('main')).toBeDefined();
+      expect(screen.getByTestId('magisterium-page')).toBeDefined();
     }, { timeout: 3000 });
   });
 
@@ -114,7 +111,7 @@ describe('Route Regression Tests', () => {
     window.history.pushState({}, '', '/logos');
     render(<App />);
     await waitFor(() => {
-      expect(screen.getByRole('main')).toBeDefined();
+      expect(screen.getByTestId('logos-page')).toBeDefined();
     }, { timeout: 3000 });
   });
 
