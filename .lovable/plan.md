@@ -1,16 +1,28 @@
-Create a system of intelligent contextual connections (Relatio) to link Bible, Catechism, Magisterium, Saints, and spiritual themes.
+Refinar a experiência emocional do Cathedra para transmitir acolhimento, profundidade e serenidade através de um design contemplativo e silencioso.
 
-### Technical Details
-*   **Component:** Create `src/components/cathedra/Relatio.tsx` to display related content in an elegant, silent way (monastic aesthetic).
-*   **Logic:** Use `src/lib/nexusContent.ts` to fetch related items based on the current context (ID, tags, or text).
-*   **Integration:**
-    *   Add `Relatio` to `Bible.tsx` (linked to chapter/book context).
-    *   Add `Relatio` to `Catechism.tsx` (linked to paragraph context).
-    *   Add `Relatio` to `MagisteriumViewer.tsx` (linked to document context).
-    *   Add `Relatio` to `SaintDetail.tsx` (linked to saint context).
-*   **Data:** Enhance `cross-references.ts` or use existing tag-based fetching to discover connections between different types of content.
+### Mudanças Propostas
 
-### Design Principles
-*   **Silencio:** Subtle animations and quiet UI. No aggressive popups.
-*   **Interligado:** Explicitly show how a Bible verse relates to a Catechism paragraph and a Saint's life.
-*   **Elegance:** High-quality typography (serifs), subtle borders, and balanced whitespace.
+#### 1. Transições e Ritmo (PageTransition)
+- Aumentar a duração das transições de página de 0.8s para 1.2s para um ritmo mais calmo.
+- Ajustar o easing para um movimento mais orgânico e suave.
+- Adicionar uma micro-interação de "respiração" visual durante o carregamento de conteúdos.
+
+#### 2. Silêncio Visual e Contemplação (index.css)
+- Refinar a classe `.visual-silence` para ocultar elementos periféricos não essenciais de forma mais agressiva.
+- Expandir o `.contemplative-mode` com filtros de cor mais quentes e suaves, reduzindo o brilho de elementos puramente brancos.
+- Aumentar o `line-height` padrão para textos de leitura (`reader-text`) para 1.8.
+- Reduzir o ruído visual em `premium-card` removendo bordas desnecessárias e usando sombras baseadas na profundidade (shadow-depth).
+
+#### 3. Integração do Relatio (Relatio.tsx)
+- Tornar as sugestões do Relatio ainda mais discretas, com transições de fade mais lentas ao aparecerem.
+- Ajustar a tipografia das conexões para serem mais harmoniosas com o texto principal.
+
+#### 4. Paleta e Tipografia (sacredPalette.ts e tailwind.config.ts)
+- Introduzir variações de cores "serenas" que se adaptam ao contexto litúrgico de forma menos saturada.
+- Ajustar o espaçamento entre letras (letter-spacing) para títulos para transmitir "direção espiritual".
+
+### Detalhes Técnicos
+- Edição em `src/components/PageTransition.tsx` para novos tempos de animação.
+- Edição em `src/index.css` para novos tokens de design e classes utilitárias de silêncio.
+- Edição em `src/components/cathedra/Relatio.tsx` para suavizar a entrada de conexões.
+- Edição em `tailwind.config.ts` para novos valores de transição e sombras.

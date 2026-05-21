@@ -3,14 +3,14 @@ import { forwardRef, ReactNode } from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 const pageVariants = {
-  initial: { opacity: 0, scale: 0.995, filter: 'blur(4px)' },
+  initial: { opacity: 0, scale: 0.99, filter: 'blur(8px)' },
   animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
-  exit: { opacity: 0, scale: 1.005, filter: 'blur(4px)' },
+  exit: { opacity: 0, scale: 1.01, filter: 'blur(8px)' },
 };
 
 const pageTransition = {
-  duration: 0.8,
-  ease: [0.22, 1, 0.36, 1] as any,
+  duration: 1.2,
+  ease: [0.25, 0.1, 0.25, 1] as any, // More contemplative, slower ease
 };
 
 const fastTransition = {
