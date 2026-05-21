@@ -24,13 +24,20 @@ export const initSentry = () => {
       
       beforeSend(event, hint) {
         // Ensure stack traces are captured for all errors
-        // Add custom context for React rendering errors if available
         const error = hint.originalException;
         if (error instanceof Error) {
           event.extra = {
             ...event.extra,
             stack: error.stack,
+            message: error.message,
           };
+
+          // Add breadcrumb for the last few actions before the crash
+          Sentry.addBreadcrumb({
+            category: 'error',
+            message: `Crash captured: ${error.message}`,
+            level: 'error',
+          });
         }
         return event;
       },
