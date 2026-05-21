@@ -22,6 +22,10 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
+// Mock window.scrollTo and element.scrollTo
+window.scrollTo = vi.fn();
+Element.prototype.scrollTo = vi.fn();
+
 // Mock window.speechSynthesis
 Object.defineProperty(window, 'speechSynthesis', {
   value: {
