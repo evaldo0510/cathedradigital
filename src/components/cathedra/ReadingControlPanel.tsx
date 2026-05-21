@@ -338,35 +338,13 @@ const ReadingControlPanel: React.FC = () => {
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] font-bold uppercase tracking-widest">Relevância Inteligente</p>
-                      <p className="text-[8px] text-muted-foreground italic">Com base no seu progresso</p>
-                    </div>
-                    <input
-                      type="checkbox"
-                      checked={settings.relatio?.relevanceByProgress}
-                      onChange={(e) => updateSettings({ relatio: { ...settings.relatio, relevanceByProgress: e.target.checked } })}
-                      className="w-3 h-3 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-                        <label htmlFor={`relatio-${source.id}`} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 cursor-pointer">
-                          {source.label}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                  
                   <div className="flex items-center justify-between pt-2 border-t border-border/5">
                     <div className="space-y-0.5">
                       <p className="text-[10px] font-bold uppercase tracking-widest">Relevância Inteligente</p>
                       <p className="text-[8px] text-muted-foreground italic">Com base no seu progresso e virtudes</p>
                     </div>
                     <Checkbox 
+                      id="relatio-relevance"
                       checked={settings.relatio?.relevanceByProgress} 
                       onCheckedChange={(checked) => updateSettings({ relatio: { ...settings.relatio, relevanceByProgress: !!checked } })}
                       className="w-3 h-3 rounded-full"
