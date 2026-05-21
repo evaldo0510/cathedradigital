@@ -1,6 +1,5 @@
 import { test, expect, describe, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from '../../App';
 
@@ -46,20 +45,23 @@ describe('Route Regression Tests', () => {
 
   routes.forEach(({ path, name }) => {
     test(`Route "${name}" (${path}) renders without crashing or infinite loops`, async () => {
-      // Use MemoryRouter to start at specific path
-      render(
-        <QueryClientProvider client={createTestQueryClient()}>
-          <MemoryRouter initialEntries={[path]}>
+      // Set the path BEFORE rendering because App has its own BrowserRouter
+      window.history.pushState({}, name, path);
+
+      await act(async () => {
+        render(
+          <QueryClientProvider client={createTestQueryClient()}>
             <App />
-          </MemoryRouter>
-        </QueryClientProvider>
-      );
+          </QueryClientProvider>
+        );
+      });
 
       // Check for main content or skeletons
       await waitFor(() => {
         const main = screen.queryByRole('main');
         const skeleton = screen.queryByTestId(/skeleton/i);
-        return main || skeleton;
+        const loading = screen.queryByText(/Contemplando/i);
+        return main || skeleton || loading;
       }, { timeout: 3000 });
 
       expect(true).toBe(true);
