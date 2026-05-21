@@ -135,7 +135,7 @@ const SpiritualJournalPage = () => {
       </div>
 
       <AnimatePresence mode="wait">
-        {activeTab === 'reflection' ? (
+        {activeTab === 'reflection' && (
           <motion.div
             key="reflection"
             initial={{ opacity: 0, x: -20 }}
@@ -240,7 +240,9 @@ const SpiritualJournalPage = () => {
               )}
             </section>
           </motion.div>
-        ) : (
+        )}
+
+        {activeTab === 'study' && (
           <motion.div
             key="study"
             initial={{ opacity: 0, x: 20 }}
@@ -250,7 +252,9 @@ const SpiritualJournalPage = () => {
           >
             <StudyJournal />
           </motion.div>
-        ) : (
+        )}
+
+        {activeTab === 'relatio' && (
           <motion.div
             key="relatio"
             initial={{ opacity: 0, y: 20 }}
