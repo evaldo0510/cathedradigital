@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+
 
 interface ContemplativeLayoutProps {
   children: React.ReactNode;
