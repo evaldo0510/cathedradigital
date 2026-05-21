@@ -332,6 +332,30 @@ const Catechism: React.FC = () => {
 
     return () => observer.disconnect();
   }, [viewMode]);
+  
+  const [startPara, endPara] = useMemo(() => {
+    if (viewMode === 'reading' && selectedSection) {
+      return selectedSection.paragraphs;
+    }
+    return [0, 0];
+  }, [viewMode, selectedSection]);
+
+  // Auto-restore scroll on first load
+  useEffect(() => {
+    if (viewMode === 'reading' && selectedSection && selectedPart) {
+      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
+      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
+      
+      if (savedScroll && savedPara && !searchParams.get('p')) {
+        const para = parseInt(savedPara);
+        if (para >= startPara && para <= endPara) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          }, 500);
+        }
+      }
+    }
+  }, [viewMode, selectedSection, selectedPart, startPara, endPara, searchParams]);
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
@@ -444,23 +468,7 @@ const Catechism: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
-    const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
-
-    // Auto-restore scroll on first load
-    useEffect(() => {
-      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
-      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
-      
-      if (savedScroll && savedPara && !searchParams.get('p')) {
-        const para = parseInt(savedPara);
-        if (para >= start && para <= end) {
-          setTimeout(() => {
-            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
-          }, 500);
-        }
-      }
-    }, [start, end]);
 
     return (
       <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
