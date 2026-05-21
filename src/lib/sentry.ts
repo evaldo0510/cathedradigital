@@ -18,8 +18,20 @@ export const initSentry = () => {
       
       environment: import.meta.env.MODE,
 
-      beforeSend(event) {
+      // Enhanced error capturing for hooks and providers
+      attachStacktrace: true,
+      normalizeDepth: 10,
+      
+      beforeSend(event, hint) {
         // Ensure stack traces are captured for all errors
+        // Add custom context for React rendering errors if available
+        const error = hint.originalException;
+        if (error instanceof Error) {
+          event.extra = {
+            ...event.extra,
+            stack: error.stack,
+          };
+        }
         return event;
       },
       
@@ -30,8 +42,6 @@ export const initSentry = () => {
       ],
     });
   } else {
-    // In dev, we can still use Sentry wrapper components if needed
-    // or just log to console
     console.log("Sentry DSN not found. Error tracking disabled.");
   }
 };

@@ -99,4 +99,15 @@ describe('HojePage Regression', () => {
     const maturityPath = screen.queryByText(/Caminho de Maturidade/i);
     expect(maturityPath).toBeNull();
   });
+
+  it('is resilient to undefined user and profile', () => {
+    // Already mocked session null in supabase mock
+    render(<HojePage />, { wrapper });
+    expect(screen.getByText(/Ritual de Hoje/i)).toBeDefined();
+  });
+
+  it('is resilient to corrupted dashboard data', () => {
+    vi.mocked(useDashboardData).mockReturnValue({ nextUp: { corrupted: true }, isLoading: false } as any);
+    render(<HojePage />, { wrapper });
+  });
 });

@@ -34,30 +34,30 @@ class AppErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-screen text-center p-8 bg-background space-y-8 animate-in fade-in duration-700">
+        <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-8 text-center bg-background/50 backdrop-blur-sm rounded-[2.5rem] border border-border/10 space-y-8 animate-in fade-in duration-700">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
-              <Icons.History className="w-10 h-10 text-primary/20" />
+            <div className="w-16 h-16 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
+              <Icons.History className="w-6 h-6 text-primary/20" />
             </div>
           </div>
 
-          <div className="space-y-4 max-w-lg mx-auto">
-            <h1 className="text-4xl md:text-5xl font-display text-primary tracking-tight">
+          <div className="space-y-4 max-w-md mx-auto">
+            <h1 className="text-2xl md:text-3xl font-display text-primary tracking-tight">
               Santuário em <span className="italic font-serif text-secondary/60">Manutenção</span>
             </h1>
-            <p className="text-sm font-serif italic text-muted-foreground leading-relaxed">
-              Pedimos desculpas, peregrino. Algo interrompeu sua jornada espiritual. 
-              Nossos guardiões técnicos já foram alertados para restaurar o caminho.
+            <p className="text-xs font-serif italic text-muted-foreground leading-relaxed">
+              Pedimos desculpas, peregrino. Algo interrompeu esta seção da sua jornada espiritual. 
+              Nossos guardiões técnicos já foram alertados.
             </p>
           </div>
 
-          <div className="flex flex-col gap-4 w-full max-w-xs pt-8">
+          <div className="flex flex-col gap-3 w-full max-w-xs pt-4">
             <Button
               onClick={() => {
                 this.setState({ hasError: false });
                 window.location.reload();
               }}
-              className="rounded-full bg-primary/90 hover:bg-primary text-primary-foreground h-14 text-[10px] font-black uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+              className="rounded-full bg-primary/90 hover:bg-primary text-white h-11 text-[9px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
             >
               Tentar Novamente
             </Button>
@@ -75,7 +75,7 @@ class AppErrorBoundary extends Component<Props, State> {
                 } catch (e) {}
                 window.location.href = '/';
               }}
-              className="text-[9px] font-bold text-muted-foreground/40 hover:text-primary uppercase tracking-widest"
+              className="text-[8px] font-bold text-muted-foreground/40 hover:text-primary uppercase tracking-widest"
             >
               Limpar Dados e Reiniciar
             </Button>
