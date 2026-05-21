@@ -163,16 +163,16 @@ const LogosAI: React.FC<LogosAIProps> = ({
           >
             <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/30">
-                  <Icons.Sparkles className="w-6 h-6" strokeWidth={0.5} />
+                <div className="w-10 h-10 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/30">
+                  <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
-                  <p className="text-[10px] text-muted-foreground/40 uppercase font-black tracking-widest mt-1">Mestre Contemplativo</p>
+                  <p className="text-[9px] text-muted-foreground/30 uppercase font-black tracking-widest mt-1">Mestre Contemplativo</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/20 hover:text-primary transition-colors">
-                <Icons.ArrowDown className="w-5 h-5 rotate-[-90deg]" strokeWidth={1} />
+              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
+                <Icons.X className="w-4 h-4" />
               </Button>
             </div>
 
@@ -213,24 +213,24 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
             </div>
 
-            <div className="p-8 md:p-10 border-t border-border/5 bg-muted/[0.02]">
+            <div className="p-8 md:p-10 border-t border-border/5 bg-background/30">
               <form onSubmit={handleQuery} className="relative group">
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Busque por luz e entendimento..."
-                  className="w-full bg-background/50 border border-border/10 rounded-full py-5 px-8 pr-16 text-base focus:bg-background focus:ring-1 focus:ring-primary/5 outline-none transition-all placeholder:text-muted-foreground/20 font-serif italic"
+                  className="w-full bg-transparent border-b border-border/10 py-5 px-0 text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/20 font-serif italic"
                 />
                 <button 
                   type="submit"
                   disabled={isLoading}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:scale-105 active:scale-95 transition-all disabled:opacity-30 shadow-premium"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all disabled:opacity-30"
                 >
-                  <Icons.ArrowDown className="w-5 h-5 rotate-[-90deg]" />
+                  <Icons.ArrowRight className="w-5 h-5" />
                 </button>
               </form>
-              <div className="mt-8 flex flex-col items-center gap-2">
+              <div className="mt-8">
                 <p className="text-[8px] text-muted-foreground/20 uppercase tracking-[0.4em] text-center font-bold">
                   Sempre em comunhão com o Magistério
                 </p>
