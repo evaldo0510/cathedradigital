@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
