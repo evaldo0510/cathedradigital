@@ -29,7 +29,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A Palavra de Deus.',
       icon: Icons.Bible,
       route: AppRoute.BIBLE,
-      shortcut: settings.shortcuts.bible,
+      shortcut: settings?.shortcuts?.bible || 'b',
       tooltip: 'Explore as Sagradas Escrituras em profundidade.'
     },
     {
@@ -37,7 +37,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A base da doutrina.',
       icon: Icons.Catechism,
       route: AppRoute.CATECHISM,
-      shortcut: settings.shortcuts.catechism,
+      shortcut: settings?.shortcuts?.catechism || 'c',
       tooltip: 'Aprofunde seu conhecimento na doutrina da Igreja.'
     },
     {
@@ -45,7 +45,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
       description: 'A voz da Igreja.',
       icon: Icons.Magisterium,
       route: AppRoute.MAGISTERIUM,
-      shortcut: settings.shortcuts.magisterium,
+      shortcut: settings?.shortcuts?.magisterium || 'm',
       tooltip: 'Documentos, encíclicas e a Tradição Viva.'
     },
   ];
@@ -54,7 +54,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
         const key = e.key.toLowerCase();
-        const doorIdx = doors.findIndex(d => d.shortcut.toLowerCase() === key);
+        const doorIdx = doors.findIndex(d => d.shortcut?.toLowerCase() === key);
         
         if (doorIdx !== -1) {
           e.preventDefault();

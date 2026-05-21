@@ -8,7 +8,13 @@ export function useEnhancedRecommendations() {
   return useQuery({
     queryKey: ['enhanced-recommendations', user?.id, userLevel],
     queryFn: async () => {
-      if (!user) return null;
+      if (!user) return {
+        type: 'ritual',
+        title: 'Ritual do Dia',
+        subtitle: 'Prática Espiritual',
+        description: 'Mantenha sua constância diária no caminho de santidade.',
+        route: '/hoje',
+      };
 
       // 1. Fetch reading marks (recent activity)
       const { data: marks } = await supabase
@@ -95,7 +101,7 @@ export function useEnhancedRecommendations() {
         route: '/hoje',
       };
     },
-    enabled: !!user,
+    enabled: true,
     staleTime: 1000 * 60 * 15,
   });
 }
