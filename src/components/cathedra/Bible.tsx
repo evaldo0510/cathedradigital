@@ -1039,6 +1039,6 @@ const Bible: React.FC = () => {
       </div>
     </ContemplativeLayout>
   );
-;
+};
 
 export default Bible;
