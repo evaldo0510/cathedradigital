@@ -72,7 +72,9 @@ class AppErrorBoundary extends Component<Props, State> {
                   for (const reg of regs) {
                     await reg.unregister();
                   }
-                } catch (e) {}
+                } catch (e) {
+                  console.error('Failed to unregister service workers:', e);
+                }
                 window.location.href = '/';
               }}
               className="text-[8px] font-bold text-muted-foreground/40 hover:text-primary uppercase tracking-widest"

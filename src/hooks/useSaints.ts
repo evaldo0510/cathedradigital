@@ -43,7 +43,7 @@ export function useOfficialSaint(forceRefresh = false) {
         if (data && !error) {
           // If we got valid data, cache it
           if (data.name && data.name !== 'Santo do Dia') {
-            try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch {}
+            try { localStorage.setItem(cacheKey, JSON.stringify(data)); } catch (e) { console.warn('Cache set error in useOfficialSaint:', e); }
           }
           return data;
         }

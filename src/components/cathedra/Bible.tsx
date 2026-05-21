@@ -417,7 +417,9 @@ const Bible: React.FC = () => {
         entries.forEach(([k, v]: [string, any]) => map.set(k, v));
         localStorage.removeItem('cathedra_bible_cache'); // migrated
       }
-    } catch {}
+    } catch (e) {
+      console.warn('Failed to migrate bible cache:', e);
+    }
     return map;
   }, []);
 

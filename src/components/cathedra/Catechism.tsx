@@ -33,12 +33,11 @@ import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
 
-
-
-
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
+  const settingsContext = useReadingSettings();
+  const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
@@ -83,7 +82,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
-
   if (data?.status === 'error_402') {
     return (
       <div className="reader-text bg-amber-500/5 border border-amber-500/10 rounded-premium p-4 text-amber-600 dark:text-amber-400 font-serif text-sm py-4 space-y-3">
@@ -116,7 +114,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
     );
   }
 
-  // Not cached - this shouldn't happen with the new auto-generate function, but we keep a generic fallback
   if (data?.status === 'not_cached') {
     return (
       <div className="reader-text py-4 space-y-3">
@@ -140,8 +137,6 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
       </div>
     );
   }
-
-  const { settings } = useReadingSettings();
 
   return (
     <div className={`reader-text text-foreground/90 font-size-${settings.fontSize} font-family-${settings.fontFamily} prose prose-lg dark:prose-invert max-w-none prose-headings:font-serif prose-headings:text-primary prose-p:my-2 transition-all duration-300`}>
@@ -338,6 +333,30 @@ const Catechism: React.FC = () => {
     return () => observer.disconnect();
   }, [viewMode]);
 
+  const [startPara, endPara] = useMemo(() => {
+    if (viewMode === 'reading' && selectedSection) {
+      return selectedSection.paragraphs;
+    }
+    return [1, 2865];
+  }, [viewMode, selectedSection]);
+
+  // Auto-restore scroll on first load
+  useEffect(() => {
+    if (viewMode === 'reading' && selectedSection && selectedPart) {
+      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
+      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
+      
+      if (savedScroll && savedPara && !searchParams.get('p')) {
+        const para = parseInt(savedPara);
+        if (para >= startPara && para <= endPara) {
+          setTimeout(() => {
+            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          }, 500);
+        }
+      }
+    }
+  }, [viewMode, selectedSection, selectedPart, startPara, endPara, searchParams]);
+
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
     try {
@@ -449,23 +468,7 @@ const Catechism: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
-    const [start, end] = selectedSection.paragraphs;
     const fromDashboard = searchParams.get('from') === 'dashboard';
-
-    // Auto-restore scroll on first load
-    useEffect(() => {
-      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
-      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
-      
-      if (savedScroll && savedPara && !searchParams.get('p')) {
-        const para = parseInt(savedPara);
-        if (para >= start && para <= end) {
-          setTimeout(() => {
-            window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
-          }, 500);
-        }
-      }
-    }, [start, end]);
 
     return (
       <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
@@ -497,7 +500,7 @@ const Catechism: React.FC = () => {
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{start} — §{end}</p>
+            <p className="text-sm text-muted-foreground">§{startPara} — §{endPara}</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -587,7 +590,7 @@ const Catechism: React.FC = () => {
             <div className="space-y-4">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
               <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
-                {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <button
                     key={p}
                     onClick={() => jumpToParagraph(p)}
@@ -612,7 +615,7 @@ const Catechism: React.FC = () => {
               <div className="p-8 md:p-16">
 
                 <div className="space-y-16">
-                  {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(p => (
+                  {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                     <LazyParagraph 
                       key={p} 
                       paragraph={p} 

@@ -37,12 +37,7 @@ const Relatio: React.FC<RelatioProps> = ({
   onNavigateToDoc,
   className 
 }) => {
-  let contextSettings;
-  try {
-    contextSettings = useReadingSettings();
-  } catch (e) {
-    // Graceful fallback for tests or missing provider
-  }
+  const contextSettings = useReadingSettings();
   const settings = contextSettings?.settings || { relatio: { enabled: true } };
   const { user } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -103,7 +98,7 @@ const Relatio: React.FC<RelatioProps> = ({
       }
     };
     loadContext();
-  }, [user, relatioConfig.relevanceByProgress]);
+  }, [user, (relatioConfig as any).relevanceByProgress]);
 
   useEffect(() => {
     const fetchRelated = async () => {
@@ -122,7 +117,7 @@ const Relatio: React.FC<RelatioProps> = ({
         const all = results.flat();
         
         // Apply type filters from settings
-        let filtered = all.filter(item => {
+        const filtered = all.filter(item => {
           if (item.id === context.id) return false;
           if (item.type === 'bible' && (relatioConfig as any).showBible === false) return false;
           if (item.type === 'catechism' && (relatioConfig as any).showCatechism === false) return false;
