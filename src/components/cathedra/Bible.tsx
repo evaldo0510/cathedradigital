@@ -902,136 +902,127 @@ const Bible: React.FC = () => {
     );
   }
 
-  // Chapter selection view
   if (viewMode === 'chapters' && selectedBook) {
     return (
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center gap-4">
-          <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+      <ContemplativeLayout
+        subtitle={`${selectedBook.name}`}
+        title="Capítulos"
+        maxW="max-w-6xl"
+      >
+        <div className="space-y-12">
+          <Button 
+            variant="ghost" 
+            onClick={goBack}
+            className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+          >
+            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Todos os Livros
           </Button>
-          <h1 className="text-2xl font-serif font-bold text-foreground">{selectedBook.name}</h1>
-        </div>
 
-        <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-          {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
-            const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
-            const hasCicRef = !!BIBLE_TO_CIC[`${selectedBook.abbr}:${ch}`];
-            return (
-              <Button 
-                key={ch} 
-                onClick={() => selectChapter(ch)}
-                className={`aspect-square flex items-center justify-center rounded-full border text-xs sm:text-sm font-bold transition-all relative
-                  ${isRead 
-                    ? 'bg-primary/10 border-primary/30 text-primary shadow-soft' 
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] hover:shadow-soft'}`}
-              >
-                {ch}
-                {isRead && <Icons.CheckCircle2 className="w-2 h-2 absolute top-0.5 right-0.5" />}
-                {hasCicRef && (
-                  <span className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-secondary" title="Referência no Catecismo" />
-                )}
-              </Button>
-            );
-          })}
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-4">
+            {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
+              const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
+              return (
+                <motion.button 
+                  key={ch} 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => selectChapter(ch)}
+                  className={`aspect-square flex items-center justify-center rounded-full border text-sm font-bold transition-all
+                    ${isRead 
+                      ? 'bg-primary text-white border-primary shadow-premium' 
+                      : 'bg-card border-border/5 text-primary hover:border-primary/20'}`}
+                >
+                  {ch}
+                </motion.button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </ContemplativeLayout>
     );
   }
 
-  // Book selection view
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <ContemplativeLayout 
+      subtitle="A Palavra de Deus"
+      title="Sagrada Escritura"
+      maxW="max-w-6xl"
+    >
       <SEOHead 
-        title="Bíblia Sagrada | Cathedra" 
-        description="Leia e estude a Sagrada Escritura com referências cruzadas e comentários."
+        title="Bíblia Sagrada | Cathedra Digital"
+        description="Explore as Sagradas Escrituras em uma experiência contemplativa premium."
         path="/bible"
       />
       
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-serif font-black text-foreground tracking-tight">Sagrada Escritura</h1>
-          <p className="text-muted-foreground mt-1">Lâmpada para meus pés é a vossa palavra.</p>
+      <div className="space-y-20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border/5 pb-12">
+          <div className="flex gap-4">
+            {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
+              <Button
+                key={t}
+                variant="ghost"
+                onClick={() => setTestament(t)}
+                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
+                  ${testament === t 
+                    ? 'bg-primary text-white shadow-premium' 
+                    : 'text-muted-foreground/40 hover:text-primary'}`}
+              >
+                {t}
+              </Button>
+            ))}
+          </div>
+          
+          <div className="relative group w-full md:w-80">
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20 group-focus-within:text-primary/40 transition-colors" />
+            <input
+              type="text"
+              placeholder="Buscar livro..."
+              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
-        
-        <div className="w-full md:w-auto flex flex-col gap-2">
-           <div className="flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest text-primary/60 mb-1">
-             <span>Progresso Geral</span>
-             <span>{overallProgress}%</span>
-           </div>
-           <Progress value={overallProgress} className="h-2 w-full md:w-48" />
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
-          <Button
-            key={t}
-            onClick={() => setTestament(t)}
-            className={`px-6 py-4 rounded-full font-bold transition-all border-2 text-sm
-              ${testament === t 
-                ? 'bg-primary border-primary text-white shadow-premium shadow-primary/20 scale-[1.02]' 
-                : 'bg-card border-border text-muted-foreground hover:border-primary/40'}`}
-          >
-            {t}
-          </Button>
-        ))}
-      </div>
-
-      <div className="relative">
-        <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Buscar livro..."
-          className="w-full pl-12 pr-4 py-4 bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-
-      <div className="space-y-8">
-        {filteredCategories.map((cat, idx) => (
-          <Collapsible key={cat.label} defaultOpen={idx === 0 || !!searchQuery}>
-            <CollapsibleTrigger className="w-full flex items-center justify-between group p-1.5 hover:bg-muted/50 rounded-full transition-all">
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${cat.bgColor}`}>
-                  <cat.icon className={`w-4 h-4 ${cat.color}`} />
+        <div className="space-y-24">
+          {filteredCategories.map((cat) => (
+            <section key={cat.label} className="space-y-12">
+              <div className="flex items-center gap-6">
+                <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
+                  <cat.icon className="w-4 h-4 text-primary/30" />
                 </div>
-                <h2 className="text-xs font-black text-foreground uppercase tracking-widest">{cat.label}</h2>
+                <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
+                <div className="h-px flex-1 bg-border/5" />
               </div>
-              <Icons.ChevronDown className="w-4 h-4 text-muted-foreground group-data-[state=open]:rotate-180 transition-transform" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-3 animate-in fade-in slide-in-from-top-1 duration-300">
-              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+              
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
                 {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
-                    <Button
+                    <motion.button
                       key={book.abbr}
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center gap-1 p-2.5 rounded-full border transition-all relative overflow-hidden group aspect-square
+                      className={`flex flex-col items-center justify-center p-8 rounded-premium border transition-all relative group
                         ${isRead 
-                          ? 'bg-primary/5 border-primary/20 text-primary' 
-                          : 'bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:scale-[1.05] shadow-soft'}`}
+                          ? 'bg-primary text-white border-primary shadow-premium' 
+                          : 'bg-card border-border/5 text-primary hover:border-primary/10 hover:shadow-premium'}`}
                     >
-                      {isRead && (
-                        <div className="absolute top-0 right-0 p-1 bg-primary text-white rounded-bl-lg shadow-soft">
-                          <Icons.CheckCircle2 className="w-2.5 h-2.5" />
-                        </div>
-                      )}
-                      <span className="text-sm sm:text-base font-bold font-serif leading-none">{book.abbr}</span>
-                      <span className="text-[7px] sm:text-premium-tiny font-bold uppercase tracking-tight text-center leading-tight truncate w-full">
+                      <span className="text-2xl font-display font-medium leading-none mb-2">{book.abbr}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
                         {book.name}
                       </span>
-                    </Button>
+                    </motion.button>
                   );
                 })}
               </div>
-            </CollapsibleContent>
-          </Collapsible>
-        ))}
+            </section>
+          ))}
+        </div>
       </div>
-    </div>
+    </ContemplativeLayout>
   );
 };
 
