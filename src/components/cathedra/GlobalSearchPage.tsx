@@ -50,7 +50,11 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   );
 
   return (
-    <>
+    <ContemplativeLayout
+      subtitle="O Verbo de Deus"
+      title="Logos IA"
+      maxW="max-w-4xl"
+    >
       <SEOHead 
         title="Logos IA | Sabedoria Teológica e Espiritual" 
         description="Pesquise e dialogue com a Logos IA sobre a Bíblia, Catecismo e Magistério. O seu assistente inteligente para aprofundamento na fé católica." 
@@ -61,7 +65,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-12 max-w-4xl mx-auto pb-24 px-4 sm:px-6">
+      <div ref={ref} className="space-y-12">
         <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="w-16 h-16 rounded-premium bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
             <Icons.Search className="w-8 h-8 text-white" />
@@ -228,7 +232,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
         )}
       </div>
-    </>
+    </ContemplativeLayout>
   );
 });
 

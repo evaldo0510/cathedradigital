@@ -12,7 +12,12 @@ export default {
         "2xl": "1400px",
       },
     },
-    extend: {
+     extend: {
+      spacing: {
+        'premium': '5rem',
+        'premium-lg': '8rem',
+        'premium-xl': '12rem',
+      },
       screens: {
         'xs': '420px',
       },

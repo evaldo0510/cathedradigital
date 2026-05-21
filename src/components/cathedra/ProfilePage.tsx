@@ -204,7 +204,12 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 relative">
+    <ContemplativeLayout
+      subtitle="Santuário Pessoal"
+      title="Meu Perfil"
+      maxW="max-w-2xl"
+    >
+      <div className="space-y-8 relative">
       <AnimatePresence>
         {showLevelUp && (
           <motion.div
@@ -592,9 +597,9 @@ const ProfilePage: React.FC = () => {
             * Ao vincular, você poderá entrar usando tanto seu e-mail/senha quanto sua conta Google.
           </p>
         </div>
-      </div>
-    </div>
-  );
-};
+          </div>
+        </ContemplativeLayout>
+    );
+  };
 
 export default ProfilePage;
