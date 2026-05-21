@@ -571,42 +571,37 @@ const Bible: React.FC = () => {
 
   // Reading view
   if (viewMode === 'reading' && selectedBook) {
-    const fromDashboard = searchParams.get('from') === 'dashboard';
     return (
-      <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
+      <ContemplativeLayout
+        subtitle={`${selectedBook.name}`}
+        title={`Capítulo ${selectedChapter}`}
+        maxW="max-w-[85ch]"
+      >
         <SEOHead 
           title={`${selectedBook.name} ${selectedChapter} | Bíblia Sagrada`}
           description={`Leia ${selectedBook.name}, capítulo ${selectedChapter}.`}
           path={`/bible?book=${selectedBook.abbr}&ch=${selectedChapter}`}
         />
-        <div className="mx-auto transition-all duration-500">
+        
+        <div className="space-y-12">
+          <div className="flex items-center justify-between gap-4 border-b border-border/5 pb-8">
+            <Button 
+              variant="ghost" 
+              onClick={goBack}
+              className="group flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary transition-all"
+            >
+              <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              Sumário
+            </Button>
 
-          {/* Back to Theme */}
-          <BackToThemeBanner />
-          {/* Back to Dashboard */}
-          {fromDashboard && (
-            <Button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-xs text-primary hover:underline">
-              <Icons.ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-            </Button>
-          )}
-          {/* Header */}
-          <div className="flex items-center gap-4">
-            <Button onClick={goBack} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-              <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
-            </Button>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedBook.name}</h1>
-              <p className="text-sm text-muted-foreground">Capítulo {selectedChapter} de {selectedBook.chapters}</p>
-            </div>
             {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
               <Button 
-                variant="secondary" 
-                size="sm" 
+                variant="ghost" 
                 onClick={() => navigate(lastReadMark.url)}
-                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary/40 hover:text-primary"
               >
                 <History className="w-4 h-4" />
-                <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Voltar ao ponto salvo</span>
+                Ponto salvo
               </Button>
             )}
           </div>
