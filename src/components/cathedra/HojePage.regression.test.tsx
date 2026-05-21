@@ -9,6 +9,9 @@ import { LangContext } from '@/contexts/LangContext';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { HelmetProvider } from 'react-helmet-async';
+import { useSaintsToday } from '@/hooks/useSaints';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 
 
 
