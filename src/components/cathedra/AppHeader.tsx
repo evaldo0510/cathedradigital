@@ -56,7 +56,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 { label: t('bible'), route: AppRoute.BIBLE },
                 { label: t('catechism'), route: AppRoute.CATECHISM },
                 { label: 'Magistério', route: AppRoute.MAGISTERIUM },
-                { label: 'Logos', route: AppRoute.BUSCAR },
+                { label: 'Logos IA', route: AppRoute.BUSCAR },
               ].map(item => (
                 <Button 
                   key={item.route} 

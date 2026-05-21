@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import A11ySettingsPanel from './components/cathedra/A11ySettingsPanel';
-import { ReadingSettingsProvider } from './contexts/ReadingSettingsContext';
+import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
 import PageTransition from './components/PageTransition';
@@ -77,9 +77,8 @@ const LoadingFallback = () => (
 );
 
 const AppLayout: React.FC = () => {
+  const { settings, updateSettings } = useReadingSettings();
   const [lang, setLangState] = useState<Language>(() => (localStorage.getItem('cathedra_lang') as Language) || 'pt');
-  const [isDark, setIsDark] = useState(() => localStorage.getItem('cathedra_theme') === 'dark');
-  const [isHighContrast, setIsHighContrast] = useState(() => localStorage.getItem('cathedra_high_contrast') === 'true');
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -88,13 +87,16 @@ const AppLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) root.classList.add('dark'); else root.classList.remove('dark');
-    if (isHighContrast) root.classList.add('high-contrast'); else root.classList.remove('high-contrast');
-    localStorage.setItem('cathedra_theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('cathedra_high_contrast', isHighContrast ? 'true' : 'false');
-  }, [isDark, isHighContrast]);
+  const isDark = settings.theme === 'dark' || settings.theme === 'night';
+  const isHighContrast = settings.highContrast;
+
+  const toggleDark = useCallback(() => {
+    updateSettings({ theme: isDark ? 'paper' : 'dark' });
+  }, [isDark, updateSettings]);
+
+  const toggleHighContrast = useCallback(() => {
+    updateSettings({ highContrast: !isHighContrast });
+  }, [isHighContrast, updateSettings]);
 
   const toggleSpeak = useCallback(() => {
     if (window.speechSynthesis.speaking) {
@@ -142,11 +144,11 @@ const AppLayout: React.FC = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <ScrollToTop />
       <LangContext.Provider value={{ lang, setLang: setLangState, t: (k) => UI_TRANSLATIONS[lang]?.[k] || k }}>
-        <ReadingSettingsProvider>
             <AppHeader 
+
               user={authUserAdapter} 
               isDark={isDark} 
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               lang={lang}
               onChangeLang={setLangState}
               onSignOut={signOut}
@@ -157,9 +159,9 @@ const AppLayout: React.FC = () => {
               user={authUserAdapter}
               onClose={() => setIsSidebarOpen(false)}
               isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
-              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              onToggleHighContrast={toggleHighContrast}
               isSpeaking={isSpeaking}
               onToggleSpeak={toggleSpeak}
               onSignOut={signOut}
@@ -188,14 +190,13 @@ const AppLayout: React.FC = () => {
               isOpen={showA11ySettings} 
               onClose={() => setShowA11ySettings(false)}
               isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
-              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              onToggleHighContrast={toggleHighContrast}
             />
             <CommandCenter />
             <PWAInstallPrompt />
             <OfflineIndicator />
-        </ReadingSettingsProvider>
       </LangContext.Provider>
     </div>
   );
@@ -208,9 +209,11 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
-              <TooltipProvider>
-                {children}
-              </TooltipProvider>
+              <ReadingSettingsProvider>
+                <TooltipProvider>
+                  {children}
+                </TooltipProvider>
+              </ReadingSettingsProvider>
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>

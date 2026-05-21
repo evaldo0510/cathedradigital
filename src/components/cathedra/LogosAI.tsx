@@ -84,7 +84,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </div>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Logos IA</h4>
-                    <p className="text-sm font-serif italic text-primary/60">Mentor Contemplativo</p>
+                    <p className="text-sm font-serif italic text-primary/60">Mentor Espiritual</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="sm" onClick={onClose} className="rounded-full text-muted-foreground/30 hover:text-primary">
@@ -168,7 +168,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
-                  <p className="text-[9px] text-muted-foreground/30 uppercase font-black tracking-widest mt-1">Mestre Contemplativo</p>
+                  <p className="text-[9px] text-muted-foreground/30 uppercase font-black tracking-widest mt-1">Mentor Espiritual</p>
                 </div>
               </div>
               <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
@@ -188,7 +188,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
 
               {history.map((msg, i) => (
-                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700`}>
+                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
                   <div className={`max-w-[90%] p-8 md:p-10 rounded-premium-lg text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 

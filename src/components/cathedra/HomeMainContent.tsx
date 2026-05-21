@@ -68,7 +68,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
   return (
     <div className="w-full max-w-5xl mx-auto space-y-32 md:space-y-48 pb-64 px-6">
       {/* RITUAL DO DIA - EXPERIÊNCIA DIÁRIA */}
-      <section className="space-y-16 animate-in fade-in duration-1000 delay-300 fill-mode-both">
+      <section className="space-y-16 animate-in fade-in duration-700 delay-100 fill-mode-both">
         <div className="flex flex-col items-center gap-6">
           <div className="w-px h-12 bg-primary/10" />
           <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
@@ -80,12 +80,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* CONTINUAR LEITURA */}
-      <section className="animate-in fade-in duration-1000 delay-500 fill-mode-both">
+      <section className="animate-in fade-in duration-700 delay-200 fill-mode-both">
         <ReadingProgressSection />
       </section>
 
       {/* NÚCLEO PRINCIPAL - BIBLIOTECA ESPIRITUAL */}
-      <section className="space-y-20 animate-in fade-in duration-1000 delay-700 fill-mode-both">
+      <section className="space-y-20 animate-in fade-in duration-700 delay-300 fill-mode-both">
         <div className="flex flex-col items-center gap-6">
           <div className="w-px h-12 bg-primary/10" />
           <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
@@ -97,7 +97,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* LOGOS IA INTEGRADA */}
-      <section className="space-y-16 animate-in fade-in duration-1000 delay-1000 fill-mode-both">
+      <section className="space-y-16 animate-in fade-in duration-700 delay-400 fill-mode-both">
         <div className="flex flex-col items-center gap-6">
           <div className="w-px h-12 bg-primary/10" />
           <h2 className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
@@ -107,9 +107,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
         
         <HomeCard
           ref={logosCardRef}
-          className="p-12 md:p-24 flex flex-col items-center gap-12 group relative overflow-hidden border-border/5 shadow-premium hover:shadow-premium-hover transition-all duration-1000 bg-card/30 backdrop-blur-sm"
+          className="p-12 md:p-24 flex flex-col items-center gap-12 group relative overflow-hidden border-border/5 shadow-premium hover:shadow-premium-hover transition-all duration-700 bg-card/30 backdrop-blur-sm"
         >
-          <div className="relative z-10 w-20 h-20 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-105 transition-transform duration-1000">
+          <div className="relative z-10 w-20 h-20 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-105 transition-transform duration-700">
             <Sparkles className="w-10 h-10" strokeWidth={0.5} />
           </div>
           
@@ -153,7 +153,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       </section>
 
       {/* EM BREVE */}
-      <section className="animate-in fade-in duration-1000 delay-1000 fill-mode-both">
+      <section className="animate-in fade-in duration-700 delay-500 fill-mode-both">
         <ComingSoonSection className="opacity-40 hover:opacity-100 transition-opacity duration-1000" />
       </section>
     </div>
