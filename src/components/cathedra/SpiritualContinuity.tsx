@@ -23,6 +23,8 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
 
   // Calculo discreto de maturidade baseado em XP
   const xp = profile?.xp || 0;
+  const historyItems = history || [];
+
   // Degrees: I, II, III, IV, V... based on XP
   const romanDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
   const degreeIndex = Math.floor(xp / 1000);
@@ -32,7 +34,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
   // Prioridade de retomada: use a marca de leitura exata se disponível, senão caia nos calculados
   const primaryResume = dashboardPrimary || nextJourney || nextBible || nextCatechism;
 
-  if (!primaryResume && (!history || history.length === 0)) return null;
+  if (!primaryResume && historyItems.length === 0) return null;
 
   return (
     <div className="space-y-12">
@@ -125,11 +127,12 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
       </div>
 
       {/* Histórico Elegante */}
-      {history && history.length > 0 && (
+      {historyItems.length > 0 && (
         <div className="space-y-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30 px-2">Caminho da Fé</p>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
-            {history.map((item: any, idx: number) => (
+            {historyItems.map((item: any, idx: number) => (
+
               <motion.div
                 key={item.id || idx}
                 whileHover={{ y: -4, borderColor: 'rgba(var(--secondary), 0.3)' }}

@@ -128,7 +128,7 @@ const HojePage: React.FC = () => {
           { name: "Sanctuarium", path: "/hoje" }
         ]}
       />
-      {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday, activeJourney, profile: profile?._sensitive }} />}
+      {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday: allSaintsToday || [], activeJourney: activeJourney || null, profile: profile?._sensitive || null }} />}
       
       <div className="app-container stack-spacing">
         {/* HERO SECTION - MONASTIC WELCOME */}

@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import RitualDoDia from './RitualDoDia';
 import { AuthProvider } from '@/hooks/useAuth';
+import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { LangContext } from '@/contexts/LangContext';
+
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -28,9 +32,16 @@ vi.mock('@/integrations/supabase/client', () => ({
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <AuthProvider>
-    {children}
+    <ReadingSettingsProvider>
+      <TooltipProvider>
+        <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
+          {children}
+        </LangContext.Provider>
+      </TooltipProvider>
+    </ReadingSettingsProvider>
   </AuthProvider>
 );
+
 
 describe('RitualDoDia Regression', () => {
   it('renders correctly when user is not logged in', () => {

@@ -6,6 +6,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/hooks/useAuth';
 import { LangContext } from '@/contexts/LangContext';
+import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -52,13 +55,18 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
-          {children}
-        </LangContext.Provider>
+        <ReadingSettingsProvider>
+          <TooltipProvider>
+            <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
+              {children}
+            </LangContext.Provider>
+          </TooltipProvider>
+        </ReadingSettingsProvider>
       </AuthProvider>
     </QueryClientProvider>
   </BrowserRouter>
 );
+
 
 describe('HojePage Regression', () => {
   it('renders correctly with null data (anonymous user)', async () => {
