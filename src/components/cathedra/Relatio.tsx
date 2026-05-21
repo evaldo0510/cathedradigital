@@ -188,9 +188,10 @@ const Relatio: React.FC<RelatioProps> = ({
       <AnimatePresence>
         {isVisible && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="space-y-6"
           >
             {/* Static References */}
@@ -229,7 +230,7 @@ const Relatio: React.FC<RelatioProps> = ({
                   return (
                     <motion.div
                       key={item.id}
-                      whileHover={{ scale: 1.01 }}
+                      whileHover={{ y: -1 }}
                       className="group relative"
                     >
                       <Card 

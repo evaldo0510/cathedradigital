@@ -100,7 +100,7 @@
 
   /* Spacing and Contrast Settings */
   [data-line-spacing="tight"] .reader-text { line-height: 1.4 !important; }
-  [data-line-spacing="normal"] .reader-text { line-height: 1.7 !important; }
+  [data-line-spacing="normal"] .reader-text { line-height: 1.85 !important; }
   [data-line-spacing="wide"] .reader-text { line-height: 2.2 !important; }
 
   [data-letter-spacing="tight"] .reader-text { letter-spacing: -0.02em !important; }
@@ -150,8 +150,33 @@
       font-size: 16px;
     }
     @screen xl {
-      font-size: 16.5px;
+      font-size: 17px; /* Slightly larger for clarity */
     }
+  }
+
+  /* Enhanced Visual Silence */
+  .visual-silence {
+    --card-shadow: none;
+    --card-shadow-hover: none;
+  }
+
+  .visual-silence .non-essential,
+  .visual-silence .floating-action-button,
+  .visual-silence .secondary-nav,
+  .visual-silence .promo-banner {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 1s ease !important;
+  }
+
+  .contemplative-mode {
+    filter: sepia(0.1) contrast(0.95) brightness(1.02);
+    background-color: #FDFBF7 !important; /* Even softer cream */
+  }
+
+  .contemplative-mode .reader-text {
+    @apply text-foreground/90;
+    letter-spacing: 0.01em;
   }
 
   .total-silence * {
