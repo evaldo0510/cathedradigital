@@ -98,7 +98,19 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                       onCheckedChange={onToggleHighContrast} 
                     />
                   </div>
+                  <div className="flex items-center justify-between group pt-4">
+                    <div className="space-y-1">
+                      <label htmlFor="reduce-animations-toggle" className="text-sm font-bold text-primary cursor-pointer">Reduzir Animações</label>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Desativa movimentos excessivos para uma experiência mais estática e rápida.</p>
+                    </div>
+                    <Switch 
+                      id="reduce-animations-toggle" 
+                      checked={settings.reduceAnimations} 
+                      onCheckedChange={(val) => updateSettings({ reduceAnimations: val })} 
+                    />
+                  </div>
                 </div>
+
               </section>
 
               <section className="space-y-6 pt-4">
