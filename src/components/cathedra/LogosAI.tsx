@@ -31,12 +31,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
 
-  const springConfig = useMemo(() => ({
-    type: settings.reduceAnimations ? 'tween' : 'spring',
-    duration: settings.reduceAnimations ? 0.05 : undefined,
-    damping: 25,
-    stiffness: 200
-  }), [settings.reduceAnimations]);
+  const springConfig = useMemo(() => {
+    if (settings.reduceAnimations) {
+      return { type: 'tween' as const, duration: 0.1 };
+    }
+    return { type: 'spring' as const, damping: 25, stiffness: 200 };
+  }, [settings.reduceAnimations]);
+
 
 
   useEffect(() => {
