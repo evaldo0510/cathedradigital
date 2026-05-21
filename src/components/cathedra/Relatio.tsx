@@ -162,7 +162,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <div className={cn("mt-12 space-y-6", className)}>
+    <div className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -234,7 +234,7 @@ const Relatio: React.FC<RelatioProps> = ({
                       className="group relative"
                     >
                       <Card 
-                        className="p-4 bg-card border border-border/40 group-hover:border-primary/30 transition-all rounded-premium shadow-sm cursor-pointer"
+                        className="p-4 bg-card/30 backdrop-blur-sm border border-border/20 group-hover:border-primary/20 transition-all rounded-premium shadow-none cursor-pointer"
                         onClick={() => {
                           if (item.type === 'bible') {
                             const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
