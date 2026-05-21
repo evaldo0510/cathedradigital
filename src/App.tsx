@@ -33,6 +33,9 @@ const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 
+import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import SplashScreen from './components/cathedra/SplashScreen';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
