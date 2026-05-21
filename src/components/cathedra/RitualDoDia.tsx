@@ -177,7 +177,7 @@ const RitualDoDia: React.FC = () => {
     return Math.floor((now.getTime() - start.getTime()) / 86400000);
   }, []);
 
-  const ritual = DAILY_RITUALS[dayOfYear % DAILY_RITUALS.length];
+  const ritual = DAILY_RITUALS[dayOfYear % DAILY_RITUALS.length] || DAILY_RITUALS[0];
 
   const audioText = `Versículo: ${ritual.verse.text} (${ritual.verse.ref}). Reflexão: ${ritual.reflection}. Catecismo: ${ritual.catechism.text}. Oração: ${ritual.prayer}`;
 
