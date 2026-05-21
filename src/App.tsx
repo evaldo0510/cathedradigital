@@ -159,12 +159,13 @@ const AppLayout: React.FC = () => {
               lang={lang}
               onChangeLang={setLangState}
               onSignOut={signOut}
-              onOpenSidebar={() => setIsSidebarOpen(true)}
+              onOpenSidebar={handleOpenSidebar}
             />
             
             <CathedralSidebar 
               user={authUserAdapter}
-              onClose={() => setIsSidebarOpen(false)}
+              onClose={handleCloseSidebar}
+
               isDark={isDark}
               onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
