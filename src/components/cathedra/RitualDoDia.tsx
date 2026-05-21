@@ -188,7 +188,7 @@ const RitualDoDia: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={isSilent ? { duration: 0 } : { duration: 1.5, ease: [0.2, 0.8, 0.2, 1] }}
-      className={`relative overflow-hidden border-border/5 shadow-premium group ${isSilent ? 'font-serif' : ''}`}
+      className={`relative overflow-hidden border-border/10 shadow-premium group ${isSilent ? 'font-serif' : ''}`}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       

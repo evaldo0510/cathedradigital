@@ -27,21 +27,12 @@ const items: ComingSoonItem[] = [
     description: 'Espaço de partilha e crescimento mútuo.' 
   },
   { 
-    label: 'Quiz Avançado', 
-    icon: Icons.Trophy, 
-    description: 'Desafie seus conhecimentos sobre a fé.' 
-  },
-  { 
-    label: 'Dashboard', 
-    icon: Icons.Layout, 
-    description: 'Acompanhamento detalhado do seu progresso.' 
-  },
-  { 
-    label: 'Recursos Sociais', 
-    icon: Icons.MessageCircle, 
-    description: 'Conecte-se com outros peregrinos.' 
+    label: 'Meditação', 
+    icon: Icons.Compass, 
+    description: 'Recursos para oração profunda.' 
   },
 ];
+
 
 export const ComingSoonSection: React.FC<{ className?: string }> = ({ className }) => {
   const [email, setEmail] = useState('');

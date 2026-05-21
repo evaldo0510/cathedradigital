@@ -83,18 +83,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = ({ user, profile, onNavi
       {/* CONTINUAR LEITURA */}
       <ReadingProgressSection />
 
-      {/* JORNADA GUIADA - NOVO FOCO CONTEMPLATIVO */}
-      <section className="space-y-12 md:space-y-16">
-        <div className="flex items-center gap-10">
-          <div className="h-px flex-1 bg-border/30" />
-          <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-            Jornada de Leitura
-          </h2>
-          <div className="h-px flex-1 bg-border/30" />
-        </div>
-        
-        <GuidedReadingFlow />
-      </section>
 
       {/* NÚCLEO PRINCIPAL - ACESSO RÁPIDO */}
       <section className="space-y-12 md:space-y-16">
