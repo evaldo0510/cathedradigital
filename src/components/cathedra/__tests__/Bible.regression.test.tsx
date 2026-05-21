@@ -8,7 +8,7 @@ import { AuthContext } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
 
-// Mock Supabase - hoisted, so we can't use helper functions from outside
+// Mock Supabase - hoisted
 vi.mock('@/integrations/supabase/client', () => {
   const chain = {
     select: vi.fn(() => chain),
@@ -17,6 +17,8 @@ vi.mock('@/integrations/supabase/client', () => {
     order: vi.fn(() => chain),
     limit: vi.fn(() => chain),
     maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+    single: vi.fn(() => Promise.resolve({ data: null, error: null })),
+    upsert: vi.fn(() => Promise.resolve({ data: null, error: null })),
     then: vi.fn((cb) => cb({ data: [], error: null })),
   };
   
@@ -28,7 +30,7 @@ vi.mock('@/integrations/supabase/client', () => {
       },
       from: vi.fn(() => chain),
       functions: {
-        invoke: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        invoke: vi.fn(() => Promise.resolve({ data: { verses: [] }, error: null })),
       },
     }
   };
