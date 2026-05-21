@@ -147,7 +147,7 @@ const AppLayout: React.FC = () => {
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               lang={lang}
               onChangeLang={setLangState}
               onSignOut={signOut}
@@ -158,9 +158,9 @@ const AppLayout: React.FC = () => {
               user={authUserAdapter}
               onClose={() => setIsSidebarOpen(false)}
               isDark={isDark}
-              onToggleDark={() => setIsDark(!isDark)}
+              onToggleDark={toggleDark}
               isHighContrast={isHighContrast}
-              onToggleHighContrast={() => setIsHighContrast(!isHighContrast)}
+              onToggleHighContrast={toggleHighContrast}
               isSpeaking={isSpeaking}
               onToggleSpeak={toggleSpeak}
               onSignOut={signOut}

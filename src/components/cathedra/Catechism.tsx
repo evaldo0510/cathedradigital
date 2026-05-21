@@ -472,7 +472,11 @@ const Catechism: React.FC = () => {
     const fromDashboard = searchParams.get('from') === 'dashboard';
 
     return (
-      <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
+      <ContemplativeLayout
+        subtitle={selectedPart.part}
+        title={selectedSection.title}
+        maxW="max-w-[1200px]"
+      >
         <BackToThemeBanner />
         {fromDashboard && (
           <Button onClick={() => navigate('/')} className="mb-6 flex items-center gap-1.5 text-xs text-primary hover:underline">
@@ -662,7 +666,7 @@ const Catechism: React.FC = () => {
             )}
           </div>
         </div>
-      </div>
+      </ContemplativeLayout>
     );
   }
 
