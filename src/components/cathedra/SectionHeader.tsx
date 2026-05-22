@@ -20,12 +20,12 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
-      <div className="w-px h-16 bg-primary/10" />
-      <h2 className="text-[11px] font-bold uppercase tracking-[0.8em] text-primary/30 whitespace-nowrap">
+      <div className="w-px h-16 bg-primary/20" />
+      <h2 className="text-[11px] font-bold uppercase tracking-[0.8em] text-primary/60 whitespace-nowrap">
         {title}
       </h2>
       {subtitle && (
-        <p className="font-serif italic text-muted-foreground/30 text-base md:text-lg max-w-lg leading-relaxed">
+        <p className="font-serif italic text-muted-foreground/70 text-base md:text-lg max-w-lg leading-relaxed">
           {subtitle}
         </p>
       )}
