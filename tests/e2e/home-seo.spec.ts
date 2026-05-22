@@ -157,10 +157,10 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       const lighthousePage = await browser.newPage();
       
       const threshold = {
-        performance: 70,
-        accessibility: 80,
-        'best-practices': 80,
-        seo: 90,
+        performance: 80, // Updated from 70
+        accessibility: 90, // Updated from 80
+        'best-practices': 90, // Updated from 80
+        seo: 95, // Updated from 90
       };
 
       const results = await playAudit({

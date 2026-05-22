@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, chromium } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { playAudit } from 'playwright-lighthouse';
 
 /**
  * Audit SEO for internal pages beyond Home
@@ -75,13 +76,53 @@ test.describe('SEO & Metadata Audit - Internal Pages', () => {
         auditResults.social.push({ status: 'success', message: 'Found og:title' });
       }
 
-      // 3. Performance
-      const performanceData = await page.evaluate(() => {
-        const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-        return entry ? { load: entry.loadEventEnd - entry.startTime } : null;
+      // 3. Lighthouse Performance Audit for internal pages
+      const browser = await chromium.launch({
+        args: ['--remote-debugging-port=9223'],
+        headless: true
       });
-      if (performanceData) {
-        auditResults.performance.push({ metric: 'Load Time', value: `${performanceData.load.toFixed(0)}ms` });
+      
+      try {
+        const lighthousePage = await browser.newPage();
+        const thresholds = {
+          performance: 70,
+          accessibility: 80,
+          'best-practices': 80,
+          seo: 85,
+        };
+
+        const results = await playAudit({
+          page: lighthousePage,
+          thresholds: thresholds,
+          port: 9223,
+          reports: {
+            formats: { html: true },
+            name: `lighthouse-report-${pageInfo.name.toLowerCase()}`,
+            directory: path.join(process.cwd(), 'test-results'),
+          },
+        });
+
+        if (results && results.lhr) {
+          Object.keys(results.lhr.categories).forEach(key => {
+            const cat = results.lhr.categories[key];
+            const score = Math.round(cat.score * 100);
+            const status = score < (thresholds[key as keyof typeof thresholds] || 0) ? 'critical' : 'success';
+            
+            auditResults.performance.push({ 
+              metric: cat.title, 
+              value: `${score}%`
+            });
+            
+            if (status === 'critical') {
+              auditResults.seo.push({ 
+                status: 'critical', 
+                message: `Lighthouse ${cat.title} score is ${score}%, below ${thresholds[key as keyof typeof thresholds]}%.` 
+              });
+            }
+          });
+        }
+      } finally {
+        await browser.close();
       }
 
       allAuditResults[pageInfo.path] = auditResults;
