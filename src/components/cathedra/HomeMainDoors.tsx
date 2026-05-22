@@ -110,5 +110,3 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
 };
 
 export default HomeMainDoors;
-
-export default HomeMainDoors;
