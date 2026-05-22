@@ -150,14 +150,14 @@ const AppLayout: React.FC = () => {
       isPremium: profile.is_premium,
       role: (profile.role as 'pilgrim' | 'scholar' | 'admin') || 'pilgrim',
       email: profile._sensitive?.email || '',
-      joinedAt: new Date().toISOString(),
+      joinedAt: profile.last_visit || new Date().toISOString(),
       progress: {
         streak: profile.streak || 0,
-        totalMinutesRead: 0,
-        completedBooks: [],
+        totalMinutesRead: profile.total_minutes_read || 0,
+        completedBooks: profile.completed_books || [],
         xp: profile.xp || 0,
-        level: 1,
-        badges: []
+        level: profile.level || 1,
+        badges: profile.badges || []
       },
       stats: {
         versesSaved: 0,
