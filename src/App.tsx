@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useCo
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
-import { AnimatePresence, MotionConfig } from 'framer-motion';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
 import { cn } from './lib/utils';
