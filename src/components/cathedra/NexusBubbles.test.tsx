@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthProvider } from '@/contexts/AuthContext';
 import React from 'react';
 
 // Mock Supabase with a more flexible chain
@@ -43,9 +44,11 @@ const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          {ui}
-        </BrowserRouter>
+        <AuthProvider>
+          <BrowserRouter>
+            {ui}
+          </BrowserRouter>
+        </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );

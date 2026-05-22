@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
+import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import React from 'react';
 
 // Mocking related data
@@ -51,11 +53,15 @@ const renderWithProviders = (slug: string) => {
   return render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/temas/:slug" element={<TemaDetailPage />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <ReadingSettingsProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/temas/:slug" element={<TemaDetailPage />} />
+              </Routes>
+            </BrowserRouter>
+          </ReadingSettingsProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );
