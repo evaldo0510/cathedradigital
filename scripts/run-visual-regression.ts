@@ -24,8 +24,14 @@ async function runVisualTests() {
 
   try {
     // Run Playwright tests
+    console.log('  - Executando Auditoria Estrutural e SEO...');
+    execSync('npx playwright test tests/e2e/home-comprehensive.spec.ts tests/e2e/home-seo.spec.ts', {
+      stdio: 'inherit',
+      env: { ...process.env, CI: 'true' }
+    });
+
     console.log('  - Executando Playwright com Snapshots e Axe-core...');
-    execSync('npx playwright test tests/e2e/visual-regression.spec.ts', {
+    execSync('npx playwright test tests/e2e/visual-regression.spec.ts tests/e2e/home-visual.spec.ts', {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
@@ -39,7 +45,7 @@ async function runVisualTests() {
     results.status = 'success';
 
   } catch (error) {
-    console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
+    console.error('❌ Falhas detectadas nos testes de regressão, auditoria ou SEO.');
     results.status = 'failed';
   }
   // Continue anyway to generate report from any available data
