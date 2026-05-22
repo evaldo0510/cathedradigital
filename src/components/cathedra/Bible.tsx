@@ -421,6 +421,7 @@ const Bible: React.FC = () => {
       setSelectedChapter(next);
       setHighlightedVerse(null);
       localStorage.setItem('cathedra_last_bible_scroll', '0');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       
       // Auto-save progress
       saveLastRead({
