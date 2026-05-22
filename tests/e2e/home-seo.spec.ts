@@ -201,6 +201,9 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
 
     // Generate HTML Report
     generateHTMLReport(auditResults);
+    
+    // Generate JSON summary for GitHub Actions
+    generateJSONSummary(auditResults, 'home');
 
     // Final Validation: Fail CI on critical errors only
     const criticalErrors = [
@@ -324,4 +327,27 @@ function generateHTMLReport(results: any) {
 
   fs.writeFileSync(path.join(reportDir, 'seo-audit-report.html'), html);
   console.log(`SEO Audit report generated at: ${path.join(reportDir, 'seo-audit-report.html')}`);
+}
+
+function generateJSONSummary(results: any, pageName: string) {
+  const reportDir = path.join(process.cwd(), 'test-results');
+  if (!fs.existsSync(reportDir)) fs.mkdirSync(reportDir, { recursive: true });
+
+  const summary = {
+    page: pageName,
+    timestamp: new Date().toISOString(),
+    critical: [
+      ...results.seo,
+      ...results.social,
+      ...results.schema
+    ].filter((i: any) => i.status === 'critical').map((i: any) => i.message),
+    warnings: [
+      ...results.seo,
+      ...results.social,
+      ...results.schema
+    ].filter((i: any) => i.status === 'warning').map((i: any) => i.message),
+    performance: results.performance
+  };
+
+  fs.writeFileSync(path.join(reportDir, `seo-summary-${pageName}.json`), JSON.stringify(summary, null, 2));
 }

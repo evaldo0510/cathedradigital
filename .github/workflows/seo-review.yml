@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main, master ]
 
+permissions:
+  pull-requests: write
+
 jobs:
   seo-audit:
     timeout-minutes: 15
@@ -30,6 +33,17 @@ jobs:
       env:
         CI: true
 
+    - name: Generate SEO Comment
+      if: always() && github.event_name == 'pull_request'
+      run: bun run scripts/generate-seo-comment.ts
+
+    - name: Post SEO Comment to PR
+      if: always() && github.event_name == 'pull_request'
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        filePath: seo-comment.md
+        comment_tag: seo-audit-summary
+
     - name: Upload SEO Reports
       if: always()
       uses: actions/upload-artifact@v4
@@ -37,7 +51,9 @@ jobs:
         name: seo-audit-reports
         path: |
           test-results/*.html
+          test-results/*.json
           public/sitemap.xml
           public/robots.txt
         retention-days: 30
+
 
