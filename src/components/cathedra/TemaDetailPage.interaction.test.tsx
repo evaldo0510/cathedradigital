@@ -21,7 +21,12 @@ vi.mock('@/hooks/useAuth', () => ({
     user: { id: 'user-123' },
     profile: { name: 'Teste' },
     loading: false,
+    refreshProfile: vi.fn(),
+    signOut: vi.fn(),
+    isPremium: true,
+    userLevel: 'iniciante'
   })),
+  AuthProvider: ({ children }: any) => <>{children}</>,
 }));
 
 vi.mock('@/integrations/supabase/client', () => ({

@@ -36,6 +36,19 @@ vi.mock('@/services/aiService', () => ({
   getSpiritualInsight: vi.fn(() => Promise.resolve({ content: 'Mocked Insight' }))
 }));
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-123' },
+    profile: { name: 'Teste' },
+    loading: false,
+    refreshProfile: vi.fn(),
+    signOut: vi.fn(),
+    isPremium: true,
+    userLevel: 'iniciante'
+  })),
+  AuthProvider: ({ children }: any) => <>{children}</>,
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false } },
 });
