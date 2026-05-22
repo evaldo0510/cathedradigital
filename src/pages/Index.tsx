@@ -1,16 +1,14 @@
-import { useEffect, useState, lazy, Suspense, useContext, useMemo } from "react";
+import { useEffect, lazy, Suspense, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-// import SEOHead from "@/components/SEOHead";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
-import { HeroSkeleton, SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
+import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 import { LangContext } from "@/contexts/LangContext";
 const HomeMainContent = lazy(() => import("@/components/cathedra/HomeMainContent"));
 
 // Lazy-load secondary components
-
 const CookieConsent = lazy(() => import("@/components/cathedra/CookieConsent"));
 const SEOHead = lazy(() => import("@/components/SEOHead"));
 
@@ -19,7 +17,6 @@ const Index = () => {
   const navigate = useNavigate();
   const { user, profile, loading } = useAuth();
   const { t } = useContext(LangContext);
-  const [isJourneyOpen, setIsJourneyOpen] = useState(false);
 
   const websiteSchema = useMemo(() => ({
     "@context": "https://schema.org",
