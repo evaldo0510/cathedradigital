@@ -1,4 +1,4 @@
-import { AppRoute } from './types';
+import { AppRoute } from '@/types';
 
 // Map of route path to canonical route if needed, or descriptive mapping
 export const ROUTE_MAPPING: Record<string, string> = {
