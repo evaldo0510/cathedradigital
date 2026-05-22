@@ -172,7 +172,6 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated HTML report.`).toBe(0);
   });
 });
-});
 
 function generateHTMLReport(results: any) {
   const reportDir = path.join(process.cwd(), 'test-results');
