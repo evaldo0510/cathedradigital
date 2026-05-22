@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 
-
 interface HomeMainContentProps {
   user: any;
   profile: any;
@@ -19,23 +18,13 @@ interface HomeMainContentProps {
 }
 
 const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, profile, onNavigate, t }) => {
-  // Verificação técnica: Home contém apenas os 8 blocos solicitados.
-  // 1. Hero (em Index.tsx)
-  // 2. Ritual do Dia
-  // 3. Continuar leitura
-  // 4, 5, 6. Biblioteca (Bíblia, Catecismo, Magistério) via HomeMainDoors
-  // 7. Logos IA
-  // 8. Em Breve
-
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
   const logosCardRef = useRef<HTMLDivElement>(null);
 
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Shortcut Alt+L for Logos IA
       if (e.altKey && e.key.toLowerCase() === 'l') {
         e.preventDefault();
         if (logosCardRef.current) {
@@ -47,7 +36,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           }, 400);
         }
       }
-
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -58,7 +46,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     if (e) e.preventDefault();
     
     if (logosQuery.trim()) {
-      // Save to local chat history
       const savedMessages = localStorage.getItem('cathedra_logos_messages');
       const messages = savedMessages ? JSON.parse(savedMessages) : [];
       const newMessage = {
@@ -73,10 +60,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     }
   };
 
-
   return (
     <div className="w-full max-w-5xl mx-auto space-y-48 md:space-y-64 pb-64 px-6">
-      {/* 1. RITUAL DO DIA */}
+      {/* 2. RITUAL DO DIA */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <SectionHeader 
           title="Ritual do Dia" 
@@ -85,12 +71,16 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <RitualDoDia />
       </section>
 
-      {/* 2. CONTINUAR LEITURA */}
+      {/* 3. CONTINUAR LEITURA */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200 fill-mode-both">
+        <SectionHeader 
+          title="Continuar Leitura" 
+          subtitle="Onde a alma parou para contemplar."
+        />
         <ReadingProgressSection />
       </section>
 
-      {/* 3, 4, 5. BIBLIOTECA (BÍBLIA, CATECISMO, MAGISTÉRIO) */}
+      {/* 4, 5, 6. BIBLIOTECA (BÍBLIA, CATECISMO, MAGISTÉRIO) */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both">
         <SectionHeader 
           title="Biblioteca" 
@@ -99,7 +89,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <HomeMainDoors t={t} />
       </section>
 
-      {/* 6. LOGOS IA */}
+      {/* 7. LOGOS IA */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-400 fill-mode-both">
         <SectionHeader 
           title="Logos IA" 
@@ -141,11 +131,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
               </button>
             </div>
           </form>
-
         </HomeCard>
       </section>
 
-      {/* 7. EM BREVE */}
+      {/* 8. EM BREVE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 fill-mode-both">
         <SectionHeader 
           title="Em Breve" 
@@ -158,6 +147,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     </div>
   );
 });
+
 HomeMainContent.displayName = 'HomeMainContent';
 
 export default HomeMainContent;
