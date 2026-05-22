@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext, useRef } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
@@ -6,9 +6,8 @@ import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
 import { AppRoute, Language } from './types';
-import { UI_TRANSLATIONS } from './services/translations';
 import { AuthProvider, useAuth } from './hooks/useAuth';
-import { LangContext } from './contexts/LangContext';
+import { LangContext, LangProvider } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
@@ -18,24 +17,21 @@ import { toast } from 'sonner';
 
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
-// A11ySettingsPanel lazy loaded below
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
-import PageTransition from './components/PageTransition';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
-import ProGate from './components/cathedra/ProGate';
 import { TooltipProvider } from '@/components/ui/tooltip';
-const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
-const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
-const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 import { useRenderPerf } from './hooks/useRenderPerf';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
 
+const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
+const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
+const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
@@ -60,6 +56,11 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+const Saints = lazy(() => import('./components/cathedra/Saints'));
+const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -98,6 +99,14 @@ const AppLayout: React.FC = () => {
   useRenderPerf('AppLayout', 10);
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
+  
+  useEffect(() => {
+    const handleGlobalLang = (e: any) => {
+      if (e.detail) setLang(e.detail);
+    };
+    window.addEventListener('change-lang', handleGlobalLang);
+    return () => window.removeEventListener('change-lang', handleGlobalLang);
+  }, [setLang]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -121,6 +130,12 @@ const AppLayout: React.FC = () => {
   const handleCloseSidebar = useCallback(() => setIsSidebarOpen(false), []);
   const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
+
+  useEffect(() => {
+    const handleOpenA11yGlobal = () => setShowA11ySettings(true);
+    window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
+    return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
+  }, []);
 
   const toggleSpeak = useCallback(() => {
     if (settings.totalSilence) return;
@@ -150,14 +165,14 @@ const AppLayout: React.FC = () => {
       isPremium: profile.is_premium,
       role: (profile.role as 'pilgrim' | 'scholar' | 'admin') || 'pilgrim',
       email: profile._sensitive?.email || '',
-      joinedAt: new Date().toISOString(),
+      joinedAt: profile.last_visit || new Date().toISOString(),
       progress: {
         streak: profile.streak || 0,
-        totalMinutesRead: 0,
-        completedBooks: [],
+        totalMinutesRead: profile.total_minutes_read || 0,
+        completedBooks: profile.completed_books || [],
         xp: profile.xp || 0,
-        level: 1,
-        badges: []
+        level: profile.level || 1,
+        badges: profile.badges || []
       },
       stats: {
         versesSaved: 0,
@@ -204,7 +219,13 @@ const AppLayout: React.FC = () => {
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
+              <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
+              <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
+              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><JornadasPage /></Suspense>} />
+              <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><CommunityPage /></Suspense>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AnimatePresence>
@@ -231,30 +252,19 @@ const AppLayout: React.FC = () => {
 };
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLang] = useState<Language>(() => {
-    try {
-      const stored = localStorage.getItem('cathedra_lang');
-      return (stored as Language) || 'pt';
-    } catch {
-      return 'pt';
-    }
-  });
-
-  const t = useCallback((k: string) => UI_TRANSLATIONS[lang]?.[k] || k, [lang]);
-
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
-              <ReadingSettingsProvider>
-                <TooltipProvider>
-                  <LangContext.Provider value={{ lang, setLang, t }}>
+              <LangProvider>
+                <ReadingSettingsProvider>
+                  <TooltipProvider>
                     {children}
-                  </LangContext.Provider>
-                </TooltipProvider>
-              </ReadingSettingsProvider>
+                  </TooltipProvider>
+                </ReadingSettingsProvider>
+              </LangProvider>
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>

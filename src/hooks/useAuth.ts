@@ -176,34 +176,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const syncAuthState = useCallback(async (currentUser: SupabaseUser | null) => {
     const requestId = ++authRequestId.current;
-    console.log('Syncing auth state, request ID:', requestId, 'User:', currentUser?.id);
+    
+    // If user is same as current state, skip (unless initial/loading)
+    if (user?.id === currentUser?.id && !loading && requestId > 1) {
+      return;
+    }
+
     setUser(currentUser);
     setSentryUser(currentUser ? { id: currentUser.id, email: currentUser.email } : null);
     setLoading(true);
 
     if (!currentUser) {
-      console.log('No user, setting loading to false');
       setProfile(null);
       setLoading(false);
       return;
     }
 
-
     try {
-      console.log('Fetching profile for:', currentUser.id);
       const resolvedProfile = await fetchProfile(currentUser);
-      console.log('Profile fetched:', !!resolvedProfile);
       
-      if (requestId !== authRequestId.current) {
-        console.log('Request ID mismatch, skipping profile set');
-        return;
-      }
+      if (requestId !== authRequestId.current) return;
       
       setProfile(resolvedProfile);
 
-      // Update streak after setting profile
       if (resolvedProfile) {
-        console.log('Updating streak...');
         void updateStreak(currentUser, resolvedProfile);
       }
     } catch (error) {
@@ -212,11 +208,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(null);
     } finally {
       if (requestId === authRequestId.current) {
-        console.log('Sync finished, setting loading to false');
         setLoading(false);
       }
     }
-  }, [fetchProfile, updateStreak]);
+  }, [fetchProfile, updateStreak, user?.id, loading]);
 
   useEffect(() => {
     let active = true;

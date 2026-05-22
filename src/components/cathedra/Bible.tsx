@@ -119,7 +119,13 @@ const Bible: React.FC = () => {
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<ViewMode>('books');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const book = searchParams.get('book');
+    const ch = searchParams.get('ch');
+    if (book && ch) return 'reading';
+    if (book) return 'chapters';
+    return 'books';
+  });
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
@@ -314,6 +320,7 @@ const Bible: React.FC = () => {
               localStorage.setItem('cathedra_last_bible_verse', data.position.toString());
             }
             setViewMode('reading');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             toast.info(`Retomando: ${found.name} ${data.chapter}`, {
               description: 'Continuando sua jornada espiritual de onde parou.',
               duration: 3000
@@ -374,6 +381,8 @@ const Bible: React.FC = () => {
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
     setViewMode('reading');
+    setHighlightedVerse(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
@@ -413,6 +422,7 @@ const Bible: React.FC = () => {
       setSelectedChapter(next);
       setHighlightedVerse(null);
       localStorage.setItem('cathedra_last_bible_scroll', '0');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       
       // Auto-save progress
       saveLastRead({

@@ -95,12 +95,12 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     if (profile?.reading_settings && Object.keys(profile.reading_settings).length > 0) {
       const remoteSettings = profile.reading_settings as ReadingSettings;
       
-      // Only update if there are actual changes to avoid render loops
       setSettings(prev => {
-        const hasChanges = Object.keys(remoteSettings).some(
-          key => JSON.stringify((remoteSettings as any)[key]) !== JSON.stringify((prev as any)[key])
-        );
-        if (!hasChanges) return prev;
+        // Simple check to prevent loops - only update if different from current
+        const remoteStr = JSON.stringify(remoteSettings);
+        const prevStr = JSON.stringify(prev);
+        if (remoteStr === prevStr) return prev;
+        
         return { ...prev, ...remoteSettings };
       });
     }
