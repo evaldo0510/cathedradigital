@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useRef, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext, useRef } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
@@ -6,7 +6,6 @@ import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
 import { AppRoute, Language } from './types';
-import { UI_TRANSLATIONS } from './services/translations';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,24 +17,17 @@ import { toast } from 'sonner';
 
 // Core UI components
 import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
-// A11ySettingsPanel lazy loaded below
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
-import PageTransition from './components/PageTransition';
 import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
-import ProGate from './components/cathedra/ProGate';
 import { TooltipProvider } from '@/components/ui/tooltip';
-const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
-const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
-const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 import { useRenderPerf } from './hooks/useRenderPerf';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
-
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
