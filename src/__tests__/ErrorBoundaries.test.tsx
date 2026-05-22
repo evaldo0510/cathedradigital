@@ -101,4 +101,22 @@ describe('Error Handling & Boundary Tests', () => {
     expect(renderCount.mock.calls.length).toBeLessThan(10);
     expect(screen.getByText(/Santuário em/i)).toBeDefined();
   });
+
+  it('Catches error in nested component and stops loop', () => {
+    const renderCount = vi.fn();
+    const DeepBuggy = () => {
+      renderCount();
+      throw new Error('Deep Error');
+    };
+    const MidLevel = () => <DeepBuggy />;
+    
+    render(
+      <AppErrorBoundary>
+        <MidLevel />
+      </AppErrorBoundary>
+    );
+    
+    expect(renderCount.mock.calls.length).toBeLessThan(10);
+    expect(screen.getByText(/Santuário em/i)).toBeDefined();
+  });
 });
