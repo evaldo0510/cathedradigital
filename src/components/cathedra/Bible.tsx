@@ -119,7 +119,13 @@ const Bible: React.FC = () => {
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<ViewMode>('books');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const book = searchParams.get('book');
+    const ch = searchParams.get('ch');
+    if (book && ch) return 'reading';
+    if (book) return 'chapters';
+    return 'books';
+  });
   const [selectedBook, setSelectedBook] = useState<{ name: string; abbr: string; chapters: number } | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');

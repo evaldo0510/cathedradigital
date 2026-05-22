@@ -245,10 +245,16 @@ const Catechism: React.FC = () => {
   const navigate = useNavigate();
   useAutoFocus();
   const [searchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<ViewMode>('parts');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    const p = searchParams.get('p');
+    return p ? 'reading' : 'parts';
+  });
   const [selectedPart, setSelectedPart] = useState<typeof CIC_SECTIONS[0] | null>(null);
   const [selectedSection, setSelectedSection] = useState<typeof CIC_SECTIONS[0]['sections'][0] | null>(null);
-  const [currentParagraph, setCurrentParagraph] = useState(1);
+  const [currentParagraph, setCurrentParagraph] = useState(() => {
+    const p = searchParams.get('p');
+    return p ? parseInt(p) : 1;
+  });
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
@@ -257,7 +263,7 @@ const Catechism: React.FC = () => {
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
-  const [shouldAutoResume, setShouldAutoResume] = useState(true);
+  const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
 
   useEffect(() => {
     const handleOpenAI = (e: any) => {

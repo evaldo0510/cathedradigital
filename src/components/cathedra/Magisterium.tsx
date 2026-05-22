@@ -168,14 +168,17 @@ const Magisterium: React.FC = () => {
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shouldAutoResume, setShouldAutoResume] = useState(true);
+  const [shouldAutoResume, setShouldAutoResume] = useState(() => {
+    const topic = new URLSearchParams(window.location.search).get('topic');
+    const doc = new URLSearchParams(window.location.search).get('doc');
+    return !(topic || doc);
+  });
 
   useEffect(() => {
     const topicParam = new URLSearchParams(window.location.search).get('topic');
     const docParam = new URLSearchParams(window.location.search).get('doc');
 
     if (topicParam || docParam) {
-      setShouldAutoResume(false);
       if (topicParam) {
         const found = SPIRITUAL_GUIDANCE.find(g => g.id === topicParam);
         if (found) setSelectedGuidance(found);
