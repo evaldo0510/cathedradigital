@@ -125,7 +125,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-16 pl-16 pr-40 rounded-full border-border/5 bg-background/20 focus:bg-background transition-all font-serif italic text-sm placeholder:text-muted-foreground/10"
+                className="h-16 pl-16 pr-40 rounded-full border-border/10 bg-background/30 focus:bg-background transition-all font-serif italic text-base md:text-lg placeholder:text-muted-foreground/10 focus:ring-1 focus:ring-primary/5"
               />
               <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10" />
               <button 
