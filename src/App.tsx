@@ -186,6 +186,13 @@ const AppLayout: React.FC = () => {
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        >
+          {t('skip_to_content')}
+        </a>
+
         <ScrollToTop />
         {location.pathname !== '/' && (
           <AppHeader 
@@ -211,7 +218,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" className={cn(location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
+        <main id="main-content" tabIndex={-1} className={cn("outline-none", location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
