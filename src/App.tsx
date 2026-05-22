@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ScrollToTop from './components/ScrollToTop';
+import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
@@ -186,15 +187,17 @@ const AppLayout: React.FC = () => {
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <ScrollToTop />
-        <AppHeader 
-          user={authUserAdapter} 
-          isDark={isDark} 
-          onToggleDark={toggleDark}
-          lang={lang}
-          onChangeLang={setLang}
-          onSignOut={signOut}
-          onOpenSidebar={handleOpenSidebar}
-        />
+        {location.pathname !== '/' && (
+          <AppHeader 
+            user={authUserAdapter} 
+            isDark={isDark} 
+            onToggleDark={toggleDark}
+            lang={lang}
+            onChangeLang={setLang}
+            onSignOut={signOut}
+            onOpenSidebar={handleOpenSidebar}
+          />
+        )}
         
         <CathedralSidebar 
           user={authUserAdapter}
@@ -208,7 +211,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" className="pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
+        <main id="main-content" className={cn(location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
@@ -231,8 +234,8 @@ const AppLayout: React.FC = () => {
           </AnimatePresence>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
-        <CathedralFooter />
+        {location.pathname !== '/' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
+        {location.pathname !== '/' && <CathedralFooter />}
         <Suspense fallback={null}>
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 

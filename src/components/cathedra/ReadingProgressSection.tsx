@@ -6,7 +6,6 @@ import { CathedraCard } from './CathedraCard';
 import { Icons } from '@/constants';
 import { ArrowRight, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { SectionHeader } from './SectionHeader';
 
 export const ReadingProgressSection: React.FC = () => {
   const navigate = useNavigate();
@@ -17,16 +16,10 @@ export const ReadingProgressSection: React.FC = () => {
   if (loading || !lastRead) return null;
 
   return (
-    <section className="space-y-12">
-      <SectionHeader 
-        title="Continuar Leitura" 
-        subtitle="Onde a alma parou para contemplar."
-      />
-
-      <div
-        className="group relative overflow-hidden p-12 md:p-16 lg:p-20 rounded-premium-lg border border-border/5 bg-card/5 backdrop-blur-md cursor-pointer transition-all duration-1000 shadow-premium hover:bg-card/10"
-        onClick={() => lastRead.url && navigate(lastRead.url)}
-      >
+    <div
+      className="group relative overflow-hidden p-12 md:p-16 lg:p-20 rounded-premium-lg border border-border/5 bg-card/5 backdrop-blur-md cursor-pointer transition-all duration-1000 shadow-premium hover:bg-card/10"
+      onClick={() => lastRead.url && navigate(lastRead.url)}
+    >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
           <div className="flex items-center gap-12">
             <div className="w-20 h-20 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/20 group-hover:scale-110 transition-all duration-1000 border border-primary/5">
@@ -66,7 +59,6 @@ export const ReadingProgressSection: React.FC = () => {
             className="h-full bg-primary/20"
           />
         </div>
-      </div>
-    </section>
+    </div>
   );
 };
