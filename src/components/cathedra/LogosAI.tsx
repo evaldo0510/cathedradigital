@@ -34,6 +34,15 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
+  const chatEndRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (history.length) scrollToBottom();
+  }, [history.length, isTyping, isLoading]);
 
 
   const springConfig = useMemo(() => {
@@ -165,6 +174,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </div>
                   </div>
                 )}
+                <div ref={chatEndRef} />
               </div>
 
               <form onSubmit={handleQuery} className="relative group max-w-2xl mx-auto pt-8 border-t border-primary/5">
@@ -274,6 +284,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </div>
                 </div>
               )}
+              <div ref={chatEndRef} />
             </div>
 
             <div className="p-8 md:p-10 border-t border-border/5 bg-background/30">
