@@ -380,6 +380,8 @@ const Bible: React.FC = () => {
   const selectChapter = (ch: number) => {
     setSelectedChapter(ch);
     setViewMode('reading');
+    setHighlightedVerse(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavigateToCIC = useCallback((paragraph: number) => {
