@@ -320,6 +320,7 @@ const Bible: React.FC = () => {
               localStorage.setItem('cathedra_last_bible_verse', data.position.toString());
             }
             setViewMode('reading');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             toast.info(`Retomando: ${found.name} ${data.chapter}`, {
               description: 'Continuando sua jornada espiritual de onde parou.',
               duration: 3000
