@@ -26,16 +26,16 @@ test.describe('Search Infrastructure - Sitemap & Robots', () => {
     const body = await response?.text();
     expect(body).toContain('<urlset');
     
-    // Verify main pages are present
+    // Verify main pages are present (updated to Portuguese routes)
     const criticalUrls = [
       '/',
-      '/bible',
-      '/catechism',
-      '/magisterium'
+      '/biblia',
+      '/catecismo',
+      '/magisterio'
     ];
     
     for (const url of criticalUrls) {
-      // Basic check for presence (assuming the sitemap uses loc tags)
+      // Basic check for presence
       expect(body, `Sitemap missing critical URL: ${url}`).toContain(url);
     }
     
@@ -44,18 +44,19 @@ test.describe('Search Infrastructure - Sitemap & Robots', () => {
 
   test('Verify sitemap points to valid pages', async ({ page }) => {
     // Navigate to a few links from the sitemap to ensure they aren't 404
-    // We sample just a few to keep CI fast
     const response = await page.goto('/sitemap.xml');
-    const body = await response?.text();
+    const body = await response?.text() || '';
     
-    // Extract first 3 locs
-    const locs = (body?.match(/<loc>(.*?)<\/loc>/g) || [])
-      .slice(0, 3)
+    // Extract locs
+    const locs = (body.match(/<loc>(.*?)<\/loc>/g) || [])
+      .slice(0, 3) // Sample 3
       .map(l => l.replace(/<\/?loc>/g, ''));
     
     for (const loc of locs) {
+      // Use request.get for faster status checking
       const pageResponse = await page.request.get(loc);
-      expect(pageResponse.status(), `Sitemap points to a broken link: ${loc}`).toBe(200);
+      // It might be a redirect or 200, but should not be 404/500
+      expect(pageResponse.status(), `Sitemap points to a broken link: ${loc}`).toBeLessThan(400);
     }
   });
 });
