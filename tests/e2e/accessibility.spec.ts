@@ -28,14 +28,24 @@ test.describe('Home Page Accessibility & Keyboard Navigation', () => {
       v => v.impact === 'critical' || v.impact === 'serious'
     );
 
-    if (accessibilityScanResults.violations.length > 0) {
-      console.log(`Found ${accessibilityScanResults.violations.length} total a11y violations.`);
-      accessibilityScanResults.violations.forEach(v => {
-        if (v.impact !== 'critical' && v.impact !== 'serious') {
-          console.warn(`[A11y Warning] ${v.id}: ${v.help} (Impact: ${v.impact})`);
-        } else {
-          console.error(`[A11y CRITICAL] ${v.id}: ${v.help} (Impact: ${v.impact})`);
-        }
+    const warnings = accessibilityScanResults.violations.filter(
+      v => v.impact !== 'critical' && v.impact !== 'serious'
+    );
+
+    if (warnings.length > 0) {
+      console.log(`\n[A11y Warnings] Found ${warnings.length} non-critical issues:`);
+      warnings.forEach(v => {
+        console.warn(`- ${v.id}: ${v.help} (Impact: ${v.impact})`);
+      });
+    }
+
+    if (strictViolations.length > 0) {
+      console.error(`\n[A11y CRITICAL] Found ${strictViolations.length} critical/serious issues:`);
+      strictViolations.forEach(v => {
+        console.error(`- ${v.id}: ${v.help} (Impact: ${v.impact})`);
+        v.nodes.forEach(node => {
+          console.error(`  Target: ${node.target.join(', ')}`);
+        });
       });
     }
 
@@ -45,6 +55,12 @@ test.describe('Home Page Accessibility & Keyboard Navigation', () => {
   test('should have valid landmarks and skip link', async ({ page }) => {
     // Check for main landmark
     await expect(page.locator('role=main')).toBeVisible();
+    
+    // Check for navigation landmark
+    await expect(page.locator('role=navigation')).toBeVisible();
+
+    // Check for contentinfo landmark (footer)
+    await expect(page.locator('role=contentinfo')).toBeVisible();
     
     // Check for skip link functionality
     await page.keyboard.press('Tab');

@@ -18,16 +18,24 @@ test.describe('Home Page Visual Regression', () => {
           *, *::before, *::after {
             animation: none !important;
             transition: none !important;
+            animation-duration: 0s !important;
+            animation-delay: 0s !important;
           }
           /* Mask dynamic content like Ritual do Dia or progress bars */
           [data-testid="ritual-content"], 
           [data-testid="reading-progress"],
-          .ritual-date-text {
+          .ritual-date-text,
+          .dynamic-date,
+          [data-testid="user-name"] {
              visibility: hidden !important;
           }
           /* Freeze fonts - ensure they don't jump */
           html {
             font-display: block !important;
+          }
+          /* Hide scrollbars for cleaner diffs */
+          ::-webkit-scrollbar {
+            display: none;
           }
         `;
         document.head.appendChild(style);
@@ -52,11 +60,13 @@ test.describe('Home Page Visual Regression', () => {
       // Take screenshot with masking of dynamic containers
       await expect(page).toHaveScreenshot(`home-${viewport.name}.png`, {
         fullPage: true,
-        maxDiffPixelRatio: 0.02, 
+        maxDiffPixelRatio: 0.01, 
         animations: 'disabled',
         mask: [
-          page.locator('section:has-text("Ritual do Dia") div.content'), // Mask dynamic ritual text
-          page.locator('section:has-text("Continuar Leitura")') // Mask progress data
+          page.locator('[data-testid="ritual-content"]'),
+          page.locator('[data-testid="reading-progress"]'),
+          page.locator('.ritual-date-text'),
+          page.locator('.dynamic-date')
         ]
       });
     });
