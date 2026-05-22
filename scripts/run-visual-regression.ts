@@ -45,6 +45,11 @@ async function runVisualTests() {
       fs.copyFileSync('visual-audit-report.json', 'public/visual-audit-report.json');
     }
 
+    if (fs.existsSync('test-results/seo-audit-report.html')) {
+      fs.copyFileSync('test-results/seo-audit-report.html', 'public/seo-audit-report.html');
+      console.log('  - Relatório SEO copiado para public/');
+    }
+
     results.status = 'success';
 
   } catch (error) {
