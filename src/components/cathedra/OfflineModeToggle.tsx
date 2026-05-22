@@ -10,7 +10,7 @@ const OfflineModeToggle: React.FC = () => {
   return (
     <Button
       onClick={toggle}
-      className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-lg hover:shadow-xl transition-all group flex items-center gap-2 ${
+      className={`fixed bottom-24 right-20 lg:bottom-6 lg:right-24 z-50 p-3 rounded-full border shadow-premium hover:shadow-premium-hover transition-all group flex items-center gap-2 ${
         isOfflineMode 
           ? 'bg-primary border-primary text-primary-foreground' 
           : 'bg-card border-border text-muted-foreground'

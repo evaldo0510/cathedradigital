@@ -1,0 +1,260 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
+
+interface ReadingSettings {
+  fontSize: 'small' | 'medium' | 'large' | 'extra-large';
+  fontFamily: 'serif' | 'sans';
+  theme: 'paper' | 'sepia' | 'dark' | 'night';
+  visualSilence: boolean; // Hides non-essential UI
+  reduceAnimations: boolean;
+  totalSilence: boolean; // Removes all sounds and even more UI (loaders/skeletons)
+  highContrast: boolean;
+  contemplativeMode: boolean;
+  fullScreen: boolean;
+  lineSpacing: 'tight' | 'normal' | 'wide';
+  letterSpacing: 'tight' | 'normal' | 'wide';
+  contrast: 'normal' | 'soft' | 'high';
+  reminders: {
+    enabled: boolean;
+    time: string;
+  };
+  shortcuts: {
+    bible: string;
+    catechism: string;
+    magisterium: string;
+    logos: string;
+  };
+  logosHistoryLimit: number;
+  relatio: {
+    enabled: boolean;
+    intensity: 'subtle' | 'standard' | 'deep';
+    showBible: boolean;
+    showCatechism: boolean;
+    showMagisterium: boolean;
+    showSaints: boolean;
+    relevanceByProgress: boolean;
+  };
+}
+
+interface ReadingSettingsContextType {
+  settings: ReadingSettings;
+  updateSettings: (newSettings: Partial<ReadingSettings>) => void;
+  resetSettings: () => void;
+  isLoading: boolean;
+}
+
+const defaultSettings: ReadingSettings = {
+  fontSize: 'medium',
+  fontFamily: 'serif',
+  theme: 'paper',
+  visualSilence: false,
+  reduceAnimations: false,
+  totalSilence: false,
+  highContrast: false,
+  contemplativeMode: false,
+  lineSpacing: 'normal',
+  letterSpacing: 'normal',
+  contrast: 'normal',
+  reminders: {
+    enabled: false,
+    time: '08:00',
+  },
+  fullScreen: false,
+  shortcuts: {
+    bible: 'b',
+    catechism: 'c',
+    magisterium: 'm',
+    logos: 'l',
+  },
+  logosHistoryLimit: 20,
+  relatio: {
+    enabled: true,
+    intensity: 'standard',
+    showBible: true,
+    showCatechism: true,
+    showMagisterium: true,
+    showSaints: true,
+    relevanceByProgress: true,
+  },
+};
+
+const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
+
+export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, profile, refreshProfile } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
+  const [settings, setSettings] = useState<ReadingSettings>(() => {
+    const stored = localStorage.getItem('cathedra_reading_settings');
+    return stored ? JSON.parse(stored) : defaultSettings;
+  });
+
+  // Sync with profile if available
+  useEffect(() => {
+    if (profile?.reading_settings && Object.keys(profile.reading_settings).length > 0) {
+      const remoteSettings = profile.reading_settings as ReadingSettings;
+      
+      setSettings(prev => {
+        // Simple check to prevent loops - only update if different from current
+        const remoteStr = JSON.stringify(remoteSettings);
+        const prevStr = JSON.stringify(prev);
+        if (remoteStr === prevStr) return prev;
+        
+        return { ...prev, ...remoteSettings };
+      });
+    }
+    setIsLoading(false);
+  }, [profile?.reading_settings]);
+
+  useEffect(() => {
+    localStorage.setItem('cathedra_reading_settings', JSON.stringify(settings));
+    
+    // Apply theme to body
+    const root = document.documentElement;
+    root.classList.remove('reading-theme-paper', 'reading-theme-sepia', 'reading-theme-dark', 'reading-theme-night');
+    root.classList.add(`reading-theme-${settings.theme}`);
+    
+    // Night mode specific
+    if (settings.theme === 'night') {
+      root.classList.add('reading-night');
+      root.classList.add('dark');
+    } else if (settings.theme === 'dark') {
+      root.classList.remove('reading-night');
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('reading-night');
+      root.classList.remove('dark');
+    }
+
+    // Apply Contrast
+    root.classList.remove('contrast-soft', 'contrast-high');
+    if (settings.contrast !== 'normal') {
+      root.classList.add(`contrast-${settings.contrast}`);
+    }
+
+    // Apply Spacing
+    root.setAttribute('data-line-spacing', settings.lineSpacing);
+    root.setAttribute('data-letter-spacing', settings.letterSpacing);
+    
+    if (settings.visualSilence) {
+      root.classList.add('visual-silence');
+    } else {
+      root.classList.remove('visual-silence');
+    }
+
+    if (settings.highContrast) {
+      root.classList.add('high-contrast');
+    } else {
+      root.classList.remove('high-contrast');
+    }
+
+    if (settings.contemplativeMode) {
+      root.classList.add('contemplative-mode');
+    } else {
+      root.classList.remove('contemplative-mode');
+    }
+
+    if (settings.reduceAnimations) {
+      root.classList.add('reduce-animations');
+    } else {
+      root.classList.remove('reduce-animations');
+    }
+
+    if (settings.totalSilence) {
+      root.classList.add('total-silence');
+    } else {
+      root.classList.remove('total-silence');
+    }
+
+    if (settings.fullScreen) {
+      root.classList.add('full-screen-mode');
+    } else {
+      root.classList.remove('full-screen-mode');
+    }
+  }, [settings]);
+
+
+
+  const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
+    const updated = { ...settings, ...newSettings };
+    setSettings(updated);
+
+    if (user) {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          reading_settings: updated as any,
+          notification_settings: {
+            daily_reminder: updated.reminders
+          }
+        })
+        .eq('id', user.id);
+
+      if (error) {
+        console.error('Error syncing reading settings:', error);
+      } else {
+        refreshProfile();
+      }
+    }
+  }, [settings, user, refreshProfile]);
+
+  const resetSettings = useCallback(async () => {
+    setSettings(defaultSettings);
+    if (user) {
+      await supabase
+        .from('profiles')
+        .update({
+          reading_settings: defaultSettings as any
+        })
+        .eq('id', user.id);
+      refreshProfile();
+    }
+  }, [user, refreshProfile]);
+
+  useEffect(() => {
+    const handleToggle = (e: any) => {
+      const newValue = e.detail;
+      updateSettings({ totalSilence: newValue });
+      toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+        description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+        icon: newValue ? "🤫" : "🔊"
+      });
+    };
+    
+    const handleKeyboardShortcut = (e: KeyboardEvent) => {
+      // Alt + S or Option + S
+      if (e.altKey && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        const newValue = !settings.totalSilence;
+        updateSettings({ totalSilence: newValue });
+        toast.success(newValue ? "Silêncio Total Ativado" : "Silêncio Total Desativado", {
+          description: newValue ? "Ambiente de oração absoluta." : "Interface e áudio restaurados.",
+          icon: newValue ? "🤫" : "🔊"
+        });
+      }
+    };
+
+    window.addEventListener('toggle-total-silence', handleToggle);
+    window.addEventListener('keydown', handleKeyboardShortcut);
+    return () => {
+      window.removeEventListener('toggle-total-silence', handleToggle);
+      window.removeEventListener('keydown', handleKeyboardShortcut);
+    };
+  }, [updateSettings, settings.totalSilence]);
+
+
+  return (
+    <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>
+      {children}
+    </ReadingSettingsContext.Provider>
+  );
+};
+
+export const useReadingSettings = () => {
+  const context = useContext(ReadingSettingsContext);
+  if (context === undefined) {
+    throw new Error('useReadingSettings must be used within a ReadingSettingsProvider');
+  }
+  return context;
+};

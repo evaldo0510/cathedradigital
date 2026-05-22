@@ -1,0 +1,11 @@
+/dashboard /hoje 301
+/biblia /bible 301
+/catecismo /catechism 301
+/curso-pch /jornadas 301
+/pch /jornadas 301
+/trilhas /jornadas 301
+/mass /liturgia?tab=missal 301
+/daily-liturgy /liturgia?tab=liturgia 301
+/calendar /liturgia?tab=calendario 301
+/ordo-missae /liturgia?tab=missal 301
+/prayers /oracao 301

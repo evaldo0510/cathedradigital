@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 interface Step {
   title: string;
@@ -99,7 +101,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const getWhatsAppLink = () => {
     const theme = answers[0] || "espiritualidade";
     const text = encodeURIComponent(`Olá! Concluí minha jornada guiada no Cathedra sobre o tema "${theme}". Gostaria de aprofundar minha reflexão.`);
-    return `https://wa.me/5511999999999?text=${text}`;
+    return `${SOCIAL_LINKS.WHATSAPP}?text=${text}`;
   };
 
   if (!isOpen) return null;
@@ -109,7 +111,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-2xl bg-card border border-border shadow-2xl rounded-[2rem] p-8 md:p-12"
+        className="relative w-full max-w-2xl bg-card border border-border shadow-premium-hover rounded-[2rem] p-8 md:p-12"
       >
         <Button 
           onClick={onClose}
@@ -207,7 +209,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-xl"
+                  className="w-full h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
@@ -229,7 +231,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             className="space-y-8"
           >
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 text-secondary">
+              <div className="w-16 h-16 bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-4 text-secondary">
                 <Sparkles className="w-8 h-8" />
               </div>
               <h2 className="text-3xl font-serif font-bold text-primary">Seu Roteiro está pronto!</h2>
@@ -239,7 +241,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </div>
 
             <div className="grid gap-6">
-              <div className="p-6 rounded-2xl bg-secondary/5 border border-secondary/20 space-y-3">
+              <div className="p-6 rounded-premium bg-secondary/5 border border-secondary/20 space-y-3">
                 <div className="flex items-center gap-2 text-secondary">
                   <Book className="w-4 h-4" />
                   <span className="text-premium-tiny font-black uppercase tracking-widest">A Palavra de Deus</span>
@@ -249,7 +251,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-primary/5 border border-primary/10 space-y-3">
+              <div className="p-6 rounded-premium bg-primary/5 border border-primary/10 space-y-3">
                 <div className="flex items-center gap-2 text-primary">
                   <Cross className="w-4 h-4" />
                   <span className="text-premium-tiny font-black uppercase tracking-widest">Catecismo</span>
@@ -259,7 +261,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-muted/30 border border-border space-y-3">
+              <div className="p-6 rounded-premium bg-muted/30 border border-border space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="w-4 h-4" />
                   <span className="text-premium-tiny font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
@@ -275,7 +277,12 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 asChild
                 className="flex-1 h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
               >
-                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
+                <a 
+                  href={getWhatsAppLink()} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url: getWhatsAppLink() })}
+                >
                   Aprofundar via WhatsApp
                 </a>
               </Button>

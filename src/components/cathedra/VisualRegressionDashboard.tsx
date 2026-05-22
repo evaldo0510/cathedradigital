@@ -138,7 +138,7 @@ const VisualRegressionDashboard: React.FC = () => {
                   <button
                     key={run.id}
                     onClick={() => setSelectedRun(run)}
-                    className={`w-full text-left p-3 rounded-xl transition-all duration-300 ${
+                    className={`w-full text-left p-3 rounded-premium-sm transition-all duration-300 ${
                       selectedRun?.id === run.id 
                         ? 'bg-primary/10 border border-primary/20' 
                         : 'hover:bg-muted/50 border border-transparent'
@@ -260,7 +260,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
     <Card className="border-border/10 bg-muted/10 overflow-hidden rounded-premium group transition-all duration-300 hover:bg-muted/20">
       <CardHeader className="p-4 border-b border-border/10 flex flex-row items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className={`p-2 rounded-xl ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
+          <div className={`p-2 rounded-premium-sm ${snapshot.status === 'pass' ? 'bg-green-500/10 text-green-500' : snapshot.status === 'fail' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>
             {snapshot.status === 'pass' ? <CheckCircle2 className="w-4 h-4" /> : snapshot.status === 'fail' ? <XCircle className="w-4 h-4" /> : <ShieldAlert className="w-4 h-4" />}
           </div>
           <div>
@@ -317,7 +317,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
       </CardHeader>
       <CardContent className="p-4 space-y-4">
         {showDiff && snapshot.diff_url ? (
-          <div className="relative aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10">
+          <div className="relative aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10">
             <img src={snapshot.diff_url} alt="Diferença Visual" className="w-full h-full object-contain" />
             <div className="absolute top-2 left-2 px-2 py-1 bg-red-500 text-white text-[8px] font-black uppercase tracking-widest rounded-md">Diferenças em Vermelho</div>
           </div>
@@ -325,13 +325,13 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Baseline (Esperado)</p>
-              <div className="aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10">
+              <div className="aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10">
                 <img src={snapshot.baseline_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Baseline" className="w-full h-full object-contain" />
               </div>
             </div>
             <div className="space-y-2">
               <p className="text-[9px] font-black uppercase tracking-widest opacity-40">Atual (Encontrado)</p>
-              <div className="aspect-video bg-black/5 rounded-xl overflow-hidden border border-border/10 relative">
+              <div className="aspect-video bg-black/5 rounded-premium-sm overflow-hidden border border-border/10 relative">
                 <img src={snapshot.current_url || 'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=1470&auto=format&fit=crop'} alt="Atual" className="w-full h-full object-contain" />
                 {snapshot.status === 'fail' && (
                   <div className="absolute inset-0 bg-red-500/5 flex items-center justify-center pointer-events-none">
@@ -344,7 +344,7 @@ const SnapshotCard = ({ snapshot, onApprove, isApproving }: { snapshot: Snapshot
         )}
 
         {snapshot.typography_errors && snapshot.typography_errors.length > 0 && (
-          <div className="p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-xl space-y-2">
+          <div className="p-3 bg-yellow-500/5 border border-yellow-500/20 rounded-premium-sm space-y-2">
             <p className="text-[9px] font-black uppercase tracking-widest text-yellow-600 flex items-center gap-1.5">
               <Type className="w-3 h-3" /> Discrepâncias Tipográficas Encontradas ({snapshot.typography_errors.length})
             </p>

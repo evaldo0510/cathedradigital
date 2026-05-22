@@ -1,8 +1,13 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { prefetchCoreModules } from "./lib/prefetch";
 import { registerSW } from 'virtual:pwa-register';
+import { initSentry } from "./lib/sentry";
+
+initSentry();
+
 
 // Guard: unregister service workers in preview/iframe contexts
 const isInIframe = (() => {
@@ -34,7 +39,11 @@ if (isPreviewHost || isInIframe) {
   });
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
 
 // Prefetch core modules after initial render
 prefetchCoreModules();

@@ -4,6 +4,8 @@ import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { setSentryUser } from '@/lib/sentry';
+
 
 export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
 
@@ -20,6 +22,7 @@ export interface Profile {
   avatar_url: string | null;
   xp?: number;
   streak?: number;
+  max_streak?: number;
   level?: number;
   last_visit?: string;
   completed_books?: string[];
@@ -29,6 +32,9 @@ export interface Profile {
   diocese?: string;
   paroquia?: string;
   movimento_pastoral?: string;
+  reading_settings?: Record<string, any>;
+  journey_reminder_time?: string;
+  weekly_goal?: number;
   _sensitive?: SensitiveData;
 }
 
@@ -42,7 +48,7 @@ interface AuthContextValue {
   refreshProfile: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextValue | null>(null);
+export const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -170,32 +176,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const syncAuthState = useCallback(async (currentUser: SupabaseUser | null) => {
     const requestId = ++authRequestId.current;
-    console.log('Syncing auth state, request ID:', requestId, 'User:', currentUser?.id);
+    
+    // If user is same as current state, skip (unless initial/loading)
+    if (user?.id === currentUser?.id && !loading && requestId > 1) {
+      return;
+    }
+
     setUser(currentUser);
+    setSentryUser(currentUser ? { id: currentUser.id, email: currentUser.email } : null);
     setLoading(true);
 
     if (!currentUser) {
-      console.log('No user, setting loading to false');
       setProfile(null);
       setLoading(false);
       return;
     }
 
     try {
-      console.log('Fetching profile for:', currentUser.id);
       const resolvedProfile = await fetchProfile(currentUser);
-      console.log('Profile fetched:', !!resolvedProfile);
       
-      if (requestId !== authRequestId.current) {
-        console.log('Request ID mismatch, skipping profile set');
-        return;
-      }
+      if (requestId !== authRequestId.current) return;
       
       setProfile(resolvedProfile);
 
-      // Update streak after setting profile
       if (resolvedProfile) {
-        console.log('Updating streak...');
         void updateStreak(currentUser, resolvedProfile);
       }
     } catch (error) {
@@ -204,11 +208,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfile(null);
     } finally {
       if (requestId === authRequestId.current) {
-        console.log('Sync finished, setting loading to false');
         setLoading(false);
       }
     }
-  }, [fetchProfile, updateStreak]);
+  }, [fetchProfile, updateStreak, user?.id, loading]);
 
   useEffect(() => {
     let active = true;

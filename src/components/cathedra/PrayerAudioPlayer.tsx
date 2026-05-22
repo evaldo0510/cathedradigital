@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Icons } from '../../constants';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface PrayerAudioPlayerProps {
   prayers: { label: string; text: string }[];
@@ -12,6 +13,7 @@ interface PrayerAudioPlayerProps {
  * Uses the Web Speech Synthesis API — no external dependencies.
  */
 const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant = 'light' }) => {
+  const { settings } = useReadingSettings();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [rate, setRate] = useState(0.85);
@@ -92,6 +94,8 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
     ? 'bg-secondary/20 text-secondary border-secondary/20 hover:bg-secondary/30'
     : 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20';
 
+  if (settings.totalSilence) return null;
+
   return (
     <div className={`rounded-full border p-4 space-y-3 ${bgClass}`}>
       <div className="flex items-center justify-between">
@@ -110,7 +114,7 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
               className={`w-6 h-6 rounded-full text-premium-tiny font-bold transition-all ${
                 rate === r
                   ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
-                  : (isDark ? 'bg-white/5 text-secondary/40' : 'bg-card text-muted-foreground')
+                  : (isDark ? 'bg-card/50 text-secondary/40' : 'bg-card text-muted-foreground')
               }`}
             >
               {r === 0.7 ? '−' : r === 1.0 ? '+' : '•'}

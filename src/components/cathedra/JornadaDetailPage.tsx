@@ -75,7 +75,7 @@ const JornadaDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
     );
   }
@@ -114,15 +114,20 @@ const JornadaDetailPage: React.FC = () => {
 
       {/* Progress */}
       <CathedraCard className="border-primary/20">
-        <CardContent className="p-4 space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Progresso</span>
-            <span className="font-semibold text-foreground">{completedCount}/{totalSteps} etapas</span>
+        <CardContent className="p-4 space-y-4">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-muted-foreground font-medium">Progresso da Jornada</span>
+            <span className="font-bold text-primary">{completedCount}/{totalSteps} etapas</span>
           </div>
-          <Progress value={progressPercent} className="h-2" />
-          <div className="flex gap-4 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ~{journey.estimated_days} dias</span>
-            <span className="capitalize">{journey.difficulty}</span>
+          <Progress value={progressPercent} className="h-1.5" />
+          <div className="flex items-center justify-between">
+            <div className="flex gap-4 text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ~{journey.estimated_days} dias</span>
+              <span className="px-2 py-0.5 rounded-full bg-muted border border-border/40">{journey.difficulty}</span>
+            </div>
+            {isJourneyComplete && (
+              <Badge className="bg-emerald-500 text-white border-none text-[8px]">FINALIZADA</Badge>
+            )}
           </div>
         </CardContent>
       </CathedraCard>
@@ -137,7 +142,7 @@ const JornadaDetailPage: React.FC = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <Card className="premium-card border-primary/30 bg-gradient-to-r from-primary/10 to-primary/5">
             <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-premium bg-primary/20 flex items-center justify-center flex-shrink-0">
                 <Award className="w-6 h-6 text-primary" />
               </div>
               <div className="flex-1">

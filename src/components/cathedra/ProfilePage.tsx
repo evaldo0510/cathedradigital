@@ -13,7 +13,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getLevelInfo } from '@/lib/levels';
 import { Switch } from '@/components/ui/switch';
 import { BADGE_DEFINITIONS } from '@/lib/badges';
+import GoogleSignInButton from '@/components/auth/GoogleSignInButton';
 import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS } from '@/data/dioceses-brasil';
+import ContemplativeLayout from './ContemplativeLayout';
 
 interface Badge {
   id: string;
@@ -32,6 +34,7 @@ const ProfilePage: React.FC = () => {
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(true);
+  const [reminderTime, setReminderTime] = useState('08:00');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -40,6 +43,7 @@ const ProfilePage: React.FC = () => {
   const [diocese, setDiocese] = useState('');
   const [paroquia, setParoquia] = useState('');
   const [movimentoPastoral, setMovimentoPastoral] = useState('');
+  const [weeklyGoal, setWeeklyGoal] = useState(7);
   const [stats, setStats] = useState({ posts: 0, likes: 0, notes: 0, daysActive: 0 });
   const [showLevelUp, setShowLevelUp] = useState(false);
   const prevLevelRef = useRef<number | null>(null);
@@ -55,6 +59,8 @@ const ProfilePage: React.FC = () => {
       setWhatsappNumber((profile as any).whatsapp_number || '');
       setWhatsappEnabled((profile as any).whatsapp_enabled || false);
       setPushEnabled((profile as any).push_enabled ?? true);
+      setReminderTime((profile as any).ritual_reminder_time || '08:00');
+      setWeeklyGoal((profile as any).weekly_goal || 7);
       supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral').eq('id', profile.id).single()
         .then(({ data }) => {
           setBio((data as any)?.bio || '');
@@ -162,6 +168,8 @@ const ProfilePage: React.FC = () => {
         whatsapp_number: whatsappNumber,
         whatsapp_enabled: whatsappEnabled,
         push_enabled: pushEnabled,
+        ritual_reminder_time: reminderTime,
+        weekly_goal: weeklyGoal,
         estado: estado || null,
         diocese: diocese || null,
         paroquia: paroquia || null,
@@ -180,7 +188,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
     </div>
   );
 
@@ -197,7 +205,12 @@ const ProfilePage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 relative">
+    <ContemplativeLayout
+      subtitle="Santuário Pessoal"
+      title="Meu Perfil"
+      maxW="max-w-2xl"
+    >
+      <div className="space-y-8 relative">
       <AnimatePresence>
         {showLevelUp && (
           <motion.div
@@ -209,7 +222,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
-              className="bg-card border-2 border-primary rounded-full p-8 shadow-2xl text-center pointer-events-auto max-w-sm mx-4"
+              className="bg-card border-2 border-primary rounded-full p-8 shadow-premium-hover text-center pointer-events-auto max-w-sm mx-4"
             >
               <motion.div
                 animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
@@ -244,7 +257,7 @@ const ProfilePage: React.FC = () => {
             aria-label="Alterar foto de perfil"
           >
             {uploading ? (
-              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-2xl animate-spin" />
+              <div className="w-5 h-5 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
             ) : (
               <Icons.Feather className="w-5 h-5 text-white" />
             )}
@@ -271,7 +284,7 @@ const ProfilePage: React.FC = () => {
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-2xl overflow-hidden">
+        <div className="relative h-3 bg-muted rounded-premium overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
@@ -285,7 +298,7 @@ const ProfilePage: React.FC = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
-          <div key={s.label} className="bg-card border border-border rounded-2xl p-4 text-center space-y-1">
+          <div key={s.label} className="bg-card border border-border rounded-premium p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -315,7 +328,7 @@ const ProfilePage: React.FC = () => {
               <p className="text-premium-tiny font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
               <p className="text-premium-tiny text-muted-foreground mt-0.5">{b.description}</p>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-2xl flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-premium flex items-center justify-center">
                   <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
                 </div>
               )}
@@ -350,7 +363,7 @@ const ProfilePage: React.FC = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Bell className="w-4 h-4 text-primary" />
@@ -361,12 +374,12 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/20 shadow-sm">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium border border-primary/20 shadow-soft">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-2xl bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
+                <div className="px-1.5 py-0.5 rounded-premium bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
               </div>
               <p className="text-premium-tiny text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
@@ -393,6 +406,42 @@ const ProfilePage: React.FC = () => {
               </div>
             </motion.div>
           )}
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Clock className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Horário do Ritual</p>
+              </div>
+              <p className="text-premium-tiny text-muted-foreground">Sua jornada diária começa aqui.</p>
+            </div>
+            <input 
+              type="time" 
+              value={reminderTime}
+              onChange={e => setReminderTime(e.target.value)}
+              className="bg-transparent text-sm font-bold text-primary border-none focus:ring-0"
+            />
+          </div>
+          
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Icons.Star className="w-4 h-4 text-primary" />
+                <p className="text-sm font-bold text-foreground">Meta Semanal</p>
+              </div>
+              <p className="text-premium-tiny text-muted-foreground">Dias de leitura por semana.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-primary">{weeklyGoal} dias</span>
+              <input 
+                type="range" 
+                min="1" 
+                max="7" 
+                value={weeklyGoal}
+                onChange={e => setWeeklyGoal(parseInt(e.target.value))}
+                className="w-24 h-2 bg-muted rounded-full accent-primary"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -407,7 +456,7 @@ const ProfilePage: React.FC = () => {
             </div>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="px-2 py-0.5 rounded-2xl bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
+                <div className="px-2 py-0.5 rounded-premium bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
                 </div>
               </div>
@@ -423,7 +472,7 @@ const ProfilePage: React.FC = () => {
         </motion.div>
       )}
 
-      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+      <div className="bg-card border border-border rounded-premium p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
         <div className="space-y-2">
@@ -518,13 +567,41 @@ const ProfilePage: React.FC = () => {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-xl hover:opacity-90 transition-all disabled:opacity-50"
+          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:opacity-90 transition-all disabled:opacity-50"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </Button>
       </div>
-    </div>
-  );
-};
+
+      <div className="premium-card p-8 space-y-6">
+        <div className="flex items-center gap-2 mb-1">
+          <Icons.ShieldCheck className="w-4 h-4 text-primary" />
+          <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Segurança da Conta</h2>
+        </div>
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-1">
+              <p className="text-sm font-bold text-foreground">Vincular Conta Google</p>
+              <p className="text-premium-tiny text-muted-foreground">
+                Adicione o Google como método de acesso sem perder seus dados atuais.
+              </p>
+            </div>
+            <GoogleSignInButton 
+              text="Vincular Google" 
+              className="bg-background hover:bg-muted text-foreground border-border"
+              onSuccess={() => toast.success('Conta Google vinculada com sucesso!')}
+            />
+          </div>
+          
+          <p className="text-[10px] text-muted-foreground text-center italic">
+            * Ao vincular, você poderá entrar usando tanto seu e-mail/senha quanto sua conta Google.
+          </p>
+        </div>
+          </div>
+        </div>
+      </ContemplativeLayout>
+    );
+  };
 
 export default ProfilePage;

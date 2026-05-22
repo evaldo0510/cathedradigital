@@ -33,11 +33,9 @@ const LandingHeader = () => {
   }, []);
 
   const navLinks = [
-    { name: "Funcionalidades", href: "#features" },
-    { name: "Como Funciona", href: "#how-it-works" },
-    { name: "Depoimentos", href: "#testimonials" },
-    { name: "Planos", href: "#pricing" },
-    { name: "Sobre", href: AppRoute.ABOUT },
+    { name: "Bíblia", href: AppRoute.BIBLE },
+    { name: "Catecismo", href: AppRoute.CATECHISM },
+    { name: "Magistério", href: AppRoute.MAGISTERIUM },
   ];
 
   const handleNavClick = (href: string) => {
@@ -54,24 +52,25 @@ const LandingHeader = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-1000 ${
         isScrolled
-          ? "py-4 bg-background border-b border-border/5"
-          : "py-8 bg-transparent"
+          ? "py-6 bg-background/80 backdrop-blur-3xl border-b border-border/5"
+          : "py-10 bg-transparent"
       }`}
     >
       <div className="app-container flex items-center justify-between">
         <div 
-          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
+          className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
           onClick={() => navigate(AppRoute.HOME)}
           onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
           tabIndex={0}
           role="button"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
-          <div className="hidden sm:block">
-            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
+          <Icons.Logo className="w-12 h-12 transition-all duration-1000 group-hover:scale-105" variant="gold" />
+          <div className="hidden sm:flex flex-col">
+            <h1 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h1>
+            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-1">Digitalis</span>
           </div>
         </div>
 
@@ -111,7 +110,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-xl overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button

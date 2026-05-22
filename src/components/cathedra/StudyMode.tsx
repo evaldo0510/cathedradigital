@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import ProConversionBanner from './ProConversionBanner';
 import { toast } from 'sonner';
 import { callColloquium } from '@/services/aiService';
+import SEOHead from '@/components/SEOHead';
 import logosAvatarImg from '@/assets/logos-avatar.png';
 import logosAquinasImg from '@/assets/logos-aquinas.png';
 import logosColloquiumImg from '@/assets/logos-colloquium.png';
@@ -327,7 +328,18 @@ const StudyMode: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-12 max-w-2xl mx-auto py-12">
-      <div className="w-24 h-24 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+      <SEOHead 
+        title="Logos IA | Inteligência Teológica Minimalista" 
+        description="Consulte a Logos IA para resumos teológicos, conexões bíblicas e suporte espiritual baseado na Tradição e no Magistério da Igreja Católica." 
+        path="/estudo"
+        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
+        keywords="logos ia, inteligência artificial católica, estudo bíblico ia, catecismo ia, teologia católica digital"
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Logos IA", path: "/estudo" }
+        ]}
+      />
+      <div className="w-24 h-24 rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
         <Shield className="w-12 h-12 text-primary" />
       </div>
       
@@ -338,7 +350,7 @@ const StudyMode: React.FC = () => {
         </p>
       </div>
 
-      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-sm space-y-6">
+      <div className="bg-card border border-border p-8 rounded-[2.5rem] shadow-soft space-y-6">
         <p className="text-sm text-foreground/80 leading-relaxed">
           O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
         </p>

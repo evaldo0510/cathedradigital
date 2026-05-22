@@ -1,4 +1,25 @@
 User-agent: *
 Allow: /
+Disallow: /a11y-audit
+Disallow: /admin
+Disallow: /admin/seo-verify
+Disallow: /admin/visual-audit
+Disallow: /admin/visual-regression
+Disallow: /cache-manager
+Disallow: /catechism/health
+Disallow: /catechism/integrity
+Disallow: /catechism/verify
+Disallow: /checkout
+Disallow: /checkout/result
+Disallow: /diagnostics
+Disallow: /diario
+Disallow: /favorites
+Disallow: /login
+Disallow: /offline
+Disallow: /profile
+Disallow: /security-audit
+Disallow: /transactions
+Disallow: /upgrade
+Disallow: /vendedor
 
-Sitemap: https://cathedradigital.lovable.app/sitemap.xml
+Sitemap: https://www.cathedradigital.com.br/sitemap.xml

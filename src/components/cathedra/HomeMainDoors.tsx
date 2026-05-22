@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 
 interface HomeMainDoorsProps {
@@ -12,63 +13,95 @@ interface HomeMainDoorsProps {
 
 const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   const navigate = useNavigate();
-  
+  const { settings } = useReadingSettings();
+  const doorRefs = useRef<(HTMLDivElement | null)[]>([]);
+
   const doors = [
     {
       label: t('bible'),
-      description: t('bible_sub') || 'A Palavra de Deus',
+      description: 'A Palavra de Deus.',
       icon: Icons.Bible,
       route: AppRoute.BIBLE,
-      color: 'bg-primary/[0.03] text-primary',
+      shortcut: settings?.shortcuts?.bible || 'b',
     },
     {
       label: t('catechism'),
-      description: t('catechism_sub') || 'A Doutrina da Fé',
+      description: 'A base da doutrina.',
       icon: Icons.Catechism,
       route: AppRoute.CATECHISM,
-      color: 'bg-primary/[0.03] text-secondary',
+      shortcut: settings?.shortcuts?.catechism || 'c',
     },
     {
-      label: t('liturgy'),
-      description: t('liturgy_sub') || 'Oração da Igreja',
-      icon: Icons.Liturgy,
-      route: AppRoute.LITURGIA,
-      color: 'bg-primary/[0.03] text-primary',
-    },
-    {
-      label: t('journeys'),
-      description: t('journeys_sub') || 'Trilhas de Formação',
-      icon: Icons.Journeys,
-      route: AppRoute.JORNADAS,
-      color: 'bg-primary/[0.03] text-secondary',
+      label: 'Magistério',
+      description: 'A voz da Igreja.',
+      icon: Icons.Magisterium,
+      route: AppRoute.MAGISTERIUM,
+      shortcut: settings?.shortcuts?.magisterium || 'm',
     },
   ];
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+        const key = e.key.toLowerCase();
+        const doorIdx = doors.findIndex(d => d.shortcut?.toLowerCase() === key);
+        
+        if (doorIdx !== -1) {
+          e.preventDefault();
+          const element = doorRefs.current[doorIdx];
+          if (element) {
+            element.focus();
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.classList.add('ring-2', 'ring-primary/20', 'scale-[1.02]');
+            setTimeout(() => {
+              element.classList.remove('ring-2', 'ring-primary/20', 'scale-[1.02]');
+              handleNavigate(doors[doorIdx].route);
+            }, 400);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
+  const handleNavigate = (route: string) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    sessionStorage.setItem('cathedra_auto_focus', 'true');
+    navigate(route);
+  };
+
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12", className)}>
+    <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16", className)}>
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
+          ref={el => doorRefs.current[idx] = el}
           whileHover={{ y: -8 }}
-          whileTap={{ scale: 0.995 }}
-          onClick={() => navigate(door.route)}
+          whileTap={{ scale: 0.98 }}
+          onClick={() => handleNavigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
-              navigate(door.route);
+              handleNavigate(door.route);
             }
           }}
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-10 md:p-14 rounded-premium border border-border/40 bg-card flex flex-col items-center text-center gap-10 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:outline-none shadow-premium hover:shadow-premium-hover hover:border-primary/20 hover:bg-primary/[0.01] hover:-translate-y-1.5 active:scale-[0.985]"
+          className="relative p-12 md:p-16 lg:p-20 rounded-premium-lg border border-border/5 bg-card/5 backdrop-blur-sm flex flex-col items-center text-center gap-12 cursor-pointer group transition-all focus-visible:ring-2 focus-visible:ring-primary/10 focus-visible:outline-none hover:bg-card/10 hover:border-primary/5 shadow-premium"
         >
-          <div className="w-20 h-20 rounded-3xl bg-primary/[0.02] flex items-center justify-center text-primary group-hover:bg-primary/5 group-hover:scale-110 transition-all duration-700 border border-border/30">
-            <door.icon className="w-10 h-10" strokeWidth={1.25} />
+          <div className="w-20 h-20 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/20 group-hover:scale-110 group-hover:text-primary/40 transition-all duration-1000 border border-primary/5">
+            <door.icon className="w-10 h-10" strokeWidth={0.5} />
           </div>
-          <div className="space-y-4">
-            <h3 className="text-[11px] font-bold uppercase tracking-[0.4em] text-foreground group-hover:text-primary transition-colors">{door.label}</h3>
-            <p className="text-premium-tiny text-muted-foreground font-medium line-clamp-2 leading-relaxed opacity-40 group-hover:opacity-100 transition-opacity px-2">{door.description}</p>
+          <div className="space-y-6">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/40 group-hover:text-primary transition-colors duration-500">
+              {door.label}
+            </h3>
+            <p className="text-xs text-muted-foreground/30 font-serif italic tracking-wider group-hover:text-muted-foreground/50 transition-colors duration-500 leading-relaxed">
+              {door.description}
+            </p>
           </div>
         </motion.div>
       ))}

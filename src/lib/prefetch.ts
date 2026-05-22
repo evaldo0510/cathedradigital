@@ -10,16 +10,19 @@ const routeImports: Record<string, () => Promise<any>> = {
   '/profile': () => import('@/components/cathedra/ProfilePage'),
   '/bible': () => import('@/components/cathedra/Bible'),
   '/catechism': () => import('@/components/cathedra/Catechism'),
+  '/santos': () => import('@/components/cathedra/Saints'),
   '/saints': () => import('@/components/cathedra/Saints'),
   '/liturgia': () => import('@/components/cathedra/LiturgiaPage'),
   '/study': () => import('@/components/cathedra/StudyMode'),
   '/rosary': () => import('@/components/cathedra/Rosary'),
   '/oracao': () => import('@/components/cathedra/PrayerPage'),
   '/login': () => import('@/components/cathedra/Auth'),
+  '/auth': () => import('@/components/cathedra/Auth'),
   '/magisterium': () => import('@/components/cathedra/Magisterium'),
   '/diagnostico': () => import('@/components/cathedra/DiagnosticoPage'),
   '/viacrucis': () => import('@/components/cathedra/ViaCrucis'),
   '/checkout': () => import('@/components/cathedra/CheckoutPage'),
+  '/logos': () => import('@/components/cathedra/LogosAI'),
 };
 
 export function prefetchRoute(route: string) {
@@ -101,5 +104,7 @@ export async function prefetchEssentialContent() {
       const { fetchCatechismParagraph } = await import('@/hooks/useCatechismParagraph');
       if (p < 2865) await fetchCatechismParagraph(p + 1);
     }
-  } catch {}
+    } catch (e) {
+      console.warn('Prefetch error for last catechism paragraph:', e);
+    }
 }

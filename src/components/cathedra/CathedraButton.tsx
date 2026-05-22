@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
+import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
 interface CathedraButtonProps extends HTMLMotionProps<"button"> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -11,24 +12,25 @@ interface CathedraButtonProps extends HTMLMotionProps<"button"> {
 
 const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
     const sizeMap = {
-      sm: 'px-6 py-2.5 text-[10px]',
-      md: 'px-10 py-4 text-[11px]',
-      lg: 'px-12 py-5 text-[12px]',
-      xl: 'px-14 py-6 text-[14px]',
+      sm: 'px-6 h-10 text-[9.5px]',
+      md: 'px-8 h-14 text-[10.5px]',
+      lg: 'px-10 h-16 text-[12px]',
+      xl: 'px-12 h-20 text-[14px]',
     };
 
     const variantStyles = {
       primary: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
-      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 py-4 font-bold uppercase tracking-[0.2em] text-[10px]',
+      ghost: 'bg-transparent hover:bg-primary/[0.02] text-primary/70 hover:text-primary transition-all rounded-full px-6 py-3 font-bold uppercase tracking-[0.2em] text-[10px]',
     };
 
     return (
       <motion.button
         ref={ref as any}
-        whileTap={{ scale: 0.96 }}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
         className={cn(
           variantStyles[variant],
           sizeMap[size],

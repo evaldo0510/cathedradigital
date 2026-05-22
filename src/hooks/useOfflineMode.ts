@@ -14,7 +14,9 @@ export function useOfflineMode() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, String(isOfflineMode));
-    } catch {}
+    } catch (e) {
+      console.warn('LocalStorage error in useOfflineMode:', e);
+    }
     
     // Dispatch a global event so other components can react
     window.dispatchEvent(new CustomEvent('offline-mode-change', { detail: isOfflineMode }));

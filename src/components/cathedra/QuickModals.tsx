@@ -174,7 +174,7 @@ export const DocumentsModal: React.FC<QuickModalProps> = ({ isOpen, onClose }) =
       </div>
       <div className="max-h-[50vh] overflow-y-auto space-y-1">
         {filtered.map(d => (
-          <div key={d.title} className="flex items-center justify-between p-3 rounded-2xl hover:bg-muted transition-colors">
+          <div key={d.title} className="flex items-center justify-between p-3 rounded-premium hover:bg-muted transition-colors">
             <div>
               <p className="text-sm font-semibold text-foreground">{d.title}</p>
               <p className="text-premium-tiny text-muted-foreground">{d.author} • {d.year}</p>
@@ -214,7 +214,7 @@ const ModalShell: React.FC<{ title: string; onClose: () => void; children: React
       aria-labelledby="modal-title"
     >
       <div className="absolute inset-0 bg-black/60 " onClick={onClose} aria-hidden="true" />
-      <div className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+      <div className="relative w-full max-w-lg bg-card border border-border rounded-premium shadow-premium-hover p-6 overflow-hidden animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
           <h3 id="modal-title" className="text-sm font-black uppercase tracking-widest text-primary">{title}</h3>
           <Button 

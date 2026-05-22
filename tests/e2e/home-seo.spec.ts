@@ -1,0 +1,268 @@
+import { test, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
+/**
+ * Enhanced SEO, Schema.org and Social Cards Audit for Home Page
+ * Fail on critical errors, log warnings.
+ */
+test.describe('SEO & Metadata Audit - Home Page', () => {
+  const auditResults = {
+    seo: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
+    schema: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
+    social: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
+    performance: [] as { metric: string; value: string }[],
+  };
+
+  test('Comprehensive SEO & Social Audit', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // 1. Core SEO Elements (Titles, Descriptions, Headings)
+    const title = await page.title();
+    if (!title) {
+      auditResults.seo.push({ status: 'critical', message: 'Title is missing.' });
+    } else if (title.length < 30 || title.length > 65) {
+      auditResults.seo.push({ status: 'warning', message: `Title "${title}" length (${title.length}) is outside recommended 30-65 range.` });
+    } else {
+      auditResults.seo.push({ status: 'success', message: `Title: ${title}` });
+    }
+
+    const description = await page.getAttribute('meta[name="description"]', 'content');
+    if (!description) {
+      auditResults.seo.push({ status: 'critical', message: 'Meta description is missing.' });
+    } else if (description.length < 120 || description.length > 165) {
+      auditResults.seo.push({ status: 'warning', message: `Description length (${description.length}) is outside recommended 120-165 range.` });
+    } else {
+      auditResults.seo.push({ status: 'success', message: 'Meta description is present and properly sized.' });
+    }
+
+    const h1Count = await page.locator('h1').count();
+    if (h1Count !== 1) {
+      auditResults.seo.push({ status: 'critical', message: `Found ${h1Count} H1 tags. Exactly one is required for SEO.` });
+    } else {
+      auditResults.seo.push({ status: 'success', message: 'Found exactly one H1 tag.' });
+    }
+
+    const canonical = await page.getAttribute('link[rel="canonical"]', 'href');
+    if (!canonical) {
+      auditResults.seo.push({ status: 'critical', message: 'Canonical tag is missing.' });
+    } else {
+      auditResults.seo.push({ status: 'success', message: `Canonical: ${canonical}` });
+    }
+
+    // Link validation (internal/external)
+    const links = await page.locator('a').all();
+    let brokenLinks = 0;
+    for (const link of links) {
+      const href = await link.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('javascript:')) {
+        auditResults.seo.push({ status: 'warning', message: `Empty or placeholder link found: "${await link.innerText()}"` });
+      }
+    }
+
+    // 2. Social Cards (Open Graph & Twitter Cards)
+    const ogTags = [
+      { property: 'og:title', required: true },
+      { property: 'og:description', required: true },
+      { property: 'og:image', required: true },
+      { property: 'og:type', required: true },
+      { property: 'og:url', required: true }
+    ];
+    for (const tag of ogTags) {
+      const content = await page.getAttribute(`meta[property="${tag.property}"]`, 'content');
+      if (!content) {
+        auditResults.social.push({ status: 'critical', message: `Missing Open Graph tag: ${tag.property}` });
+      } else if (tag.property === 'og:image' && !content.startsWith('http')) {
+        auditResults.social.push({ status: 'warning', message: `OG Image path should be absolute: ${content}` });
+      } else {
+        auditResults.social.push({ status: 'success', message: `Found ${tag.property}` });
+      }
+    }
+
+    const twitterTags = [
+      { name: 'twitter:card', required: true },
+      { name: 'twitter:title', required: true },
+      { name: 'twitter:description', required: true },
+      { name: 'twitter:image', required: true }
+    ];
+    for (const tag of twitterTags) {
+      const content = await page.getAttribute(`meta[name="${tag.name}"]`, 'content');
+      if (!content) {
+        auditResults.social.push({ status: 'critical', message: `Missing Twitter Card tag: ${tag.name}` });
+      } else {
+        auditResults.social.push({ status: 'success', message: `Found ${tag.name}` });
+      }
+    }
+
+    // 3. Schema.org / Structured Data Validation
+    const scripts = await page.locator('script[type="application/ld+json"]').all();
+    if (scripts.length === 0) {
+      auditResults.schema.push({ status: 'critical', message: 'No Schema.org (JSON-LD) found. Critical for search snippets.' });
+    } else {
+      for (const script of scripts) {
+        const content = await script.textContent();
+        try {
+          const json = JSON.parse(content || '{}');
+          if (!json['@context'] || !json['@type']) {
+            auditResults.schema.push({ status: 'critical', message: 'Invalid Schema.org structure: missing @context or @type.' });
+          } else {
+            auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
+            
+            // Specific check for WebSite schema
+            if (json['@type'] === 'WebSite') {
+              if (!json.name) auditResults.schema.push({ status: 'warning', message: 'WebSite schema missing "name".' });
+              if (!json.url) auditResults.schema.push({ status: 'critical', message: 'WebSite schema missing "url".' });
+            }
+          }
+        } catch (e) {
+          auditResults.schema.push({ status: 'critical', message: 'Malformed JSON-LD script (Syntax Error).' });
+        }
+      }
+    }
+
+    // 4. Basic Performance Metrics
+    const performanceData = await page.evaluate(() => {
+      const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+      if (!entry) return null;
+      return {
+        dns: entry.domainLookupEnd - entry.domainLookupStart,
+        ttfb: entry.responseStart - entry.requestStart,
+        domReady: entry.domContentLoadedEventEnd - entry.startTime,
+        load: entry.loadEventEnd - entry.startTime,
+      };
+    });
+
+    if (performanceData) {
+      auditResults.performance.push({ metric: 'TTFB', value: `${performanceData.ttfb.toFixed(0)}ms` });
+      auditResults.performance.push({ metric: 'DOM Ready', value: `${performanceData.domReady.toFixed(0)}ms` });
+      auditResults.performance.push({ metric: 'Total Load', value: `${performanceData.load.toFixed(0)}ms` });
+      
+      if (performanceData.load > 3000) {
+        auditResults.performance.push({ metric: 'Status', value: 'SLOW' });
+      }
+    }
+
+    // Generate HTML Report
+    generateHTMLReport(auditResults);
+
+    // Final Validation: Fail CI on critical errors only
+    const criticalErrors = [
+      ...auditResults.seo,
+      ...auditResults.social,
+      ...auditResults.schema
+    ].filter(i => i.status === 'critical');
+    
+    const warnings = [
+      ...auditResults.seo,
+      ...auditResults.social,
+      ...auditResults.schema
+    ].filter(i => i.status === 'warning');
+
+    if (warnings.length > 0) {
+      console.log('\n--- [SEO AUDIT WARNINGS] ---');
+      warnings.forEach(w => console.log(`⚠️  ${w.message}`));
+    }
+
+    if (criticalErrors.length > 0) {
+      console.error('\n--- [CRITICAL SEO ERRORS] ---');
+      criticalErrors.forEach(e => console.error(`❌ ${e.message}`));
+    }
+
+    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated HTML report.`).toBe(0);
+  });
+});
+
+function generateHTMLReport(results: any) {
+  const reportDir = path.join(process.cwd(), 'test-results');
+  if (!fs.existsSync(reportDir)) fs.mkdirSync(reportDir, { recursive: true });
+
+  const renderItems = (items: { status: string; message: string }[]) => {
+    return items.map(i => `
+      <li class="status-${i.status}">
+        <span class="icon">${i.status === 'success' ? '✅' : i.status === 'warning' ? '⚠️' : '❌'}</span>
+        ${i.message}
+      </li>
+    `).join('');
+  };
+
+  const html = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO & Metadata Audit Report - Cathedra Digital</title>
+    <style>
+        :root {
+            --critical: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+        }
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.6; color: var(--text); background: var(--bg); max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        h1 { color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 30px; font-weight: 800; letter-spacing: -0.025em; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .section { background: var(--card-bg); padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        .section h3 { margin-top: 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px; margin-bottom: 16px; font-weight: 600; }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 14px; padding: 8px; border-radius: 6px; }
+        .status-critical { background: #fef2f2; color: #991b1b; }
+        .status-warning { background: #fffbeb; color: #92400e; }
+        .status-success { background: #f0fdf4; color: #166534; }
+        .icon { font-style: normal; flex-shrink: 0; }
+        .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .metric-item { background: #f9fafb; padding: 16px; border-radius: 8px; text-align: center; }
+        .metric-value { display: block; font-size: 24px; font-weight: 700; color: #111827; }
+        .metric-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; }
+        .summary-badge { padding: 4px 12px; border-radius: 9999px; font-size: 12px; }
+        footer { text-align: center; margin-top: 60px; color: #9ca3af; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <h1>Relatório de Auditoria SEO & Social</h1>
+    <p>Data de geração: ${new Date().toLocaleString('pt-BR')}</p>
+
+    <div class="grid">
+        <div class="section">
+            <h3>Tags Meta & Estrutura</h3>
+            <ul>${renderItems(results.seo)}</ul>
+        </div>
+
+        <div class="section">
+            <h3>Redes Sociais (OG & Twitter)</h3>
+            <ul>${renderItems(results.social)}</ul>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="section">
+            <h3>Dados Estruturados (Schema.org)</h3>
+            <ul>${renderItems(results.schema)}</ul>
+        </div>
+
+        <div class="section">
+            <h3>Performance Básica</h3>
+            <div class="metric-grid">
+                ${results.performance.map((p: any) => `
+                    <div class="metric-item">
+                        <span class="metric-value">${p.value}</span>
+                        <span class="metric-label">${p.metric}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Cathedra Digital Premium Quality Audit System
+    </footer>
+</body>
+</html>
+  `;
+
+  fs.writeFileSync(path.join(reportDir, 'seo-audit-report.html'), html);
+  console.log(`SEO Audit report generated at: ${path.join(reportDir, 'seo-audit-report.html')}`);
+}
