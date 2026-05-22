@@ -2,13 +2,13 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Sparkles, CheckCircle2, ArrowRight, Book, Heart, VolumeX, Bell, Download, Settings2, Clock, Map } from 'lucide-react';
 import { DAILY_RITUALS } from '@/data/dailyRitual';
-import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
 import AudioContentPlayer from './AudioContentPlayer';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { jsPDF } from 'jspdf';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
