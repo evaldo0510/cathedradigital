@@ -8,7 +8,7 @@ import ScrollToTop from './components/ScrollToTop';
 import { AppRoute, Language } from './types';
 import { UI_TRANSLATIONS } from './services/translations';
 import { AuthProvider, useAuth } from './hooks/useAuth';
-import { LangContext } from './contexts/LangContext';
+import { LangContext, LangProvider } from './contexts/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
@@ -242,30 +242,19 @@ const AppLayout: React.FC = () => {
 };
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [lang, setLang] = useState<Language>(() => {
-    try {
-      const stored = localStorage.getItem('cathedra_lang');
-      return (stored as Language) || 'pt';
-    } catch {
-      return 'pt';
-    }
-  });
-
-  const t = useCallback((k: string) => UI_TRANSLATIONS[lang]?.[k] || k, [lang]);
-
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
-              <ReadingSettingsProvider>
-                <TooltipProvider>
-                  <LangContext.Provider value={{ lang, setLang, t }}>
+              <LangProvider>
+                <ReadingSettingsProvider>
+                  <TooltipProvider>
                     {children}
-                  </LangContext.Provider>
-                </TooltipProvider>
-              </ReadingSettingsProvider>
+                  </TooltipProvider>
+                </ReadingSettingsProvider>
+              </LangProvider>
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
