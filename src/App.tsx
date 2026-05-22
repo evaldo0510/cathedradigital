@@ -60,6 +60,11 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+const Saints = lazy(() => import('./components/cathedra/Saints'));
+const HojePage = lazy(() => import('./components/cathedra/HojePage'));
+const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
+const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -204,7 +209,13 @@ const AppLayout: React.FC = () => {
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
+              <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
+              <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
+              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><JornadasPage /></Suspense>} />
+              <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><CommunityPage /></Suspense>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AnimatePresence>
