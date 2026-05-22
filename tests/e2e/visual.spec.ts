@@ -5,17 +5,40 @@ test.describe('Home Page Visual Regression', () => {
     // Navigate to home
     await page.goto('/');
     
-    // Set reduced motion to avoid animation-related failures
+    // 1. Force deterministic rendering by disabling all animations/transitions
+    await page.addStyleTag({
+      content: `
+        *, *::before, *::after {
+          animation-duration: 0s !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0s !important;
+          scroll-behavior: auto !important;
+        }
+        .animate-pulse, .animate-bounce, .animate-spin {
+          animation: none !important;
+        }
+      `
+    });
+
+    // 2. Set reduced motion
     await page.emulateMedia({ reducedMotion: 'reduce' });
     
-    // Wait for fonts to load
+    // 3. Wait for fonts to be stable
     await page.evaluate(() => document.fonts.ready);
     
-    // Ensure all images are loaded
+    // 4. Ensure images are loaded
     await page.waitForLoadState('networkidle');
     
-    // Wait for main content to be visible
+    // 5. Wait for main content
     await page.waitForSelector('#main-content', { state: 'visible' });
+    
+    // 6. Mask or freeze dynamic text if necessary (e.g. current time/date)
+    await page.evaluate(() => {
+      const timeElements = document.querySelectorAll('time, .current-date');
+      timeElements.forEach(el => {
+        el.textContent = '01/01/2026';
+      });
+    });
   });
 
   const viewports = [
@@ -28,21 +51,23 @@ test.describe('Home Page Visual Regression', () => {
     test(`screenshot comparison for ${vp.name}`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       
-      // Additional wait for any dynamic layouts to settle after resize
+      // Give it a moment to settle after resize
       await page.waitForTimeout(500);
 
-      // Take full page screenshot with masking of dynamic components
+      // Take full page screenshot with masking of highly dynamic content
       await expect(page).toHaveScreenshot(`home-${vp.name}.png`, {
         fullPage: true,
         mask: [
           page.locator('#ritual-do-dia'),
           page.locator('#reading-progress'),
           page.locator('time'),
-          page.locator('.animate-pulse'), // Mask any skeletons
-          page.locator('[data-dynamic="true"]') // General purpose dynamic tag
+          page.locator('.animate-pulse'),
+          page.locator('[data-dynamic="true"]'),
+          page.locator('input[type="text"]'), // Mask search queries in inputs
         ],
         animations: 'disabled',
-        maxDiffPixelRatio: 0.02 // Allow small variations
+        maxDiffPixelRatio: 0.01, // Stricter threshold
+        threshold: 0.1
       });
     });
   }
