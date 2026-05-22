@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SearchResult {
   bookAbbrev: string;
@@ -21,6 +21,9 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [searched, setSearched] = useState(false);
   const [visibleCount, setVisibleCount] = useState(RESULTS_PER_PAGE);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const isBibleRoute = useMemo(() => pathname.startsWith('/bible'), [pathname]);
 
   const doSearch = useCallback(async () => {
     if (query.trim().length < 2) return;
@@ -43,7 +46,11 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const loadMore = () => setVisibleCount(prev => prev + RESULTS_PER_PAGE);
 
   const goToVerse = (r: SearchResult) => {
-    navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`);
+    if (isBibleRoute) {
+      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`, { replace: true });
+    } else {
+      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`);
+    }
     onClose();
   };
 
