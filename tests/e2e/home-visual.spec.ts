@@ -10,14 +10,38 @@ test.describe('Home Page Visual Regression', () => {
   for (const viewport of VIEWPORTS) {
     test(`Visual baseline for Home on ${viewport.name}`, async ({ page }) => {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
+      
+      // Inject CSS to fix rendering for deterministic screenshots
+      await page.addInitScript(() => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+          }
+          /* Mask dynamic content like Ritual do Dia or progress bars */
+          [data-testid="ritual-content"], 
+          [data-testid="reading-progress"],
+          .ritual-date-text {
+             visibility: hidden !important;
+          }
+          /* Freeze fonts - ensure they don't jump */
+          html {
+            font-display: block !important;
+          }
+        `;
+        document.head.appendChild(style);
+      });
+
       await page.goto('/');
       
       // Wait for everything to settle
       await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000); // Wait for animations
+      
+      // Wait for fonts specifically
+      await page.evaluate(() => document.fonts.ready);
       
       // Ensure the 8 blocks are visible before taking the screenshot
-      // This acts as a sanity check
       await expect(page.locator('h1')).toBeVisible();
       await expect(page.locator('h2:has-text("Ritual do Dia")')).toBeVisible();
       await expect(page.locator('h2:has-text("Continuar Leitura")')).toBeVisible();
@@ -25,16 +49,35 @@ test.describe('Home Page Visual Regression', () => {
       await expect(page.locator('h2:has-text("Logos IA")')).toBeVisible();
       await expect(page.locator('h2:has-text("Em Breve")')).toBeVisible();
 
-      // Mask dynamic content if any (like dates or changing text)
-      // The "Ritual do Dia" might have changing text. We mask it to avoid false positives.
-      // But for "visual regression" of the layout, we might want to see it.
-      // Let's assume we want to catch layout shifts.
-      
+      // Take screenshot with masking of dynamic containers
       await expect(page).toHaveScreenshot(`home-${viewport.name}.png`, {
         fullPage: true,
-        maxDiffPixelRatio: 0.05, // Allow small differences for font rendering in CI
+        maxDiffPixelRatio: 0.02, 
         animations: 'disabled',
+        mask: [
+          page.locator('section:has-text("Ritual do Dia") div.content'), // Mask dynamic ritual text
+          page.locator('section:has-text("Continuar Leitura")') // Mask progress data
+        ]
       });
     });
   }
+
+  test('Structural Consistency: Ensure no duplicate containers', async ({ page }) => {
+    await page.goto('/');
+    
+    // Check for exact section count in MainContent
+    const mainSections = page.locator('#main-content section');
+    // Hero is outside main-content in Index.tsx, or inside? 
+    // In Index.tsx: HeroSection is above <main id="main-content">
+    // HomeMainContent has 5 sections: Ritual, Continuar, Biblioteca, Logos, Em Breve.
+    await expect(mainSections).toHaveCount(5);
+
+    // Verify unique IDs/Landmarks
+    const landmarks = ['navigation', 'main', 'contentinfo', 'banner'];
+    for (const landmark of landmarks) {
+      const count = await page.locator(`[role="${landmark}"]`).count();
+      // banner (header) might be 1, navigation might be multiple but should be distinct
+      if (landmark === 'main') expect(count).toBe(1);
+    }
+  });
 });

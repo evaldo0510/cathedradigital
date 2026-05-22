@@ -31,6 +31,7 @@ jobs:
 
     - name: Upload Visual Audit Artifacts
       if: always()
+      uses: actions/upload-artifact@v4
       with:
         name: visual-regression-premium-report
         path: |
