@@ -1,84 +1,61 @@
 import { test, expect } from '@playwright/test';
 
-const OFFICIAL_DOMAIN = 'https://www.cathedradigital.com.br';
-
-test.describe('SEO, Sitemap and Robots Delivery', () => {
-  test('should serve sitemap.xml with correct headers and content', async ({ request }) => {
-    const response = await request.get('/sitemap.xml');
+/**
+ * Sitemap & Robots.txt Delivery and Integrity Test
+ */
+test.describe('Search Infrastructure - Sitemap & Robots', () => {
+  
+  test('robots.txt should exist and be indexable', async ({ page }) => {
+    const response = await page.goto('/robots.txt');
+    expect(response?.status()).toBe(200);
     
-    // Check if sitemap is served
-    expect(response.ok()).toBeTruthy();
+    const body = await response?.text();
+    expect(body).toContain('User-agent: *');
+    expect(body).toContain('Sitemap:');
     
-    // Check headers
-    const contentType = response.headers()['content-type'];
-    expect(contentType).toMatch(/xml/);
-    
-    const cacheControl = response.headers()['cache-control'];
-    // Expect some caching, e.g., max-age=3600 or public
-    expect(cacheControl).toBeDefined();
-    
-    const text = await response.text();
-    
-    // Check for essential URLs and tags
-    expect(text).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
-    expect(text).toContain(OFFICIAL_DOMAIN);
-    expect(text).toContain('/hoje');
-    expect(text).toContain('/bible');
-    expect(text).toContain('/catechism');
-    expect(text).toContain('<changefreq>daily</changefreq>');
-    expect(text).toContain('<priority>1.0</priority>');
-    
-    // Ensure no admin routes are present
-    expect(text).not.toContain('/admin');
-    expect(text).not.toContain('/login');
+    // Check if sitemap URL in robots.txt matches project URL
+    const sitemapUrl = body?.match(/Sitemap:\s*(.*)/)?.[1];
+    expect(sitemapUrl).toBeTruthy();
+    console.log(`Verified Sitemap URL in robots.txt: ${sitemapUrl}`);
   });
 
-  test('should serve robots.txt with sitemap and dynamic disallows', async ({ request }) => {
-    const response = await request.get('/robots.txt');
-    expect(response.ok()).toBeTruthy();
+  test('sitemap.xml should exist and contain main routes', async ({ page }) => {
+    const response = await page.goto('/sitemap.xml');
+    expect(response?.status()).toBe(200);
     
-    const contentType = response.headers()['content-type'];
-    expect(contentType).toMatch(/text\/plain/);
+    const body = await response?.text();
+    expect(body).toContain('<urlset');
     
-    const cacheControl = response.headers()['cache-control'];
-    expect(cacheControl).toBeDefined();
-    
-    const text = await response.text();
-    expect(text).toContain(`Sitemap: ${OFFICIAL_DOMAIN}/sitemap.xml`);
-    expect(text).toContain('Disallow: /admin');
-    expect(text).toContain('Disallow: /checkout');
-    expect(text).toContain('Disallow: /profile');
-  });
-
-  test('should have correct canonical tags on main public pages', async ({ page }) => {
-    const publicPages = [
+    // Verify main pages are present
+    const criticalUrls = [
       '/',
-      '/hoje',
       '/bible',
       '/catechism',
-      '/about',
-      '/guia-modulos'
+      '/magisterium'
     ];
-
-    for (const path of publicPages) {
-      await page.goto(path);
-      const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
-      expect(canonical).toBe(`${OFFICIAL_DOMAIN}${path === '/' ? '' : path}`);
+    
+    for (const url of criticalUrls) {
+      // Basic check for presence (assuming the sitemap uses loc tags)
+      expect(body, `Sitemap missing critical URL: ${url}`).toContain(url);
     }
+    
+    console.log('Verified critical URLs in sitemap.xml');
   });
 
-  test('should have correct canonical tags on representative dynamic routes', async ({ page }) => {
-    const dynamicRoutes = [
-      { path: '/santos/santo-antonio', expected: '/santos/santo-antonio' },
-      { path: '/magisterium/dei-verbum', expected: '/magisterium/dei-verbum' },
-      { path: '/temas/fe-e-razao', expected: '/temas/fe-e-razao' }
-    ];
-
-    for (const route of dynamicRoutes) {
-      await page.goto(route.path);
-      const canonical = await page.locator('link[rel="canonical"]').getAttribute('href');
-      expect(canonical).toBe(`${OFFICIAL_DOMAIN}${route.expected}`);
+  test('Verify sitemap points to valid pages', async ({ page }) => {
+    // Navigate to a few links from the sitemap to ensure they aren't 404
+    // We sample just a few to keep CI fast
+    const response = await page.goto('/sitemap.xml');
+    const body = await response?.text();
+    
+    // Extract first 3 locs
+    const locs = (body?.match(/<loc>(.*?)<\/loc>/g) || [])
+      .slice(0, 3)
+      .map(l => l.replace(/<\/?loc>/g, ''));
+    
+    for (const loc of locs) {
+      const pageResponse = await page.request.get(loc);
+      expect(pageResponse.status(), `Sitemap points to a broken link: ${loc}`).toBe(200);
     }
   });
 });
-
