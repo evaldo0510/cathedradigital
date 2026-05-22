@@ -108,15 +108,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         
         <HomeCard
           ref={logosCardRef}
-          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/5 bg-card/10 backdrop-blur-md transition-all duration-1000 rounded-premium-lg shadow-premium"
+          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/10 bg-card/20 backdrop-blur-md transition-all duration-1000 rounded-premium-lg shadow-premium"
         >
-          <div className="relative z-10 w-24 h-24 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-110 transition-transform duration-1000">
+          <div className="relative z-10 w-24 h-24 rounded-full bg-primary/[0.05] border border-primary/20 flex items-center justify-center text-primary/40 group-hover:scale-110 transition-transform duration-1000">
             <Sparkles className="w-12 h-12" strokeWidth={0.5} />
           </div>
           
           <div className="relative z-10 space-y-6 text-center max-w-2xl">
             <h3 className="text-5xl font-display font-medium text-primary tracking-tight">Logos</h3>
-            <p className="text-xl text-muted-foreground/30 leading-relaxed font-serif italic max-w-md mx-auto">
+            <p className="text-xl text-muted-foreground/60 leading-relaxed font-serif italic max-w-md mx-auto">
               "Buscai e encontrareis, batei e abrir-se-vos-á."
             </p>
           </div>
@@ -128,19 +128,20 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Busque por luz e entendimento..."
-                className="h-24 pl-20 pr-40 rounded-full border-border/10 bg-background/30 focus:bg-background transition-all text-2xl placeholder:text-muted-foreground/10 font-serif italic focus:ring-1 focus:ring-primary/5 shadow-premium"
+                className="h-24 pl-20 pr-40 rounded-full border-border/20 bg-background/50 focus:bg-background transition-all text-2xl placeholder:text-muted-foreground/40 font-serif italic focus:ring-2 focus:ring-primary/20 shadow-premium"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <MessageSquare className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 text-primary/10" />
+              <MessageSquare className="absolute left-8 top-1/2 -translate-y-1/2 w-8 h-8 text-primary/30" />
               <button 
                 type="submit"
-                className="absolute right-4 top-1/2 -translate-y-1/2 px-10 py-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-[0.3em] hover:brightness-110 transition-all flex items-center gap-4 group/btn shadow-premium"
+                className="absolute right-4 top-1/2 -translate-y-1/2 px-10 py-5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-[0.3em] hover:brightness-110 transition-all flex items-center gap-4 group/btn shadow-premium focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
               >
                 Consultar
                 <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </form>
+
         </HomeCard>
       </section>
 
