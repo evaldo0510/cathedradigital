@@ -1,17 +1,20 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { playAudit } from 'playwright-lighthouse';
+import { chromium } from '@playwright/test';
 
 /**
- * Enhanced SEO, Schema.org and Social Cards Audit for Home Page
- * Fail on critical errors, log warnings.
+ * Enhanced SEO, Schema.org, Social Cards and Lighthouse Performance Audit for Home Page
+ * Fail on critical errors or performance below threshold.
  */
 test.describe('SEO & Metadata Audit - Home Page', () => {
   const auditResults = {
     seo: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
     schema: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
     social: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
-    performance: [] as { metric: string; value: string }[],
+    performance: [] as { metric: string; value: string; score?: number }[],
+    lighthouse: {} as any,
   };
 
   test('Comprehensive SEO & Social Audit', async ({ page }) => {
@@ -144,26 +147,56 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       }
     }
 
-    // 4. Basic Performance Metrics
-    const performanceData = await page.evaluate(() => {
-      const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-      if (!entry) return null;
-      return {
-        dns: entry.domainLookupEnd - entry.domainLookupStart,
-        ttfb: entry.responseStart - entry.requestStart,
-        domReady: entry.domContentLoadedEventEnd - entry.startTime,
-        load: entry.loadEventEnd - entry.startTime,
-      };
+    // 4. Lighthouse Performance Audit
+    const browser = await chromium.launch({
+      args: ['--remote-debugging-port=9222'],
+      headless: true
     });
-
-    if (performanceData) {
-      auditResults.performance.push({ metric: 'TTFB', value: `${performanceData.ttfb.toFixed(0)}ms` });
-      auditResults.performance.push({ metric: 'DOM Ready', value: `${performanceData.domReady.toFixed(0)}ms` });
-      auditResults.performance.push({ metric: 'Total Load', value: `${performanceData.load.toFixed(0)}ms` });
+    
+    try {
+      const lighthousePage = await browser.newPage();
       
-      if (performanceData.load > 3000) {
-        auditResults.performance.push({ metric: 'Status', value: 'SLOW' });
+      const threshold = {
+        performance: 70,
+        accessibility: 80,
+        'best-practices': 80,
+        seo: 90,
+      };
+
+      const results = await playAudit({
+        page: lighthousePage,
+        thresholds: threshold,
+        port: 9222,
+        reports: {
+          formats: { html: true },
+          name: 'lighthouse-report',
+          directory: path.join(process.cwd(), 'test-results'),
+        },
+      });
+
+      if (results && results.lhr) {
+        auditResults.lighthouse = results.lhr.categories;
+        Object.keys(results.lhr.categories).forEach(key => {
+          const cat = results.lhr.categories[key];
+          const score = Math.round(cat.score * 100);
+          const status = score < (threshold[key as keyof typeof threshold] || 0) ? 'critical' : 'success';
+          
+          auditResults.performance.push({ 
+            metric: cat.title, 
+            value: `${score}%`,
+            score: score
+          });
+          
+          if (status === 'critical') {
+            auditResults.seo.push({ 
+              status: 'critical', 
+              message: `Lighthouse ${cat.title} score is ${score}%, which is below the minimum threshold of ${threshold[key as keyof typeof threshold]}%.` 
+            });
+          }
+        });
       }
+    } finally {
+      await browser.close();
     }
 
     // Generate HTML Report
@@ -183,16 +216,16 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     ].filter(i => i.status === 'warning');
 
     if (warnings.length > 0) {
-      console.log('\n--- [SEO AUDIT WARNINGS] ---');
+      console.log('\n--- [SEO & PERF AUDIT WARNINGS] ---');
       warnings.forEach(w => console.log(`⚠️  ${w.message}`));
     }
 
     if (criticalErrors.length > 0) {
-      console.error('\n--- [CRITICAL SEO ERRORS] ---');
+      console.error('\n--- [CRITICAL SEO & PERF ERRORS] ---');
       criticalErrors.forEach(e => console.error(`❌ ${e.message}`));
     }
 
-    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated HTML report.`).toBe(0);
+    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated reports.`).toBe(0);
   });
 });
 
@@ -267,15 +300,18 @@ function generateHTMLReport(results: any) {
         </div>
 
         <div class="section">
-            <h3>Performance Básica</h3>
+            <h3>Lighthouse Performance Scores</h3>
             <div class="metric-grid">
                 ${results.performance.map((p: any) => `
-                    <div class="metric-item">
+                    <div class="metric-item ${p.score && p.score < 70 ? 'status-critical' : ''}">
                         <span class="metric-value">${p.value}</span>
                         <span class="metric-label">${p.metric}</span>
                     </div>
                 `).join('')}
             </div>
+            <p style="font-size: 11px; margin-top: 15px; color: #666;">
+                * Ver relatório detalhado: <a href="lighthouse-report.html">Lighthouse Full Report</a>
+            </p>
         </div>
     </div>
 
