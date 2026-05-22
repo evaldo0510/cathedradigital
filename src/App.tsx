@@ -218,7 +218,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" className={cn(location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
+        <main id="main-content" tabIndex={-1} className={cn("outline-none", location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
