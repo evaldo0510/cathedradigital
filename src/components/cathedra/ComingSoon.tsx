@@ -104,12 +104,12 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             key={idx}
             className="flex flex-col items-center text-center gap-10 group cursor-default"
           >
-            <div className="w-20 h-20 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/10 group-hover:text-primary/30 transition-all duration-1000">
+            <div className="w-20 h-20 rounded-full bg-primary/[0.05] border border-primary/10 flex items-center justify-center text-primary/40 group-hover:text-primary/60 transition-all duration-1000">
               <item.icon className="w-8 h-8" strokeWidth={0.5} />
             </div>
             <div className="space-y-6">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/20 group-hover:text-primary/40 transition-colors duration-500">{item.label}</h3>
-              <p className="text-xs text-muted-foreground/10 leading-relaxed font-serif italic tracking-wider group-hover:text-muted-foreground/30 transition-colors duration-500">{item.description}</p>
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/40 group-hover:text-primary/60 transition-colors duration-500">{item.label}</h3>
+              <p className="text-xs text-muted-foreground/40 leading-relaxed font-serif italic tracking-wider group-hover:text-muted-foreground/60 transition-colors duration-500">{item.description}</p>
             </div>
           </div>
         ))}
@@ -125,13 +125,13 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-16 pl-16 pr-40 rounded-full border-border/10 bg-background/30 focus:bg-background transition-all font-serif italic text-base md:text-lg placeholder:text-muted-foreground/10 focus:ring-1 focus:ring-primary/5"
+                className="h-16 pl-16 pr-40 rounded-full border-border/20 bg-background/50 focus:bg-background transition-all font-serif italic text-base md:text-lg placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-primary/20"
               />
-              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10" />
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/30" />
               <button 
                 type="submit" 
                 disabled={loading}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 rounded-full bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-500"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 rounded-full bg-primary/20 text-primary text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-500 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
               >
                 {loading ? "..." : "Notificar"}
               </button>
