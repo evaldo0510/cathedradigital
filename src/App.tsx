@@ -99,6 +99,14 @@ const AppLayout: React.FC = () => {
   useRenderPerf('AppLayout', 10);
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
+  
+  useEffect(() => {
+    const handleGlobalLang = (e: any) => {
+      if (e.detail) setLang(e.detail);
+    };
+    window.addEventListener('change-lang', handleGlobalLang);
+    return () => window.removeEventListener('change-lang', handleGlobalLang);
+  }, [setLang]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -122,6 +130,12 @@ const AppLayout: React.FC = () => {
   const handleCloseSidebar = useCallback(() => setIsSidebarOpen(false), []);
   const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
+
+  useEffect(() => {
+    const handleOpenA11yGlobal = () => setShowA11ySettings(true);
+    window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
+    return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
+  }, []);
 
   const toggleSpeak = useCallback(() => {
     if (settings.totalSilence) return;
