@@ -23,9 +23,13 @@ async function runVisualTests() {
   };
 
   try {
-    // Run Playwright tests - specifically the visual and accessibility ones
-    console.log('  - Executando Auditoria Visual e de Acessibilidade...');
-    execSync('npx playwright test tests/e2e/visual.spec.ts tests/e2e/accessibility.spec.ts tests/e2e/home-seo.spec.ts', {
+    // Generate SEO assets first
+    console.log('  - Gerando assets de SEO (sitemap, robots)...');
+    execSync('bun run generate:seo', { stdio: 'inherit' });
+
+    // Run Playwright tests - specifically the visual, accessibility and SEO ones
+    console.log('  - Executando Auditoria Visual, Acessibilidade e SEO...');
+    execSync('npx playwright test tests/e2e/visual.spec.ts tests/e2e/accessibility.spec.ts tests/e2e/home-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts', {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
