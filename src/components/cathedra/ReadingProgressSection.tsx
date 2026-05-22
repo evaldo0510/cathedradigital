@@ -17,6 +17,7 @@ export const ReadingProgressSection: React.FC = () => {
 
   return (
     <div
+      id="reading-progress"
       className="group relative overflow-hidden p-12 md:p-16 lg:p-20 rounded-premium-lg border border-border/5 bg-card/5 backdrop-blur-md cursor-pointer transition-all duration-1000 shadow-premium hover:bg-card/10"
       onClick={() => lastRead.url && navigate(lastRead.url)}
     >
