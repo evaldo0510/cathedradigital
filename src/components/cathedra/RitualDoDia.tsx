@@ -184,7 +184,7 @@ const RitualDoDia: React.FC = () => {
   return (
     <div
       className={cn(
-        "relative overflow-hidden border-border/5 bg-card/5 backdrop-blur-md rounded-[3rem] shadow-premium transition-all duration-1000",
+        "relative overflow-hidden border-border/5 bg-card/5 backdrop-blur-md rounded-premium-lg shadow-premium transition-all duration-1000",
         isSilent ? 'font-serif' : ''
       )}
     >

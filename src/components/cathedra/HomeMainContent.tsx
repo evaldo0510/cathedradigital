@@ -100,7 +100,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         
         <HomeCard
           ref={logosCardRef}
-          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/5 bg-card/10 backdrop-blur-md transition-all duration-1000"
+          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/5 bg-card/10 backdrop-blur-md transition-all duration-1000 rounded-premium-lg shadow-premium"
         >
           <div className="relative z-10 w-24 h-24 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-110 transition-transform duration-1000">
             <Sparkles className="w-12 h-12" strokeWidth={0.5} />

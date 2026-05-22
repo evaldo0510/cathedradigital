@@ -24,36 +24,36 @@ export const ReadingProgressSection: React.FC = () => {
       />
 
       <div
-        className="group relative overflow-hidden p-12 md:p-16 rounded-[2.5rem] border border-border/5 bg-card/5 backdrop-blur-md cursor-pointer transition-all duration-1000 shadow-premium hover:bg-card/10"
+        className="group relative overflow-hidden p-12 md:p-16 lg:p-20 rounded-premium-lg border border-border/5 bg-card/5 backdrop-blur-md cursor-pointer transition-all duration-1000 shadow-premium hover:bg-card/10"
         onClick={() => lastRead.url && navigate(lastRead.url)}
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
-          <div className="flex items-center gap-10">
-            <div className="w-16 h-16 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/20 group-hover:scale-110 transition-all duration-1000 border border-primary/5">
-              <Clock className="w-8 h-8" strokeWidth={0.5} />
+          <div className="flex items-center gap-12">
+            <div className="w-20 h-20 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/20 group-hover:scale-110 transition-all duration-1000 border border-primary/5">
+              <Clock className="w-10 h-10" strokeWidth={0.5} />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <span className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/30">
+                <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 
                    lastRead.content_type === 'catechism' ? 'Catecismo' : 
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
                 </span>
               </div>
-              <h3 className="text-3xl font-display font-medium text-primary tracking-tight leading-tight">
+              <h3 className="text-4xl font-display font-medium text-primary tracking-tight leading-tight">
                 {lastRead.label || 'Continuar de onde parou'}
               </h3>
             </div>
           </div>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-10">
             <div className="text-right hidden sm:block">
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 group-hover:text-primary/30 transition-colors">
+              <p className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/10 group-hover:text-primary/30 transition-colors">
                 Retomar
               </p>
             </div>
-            <div className="w-14 h-14 rounded-full border border-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium">
-              <ArrowRight className="w-5 h-5" />
+            <div className="w-16 h-16 rounded-full border border-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium">
+              <ArrowRight className="w-6 h-6" />
             </div>
           </div>
         </div>
