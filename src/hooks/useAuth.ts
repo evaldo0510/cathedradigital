@@ -224,14 +224,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }, 8000);
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth?.onAuthStateChange((event, session) => {
       if (!active || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') return;
       void syncAuthState(session?.user ?? null);
     });
 
     const initSession = async (retryCount = 0) => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth?.getSession() || { data: { session: null }, error: null };
         if (!active) return;
 
         if (error) {
@@ -281,7 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
-    await supabase.auth.signOut();
+    await supabase.auth?.signOut();
     setUser(null);
     setProfile(null);
     setLoading(false);
