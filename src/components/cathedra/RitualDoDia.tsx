@@ -366,12 +366,12 @@ const RitualDoDia: React.FC = () => {
             className="text-primary/40 hover:text-primary transition-colors"
           />
           
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             {progress > 0 && (
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
+                className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/20 hover:text-primary transition-all"
                 onClick={() => {
                   setProgress(0);
                   if (user) {
@@ -383,32 +383,32 @@ const RitualDoDia: React.FC = () => {
                   }
                 }}
               >
-                Recomeçar
+                Reiniciar
               </Button>
             )}
             {progress < 100 && (
               <Button 
-                className="rounded-full bg-primary/90 hover:bg-primary text-white px-8 h-12 text-[10px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+                className="rounded-full bg-primary/90 hover:bg-primary text-white px-10 h-14 text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium hover:shadow-premium-hover transition-all"
                 onClick={() => {
                   const sections = [25, 50, 75, 100];
                   const nextProgress = sections.find(s => s > progress) || 100;
                   handleProgress(nextProgress);
                 }}
               >
-                {progress === 0 ? 'Iniciar Ritual' : 'Próximo Passo'}
-                <ArrowRight className="ml-2 w-3 h-3" />
+                {progress === 0 ? 'Iniciar' : 'Continuar'}
+                <ArrowRight className="ml-3 w-4 h-4" />
               </Button>
             )}
             {progress === 100 && (
-              <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] px-6 py-3 bg-primary/5 rounded-full">
+              <div className="flex items-center gap-3 text-primary/40 font-bold uppercase tracking-[0.5em] text-[10px] px-8 py-4 bg-primary/[0.02] rounded-full border border-primary/5">
                 <CheckCircle2 className="w-4 h-4" />
-                Concluído por hoje
+                Concluído
               </div>
             )}
           </div>
         </div>
       </div>
-    </HomeCard>
+    </div>
   );
 };
 
