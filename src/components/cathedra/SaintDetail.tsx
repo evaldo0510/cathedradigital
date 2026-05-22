@@ -5,10 +5,8 @@ import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import ShareButton from './ShareButton';
 import DocumentViewer from './DocumentViewer';
-import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
 import { type Saint } from '@/data/saints';
-
 import { AppRoute } from '@/types';
 import { BookOpen, Quote, Shield, Info, Heart, Lightbulb, MessageSquare, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -87,7 +85,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       initial={{ scale: 0.9, y: 20 }}
       animate={{ scale: 1, y: 0 }}
       exit={{ scale: 0.9, y: 20 }}
-      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-premium-hover border border-border flex flex-col md:flex-row relative"
+      className="bg-card rounded-[2.5rem] max-w-5xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-border flex flex-col md:flex-row relative"
       onClick={e => e.stopPropagation()}
     >
       <Button 
@@ -117,7 +115,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {/* Top Info Strip */}
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+            <div className="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Calendar className="w-5 h-5" />
             </div>
             <div>
@@ -128,7 +126,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           {saint.born && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium bg-secondary/30 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-2xl bg-secondary/30 flex items-center justify-center text-primary">
                 <Icons.User className="w-5 h-5" />
               </div>
               <div>
@@ -140,7 +138,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
           {saint.died && (
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-premium bg-destructive/10 flex items-center justify-center text-destructive">
+              <div className="w-10 h-10 rounded-2xl bg-destructive/10 flex items-center justify-center text-destructive">
                 <Icons.XCircle className="w-5 h-5" />
               </div>
               <div>
@@ -151,7 +149,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           )}
 
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
+            <div className="w-10 h-10 rounded-2xl bg-secondary flex items-center justify-center text-secondary-foreground">
               <Shield className="w-5 h-5" />
             </div>
             <div>
@@ -275,9 +273,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {saint.works.map((work, idx) => (
-                <div key={idx} className="p-4 bg-card border border-border rounded-premium flex items-center justify-between group hover:border-primary/30 transition-all">
+                <div key={idx} className="p-4 bg-card border border-border rounded-2xl flex items-center justify-between group hover:border-primary/30 transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="w-8 h-8 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                       <Icons.Book className="w-4 h-4" />
                     </div>
                     <div>
@@ -301,36 +299,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </section>
         )}
 
-        {/* Relatio: Intelligent Contextual Connections */}
-        <Relatio 
-          context={{
-            type: 'saint',
-            id: saint.id,
-            tags: [...(saint.virtues || []), ...(saint.patronOf || []), saint.name, 'Saints', 'Espiritualidade']
-          }}
-          onNavigateToBible={(abbr, ch) => {
-            navigate(`/bible?book=${abbr}&chapter=${ch}`);
-            onClose();
-          }}
-          onNavigateToCIC={(p) => {
-            navigate(`/catechism?p=${p}`);
-            onClose();
-          }}
-          onNavigateToDoc={(docId) => {
-            navigate(`/magisterium/${docId}`);
-            onClose();
-          }}
-        />
-
         {/* Suggested Journey */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-soft"
+          className="bg-primary/5 rounded-[2rem] p-6 md:p-8 border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-6 group hover:bg-primary/10 transition-all shadow-sm"
         >
           <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-premium bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+            <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
               <Icons.Route className="w-7 h-7" />
             </div>
             <div>
@@ -346,12 +323,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               navigate(`/jornadas/${suggestedJourney.id}`);
               onClose();
             }}
-            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-premium shadow-primary/20 group/btn transition-all"
+            className="h-14 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-tiny tracking-[0.2em] rounded-full shadow-lg shadow-primary/20 group/btn transition-all"
           >
             Começar Jornada <Icons.ChevronRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
-
 
       </div>
     </motion.div>

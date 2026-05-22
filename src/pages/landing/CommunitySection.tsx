@@ -32,7 +32,7 @@ const CommunitySection = () => {
 
   return (
     <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-premium pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-2xl pointer-events-none" />
       
       <div className="max-w-7xl mx-auto space-y-20 relative z-10">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
@@ -79,10 +79,10 @@ const CommunitySection = () => {
               viewport={{ once: true }}
               custom={i + 3}
               whileHover={{ y: -10 }}
-              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-soft hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
+              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-6">
-                <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
                 <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-2 py-1 rounded-full">
@@ -106,7 +106,7 @@ const CommunitySection = () => {
         >
           <div className="flex -space-x-4 justify-center mb-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="w-12 h-12 rounded-premium border-4 border-background bg-muted overflow-hidden">
+              <div key={i} className="w-12 h-12 rounded-2xl border-4 border-background bg-muted overflow-hidden">
                 <img 
                   src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 20}`} 
                   alt="Avatar de membro"
@@ -114,7 +114,7 @@ const CommunitySection = () => {
                 />
               </div>
             ))}
-            <div className="w-12 h-12 rounded-premium border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
+            <div className="w-12 h-12 rounded-2xl border-4 border-background bg-primary flex items-center justify-center text-white text-premium-tiny font-bold">
               +1k
             </div>
           </div>

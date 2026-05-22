@@ -20,9 +20,9 @@
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 11% / 0.05;
-    --input: 222 47% 11% / 0.05;
-    --ring: 222 47% 11% / 0.1;
+    --border: 222 47% 11% / 0.08;
+    --input: 222 47% 11% / 0.08;
+    --ring: 222 47% 11%;
     --radius: 0.75rem;
     --sidebar-background: 45 42% 98%;
     --sidebar-foreground: 222 47% 11%;
@@ -75,8 +75,8 @@
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 0%;
     --secondary-foreground: 0 0% 100%;
-    --border: 0 0% 0% / 0.2;
-    --input: 0 0% 0% / 0.1;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
     --ring: 0 0% 0%;
     --muted-foreground: 0 0% 10%;
     --shadow-premium: none;
@@ -97,18 +97,6 @@
     --ring: 60 100% 50%;
     --muted-foreground: 0 0% 90%;
   }
-
-  /* Spacing and Contrast Settings */
-  [data-line-spacing="tight"] .reader-text { line-height: 1.4 !important; }
-  [data-line-spacing="normal"] .reader-text { line-height: 1.85 !important; }
-  [data-line-spacing="wide"] .reader-text { line-height: 2.2 !important; }
-
-  [data-letter-spacing="tight"] .reader-text { letter-spacing: -0.02em !important; }
-  [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
-  [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
-
-  .contrast-soft .reader-text { filter: contrast(0.9) brightness(1.05); }
-  .contrast-high .reader-text { filter: contrast(1.2) saturate(1.1); }
 }
 
 @layer base {
@@ -150,86 +138,9 @@
       font-size: 16px;
     }
     @screen xl {
-      font-size: 17px; /* Slightly larger for clarity */
+      font-size: 16.5px;
     }
   }
-
-  /* Enhanced Visual Silence */
-  .visual-silence {
-    --card-shadow: none;
-    --card-shadow-hover: none;
-  }
-
-  .visual-silence .non-essential,
-  .visual-silence .floating-action-button,
-  .visual-silence .secondary-nav,
-  .visual-silence .promo-banner {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 1s ease !important;
-  }
-
-  .contemplative-mode {
-    filter: sepia(0.1) contrast(0.95) brightness(1.02);
-    background-color: #FDFBF7 !important; /* Even softer cream */
-  }
-
-  .contemplative-mode .reader-text {
-    @apply text-foreground/90;
-    letter-spacing: 0.01em;
-  }
-
-  .total-silence * {
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  .total-silence .animate-pulse,
-  .total-silence .animate-spin,
-  .total-silence .animate-bounce,
-  .total-silence .animate-ping,
-  .total-silence [class*="animate-"],
-  .total-silence .skeleton,
-  .total-silence .loading-spinner,
-  .total-silence .loading-overlay {
-    display: none !important;
-  }
-  
-  .total-silence .sacred-skeleton,
-  .total-silence .home-skeleton,
-  .total-silence [data-sidebar="menu-skeleton"],
-  .total-silence [data-testid*="skeleton"],
-  .total-silence [class*="Skeleton"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  /* Audio exclusion in total silence */
-  .total-silence .audio-control,
-  .total-silence .audio-player,
-  .total-silence button:has(.lucide-headphones),
-  .total-silence button:has(.lucide-volume-2),
-  .total-silence button:has(.lucide-volume-x),
-  .total-silence .audio-button-container,
-  .total-silence [data-audio-player],
-  .total-silence [class*="AudioContentPlayer"] {
-    display: none !important;
-  }
-
-  /* Ensure essential controls are still visible and layout is stable */
-  .total-silence .essential-control {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Prevent layout collapse when loaders are hidden */
-  .total-silence .min-h-screen {
-    min-height: 100vh !important;
-  }
-
 
   input, select, textarea {
     font-size: 16px !important;
@@ -264,7 +175,6 @@
   h1, h2, h3, h4, h5, h6 {
     @apply tracking-tight font-display text-primary;
     text-wrap: balance;
-    letter-spacing: -0.01em;
   }
 
   h1 { 
@@ -325,15 +235,7 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/20 max-w-[70ch] mx-auto text-foreground;
-    font-variant-numeric: oldstyle-nums;
-    font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
-    text-rendering: optimizeLegibility;
-  }
-
-  /* Specific Reader Container */
-  .reader-container {
-    @apply w-full max-w-[85ch] mx-auto px-6 py-12 md:py-24;
+    @apply selection:bg-primary/30 max-w-[70ch] mx-auto text-foreground;
   }
 }
 
@@ -395,76 +297,61 @@
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
-  /* Design System Tokens - Unified Source of Truth */
-  :root {
-    --card-radius: 2rem;
-    --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
-    --card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
-    --btn-radius: 9999px;
-    --layout-max-width: 800px; /* Reduced for better reading comfort */
-    --transition-premium: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-fast: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/5 shadow-premium transition-all relative overflow-hidden;
-    border-radius: var(--card-radius);
-    transition: all var(--transition-premium);
+    @apply bg-card border border-border/40 rounded-premium shadow-premium transition-all duration-500 relative overflow-hidden;
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:border-primary/10 active:scale-[0.995];
-    box-shadow: var(--card-shadow);
-  }
-
-  .premium-card-interactive:hover {
-    box-shadow: var(--card-shadow-hover);
+    @apply premium-card cursor-pointer hover:shadow-premium-hover hover:border-primary/20 hover:-translate-y-1.5 active:scale-[0.985] active:shadow-premium-active active:translate-y-0;
   }
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-20;
+    @apply premium-card p-10 sm:p-14 lg:p-16;
   }
 
-  /* Standardized Vertical Rhythm - More spacious for monastic feel */
+  /* Standard card shadow and radius */
+  .card-standard {
+    @apply premium-card;
+  }
+
+  /* Section Spacing - Standardized Vertical Rhythm */
   .section-spacing {
-    @apply py-20 sm:py-28 md:py-36 lg:py-48; /* Slightly tighter for better rhythm */
+    @apply py-24 sm:py-32 md:py-40 lg:py-64;
   }
 
   .stack-spacing {
-    @apply space-y-10 md:space-y-12 lg:space-y-16;
+    @apply space-y-10 md:space-y-14 lg:space-y-20;
   }
   
   .premium-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 lg:gap-16;
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-16;
   }
 
   .premium-header {
-    @apply text-center space-y-6 mb-16 md:mb-24 max-w-4xl mx-auto;
+    @apply text-center space-y-8 mb-20 md:mb-32 max-w-4xl mx-auto;
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
+    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-border/30 rounded-full text-[10px] font-bold uppercase tracking-[0.45em] text-foreground/40 transition-all hover:bg-primary/[0.06] hover:text-foreground/60;
   }
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 h-14 font-bold uppercase tracking-[0.25em] text-[10px] flex items-center justify-center gap-4 active:scale-[0.96] disabled:opacity-30 disabled:cursor-not-allowed;
-    border-radius: var(--btn-radius);
-    transition: all var(--transition-fast);
+    @apply relative overflow-hidden px-10 py-5 rounded-full font-bold uppercase tracking-[0.25em] text-[11px] transition-all duration-500 flex items-center justify-center gap-4 shadow-soft active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover;
+    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover hover:-translate-y-1 hover:brightness-110 active:translate-y-0;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover;
+    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover hover:-translate-y-1 active:translate-y-0;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-border/20 text-primary hover:border-primary/10 hover:bg-primary/[0.005];
+    @apply btn-premium bg-transparent border border-border/60 text-primary hover:border-primary/30 hover:bg-primary/[0.02] hover:-translate-y-1 active:translate-y-0 shadow-none hover:shadow-soft;
   }
 }
 
@@ -487,27 +374,17 @@
 
 /* Page transitions */
 .page-enter {
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.reduce-animations .page-enter {
-  animation: fadeIn 0.1s linear forwards;
-}
-
-.reduce-animations * {
-  transition-duration: 0.1s !important;
-  animation-duration: 0.1s !important;
-  animation-iteration-count: 1 !important;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse-slow {
-  0%, 100% { opacity: 0.6; transform: scale(1); filter: blur(20px); }
-  50% { opacity: 0.3; transform: scale(1.1); filter: blur(40px); }
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
 }
 
 .animate-pulse-slow {
@@ -520,262 +397,43 @@
   100% { transform: translate(0, 0) rotate(0deg) scale(1); }
 }
 
-/* --- Reading Themes --- */
-.reading-theme-paper {
-  --background: 45 42% 96%;
-  --foreground: 222 47% 11%;
-  --card: 45 42% 98%;
-  --primary: 222 47% 11%;
+/* Standardize reading mode to project colors */
+.reading-night {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 214 68% 14%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 48% 60%;
+  --secondary-foreground: 214 68% 14%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 40 48% 60%;
+  --accent-foreground: 214 68% 14%;
+  --border: 214 68% 14% / 0.1;
+  --input: 214 68% 14% / 0.1;
+  --ring: 214 68% 14%;
 }
 
-.reading-theme-sepia {
-  --background: 35 30% 88%;
-  --foreground: 25 20% 15%;
-  --card: 35 30% 90%;
-  --primary: 25 20% 20%;
-  --muted-foreground: 25 15% 40%;
-  --border: 25 15% 15% / 0.1;
+.reading-night body,
+.reading-night {
+  transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
 }
 
-.reading-theme-dark {
-  --background: 222 47% 4%;
-  --foreground: 45 42% 96%;
-  --card: 222 47% 6%;
-  --primary: 45 80% 65%;
+.reading-night .reader-text {
+  color: #1A1A1A;
+  line-height: 2;
+  letter-spacing: 0.01em;
 }
-
-.reading-theme-night {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 70%;
-  --card: 0 0% 5%;
-  --primary: 0 0% 90%;
-  --muted-foreground: 0 0% 40%;
-  --border: 0 0% 100% / 0.1;
-}
-
-/* --- Visual Silence & Contemplation --- */
-.visual-silence .sidebar-trigger,
-.visual-silence .bottom-nav,
-.visual-silence .app-header-actions,
-.visual-silence .back-to-theme-banner,
-.visual-silence .floating-action-button {
-  opacity: 0.1;
-  transition: opacity 0.8s ease;
-}
-
-.visual-silence .sidebar-trigger:hover,
-.visual-silence .bottom-nav:hover,
-.visual-silence .app-header-actions:hover,
-.visual-silence .back-to-theme-banner:hover,
-.visual-silence .floating-action-button:hover {
-  opacity: 1;
-}
-
-/* Focused Reading Mode - Hides everything except content */
-.full-screen-mode .app-header,
-.full-screen-mode .bottom-nav,
-.full-screen-mode .sidebar,
-.full-screen-mode .cathedral-footer,
-.full-screen-mode .sidebar-trigger {
-  display: none !important;
-}
-
-.full-screen-mode main {
-  padding-top: 2rem !important;
-  padding-bottom: 4rem !important;
-}
-
-.full-screen-mode .reading-controls-floating {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-.full-screen-mode:hover .reading-controls-floating {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.visual-silence .hero-decorative-elements,
-.visual-silence .coming-soon-badge,
-.visual-silence .footer-quote {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Reduce Animations */
-.reduce-animations *,
-.reduce-animations *::before,
-.reduce-animations *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
-}
-
-/* Micro-rhythms for contemplation */
-.monastic-entry {
-  animation: monasticFadeIn 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes monasticFadeIn {
-  0% { opacity: 0; filter: blur(10px); }
-  30% { opacity: 0.1; filter: blur(5px); }
-  100% { opacity: 1; filter: blur(0); }
-}
-
-/* Contemplative Mode */
-.contemplative-mode {
-  filter: sepia(0.08) contrast(0.96) brightness(1.02);
-}
-
-.contemplative-mode .shadow-premium,
-.contemplative-mode .shadow-premium-hover {
-  box-shadow: 0 8px 30px rgba(0,0,0,0.01) !important;
-}
-
-
-/* Monastic Sanctuary Layer */
-.monastic-sanctuary {
-  @apply min-h-screen bg-background text-foreground selection:bg-primary/10;
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(var(--primary) / 0.02) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(var(--secondary) / 0.02) 0, transparent 50%);
-}
-
-.monastic-glass {
-  @apply bg-background/40 backdrop-blur-3xl border border-white/5 dark:border-white/5;
-}
-
-.monastic-text {
-  @apply font-serif tracking-tight leading-relaxed;
-}
-
-.monastic-label {
-  @apply text-[9px] font-black uppercase tracking-[0.8em] text-primary/20;
-}
-
-.contemplative-mode .btn-premium {
-  box-shadow: none !important;
-}
-
-
-/* Typography Overrides */
-.font-size-small .reader-text { font-size: 0.875rem; }
-.font-size-medium .reader-text { font-size: 1.125rem; }
-.font-size-large .reader-text { font-size: 1.375rem; }
-.font-size-extra-large .reader-text { font-size: 1.625rem; }
-
-.font-family-serif .reader-text { font-family: 'Merriweather', serif; }
-.font-family-sans .reader-text { font-family: 'Inter', sans-serif; }
-
-.line-height-snug .reader-text { line-height: 1.5; }
-.line-height-normal .reader-text { line-height: 1.7; }
-.line-height-relaxed .reader-text { line-height: 2.0; }
-
-.reader-container {
-  @apply max-w-[72ch] mx-auto px-4 sm:px-8 py-10 md:py-20;
-}
-
-.reader-section-header {
-  @apply mb-12 border-b border-border/20 pb-8;
-}
-
-.reader-navigation-aside {
-  @apply hidden xl:flex flex-col gap-4 sticky top-32 w-64 -ml-72 self-start;
-}
-
-
-.line-height-snug .reader-text { line-height: 1.4; }
-.line-height-normal .reader-text { line-height: 1.7; }
-.line-height-relaxed .reader-text { line-height: 2.1; }
 
 @keyframes ripple-expand {
   to {
     transform: scale(1);
     opacity: 0;
-  }
-}
-
-/* --- Auto Focus Highlight --- */
-.auto-focused-title {
-  @apply ring-4 ring-primary/20 rounded-lg transition-all duration-1000;
-  background: linear-gradient(to right, hsl(var(--primary) / 0.05), transparent);
-}
-
-/* --- Full Screen Mode --- */
-.full-screen-mode header,
-.full-screen-mode footer,
-.full-screen-mode .back-to-theme-banner,
-.full-screen-mode .sidebar-navigation,
-.full-screen-mode .bottom-nav,
-.full-screen-mode .reader-navigation-aside,
-.full-screen-mode aside:not(.logos-ai-aside) {
-  display: none !important;
-}
-
-.full-screen-mode .reader-container {
-  max-width: 80ch;
-  margin: 0 auto;
-  border: none;
-  box-shadow: none;
-  background: transparent;
-}
-
-.full-screen-mode .reader-text {
-  padding-top: 5vh;
-  padding-bottom: 20vh;
-}
-
-/* --- Premium Print --- */
-@media print {
-  header, footer, nav, .bottom-nav, .no-print, .reader-navigation-aside, .logos-ai-chat, .floating-action-button, .app-header-actions, .premium-tag, .reader-navigation-aside, .reading-controls, button:not(.print-include) {
-    display: none !important;
-  }
-  
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  .reader-container {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-  
-  .reader-text {
-    font-size: 12pt !important;
-    line-height: 1.6 !important;
-    color: black !important;
-    padding: 0 !important;
-  }
-
-  h1, h2, h3 {
-    color: #0F172A !important;
-    page-break-after: avoid;
-  }
-
-  /* Show notes only when requested */
-  .notes-panel-print {
-    display: none;
-  }
-  
-  .print-with-notes .notes-panel-print {
-    display: block !important;
-    margin: 10pt 0 20pt 20pt !important;
-    padding: 10pt !important;
-    border-left: 2pt solid #D4AF37 !important;
-    font-style: italic !important;
-    background: #F9F9F9 !important;
-    page-break-inside: avoid;
-  }
-
-  p {
-    orphans: 3;
-    widows: 3;
   }
 }

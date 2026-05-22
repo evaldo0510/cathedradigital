@@ -97,7 +97,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row items-start gap-5">
-            <div className="w-16 h-16 rounded-premium bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div className="flex-1 min-w-0 space-y-2">
@@ -194,7 +194,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
           </CardHeader>
           <CardContent className="space-y-3">
             {journalEntries.map((entry: any) => (
-              <div key={entry.id} className="p-3 rounded-premium bg-muted/30 border border-border/30">
+              <div key={entry.id} className="p-3 rounded-2xl bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
                   {entry.mood && <Badge variant="secondary" className="text-premium-tiny">{entry.mood}</Badge>}

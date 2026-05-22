@@ -54,11 +54,11 @@ const FeedbackWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-full p-6 overflow-hidden"
+            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-2xl rounded-full p-6 overflow-hidden"
           >
             {submitted ? (
               <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
                   <Send className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-2xl font-bold uppercase tracking-widest text-premium-tiny min-w-0"
       >
         <MessageSquare className="w-4 h-4 shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

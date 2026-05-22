@@ -80,61 +80,36 @@ export const useDashboardData = (user: User | null) => {
     staleTime: 1000 * 60 * 60, // 1 hour cache
   });
 
-  // Next Up (Enhanced for Continuity)
+  // Next Up
   const nextUpQuery = useQuery({
     queryKey: ['next-up', userId],
     queryFn: async () => {
       if (!userId) return null;
       
-      const [lastBible, lastCatechism, lastJourney, lastReflection, lastJournal, history, lastRead] = await Promise.all([
+      const [lastBible, lastCatechism, lastJourney] = await Promise.all([
         (supabase as any).from('bible_chapters_read').select('book_abbr, chapter').eq('user_id', userId).order('read_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('catechism_paragraphs_read').select('paragraph').eq('user_id', userId).order('read_at', { ascending: false }).limit(1).maybeSingle(),
         supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId).order('completed_at', { ascending: false }).limit(1).maybeSingle(),
-        supabase.from('reading_reflections').select('content, reading_type, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
-        supabase.from('spiritual_journal').select('content, mood, created_at').eq('user_id', userId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
-        supabase.from('user_history').select('*').eq('user_id', userId).order('visited_at', { ascending: false }).limit(5),
-        supabase.from('reading_marks').select('*').eq('user_id', userId).eq('is_last_read', true).order('updated_at', { ascending: false }).limit(1).maybeSingle(),
       ]);
-
-      const results: any = {
-        history: history.data || []
-      };
-
-      if (lastRead.data) {
-        results.primaryResume = {
-          type: lastRead.data.content_type,
-          label: lastRead.data.label,
-          route: lastRead.data.url,
-          subtitle: 'Retomar de onde parei'
-        };
-      }
 
       if (lastJourney.data) {
         const { data: steps } = await supabase.from('journey_steps').select('id, title').eq('journey_id', lastJourney.data.journey_id).order('step_order', { ascending: true });
         const currentIndex = steps?.findIndex(s => s.id === lastJourney.data.step_id) ?? -1;
         if (steps && currentIndex !== -1 && currentIndex < steps.length - 1) {
           const next = steps[currentIndex + 1];
-          results.nextJourney = { type: 'journey', label: next.title, route: `/jornadas/${lastJourney.data.journey_id}/step?step=${next.id}`, subtitle: 'Próxima Etapa da Jornada' };
+          return { type: 'journey', label: next.title, route: `/jornadas/${lastJourney.data.journey_id}/step?step=${next.id}`, subtitle: 'Próxima Etapa da Jornada' };
         }
       }
 
       if (lastBible.data) {
-        results.nextBible = { type: 'bible', label: `${lastBible.data.book_abbr} ${lastBible.data.chapter + 1}`, route: `/bible?book=${lastBible.data.book_abbr}&ch=${lastBible.data.chapter + 1}`, subtitle: 'Continuar Leitura da Bíblia', lastBible: lastBible.data };
+        return { type: 'bible', label: `${lastBible.data.book_abbr} ${lastBible.data.chapter + 1}`, route: `/bible?book=${lastBible.data.book_abbr}&ch=${lastBible.data.chapter + 1}`, subtitle: 'Continuar Leitura da Bíblia', lastBible: lastBible.data };
       }
 
       if (lastCatechism.data) {
-        results.nextCatechism = { type: 'catechism', label: `§${lastCatechism.data.paragraph + 1}`, route: `/catechism?p=${lastCatechism.data.paragraph + 1}`, subtitle: 'Continuar Estudo do Catecismo' };
+        return { type: 'catechism', label: `§${lastCatechism.data.paragraph + 1}`, route: `/catechism?p=${lastCatechism.data.paragraph + 1}`, subtitle: 'Continuar Estudo do Catecismo' };
       }
 
-      if (lastReflection.data) {
-        results.lastReflection = { type: 'reflection', content: lastReflection.data.content, date: lastReflection.data.created_at, readingType: lastReflection.data.reading_type };
-      }
-
-      if (lastJournal.data) {
-        results.lastJournal = { type: 'journal', content: lastJournal.data.content, mood: lastJournal.data.mood, date: lastJournal.data.created_at };
-      }
-
-      return results;
+      return null;
     },
     enabled: !!userId,
   });

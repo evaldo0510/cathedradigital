@@ -34,7 +34,7 @@ const TestimonialsSection = () => {
               </p>
 
               <div className="pt-8 border-t border-border/10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
+                <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
                   {t.avatar}
                 </div>
                 <div>

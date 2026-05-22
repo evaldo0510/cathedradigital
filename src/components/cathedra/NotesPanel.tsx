@@ -5,7 +5,7 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useAuth } from '@/hooks/useAuth';
 
 interface NotesPanelProps {
-  contentType: 'magisterium' | 'catechism' | 'bible';
+  contentType: 'magisterium' | 'catechism';
   contentId: string;
   contentLabel?: string;
 }
@@ -32,11 +32,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
 
   const handleSave = async () => {
     if (!newNote.trim()) return;
-    await addNote(contentId, newNote, selectedColor, {
-      book_abbr: contentType === 'bible' ? contentId : undefined,
-      chapter: contentType === 'bible' ? parseInt(contentId.split('_')[1] || '0') : undefined,
-      paragraph: contentType === 'catechism' ? parseInt(contentId) : undefined,
-    });
+    await addNote(contentId, newNote, selectedColor);
     setNewNote('');
   };
 
@@ -65,7 +61,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-4 space-y-3">
+        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl z-50 p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}
@@ -153,16 +149,6 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           {!loading && notes.length === 0 && (
             <p className="text-xs text-muted-foreground italic text-center py-2">Nenhuma anotação ainda.</p>
           )}
-        </div>
-      )}
-      {notes.length > 0 && (
-        <div className="notes-panel-print hidden">
-          {notes.map(note => (
-            <div key={note.id} className="mb-2">
-              <span className="text-[8pt] text-gray-500">{new Date(note.created_at).toLocaleDateString()} — </span>
-              {note.note_text}
-            </div>
-          ))}
         </div>
       )}
     </div>

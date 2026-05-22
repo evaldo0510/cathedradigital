@@ -104,66 +104,6 @@ const DesignSystemGuide: React.FC = () => {
           </div>
         </section>
 
-        {/* Layout & Spacing Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Layout & Spacing</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <CathedraCard padding="lg" className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Containers & Grids</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
-                  .app-container (max-width: 1280px)
-                </div>
-                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
-                  .premium-grid (gap-14)
-                </div>
-                <div className="p-4 bg-muted/10 rounded-premium-sm border border-dashed border-border/40 flex items-center justify-center text-[10px] font-mono">
-                  .responsive-grid (gap-12)
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">O sistema utiliza um grid de 1280px centralizado com gutters progressivos de 1rem a 4rem.</p>
-            </CathedraCard>
-
-            <CathedraCard padding="lg" className="space-y-8">
-              <h3 className="text-xl font-serif font-bold text-primary">Ritmo Vertical</h3>
-              <div className="space-y-4">
-                <div className="h-20 bg-primary/5 rounded-premium-sm border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
-                  .section-spacing (py-56)
-                </div>
-                <div className="h-10 bg-primary/5 rounded-premium-sm border border-dashed border-primary/20 flex items-center justify-center text-[10px] font-mono">
-                  .stack-spacing (space-y-16)
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">O silêncio visual é mantido através de grandes áreas de respiro vertical entre seções principais.</p>
-            </CathedraCard>
-          </div>
-        </section>
-
-        {/* Audit Progress Section */}
-        <section className="space-y-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px flex-1 bg-border/40" />
-            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Relatório de Conformidade</h2>
-            <div className="h-px flex-1 bg-border/40" />
-          </div>
-
-          <CathedraCard padding="xl" variant="glass" className="text-center space-y-6">
-            <div className="inline-flex p-4 rounded-full bg-green-500/10 text-green-500 mb-4">
-              <Icons.ShieldCheck className="w-8 h-8" />
-            </div>
-            <h3 className="text-2xl font-serif">O seu ecossistema está unificado</h3>
-            <p className="max-w-xl mx-auto opacity-70">A auditoria visual automática varre o código em tempo real para garantir que nenhum componente fuja dos padrões premium estabelecidos.</p>
-            <CathedraButton variant="primary" onClick={() => window.location.href='/visual-audit'}>
-              Ver Auditoria Completa
-            </CathedraButton>
-          </CathedraCard>
-        </section>
-
         {/* Checklist Auditoria */}
         <section className="space-y-12 pb-20">
           <div className="flex items-center gap-6">
@@ -173,22 +113,22 @@ const DesignSystemGuide: React.FC = () => {
           </div>
 
           <CathedraCard padding="lg" className="bg-secondary/5 border-secondary/20">
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 font-serif">
+            <ul className="space-y-4 font-serif">
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p className="text-sm"><strong>Cards:</strong> Todos os containers devem usar <code>CathedraCard</code> ou classes <code>rounded-premium shadow-premium</code>.</p>
+                <p><strong>Cards:</strong> Todos os containers devem usar <code>CathedraCard</code> ou classes <code>rounded-premium shadow-premium</code>.</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p className="text-sm"><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>CathedraButton</code> (ou <code>HomeButton</code>).</p>
+                <p><strong>Botões:</strong> Substituir <code>Button</code> do shadcn por <code>CathedraButton</code> (ou <code>HomeButton</code> que é o alias compatível).</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p className="text-sm"><strong>Grids:</strong> Manter <code>gap-8 md:gap-12 lg:gap-16</code> em listagens e <code>stack-spacing</code> para seções verticais.</p>
+                <p><strong>Grids:</strong> Manter <code>gap-8 md:gap-12 lg:gap-16</code> em listagens e <code>stack-spacing</code> para seções verticais.</p>
               </li>
               <li className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-1">✓</div>
-                <p className="text-sm"><strong>Sombras:</strong> Nunca usar <code>shadow-md/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
+                <p><strong>Sombras:</strong> Nunca usar <code>shadow-md/lg/xl</code> nativos; usar <code>shadow-premium</code> ou <code>shadow-soft</code>.</p>
               </li>
             </ul>
           </CathedraCard>

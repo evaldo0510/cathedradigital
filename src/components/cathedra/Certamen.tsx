@@ -135,8 +135,8 @@ const Certamen: React.FC = () => {
     const pct = Math.round((score / (answered || 1)) * 100);
     return (
       <div className="max-w-2xl mx-auto space-y-8 p-4">
-        <div className="bg-card border border-border rounded-premium p-10 text-center space-y-6 shadow-premium-hover">
-          <div className="w-20 h-20 rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
+        <div className="bg-card border border-border rounded-2xl p-10 text-center space-y-6 shadow-xl">
+          <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-10 h-10" /> : pct >= 50 ? <BookOpen className="w-10 h-10" /> : <Heart className="w-10 h-10" />}
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
@@ -153,7 +153,7 @@ const Certamen: React.FC = () => {
               <RotateCcw className="w-4 h-4" />
               Tentar Novamente
             </Button>
-            <Button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-premium shadow-primary/20">
+            <Button onClick={shareResult} className="px-8 py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
               <Share2 className="w-4 h-4" />
               Compartilhar Resultado
             </Button>
@@ -168,7 +168,7 @@ const Certamen: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-8 p-4">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
           <Icons.Star className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
@@ -179,7 +179,7 @@ const Certamen: React.FC = () => {
       <div className="flex flex-wrap gap-2 justify-center">
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => { setCategory(cat); restart(); }}
-            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-premium scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-md scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
             {cat}
           </Button>
         ))}
@@ -187,7 +187,7 @@ const Certamen: React.FC = () => {
 
       <div className="flex items-center justify-between text-sm px-2">
         <span className="text-muted-foreground font-bold">Pergunta {currentIndex + 1}/{filtered.length}</span>
-        <div className="h-2 flex-1 mx-4 bg-muted rounded-premium overflow-hidden">
+        <div className="h-2 flex-1 mx-4 bg-muted rounded-2xl overflow-hidden">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${((currentIndex + 1) / filtered.length) * 100}%` }}
@@ -197,7 +197,7 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-8 space-y-6 shadow-soft">
+      <div className="bg-card border border-border rounded-2xl p-8 space-y-6 shadow-sm">
         <span className="text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-1 rounded">{question.category}</span>
         <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 

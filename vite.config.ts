@@ -16,35 +16,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
-    {
-      name: 'seo-headers',
-      configureServer(server: any) {
-        server.middlewares.use((req: any, res: any, next: any) => {
-          if (req.url === '/sitemap.xml') {
-            res.setHeader('Content-Type', 'application/xml');
-            res.setHeader('Cache-Control', 'public, max-age=3600');
-          }
-          if (req.url === '/robots.txt') {
-            res.setHeader('Content-Type', 'text/plain');
-            res.setHeader('Cache-Control', 'public, max-age=3600');
-          }
-          next();
-        });
-      },
-      configurePreviewServer(server: any) {
-        server.middlewares.use((req: any, res: any, next: any) => {
-          if (req.url === '/sitemap.xml') {
-            res.setHeader('Content-Type', 'application/xml');
-            res.setHeader('Cache-Control', 'public, max-age=3600');
-          }
-          if (req.url === '/robots.txt') {
-            res.setHeader('Content-Type', 'text/plain');
-            res.setHeader('Cache-Control', 'public, max-age=3600');
-          }
-          next();
-        });
-      }
-    },
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',

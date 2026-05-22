@@ -269,7 +269,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-premium p-6 space-y-3 text-center">
+          <div className="bg-card border border-primary/20 rounded-2xl p-6 space-y-3 text-center">
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
@@ -298,7 +298,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
           </div>
           
           <div className="space-y-2 mb-8">
-            <div className="w-full h-1 bg-muted rounded-premium overflow-hidden">
+            <div className="w-full h-1 bg-muted rounded-2xl overflow-hidden">
               <motion.div 
                 className="h-full bg-primary"
                 initial={{ width: 0 }}
@@ -324,7 +324,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                     onClick={() => handleDiagAnswer(opt.value)}
                     className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
                   >
-                    <div className="p-3 rounded-premium bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="p-3 rounded-2xl bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {opt.icon}
                     </div>
                     <span className="font-bold text-foreground">{opt.label}</span>
@@ -377,7 +377,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               }`}
             />
           ))}
-          <div className="w-2.5 h-2.5 rounded-premium bg-muted-foreground/30" />
+          <div className="w-2.5 h-2.5 rounded-2xl bg-muted-foreground/30" />
         </div>
 
         <div className="flex items-center justify-between">

@@ -39,7 +39,6 @@ interface TagBubbleProps {
   isSuggested?: boolean;
   tabIndex?: number;
   onKeyDown?: (e: React.KeyboardEvent) => void;
-  onClick?: (e: React.MouseEvent) => void;
   className?: string;
   profileId?: ProfileId | null;
   navigateOnClick?: boolean;
@@ -47,9 +46,7 @@ interface TagBubbleProps {
   size?: 'xs' | 'sm' | 'md';
 }
 
-
-export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, onClick, className, profileId, navigateOnClick, priorityGroup, size }) => {
-
+export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, tabIndex, onKeyDown, className, profileId, navigateOnClick, priorityGroup, size }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -58,55 +55,6 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [errorDetails, setErrorDetails] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<{ startTime: number; endTime?: number; source?: 'supabase' | 'ia' | 'both' }>({ startTime: 0 });
-  
-  // Navigation stack for context-to-context breadcrumbs
-  const [navHistory, setNavHistory] = useState<Tag[]>([tag]);
-
-  const currentTag = navHistory[navHistory.length - 1];
-
-  const fetchContentForTag = async (targetTag: Tag) => {
-    const startTime = performance.now();
-    setMetrics({ startTime });
-    setStatus('loading');
-    setErrorDetails(null);
-    setContent([]);
-    setLogosInsight(null);
-    
-    try {
-      const uniqueResults = await fetchNexusTagContent(targetTag);
-      setContent(uniqueResults);
-
-      // IA Fetch
-      try {
-        const result = await getSpiritualInsight(targetTag.label, undefined, profileId);
-        if (!result.error && result.content) {
-          setLogosInsight(result.content);
-        }
-      } catch (iaErr) {
-        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
-      }
-
-      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
-      setStatus('success');
-    } catch (e: any) {
-      console.error(`[Nexus Diagnostic] Error fetching ${targetTag.label}:`, e);
-      setErrorDetails(e.message || 'Erro desconhecido');
-      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
-      setStatus('error');
-    }
-  };
-
-  const handlePushTag = (newTag: Tag) => {
-    setNavHistory(prev => [...prev, newTag]);
-    fetchContentForTag(newTag);
-  };
-
-  const handlePopTag = (index: number) => {
-    const newHistory = navHistory.slice(0, index + 1);
-    setNavHistory(newHistory);
-    fetchContentForTag(newHistory[newHistory.length - 1]);
-  };
-
 
   const { data: allThemes } = useQuery({
     queryKey: ['tags'],
@@ -124,6 +72,40 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
 
+  const fetchContent = async () => {
+    if (content.length > 0 || status === 'loading') return;
+    const startTime = performance.now();
+    setMetrics({ startTime });
+    setStatus('loading');
+    setErrorDetails(null);
+    
+    const normalizedTag = normalizeText(tag.label);
+    console.log(`[Nexus Diagnostic] Fetching content for tag: ${tag.label} (Normalized: ${normalizedTag})`);
+    
+    try {
+      const uniqueResults = await fetchNexusTagContent(tag);
+      setContent(uniqueResults);
+
+      // IA Fetch
+      try {
+        const result = await getSpiritualInsight(tag.label, undefined, profileId);
+        if (!result.error && result.content) {
+          setLogosInsight(result.content);
+        }
+      } catch (iaErr) {
+        console.error(`[Nexus Diagnostic] AI Fetch failed.`, iaErr);
+      }
+
+      setMetrics(prev => ({ ...prev, endTime: performance.now(), source: 'both' }));
+      setStatus('success');
+    } catch (e: any) {
+      console.error(`[Nexus Diagnostic] Error fetching ${tag.label}:`, e);
+      setErrorDetails(e.message || 'Erro desconhecido');
+      setMetrics(prev => ({ ...prev, endTime: performance.now() }));
+      setStatus('error');
+    }
+  };
+
   const prefetchTag = useCallback(() => {
     queryClient.prefetchQuery({
       queryKey: ['tag-contents', tag.id, tag.label],
@@ -139,9 +121,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
         return;
       }
       setOpen(val);
-      if (val) fetchContentForTag(tag);
+      if (val) fetchContent();
     }}>
-
       <PopoverTrigger asChild>
         <BubbleTag
           label={tag.label}
@@ -150,14 +131,11 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           isSelected={open}
           isSuggested={isSuggested}
           size={size}
-          onClick={(e) => {
-            if (onClick) {
-              onClick(e);
-            } else if (navigateOnClick) {
+          onClick={() => {
+            if (navigateOnClick) {
               navigate(`${AppRoute.TEMAS}/${tag.slug}`);
             }
           }} 
-
           onKeyDown={onKeyDown}
           onMouseEnter={prefetchTag}
           tabIndex={tabIndex}
@@ -166,10 +144,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           className={className}
         />
       </PopoverTrigger>
-      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-premium-hover z-[100] bg-card/95 backdrop-blur-xl">
+      <PopoverContent data-testid="nexus-popover" className="w-[340px] sm:w-[460px] p-0 rounded-[3rem] border-primary/10 overflow-hidden shadow-2xl z-[100] bg-card/95 backdrop-blur-xl">
         <div className="bg-gradient-to-b from-primary/[0.03] to-transparent p-8 border-b border-border/20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-premium bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
+            <div className="w-14 h-14 rounded-3xl bg-white/40 dark:bg-black/20 flex items-center justify-center shadow-soft text-primary border border-primary/5">
               {getTagIcon(tag.emoji, "w-7 h-7")}
             </div>
             <div>
@@ -179,115 +157,72 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           </div>
           <Button 
             onClick={() => navigate(`${AppRoute.TEMAS}/${tag.slug}`)}
-            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-premium-hover shadow-primary/10 group border-none"
+            className="w-12 h-12 rounded-full bg-primary text-primary-foreground hover:scale-110 active:scale-95 transition-all flex items-center justify-center shadow-xl shadow-primary/10 group border-none"
             title="Estudo Completo"
           >
             <ExternalLink className="w-5 h-5 group-hover:rotate-12 transition-transform" strokeWidth={1.5} />
           </Button>
         </div>
         
-        <div className="p-10 space-y-10 max-h-[600px] overflow-y-auto scrollbar-none">
-          {/* Path Navigation - Monastic Breadcrumbs with History */}
-          <nav className="flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none pb-4 border-b border-border/5">
-            <button 
-              onClick={() => handlePopTag(0)}
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all flex items-center gap-1 group"
-            >
-              <Icons.Logo className="w-3 h-3 opacity-20 group-hover:opacity-100 transition-opacity" />
-              Nexus
-            </button>
-            
-            {navHistory.map((hTag, idx) => (
-              <React.Fragment key={`${hTag.id}-${idx}`}>
-                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/10 flex-shrink-0" />
-                <button 
-                  onClick={() => handlePopTag(idx)}
-                  disabled={idx === navHistory.length - 1}
-                  className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-full border transition-all ${
-                    idx === navHistory.length - 1 
-                      ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-soft' 
-                      : 'text-muted-foreground/30 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
-                  }`}
-                >
-                  {hTag.label}
-                </button>
-              </React.Fragment>
-            ))}
-            
-            {navHistory.length > 1 && (
-              <button 
-                onClick={() => handlePopTag(navHistory.length - 2)}
-                className="ml-auto text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 hover:text-secondary flex items-center gap-1 pl-4"
-              >
-                <Icons.ArrowDown className="w-3 h-3 rotate-90" /> Voltar
-              </button>
-            )}
-          </nav>
-
-          {/* Elegant Map Header */}
-          <header className="flex flex-col gap-2 items-center justify-center text-center py-4">
-            <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/20">SENTIERO DI SAPIENZA</span>
-            <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
-              {navHistory.length > 1 ? `Explorando conexões de ${currentTag.label}` : 'Mapeando as conexões vivas da Fé e da Tradição'}
-            </p>
-          </header>
-
-
+        <div className="p-5 space-y-5 max-h-[450px] overflow-y-auto scrollbar-none">
+          {/* Diagnostic Panel (Mini) */}
+          <div className="p-2 rounded-2xl bg-muted/30 border border-border/40 flex items-center justify-between text-premium-tiny font-black uppercase tracking-widest opacity-60">
+            <div className="flex gap-2">
+              <span>Time: {metrics.endTime ? `${Math.round(metrics.endTime - metrics.startTime)}ms` : '--'}</span>
+              <span>Source: {metrics.source || 'pending'}</span>
+            </div>
+            <span>Query: "{tag.label}"</span>
+          </div>
 
           {status === 'loading' ? (
             <div className="space-y-4 py-2">
               <div className="flex gap-2">
-                <div className="w-8 h-8 rounded-premium bg-muted animate-pulse" />
+                <div className="w-8 h-8 rounded-2xl bg-muted animate-pulse" />
                 <div className="flex-1 space-y-2">
                   <div className="h-3 bg-muted rounded animate-pulse w-full" />
                   <div className="h-3 bg-muted rounded animate-pulse w-2/3" />
                 </div>
               </div>
-              <div className="h-32 bg-muted/20 rounded-premium animate-pulse w-full" />
+              <div className="h-32 bg-muted/20 rounded-2xl animate-pulse w-full" />
               <p className="text-premium-tiny text-center text-muted-foreground animate-pulse">Consultando Nexus...</p>
             </div>
           ) : status === 'error' && content.length === 0 ? (
-            <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-premium border border-red-500/10">
+            <div className="p-6 text-center space-y-3 bg-red-500/5 rounded-2xl border border-red-500/10">
               <AlertCircle className="w-8 h-8 text-red-500 mx-auto" />
-            <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
-            <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
-            <Button size="sm" variant="outline" onClick={() => fetchContentForTag(currentTag)} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
-          </div>
-        ) : (
-
+              <p className="text-sm font-bold text-red-600">Erro ao carregar conteúdo</p>
+              <p className="text-premium-tiny text-muted-foreground italic">{errorDetails}</p>
+              <Button size="sm" variant="outline" onClick={fetchContent} data-testid="retry-button" className="h-8 rounded-full text-premium-tiny uppercase font-black tracking-widest">Tentar Novamente</Button>
+            </div>
+          ) : (
             <>
               {status === 'error' && content.length > 0 && (
-                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-premium text-premium-tiny font-bold flex items-center gap-2 mb-2">
+                <div className="px-3 py-1 bg-amber-500/10 text-amber-600 rounded-2xl text-premium-tiny font-bold flex items-center gap-2 mb-2">
                   <Info className="w-3 h-3" /> IA Indisponível — Exibindo conteúdo parcial do Nexus
                 </div>
               )}
               {logosInsight && (
                 <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1.2 }}
-                  className="bg-primary/[0.01] rounded-[2.5rem] p-8 border border-primary/[0.03] relative overflow-hidden group"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-secondary/5 rounded-full p-4 border border-secondary/10 relative overflow-hidden group"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/[0.01] rounded-full -mr-16 -mt-16 blur-3xl" />
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-5 h-5 rounded-full bg-primary/5 flex items-center justify-center">
-                      <Sparkles className="w-2.5 h-2.5 text-primary/40" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Contemplação Logos</span>
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-secondary/5 rounded-2xl  -mr-6 -mt-6" />
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sparkles className="w-3.5 h-3.5 text-secondary" />
+                    <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary">Logos Insight</span>
                   </div>
-                  <p className="text-base text-foreground/70 leading-relaxed italic font-serif text-center px-4">
+                  <p className="text-premium-small text-foreground/90 leading-relaxed italic font-serif">
                     "{logosInsight}"
                   </p>
                 </motion.div>
               )}
               
-              {content.length > 0 && (
+              {content.length > 0 ? (
                 <div className="space-y-6">
                   {[
                     { id: 'bible', label: 'Bíblia', icon: <BookOpen className="w-3.5 h-3.5" /> },
                     { id: 'catechism', label: 'Catecismo', icon: <Church className="w-3.5 h-3.5" /> },
                     { id: 'magisterium', label: 'Magistério', icon: <Shield className="w-3.5 h-3.5" /> },
-                    { id: 'saint', label: 'Santos', icon: <Sparkles className="w-3.5 h-3.5" /> },
                     { id: 'journey', label: 'Jornadas', icon: <Flame className="w-3.5 h-3.5" /> },
                   ].map((category) => {
                     const categoryContent = content.filter(c => c.type === category.id);
@@ -320,7 +255,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="space-y-1.5 group/content p-3 rounded-3xl hover:bg-primary/[0.03] transition-colors cursor-pointer border border-transparent hover:border-primary/5"
+                                className="space-y-1.5 group/content p-2 rounded-full hover:bg-primary/5 transition-colors cursor-pointer"
                                 onClick={() => link && navigate(link)}
                               >
                                 <p className="text-premium-small leading-relaxed text-foreground/80 line-clamp-3 group-hover/content:text-foreground transition-colors">
@@ -348,9 +283,9 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                                               emoji={matchingTag.emoji}
                                               index={i}
                                               size="xs"
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                handlePushTag(matchingTag);
+                                              onClick={() => {
+                                                navigate(`${AppRoute.TEMAS}/${matchingTag.slug}`);
+                                                setOpen(false);
                                               }}
                                             />
                                           );
@@ -367,37 +302,10 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     );
                   })}
                 </div>
-              )}
-
-
-              {/* Related Themes (The "Map" feeling) */}
-              <div className="pt-10 space-y-6 border-t border-border/5">
-                <div className="flex flex-col items-center gap-2">
-                  <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/20">RADIUS COGNITIONIS</span>
-                  <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
-                </div>
-                <div className="flex flex-wrap justify-center gap-3">
-                  {allThemes?.filter(t => t.category === currentTag.category && t.id !== currentTag.id).slice(0, 5).map((t, i) => (
-                    <TagBubble 
-                      key={t.id} 
-                      tag={t} 
-                      index={i} 
-                      size="xs" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePushTag(t);
-                      }}
-                      className="opacity-60 hover:opacity-100 transition-opacity" 
-                    />
-                  ))}
-                </div>
-
-              </div>
-
-              {!logosInsight && status === 'success' && content.length === 0 && (
+              ) : !logosInsight && status === 'success' && (
                 <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-                  <div className="w-16 h-16 rounded-premium bg-muted/20 flex items-center justify-center relative">
-                    <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
+                  <div className="w-16 h-16 rounded-2xl bg-muted/20 flex items-center justify-center relative">
+                    <div className="absolute inset-0 rounded-2xl border border-primary/10 animate-ping opacity-20" />
                     <Search className="w-8 h-8 text-muted-foreground/30" />
                   </div>
                   <div className="space-y-1">
@@ -462,100 +370,230 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
           label: t.name,
           emoji: t.emoji || '⛪',
           category: t.category || 'Geral'
-        })) as Tag[];
+        }));
         setTags(mappedTags);
       }
       setLoading(false);
     };
-
     fetchTags();
   }, []);
 
-  const categories = useMemo(() => {
-    const cats = [...new Set(tags.map(t => t.category))];
-    return cats.sort();
-  }, [tags]);
+  const [activeFilter, setActiveFilter] = useState<string>(() => {
+    return localStorage.getItem('nexus_bubbles_filter') || 'all';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('nexus_bubbles_filter', activeFilter);
+  }, [activeFilter]);
+
+  const categories = {
+    fundamentos: { label: 'Fundamentos', icon: <Icons.Church className="w-3.5 h-3.5" /> },
+    dores: { label: 'Dores', icon: <Icons.Heart className="w-3.5 h-3.5 text-destructive" /> },
+    divino: { label: 'Mistério', icon: <Icons.Sparkles className="w-3.5 h-3.5 text-secondary" /> },
+    vida: { label: 'Vida', icon: <Icons.Flame className="w-3.5 h-3.5 text-orange-500" /> },
+  };
+
+  const profileSuggestedTags = useMemo(() => {
+    if (!profileId || !tags.length) return [];
+    const profile = PROFILES[profileId];
+    if (!profile) return [];
+
+    const relevantLabels = [profile.theme, profile.pain.label, 'Oração', 'Jesus', 'Fé'];
+    return tags.filter(t => relevantLabels.some(l => t.label.toLowerCase().includes(l.toLowerCase()))).slice(0, 8);
+  }, [profileId, tags]);
 
   const filteredTags = useMemo(() => {
-    if (!searchQuery.trim()) return tags;
-    const query = normalizeText(searchQuery);
-    return tags.filter(t => normalizeText(t.label).includes(query));
-  }, [tags, searchQuery]);
+    let result = tags;
+    if (searchQuery) {
+      const q = normalizeText(searchQuery);
+      return result.filter(t => 
+        normalizeText(t.label).includes(q) || 
+        normalizeText(t.category).includes(q)
+      );
+    }
+    
+    if (activeFilter !== 'all') {
+      result = result.filter(t => t.category?.toLowerCase() === activeFilter.toLowerCase());
+    }
+    return result;
+  }, [tags, searchQuery, activeFilter]);
 
-  // Priority grouping for better visualization
-  const priorityGroups = useMemo(() => {
-    const suggested = tags.filter(t => t.priorityGroup === 'suggested');
-    const essential = tags.filter(t => t.priorityGroup === 'essential');
-    return { suggested, essential };
-  }, [tags]);
+  const { activeIndex: filteredActiveIndex, handleKeyDown: handleFilteredKeyDown } = useRovingTabindex(filteredTags?.length || 0, filteredRef);
+  const { activeIndex: suggestedActiveIndex, handleKeyDown: handleSuggestedKeyDown } = useRovingTabindex(profileSuggestedTags?.length || 0, suggestedRef);
 
-  const { handleKeyDown } = useRovingTabindex(filteredTags.length);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="w-6 h-6 animate-spin text-primary/40" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-12">
-      <div className="relative group max-w-md mx-auto">
-        <div className="absolute inset-0 bg-primary/5 rounded-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-        <input 
-          type="text" 
-          placeholder="Buscar temas e conexões..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-12 pl-12 pr-4 rounded-full bg-card border border-border/40 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all text-sm outline-none"
-        />
+    <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-border/40 pb-4">
+        <div className="flex flex-col text-center sm:text-left">
+          <span className="text-premium-tiny font-black uppercase tracking-[0.4em] text-primary/70">
+            Nexus Theologicus
+          </span>
+          <span className="text-premium-tiny text-muted-foreground/60 font-medium italic mt-0.5">Clique nas bolhas para conexões teológicas</span>
+        </div>
+        
+        <div className="relative group/search max-w-[140px] md:max-w-[200px]">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/60 transition-colors group-focus-within/search:text-primary" />
+          <input 
+            type="text"
+            placeholder="Buscar tema..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-8 pl-8 pr-8 bg-card border border-border/50 rounded-full text-premium-tiny focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            aria-label="Buscar tema no Nexus"
+
+          />
+          {searchQuery && (
+            <Button 
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 hover:bg-muted rounded-full"
+            >
+              <X className="w-2.5 h-2.5 text-muted-foreground" />
+            </Button>
+          )}
+        </div>
+      </div>
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+        <Button
+          onClick={() => setActiveFilter('all')}
+          aria-pressed={activeFilter === 'all'}
+          className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === 'all' ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+        >
+          Todos
+        </Button>
+
+        {Object.entries(categories).map(([key, cat]) => (
+          <Button
+            key={key}
+            onClick={() => setActiveFilter(key)}
+            aria-pressed={activeFilter === key}
+            className={`px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-primary outline-none ${activeFilter === key ? 'bg-primary text-primary-foreground shadow-lg' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+          >
+
+            {cat.icon}
+            {cat.label}
+          </Button>
+        ))}
       </div>
 
-      <div className="space-y-16">
-        {searchQuery.trim() ? (
-          <div className="space-y-6">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 text-center">Resultados da Busca</h3>
-            <div 
-              ref={filteredRef}
-              className="flex flex-wrap justify-center gap-3"
+      <div className="space-y-6">
+        <AnimatePresence mode="wait">
+          {searchQuery || activeFilter !== 'all' ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="space-y-3"
+              key="filtered"
             >
-              {filteredTags.map((tag, i) => (
-                <TagBubble 
-                  key={tag.id} 
-                  tag={tag} 
-                  index={i} 
-                  profileId={profileId}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            {categories.map((cat, idx) => {
-              const catTags = tags.filter(t => t.category === cat);
-              return (
-                <section key={cat} className="space-y-6">
-                  <div className="flex items-center gap-6">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">{cat}</h3>
-                    <div className="h-px flex-1 bg-border/20" />
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-premium-tiny font-bold text-muted-foreground uppercase tracking-widest">
+                  {searchQuery ? 'Resultado da Busca' : categories[activeFilter as keyof typeof categories]?.label}
+                </p>
+                {searchQuery && activeFilter !== 'all' && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-premium-tiny text-primary/60 font-medium italic">Pesquisando globalmente</span>
+                    <Button 
+                      onClick={() => setActiveFilter('all')}
+                      className="text-premium-tiny font-black uppercase tracking-tighter text-primary hover:underline"
+                    >
+                      Limpar Filtro
+                    </Button>
                   </div>
-                  <div className="flex flex-wrap gap-3">
-                    {catTags.map((tag, i) => (
-                      <TagBubble 
-                        key={tag.id} 
-                        tag={tag} 
-                        index={i} 
-                        profileId={profileId}
-                      />
+                )}
+              </div>
+              <div className="flex flex-wrap gap-1.5" role="list" ref={filteredRef}>
+                {filteredTags && filteredTags.length ? filteredTags.map((tag, i) => (
+                  <div key={tag.slug} role="listitem">
+                    <TagBubble 
+                      tag={tag} 
+                      index={i} 
+                      tabIndex={filteredActiveIndex === i ? 0 : -1}
+                      onKeyDown={(e) => handleFilteredKeyDown(e, i)}
+                      profileId={profileId}
+                    />
+                  </div>
+                )) : (
+                  <p className="text-premium-tiny text-muted-foreground italic">Nenhum tema encontrado.</p>
+                )}
+              </div>
+            </motion.div>
+          ) : (
+            <div key="default" className="space-y-6">
+              {/* Profile Suggestions */}
+              {profileId && profileSuggestedTags.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-2.5 p-4 rounded-[2rem] bg-gradient-to-br from-secondary/10 via-card to-primary/5 border border-secondary/20 shadow-sm relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-2xl  -mr-8 -mt-8" />
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 rounded-2xl bg-secondary/20 flex items-center justify-center">
+                      <Heart className="w-3 h-3 text-secondary" />
+                    </div>
+                    <span className="text-premium-tiny font-black uppercase tracking-widest text-secondary">
+                      Sugeridos para sua Jornada
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5" role="list" ref={suggestedRef}>
+                    {profileSuggestedTags.map((tag, i) => (
+                      <div key={tag.slug} role="listitem">
+                        <TagBubble 
+                          tag={tag} 
+                          index={i} 
+                          isSuggested 
+                          tabIndex={suggestedActiveIndex === i ? 0 : -1}
+                          onKeyDown={(e) => handleSuggestedKeyDown(e, i)}
+                          profileId={profileId}
+                        />
+                      </div>
                     ))}
                   </div>
-                </section>
-              );
-            })}
-          </>
-        )}
-      </div>
+                </motion.div>
+              )}
 
-      {!loading && filteredTags.length === 0 && (
-        <div className="text-center py-20 space-y-4">
-          <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-          <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
-        </div>
-      )}
+              {/* Categorized Tags */}
+              <div className="grid grid-cols-1 gap-5">
+                {Object.entries(categories).map(([key, category]) => {
+                  const categoryTags = tags.filter(t => t.category?.toLowerCase() === key.toLowerCase());
+                  if (categoryTags.length === 0) return null;
+
+                  return (
+                    <motion.div key={key} layout className="space-y-2.5">
+                      <Button
+                        onClick={() => setExpandedCategory(expandedCategory === key ? null : key)}
+                        className="flex items-center gap-1.5 group w-full"
+                      >
+                        {category.icon}
+                        <span className="text-premium-tiny font-black uppercase tracking-widest text-foreground group-hover:text-primary transition-colors">
+                          {category.label}
+                        </span>
+                        <div className="h-px flex-1 bg-border/40" />
+                        <span className="text-premium-tiny font-black text-muted-foreground/40">{categoryTags.length} temas</span>
+                      </Button>
+                      <div className="flex flex-wrap gap-1.5" role="list">
+                        {categoryTags.slice(0, expandedCategory === key ? 100 : 8).map((tag, i) => (
+                          <div key={tag.slug} role="listitem">
+                            <TagBubble tag={tag} index={i} profileId={profileId} />
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };

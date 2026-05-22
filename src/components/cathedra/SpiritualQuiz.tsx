@@ -321,7 +321,7 @@ const SpiritualQuiz: React.FC = () => {
     const dirLabel = existingData?.direction || p.direction.label;
     
     return (
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-premium border border-border bg-card p-5 space-y-3">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl border border-border bg-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground">Seu Perfil Espiritual</span>
           <Button 
@@ -367,7 +367,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-premium`}
+        className={`rounded-full border border-secondary/20 bg-gradient-to-br ${p.bgGradient} p-6 md:p-8 space-y-6 shadow-lg`}
       >
         <div className="text-center space-y-3">
           <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', delay: 0.2 }} className="text-5xl block">{p.emoji}</motion.span>
@@ -379,11 +379,11 @@ const SpiritualQuiz: React.FC = () => {
         <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 rounded-premium bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">💔 O que te trava</p>
             <p className="text-sm font-bold text-foreground">{painLabel}</p>
           </div>
-          <div className="p-3 rounded-premium bg-background/60 border border-border space-y-1 text-center">
+          <div className="p-3 rounded-2xl bg-background/60 border border-border space-y-1 text-center">
             <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground">🔥 Seu caminho</p>
             <p className="text-sm font-bold text-foreground">{dirLabel}</p>
           </div>
@@ -394,15 +394,15 @@ const SpiritualQuiz: React.FC = () => {
         <div className="space-y-2">
           <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground text-center">Recomendado para você</p>
           <div className="space-y-2 text-sm">
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-premium bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-primary/[0.04] border border-primary/10">
               <Sparkles className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Jornada: <strong className="text-foreground">{p.journeyName}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-premium bg-primary/[0.04] border border-primary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-primary/[0.04] border border-primary/10">
               <BookOpen className="w-4 h-4 text-primary shrink-0" />
               <span className="text-foreground/80">Tema: <strong className="text-foreground">{p.theme}</strong></span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-premium bg-secondary/[0.06] border border-secondary/10">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-2xl bg-secondary/[0.06] border border-secondary/10">
               <Brain className="w-4 h-4 text-secondary shrink-0" />
               <span className="text-foreground/80">Reflexão com <strong className="text-foreground">Logos IA</strong></span>
             </div>
@@ -430,7 +430,7 @@ const SpiritualQuiz: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-soft text-center"
+        className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 md:p-8 space-y-5 shadow-sm text-center"
       >
         <div className="space-y-3">
           <span className="text-4xl block">🧠</span>
@@ -460,15 +460,15 @@ const SpiritualQuiz: React.FC = () => {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-soft"
+      className="rounded-full border border-secondary/20 bg-gradient-to-br from-card to-secondary/5 p-6 space-y-5 shadow-sm"
     >
       <div className="space-y-1">
         <div className="flex items-center justify-between">
           <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Quiz Espiritual</p>
           <p className="text-premium-tiny font-bold text-muted-foreground">Pergunta {step + 1} de {QUESTIONS.length}</p>
         </div>
-        <div className="h-1.5 bg-muted rounded-premium overflow-hidden">
-          <motion.div className="h-full bg-secondary rounded-premium" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
+        <div className="h-1.5 bg-muted rounded-2xl overflow-hidden">
+          <motion.div className="h-full bg-secondary rounded-2xl" animate={{ width: `${progress}%` }} transition={{ type: 'spring', damping: 20 }} />
         </div>
       </div>
 

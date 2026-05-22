@@ -22,7 +22,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-2xl">
           <Feather className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
@@ -36,10 +36,10 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       {/* Daily suggestion card */}
       <motion.button
         onClick={() => onPassageChange(dailyPassage.ref)}
-        className={`w-full max-w-lg mx-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all shadow-premium group ${
+        className={`w-full max-w-lg mx-auto flex items-center gap-6 p-6 rounded-[2rem] border transition-all shadow-lg group ${
           selectedPassage === dailyPassage.ref
             ? 'bg-primary border-primary text-primary-foreground shadow-primary/20'
-            : 'bg-card border-border hover:border-primary/30 hover:shadow-premium-hover'
+            : 'bg-card border-border hover:border-primary/30 hover:shadow-xl'
         }`}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -75,7 +75,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         transition={{ delay: 0.5, duration: 0.6 }}
       >
         {STEPS.map((step, i) => (
-          <div key={step.id} className="group p-5 rounded-premium bg-card border border-border text-center space-y-3 hover:border-primary/30 hover:shadow-premium-hover hover:-translate-y-1 transition-all">
+          <div key={step.id} className="group p-5 rounded-2xl bg-card border border-border text-center space-y-3 hover:border-primary/30 hover:shadow-xl hover:-translate-y-1 transition-all">
             <div className={`w-12 h-12 rounded-full mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
               <step.icon className="w-6 h-6" />
             </div>
@@ -89,7 +89,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
       {/* Select passage */}
       <motion.div 
-        className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-premium-hover shadow-black/[0.02]"
+        className="bg-card border border-border rounded-[2.5rem] p-8 md:p-12 space-y-10 shadow-2xl shadow-black/[0.02]"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7, duration: 0.6 }}
@@ -104,7 +104,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               value={selectedPassage}
               onChange={e => onPassageChange(e.target.value)}
               placeholder="Ex: Jo 1,1-18 ou Sl 23..."
-              className="w-full px-6 py-4 rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft"
+              className="w-full px-6 py-4 rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-sm"
             />
           </div>
 
@@ -115,7 +115,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
                 onClick={() => onPassageChange(p.ref)}
                 className={`px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
                   selectedPassage === p.ref
-                    ? 'bg-primary border-primary text-white shadow-premium'
+                    ? 'bg-primary border-primary text-white shadow-lg'
                     : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
                 }`}
               >
@@ -129,7 +129,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <Button
             disabled={!selectedPassage.trim()}
             onClick={onStart}
-            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
+            className="px-10 py-5 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-[0.2em] shadow-xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
           >
             Iniciar Lectio Divina
           </Button>

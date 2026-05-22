@@ -192,12 +192,12 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </header>
 
         <div className="flex justify-center overflow-x-auto pb-4 no-scrollbar">
-          <div className="bg-secondary/50 p-1 rounded-premium flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
+          <div className="bg-secondary/50 p-1 rounded-2xl flex gap-1 min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
             {viewModes.map((mode, idx) => (
               <Button
                 key={mode}
                 {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-4 md:px-6 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  viewMode === mode ? 'bg-background text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
+                  viewMode === mode ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                 }`)}
                 onClick={() => setViewMode(mode)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, viewModes.length, (newIdx) => setViewMode(viewModes[newIdx]), 'tab-')}
@@ -253,7 +253,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       onClick={() => setSelectedDate(date)}
                       className={`flex flex-col items-center justify-center min-w-[56px] h-20 rounded-full border transition-all ${
                         isSameDay(date, selectedDate)
-                          ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
+                          ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20 scale-110'
                           : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
                       }`}
                       aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
@@ -413,7 +413,7 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         </p>
                         <Button 
                           onClick={() => handleGlobalSearch(search)}
-                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-full shadow-premium shadow-primary/20 flex items-center gap-3 mx-auto"
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xs uppercase tracking-widest h-12 px-8 rounded-full shadow-lg shadow-primary/20 flex items-center gap-3 mx-auto"
                         >
                           <Sparkles className="w-4 h-4" />
                           Buscar na Biblioteca Universal
@@ -519,7 +519,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
   return (
     <Button
       onClick={onClick}
-      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
+      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
       <div className="relative h-48 overflow-hidden">
         <SacredImage 
@@ -544,7 +544,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
           <div className="flex items-center justify-between mb-2">
             <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{saint.feastDay}</span>
             {saint.works && saint.works.length > 0 && (
-              <div className="p-1 bg-primary/5 rounded-premium text-primary" title="Possui obras escritas">
+              <div className="p-1 bg-primary/5 rounded-2xl text-primary" title="Possui obras escritas">
                 <BookOpen className="w-3 h-3" />
               </div>
             )}

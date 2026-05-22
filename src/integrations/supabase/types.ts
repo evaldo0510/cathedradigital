@@ -65,33 +65,6 @@ export type Database = {
         }
         Relationships: []
       }
-      audit_logs: {
-        Row: {
-          created_at: string | null
-          event_type: string
-          id: string
-          metadata: Json | null
-          path: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_type: string
-          id?: string
-          metadata?: Json | null
-          path?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_type?: string
-          id?: string
-          metadata?: Json | null
-          path?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       bible_chapters_read: {
         Row: {
           book_abbr: string
@@ -258,7 +231,6 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          metadata: Json | null
           title: string
           updated_at: string
           user_id: string
@@ -266,7 +238,6 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id: string
@@ -274,7 +245,6 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          metadata?: Json | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -312,27 +282,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      coming_soon_leads: {
-        Row: {
-          created_at: string
-          email: string
-          id: string
-          interest_type: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          id?: string
-          interest_type?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          id?: string
-          interest_type?: string | null
-        }
-        Relationships: []
       }
       community_likes: {
         Row: {
@@ -928,28 +877,21 @@ export type Database = {
           estado: string | null
           id: string
           is_premium: boolean
-          journey_reminder_time: string | null
           last_action_at: string | null
-          last_active_at: string | null
           last_notified_at: string | null
-          last_reminder_sent_at: string | null
           last_visit: string | null
           level: number | null
-          max_streak: number | null
           movimento_pastoral: string | null
           name: string
-          notification_settings: Json | null
           paroquia: string | null
-          preferred_reminder_time: string | null
           program_duration: number | null
-          reading_settings: Json | null
-          ritual_reminder_time: string | null
-          ritual_silent_mode: boolean | null
+          push_enabled: boolean | null
           role: string | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
-          weekly_goal: number | null
+          whatsapp_enabled: boolean | null
+          whatsapp_number: string | null
           xp: number | null
         }
         Insert: {
@@ -962,28 +904,21 @@ export type Database = {
           estado?: string | null
           id: string
           is_premium?: boolean
-          journey_reminder_time?: string | null
           last_action_at?: string | null
-          last_active_at?: string | null
           last_notified_at?: string | null
-          last_reminder_sent_at?: string | null
           last_visit?: string | null
           level?: number | null
-          max_streak?: number | null
           movimento_pastoral?: string | null
           name?: string
-          notification_settings?: Json | null
           paroquia?: string | null
-          preferred_reminder_time?: string | null
           program_duration?: number | null
-          reading_settings?: Json | null
-          ritual_reminder_time?: string | null
-          ritual_silent_mode?: boolean | null
+          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          weekly_goal?: number | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
           xp?: number | null
         }
         Update: {
@@ -996,80 +931,24 @@ export type Database = {
           estado?: string | null
           id?: string
           is_premium?: boolean
-          journey_reminder_time?: string | null
           last_action_at?: string | null
-          last_active_at?: string | null
           last_notified_at?: string | null
-          last_reminder_sent_at?: string | null
           last_visit?: string | null
           level?: number | null
-          max_streak?: number | null
           movimento_pastoral?: string | null
           name?: string
-          notification_settings?: Json | null
           paroquia?: string | null
-          preferred_reminder_time?: string | null
           program_duration?: number | null
-          reading_settings?: Json | null
-          ritual_reminder_time?: string | null
-          ritual_silent_mode?: boolean | null
+          push_enabled?: boolean | null
           role?: string | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
-          weekly_goal?: number | null
+          whatsapp_enabled?: boolean | null
+          whatsapp_number?: string | null
           xp?: number | null
         }
         Relationships: []
-      }
-      profiles_private: {
-        Row: {
-          created_at: string | null
-          id: string
-          push_enabled: boolean | null
-          updated_at: string | null
-          whatsapp_enabled: boolean | null
-          whatsapp_number: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          id: string
-          push_enabled?: boolean | null
-          updated_at?: string | null
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          push_enabled?: boolean | null
-          updated_at?: string | null
-          whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_private_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_private_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "public_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_private_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "user_management_stats"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       push_subscriptions: {
         Row: {
@@ -1124,111 +1003,6 @@ export type Database = {
           percentage?: number
           score?: number
           total?: number
-          user_id?: string
-        }
-        Relationships: []
-      }
-      reading_marks: {
-        Row: {
-          chapter: number | null
-          content_id: string
-          content_type: string
-          created_at: string
-          id: string
-          is_last_read: boolean | null
-          label: string | null
-          paragraph: number | null
-          position: number | null
-          updated_at: string
-          url: string | null
-          user_id: string
-        }
-        Insert: {
-          chapter?: number | null
-          content_id: string
-          content_type: string
-          created_at?: string
-          id?: string
-          is_last_read?: boolean | null
-          label?: string | null
-          paragraph?: number | null
-          position?: number | null
-          updated_at?: string
-          url?: string | null
-          user_id: string
-        }
-        Update: {
-          chapter?: number | null
-          content_id?: string
-          content_type?: string
-          created_at?: string
-          id?: string
-          is_last_read?: boolean | null
-          label?: string | null
-          paragraph?: number | null
-          position?: number | null
-          updated_at?: string
-          url?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      reading_reflections: {
-        Row: {
-          content: string | null
-          context_id: string | null
-          created_at: string
-          id: string
-          reading_type: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          content?: string | null
-          context_id?: string | null
-          created_at?: string
-          id?: string
-          reading_type: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          content?: string | null
-          context_id?: string | null
-          created_at?: string
-          id?: string
-          reading_type?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      ritual_progress: {
-        Row: {
-          completed: boolean
-          created_at: string
-          date: string
-          id: string
-          progress_percent: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          completed?: boolean
-          created_at?: string
-          date?: string
-          id?: string
-          progress_percent?: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          completed?: boolean
-          created_at?: string
-          date?: string
-          id?: string
-          progress_percent?: number
-          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -1517,7 +1291,6 @@ export type Database = {
           created_at: string
           entry_date: string
           id: string
-          is_reviewed: boolean
           journey_id: string | null
           mood: string | null
           step_id: string | null
@@ -1529,7 +1302,6 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
-          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1541,7 +1313,6 @@ export type Database = {
           created_at?: string
           entry_date?: string
           id?: string
-          is_reviewed?: boolean
           journey_id?: string | null
           mood?: string | null
           step_id?: string | null
@@ -1832,52 +1603,34 @@ export type Database = {
       }
       user_notes: {
         Row: {
-          book_abbr: string | null
-          chapter: number | null
           content_id: string
           content_type: string
           created_at: string
           highlight_color: string | null
           id: string
-          is_reviewed: boolean
-          metadata: Json | null
           note_text: string
-          paragraph: number | null
           updated_at: string
           user_id: string
-          verse: number | null
         }
         Insert: {
-          book_abbr?: string | null
-          chapter?: number | null
           content_id: string
           content_type: string
           created_at?: string
           highlight_color?: string | null
           id?: string
-          is_reviewed?: boolean
-          metadata?: Json | null
           note_text?: string
-          paragraph?: number | null
           updated_at?: string
           user_id: string
-          verse?: number | null
         }
         Update: {
-          book_abbr?: string | null
-          chapter?: number | null
           content_id?: string
           content_type?: string
           created_at?: string
           highlight_color?: string | null
           id?: string
-          is_reviewed?: boolean
-          metadata?: Json | null
           note_text?: string
-          paragraph?: number | null
           updated_at?: string
           user_id?: string
-          verse?: number | null
         }
         Relationships: []
       }
@@ -2051,39 +1804,6 @@ export type Database = {
           },
         ]
       }
-      weekly_goals_history: {
-        Row: {
-          achieved_count: number
-          completed: boolean | null
-          created_at: string
-          goal_count: number
-          id: string
-          updated_at: string
-          user_id: string
-          week_start_date: string
-        }
-        Insert: {
-          achieved_count: number
-          completed?: boolean | null
-          created_at?: string
-          goal_count: number
-          id?: string
-          updated_at?: string
-          user_id: string
-          week_start_date: string
-        }
-        Update: {
-          achieved_count?: number
-          completed?: boolean | null
-          created_at?: string
-          goal_count?: number
-          id?: string
-          updated_at?: string
-          user_id?: string
-          week_start_date?: string
-        }
-        Relationships: []
-      }
     }
     Views: {
       public_profiles: {
@@ -2150,7 +1870,6 @@ export type Database = {
       }
     }
     Functions: {
-      check_daily_reminders: { Args: never; Returns: undefined }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       search_community_posts_fuzzy: {

@@ -8,7 +8,6 @@ import SacredImage from './SacredImage';
 import DeepContentSection from './DeepContentSection';
 import { toast } from 'sonner';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
-import Relatio from './Relatio';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,11 +18,6 @@ import { Button } from '@/components/ui/button';
 import AudioButton from './AudioButton';
 import { useNavigate } from 'react-router-dom';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
-import { useReadingMarks } from '@/hooks/useReadingMarks';
-import ReadingControlPanel from './ReadingControlPanel';
-import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { useRenderPerf } from '@/hooks/useRenderPerf';
-import ContemplativeLayout from './ContemplativeLayout';
 
 const SPIRITUAL_GUIDANCE = [
   {
@@ -155,12 +149,8 @@ const DOCS_LIST = [
 const THEMES = Array.from(new Set(DOCS_LIST.flatMap(d => d.theme))).sort();
 
 const Magisterium: React.FC = () => {
-  useRenderPerf('Magisterium', 15);
   const navigate = useNavigate();
-  useAutoFocus();
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
-  const { saveLastRead, getLastRead } = useReadingMarks();
-  const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('guidance');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -168,69 +158,6 @@ const Magisterium: React.FC = () => {
   const [selectedGuidance, setSelectedGuidance] = useState(SPIRITUAL_GUIDANCE[0]);
   const activeGuidanceIndex = SPIRITUAL_GUIDANCE.findIndex(g => g.id === selectedGuidance.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [shouldAutoResume, setShouldAutoResume] = useState(() => {
-    const topic = new URLSearchParams(window.location.search).get('topic');
-    const doc = new URLSearchParams(window.location.search).get('doc');
-    return !(topic || doc);
-  });
-
-  useEffect(() => {
-    const topicParam = new URLSearchParams(window.location.search).get('topic');
-    const docParam = new URLSearchParams(window.location.search).get('doc');
-
-    if (topicParam || docParam) {
-      if (topicParam) {
-        const found = SPIRITUAL_GUIDANCE.find(g => g.id === topicParam);
-        if (found) setSelectedGuidance(found);
-      }
-      return;
-    }
-
-    const fetchLastRead = async () => {
-      const { data: authData } = await supabase.auth.getUser();
-      const user = authData?.user;
-      if (!user) return;
-
-      const { data } = await supabase
-        .from('reading_marks')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('content_type', 'magisterium')
-        .eq('is_last_read', true)
-        .maybeSingle();
-
-      if (data) {
-        setLastReadMark(data);
-        if (shouldAutoResume && data.content_id) {
-          const found = SPIRITUAL_GUIDANCE.find(g => g.id === data.content_id);
-          if (found) {
-            setSelectedGuidance(found);
-            toast.info(`Retornando ao tema: ${found.theme}`, {
-              description: 'Sua leitura foi retomada de onde você parou.',
-              duration: 3000
-            });
-          }
-        }
-      }
-      setShouldAutoResume(false);
-    };
-    fetchLastRead();
-  }, [shouldAutoResume]);
-
-  const MemoizedRelatio = useMemo(() => {
-    if (activeTab !== 'guidance' || !selectedGuidance) return null;
-    return (
-      <Relatio 
-        context={{ 
-          type: 'magisterium', 
-          id: selectedGuidance.id,
-          tags: [selectedGuidance.theme, 'Magistério']
-        }}
-        onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&ch=${ch}`)}
-        onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
-      />
-    );
-  }, [activeTab, selectedGuidance, navigate]);
 
   const filteredDocs = useMemo(() => {
     return DOCS_LIST.filter(doc => {
@@ -247,103 +174,263 @@ const Magisterium: React.FC = () => {
     setTimeout(() => {
       setSelectedGuidance(item);
       setIsTransitioning(false);
-      
-      // Auto-save progress
-      saveLastRead({
-        content_type: 'magisterium',
-        content_id: item.id,
-        label: `Guia: ${item.theme}`,
-        url: `/magisterium?topic=${item.id}`
-      });
     }, 300);
   };
 
   return (
-    <ContemplativeLayout
-      subtitle="Magisterium Ecclesiae"
-      title="Magistério"
-      maxW="max-w-6xl"
-    >
+    <div className="max-w-5xl mx-auto space-y-8 pb-20 px-4">
       <SEOHead 
-        title="Magistério da Igreja | Cathedra" 
-        description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
+        title="Magistério da Igreja" 
+        description="Acesse encíclicas, exortações e documentos fundamentais do Magistério da Igreja Católica." 
         path="/magisterium"
       />
 
-      <div className="space-y-24">
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-border/5 pb-12">
-          <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
-            <input
-              placeholder="Buscar documento ou autor..." 
-              className="w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background transition-all font-serif italic text-lg"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-2xl">
+          <Icons.Scroll className="w-4 h-4 text-primary" />
+          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Magisterium Ecclesiae</span>
+        </div>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Magistério</h1>
+        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">A voz da Igreja guiando o coração dos fiéis através dos séculos.</p>
+      </div>
+
+      <Tabs defaultValue="guidance" className="w-full" onValueChange={setActiveTab}>
+        <div className="flex justify-center mb-8">
+          <TabsList className="bg-muted/50 p-1 rounded-full">
+            <TabsTrigger value="guidance" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
+              Guia Espiritual
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="rounded-full data-[state=active]:bg-primary data-[state=active]:text-white px-6 py-2 text-xs font-bold uppercase tracking-widest transition-all">
+              Documentos
+            </TabsTrigger>
+          </TabsList>
+        </div>
+
+        <TabsContent value="guidance" className="mt-0 focus-visible:outline-none outline-none">
+          <div className="space-y-12">
+            <div 
+              className="flex flex-wrap justify-center gap-3 bg-card  p-6 sm:p-10 rounded-[2.5rem] sm:rounded-[3.5rem] border border-border/40 shadow-xl relative overflow-hidden group"
+              role="tablist"
+              aria-label="Temas de guia espiritual"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+              {SPIRITUAL_GUIDANCE.map((item, idx, arr) => (
+                <motion.button
+                  key={item.id}
+                  id={`tab-guidance-${item.id}`}
+                  role="tab"
+                  aria-selected={selectedGuidance.id === item.id}
+                  aria-controls={`panel-guidance-${item.id}`}
+                  onKeyDown={(e) => {
+                    if (e.key === 'ArrowRight' && idx < arr.length - 1) document.getElementById(`tab-guidance-${arr[idx+1].id}`)?.focus();
+                    if (e.key === 'ArrowLeft' && idx > 0) document.getElementById(`tab-guidance-${arr[idx-1].id}`)?.focus();
+                  }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.05 }}
+                  whileHover={{ scale: 1.1, y: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleSelectGuidance(item)}
+                  className={`flex items-center gap-3 px-6 py-3.5 rounded-full border transition-all shadow-sm relative z-10 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                    selectedGuidance.id === item.id 
+                      ? "bg-primary text-primary-foreground shadow-xl shadow-primary/30 scale-110" 
+                      : "bg-card/60 text-foreground/80 border-border/60 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
+                  }`}
+
+                >
+                  <div className={`p-2 rounded-full ${selectedGuidance.id === item.id ? "bg-white/20" : "bg-muted/50"}`}>
+                    {item.icon}
+                  </div>
+                  <span className="font-black text-premium-tiny sm:text-xs uppercase tracking-[0.15em]">{item.theme}</span>
+                </motion.button>
+              ))}
+            </div>
+
+            <div className="w-full">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedGuidance.id}
+                  {...getTabPanelProps(`panel-guidance-${selectedGuidance.id}`, `tab-guidance-${activeGuidanceIndex}`, true, "bg-card border border-border rounded-[2.5rem] p-8 md:p-12 shadow-sm space-y-8 outline-none")}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="pt-8 border-t border-border/40">
+                    <DeepContentSection 
+                      content={{
+                        textoBase: selectedGuidance.textoBase || selectedGuidance.magisteriumAnswer,
+                        explicacao: (selectedGuidance as any).explicacao || '',
+                        interpretacaoProfunda: (selectedGuidance as any).interpretacaoProfunda || '',
+                        aplicacaoPratica: (selectedGuidance as any).aplicacaoPratica || '',
+                        reflexaoFinal: (selectedGuidance as any).reflexaoFinal || '',
+                        exercicio: (selectedGuidance as any).exercicio || ''
+                      }} 
+                      contentType="other"
+                      title="Lumen Veritatis" 
+                    />
+                  </div>
+
+                  <div className="space-y-4 relative">
+                    <div className="flex items-center justify-between gap-4">
+                      <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">{selectedGuidance.question}</h2>
+                      <AudioButton variant="ghost" className="shrink-0" />
+                    </div>
+
+                    <p className="text-lg text-muted-foreground leading-relaxed font-serif italic">
+                      "
+                      {parseTheologicalReferences(selectedGuidance.magisteriumAnswer).map((seg, i) => {
+                        if (seg.type === 'bibleRef') {
+                          return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                        }
+                        if (seg.type === 'catechismRef') {
+                          return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                        }
+                        return <span key={i}>{seg.value}</span>;
+                      })}
+                      "
+                    </p>
+                    <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
+                      <Icons.Scroll className="w-4 h-4" /> {selectedGuidance.sourceDoc}
+                    </div>
+                  </div>
+
+                  <div className="bg-primary/5 rounded-2xl p-6 border border-primary/10 space-y-4">
+                    <p className="text-xl font-serif font-bold text-primary leading-tight">{selectedGuidance.padh}</p>
+                    <p className="text-sm font-bold text-foreground">
+                      {parseTheologicalReferences(selectedGuidance.innerQuestion).map((seg, i) => {
+                        if (seg.type === 'bibleRef') {
+                          return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
+                        }
+                        if (seg.type === 'catechismRef') {
+                          return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
+                        }
+                        return <span key={i}>{seg.value}</span>;
+                      })}
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Documentos Relacionados</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {selectedGuidance.relatedDocs.map(docId => {
+                        const doc = DOCS_LIST.find(d => d.id === docId);
+                        return (
+                          <div key={docId} className="p-4 rounded-2xl border border-border bg-muted/30 flex items-center gap-3">
+                            <Icons.FileText className="w-5 h-5 text-primary" />
+                            <div>
+                              <p className="text-xs font-bold text-foreground">{doc?.title || 'Documento'}</p>
+                              <p className="text-premium-tiny text-muted-foreground">{doc?.type || 'Magistério'} • {doc?.year}</p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="documents" className="mt-0 focus-visible:outline-none outline-none space-y-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input 
+                placeholder="Buscar por título ou autor..." 
+                className="pl-10 h-12 rounded-full bg-card border-border"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar" role="tablist" aria-label="Filtros de temas">
+              <Button 
+                variant={selectedTheme === null ? "default" : "outline"} 
+                className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
+                onClick={() => setSelectedTheme(null)}
+                role="tab"
+                aria-selected={selectedTheme === null}
+              >
+                Todos
+              </Button>
+              {THEMES.map(theme => (
+                <Button 
+                  key={theme}
+                  variant={selectedTheme === theme ? "default" : "outline"} 
+                  className="rounded-full h-10 px-4 text-premium-tiny font-black uppercase tracking-widest flex-shrink-0"
+                  onClick={() => setSelectedTheme(theme)}
+                  role="tab"
+                  aria-selected={selectedTheme === theme}
+                >
+                  {theme}
+                </Button>
+              ))}
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 md:pb-0">
-            <Button 
-              variant="ghost"
-              className={`rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${selectedTheme === null ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary'}`}
-              onClick={() => setSelectedTheme(null)}
-            >
-              Todos
-            </Button>
-            {THEMES.slice(0, 5).map(theme => (
-              <Button 
-                key={theme}
-                variant="ghost"
-                className={`rounded-full px-6 py-2 text-[10px] font-bold uppercase tracking-widest transition-all ${selectedTheme === theme ? 'bg-primary text-white shadow-premium' : 'text-primary/40 hover:text-primary'}`}
-                onClick={() => setSelectedTheme(theme)}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredDocs.map((doc, idx) => (
+              <motion.div
+                key={doc.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
               >
-                {theme}
-              </Button>
+                <Card className="group h-full hover:border-primary/30 transition-all border-border bg-card overflow-hidden rounded-2xl">
+                  <CardContent className="p-6 flex flex-col h-full space-y-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="p-2.5 rounded-2xl bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                        {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : 
+                         doc.type === 'Constituição' ? <Icons.Library className="w-5 h-5" /> :
+                         <Icons.FileText className="w-5 h-5" />}
+                      </div>
+                      <Badge variant="outline" className="text-premium-tiny font-black uppercase tracking-widest border-primary/20 text-primary bg-primary/5">
+                        {doc.year}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-1 flex-1">
+                      <h3 className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors">{doc.title}</h3>
+                      <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">{doc.author}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 mt-2">{doc.summary}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1 pt-2">
+                      {doc.theme.map(t => (
+                        <span key={t} className="text-premium-tiny font-bold text-primary/60 bg-primary/5 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <Button 
+                      variant="ghost" 
+                      className="w-full justify-between group/btn text-premium-tiny font-black uppercase tracking-widest h-10 px-0 hover:bg-transparent hover:text-primary"
+                      onClick={() => navigate(`/magisterium/${doc.id}`)}
+                    >
+                      Ler Documento
+                      <Icons.ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
-        </div>
 
-        {/* Documents Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
-          {filteredDocs.map((doc, idx) => (
-            <motion.button
-              key={doc.id}
-              whileHover={{ y: -8 }}
-              onClick={() => navigate(`/magisterium/${doc.id}`)}
-              className="text-left flex flex-col gap-8 p-12 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group h-full"
-            >
-              <div className="flex justify-between items-start">
-                <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:text-primary/40 transition-colors">
-                  {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : <Icons.FileText className="w-5 h-5" />}
-                </div>
-                <span className="text-[10px] font-bold text-secondary/40 border border-secondary/10 px-3 py-1 rounded-full">{doc.year}</span>
-              </div>
-
-              <div className="space-y-4 flex-1">
-                <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{doc.title}</h3>
-                <p className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
-                <p className="text-sm text-muted-foreground/40 font-serif italic line-clamp-3 leading-relaxed">{doc.summary}</p>
-              </div>
-
-              <div className="flex flex-wrap gap-2 pt-4">
-                {doc.theme.map(t => (
-                  <span key={t} className="text-[8px] font-bold text-primary/20 bg-primary/[0.01] px-3 py-1 rounded-full uppercase tracking-widest">
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </motion.button>
-          ))}
-        </div>
-
-        {filteredDocs.length === 0 && (
-          <div className="text-center py-32 border border-dashed border-border/10 rounded-premium">
-            <p className="text-muted-foreground/40 font-serif italic">Nenhum documento encontrado no silêncio da busca.</p>
-          </div>
-        )}
-      </div>
-    </ContemplativeLayout>
+          {filteredDocs.length === 0 && (
+            <div className="text-center py-20 bg-muted/20 rounded-[2.5rem] border-2 border-dashed border-border">
+              <Icons.FileText className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+              <p className="text-muted-foreground font-serif italic">Nenhum documento encontrado com esses critérios.</p>
+              <Button variant="link" className="text-primary mt-2" onClick={() => { setSearchQuery(''); setSelectedTheme(null); }}>
+                Limpar filtros
+              </Button>
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 
