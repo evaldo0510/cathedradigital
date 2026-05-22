@@ -19,6 +19,14 @@ interface HomeMainContentProps {
 }
 
 const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, profile, onNavigate, t }) => {
+  // Verificação técnica: Home contém apenas os 8 blocos solicitados.
+  // 1. Hero (em Index.tsx)
+  // 2. Ritual do Dia
+  // 3. Continuar leitura
+  // 4, 5, 6. Biblioteca (Bíblia, Catecismo, Magistério) via HomeMainDoors
+  // 7. Logos IA
+  // 8. Em Breve
+
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
@@ -100,7 +108,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         
         <HomeCard
           ref={logosCardRef}
-          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/5 bg-card/10 backdrop-blur-md transition-all duration-1000"
+          className="p-16 md:p-32 flex flex-col items-center gap-16 group relative overflow-hidden border-border/5 bg-card/10 backdrop-blur-md transition-all duration-1000 rounded-premium-lg shadow-premium"
         >
           <div className="relative z-10 w-24 h-24 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:scale-110 transition-transform duration-1000">
             <Sparkles className="w-12 h-12" strokeWidth={0.5} />
