@@ -147,26 +147,56 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       }
     }
 
-    // 4. Basic Performance Metrics
-    const performanceData = await page.evaluate(() => {
-      const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-      if (!entry) return null;
-      return {
-        dns: entry.domainLookupEnd - entry.domainLookupStart,
-        ttfb: entry.responseStart - entry.requestStart,
-        domReady: entry.domContentLoadedEventEnd - entry.startTime,
-        load: entry.loadEventEnd - entry.startTime,
-      };
+    // 4. Lighthouse Performance Audit
+    const browser = await chromium.launch({
+      args: ['--remote-debugging-port=9222'],
+      headless: true
     });
-
-    if (performanceData) {
-      auditResults.performance.push({ metric: 'TTFB', value: `${performanceData.ttfb.toFixed(0)}ms` });
-      auditResults.performance.push({ metric: 'DOM Ready', value: `${performanceData.domReady.toFixed(0)}ms` });
-      auditResults.performance.push({ metric: 'Total Load', value: `${performanceData.load.toFixed(0)}ms` });
+    
+    try {
+      const lighthousePage = await browser.newPage();
       
-      if (performanceData.load > 3000) {
-        auditResults.performance.push({ metric: 'Status', value: 'SLOW' });
+      const threshold = {
+        performance: 70,
+        accessibility: 80,
+        'best-practices': 80,
+        seo: 90,
+      };
+
+      const results = await playAudit({
+        page: lighthousePage,
+        thresholds: threshold,
+        port: 9222,
+        reports: {
+          formats: { html: true },
+          name: 'lighthouse-report',
+          directory: path.join(process.cwd(), 'test-results'),
+        },
+      });
+
+      if (results && results.lhr) {
+        auditResults.lighthouse = results.lhr.categories;
+        Object.keys(results.lhr.categories).forEach(key => {
+          const cat = results.lhr.categories[key];
+          const score = Math.round(cat.score * 100);
+          const status = score < (threshold[key as keyof typeof threshold] || 0) ? 'critical' : 'success';
+          
+          auditResults.performance.push({ 
+            metric: cat.title, 
+            value: `${score}%`,
+            score: score
+          });
+          
+          if (status === 'critical') {
+            auditResults.seo.push({ 
+              status: 'critical', 
+              message: `Lighthouse ${cat.title} score is ${score}%, which is below the minimum threshold of ${threshold[key as keyof typeof threshold]}%.` 
+            });
+          }
+        });
       }
+    } finally {
+      await browser.close();
     }
 
     // Generate HTML Report
@@ -186,16 +216,16 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     ].filter(i => i.status === 'warning');
 
     if (warnings.length > 0) {
-      console.log('\n--- [SEO AUDIT WARNINGS] ---');
+      console.log('\n--- [SEO & PERF AUDIT WARNINGS] ---');
       warnings.forEach(w => console.log(`⚠️  ${w.message}`));
     }
 
     if (criticalErrors.length > 0) {
-      console.error('\n--- [CRITICAL SEO ERRORS] ---');
+      console.error('\n--- [CRITICAL SEO & PERF ERRORS] ---');
       criticalErrors.forEach(e => console.error(`❌ ${e.message}`));
     }
 
-    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated HTML report.`).toBe(0);
+    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated reports.`).toBe(0);
   });
 });
 
