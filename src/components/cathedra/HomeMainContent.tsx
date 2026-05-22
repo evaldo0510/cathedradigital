@@ -152,6 +152,3 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 HomeMainContent.displayName = 'HomeMainContent';
 
 export default HomeMainContent;
-HomeMainContent.displayName = 'HomeMainContent';
-
-export default HomeMainContent;
