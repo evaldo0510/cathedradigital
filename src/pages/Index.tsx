@@ -52,12 +52,6 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden selection:bg-primary/10">
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-      >
-        Pular para o conteúdo principal
-      </a>
       
       <LandingHeader />
       
@@ -77,7 +71,7 @@ const Index = () => {
 
       <HeroSection onStart={handleStart} />
 
-      <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
+      <div className="w-full flex flex-col items-center outline-none">
         <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
           <HomeMainContent 
             user={user} 
@@ -90,7 +84,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <CookieConsent />
         </Suspense>
-      </main>
+      </div>
     </div>
   );
 };
