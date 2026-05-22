@@ -18,12 +18,12 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // 1. Core SEO Elements
+    // 1. Core SEO Elements (Titles, Descriptions, Headings)
     const title = await page.title();
     if (!title) {
       auditResults.seo.push({ status: 'critical', message: 'Title is missing.' });
-    } else if (title.length < 30 || title.length > 60) {
-      auditResults.seo.push({ status: 'warning', message: `Title "${title}" length (${title.length}) is outside 30-60 range.` });
+    } else if (title.length < 30 || title.length > 65) {
+      auditResults.seo.push({ status: 'warning', message: `Title "${title}" length (${title.length}) is outside recommended 30-65 range.` });
     } else {
       auditResults.seo.push({ status: 'success', message: `Title: ${title}` });
     }
@@ -31,15 +31,15 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     const description = await page.getAttribute('meta[name="description"]', 'content');
     if (!description) {
       auditResults.seo.push({ status: 'critical', message: 'Meta description is missing.' });
-    } else if (description.length < 120 || description.length > 160) {
-      auditResults.seo.push({ status: 'warning', message: `Description length (${description.length}) is outside 120-160 range.` });
+    } else if (description.length < 120 || description.length > 165) {
+      auditResults.seo.push({ status: 'warning', message: `Description length (${description.length}) is outside recommended 120-165 range.` });
     } else {
       auditResults.seo.push({ status: 'success', message: 'Meta description is present and properly sized.' });
     }
 
     const h1Count = await page.locator('h1').count();
     if (h1Count !== 1) {
-      auditResults.seo.push({ status: 'critical', message: `Found ${h1Count} H1 tags. Exactly one is required.` });
+      auditResults.seo.push({ status: 'critical', message: `Found ${h1Count} H1 tags. Exactly one is required for SEO.` });
     } else {
       auditResults.seo.push({ status: 'success', message: 'Found exactly one H1 tag.' });
     }
@@ -51,7 +51,17 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       auditResults.seo.push({ status: 'success', message: `Canonical: ${canonical}` });
     }
 
-    // 2. Social Cards (OG & Twitter)
+    // Link validation (internal/external)
+    const links = await page.locator('a').all();
+    let brokenLinks = 0;
+    for (const link of links) {
+      const href = await link.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('javascript:')) {
+        auditResults.seo.push({ status: 'warning', message: `Empty or placeholder link found: "${await link.innerText()}"` });
+      }
+    }
+
+    // 2. Social Cards (Open Graph & Twitter Cards)
     const ogTags = [
       { property: 'og:title', required: true },
       { property: 'og:description', required: true },
@@ -62,7 +72,9 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     for (const tag of ogTags) {
       const content = await page.getAttribute(`meta[property="${tag.property}"]`, 'content');
       if (!content) {
-        auditResults.social.push({ status: 'critical', message: `Missing Social tag: ${tag.property}` });
+        auditResults.social.push({ status: 'critical', message: `Missing Open Graph tag: ${tag.property}` });
+      } else if (tag.property === 'og:image' && !content.startsWith('http')) {
+        auditResults.social.push({ status: 'warning', message: `OG Image path should be absolute: ${content}` });
       } else {
         auditResults.social.push({ status: 'success', message: `Found ${tag.property}` });
       }
@@ -77,52 +89,64 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     for (const tag of twitterTags) {
       const content = await page.getAttribute(`meta[name="${tag.name}"]`, 'content');
       if (!content) {
-        auditResults.social.push({ status: 'critical', message: `Missing Twitter tag: ${tag.name}` });
+        auditResults.social.push({ status: 'critical', message: `Missing Twitter Card tag: ${tag.name}` });
       } else {
         auditResults.social.push({ status: 'success', message: `Found ${tag.name}` });
       }
     }
 
-    // 3. Schema.org / Structured Data
+    // 3. Schema.org / Structured Data Validation
     const scripts = await page.locator('script[type="application/ld+json"]').all();
     if (scripts.length === 0) {
-      auditResults.schema.push({ status: 'critical', message: 'No Schema.org (JSON-LD) found.' });
+      auditResults.schema.push({ status: 'critical', message: 'No Schema.org (JSON-LD) found. Critical for search snippets.' });
     } else {
       for (const script of scripts) {
         const content = await script.textContent();
         try {
           const json = JSON.parse(content || '{}');
           if (!json['@context'] || !json['@type']) {
-            auditResults.schema.push({ status: 'critical', message: 'Invalid Schema.org structure (missing @context or @type).' });
+            auditResults.schema.push({ status: 'critical', message: 'Invalid Schema.org structure: missing @context or @type.' });
           } else {
-            auditResults.schema.push({ status: 'success', message: `Found Schema.org: ${json['@type']}` });
-            // Basic field check for common types
-            if (json['@type'] === 'WebSite' && !json.name) {
-              auditResults.schema.push({ status: 'warning', message: 'Schema WebSite missing "name" field.' });
+            auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
+            
+            // Specific check for WebSite schema
+            if (json['@type'] === 'WebSite') {
+              if (!json.name) auditResults.schema.push({ status: 'warning', message: 'WebSite schema missing "name".' });
+              if (!json.url) auditResults.schema.push({ status: 'critical', message: 'WebSite schema missing "url".' });
             }
           }
         } catch (e) {
-          auditResults.schema.push({ status: 'critical', message: 'Malformed JSON-LD script.' });
+          auditResults.schema.push({ status: 'critical', message: 'Malformed JSON-LD script (Syntax Error).' });
         }
       }
     }
 
-    // 4. Performance Basics
-    const timing = await page.evaluate(() => {
-      const t = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      if (!t) return { domContentLoaded: 0, loadTime: 0 };
+    // 4. Basic Performance Metrics
+    const performanceData = await page.evaluate(() => {
+      const [entry] = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+      if (!entry) return null;
       return {
-        domContentLoaded: t.domContentLoadedEventEnd - t.startTime,
-        loadTime: t.loadEventEnd - t.startTime,
+        dns: entry.domainLookupEnd - entry.domainLookupStart,
+        ttfb: entry.responseStart - entry.requestStart,
+        domReady: entry.domContentLoadedEventEnd - entry.startTime,
+        load: entry.loadEventEnd - entry.startTime,
       };
     });
-    auditResults.performance.push({ metric: 'DOM Content Loaded', value: `${timing.domContentLoaded.toFixed(0)}ms` });
-    auditResults.performance.push({ metric: 'Full Load Time', value: `${timing.loadTime.toFixed(0)}ms` });
+
+    if (performanceData) {
+      auditResults.performance.push({ metric: 'TTFB', value: `${performanceData.ttfb.toFixed(0)}ms` });
+      auditResults.performance.push({ metric: 'DOM Ready', value: `${performanceData.domReady.toFixed(0)}ms` });
+      auditResults.performance.push({ metric: 'Total Load', value: `${performanceData.load.toFixed(0)}ms` });
+      
+      if (performanceData.load > 3000) {
+        auditResults.performance.push({ metric: 'Status', value: 'SLOW' });
+      }
+    }
 
     // Generate HTML Report
     generateHTMLReport(auditResults);
 
-    // Final Validation: Fail CI on critical errors
+    // Final Validation: Fail CI on critical errors only
     const criticalErrors = [
       ...auditResults.seo,
       ...auditResults.social,
@@ -136,16 +160,16 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     ].filter(i => i.status === 'warning');
 
     if (warnings.length > 0) {
-      console.log('\n--- SEO Audit Warnings ---');
-      warnings.forEach(w => console.log(`[WARNING] ${w.message}`));
+      console.log('\n--- [SEO AUDIT WARNINGS] ---');
+      warnings.forEach(w => console.log(`⚠️  ${w.message}`));
     }
 
     if (criticalErrors.length > 0) {
-      console.error('\n--- CRITICAL SEO FAILURES ---');
-      criticalErrors.forEach(e => console.error(`[ERROR] ${e.message}`));
+      console.error('\n--- [CRITICAL SEO ERRORS] ---');
+      criticalErrors.forEach(e => console.error(`❌ ${e.message}`));
     }
 
-    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. See report for details.`).toBe(0);
+    expect(criticalErrors.length, `SEO Audit failed with ${criticalErrors.length} critical issues. Review the generated HTML report.`).toBe(0);
   });
 });
 
