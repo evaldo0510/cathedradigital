@@ -34,6 +34,11 @@ describe('Error Handling & Boundary Tests', () => {
     vi.clearAllMocks();
     // Silence console.error for expected errors
     vi.spyOn(console, 'error').mockImplementation(() => {});
+    
+    // Mock Element.prototype.scrollTo if not already mocked
+    if (typeof Element.prototype.scrollTo !== 'function') {
+      Element.prototype.scrollTo = vi.fn();
+    }
   });
 
   it('AppErrorBoundary catches child errors and displays fallback UI', () => {
