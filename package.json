@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:ci": "vitest run --coverage --reporter=default",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
