@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/hooks/useAuth';
 import React from 'react';
 
 // Mocking related data
