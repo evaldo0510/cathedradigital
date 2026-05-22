@@ -23,21 +23,20 @@ async function runVisualTests() {
   };
 
   try {
-    // Run Playwright tests
-    console.log('  - Executando Auditoria Estrutural e SEO...');
-    execSync('npx playwright test tests/e2e/home-comprehensive.spec.ts tests/e2e/home-seo.spec.ts', {
-      stdio: 'inherit',
-      env: { ...process.env, CI: 'true' }
-    });
-
-    console.log('  - Executando Playwright com Snapshots e Axe-core...');
-    execSync('npx playwright test tests/e2e/visual-regression.spec.ts tests/e2e/home-visual.spec.ts', {
+    // Run Playwright tests - specifically the visual and accessibility ones
+    console.log('  - Executando Auditoria Visual e de Acessibilidade...');
+    execSync('npx playwright test tests/e2e/visual.spec.ts tests/e2e/accessibility.spec.ts tests/e2e/home-seo.spec.ts', {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
 
     console.log('  - Executando Auditoria de Tokens (Design System)...');
-    execSync('bun run scripts/visual-audit.ts', { stdio: 'inherit' });
+    // Ensure we have bun or fallback to node
+    try {
+      execSync('bun run scripts/visual-audit.ts', { stdio: 'inherit' });
+    } catch {
+      execSync('npx ts-node scripts/visual-audit.ts', { stdio: 'inherit' });
+    }
     if (fs.existsSync('visual-audit-report.json')) {
       fs.copyFileSync('visual-audit-report.json', 'public/visual-audit-report.json');
     }
