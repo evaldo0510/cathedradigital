@@ -135,6 +135,7 @@ test.describe('SEO & Metadata Audit - Internal Pages', () => {
 
   test.afterAll(async () => {
     generateInternalHTMLReport(allAuditResults);
+    generateInternalJSONSummary(allAuditResults);
   });
 });
 
@@ -191,4 +192,19 @@ function generateInternalHTMLReport(results: Record<string, any>) {
   `;
 
   fs.writeFileSync(path.join(reportDir, 'internal-seo-audit-report.html'), html);
+}
+
+function generateInternalJSONSummary(results: Record<string, any>) {
+  const reportDir = path.join(process.cwd(), 'test-results');
+  if (!fs.existsSync(reportDir)) fs.mkdirSync(reportDir, { recursive: true });
+
+  const summary = Object.values(results).map(res => ({
+    page: res.name,
+    path: res.path,
+    critical: [...res.seo, ...res.social].filter(i => i.status === 'critical').map(i => i.message),
+    warnings: [...res.seo, ...res.social].filter(i => i.status === 'warning').map(i => i.message),
+    performance: res.performance
+  }));
+
+  fs.writeFileSync(path.join(reportDir, 'seo-summary-internal.json'), JSON.stringify(summary, null, 2));
 }
