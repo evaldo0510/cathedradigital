@@ -50,6 +50,23 @@ test.describe('SEO & Metadata Audit - Internal Pages', () => {
         auditResults.seo.push({ status: 'success', message: `Found ${h1Count} H1 tag(s).` });
       }
 
+      const canonical = await page.getAttribute('link[rel="canonical"]', 'href');
+      if (!canonical) {
+        auditResults.seo.push({ status: 'critical', message: 'Canonical tag is missing.' });
+      } else {
+        auditResults.seo.push({ status: 'success', message: `Canonical: ${canonical}` });
+      }
+
+      const robots = await page.getAttribute('meta[name="robots"]', 'content');
+      if (robots && (robots.includes('noindex') || robots.includes('none'))) {
+        auditResults.seo.push({ status: 'warning', message: `Robots meta restricts indexing: "${robots}"` });
+      }
+
+      const hreflangs = await page.locator('link[rel="alternate"][hreflang]').all();
+      if (hreflangs.length > 0) {
+        auditResults.seo.push({ status: 'success', message: `Found ${hreflangs.length} hreflang tag(s).` });
+      }
+
       // 2. Social
       const ogTitle = await page.getAttribute('meta[property="og:title"]', 'content');
       if (!ogTitle) {

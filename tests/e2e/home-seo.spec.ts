@@ -51,6 +51,29 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       auditResults.seo.push({ status: 'success', message: `Canonical: ${canonical}` });
     }
 
+    const robots = await page.getAttribute('meta[name="robots"]', 'content');
+    if (robots && (robots.includes('noindex') || robots.includes('none'))) {
+      auditResults.seo.push({ status: 'warning', message: `Robots meta tag is set to restrict indexing: "${robots}". Ensure this is intentional.` });
+    } else if (robots) {
+      auditResults.seo.push({ status: 'success', message: `Robots meta: ${robots}` });
+    } else {
+      auditResults.seo.push({ status: 'success', message: 'No indexing restrictions found in robots meta tag.' });
+    }
+
+    const hreflangs = await page.locator('link[rel="alternate"][hreflang]').all();
+    if (hreflangs.length > 0) {
+      for (const hl of hreflangs) {
+        const lang = await hl.getAttribute('hreflang');
+        const href = await hl.getAttribute('href');
+        if (!href) {
+          auditResults.seo.push({ status: 'critical', message: `Hreflang for "${lang}" is missing an href attribute.` });
+        } else {
+          auditResults.seo.push({ status: 'success', message: `Hreflang found: ${lang} -> ${href}` });
+        }
+      }
+    } else {
+      auditResults.seo.push({ status: 'warning', message: 'No hreflang tags found. Recommended for multi-language or global sites.' });
+
     // Link validation (internal/external)
     const links = await page.locator('a').all();
     let brokenLinks = 0;
