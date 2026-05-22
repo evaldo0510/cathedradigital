@@ -26,8 +26,9 @@ vi.mock('@/hooks/useAuth', () => ({
     isPremium: true,
     userLevel: 'iniciante'
   })),
-  AuthProvider: ({ children }: any) => <>{children}</>,
 }));
+
+const AuthProvider = ({ children }: any) => <>{children}</>;
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { 

@@ -35,8 +35,9 @@ vi.mock('@/hooks/useAuth', () => ({
     isPremium: true,
     userLevel: 'iniciante'
   })),
-  AuthProvider: ({ children }: any) => <>{children}</>,
 }));
+
+const AuthProvider = ({ children }: any) => <>{children}</>;
 
 const queryClient = new QueryClient({
   defaultOptions: {
