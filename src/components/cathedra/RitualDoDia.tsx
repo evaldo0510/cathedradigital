@@ -2,13 +2,13 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Sparkles, CheckCircle2, ArrowRight, Book, Heart, VolumeX, Bell, Download, Settings2, Clock, Map } from 'lucide-react';
 import { DAILY_RITUALS } from '@/data/dailyRitual';
-import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
 import AudioContentPlayer from './AudioContentPlayer';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { jsPDF } from 'jspdf';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -182,198 +182,177 @@ const RitualDoDia: React.FC = () => {
   const audioText = ritual ? `Versículo: ${ritual.verse?.text || ''} (${ritual.verse?.ref || ''}). Reflexão: ${ritual.reflection || ''}. Catecismo: ${ritual.catechism?.text || ''}. Oração: ${ritual.prayer || ''}` : '';
 
   return (
-    <HomeCard
-      as={motion.div}
-      initial={isSilent ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={isSilent ? { duration: 0 } : { duration: 1.5, ease: [0.2, 0.8, 0.2, 1] }}
-      className={`relative overflow-hidden border-border/10 shadow-premium group ${isSilent ? 'font-serif' : ''}`}
+    <div
+      className={cn(
+        "relative overflow-hidden border-border/5 bg-card/5 backdrop-blur-md rounded-[3rem] shadow-premium transition-all duration-1000",
+        isSilent ? 'font-serif' : ''
+      )}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       
-      <div className="relative z-10 p-10 md:p-16 lg:p-24 space-y-16">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-10 border-b border-border/5 pb-16">
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-primary/20" strokeWidth={1.2} />
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/20">
-                ORATIO ET CONTEMPLATIO
-              </span>
-            </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display text-primary tracking-tight leading-tight">
-              Ritual do Dia
-            </h2>
-          </div>
-          <div className="flex flex-col items-start md:items-end gap-2">
-            <span className="text-xs font-serif italic text-muted-foreground">
+      <div className="relative z-10 p-12 md:p-20 lg:p-32 space-y-24">
+        {/* Header Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-border/5 pb-20">
+          <div className="flex flex-col gap-4">
+            <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
-            {progress > 0 && (
-              <div className="flex items-center gap-3">
-                <div className="h-1 w-20 bg-border/20 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={isSilent ? { width: `${progress}%` } : { width: 0 }}
-                    animate={{ width: `${progress}%` }}
-                    transition={isSilent ? { duration: 0 } : { duration: 0.5 }}
-                    className="h-full bg-primary/40"
-                  />
+            <div className="flex items-center gap-6">
+              {progress > 0 && (
+                <div className="flex items-center gap-4">
+                  <div className="h-1 w-24 bg-border/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress}%` }}
+                      className="h-full bg-primary/20"
+                    />
+                  </div>
+                  <span className="text-[9px] font-bold text-primary/30 uppercase tracking-[0.4em]">{progress}%</span>
                 </div>
-                <span className="text-[9px] font-bold text-primary/40 uppercase tracking-widest">{progress}% concluído</span>
-              </div>
-            )}
-            
-            <div className="flex items-center gap-2 mt-2">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className={`w-8 h-8 rounded-full transition-colors ${isSilent ? 'text-primary' : 'text-primary/30 hover:text-primary'}`}
-                onClick={() => updateSettings(!isSilent, reminderTime)}
-                title={isSilent ? "Desativar Modo Silencioso" : "Ativar Modo Silencioso"}
-              >
-                {isSilent ? <VolumeX className="w-4 h-4" /> : <Sparkles className="w-4 h-4" strokeWidth={1} />}
-              </Button>
+              )}
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className={cn("w-10 h-10 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/20 hover:text-primary')}
+              onClick={() => updateSettings(!isSilent, reminderTime)}
+            >
+              {isSilent ? <VolumeX className="w-5 h-5" /> : <Sparkles className="w-5 h-5" strokeWidth={0.5} />}
+            </Button>
 
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-8 h-8 rounded-full text-primary/30 hover:text-primary transition-colors"
-                onClick={exportPDF}
-                title="Baixar PDF"
-              >
-                <Download className="w-4 h-4" />
-              </Button>
-              
-              <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="w-8 h-8 rounded-full text-primary/30 hover:text-primary transition-colors"
-                    title="Configurações"
-                  >
-                    <Settings2 className="w-4 h-4" />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] border-border/10 shadow-premium">
-                  <DialogHeader>
-                    <DialogTitle className="font-display text-2xl text-primary">Configurações do Ritual</DialogTitle>
-                  </DialogHeader>
-                  <div className="grid gap-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label className="text-sm font-bold uppercase tracking-widest text-primary/60">Modo Silencioso</Label>
-                        <p className="text-xs text-muted-foreground font-serif italic">Desativa animações e simplifica a tipografia.</p>
-                      </div>
-                      <Switch 
-                        checked={isSilent} 
-                        onCheckedChange={(val) => updateSettings(val, reminderTime)}
-                      />
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="w-10 h-10 rounded-full text-primary/20 hover:text-primary transition-colors"
+              onClick={exportPDF}
+            >
+              <Download className="w-5 h-5" />
+            </Button>
+            
+            <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="w-10 h-10 rounded-full text-primary/20 hover:text-primary transition-colors"
+                >
+                  <Settings2 className="w-5 h-5" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] border-border/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2rem]">
+                <DialogHeader>
+                  <DialogTitle className="font-display text-3xl text-primary">Configurações</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-8 py-8">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Modo Silencioso</Label>
+                      <p className="text-xs text-muted-foreground/40 font-serif italic">Foco absoluto na leitura.</p>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-primary/40" />
-                        <Label className="text-sm font-bold uppercase tracking-widest text-primary/60">Lembrete Diário</Label>
-                      </div>
-                      <div className="flex gap-2">
-                        <Input 
-                          type="time" 
-                          value={reminderTime}
-                          onChange={(e) => setReminderTime(e.target.value)}
-                          className="font-mono text-sm border-border/20"
-                        />
-                        <Button 
-                          onClick={() => updateSettings(isSilent, reminderTime)}
-                          className="bg-primary/90 hover:bg-primary text-[10px] font-bold uppercase tracking-widest"
-                        >
-                          Salvar
-                        </Button>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground font-serif italic">Defina o horário para sua prática espiritual diária.</p>
+                    <Switch 
+                      checked={isSilent} 
+                      onCheckedChange={(val) => updateSettings(val, reminderTime)}
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-4 h-4 text-primary/40" />
+                      <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Lembrete</Label>
+                    </div>
+                    <div className="flex gap-3">
+                      <Input 
+                        type="time" 
+                        value={reminderTime}
+                        onChange={(e) => setReminderTime(e.target.value)}
+                        className="font-mono text-sm border-border/10 bg-background/50 rounded-full h-12 px-6"
+                      />
+                      <Button 
+                        onClick={() => updateSettings(isSilent, reminderTime)}
+                        className="bg-primary/90 hover:bg-primary text-[10px] font-bold uppercase tracking-widest rounded-full h-12 px-8"
+                      >
+                        Salvar
+                      </Button>
                     </div>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
         {/* Content Sections */}
-        <div className="grid grid-cols-1 gap-16">
+        <div className="grid grid-cols-1 gap-24">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-6 max-w-2xl">
-            <div className="flex items-center gap-3">
-              <BookOpen className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10">I. Lectio Divina</span>
-            </div>
+          <section className="space-y-10 max-w-3xl mx-auto text-center">
+            <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary/10">I. Lectio</span>
             <div 
-              className={`group cursor-pointer transition-all duration-1000 ${progress >= 25 ? 'opacity-30 grayscale' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={cn(
+                "group cursor-pointer transition-all duration-1000",
+                progress >= 25 ? 'opacity-20 grayscale' : 'opacity-100'
+              )}
               onClick={() => handleProgress(25)}
             >
-              <blockquote className="text-3xl md:text-4xl lg:text-5xl font-serif italic leading-relaxed text-primary/80 selection:bg-primary/5">
+              <blockquote className="text-4xl md:text-5xl lg:text-6xl font-serif italic leading-[1.3] text-primary/80 selection:bg-primary/5">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-6 text-[10px] font-black text-primary/20 uppercase tracking-[0.4em]">
+              <p className="mt-8 text-[10px] font-bold text-primary/20 uppercase tracking-[0.5em]">
                 — {ritual?.verse?.ref || ''}
               </p>
-
             </div>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-6 max-w-2xl ml-auto text-right">
-            <div className="flex items-center gap-3 justify-end">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30">II. Reflexão</span>
-              <Sparkles className="w-4 h-4 text-primary/30" strokeWidth={1.5} />
-            </div>
+          <section className="space-y-10 max-w-2xl mx-auto text-center">
+            <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary/10">II. Meditatio</span>
             <div 
-              className={`group cursor-pointer transition-all duration-1000 ${progress >= 50 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={cn(
+                "group cursor-pointer transition-all duration-1000",
+                progress >= 50 ? 'opacity-20' : 'opacity-100'
+              )}
               onClick={() => handleProgress(50)}
             >
-              <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed text-foreground/60 font-serif italic selection:bg-primary/5">
+              <p className="text-2xl md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5">
                 {ritual.reflection}
               </p>
             </div>
           </section>
 
           {/* 3. Catechism */}
-          <section className="space-y-8 max-w-2xl border-l border-border/5 pl-12 py-4">
-            <div className="flex items-center gap-3">
-              <Book className="w-4 h-4 text-primary/10" strokeWidth={1.2} />
-              <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10">III. Traditio Sancta</span>
-            </div>
+          <section className="space-y-10 max-w-2xl mx-auto text-center">
+            <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary/10">III. Traditio</span>
             <div 
-              className={`group cursor-pointer transition-all duration-1000 ${progress >= 75 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={cn(
+                "group cursor-pointer transition-all duration-1000",
+                progress >= 75 ? 'opacity-20' : 'opacity-100'
+              )}
               onClick={() => handleProgress(75)}
             >
-              <p className="text-lg md:text-xl leading-relaxed text-foreground/50 font-serif tracking-tight selection:bg-primary/5">
+              <p className="text-xl md:text-2xl leading-relaxed text-foreground/30 font-serif tracking-tight selection:bg-primary/5">
                 {ritual?.catechism?.text || ''}
               </p>
-              <p className="mt-4 text-[9px] font-black text-primary/20 uppercase tracking-[0.4em]">
-                Catechismus §{ritual?.catechism?.number || ''}
+              <p className="mt-6 text-[9px] font-bold text-primary/10 uppercase tracking-[0.5em]">
+                §{ritual?.catechism?.number || ''}
               </p>
-
             </div>
           </section>
 
           {/* 4. Prayer */}
-          <section className="space-y-12 max-w-3xl mx-auto text-center py-20 bg-primary/[0.005] rounded-[3rem] border border-primary/[0.02]">
-            <div className="flex flex-col items-center gap-6">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/10 animate-pulse" />
-              <span className="text-[9px] font-black uppercase tracking-[0.8em] text-primary/20">IV. Oratio</span>
-            </div>
+          <section className="space-y-12 max-w-3xl mx-auto text-center py-24 bg-primary/[0.01] rounded-[4rem] border border-primary/[0.05]">
+            <span className="text-[9px] font-bold uppercase tracking-[1em] text-primary/20">IV. Oratio</span>
             <div 
-              className={`group cursor-pointer transition-all duration-1000 px-12 ${progress >= 100 ? 'opacity-30' : 'opacity-100'} ${isSilent ? 'hover:opacity-80' : ''}`}
+              className={cn(
+                "group cursor-pointer transition-all duration-1000 px-16",
+                progress >= 100 ? 'opacity-20' : 'opacity-100'
+              )}
               onClick={() => handleProgress(100)}
             >
-              <p className="text-3xl md:text-4xl lg:text-5xl leading-tight text-primary/70 font-serif italic selection:bg-primary/5">
+              <p className="text-4xl md:text-5xl lg:text-6xl leading-tight text-primary/60 font-serif italic selection:bg-primary/5">
                 {ritual?.prayer || ''}
               </p>
-
             </div>
           </section>
         </div>
@@ -387,12 +366,12 @@ const RitualDoDia: React.FC = () => {
             className="text-primary/40 hover:text-primary transition-colors"
           />
           
-          <div className="flex gap-4">
+          <div className="flex gap-6">
             {progress > 0 && (
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
+                className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/20 hover:text-primary transition-all"
                 onClick={() => {
                   setProgress(0);
                   if (user) {
@@ -404,32 +383,32 @@ const RitualDoDia: React.FC = () => {
                   }
                 }}
               >
-                Recomeçar
+                Reiniciar
               </Button>
             )}
             {progress < 100 && (
               <Button 
-                className="rounded-full bg-primary/90 hover:bg-primary text-white px-8 h-12 text-[10px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+                className="rounded-full bg-primary/90 hover:bg-primary text-white px-10 h-14 text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium hover:shadow-premium-hover transition-all"
                 onClick={() => {
                   const sections = [25, 50, 75, 100];
                   const nextProgress = sections.find(s => s > progress) || 100;
                   handleProgress(nextProgress);
                 }}
               >
-                {progress === 0 ? 'Iniciar Ritual' : 'Próximo Passo'}
-                <ArrowRight className="ml-2 w-3 h-3" />
+                {progress === 0 ? 'Iniciar' : 'Continuar'}
+                <ArrowRight className="ml-3 w-4 h-4" />
               </Button>
             )}
             {progress === 100 && (
-              <div className="flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-[10px] px-6 py-3 bg-primary/5 rounded-full">
+              <div className="flex items-center gap-3 text-primary/40 font-bold uppercase tracking-[0.5em] text-[10px] px-8 py-4 bg-primary/[0.02] rounded-full border border-primary/5">
                 <CheckCircle2 className="w-4 h-4" />
-                Concluído por hoje
+                Concluído
               </div>
             )}
           </div>
         </div>
       </div>
-    </HomeCard>
+    </div>
   );
 };
 

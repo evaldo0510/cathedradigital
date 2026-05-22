@@ -76,116 +76,74 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
       if (error) {
         if (error.code === '23505') {
-          toast.info("Você já está na nossa lista de espera. Obrigado pelo interesse!");
-          setSubmitted(true); // Already registered
+          toast.info("Você já está na nossa lista de espera.");
+          setSubmitted(true);
         } else {
           throw error;
         }
       } else {
         setSubmitted(true);
-        toast.success("Interesse registrado com sucesso. Você será notificado das novidades.");
+        toast.success("Interesse registrado com sucesso.");
         setEmail('');
       }
     } catch (err) {
       console.error('Error registering lead:', err);
-      toast.error("Erro ao registrar interesse. Tente novamente em instantes.");
+      toast.error("Erro ao registrar interesse.");
     } finally {
       setLoading(true);
-      // Brief artificial delay for better UX feel
       setTimeout(() => setLoading(false), 500);
     }
   };
 
 
   return (
-    <section className={cn("space-y-16", className)}>
-      <div className="flex items-center gap-10">
-        <div className="h-px flex-1 bg-border/30" />
-        <h2 className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
-          Em Breve
-        </h2>
-        <div className="h-px flex-1 bg-border/30" />
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+    <div className={cn("space-y-24", className)}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto">
         {items.map((item, idx) => (
-          <motion.div
+          <div
             key={idx}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 1, delay: idx * 0.1 }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center text-center gap-6 group cursor-default"
+            className="flex flex-col items-center text-center gap-8 group cursor-default"
           >
-            <div className="w-12 h-12 rounded-premium bg-primary/[0.01] border border-border/5 flex items-center justify-center text-primary/10 group-hover:text-primary/30 group-hover:border-primary/10 transition-all duration-1000">
-              <item.icon className="w-5 h-5" strokeWidth={0.5} />
+            <div className="w-16 h-16 rounded-full bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/10 group-hover:text-primary/30 transition-all duration-1000">
+              <item.icon className="w-6 h-6" strokeWidth={0.5} />
             </div>
-            <div className="space-y-3">
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/20 group-hover:text-primary/40 transition-colors">{item.label}</h3>
-              <p className="text-[9px] text-muted-foreground/10 leading-relaxed font-serif italic group-hover:text-muted-foreground/30 transition-colors">{item.description}</p>
+            <div className="space-y-4">
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 group-hover:text-primary/40 transition-colors duration-500">{item.label}</h3>
+              <p className="text-[10px] text-muted-foreground/10 leading-relaxed font-serif italic tracking-wider group-hover:text-muted-foreground/30 transition-colors duration-500">{item.description}</p>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
       
-      <div className="max-w-xl mx-auto w-full">
-        <div className="p-8 md:p-12 rounded-premium border border-primary/5 bg-primary/[0.01] flex flex-col items-center gap-8 text-center">
-          <div className="space-y-3">
-            <h3 className="text-sm font-bold uppercase tracking-[0.3em] text-primary/60">Seja notificado</h3>
-            <p className="text-xs text-muted-foreground italic font-serif leading-relaxed">
-              Junte-se à lista de espera para os novos módulos da biblioteca espiritual.
-            </p>
-          </div>
-
-          {!submitted ? (
-            <form onSubmit={handleSubmit} className="w-full space-y-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-
-              <div className="relative flex-1">
-                <Input
-                  type="email"
-                  placeholder="Seu melhor e-mail..."
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 pl-12 rounded-premium border-border/20 bg-background/50 focus:bg-background transition-all"
-                />
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
-              </div>
-              <Button 
+      <div className="max-w-md mx-auto w-full">
+        {!submitted ? (
+          <form onSubmit={handleSubmit} className="relative group">
+            <div className="relative">
+              <Input
+                type="email"
+                placeholder="Seu melhor e-mail para novidades..."
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-16 pl-16 pr-40 rounded-full border-border/5 bg-background/20 focus:bg-background transition-all font-serif italic text-sm placeholder:text-muted-foreground/10"
+              />
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10" />
+              <button 
                 type="submit" 
                 disabled={loading}
-                className="h-12 px-8 rounded-premium bg-primary text-primary-foreground font-bold uppercase tracking-widest text-[10px] hover:brightness-110"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 rounded-full bg-primary/10 text-primary text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-500"
               >
-                {loading ? "Processando..." : (
-                  <span className="flex items-center gap-2">
-                    Indicar Interesse
-                    <ArrowRight className="w-3 h-3" />
-                  </span>
-                )}
-              </Button>
-              </div>
-              
-            </form>
-
-          ) : (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex items-center gap-3 text-secondary py-3 px-6 rounded-full bg-secondary/10 border border-secondary/20"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Inscrito com sucesso</span>
-            </motion.div>
-          )}
-        </div>
+                {loading ? "..." : "Notificar"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="flex items-center justify-center gap-3 text-primary/30 py-4 px-8 rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit">
+            <CheckCircle2 className="w-4 h-4" />
+            <span className="text-[9px] font-bold uppercase tracking-widest">Aguardando novidades</span>
+          </div>
+        )}
       </div>
-      
-      <div className="text-center pt-8">
-        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/20">
-          Evolução constante sob a luz da tradição
-        </p>
-      </div>
-    </section>
+    </div>
   );
 };
