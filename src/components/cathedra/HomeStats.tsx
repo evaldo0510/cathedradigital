@@ -1,4 +1,5 @@
-import React from 'react';
+// Componente removido para simplificação da Home.
+export default () => null;
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 

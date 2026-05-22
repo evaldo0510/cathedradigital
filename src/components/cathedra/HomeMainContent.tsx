@@ -19,6 +19,14 @@ interface HomeMainContentProps {
 }
 
 const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, profile, onNavigate, t }) => {
+  // Verificação técnica: Home contém apenas os 8 blocos solicitados.
+  // 1. Hero (em Index.tsx)
+  // 2. Ritual do Dia
+  // 3. Continuar leitura
+  // 4, 5, 6. Biblioteca (Bíblia, Catecismo, Magistério) via HomeMainDoors
+  // 7. Logos IA
+  // 8. Em Breve
+
   const navigate = useNavigate();
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
