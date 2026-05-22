@@ -26,17 +26,17 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Run SEO & Schema Audit
-      run: npx playwright test tests/e2e/home-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts
+      run: npx playwright test tests/e2e/home-seo.spec.ts tests/e2e/internal-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts
       env:
         CI: true
 
-    - name: Upload SEO Report
+    - name: Upload SEO Reports
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: seo-audit-report
+        name: seo-audit-reports
         path: |
-          test-results/seo-audit-report.html
+          test-results/*.html
           public/sitemap.xml
           public/robots.txt
         retention-days: 30
