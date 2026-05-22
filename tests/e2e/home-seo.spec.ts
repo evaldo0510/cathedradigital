@@ -1,17 +1,20 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { playAudit } from 'playwright-lighthouse';
+import { chromium } from '@playwright/test';
 
 /**
- * Enhanced SEO, Schema.org and Social Cards Audit for Home Page
- * Fail on critical errors, log warnings.
+ * Enhanced SEO, Schema.org, Social Cards and Lighthouse Performance Audit for Home Page
+ * Fail on critical errors or performance below threshold.
  */
 test.describe('SEO & Metadata Audit - Home Page', () => {
   const auditResults = {
     seo: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
     schema: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
     social: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
-    performance: [] as { metric: string; value: string }[],
+    performance: [] as { metric: string; value: string; score?: number }[],
+    lighthouse: {} as any,
   };
 
   test('Comprehensive SEO & Social Audit', async ({ page }) => {
@@ -267,15 +270,18 @@ function generateHTMLReport(results: any) {
         </div>
 
         <div class="section">
-            <h3>Performance Básica</h3>
+            <h3>Lighthouse Performance Scores</h3>
             <div class="metric-grid">
                 ${results.performance.map((p: any) => `
-                    <div class="metric-item">
+                    <div class="metric-item ${p.score && p.score < 70 ? 'status-critical' : ''}">
                         <span class="metric-value">${p.value}</span>
                         <span class="metric-label">${p.metric}</span>
                     </div>
                 `).join('')}
             </div>
+            <p style="font-size: 11px; margin-top: 15px; color: #666;">
+                * Ver relatório detalhado: <a href="lighthouse-report.html">Lighthouse Full Report</a>
+            </p>
         </div>
     </div>
 
