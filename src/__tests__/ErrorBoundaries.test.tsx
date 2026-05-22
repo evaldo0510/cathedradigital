@@ -35,9 +35,12 @@ describe('Error Handling & Boundary Tests', () => {
     // Silence console.error for expected errors
     vi.spyOn(console, 'error').mockImplementation(() => {});
     
-    // Mock Element.prototype.scrollTo if not already mocked
+    // Polyfill scrollTo on Element and window
     if (typeof Element.prototype.scrollTo !== 'function') {
       Element.prototype.scrollTo = vi.fn();
+    }
+    if (typeof window.scrollTo !== 'function') {
+      window.scrollTo = vi.fn();
     }
   });
 
