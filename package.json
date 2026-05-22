@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:ci": "vitest run --coverage --reporter=default --passWithNoTests --coverage.thresholds.100=0 --coverage.thresholds.statements=20",
+    "test:ci": "vitest run --coverage --reporter=default --passWithNoTests",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
