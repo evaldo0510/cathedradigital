@@ -80,6 +80,28 @@ jobs:
           done
           echo "EOF" >> $GITHUB_ENV
 
+      - name: Extract Coverage Data
+        if: github.event_name == 'pull_request' && always()
+        id: coverage-data
+        shell: bash
+        run: |
+          if [ -f "coverage/coverage-summary.json" ]; then
+            TOTAL_PCT=$(jq -r '.total.lines.pct' coverage/coverage-summary.json)
+            # Find files below 80% threshold
+            LOW_COVERAGE=$(jq -r '. | to_entries | .[] | select(.key != "total" and .value.lines.pct < 80) | "\(.key): \(.value.lines.pct)%"' coverage/coverage-summary.json | head -n 10)
+            if [ -z "$LOW_COVERAGE" ]; then LOW_COVERAGE="Nenhum (Todos acima do limite)"; fi
+            
+            echo "TOTAL=$TOTAL_PCT" >> $GITHUB_OUTPUT
+            {
+              echo 'LOW_FILES<<EOF'
+              echo "$LOW_COVERAGE"
+              echo 'EOF'
+            } >> $GITHUB_OUTPUT
+          else
+            echo "TOTAL=N/A" >> $GITHUB_OUTPUT
+            echo "LOW_FILES=Sumário não encontrado" >> $GITHUB_OUTPUT
+          fi
+
       - name: PR Comment
         if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@v7
@@ -90,21 +112,34 @@ jobs:
               typecheck: '${{ steps.typecheck.outcome }}',
               vitest: '${{ steps.vitest.outcome }}'
             };
+            const coverageTotal = '${{ steps.coverage-data.outputs.TOTAL }}';
+            const lowFiles = `${{ steps.coverage-data.outputs.LOW_FILES }}`;
+            
             const icon = (s) => s === 'success' ? '✅' : '❌';
             const diffMap = process.env.MAP_BODY || '';
             
             const body = `
             ### 🛠️ Resultado do Pipeline (CI)
-            | Step | Status |
-            | :--- | :--- |
-            | Lint | ${icon(results.lint)} ${results.lint === 'success' ? 'Passou' : 'Falhou (Max 0 warnings)'} |
-            | Typecheck | ${icon(results.typecheck)} ${results.typecheck === 'success' ? 'Passou' : 'Falhou'} |
-            | Testes & Coverage | ${icon(results.vitest)} ${results.vitest === 'success' ? 'Passou (Min 80%)' : 'Falhou'} |
+            | Step | Status | Detalhes |
+            | :--- | :--- | :--- |
+            | Lint | ${icon(results.lint)} | ${results.lint === 'success' ? 'Passou' : 'Falhou (Max 0 warnings)'} |
+            | Typecheck | ${icon(results.typecheck)} | ${results.typecheck === 'success' ? 'Passou' : 'Falhou'} |
+            | Testes & Coverage | ${icon(results.vitest)} | **${coverageTotal}%** ${results.vitest === 'success' ? '✅' : '❌'} |
+            
+            <details>
+            <summary><b>📊 Detalhes de Cobertura</b></summary>
+            
+            **Cobertura Total:** \`${coverageTotal}%\`
+            **Arquivos abaixo do threshold (80%):**
+            \`\`\`
+            ${lowFiles}
+            \`\`\`
+            </details>
             
             ${diffMap}
             
             ---
-            _Thresholds: Lint (0 warnings), Typecheck (No errors), Coverage (80% Lines/Funcs)_
+            _Thresholds: Lint (0 warnings), Coverage (80% Lines)_
             `;
             
             github.rest.issues.createComment({
