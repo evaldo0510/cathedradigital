@@ -99,9 +99,12 @@ describe('TemasPage - Integration Tests', () => {
     }, { timeout: 3000 });
 
 
-    // Check if category filters exist
-    expect(screen.getByText('Fundamentos')).toBeInTheDocument();
-    expect(screen.getByText('Virtudes')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Todos/i)).toBeInTheDocument();
+      expect(screen.getByText(/Fundamentos/i)).toBeInTheDocument();
+      expect(screen.getByText(/Virtudes/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+
   });
 
   it('settles to non-loading state when tags fetch returns null', async () => {
