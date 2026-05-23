@@ -1,0 +1,17 @@
+{
+  "seo": {
+    "title_tag": "Presente",
+    "meta_description": "Presente",
+    "h1_check": "Presente",
+    "alt_text": "Presente em imagens críticas",
+    "mobile_friendly": "Sim",
+    "canonical_tags": "Configuradas"
+  },
+  "performance": {
+    "lcp": "Otimal",
+    "cls": "Baixo",
+    "fid": "Excelente",
+    "lazy_loading": "Ativado",
+    "asset_optimization": "Vite/PostCSS"
+  }
+}
