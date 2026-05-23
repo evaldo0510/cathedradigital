@@ -7,7 +7,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from '@/hooks/useAuth';
 import React from 'react';
 
 // Mock Supabase with a more flexible chain

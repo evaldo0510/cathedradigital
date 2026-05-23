@@ -4,7 +4,6 @@ import TemasPage from './TemasPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthProvider } from '@/hooks/useAuth';
 import { HelmetProvider } from 'react-helmet-async';
 
 // Mocking dependencies
