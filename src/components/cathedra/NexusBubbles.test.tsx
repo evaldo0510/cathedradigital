@@ -4,7 +4,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import NexusBubbles from './NexusBubbles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
