@@ -73,13 +73,12 @@ describe('NexusBubbles - Integration Tests', () => {
     const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
     vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnThis(),
-      order: vi.fn().mockImplementation((resolve) => {
-        const res = { data: mockTags, error: null };
-        if (typeof resolve === 'function') return resolve(res);
-        return { then: (r: any) => r(res) };
-      }),
+      order: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
       then: vi.fn().mockImplementation((resolve) => resolve({ data: mockTags, error: null }))
     } as any);
+
 
 
 
