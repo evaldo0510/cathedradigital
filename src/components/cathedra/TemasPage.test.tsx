@@ -78,17 +78,15 @@ describe('TemasPage - Integration Tests', () => {
       { id: '2', label: 'Amor', slug: 'amor', category: 'virtudes', emoji: '❤️' }
     ];
 
+    const mockResult = { data: mockTags, error: null };
     vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnThis(),
       order: vi.fn().mockImplementation((resolve) => {
-        const res = { data: mockTags, error: null };
-        if (typeof resolve === 'function') return resolve(res);
-        return { then: (r: any) => r(res), catch: () => {} };
+        if (typeof resolve === 'function') return Promise.resolve(resolve(mockResult));
+        return Promise.resolve(mockResult);
       })
-
-
-
     } as any);
+
 
 
 
