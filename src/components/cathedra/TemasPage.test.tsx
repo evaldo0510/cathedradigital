@@ -83,8 +83,9 @@ describe('TemasPage - Integration Tests', () => {
       order: vi.fn().mockImplementation((resolve) => {
         const res = { data: mockTags, error: null };
         if (typeof resolve === 'function') return resolve(res);
-        return { then: (r: any) => r(res) };
+        return { then: (r: any) => r(res), catch: () => {} };
       })
+
 
 
     } as any);
