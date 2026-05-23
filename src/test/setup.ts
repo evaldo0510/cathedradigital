@@ -17,11 +17,10 @@ vi.mock('@/integrations/supabase/client', () => ({
       maybeSingle: vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null })),
       then: vi.fn().mockImplementation(function(this: any, resolve) {
         if (typeof resolve === 'function') {
-          return resolve({ data: [], error: null });
+          return Promise.resolve(resolve({ data: [], error: null }));
         }
         return Promise.resolve({ data: [], error: null });
       }),
-
     })),
   },
 }));
