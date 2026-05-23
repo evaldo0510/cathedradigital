@@ -4,6 +4,7 @@ import TemasPage from './TemasPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -23,6 +24,20 @@ vi.mock('@/hooks/useFuzzySearch', () => ({
   }))
 }));
 
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: 'user-123' },
+    profile: { name: 'Teste' },
+    loading: false,
+    refreshProfile: vi.fn(),
+    signOut: vi.fn(),
+    isPremium: true,
+    userLevel: 'iniciante'
+  })),
+}));
+
+const AuthProvider = ({ children }: any) => <>{children}</>;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -33,11 +48,15 @@ const queryClient = new QueryClient({
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {ui}
-      </BrowserRouter>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <BrowserRouter>
+            {ui}
+          </BrowserRouter>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 };
 
