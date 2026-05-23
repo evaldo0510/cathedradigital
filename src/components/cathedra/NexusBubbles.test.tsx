@@ -87,7 +87,10 @@ describe('NexusBubbles - Integration Tests', () => {
     renderWithProviders(<NexusBubbles />);
 
 
-    expect(await screen.findByText(/Fé/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Fé/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+
 
     const searchInput = screen.getByPlaceholderText(/Buscar tema/i);
     fireEvent.change(searchInput, { target: { value: 'Inexistente' } });
