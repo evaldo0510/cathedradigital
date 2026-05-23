@@ -72,7 +72,7 @@ describe('NexusBubbles - Integration Tests', () => {
   it('displays fallback message when search returns no results', async () => {
     const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
     const mockResult = { data: mockTags, error: null };
-    vi.mocked(supabase.from).mockImplementation((table) => {
+    vi.mocked(supabase.from).mockImplementation(((table: string) => {
       const chain = {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
@@ -81,7 +81,8 @@ describe('NexusBubbles - Integration Tests', () => {
         then: vi.fn().mockImplementation((resolve) => Promise.resolve(resolve(table === 'themes' ? mockResult : { data: [], error: null })))
       };
       return chain as any;
-    });
+    }) as any);
+
 
 
 
