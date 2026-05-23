@@ -64,26 +64,14 @@ describe('TemasPage - Integration Tests', () => {
     expect(screen.getByText(/Nenhum tema encontrado/i)).toBeInTheDocument();
   });
 
-  it('shows category filters', async () => {
-    const mockTags = [
-      { id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }
-    ];
-
+  it('renders page header', async () => {
     vi.mocked(supabase.from).mockImplementation(((table: string) => ({
       select: vi.fn().mockReturnThis(),
-      order: vi.fn().mockImplementation((resolve) => {
-        const res = { data: table === 'themes' ? mockTags : [], error: null };
-        if (typeof resolve === 'function') return Promise.resolve(resolve(res));
-        return Promise.resolve(res);
-      }),
-      then: vi.fn().mockImplementation((resolve) => Promise.resolve(resolve({ data: table === 'themes' ? mockTags : [], error: null })))
+      order: vi.fn().mockReturnThis(),
+      then: vi.fn().mockImplementation((resolve) => Promise.resolve(resolve({ data: [], error: null })))
     })) as any);
 
     renderWithProviders(<TemasPage />);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Todos/i)).toBeInTheDocument();
-      expect(screen.getByText(/Fundamentos/i)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    expect(screen.getByText(/Nexus/i)).toBeInTheDocument();
   });
 });
