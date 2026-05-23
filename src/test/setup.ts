@@ -16,8 +16,12 @@ vi.mock('@/integrations/supabase/client', () => ({
       limit: vi.fn().mockReturnThis(),
       maybeSingle: vi.fn().mockImplementation(() => Promise.resolve({ data: null, error: null })),
       then: vi.fn().mockImplementation(function(this: any, resolve) {
-        return resolve({ data: [], error: null });
+        if (typeof resolve === 'function') {
+          return resolve({ data: [], error: null });
+        }
+        return Promise.resolve({ data: [], error: null });
       }),
+
     })),
   },
 }));
