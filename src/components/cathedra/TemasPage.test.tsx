@@ -79,13 +79,19 @@ describe('TemasPage - Integration Tests', () => {
     ];
 
     const mockResult = { data: mockTags, error: null };
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnThis(),
-      order: vi.fn().mockImplementation((resolve) => {
-        if (typeof resolve === 'function') return Promise.resolve(resolve(mockResult));
-        return Promise.resolve(mockResult);
-      })
-    } as any);
+    vi.mocked(supabase.from).mockImplementation(((table: string) => {
+      const chain = {
+        select: vi.fn().mockReturnThis(),
+        order: vi.fn().mockImplementation((resolve) => {
+          const res = table === 'themes' ? mockResult : { data: [], error: null };
+          if (typeof resolve === 'function') return resolve(res);
+          return res;
+        }),
+        then: vi.fn().mockImplementation((resolve) => Promise.resolve(resolve(table === 'themes' ? mockResult : { data: [], error: null })))
+      };
+      return chain as any;
+    }) as any);
+
 
 
 
