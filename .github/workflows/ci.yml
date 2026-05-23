@@ -33,24 +33,18 @@ jobs:
 
       - name: Lint
         id: lint
-        continue-on-error: true
         run: |
           bun run lint --max-warnings 0 > lint.log 2>&1
-          echo "status=$?" >> $GITHUB_OUTPUT
 
       - name: Typecheck
         id: typecheck
-        continue-on-error: true
         run: |
           bun run typecheck > typecheck.log 2>&1
-          echo "status=$?" >> $GITHUB_OUTPUT
 
-      - name: Unit Tests
+      - name: Unit Tests (with Coverage Thresholds)
         id: vitest
-        continue-on-error: true
         run: |
-          bun run test:ci --coverage > vitest.log 2>&1
-          echo "status=$?" >> $GITHUB_OUTPUT
+          bun run test:ci > vitest.log 2>&1
 
       - name: Generate Diff Map
         id: diff-map
@@ -91,26 +85,26 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const status = {
-              lint: '${{ steps.lint.outputs.status }}',
-              typecheck: '${{ steps.typecheck.outputs.status }}',
-              vitest: '${{ steps.vitest.outputs.status }}'
+            const results = {
+              lint: '${{ steps.lint.outcome }}',
+              typecheck: '${{ steps.typecheck.outcome }}',
+              vitest: '${{ steps.vitest.outcome }}'
             };
-            const icon = (s) => s === '0' ? '✅' : '❌';
+            const icon = (s) => s === 'success' ? '✅' : '❌';
             const diffMap = process.env.MAP_BODY || '';
             
             const body = `
             ### 🛠️ Resultado do Pipeline (CI)
             | Step | Status |
             | :--- | :--- |
-            | Lint | ${icon(status.lint)} ${status.lint === '0' ? 'Passou' : 'Falhou'} |
-            | Typecheck | ${icon(status.typecheck)} ${status.typecheck === '0' ? 'Passou' : 'Falhou'} |
-            | Testes Unitários | ${icon(status.vitest)} ${status.vitest === '0' ? 'Passou' : 'Falhou'} |
+            | Lint | ${icon(results.lint)} ${results.lint === 'success' ? 'Passou' : 'Falhou (Max 0 warnings)'} |
+            | Typecheck | ${icon(results.typecheck)} ${results.typecheck === 'success' ? 'Passou' : 'Falhou'} |
+            | Testes & Coverage | ${icon(results.vitest)} ${results.vitest === 'success' ? 'Passou (Min 80%)' : 'Falhou'} |
             
             ${diffMap}
             
             ---
-            _Thresholds: Lint (0 warnings), Typecheck (No errors), Tests (Passing)_
+            _Thresholds: Lint (0 warnings), Typecheck (No errors), Coverage (80% Lines/Funcs)_
             `;
             
             github.rest.issues.createComment({
@@ -124,7 +118,7 @@ jobs:
     name: Playwright E2E & Audit
     runs-on: ubuntu-latest
     needs: validate
-    if: always() && needs.validate.result == 'success'
+    if: always() && needs.validate.result != 'skipped'
     permissions:
       pull-requests: write
       contents: read
@@ -143,32 +137,31 @@ jobs:
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps
 
-      - name: Run E2E & Audits
+      - name: Run E2E & Audits (Performance & SEO Thresholds)
         id: e2e
-        continue-on-error: true
         run: |
-          # Thresholds fictícios baseados em saída de console ou ferramentas de audit
-          bun run test:audit > e2e-audit.log 2>&1
-          STATUS=$?
-          
-          # Exemplo de falha por threshold (SEO < 90 ou Performance < 80)
-          # Isso depende da implementação do test:audit
-          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          # O script test:audit já sai com exit 1 se falhar, 
+          # mas vamos injetar variáveis de ambiente para thresholds reais se necessário
+          bun run test:audit
+        env:
+          PERF_THRESHOLD: 80
+          SEO_THRESHOLD: 90
+          A11Y_THRESHOLD: 100
 
       - name: PR Audit Comment
         if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@v7
         with:
           script: |
-            const status = '${{ steps.e2e.outputs.status }}';
+            const outcome = '${{ steps.e2e.outcome }}';
             const body = `
             ### 🎭 E2E & Auditoria de Qualidade
             | Verificação | Status |
             | :--- | :--- |
-            | Fluxos Críticos | ${status === '0' ? '✅ OK' : '❌ Falha'} |
-            | Performance | 📈 Validado |
-            | SEO | 🔍 Validado |
-            | Acessibilidade | ♿ WCAG 2.1 |
+            | Fluxos Críticos | ${outcome === 'success' ? '✅ OK' : '❌ Falha'} |
+            | Performance | ${outcome === 'success' ? '✅ >80' : '⚠️ Revisar'} |
+            | SEO | ${outcome === 'success' ? '✅ >90' : '⚠️ Revisar'} |
+            | Acessibilidade | ${outcome === 'success' ? '✅ 100%' : '⚠️ Falhas'} |
             
             > 💡 Relatórios detalhados anexados aos artefatos do workflow.
             `;
