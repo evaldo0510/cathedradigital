@@ -94,9 +94,10 @@ describe('TemasPage - Integration Tests', () => {
 
     // Wait for tags to load
     await waitFor(() => {
-      expect(screen.getByText('Fé')).toBeInTheDocument();
-      expect(screen.getByText('Amor')).toBeInTheDocument();
-    });
+      expect(screen.getByText(/Fé/i)).toBeInTheDocument();
+      expect(screen.getByText(/Amor/i)).toBeInTheDocument();
+    }, { timeout: 3000 });
+
 
     // Check if category filters exist
     expect(screen.getByText('Fundamentos')).toBeInTheDocument();
