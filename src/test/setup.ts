@@ -11,7 +11,7 @@ vi.mock('@/integrations/supabase/client', () => ({
     },
     from: vi.fn((table) => {
       const mockResult = {
-        data: table === 'nexus_tags' ? [] : null,
+        data: table === 'themes' ? [] : (table === 'nexus_tags' ? [] : null),
         error: null
       };
       
@@ -27,10 +27,12 @@ vi.mock('@/integrations/supabase/client', () => ({
           }
           return Promise.resolve(mockResult);
         }),
+        catch: vi.fn().mockReturnThis(),
       };
       
       return chain;
     }),
+
 
 
   },
