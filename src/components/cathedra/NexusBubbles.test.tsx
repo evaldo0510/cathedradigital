@@ -9,21 +9,9 @@ import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
 
-// Mock Supabase with a more flexible chain
-vi.mock('@/integrations/supabase/client', () => {
-  const mockTable = {
-    select: vi.fn().mockReturnThis(),
-    order: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    limit: vi.fn().mockReturnThis(),
-    then: vi.fn().mockImplementation((resolve) => resolve({ data: [], error: null })),
-  };
-  return {
-    supabase: {
-      from: vi.fn(() => mockTable)
-    }
-  };
-});
+// Supabase is mocked globally in src/test/setup.ts
+import { supabase } from '@/integrations/supabase/client';
+
 
 vi.mock('@/lib/nexusContent', () => ({
   fetchNexusTagContent: vi.fn(),
