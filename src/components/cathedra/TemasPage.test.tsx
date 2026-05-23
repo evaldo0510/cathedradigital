@@ -81,9 +81,11 @@ describe('TemasPage - Integration Tests', () => {
     vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnThis(),
       order: vi.fn().mockImplementation((resolve) => {
-        if (typeof resolve === 'function') return resolve({ data: mockTags, error: null });
-        return { then: (r: any) => r({ data: mockTags, error: null }) };
+        const res = { data: mockTags, error: null };
+        if (typeof resolve === 'function') return Promise.resolve(resolve(res));
+        return Promise.resolve(res);
       })
+
     } as any);
 
 
