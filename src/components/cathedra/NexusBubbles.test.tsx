@@ -71,14 +71,16 @@ describe('NexusBubbles - Integration Tests', () => {
 
   it('displays fallback message when search returns no results', async () => {
     const mockTags = [{ id: '1', label: 'Fé', slug: 'fe', category: 'fundamentos', emoji: '✝️' }];
-    (supabase.from as any).mockReturnValue({
+    vi.mocked(supabase.from).mockReturnValue({
       select: vi.fn().mockReturnThis(),
-      order: vi.fn().mockImplementation(() => ({
-        then: (resolve: any) => resolve({ data: mockTags, error: null })
-      }))
-    });
+      order: vi.fn().mockImplementation(function(this: any, resolve: any) {
+        if (typeof resolve === 'function') return resolve({ data: mockTags, error: null });
+        return { then: (r: any) => r({ data: mockTags, error: null }) };
+      })
+    } as any);
 
     renderWithProviders(<NexusBubbles />);
+
     expect(await screen.findByText(/Fé/i)).toBeInTheDocument();
 
     const searchInput = screen.getByPlaceholderText(/Buscar tema/i);
