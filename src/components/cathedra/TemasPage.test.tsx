@@ -7,15 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { HelmetProvider } from 'react-helmet-async';
 
 // Mocking dependencies
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        order: vi.fn(() => Promise.resolve({ data: [], error: null }))
-      }))
-    }))
-  }
-}));
+// Supabase is mocked globally in src/test/setup.ts
+
 
 vi.mock('@/hooks/useFuzzySearch', () => ({
   useFuzzySearch: vi.fn(() => ({
