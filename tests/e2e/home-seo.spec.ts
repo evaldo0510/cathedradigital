@@ -80,7 +80,7 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
 
     // Link validation (internal/external)
     const links = await page.locator('a').all();
-    let brokenLinks = 0;
+    const brokenLinks = 0;
     for (const link of links) {
       const href = await link.getAttribute('href');
       if (!href || href === '#' || href.startsWith('javascript:')) {
