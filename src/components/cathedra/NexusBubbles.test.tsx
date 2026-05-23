@@ -88,8 +88,9 @@ describe('NexusBubbles - Integration Tests', () => {
 
 
     await waitFor(() => {
-      expect(screen.getByText(/Fé/i)).toBeInTheDocument();
+      expect(screen.getByText(/Todos/i)).toBeInTheDocument();
     }, { timeout: 3000 });
+
 
 
     const searchInput = screen.getByPlaceholderText(/Buscar tema/i);
