@@ -102,6 +102,13 @@ jobs:
             echo "LOW_FILES=Sumário não encontrado" >> $GITHUB_OUTPUT
           fi
 
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
       - name: PR Comment
         if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@v7
@@ -114,6 +121,10 @@ jobs:
             };
             const coverageTotal = '${{ steps.coverage-data.outputs.TOTAL }}';
             const lowFiles = `${{ steps.coverage-data.outputs.LOW_FILES }}`;
+            const runId = context.runId;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const artifactUrl = `https://github.com/${owner}/${repo}/actions/runs/${runId}/artifacts`;
             
             const icon = (s) => s === 'success' ? '✅' : '❌';
             const diffMap = process.env.MAP_BODY || '';
@@ -130,6 +141,8 @@ jobs:
             <summary><b>📊 Detalhes de Cobertura</b></summary>
             
             **Cobertura Total:** \`${coverageTotal}%\`
+            **Relatório Completo (Artifacts):** [Acessar Artifacts](${artifactUrl})
+            
             **Arquivos abaixo do threshold (80%):**
             \`\`\`
             ${lowFiles}
@@ -175,13 +188,18 @@ jobs:
       - name: Run E2E & Audits (Performance & SEO Thresholds)
         id: e2e
         run: |
-          # O script test:audit já sai com exit 1 se falhar, 
-          # mas vamos injetar variáveis de ambiente para thresholds reais se necessário
           bun run test:audit
         env:
           PERF_THRESHOLD: 80
           SEO_THRESHOLD: 90
           A11Y_THRESHOLD: 100
+
+      - name: Upload Audit Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-reports
+          path: playwright-report/
 
       - name: PR Audit Comment
         if: github.event_name == 'pull_request' && always()
@@ -189,6 +207,11 @@ jobs:
         with:
           script: |
             const outcome = '${{ steps.e2e.outcome }}';
+            const runId = context.runId;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const artifactUrl = `https://github.com/${owner}/${repo}/actions/runs/${runId}/artifacts`;
+
             const body = `
             ### 🎭 E2E & Auditoria de Qualidade
             | Verificação | Status |
@@ -198,7 +221,7 @@ jobs:
             | SEO | ${outcome === 'success' ? '✅ >90' : '⚠️ Revisar'} |
             | Acessibilidade | ${outcome === 'success' ? '✅ 100%' : '⚠️ Falhas'} |
             
-            > 💡 Relatórios detalhados anexados aos artefatos do workflow.
+            > 📊 **[Baixar Relatórios Detalhados](${artifactUrl})**
             `;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
