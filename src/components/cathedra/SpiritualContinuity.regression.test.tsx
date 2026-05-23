@@ -8,22 +8,8 @@ import { AuthProvider } from '@/hooks/useAuth';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LangContext } from '@/contexts/LangContext';
 
-// Mock Supabase
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
-    auth: {
-      onAuthStateChange: vi.fn(() => ({ data: { subscription: { unsubscribe: vi.fn() } } })),
-      getSession: vi.fn(() => Promise.resolve({ data: { session: null }, error: null })),
-    },
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
-        })),
-      })),
-    })),
-  },
-}));
+// Supabase is mocked globally in src/test/setup.ts
+
 
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
