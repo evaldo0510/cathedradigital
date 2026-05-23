@@ -22,17 +22,13 @@ vi.mock('@/services/aiService', () => ({
   getSpiritualInsight: vi.fn(() => Promise.resolve({ content: 'Mocked Insight' }))
 }));
 
+import { useAuth } from '@/hooks/useAuth';
+import { authenticatedAuthContext } from '@/test/authMock';
+
 vi.mock('@/hooks/useAuth', () => ({
-  useAuth: vi.fn(() => ({
-    user: { id: 'user-123' },
-    profile: { name: 'Teste' },
-    loading: false,
-    refreshProfile: vi.fn(),
-    signOut: vi.fn(),
-    isPremium: true,
-    userLevel: 'iniciante'
-  })),
+  useAuth: vi.fn(() => authenticatedAuthContext),
 }));
+
 
 const AuthProvider = ({ children }: any) => <>{children}</>;
 
