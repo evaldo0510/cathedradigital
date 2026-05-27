@@ -2,6 +2,8 @@
 -- RLS Regression Tests V3
 BEGIN;
 
+RAISE NOTICE 'Starting RLS regression tests...';
+
 -- Insert test users into auth.users
 INSERT INTO auth.users (id, email, aud, role)
 VALUES 
@@ -18,20 +20,19 @@ ON CONFLICT DO NOTHING;
 SET ROLE authenticated;
 SET request.jwt.claims = '{"sub": "00000000-0000-0000-0000-000000000001", "role": "authenticated"}';
 
--- Should be able to select
 DO $$
 BEGIN
     PERFORM * FROM theme_contents LIMIT 1;
+    RAISE NOTICE 'SUCCESS: SELECT theme_contents as authenticated';
 END $$;
 
--- Should NOT be able to insert
 DO $$
 BEGIN
     BEGIN
         INSERT INTO theme_contents (title, content_type, reference) VALUES ('Test', 'text', 'test');
         RAISE EXCEPTION 'RLS FAIL: authenticated user should NOT be able to INSERT into theme_contents';
     EXCEPTION WHEN insufficient_privilege THEN
-        -- Success
+        RAISE NOTICE 'SUCCESS: INSERT theme_contents blocked for non-admin';
     END;
 END $$;
 
@@ -40,7 +41,10 @@ SET request.jwt.claims = '{"sub": "00000000-0000-0000-0000-000000000002", "role"
 DO $$
 BEGIN
     INSERT INTO theme_contents (title, content_type, reference) VALUES ('Admin Test', 'text', 'admin-test');
+    RAISE NOTICE 'SUCCESS: INSERT theme_contents allowed for admin';
 END $$;
+
+RAISE NOTICE 'All RLS regression tests passed.';
 
 -- Cleanup
 ROLLBACK;
