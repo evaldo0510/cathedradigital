@@ -1250,8 +1250,12 @@ const Bible: React.FC = () => {
             <React.Suspense fallback={<BibleChapterSkeleton />}>
               <LogosAI 
                 isOpen={showLogosAI} 
-                onClose={() => setShowLogosAI(false)} 
+                onClose={() => {
+                  setShowLogosAI(false);
+                  setLogosAIInitialQuery('');
+                }} 
                 context={logosAIContext}
+                initialQuery={logosAIInitialQuery}
                 type="bible"
                 variant="integrated"
               />
