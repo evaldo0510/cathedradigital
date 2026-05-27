@@ -519,6 +519,14 @@
   .btn-premium-outline:hover {
     @apply -translate-y-0.5;
   }
+
+  .btn-premium-ghost {
+    @apply btn-premium bg-transparent text-primary/40 hover:text-primary hover:bg-primary/[0.03];
+  }
+
+  .btn-premium-ghost:hover {
+    @apply -translate-y-0.5;
+  }
 }
 
 /* Custom scrollbar (hidden for cleaner UI as requested) */
