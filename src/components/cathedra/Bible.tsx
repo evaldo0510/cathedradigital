@@ -1079,6 +1079,11 @@ const Bible: React.FC = () => {
                   toast.info('Clique em um versículo primeiro para anotar.');
                 }
               }}
+              onAskLogos={(text) => {
+                setLogosAIInitialQuery(`Explique esta passagem da Bíblia: "${text}"`);
+                setLogosAIContext(`${selectedBook.name} ${selectedChapter}${highlightedVerse ? ':' + highlightedVerse : ''}`);
+                setShowLogosAI(true);
+              }}
             />
 
             <NoteEditModal 
