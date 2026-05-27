@@ -121,7 +121,7 @@
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary/40 ring-offset-4 ring-offset-background transition-all duration-300;
+    @apply outline-none ring-1 ring-primary/30 ring-offset-2 ring-offset-background transition-all duration-300;
   }
 
 
@@ -444,7 +444,7 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/50 hover:border-primary/10 active:scale-[0.995] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-2 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-card/50 hover:border-primary/10 active:scale-[0.995] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
@@ -495,7 +495,7 @@
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border-primary/10 text-primary/60 hover:border-primary/20 hover:text-primary hover:bg-primary/[0.01];
+    @apply btn-premium bg-transparent border-primary/20 text-primary/70 hover:border-primary/40 hover:text-primary hover:bg-primary/[0.02];
   }
 }
 
@@ -508,11 +508,11 @@
 
 @layer utilities {
   .responsive-padding {
-    @apply p-4 sm:p-6 md:p-8 lg:p-12;
+    @apply p-8 sm:p-10 md:p-14 lg:p-20;
   }
   
   .responsive-gap {
-    @apply gap-4 md:gap-6 lg:gap-8;
+    @apply gap-8 md:gap-12 lg:gap-16;
   }
 }
 
