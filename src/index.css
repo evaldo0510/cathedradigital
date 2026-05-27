@@ -522,8 +522,19 @@
   }
 
   .premium-card-interactive:hover {
-    @apply shadow-[0_40px_100px_-30px_rgba(0,0,0,0.03)] -translate-y-1;
-    border-color: hsla(var(--primary) / 0.08);
+    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.04)] -translate-y-1.5;
+    border-color: hsla(var(--primary) / 0.12);
+    background-color: hsla(var(--card) / 0.5);
+  }
+
+  .premium-card-interactive::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-1000 pointer-events-none;
+    background: radial-gradient(circle at center, hsla(var(--primary) / 0.03) 0%, transparent 70%);
+  }
+
+  .premium-card-interactive:hover::after {
+    @apply opacity-100;
   }
 
   /* Specific Card Sizes for Desktop */

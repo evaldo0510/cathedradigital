@@ -44,10 +44,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-14 h-14 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100" variant="dark" />
+            <Icons.Logo className="w-14 h-14 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100 group-hover:scale-110 md:group-hover:scale-105" variant="dark" />
             <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1em] transition-all duration-1000">Cathedra</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/30 mt-2">Biblioteca Digital</span>
+              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1.2em] transition-all duration-1000 group-hover:text-primary/70">Cathedra</span>
+              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/30 mt-2 group-hover:text-muted-foreground/50 transition-colors duration-1000">Biblioteca Digital</span>
             </div>
           </div>
 
