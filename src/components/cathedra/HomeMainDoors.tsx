@@ -96,7 +96,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
             <door.icon className="w-8 h-8" strokeWidth={0.5} />
           </div>
           <div className="space-y-5">
-            <h3 className="text-[9px] font-bold uppercase tracking-[0.5em] text-primary/20 group-hover:text-primary/40 transition-colors duration-700">
+            <h3 className="text-[9px] font-bold uppercase tracking-[0.5em] text-primary/15 group-hover:text-primary/30 transition-colors duration-700">
               {door.label}
             </h3>
             <p className="text-[11px] text-muted-foreground/20 font-serif italic tracking-wider group-hover:text-muted-foreground/30 transition-colors duration-700 leading-relaxed max-w-[160px]">
