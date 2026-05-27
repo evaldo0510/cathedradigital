@@ -150,16 +150,26 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
+      <meta property="og:site_name" content="Cathedra Digital" />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
       
-      {/* Multiple OG images for fallback support */}
+      {/* Primary OG image */}
       <meta property="og:image" content={displayImage} />
-      {image && image !== DEFAULT_OG_IMAGE && <meta property="og:image" content={DEFAULT_OG_IMAGE} />}
-      <meta property="og:image" content={DEFAULT_OG_IMAGE} />
-      
+      <meta property="og:image:secure_url" content={displayImage} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:alt" content={displayTitle} />
+      
+      {/* Fallback OG images */}
+      {image && image !== DEFAULT_OG_IMAGE && (
+        <>
+          <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content={twitterHandle} />
