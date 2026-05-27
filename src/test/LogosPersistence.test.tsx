@@ -96,7 +96,7 @@ describe('LogosAI Persistence and Silence', () => {
     expect(screen.queryByText('hello')).toBeNull();
   });
 
-  it('should switch history when context changes', () => {
+  it('should switch history when context changes', async () => {
     const context1 = 'section-1';
     const context2 = 'section-2';
     const history1 = [{ role: 'user', content: 'msg 1' }];
