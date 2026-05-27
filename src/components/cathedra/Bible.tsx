@@ -157,6 +157,7 @@ const Bible: React.FC = () => {
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
@@ -164,7 +165,7 @@ const Bible: React.FC = () => {
   }, [chapterNotes, selectedBook, selectedChapter]);
 
   const currentChapterHighlights = useMemo(() => {
-    return currentChapterNotes.filter(n => n.highlight_color);
+    return currentChapterNotes.filter(n => !!n.highlight_color);
   }, [currentChapterNotes]);
 
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
