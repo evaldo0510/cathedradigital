@@ -23,10 +23,10 @@ export const ReadingProgressSection: React.FC = () => {
     >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
           <div className="flex items-center gap-10">
-            <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-110 group-hover:text-primary/25 transition-all duration-1000 border border-primary/[0.02]">
+            <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/25 transition-all duration-1000 border border-primary/[0.02]">
               <Clock className="w-8 h-8" strokeWidth={0.5} />
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/10">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 
@@ -34,7 +34,7 @@ export const ReadingProgressSection: React.FC = () => {
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
                 </span>
               </div>
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight leading-tight">
+              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/60 tracking-tight leading-tight">
                 {lastRead.label || 'Continuar de onde parou'}
               </h3>
             </div>
