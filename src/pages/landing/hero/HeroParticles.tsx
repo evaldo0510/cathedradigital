@@ -30,5 +30,3 @@ const HeroParticles = () => {
 };
 
 export default HeroParticles;
-
-export default HeroParticles;
