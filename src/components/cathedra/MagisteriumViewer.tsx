@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { MAGISTERIUM_URLS } from '@/data/magisterium-urls';
@@ -15,7 +16,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
@@ -38,6 +39,7 @@ const MagisteriumViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -45,7 +47,7 @@ const MagisteriumViewer: React.FC = () => {
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
-    return docNotes.filter(n => n.content_id.startsWith(id));
+    return docNotes.filter(n => n.content_id === id || n.content_id.startsWith(`${id}:`));
   }, [docNotes, id]);
 
 
@@ -272,12 +274,47 @@ const MagisteriumViewer: React.FC = () => {
       <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
         {/* Elegant side navigation for documents can be implemented if the text has anchors. 
             For now, we'll keep the side column for balance and potential future TOC. */}
-        <aside className="reader-navigation-aside">
+        <aside className="reader-navigation-aside space-y-12">
           <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
             <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
             <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
             <p className="text-xs text-muted-foreground italic text-center leading-relaxed">"O Magistério não está acima da Palavra de Deus, mas ao seu serviço." (Dei Verbum, 10)</p>
           </div>
+
+          {currentDocNotes.length > 0 && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Marcações</p>
+              <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+                {currentDocNotes.map(note => {
+                  const pIdx = note.content_id.includes(':') ? parseInt(note.content_id.split(':')[1]) : null;
+                  
+                  return (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (pIdx !== null) {
+                          const el = document.getElementById(`para-${pIdx}`);
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }}
+                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Parágrafo {pIdx !== null ? pIdx + 1 : ''}</span>
+                        {note.highlight_color && (
+                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                        )}
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        {note.note_text === 'Destacado para meditação' ? 'Destaque visual' : note.note_text}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </aside>
 
         <motion.div 
@@ -297,26 +334,47 @@ const MagisteriumViewer: React.FC = () => {
                 prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
-              {processedText.split('\n\n').map((para, idx) => (
-                <div key={idx} className="group relative mb-4">
-                  <ReactMarkdown>{para}</ReactMarkdown>
-                  <div className="absolute top-0 -right-12 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity no-print">
-                    <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
-                    <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+              {processedText.split('\n\n').map((para, idx) => {
+                const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
+                
+                return (
+                  <div key={idx} className="group relative mb-4" id={`para-${idx}`}>
+                    <div className={cn(note ? `highlight-${note.highlight_color} px-1 rounded-sm cursor-pointer` : '')}
+                         onClick={() => note && setActiveHighlight(note)}>
+                      <ReactMarkdown>{para}</ReactMarkdown>
+                    </div>
+                    <div className="absolute top-0 -right-12 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity no-print">
+                      <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
+                      <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                if (id) {
+                if (activeHighlight) {
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => setActiveHighlight(null));
+                } else if (id) {
                   addNote(id, 'Destacado para meditação', color);
                 }
               }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteDocNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
               onAddNote={() => {
-                if (id) {
+                if (activeHighlight) {
+                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
+                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
+                   setActiveHighlight(null);
+                } else if (id) {
                   const note = prompt('Sua reflexão sobre este documento:');
                   if (note) {
                     addNote(id, note, 'yellow');

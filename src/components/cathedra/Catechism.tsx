@@ -38,11 +38,17 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, UserNote } from '@/hooks/useNotes';
 
 
 
-const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
+const CatechismContent: React.FC<{ 
+  paragraph: number; 
+  onNavigateToBible?: (abbr: string, chapter: number) => void; 
+  isVisible?: boolean;
+  onHighlightClick?: (note: UserNote) => void;
+  highlights?: UserNote[];
+}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, highlights = [] }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const settingsContext = useReadingSettings();
@@ -166,7 +172,22 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
           />
         ) : (
           <ReactMarkdown key={i} components={{
-            p: (props) => <span>{props.children}</span>,
+            p: (props) => {
+              const text = typeof props.children === 'string' ? props.children : '';
+              const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
+              
+              if (h) {
+                return (
+                  <span 
+                    onClick={() => onHighlightClick?.(h)}
+                    className={`highlight-${h.highlight_color} px-1 rounded-sm cursor-pointer hover:brightness-95 transition-all`}
+                  >
+                    {props.children}
+                  </span>
+                );
+              }
+              return <span>{props.children}</span>;
+            },
           }}>{seg.value}</ReactMarkdown>
         )
       )}
@@ -190,7 +211,16 @@ const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr:
   );
 };
 
-const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+const LazyParagraph: React.FC<{ 
+  paragraph: number; 
+  currentParagraph: number; 
+  paragraphsRead: Set<number>; 
+  isFavorite: (type: string, title: string) => boolean; 
+  toggleFavorite: (item: any) => void; 
+  handleNavigateToBible: (abbr: string, chapter: number) => void;
+  onHighlightClick?: (note: UserNote) => void;
+  highlights?: UserNote[];
+}> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, highlights = [] }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -235,7 +265,13 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      <CatechismContent 
+        paragraph={p} 
+        onNavigateToBible={handleNavigateToBible} 
+        isVisible={isVisible} 
+        onHighlightClick={onHighlightClick}
+        highlights={highlights}
+      />
 
       <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
         <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
@@ -275,6 +311,7 @@ const Catechism: React.FC = () => {
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
@@ -283,6 +320,10 @@ const Catechism: React.FC = () => {
       return p >= selectedSection.paragraphs[0] && p <= selectedSection.paragraphs[1];
     });
   }, [chapterNotes, selectedSection]);
+
+  const currentChapterHighlights = useMemo(() => {
+    return currentChapterNotes.filter(n => n.highlight_color);
+  }, [currentChapterNotes]);
 
 
   useEffect(() => {
@@ -337,8 +378,8 @@ const Catechism: React.FC = () => {
             const p = parseInt(entry.target.id.replace('p', ''));
             if (!isNaN(p)) {
               setCurrentParagraph(p);
-              localStorage.setItem('cathedra_last_catechism_para', p.toString());
-              localStorage.setItem('cathedra_last_catechism_scroll', window.scrollY.toString());
+              localStorage.setItem(`cathedra_last_catechism_para_CIC`, p.toString());
+              localStorage.setItem(`cathedra_last_catechism_scroll_CIC`, window.scrollY.toString());
               
               // Auto-save progress
               saveLastRead({
@@ -372,8 +413,8 @@ const Catechism: React.FC = () => {
   // Auto-restore scroll on first load
   useEffect(() => {
     if (viewMode === 'reading' && selectedSection && selectedPart) {
-      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
-      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
+      const savedScroll = localStorage.getItem(`cathedra_last_catechism_scroll_CIC`);
+      const savedPara = localStorage.getItem(`cathedra_last_catechism_para_CIC`);
       
       if (savedScroll && savedPara && !searchParams.get('p')) {
         const para = parseInt(savedPara);
@@ -684,10 +725,10 @@ const Catechism: React.FC = () => {
 
         <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
           {/* Elegant Side Navigation for paragraphs (Desktop) */}
-          <aside className="reader-navigation-aside">
+          <aside className="reader-navigation-aside space-y-12">
             <div className="space-y-4">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
-              <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
                 {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <button
                     key={p}
@@ -706,6 +747,34 @@ const Catechism: React.FC = () => {
                 ))}
               </nav>
             </div>
+
+            {currentChapterNotes.length > 0 && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Reflexões</p>
+                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                  {currentChapterNotes.map(note => (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (note.paragraph) jumpToParagraph(note.paragraph);
+                      }}
+                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">§{note.paragraph}</span>
+                        {note.highlight_color && (
+                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                        )}
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        {note.note_text === 'Destacado para meditação' ? 'Destaque sem nota' : note.note_text}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
@@ -796,20 +865,32 @@ const Catechism: React.FC = () => {
           </Button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {selectedPart.sections.map(sec => (
-              <motion.button 
-                key={sec.id} 
-                whileHover={{ x: 8 }}
-                onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-                className="text-left p-10 md:p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-6"
-              >
-                <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h2>
-                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-                </div>
-              </motion.button>
-            ))}
+            {selectedPart.sections.map(sec => {
+              const isLastReadSection = lastReadMark?.content_id === 'CIC' && lastReadMark?.paragraph >= sec.paragraphs[0] && lastReadMark?.paragraph <= sec.paragraphs[1];
+              
+              return (
+                <motion.button 
+                  key={sec.id} 
+                  whileHover={{ x: 8 }}
+                  onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+                  className={`text-left p-10 md:p-12 rounded-premium bg-card border transition-all group flex flex-col gap-6 relative
+                    ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : 'border-primary/[0.03] hover:border-primary/10'}`}
+                >
+                  <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">
+                    Seção {sec.id} {isLastReadSection && '• Ponto Salvo'}
+                  </span>
+                  <div className="space-y-2">
+                    <h2 className={`text-2xl font-display font-medium group-hover:text-secondary transition-colors ${isLastReadSection ? 'text-secondary' : 'text-primary'}`}>{sec.title}</h2>
+                    <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
+                  </div>
+                  {isLastReadSection && (
+                    <span className="absolute top-4 right-8 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse">
+                      Retomar Leitura
+                    </span>
+                  )}
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </ContemplativeLayout>

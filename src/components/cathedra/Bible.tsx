@@ -40,7 +40,7 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, UserNote } from '@/hooks/useNotes';
 
 
 
@@ -155,11 +155,16 @@ const Bible: React.FC = () => {
   const { user, profile } = useAuth();
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
     return chapterNotes.filter(n => n.book_abbr === selectedBook.abbr && n.chapter === selectedChapter);
   }, [chapterNotes, selectedBook, selectedChapter]);
+
+  const currentChapterHighlights = useMemo(() => {
+    return currentChapterNotes.filter(n => n.highlight_color);
+  }, [currentChapterNotes]);
 
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
 
@@ -492,8 +497,8 @@ const Bible: React.FC = () => {
 
   useEffect(() => {
     if (viewMode === 'reading' && !isLoading && verses.length > 0) {
-      const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
-      const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
+      const savedScroll = localStorage.getItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`);
+      const savedVerse = localStorage.getItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`);
       
       // Better resume: only if no specific verse in URL
       if (!searchParams.get('v') && !searchParams.get('verse')) {
@@ -521,8 +526,8 @@ const Bible: React.FC = () => {
       setReadingProgress(Math.min(100, Math.max(0, progress)));
       
       // Persist scroll for resumption
-      if (Math.abs(window.scrollY - parseInt(localStorage.getItem('cathedra_last_bible_scroll') || '0')) > 100) {
-        localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+      if (Math.abs(window.scrollY - parseInt(localStorage.getItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`) || '0')) > 100) {
+        localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
       }
     };
     window.addEventListener('scroll', handleScroll);
@@ -765,10 +770,10 @@ const Bible: React.FC = () => {
         {/* Content with Side Nav */}
         <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
           {/* Elegant Side Navigation for Chapters (Desktop) */}
-          <aside className="reader-navigation-aside">
+          <aside className="reader-navigation-aside space-y-12">
             <div className="space-y-4">
               <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
-              <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
                 {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
                   <button
                     key={ch}
@@ -787,6 +792,37 @@ const Bible: React.FC = () => {
                 ))}
               </nav>
             </div>
+
+            {currentChapterNotes.length > 0 && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+                <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
+                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                  {currentChapterNotes.map(note => (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (note.verse) {
+                          const el = document.getElementById(`v${note.verse}`);
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }}
+                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
+                        {note.highlight_color && (
+                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                        )}
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
@@ -817,8 +853,8 @@ const Bible: React.FC = () => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
                               setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
-                              localStorage.setItem('cathedra_last_bible_verse', vNum.toString());
-                              localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+                              localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
+                              localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
                               
                               // Seamless auto-save on verse click/selection
                               saveLastRead({
@@ -833,7 +869,14 @@ const Bible: React.FC = () => {
                             }}>
                               <p className="leading-relaxed">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                  <span className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1`}>
+                                  <span 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
+                                      if (note) setActiveHighlight(note);
+                                    }}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all`}
+                                  >
                                     {v.text}
                                   </span>
                                 )}
@@ -879,8 +922,19 @@ const Bible: React.FC = () => {
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                if (highlightedVerse) {
+                if (activeHighlight) {
+                  // Update existing highlight
+                  // Assuming updateNote handles color or I need to extend it
+                  // Let's check updateNote signature... it only handles text in hook.
+                  // I might need to update the hook to handle color.
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
+                    setActiveHighlight(null);
+                    // refresh notes
+                  });
+                } else if (highlightedVerse) {
                   addNote(selectedBook.abbr, 'Destacado para meditação', color, {
                     book_abbr: selectedBook.abbr,
                     chapter: selectedChapter,
@@ -890,9 +944,18 @@ const Bible: React.FC = () => {
                   toast.info('Clique em um versículo primeiro para destacar.');
                 }
               }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteChapterNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
               onAddNote={() => {
-                if (highlightedVerse) {
-                  // This is handled by a prompt for now, or opens a sidebar
+                if (activeHighlight) {
+                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
+                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
+                   setActiveHighlight(null);
+                } else if (highlightedVerse) {
                   const note = prompt('Sua reflexão sobre este versículo:');
                   if (note) {
                     addNote(selectedBook.abbr, note, 'yellow', {
@@ -1062,18 +1125,27 @@ const Bible: React.FC = () => {
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-4">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
+              const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
+              
               return (
                 <motion.button 
                   key={ch} 
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
-                  className={`aspect-square flex items-center justify-center rounded-full border text-sm font-bold transition-all
+                  className={`aspect-square flex flex-col items-center justify-center rounded-2xl border text-sm font-bold transition-all relative group
                     ${isRead 
                       ? 'bg-primary text-primary-foreground border-primary' 
-                      : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
+                      : isLastReadChapter
+                        ? 'bg-secondary/10 border-secondary text-primary'
+                        : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
                 >
-                  {ch}
+                  <span>{ch}</span>
+                  {isLastReadChapter && (
+                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
+                      Retomar
+                    </span>
+                  )}
                 </motion.button>
               );
             })}
