@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { ChevronUp } from 'lucide-react';
+import { Icons } from '@/constants';
 
 interface ReadingProgressProps {
   progress: number;
