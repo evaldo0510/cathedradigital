@@ -15,12 +15,12 @@ Deno.test("Notification functions return 413 for large payloads", async () => {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
-        "Content-Length": largePayload.length.toString(),
       },
       body: JSON.stringify({ data: largePayload }),
     });
     
     assertEquals(response.status, 413, `${func} should return 413 for large payload`);
+    await response.text(); // Consume body to avoid leak
   }
 });
 
@@ -32,10 +32,10 @@ Deno.test("Intelligent notifications return 413 for large payloads", async () =>
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${SERVICE_ROLE_KEY}`,
-      "Content-Length": largePayload.length.toString(),
     },
     body: JSON.stringify({ data: largePayload }),
   });
   
   assertEquals(response.status, 413, "intelligent-notifications should return 413 for large payload");
+  await response.text(); // Consume body to avoid leak
 });
