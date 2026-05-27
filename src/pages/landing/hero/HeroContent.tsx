@@ -30,7 +30,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         scale: shouldReduceMotion ? 1 : heroScale, 
         y: shouldReduceMotion ? 0 : heroY 
       }}
-      className="relative z-10 max-w-6xl text-center px-6 flex flex-col items-center justify-center min-h-[70vh] w-full"
+      className="relative z-10 max-w-[var(--layout-max-width)] text-center px-6 md:px-14 flex flex-col items-center justify-center min-h-[75vh] w-full"
     >
       {/* Upper Spiritual Anchor */}
       <motion.div
