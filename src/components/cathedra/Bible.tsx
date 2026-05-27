@@ -732,7 +732,7 @@ const Bible: React.FC = () => {
           {/* Elegant Side Navigation for Chapters (Desktop) */}
           <aside className="reader-navigation-aside">
             <div className="space-y-4">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
+              <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
               <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
                 {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
                   <button
@@ -740,7 +740,7 @@ const Bible: React.FC = () => {
                     onClick={() => selectChapter(ch)}
                     className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
                       ${selectedChapter === ch 
-                        ? 'bg-primary text-white shadow-soft' 
+                        ? 'bg-primary text-primary-foreground' 
                         : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
                   >
                     <span className="opacity-50 text-[10px] w-4">{ch}</span>
@@ -755,7 +755,7 @@ const Bible: React.FC = () => {
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
-            <div className="reader-container bg-card/30 backdrop-blur-sm border border-border/5 shadow-premium overflow-hidden rounded-3xl relative transition-all duration-1000">
+            <div className="reader-container bg-card/40 backdrop-blur-md border border-primary/[0.04] overflow-hidden rounded-[2.5rem] relative transition-all duration-1000">
               <div className="p-8 md:p-16">
 
 
@@ -777,7 +777,7 @@ const Bible: React.FC = () => {
                           className={`group relative py-2 px-3 rounded-premium transition-all duration-300 mb-1
                             ${highlightedVerse === v.number ? 'bg-primary/10 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`}>
                           <div className="flex items-start gap-3">
-                            <sup className="text-[0.6em] font-bold text-primary mt-1.5 select-none opacity-60">{v.number}</sup>
+                            <sup className="text-[0.6em] font-medium text-primary mt-1.5 select-none opacity-40">{v.number}</sup>
                             <div className="flex-1" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -959,8 +959,8 @@ const Bible: React.FC = () => {
                   onClick={() => selectChapter(ch)}
                   className={`aspect-square flex items-center justify-center rounded-full border text-sm font-bold transition-all
                     ${isRead 
-                      ? 'bg-primary text-white border-primary shadow-premium' 
-                      : 'bg-card border-border/5 text-primary hover:border-primary/20'}`}
+                      ? 'bg-primary text-primary-foreground border-primary' 
+                      : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
                 >
                   {ch}
                 </motion.button>
@@ -994,7 +994,7 @@ const Bible: React.FC = () => {
                 onClick={() => setTestament(t)}
                 className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
                   ${testament === t 
-                    ? 'bg-primary text-white shadow-premium' 
+                    ? 'bg-primary text-primary-foreground' 
                     : 'text-muted-foreground/40 hover:text-primary'}`}
               >
                 {t}
@@ -1036,8 +1036,8 @@ const Bible: React.FC = () => {
                       onClick={() => selectBook(book)}
                       className={`flex flex-col items-center justify-center p-8 rounded-premium border transition-all relative group
                         ${isRead 
-                          ? 'bg-primary text-white border-primary shadow-premium' 
-                          : 'bg-card border-border/5 text-primary hover:border-primary/10 hover:shadow-premium'}`}
+                          ? 'bg-primary text-primary-foreground border-primary' 
+                          : 'bg-card border-primary/[0.04] text-primary hover:border-primary/10'}`}
                     >
                       <span className="text-2xl font-display font-medium leading-none mb-2">{book.abbr}</span>
                       <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
