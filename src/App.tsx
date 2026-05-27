@@ -119,25 +119,47 @@ SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
   <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-1000">
-    <div className="relative mb-12">
-      <div className="w-16 h-16 rounded-full bg-primary/[0.03] border border-primary/5 animate-pulse" />
-      <div className="absolute inset-0 w-16 h-16 rounded-full border-t-2 border-primary/20 animate-spin [animation-duration:3s]" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/20 animate-pulse" />
-      </div>
-    </div>
-    <div className="space-y-6 w-full max-w-sm">
-      <div className="h-0.5 w-full bg-primary/5 rounded-full overflow-hidden">
+    <div className="relative mb-16">
+      <motion.div 
+        animate={{ 
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.1, 0.3],
+          filter: ["blur(20px)", "blur(40px)", "blur(20px)"]
+        }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-0 w-24 h-24 -left-4 -top-4 rounded-full bg-primary/10" 
+      />
+      <div className="w-16 h-16 rounded-full bg-primary/[0.03] border border-primary/5 relative z-10" />
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 w-16 h-16 rounded-full border-t border-primary/10 z-20" 
+      />
+      <div className="absolute inset-0 flex items-center justify-center z-30">
         <motion.div 
-          className="h-full bg-primary/20"
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="w-1.5 h-1.5 rounded-full bg-primary/40" 
         />
       </div>
-      <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 text-center">
-        Contemplando...
-      </p>
+    </div>
+    <div className="space-y-8 w-full max-w-sm flex flex-col items-center">
+      <div className="h-[1px] w-32 bg-primary/5 rounded-full overflow-hidden">
+        <motion.div 
+          className="h-full bg-primary/20"
+          initial={{ width: "0%", x: "-100%" }}
+          animate={{ width: "100%", x: "100%" }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      <motion.p 
+        initial={{ opacity: 0, letterSpacing: "0.2em" }}
+        animate={{ opacity: 1, letterSpacing: "0.6em" }}
+        transition={{ duration: 2, ease: "easeOut" }}
+        className="text-[9px] font-bold uppercase text-primary/30 text-center tracking-[0.6em]"
+      >
+        Contemplatio
+      </motion.p>
     </div>
   </div>
 );

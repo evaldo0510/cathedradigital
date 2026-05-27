@@ -133,20 +133,30 @@ const HojePage: React.FC = () => {
       <div className="app-container stack-spacing">
         {/* HERO SECTION - MONASTIC WELCOME */}
         <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ duration: 2.5, ease: [0.2, 0.8, 0.2, 1] }}
+          initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
+          animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
+          transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
           className="text-center space-y-24 max-w-6xl mx-auto"
         >
           <div className="flex flex-col items-center gap-6">
-            <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-            <p className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">
+            <motion.div 
+              initial={{ height: 0 }}
+              animate={{ height: 64 }}
+              transition={{ duration: 2, delay: 1 }}
+              className="w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
+            />
+            <p className="text-[10px] font-black uppercase tracking-[1em] text-primary/15">
               {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
             </p>
           </div>
-          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.3px]">
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.2px]">
             Mosteiro <br />
-            <span className="text-secondary/60 italic font-serif">Digital.</span>
+            <motion.span 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 0.6, x: 0 }}
+              transition={{ duration: 3, delay: 0.5 }}
+              className="text-secondary italic font-serif"
+            >Digital.</motion.span>
           </h1>
         </motion.div>
 

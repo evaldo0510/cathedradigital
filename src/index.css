@@ -492,8 +492,8 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1800px;
-    --transition-premium: 1200ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-premium: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 800ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Standardized Opacities for "Visual Silence" */
     --opacity-icon-idle: 0.3;
@@ -505,7 +505,7 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card/30 backdrop-blur-xl border border-primary/[0.05] transition-all relative overflow-hidden;
+    @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
   }
@@ -517,11 +517,24 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/50 hover:border-primary/10 active:scale-[0.995] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    transition: all var(--transition-premium);
   }
 
   .premium-card-interactive:hover {
-    box-shadow: var(--card-shadow-hover);
+    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.04)] -translate-y-1.5;
+    border-color: hsla(var(--primary) / 0.12);
+    background-color: hsla(var(--card) / 0.5);
+  }
+
+  .premium-card-interactive::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-1000 pointer-events-none;
+    background: radial-gradient(circle at center, hsla(var(--primary) / 0.03) 0%, transparent 70%);
+  }
+
+  .premium-card-interactive:hover::after {
+    @apply opacity-100;
   }
 
   /* Specific Card Sizes for Desktop */
@@ -622,7 +635,7 @@
 
 /* Page transitions */
 .page-enter {
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: cinematicFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -639,6 +652,19 @@
 
 .reduce-animations .page-enter {
   animation: fadeIn 0.1s linear forwards;
+}
+
+@keyframes cinematicFadeIn {
+  from { 
+    opacity: 0; 
+    transform: scale(1.02) translateY(5px); 
+    filter: blur(8px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+    filter: blur(0); 
+  }
 }
 
 @keyframes fadeIn {

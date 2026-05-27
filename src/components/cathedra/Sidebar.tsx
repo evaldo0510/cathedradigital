@@ -188,20 +188,20 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/40 backdrop-blur-md z-[145]"
+            className="fixed inset-0 bg-background/30 backdrop-blur-xl z-[145]"
             aria-hidden="true"
           />
 
           {/* Premium Retractable Sidebar */}
           <motion.aside
             ref={sidebarRef}
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 left-0 h-full w-[320px] md:w-[380px] bg-card/95 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-8 md:p-12 z-[150] shadow-2xl overflow-hidden admin-hide"
+            initial={{ x: '-100%', opacity: 0, filter: 'blur(10px)' }}
+            animate={{ x: 0, opacity: 1, filter: 'blur(0px)' }}
+            exit={{ x: '-100%', opacity: 0, filter: 'blur(10px)' }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-0 left-0 h-full w-[320px] md:w-[420px] bg-card/80 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-10 md:p-16 z-[150] shadow-2xl overflow-hidden admin-hide"
 
             role="dialog"
             aria-modal="true"
@@ -237,9 +237,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             </div>
 
             <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2" role="navigation">
-              {sections.map((section) => (section.items.length > 0 && (
-                <div key={section.label} className="animate-in fade-in slide-in-from-left-4 duration-700">
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 mb-6 px-4">{section.label}</h3>
+              {sections.map((section, sectionIdx) => (section.items.length > 0 && (
+                <motion.div 
+                  key={section.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + (sectionIdx * 0.1), duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/15 mb-6 px-4">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -271,7 +276,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       );
                     })}
                   </ul>
-                </div>
+                </motion.div>
               )))}
             </nav>
 
