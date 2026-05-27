@@ -28,95 +28,103 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const isDashboard = pathname === '/';
 
   return (
-    <header 
-      className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
-      role="banner"
-    >
-      <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0">
+    <>
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all font-bold uppercase tracking-widest text-[10px]"
+      >
+        Pular para o conteúdo
+      </a>
+      <header 
+        className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
+        role="banner"
+      >
+        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0">
 
-        {/* Logo Section - Centralized on Mobile */}
-        <div 
-          className="flex items-center justify-center md:justify-start gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto p-2" 
-          role="link" 
-          aria-label="Ir para a página inicial do Cathedra"
-          tabIndex={0} 
-          onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
-          onClick={() => navigate('/')}
-        >
-          <Icons.Logo className="w-10 h-10 md:w-11 md:h-11 transition-all duration-1000" variant="dark" />
-          <div className="flex flex-col min-w-0">
-            <span className="text-lg md:text-xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.65em] transition-all duration-1000">Cathedra</span>
+          {/* Logo Section - Centralized on Mobile */}
+          <div 
+            className="flex items-center justify-center md:justify-start gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto p-2" 
+            role="link" 
+            aria-label="Ir para a página inicial do Cathedra"
+            tabIndex={0} 
+            onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
+            onClick={() => navigate('/')}
+          >
+            <Icons.Logo className="w-10 h-10 md:w-11 md:h-11 transition-all duration-1000" variant="dark" />
+            <div className="flex flex-col min-w-0">
+              <span className="text-lg md:text-xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.65em] transition-all duration-1000">Cathedra</span>
+            </div>
           </div>
-        </div>
 
-        {/* Navigation & Controls Section */}
-        <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-4">
-          <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end">
-            {!isDashboard && (
+          {/* Navigation & Controls Section */}
+          <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-4">
+            <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end">
+              {!isDashboard && (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigate(-1)}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={t('back') || 'Voltar'}
+                >
+                  <Icons.ChevronLeft className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                </Button>
+              )}
+
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navigate(-1)}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary/40"
-                aria-label={t('back') || 'Voltar'}
+                onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label={t('search') || 'Buscar'}
               >
-                <Icons.ChevronLeft className="w-4 h-4" />
+                <Icons.Search className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
               </Button>
-            )}
 
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary/40"
-              aria-label={t('search') || 'Buscar'}
-            >
-              <Icons.Search className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
-            </Button>
-
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onToggleDark}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary/40"
-              aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-            >
-              {isDark ? <Icons.Sun className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" /> : <Icons.Moon className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />}
-            </Button>
-
-            {user ? (
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => navigate(AppRoute.PROFILE)}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden focus-visible:ring-2 focus-visible:ring-primary/40"
-                aria-label={t('profile') || 'Meu Perfil'}
+                onClick={onToggleDark}
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
               >
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
-                ) : (
-                  <Icons.User className="w-5 h-5 opacity-60" />
-                )}
+                {isDark ? <Icons.Sun className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" /> : <Icons.Moon className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />}
               </Button>
-            ) : (
-              <Button 
-                onClick={() => navigate(AppRoute.LOGIN)} 
-                className="btn-premium-primary h-10 px-5 md:px-6 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary/40"
-              >
-                {t('enter')}
-              </Button>
-            )}
 
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onOpenSidebar}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group focus-visible:ring-2 focus-visible:ring-primary/40"
-              aria-label="Abrir menu lateral"
-            >
-              <Icons.Menu className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
-            </Button>
-          </div>
+              {user ? (
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => navigate(AppRoute.PROFILE)}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label={t('profile') || 'Meu Perfil'}
+                >
+                  {user.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <Icons.User className="w-5 h-5 opacity-70" />
+                  )}
+                </Button>
+              ) : (
+                <Button 
+                  onClick={() => navigate(AppRoute.LOGIN)} 
+                  className="btn-premium-primary h-10 px-5 md:px-6 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  {t('enter')}
+                </Button>
+              )}
+
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onOpenSidebar}
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label="Abrir menu lateral"
+              >
+                <Icons.Menu className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+              </Button>
+            </div>
+
 
 
           {/* Desktop Navigation */}
