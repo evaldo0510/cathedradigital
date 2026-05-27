@@ -31,7 +31,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
     <header className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color]">
       <div className="app-container flex items-center justify-between h-20 sm:h-24">
         <div className="flex items-center gap-8 min-w-0">
-          <div className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/10 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
+          <div className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-2 outline-none rounded-lg" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
             <Icons.Logo className="w-9 h-9 transition-all duration-1000" variant="dark" />
             <div className="flex flex-col min-w-0">
               <span className="text-lg font-display font-light uppercase tracking-[0.5em] text-primary leading-none group-hover:tracking-[0.55em] transition-all duration-1000">Cathedra</span>
@@ -43,7 +43,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               variant="outline"
               size="sm"
               onClick={() => navigate(-1)}
-              className="h-10 px-4 rounded-full border-primary/10 hover:bg-primary/5"
+              className="h-10 px-4 rounded-full border-primary/20 hover:bg-primary/5 focus-visible:ring-primary/40"
             >
               <Icons.ChevronLeft className="w-4 h-4" />
               <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>

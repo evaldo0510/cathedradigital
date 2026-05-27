@@ -205,7 +205,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           >
             <div className="flex items-center justify-between mb-12">
               <div 
-                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" 
+                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
