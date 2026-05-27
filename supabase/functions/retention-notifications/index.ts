@@ -5,6 +5,30 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Rate limiter: max requests per window
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 10; // Cron functions usually called once/day, 10 is plenty
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
+
 /**
  * Retention notifications edge function.
  * Triggered daily via pg_cron.
@@ -18,6 +42,14 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const clientIP = getClientIP(req);
+    if (isRateLimited(clientIP)) {
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded" }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 

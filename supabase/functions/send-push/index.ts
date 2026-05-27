@@ -6,7 +6,37 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+// Rate limiter: max requests per window (in-memory, resets on cold start)
+const rateLimitMap = new Map<string, number[]>();
+const RATE_LIMIT = 20; // max requests per minute
+const RATE_WINDOW_MS = 60_000;
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(key) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    rateLimitMap.set(key, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  rateLimitMap.set(key, timestamps);
+  // Basic cleanup to prevent memory leak
+  if (rateLimitMap.size > 1000) {
+    for (const [k, v] of rateLimitMap) {
+      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
+    }
+  }
+  return false;
+}
+
+function getClientIP(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    ?? req.headers.get("x-real-ip")
+    ?? "unknown";
+}
+
 const VAPID_PUBLIC_KEY = "BKVIOXhXSUD1UyFZHbRue5ITwT0pn-v5RdvHYwpYIMkKJ1VrRPWuHpckyeg8K_61LrN4t9tdzYp4OC5wkdbJ2Z4";
+
 const VAPID_PRIVATE_KEY = Deno.env.get("VAPID_PRIVATE_KEY") || "";
 const VAPID_SUBJECT = "mailto:cathedra@cathedradigital.app";
 
@@ -123,6 +153,14 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const clientIP = getClientIP(req);
+    if (isRateLimited(clientIP)) {
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded" }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
+      );
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -139,6 +177,7 @@ Deno.serve(async (req) => {
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
 
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
