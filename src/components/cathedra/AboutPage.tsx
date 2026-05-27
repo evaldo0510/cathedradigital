@@ -7,7 +7,7 @@ const AboutPage: React.FC = () => (
   <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
     {/* Hero Section */}
     <div className="text-center space-y-4">
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20">
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/[0.02] rounded-full border border-primary/10">
         <Icons.Cross className="w-4 h-4 text-primary" />
         <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>
@@ -16,7 +16,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Quick Navigation Anchors */}
-    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-border/50 sticky top-0 bg-background  z-20">
+    <nav className="flex flex-wrap justify-center gap-2 md:gap-8 py-4 border-y border-primary/5 sticky top-0 bg-background/80 backdrop-blur-md z-20">
       {[
         { label: 'Missão', href: '#missao', icon: <Icons.Target className="w-4 h-4" /> },
         { label: 'História', href: '#historia', icon: <Icons.History className="w-4 h-4" /> },
@@ -25,7 +25,7 @@ const AboutPage: React.FC = () => (
         <a 
           key={link.href} 
           href={link.href}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-full transition-all"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground/60 hover:text-primary hover:bg-primary/[0.03] rounded-full transition-all"
         >
           {link.icon}
           {link.label}
@@ -47,7 +47,7 @@ const AboutPage: React.FC = () => (
       {/* Missão Section */}
       <div id="missao" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
             <Icons.Target className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa Missão</h2>
@@ -61,7 +61,7 @@ const AboutPage: React.FC = () => (
       {/* História Section */}
       <div id="historia" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
             <Icons.History className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa História</h2>
@@ -74,7 +74,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-premium p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 bg-primary/[0.01] rounded-[2.5rem] p-8 md:p-12 border border-primary/5 shadow-premium">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => (
               rel="noopener noreferrer"
               aria-label={social.label}
               onClick={() => trackEvent('social_link_click', { platform: social.label, url: social.url })}
-              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-soft transition-all hover:shadow-premium hover:-translate-y-1 ${social.color} group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-primary/5 shadow-sm transition-all hover:shadow-premium hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
@@ -124,8 +124,8 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="bg-card border border-border rounded-premium p-6 space-y-4 hover:border-primary/30 transition-colors group">
-            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
+          <div key={pillar.title} className="bg-card border border-primary/5 rounded-premium p-6 space-y-4 hover:border-primary/20 transition-all group shadow-premium">
+            <div className="text-primary/40 bg-primary/[0.01] border border-primary/5 w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-500 group-hover:rotate-6 group-hover:text-primary group-hover:bg-primary/[0.03]">
               {pillar.icon}
             </div>
             <div className="space-y-2">
@@ -139,10 +139,10 @@ const AboutPage: React.FC = () => (
 
     {/* Creator Section */}
     <div className="pt-16 border-t border-border/40">
-      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
+      <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-primary/[0.01] rounded-[2.5rem] p-8 md:p-12 border border-primary/5 shadow-premium">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-premium-hover overflow-hidden group">
-            <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
+            <div className="w-full h-full rounded-full bg-primary/[0.02] flex items-center justify-center overflow-hidden border border-primary/10 group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
             <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-premium border-4 border-background">

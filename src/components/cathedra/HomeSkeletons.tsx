@@ -6,7 +6,7 @@ export const SectionSkeleton = () => (
       <div className="h-8 w-48 bg-muted/20 rounded-premium animate-pulse" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-64 bg-muted/10 rounded-premium border border-border/50 animate-pulse" />
+          <div key={i} className="h-64 bg-muted/10 rounded-premium border border-primary/5 animate-pulse" />
         ))}
       </div>
     </div>
@@ -14,7 +14,7 @@ export const SectionSkeleton = () => (
 );
 
 export const RitualSkeleton = () => (
-  <div className="w-full rounded-premium border border-border bg-card/50 p-6 space-y-6 animate-pulse">
+  <div className="w-full rounded-premium border border-primary/5 bg-card/50 p-6 space-y-6 animate-pulse">
     <div className="flex justify-between items-center">
       <div className="h-4 w-32 bg-muted/20 rounded-premium" />
       <div className="h-4 w-24 bg-muted/10 rounded-premium" />
