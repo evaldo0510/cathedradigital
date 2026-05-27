@@ -45,7 +45,7 @@ const MagisteriumViewer: React.FC = () => {
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { notes: docNotes, addNote, deleteNote: deleteDocNote } = useNotes('magisterium');
+  const { notes: docNotes, addNote, updateNote, deleteNote: deleteDocNote } = useNotes('magisterium');
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
