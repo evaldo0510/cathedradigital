@@ -74,6 +74,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
         { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type className="w-5 h-5" /> },
         { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather className="w-5 h-5" /> },
         { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass className="w-5 h-5" /> },
+        { label: 'Obra: Evaldo Poeta', path: AppRoute.LIVRO_EVALDO, icon: <Icons.Award className="w-5 h-5" />, pro: true },
       ]
     },
     {

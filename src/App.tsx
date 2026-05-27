@@ -98,6 +98,7 @@ const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
 const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResultPage'));
+const InnerFreedomBook = lazy(() => import('./components/cathedra/InnerFreedomBook'));
 const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
 const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
 const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
@@ -298,6 +299,7 @@ const AppLayout: React.FC = () => {
               <Route path="/papas" element={<Suspense fallback={<LoadingFallback />}><PopesPage /></Suspense>} />
               <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
               <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
+              <Route path="/livro-evaldo" element={<Suspense fallback={<LoadingFallback />}><InnerFreedomBook /></Suspense>} />
 
               {/* Liturgia & Oração */}
               <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><LiturgiaPage /></Suspense>} />
