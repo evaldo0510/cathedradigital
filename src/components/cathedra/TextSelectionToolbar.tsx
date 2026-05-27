@@ -6,11 +6,17 @@ import { Button } from '@/components/ui/button';
 interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
   onAddNote: () => void;
+  onDeleteHighlight?: () => void;
+  activeHighlightId?: string | null;
+  activeColor?: string | null;
 }
 
 export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({ 
   onHighlight, 
-  onAddNote 
+  onAddNote,
+  onDeleteHighlight,
+  activeHighlightId,
+  activeColor
 }) => {
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
