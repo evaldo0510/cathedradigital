@@ -172,7 +172,7 @@ const Bible: React.FC = () => {
       setHistoryIndex(newHistory.length - 1);
       return newHistory;
     });
-  }, [location.pathname, location.search]);
+  }, [location.pathname, location.search, historyIndex]);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
