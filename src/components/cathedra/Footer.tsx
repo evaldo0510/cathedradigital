@@ -192,9 +192,10 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: <Icons.Instagram className="w-4 h-4" />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
-                { icon: <Icons.Youtube className="w-4 h-4" />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
-                { icon: <Icons.Whatsapp className="w-4 h-4" />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
+                { icon: <Icons.Instagram className="w-5 h-5" />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
+                { icon: <Icons.Youtube className="w-5 h-5" />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
+                { icon: <Icons.Whatsapp className="w-5 h-5" />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
+
               ].map((social, i) => (
                 <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
                   <a href={social.url} target="_blank" rel="noopener noreferrer" onClick={() => handleSocialClick(social.platform, social.url)} aria-label={social.platform}>

@@ -89,85 +89,87 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     ...(user?.role === 'admin' ? [{
       label: t('admin'),
       items: [
-        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock className="w-5 h-5" /> },
+        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
+        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock className="w-5 h-5 opacity-70" /> },
+
       ]
 
     }] : []),
     {
       label: 'Hoje',
       items: [
-        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun className="w-5 h-5" /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen className="w-5 h-5" /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5" /> },
-        { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award className="w-5 h-5" /> },
+        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun className="w-5 h-5 opacity-70" /> },
+        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
+        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
+        { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Portal Sagrado',
       items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5" /> },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5" /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles className="w-5 h-5" /> },
+        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5 opacity-70" /> },
+        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5 opacity-70" /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5 opacity-70" /> },
+        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Biblioteca',
       items: [
-        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5" /> },
-        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
-        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary className="w-5 h-5" /> },
-        { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type className="w-5 h-5" /> },
-        { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather className="w-5 h-5" /> },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass className="w-5 h-5" /> },
+        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5 opacity-70" /> },
+        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5 opacity-70" /> },
+        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary className="w-5 h-5 opacity-70" /> },
+        { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type className="w-5 h-5 opacity-70" /> },
+        { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather className="w-5 h-5 opacity-70" /> },
+        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Santos & Devoções',
       items: [
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator className="w-5 h-5" /> },
-        { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles className="w-5 h-5" /> },
-        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users className="w-5 h-5 opacity-70" /> },
+        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator className="w-5 h-5 opacity-70" /> },
+        { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
+        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Liturgia & Oração',
       items: [
-        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.ScrollText className="w-5 h-5" /> },
-        { label: 'Calendário', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.Calendar className="w-5 h-5" /> },
-        { label: 'Missal', path: AppRoute.MISSAL, icon: <Icons.BookOpen className="w-5 h-5" /> },
-        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5" /> },
-        { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5" /> },
-        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5" /> },
-        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music className="w-5 h-5" /> },
-        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Sparkles className="w-5 h-5" /> },
-        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen className="w-5 h-5" /> },
-        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather className="w-5 h-5" /> },
+        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.ScrollText className="w-5 h-5 opacity-70" /> },
+        { label: 'Calendário', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.Calendar className="w-5 h-5 opacity-70" /> },
+        { label: 'Missal', path: AppRoute.MISSAL, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
+        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5 opacity-70" /> },
+        { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
+        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5 opacity-70" /> },
+        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music className="w-5 h-5 opacity-70" /> },
+        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
+        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
+        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Jornadas',
       items: [
-        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5" /> },
+        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Comunidade',
       items: [
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart className="w-5 h-5" /> },
-        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-70" /> },
+        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
+        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
       ]
     },
     {
       label: 'Conta',
       items: [
-        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award className="w-5 h-5" /> },
-        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info className="w-5 h-5" /> },
+        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award className="w-5 h-5 opacity-70" /> },
+        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info className="w-5 h-5 opacity-70" /> },
       ]
     }
+
   ];
 
   const handleNav = useCallback((path: string) => {
