@@ -10,21 +10,22 @@ interface AdminGuardProps {
 const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   const { user, profile, loading } = useAuth();
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
+  if (loading || !user) {
+    if (loading) {
+      return (
+      <div className="flex items-center justify-center min-h-[60vh]" role="status" aria-label="Carregando">
         <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
-    );
-  }
 
-  if (!user) {
-    return <Navigate to={AppRoute.LOGIN} replace />;
+      );
+    }
+    return <Navigate to="/" replace />;
   }
 
   if (profile?.role !== 'admin') {
     return <Navigate to="/" replace />;
   }
+
 
 
   return <>{children}</>;

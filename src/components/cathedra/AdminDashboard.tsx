@@ -127,6 +127,13 @@ const AdminDashboard: React.FC = () => {
   };
 
   useEffect(() => {
+    document.body.classList.add('admin-mode');
+    return () => {
+      document.body.classList.remove('admin-mode');
+    };
+  }, []);
+
+  useEffect(() => {
     if (activeTab && tabsListRef.current) {
       const activeTrigger = tabsListRef.current.querySelector(`[data-state="active"]`);
       if (activeTrigger) {
