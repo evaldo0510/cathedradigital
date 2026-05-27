@@ -832,7 +832,6 @@ const Catechism: React.FC = () => {
           >
             Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
           </Button>
-
         </div>
 
         <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">

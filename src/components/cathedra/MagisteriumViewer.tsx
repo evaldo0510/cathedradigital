@@ -406,9 +406,8 @@ const MagisteriumViewer: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 w-full max-w-[75ch] mx-auto"
+          className="flex-1 w-full max-w-[75ch] mx-auto relative"
         >
-          <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (
               <motion.div 
