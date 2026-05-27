@@ -697,8 +697,16 @@ const Catechism: React.FC = () => {
             <ReadingProgress 
               progress={readingProgress}
               onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onScrollToPercentage={(p) => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                window.scrollTo({ top: (p / 100) * totalHeight, behavior: 'smooth' });
+              }}
               showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
-              onResumeLast={() => navigate(lastReadMark.url)}
+              onResumeLast={() => {
+                if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                   navigate(lastReadMark.url);
+                }
+              }}
               label={`Catecismo §${currentParagraph}`}
             />
 
