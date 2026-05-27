@@ -63,11 +63,18 @@ const LogosAI: React.FC<LogosAIProps> = ({
   }, [selectedText]);
 
 
-  const handleQuery = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (!query.trim() || isLoading) return;
+  useEffect(() => {
+    if (initialQuery) {
+      setQuery(initialQuery);
+    }
+  }, [initialQuery]);
 
-    const userMsg = query.trim();
+  const handleQuery = async (e?: React.FormEvent, customQuery?: string) => {
+    if (e) e.preventDefault();
+    const finalQuery = customQuery || query;
+    if (!finalQuery.trim() || isLoading) return;
+
+    const userMsg = finalQuery.trim();
     setHistory(prev => [...prev, { role: 'user', content: userMsg }]);
     setQuery('');
     setIsLoading(true);
