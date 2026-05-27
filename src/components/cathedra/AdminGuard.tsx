@@ -23,16 +23,9 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   }
 
   if (profile?.role !== 'admin') {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
-        <div className="w-16 h-16 rounded-premium bg-destructive/10 flex items-center justify-center mb-4">
-          <span className="text-2xl">🔒</span>
-        </div>
-        <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
-        <p className="text-muted-foreground">Esta área é exclusiva para administradores.</p>
-      </div>
-    );
+    return <Navigate to="/" replace />;
   }
+
 
   return <>{children}</>;
 };
