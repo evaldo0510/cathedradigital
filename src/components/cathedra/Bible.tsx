@@ -145,7 +145,6 @@ const Bible: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [bibleError, setBibleError] = useState('');
   const [highlightedVerse, setHighlightedVerse] = useState<number | null>(null);
-  const { settings, updateSettings } = useReadingSettings();
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [lastReadMark, setLastReadMark] = useState<any>(null);
@@ -814,7 +813,7 @@ const Bible: React.FC = () => {
                             ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5' : 'hover:bg-primary/[0.01]'}`}>
                           <div className="flex items-start gap-3">
                             <sup className="text-[0.55em] font-medium text-primary mt-2 select-none opacity-20 group-hover:opacity-40 transition-opacity">{v.number}</sup>
-                            <div className="flex-1" onClick={() => {
+                            <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
                               setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
@@ -831,7 +830,7 @@ const Bible: React.FC = () => {
                                 url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
                                 is_last_read: true
                               });
-                            }} className="flex-1 cursor-pointer">
+                            }}>
                               <p className="leading-relaxed">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1`}>
