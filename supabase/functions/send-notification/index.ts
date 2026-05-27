@@ -6,10 +6,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-// Rate limiter: max requests per window (in-memory, resets on cold start)
+// Rate limiter
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 20; // max requests
-const RATE_WINDOW_MS = 60_000; // per minute
+const RATE_LIMIT = 20;
+const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(key: string): boolean {
   const now = Date.now();
@@ -20,11 +20,6 @@ function isRateLimited(key: string): boolean {
   }
   timestamps.push(now);
   rateLimitMap.set(key, timestamps);
-  if (rateLimitMap.size > 10000) {
-    for (const [k, v] of rateLimitMap) {
-      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
-    }
-  }
   return false;
 }
 
@@ -34,68 +29,81 @@ function getClientIP(req: Request): string {
     ?? "unknown";
 }
 
-/**
- * Secure notification sender — bypasses RLS using service role.
- * Called internally by other edge functions or by admin users.
- */
+async function logSecurityEvent(supabase: any, event: { type: string, severity: string, description: string, metadata?: any }) {
+  console.log(`[SECURITY ${event.severity.toUpperCase()}] ${event.type}: ${event.description}`);
+  try {
+    await supabase.from("security_audit_logs").insert({
+      event_type: event.type,
+      severity: event.severity,
+      description: event.description,
+      metadata: event.metadata || {}
+    });
+  } catch (err) {
+    console.error("Failed to log security event:", err);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  // Require service-role bearer or X-Cron-Secret header — this is an internal/admin endpoint
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-  const authHeader = req.headers.get("authorization") || "";
-  const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
-  const cronSecret = Deno.env.get("CRON_SECRET") || "";
-  const cronSecretHeader = req.headers.get("x-cron-secret") || "";
-  const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
-  const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
-  if (!isServiceRole && !isCronSecret) {
-    return new Response(
-      JSON.stringify({ error: "Forbidden" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 403 }
-    );
-  }
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
 
   const clientIP = getClientIP(req);
+  
+  // 1. Check Rate Limit
   if (isRateLimited(clientIP)) {
+    await logSecurityEvent(supabase, {
+      type: "RATE_LIMIT_EXCEEDED",
+      severity: "warning",
+      description: `Rate limit hit for IP: ${clientIP}`,
+      metadata: { ip: clientIP, function: "send-notification" }
+    });
     return new Response(
-      JSON.stringify({ error: "Rate limit exceeded. Try again later." }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" }, status: 429 }
+      JSON.stringify({ error: "Rate limit exceeded" }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 429 }
     );
   }
 
-  // Abuse protection: limit body size to 10KB
+  // 2. Check Payload Size
   const contentLength = parseInt(req.headers.get("content-length") || "0");
-  if (contentLength > 10240) {
+  if (contentLength > 10240) { // 10KB
+    await logSecurityEvent(supabase, {
+      type: "PAYLOAD_TOO_LARGE",
+      severity: "critical",
+      description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
+      metadata: { ip: clientIP, size: contentLength, function: "send-notification" }
+    });
     return new Response(
       JSON.stringify({ error: "Payload too large" }),
       { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 
+  // Auth check
+  const authHeader = req.headers.get("authorization") || "";
+  const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+  const cronSecret = Deno.env.get("CRON_SECRET") || "";
+  const cronSecretHeader = req.headers.get("x-cron-secret") || "";
+  
+  if (providedBearer !== serviceRoleKey && cronSecretHeader !== cronSecret) {
+    await logSecurityEvent(supabase, {
+      type: "UNAUTHORIZED_ACCESS",
+      severity: "critical",
+      description: `Unauthorized attempt to call send-notification from IP: ${clientIP}`,
+      metadata: { ip: clientIP }
+    });
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
+  }
 
   try {
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
-
     const { user_id, title, message, link, type } = await req.json();
 
-    // Input validation
     if (!user_id || !title) {
-      return new Response(
-        JSON.stringify({ error: "user_id and title are required" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-      );
-    }
-
-    if (link && !link.startsWith("/") && !link.startsWith("https://")) {
-      return new Response(
-        JSON.stringify({ error: "Invalid link format" }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
-      );
+      return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: corsHeaders });
     }
 
     const { error } = await supabase.from("notifications").insert({
@@ -106,23 +114,11 @@ Deno.serve(async (req) => {
       type: type || "system",
     });
 
-    if (error) {
-      console.error("Notification insert error:", error);
-      return new Response(
-        JSON.stringify({ error: error.message }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-      );
-    }
+    if (error) throw error;
 
-    return new Response(
-      JSON.stringify({ success: true }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (err) {
     console.error("send-notification error:", err);
-    return new Response(
-      JSON.stringify({ error: (err as Error).message }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
-    );
+    return new Response(JSON.stringify({ error: (err as Error).message }), { status: 500, headers: corsHeaders });
   }
 });
