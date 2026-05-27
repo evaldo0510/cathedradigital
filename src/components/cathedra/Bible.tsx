@@ -154,7 +154,7 @@ const Bible: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
-  const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('bible');
+  const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -533,10 +533,7 @@ const Bible: React.FC = () => {
     if (!selectedBook || !highlightedVerse) return;
     
     if (activeHighlight) {
-       await supabase.from('user_notes').update({ 
-         note_text: text, 
-         highlight_color: color 
-       }).eq('id', activeHighlight.id);
+       await updateNote(activeHighlight.id, text, color);
        setActiveHighlight(null);
     } else {
       await addNote(selectedBook.abbr, text, color, {
@@ -867,6 +864,7 @@ const Bible: React.FC = () => {
                       key={note.id}
                       onClick={() => {
                         if (note.verse) {
+                          setHighlightedVerse(note.verse);
                           const el = document.getElementById(`v${note.verse}`);
                           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }

@@ -86,10 +86,13 @@ export function useNotes(contentType: string, contentId?: string) {
     }
   }, [user, contentType]);
 
-  const updateNote = useCallback(async (noteId: string, text: string) => {
+  const updateNote = useCallback(async (noteId: string, text: string, color?: string) => {
     if (!user) return;
-    await supabase.from('user_notes').update({ note_text: text.trim() }).eq('id', noteId);
-    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, note_text: text.trim(), updated_at: new Date().toISOString() } : n));
+    const updates: any = { note_text: text.trim(), updated_at: new Date().toISOString() };
+    if (color) updates.highlight_color = color;
+    
+    await supabase.from('user_notes').update(updates).eq('id', noteId);
+    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, ...updates } : n));
   }, [user]);
 
   const deleteNote = useCallback(async (noteId: string) => {

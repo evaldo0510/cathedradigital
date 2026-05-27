@@ -310,7 +310,7 @@ const Catechism: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
-  const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
+  const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -433,10 +433,7 @@ const Catechism: React.FC = () => {
     if (!currentParagraph) return;
     
     if (activeHighlight) {
-       await supabase.from('user_notes').update({ 
-         note_text: text, 
-         highlight_color: color 
-       }).eq('id', activeHighlight.id);
+       await updateNote(activeHighlight.id, text, color);
        setActiveHighlight(null);
     } else {
       await addNote(currentParagraph.toString(), text, color, {
@@ -814,7 +811,14 @@ const Catechism: React.FC = () => {
                     <button
                       key={note.id}
                       onClick={() => {
-                        if (note.paragraph) jumpToParagraph(note.paragraph);
+                        if (note.paragraph) {
+                          jumpToParagraph(note.paragraph);
+                          const el = document.getElementById(`p${note.paragraph}`);
+                          if (el) {
+                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
+                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
+                          }
+                        }
                       }}
                       className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
                         ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}

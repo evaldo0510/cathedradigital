@@ -45,7 +45,7 @@ const MagisteriumViewer: React.FC = () => {
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { notes: docNotes, addNote, deleteNote: deleteDocNote } = useNotes('magisterium');
+  const { notes: docNotes, addNote, updateNote, deleteNote: deleteDocNote } = useNotes('magisterium');
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
@@ -142,10 +142,7 @@ const MagisteriumViewer: React.FC = () => {
     if (!id) return;
     
     if (activeHighlight) {
-       await supabase.from('user_notes').update({ 
-         note_text: text, 
-         highlight_color: color 
-       }).eq('id', activeHighlight.id);
+       await updateNote(activeHighlight.id, text, color);
        setActiveHighlight(null);
     } else {
       await addNote(id, text, color);
@@ -345,7 +342,11 @@ const MagisteriumViewer: React.FC = () => {
                       onClick={() => {
                         if (pIdx !== null) {
                           const el = document.getElementById(`para-${pIdx}`);
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
+                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
+                          }
                         }
                       }}
                       className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
