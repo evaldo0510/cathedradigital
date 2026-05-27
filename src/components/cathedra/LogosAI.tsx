@@ -63,13 +63,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
   }, [selectedText]);
 
 
-  useEffect(() => {
-    if (initialQuery && isOpen && history.length === 0) {
-      handleQuery(undefined, initialQuery);
-    }
-  }, [initialQuery, isOpen]);
-
-  const handleQuery = async (e?: React.FormEvent, customQuery?: string) => {
+  const handleQuery = React.useCallback(async (e?: React.FormEvent, customQuery?: string) => {
     if (e) e.preventDefault();
     const finalQuery = customQuery || query;
     if (!finalQuery.trim() || isLoading) return;
@@ -119,7 +113,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [query, isLoading, history, context, selectedText, type]);
+
+  useEffect(() => {
+    if (initialQuery && isOpen && history.length === 0) {
+      handleQuery(undefined, initialQuery);
+    }
+  }, [initialQuery, isOpen, history.length, handleQuery]);
 
   if (variant === 'integrated') {
     return (
