@@ -250,6 +250,7 @@ const AppLayout: React.FC = () => {
         )}
         
         <CathedralSidebar 
+          isOpen={isSidebarOpen}
           user={authUserAdapter}
           onClose={handleCloseSidebar}
           isDark={isDark}
@@ -261,7 +262,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" tabIndex={-1} className={cn("outline-none", location.pathname === '/' ? "p-0 max-w-none" : "pb-24 pt-20 px-4 md:px-8 max-w-7xl mx-auto min-h-screen")}>
+        <main id="main-content" tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 pt-28 px-6 md:px-12 lg:px-16 max-w-[1400px] mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />

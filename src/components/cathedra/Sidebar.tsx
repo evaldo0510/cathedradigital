@@ -1,16 +1,17 @@
 import { Button } from '@/components/ui/button';
-import React, { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
 import { Icons } from '../../constants';
 import { AppRoute, User } from '../../types';
-import { LangContext } from '@/contexts/LangContext';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface SidebarProps {
-  onClose?: () => void;
+  isOpen: boolean;
+  onClose: () => void;
   user: User | null;
   isDark?: boolean;
   onToggleDark?: () => void;
@@ -21,7 +22,7 @@ interface SidebarProps {
   onSignOut?: () => void;
 }
 
-const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }, ref) => {
+const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContrast, onToggleHighContrast, isSpeaking, onToggleSpeak, onSignOut }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -32,7 +33,6 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
     
-    // Listen for cache updates
     const handleCacheUpdate = () => {
       getCacheStats().then(stats => setCacheCount(stats.total));
     };
@@ -123,171 +123,207 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
     }
   ];
 
-  const handleNav = useCallback((item: string | { path: string; onClick?: () => void }) => {
-    const path = typeof item === 'string' ? item : item.path;
-    if (typeof item !== 'string' && item.onClick) item.onClick();
+  const handleNav = useCallback((path: string) => {
     if (path !== '#') {
       navigate(path);
-      onClose?.();
+      onClose();
     }
   }, [navigate, onClose]);
 
   return (
-    <>
-      <aside ref={ref} className="h-full w-[320px] bg-card border-r border-border/20 flex flex-col p-8 overflow-hidden">
-        <div className="mb-12 px-2 flex items-center gap-4 cursor-pointer group hover:opacity-90 transition-opacity" onClick={() => handleNav('/')}>
-          <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
-          <div className="space-y-0.5">
-            <h1 className="text-xl font-display font-medium tracking-[0.2em] text-primary leading-none uppercase">CATHEDRA</h1>
-            <p className="text-[8px] font-bold uppercase text-primary/20 tracking-[0.5em]">
-              Sanctuarium
-            </p>
-          </div>
-        </div>
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Elegant Overlay Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            onClick={onClose}
+            className="fixed inset-0 bg-background/40 backdrop-blur-md z-[145]"
+            aria-hidden="true"
+          />
 
-        <nav className="flex-1 space-y-6 overflow-y-auto pb-4 no-scrollbar">
-          {sections.map((section) => (section.items.length > 0 && (
-            <div key={section.label}>
-              <h3 className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/30 mb-5 px-4">{section.label}</h3>
-              <ul className="space-y-1">
-                {section.items.map((item, idx) => (
-                  <li key={idx}>
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleNav(item.path)}
-                      onMouseEnter={() => prefetchRoute(item.path)}
-                      onTouchStart={() => prefetchRoute(item.path)}
-                      aria-current={currentPath === item.path ? 'page' : undefined}
-                      className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-full text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[52px] border-none shadow-none
-                        ${currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path))
-                          ? 'bg-primary text-primary-foreground shadow-premium hover:opacity-90'
-                          : 'text-muted-foreground/60 hover:bg-primary/[0.03] hover:text-primary'}`}
-                    >
-                      <span className="opacity-70 flex-shrink-0">{item.icon}</span>
-                      <span className="tracking-tight truncate">{item.label}</span>
-                      {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                        <span className="ml-auto bg-primary/20 text-primary text-premium-tiny font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
-                          {cacheCount}
-                        </span>
-                      )}
-                      {(item as any).pro && <span className="ml-auto text-premium-tiny font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
-                      {currentPath === item.path && item.path !== AppRoute.CACHE_MANAGER && <div className="ml-auto w-1 h-1 rounded-premium bg-primary flex-shrink-0" />}
-                    </Button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )))}
-        </nav>
-
-
-        <div className="pt-4 pb-20 lg:pb-0 border-t border-border space-y-3">
-          <div className="flex flex-col gap-2 mb-2 px-1">
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                variant="outline"
-                size="sm"
-                onClick={onToggleDark} 
-                className="flex-1 min-w-[100px] h-12 rounded-full border border-border bg-muted flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-                aria-label={isDark ? "Mudar para modo claro" : "Mudar para modo escuro"}
+          {/* Premium Retractable Sidebar */}
+          <motion.aside
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed top-0 left-0 h-full w-[320px] md:w-[380px] bg-card/95 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-8 md:p-12 z-[150] shadow-2xl overflow-hidden"
+          >
+            <div className="flex items-center justify-between mb-12">
+              <div 
+                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" 
+                onClick={() => handleNav('/')}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                {isDark ? <Icons.Sun className="w-5 h-5 text-primary" /> : <Icons.Moon className="w-5 h-5" />}
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isDark ? (lang === 'pt' ? 'Claro' : 'Light') : (lang === 'pt' ? 'Escuro' : 'Dark')}</span>
-              </Button>
+                <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-700 group-hover:scale-110" variant="blue" />
+                <div className="space-y-0.5">
+                  <h1 className="text-xl font-display font-medium tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[8px] font-bold uppercase text-primary/20 tracking-[0.5em]">
+                    Sanctuarium
+                  </p>
+                </div>
+              </div>
 
-              <Button 
-                variant={isHighContrast ? "default" : "outline"}
-                size="sm"
-                onClick={onToggleHighContrast} 
-                className={`flex-1 min-w-[100px] h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  !isHighContrast ? 'bg-muted' : 'ring-2 ring-primary ring-offset-1'
-                }`}
-                aria-label={isHighContrast ? "Desativar alto contraste" : "Ativar alto contraste"}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onClose}
+                className="rounded-full w-10 h-10 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all"
+                aria-label="Fechar menu"
               >
-                <Icons.ShieldCheck className="w-5 h-5" />
-                <span className="text-premium-tiny font-black uppercase tracking-widest truncate">{isHighContrast ? 'Contraste +' : 'Contraste'}</span>
+                <Icons.X className="w-5 h-5" />
               </Button>
             </div>
 
-            {!settings.totalSilence && (
-              <div className="flex gap-2">
-                <Button 
-                  variant={isSpeaking ? "default" : "outline"}
-                  size="sm"
-                  onClick={onToggleSpeak} 
-                  className={`flex-1 h-12 rounded-full border border-border flex items-center justify-center gap-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                    !isSpeaking ? 'bg-muted' : ''
-                  }`}
-                  aria-label={isSpeaking ? t('audio_stop') : t('audio_read')}
-                >
-                  {isSpeaking ? <Icons.Message className="w-5 h-5 animate-pulse" /> : <Icons.Volume2 className="w-5 h-5" />}
-                  <span className="text-premium-tiny font-black uppercase tracking-widest">{isSpeaking ? t('audio_stop') : t('audio_read')}</span>
-                </Button>
-              </div>
-            )}
+            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2">
+              {sections.map((section) => (section.items.length > 0 && (
+                <div key={section.label} className="animate-in fade-in slide-in-from-left-4 duration-700">
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 mb-6 px-4">{section.label}</h3>
+                  <ul className="space-y-1">
+                    {section.items.map((item, idx) => {
+                      const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
+                      return (
+                        <li key={idx}>
+                          <Button
+                            variant="ghost"
+                            onClick={() => handleNav(item.path)}
+                            onMouseEnter={() => prefetchRoute(item.path)}
+                            onTouchStart={() => prefetchRoute(item.path)}
+                            aria-current={isActive ? 'page' : undefined}
+                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[56px] border border-transparent
+                              ${isActive
+                                ? 'bg-primary/5 text-primary border-primary/10 shadow-sm'
+                                : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
+                          >
+                            <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-40'}`}>{item.icon}</span>
+                            <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
+                            {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
+                              <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                                {cacheCount}
+                              </span>
+                            )}
+                            {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
+                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 shadow-[0_0_8px_rgba(var(--primary),0.3)]" />}
+                          </Button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )))}
+            </nav>
 
-            <div className="flex flex-wrap gap-1 mt-1">
-              {(['pt', 'en', 'es', 'la', 'it', 'fr', 'de'] as const).map((l) => (
-                <Button
-                  key={l}
-                  variant="ghost"
-                  onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                  aria-label={`Mudar idioma para ${l.toUpperCase()}`}
-                  aria-pressed={lang === l}
-                  className={`px-3 py-1.5 h-auto text-premium-tiny font-black uppercase rounded-full border transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                    lang === l 
-                      ? 'bg-primary text-white border-primary shadow-sm' 
-                      : 'bg-muted text-muted-foreground border-border hover:border-primary/50'
-                  }`}
-                >
-                  {l}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {user ? (
-            <div 
-              onClick={() => handleNav(AppRoute.PROFILE)} 
-              className="w-full flex items-center gap-4 p-4 bg-muted/30 rounded-full hover:border-primary/20 border border-border/10 transition-all cursor-pointer shadow-soft group"
-            >
-              <div className="w-12 h-12 rounded-premium bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-soft group-hover:scale-105 transition-transform">
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover rounded-premium" />
-                ) : (
-                  user.name.charAt(0).toUpperCase()
-                )}
-              </div>
-              <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-bold truncate text-primary/80">{user.name}</p>
-                <p className="text-[10px] uppercase text-secondary font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'PRO' : 'Gratuito'}</p>
-                {!user.isPremium && (
-                  <div 
-                    onClick={(e) => { e.stopPropagation(); handleNav(AppRoute.UPGRADE); }}
-                    className="mt-1 inline-flex items-center gap-1 text-premium-tiny font-black uppercase tracking-widest bg-primary/10 text-primary px-1.5 py-0.5 rounded-full hover:bg-primary hover:text-white transition-colors animate-pulse"
+            <div className="pt-8 mt-auto border-t border-primary/5 space-y-6">
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button 
+                    variant="outline"
+                    onClick={onToggleDark} 
+                    className="h-12 rounded-xl border-primary/5 bg-muted/30 flex items-center justify-center gap-2 transition-all hover:bg-primary/5 hover:border-primary/10"
+                    aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    Upgrade <Icons.ArrowRight className="w-2 h-2" />
-                  </div>
+                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
+                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                  </Button>
+
+                  <Button 
+                    variant={isHighContrast ? "default" : "outline"}
+                    onClick={onToggleHighContrast} 
+                    className={`h-12 rounded-xl border-primary/5 flex items-center justify-center gap-2 transition-all ${
+                      isHighContrast ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    }`}
+                  >
+                    <Icons.ShieldCheck className="w-4 h-4" />
+                    <span className="text-[9px] font-bold uppercase tracking-widest">Contraste</span>
+                  </Button>
+                </div>
+
+                {!settings.totalSilence && (
+                  <Button 
+                    variant={isSpeaking ? "default" : "outline"}
+                    onClick={onToggleSpeak} 
+                    className={`w-full h-12 rounded-xl border-primary/5 flex items-center justify-center gap-3 transition-all ${
+                      isSpeaking ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    }`}
+                  >
+                    {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4 opacity-40" />}
+                    <span className="text-[9px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar Áudio' : 'Ouvir Página'}</span>
+                  </Button>
                 )}
+
+                <div className="flex flex-wrap gap-1.5 justify-center">
+                  {(['pt', 'en', 'es', 'la'] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
+                      className={`px-3 py-1 text-[8px] font-black uppercase rounded-full border transition-all ${
+                        lang === l 
+                          ? 'bg-primary text-primary-foreground border-primary shadow-sm' 
+                          : 'bg-muted/30 text-muted-foreground/40 border-primary/5 hover:border-primary/20'
+                      }`}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <Button 
-                onClick={(e) => { e.stopPropagation(); onSignOut?.(); }}
-                className="p-2 text-muted-foreground hover:text-destructive transition-colors"
-                title={t('exit_session')}
-              >
-                <Icons.LogOut className="w-4 h-4" />
-              </Button>
+
+              {user ? (
+                <div className="p-4 bg-primary/[0.02] rounded-3xl border border-primary/5 space-y-4">
+                  <div 
+                    onClick={() => handleNav(AppRoute.PROFILE)} 
+                    className="flex items-center gap-4 cursor-pointer group"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-premium group-hover:scale-105 transition-transform overflow-hidden">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        user.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold truncate text-primary/80">{user.name}</p>
+                      <p className="text-[8px] uppercase text-primary/30 font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between gap-2">
+                    {!user.isPremium && (
+                      <Button 
+                        onClick={() => handleNav(AppRoute.UPGRADE)}
+                        className="flex-1 h-10 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all"
+                      >
+                        Upgrade
+                      </Button>
+                    )}
+                    <Button 
+                      variant="ghost"
+                      size="icon"
+                      onClick={onSignOut}
+                      className="h-10 w-10 rounded-xl text-muted-foreground/20 hover:text-destructive hover:bg-destructive/5"
+                    >
+                      <Icons.LogOut className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-14 bg-primary text-primary-foreground rounded-2xl font-bold uppercase text-[10px] tracking-[0.3em] shadow-premium hover:shadow-premium-hover transition-all">
+                  {t('enter')}
+                </Button>
+              )}
             </div>
-          ) : (
-            <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all">
-              {t('enter')}
-            </Button>
-          )}
-        </div>
-      </aside>
-    </>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
   );
-}));
+});
 
 Sidebar.displayName = 'Sidebar';
 
