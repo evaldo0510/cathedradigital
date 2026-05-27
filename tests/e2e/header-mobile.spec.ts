@@ -135,48 +135,49 @@ test.describe('Mobile Header Comprehensive Tests', () => {
     });
   }
 
-  test('Keyboard Navigation Loop and Focus Trap Prevention', async ({ page }) => {
+  test('Keyboard Navigation Sequence & Focus Visibility', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('/bible');
+    await page.goto('/hoje');
     
-    // Start from the top
+    // 1. Reset and move focus into header
     await page.keyboard.press('Home');
-    await page.mouse.click(0, 0);
+    await page.keyboard.press('Tab'); // Should land on Skip Link
     
-    // Total interactive elements in header (approx 7): Skip, Logo, Back, Search, Theme, Profile, Menu
-    // We'll tab through more than enough to ensure we exit the header and enter main content
-    const interactiveElementsCount = 10;
-    
-    for (let i = 0; i < interactiveElementsCount; i++) {
-      await page.keyboard.press('Tab');
-      const focusedElement = await page.evaluate(() => {
+    // 2. Sequential Tab navigation through ALL elements
+    const expectedLabels = [
+      'Pular para o conteúdo',
+      'Ir para a página inicial',
+      'Voltar',
+      'Buscar',
+      'Alternar modo de cor',
+      'Perfil',
+      'Abrir menu lateral'
+    ];
+
+    for (const label of expectedLabels) {
+      const activeElement = await page.evaluate(() => {
         const el = document.activeElement;
-        if (!el) return null;
         return {
-          tagName: el.tagName,
-          ariaLabel: el.getAttribute('aria-label'),
-          role: el.getAttribute('role'),
-          isVisible: window.getComputedStyle(el).display !== 'none' && window.getComputedStyle(el).visibility !== 'hidden',
-          outline: window.getComputedStyle(el).outlineStyle,
-          boxShadow: window.getComputedStyle(el).boxShadow
+          label: el?.getAttribute('aria-label') || el?.textContent?.trim(),
+          outline: window.getComputedStyle(el!).outlineStyle,
+          boxShadow: window.getComputedStyle(el!).boxShadow,
+          isInsideHeader: !!el?.closest('header')
         };
       });
+      
+      // Basic check that we are tabbing through something meaningful
+      expect(activeElement.label?.toLowerCase()).toContain(label.toLowerCase().split(' ')[0]);
+      
+      // CRITICAL: Ensure focus is VISIBLE (either outline or box-shadow ring)
+      const hasFocusRing = activeElement.outline !== 'none' || activeElement.boxShadow.includes('rgb');
+      expect(hasFocusRing).toBeTruthy();
 
-      expect(focusedElement).not.toBeNull();
-      // Verify focus is visible (either via outline or box-shadow ring)
-      const hasVisibleFocus = focusedElement?.outline !== 'none' || focusedElement?.boxShadow.includes('rgb');
-      expect(hasVisibleFocus).toBeTruthy();
+      await page.keyboard.press('Tab');
     }
 
-    // After tabbing through header, we should be able to tab back
-    for (let i = 0; i < 5; i++) {
-      await page.keyboard.press('Shift+Tab');
-    }
-    
-    const backToHeader = await page.locator('header[role="banner"]').evaluate(header => 
-      header.contains(document.activeElement)
-    );
-    expect(backToHeader).toBeTruthy();
+    // 3. Verify we exited the header after all elements
+    const exitedHeader = await page.evaluate(() => !document.activeElement?.closest('header'));
+    expect(exitedHeader).toBeTruthy();
   });
 
   test('High Zoom and Contrast Resilience', async ({ page }) => {
