@@ -64,6 +64,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 outline-none" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
+        <h2 className="sr-only">Destaques e Ritual</h2>
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
@@ -77,6 +78,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
+          <h2 className="sr-only">Sua Jornada de Leitura</h2>
           <SectionHeader 
             align="left"
             title="Sua Jornada" 
@@ -90,6 +92,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
         {/* 3. LOGOS IA - INTELLIGENT COMPANION */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both flex flex-col">
+          <h2 className="sr-only">Logos IA</h2>
           <SectionHeader 
             align="left"
             title="Logos IA" 
@@ -137,6 +140,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both">
+        <h2 className="sr-only">Fontes de Sabedoria</h2>
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
@@ -149,6 +153,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1000">
+        <h2 className="sr-only">Futuras Expansões</h2>
         <SectionHeader 
           title="O Futuro" 
           subtitle="Novas salas sendo preparadas para o seu santuário."

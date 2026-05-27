@@ -194,7 +194,7 @@ const RitualDoDia: React.FC = () => {
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
-            <span className="text-[8px] md:text-[9px] font-medium uppercase tracking-[0.5em] text-primary/40">
+            <span className="text-[8px] md:text-[9px] font-medium uppercase tracking-[0.5em] text-primary/40 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
             <div className="flex items-center gap-6 md:gap-8">
@@ -299,7 +299,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-2xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary/90 selection:bg-primary/5 tracking-tight px-2">
+              <blockquote className="text-2xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-8 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
@@ -337,7 +337,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(75)}
                 aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-foreground/40 font-serif tracking-tight selection:bg-primary/5 px-2">
+                <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-foreground/50 font-serif tracking-tight selection:bg-primary/5 px-2">
                   {ritual?.catechism?.text || ''}
                 </p>
                 <p className="mt-8 md:mt-10 text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
