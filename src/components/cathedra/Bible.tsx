@@ -982,7 +982,22 @@ const Bible: React.FC = () => {
         title="Bíblia Sagrada | Cathedra Digital"
         description="Explore as Sagradas Escrituras em uma experiência contemplativa premium."
         path="/bible"
+        type="book"
       />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Book",
+          "name": "Bíblia Sagrada",
+          "author": "Inspirada por Deus / Tradição da Igreja",
+          "genre": "Religioso / Sagrada Escritura",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Cathedra Digital"
+          },
+          "about": "Palavra de Deus e base da fé católica."
+        })}
+      </script>
       
       <div className="space-y-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
