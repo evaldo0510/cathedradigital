@@ -319,7 +319,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-lg md:text-2xl lg:text-3xl leading-relaxed text-foreground/70 font-serif italic selection:bg-primary/5 px-4">
+              <p className="text-lg md:text-2xl lg:text-3xl leading-relaxed text-foreground/90 font-serif italic selection:bg-primary/5 px-4">
                 {ritual.reflection}
               </p>
             </button>
@@ -337,7 +337,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(75)}
                 aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-foreground/50 font-serif tracking-tight selection:bg-primary/5 px-2">
+                <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-foreground/80 font-serif tracking-tight selection:bg-primary/5 px-2">
                   {ritual?.catechism?.text || ''}
                 </p>
                 <p className="mt-8 md:mt-10 text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
@@ -357,7 +357,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(100)}
                 aria-label={`Oração do dia. Clique para marcar como concluída.`}
               >
-                <p className="text-xl md:text-3xl lg:text-4xl leading-tight text-primary/80 font-serif italic selection:bg-primary/5">
+                <p className="text-xl md:text-3xl lg:text-4xl leading-tight text-primary font-serif italic selection:bg-primary/5">
                   {ritual?.prayer || ''}
                 </p>
               </button>
@@ -410,7 +410,7 @@ const RitualDoDia: React.FC = () => {
               </CathedraButton>
             )}
             {progress === 100 && (
-              <div className="flex items-center gap-3 text-primary/40 font-bold uppercase tracking-[0.5em] text-[10px] px-10 py-5 bg-primary/[0.01] rounded-full border border-primary/5 shadow-sm">
+              <div className="flex items-center gap-3 text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-10 py-5 bg-primary/[0.01] rounded-full border border-primary/5 shadow-sm">
                 <CheckCircle2 className="w-4 h-4" />
                 Concluído
               </div>

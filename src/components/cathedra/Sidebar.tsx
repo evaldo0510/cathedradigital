@@ -205,7 +205,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           >
             <div className="flex items-center justify-between mb-12">
               <div 
-                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" 
+                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
@@ -224,7 +224,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-10 h-10 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all"
+                className="rounded-full w-10 h-10 text-muted-foreground/60 hover:text-primary hover:bg-primary/5 transition-all"
                 aria-label="Fechar menu"
               >
                 <Icons.X className="w-5 h-5" />
@@ -246,12 +246,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onMouseEnter={() => prefetchRoute(item.path)}
                             onTouchStart={() => prefetchRoute(item.path)}
                             aria-current={isActive ? 'page' : undefined}
-                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[56px] border border-transparent
+                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-2 outline-none h-auto min-h-[56px] border border-transparent
                               ${isActive
                                 ? 'bg-primary/5 text-primary border-primary/10 shadow-sm'
-                                : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
+                                : 'text-muted-foreground/60 hover:bg-primary/[0.02] hover:text-primary'}`}
                           >
-                            <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-40'}`}>{item.icon}</span>
+                            <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.icon}</span>
                             <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                               <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
