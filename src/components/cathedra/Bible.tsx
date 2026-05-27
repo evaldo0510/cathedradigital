@@ -481,46 +481,50 @@ const Bible: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (viewMode !== 'reading' || !selectedBook) return;
-      
+      // Ignore if user is typing in an input, textarea, or if a modal is open
+      const activeElement = document.activeElement;
+      const isTyping = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA' || (activeElement as HTMLElement)?.isContentEditable;
+      if (isTyping || isNoteModalOpen || viewMode !== 'reading' || !selectedBook) return;
+
       // Accessibility: Reading shortcuts
-      if (viewMode === 'reading' && !isNoteModalOpen) {
-        if (e.key === 'ArrowLeft') {
-          e.preventDefault();
-          navigateChapter(-1);
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigateChapter(-1);
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigateChapter(1);
+      }
+      if (e.key.toLowerCase() === 'h') {
+        e.preventDefault();
+        if (highlightedVerse) {
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        } else {
+          toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
         }
-        if (e.key === 'ArrowRight') {
-          e.preventDefault();
-          navigateChapter(1);
+      }
+      if (e.key.toLowerCase() === 'n') {
+        e.preventDefault();
+        if (highlightedVerse) {
+          setIsNoteModalOpen(true);
+        } else {
+          toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
         }
-        if (e.key.toLowerCase() === 'h') {
-          e.preventDefault();
-          if (highlightedVerse) {
-            handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
-          } else {
-            toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
-          }
-        }
-        if (e.key.toLowerCase() === 'n') {
-          e.preventDefault();
-          if (highlightedVerse) {
-            setIsNoteModalOpen(true);
-          } else {
-            toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
-          }
-        }
-        if (e.key === 'Escape') {
-          e.preventDefault();
-          setHighlightedVerse(null);
-          setActiveHighlight(null);
-        }
-        // Progress navigation (Alt + Up/Down)
-        if (e.altKey && e.key === 'ArrowUp') {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
-          e.preventDefault();
+      }
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setHighlightedVerse(null);
+        setActiveHighlight(null);
+      }
+      // Progress navigation (Alt + Up/Down)
+      if (e.altKey && e.key === 'ArrowUp') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
+        e.preventDefault();
+        // Confirmation for resuming to avoid context loss
+        if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
           navigate(lastReadMark.url);
         }
       }
@@ -1037,8 +1041,16 @@ const Bible: React.FC = () => {
             <ReadingProgress 
               progress={readingProgress}
               onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onScrollToPercentage={(p) => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                window.scrollTo({ top: (p / 100) * totalHeight, behavior: 'smooth' });
+              }}
               showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
-              onResumeLast={() => navigate(lastReadMark.url)}
+              onResumeLast={() => {
+                if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                   navigate(lastReadMark.url);
+                }
+              }}
               label={`${selectedBook.name} ${selectedChapter}`}
             />
 

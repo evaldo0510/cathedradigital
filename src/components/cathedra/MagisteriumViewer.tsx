@@ -152,7 +152,10 @@ const MagisteriumViewer: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isNoteModalOpen) return;
+      // Ignore if user is typing or modal is open
+      const activeElement = document.activeElement;
+      const isTyping = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA' || (activeElement as HTMLElement)?.isContentEditable;
+      if (isTyping || isNoteModalOpen) return;
       
       // Accessibility: Reading shortcuts
       if (id) {
@@ -175,7 +178,9 @@ const MagisteriumViewer: React.FC = () => {
         }
         if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
           e.preventDefault();
-          navigate(lastReadMark.url);
+          if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+            navigate(lastReadMark.url);
+          }
         }
       }
     };
@@ -448,8 +453,16 @@ const MagisteriumViewer: React.FC = () => {
             <ReadingProgress 
               progress={readingProgress}
               onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onScrollToPercentage={(p) => {
+                const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                window.scrollTo({ top: (p / 100) * totalHeight, behavior: 'smooth' });
+              }}
               showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
-              onResumeLast={() => navigate(lastReadMark.url)}
+              onResumeLast={() => {
+                if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                   navigate(lastReadMark.url);
+                }
+              }}
               label={content.title}
             />
         </motion.div>
