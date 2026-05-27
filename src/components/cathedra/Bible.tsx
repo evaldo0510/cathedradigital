@@ -40,7 +40,6 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes } from '@/hooks/useNotes';
 
-import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -837,31 +836,45 @@ const Bible: React.FC = () => {
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
             {!isLoading && !bibleError && (
-              <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
-                <Relatio 
-                  context={{
-                    type: 'bible',
-                    id: `bible-${selectedBook.abbr}-${selectedChapter}`,
-                    abbr: selectedBook.abbr,
-                    chapter: selectedChapter,
-                    tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
-                  }}
-                  onNavigateToBible={(abbr, ch) => {
-                    const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
-                      .flatMap(cat => cat.books)
-                      .find(b => b.abbr === abbr);
-                    if (book) {
-                      setSelectedBook(book);
-                      setSelectedChapter(ch);
-                      setViewMode('reading');
-                      window.scrollTo(0, 0);
+              <>
+                <ChapterNotesList 
+                  notes={currentChapterNotes} 
+                  onDeleteNote={deleteChapterNote}
+                  onNoteClick={(note) => {
+                    if (note.verse) {
+                      const el = document.getElementById(`v${note.verse}`);
+                      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                   }}
-                  onNavigateToCIC={handleNavigateToCIC}
-                  onNavigateToDoc={handleNavigateToDoc}
                 />
-              </div>
+                
+                <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
+                  <Relatio 
+                    context={{
+                      type: 'bible',
+                      id: `bible-${selectedBook.abbr}-${selectedChapter}`,
+                      abbr: selectedBook.abbr,
+                      chapter: selectedChapter,
+                      tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
+                    }}
+                    onNavigateToBible={(abbr, ch) => {
+                      const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
+                        .flatMap(cat => cat.books)
+                        .find(b => b.abbr === abbr);
+                      if (book) {
+                        setSelectedBook(book);
+                        setSelectedChapter(ch);
+                        setViewMode('reading');
+                        window.scrollTo(0, 0);
+                      }
+                    }}
+                    onNavigateToCIC={handleNavigateToCIC}
+                    onNavigateToDoc={handleNavigateToDoc}
+                  />
+                </div>
+              </>
             )}
+
 
 
 
