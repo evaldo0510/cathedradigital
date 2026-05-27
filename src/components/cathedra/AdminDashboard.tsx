@@ -85,6 +85,13 @@ interface SensitiveRow {
 }
 
 const AdminDashboard: React.FC = () => {
+  useEffect(() => {
+    // Force specific body class for admin layout
+    document.body.classList.add('admin-mode');
+    return () => document.body.classList.remove('admin-mode');
+  }, []);
+
+
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
