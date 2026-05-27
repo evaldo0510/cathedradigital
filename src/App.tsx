@@ -58,7 +58,7 @@ const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPa
 const Index = lazy(() => import('./pages/Index'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
-const SaintDetail = lazy(() => import('./components/cathedra/SaintDetail'));
+
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
