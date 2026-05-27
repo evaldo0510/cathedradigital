@@ -185,15 +185,14 @@ const RitualDoDia: React.FC = () => {
     <div
       id="ritual-do-dia"
       className={cn(
-        "relative overflow-hidden border-border/5 bg-card/5 backdrop-blur-md rounded-premium-lg shadow-premium transition-all duration-1000",
+        "relative overflow-hidden transition-all duration-1000",
         isSilent ? 'font-serif' : ''
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       
       <div className="relative z-10 p-6 md:p-14 lg:p-20 space-y-12 md:space-y-24">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.02] pb-10 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.6em] text-primary/20">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
