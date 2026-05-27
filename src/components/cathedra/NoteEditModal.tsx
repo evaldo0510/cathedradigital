@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
-import { UserNote } from '@/hooks/useNotes';
 
 interface NoteEditModalProps {
   isOpen: boolean;
@@ -26,18 +25,22 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
   isOpen, 
   onClose, 
   onSave, 
+  onDelete,
   initialText = '', 
   initialColor = 'yellow',
-  title = "Minha Reflexão"
+  title = "Minha Reflexão",
+  isEditing = false
 }) => {
   const [text, setText] = useState(initialText);
   const [color, setColor] = useState(initialColor);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setText(initialText);
       setColor(initialColor);
+      setShowDeleteConfirm(false);
       setTimeout(() => textareaRef.current?.focus(), 200);
     }
   }, [isOpen, initialText, initialColor]);
