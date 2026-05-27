@@ -65,7 +65,7 @@ describe('HeroSection Advanced Validation', () => {
   it('should have no accessibility violations (WCAG 2.1 AA)', async () => {
     const { container } = renderHero();
     const results = await axe(container);
-    // Use string check if types are failing
+    // @ts-ignore
     expect(results).toHaveNoViolations();
   });
 
