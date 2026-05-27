@@ -125,6 +125,21 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Require service-role bearer or X-Cron-Secret header — push broadcasts are admin/cron-only
+    const authHeader = req.headers.get("authorization") || "";
+    const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+    const cronSecret = Deno.env.get("CRON_SECRET") || "";
+    const cronSecretHeader = req.headers.get("x-cron-secret") || "";
+    const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
+    const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
+    if (!isServiceRole && !isCronSecret) {
+      return new Response(
+        JSON.stringify({ error: "Forbidden" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     const { mode, user_id, title, body: msgBody, url: msgUrl } = await req.json();
