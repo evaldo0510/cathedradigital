@@ -265,11 +265,15 @@ function generateHTMLReport(results: any) {
   const reportDir = path.join(process.cwd(), 'test-results');
   if (!fs.existsSync(reportDir)) fs.mkdirSync(reportDir, { recursive: true });
 
-  const renderItems = (items: { status: string; message: string }[]) => {
+  const renderItems = (items: { status: string; message: string; evidence?: string; suggestion?: string }[]) => {
     return items.map(i => `
-      <li class="status-${i.status}">
-        <span class="icon">${i.status === 'success' ? '✅' : i.status === 'warning' ? '⚠️' : '❌'}</span>
-        ${i.message}
+      <li class="status-${i.status}" style="flex-direction: column; align-items: stretch;">
+        <div style="display: flex; align-items: center; gap: 10px; font-weight: bold;">
+          <span class="icon">${i.status === 'success' ? '✅' : i.status === 'warning' ? '⚠️' : '❌'}</span>
+          ${i.message}
+        </div>
+        ${i.evidence ? `<div style="margin-top: 8px; font-family: monospace; font-size: 12px; background: rgba(0,0,0,0.05); padding: 8px; border-radius: 4px; overflow-wrap: break-word;"><strong>Evidência:</strong> ${i.evidence}</div>` : ''}
+        ${i.suggestion ? `<div style="margin-top: 4px; color: #4b5563; font-style: italic;">💡 <strong>Sugestão:</strong> ${i.suggestion}</div>` : ''}
       </li>
     `).join('');
   };
