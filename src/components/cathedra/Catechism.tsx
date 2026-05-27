@@ -978,6 +978,12 @@ const Catechism: React.FC = () => {
                     onNavigateToBible={handleNavigateToBible}
                     onNavigateToCIC={(p) => setCurrentParagraph(p)}
                     onNavigateToDoc={handleNavigateToDoc}
+                    onSelectLogosQuery={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
+                      setShowLogosAI(true);
+                      setLogosSelectionsCount(prev => prev + 1);
+                    }}
                   />
                 </div>
               )}
