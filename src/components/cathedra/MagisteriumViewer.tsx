@@ -354,13 +354,27 @@ const MagisteriumViewer: React.FC = () => {
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                if (id) {
+                if (activeHighlight) {
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => setActiveHighlight(null));
+                } else if (id) {
                   addNote(id, 'Destacado para meditação', color);
                 }
               }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteDocNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
               onAddNote={() => {
-                if (id) {
+                if (activeHighlight) {
+                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
+                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
+                   setActiveHighlight(null);
+                } else if (id) {
                   const note = prompt('Sua reflexão sobre este documento:');
                   if (note) {
                     addNote(id, note, 'yellow');
