@@ -755,7 +755,7 @@ const Bible: React.FC = () => {
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
-            <div className="reader-container bg-card/40 backdrop-blur-md border border-primary/[0.04] overflow-hidden rounded-[2.5rem] relative transition-all duration-1000">
+            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] relative transition-all duration-1000">
               <div className="p-8 md:p-16">
 
 
@@ -775,9 +775,9 @@ const Bible: React.FC = () => {
                         <div key={v.number} 
                           id={`v${v.number}`}
                           className={`group relative py-2 px-3 rounded-premium transition-all duration-300 mb-1
-                            ${highlightedVerse === v.number ? 'bg-primary/10 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`}>
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5' : 'hover:bg-primary/[0.01]'}`}>
                           <div className="flex items-start gap-3">
-                            <sup className="text-[0.6em] font-medium text-primary mt-1.5 select-none opacity-40">{v.number}</sup>
+                            <sup className="text-[0.55em] font-medium text-primary mt-2 select-none opacity-20 group-hover:opacity-40 transition-opacity">{v.number}</sup>
                             <div className="flex-1" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -821,7 +821,7 @@ const Bible: React.FC = () => {
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
             {!isLoading && !bibleError && (
-              <div className="w-full max-w-[72ch] mx-auto">
+              <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
                 <Relatio 
                   context={{
                     type: 'bible',
@@ -985,7 +985,7 @@ const Bible: React.FC = () => {
       />
       
       <div className="space-y-20">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border/5 pb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
           <div className="flex gap-4">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button

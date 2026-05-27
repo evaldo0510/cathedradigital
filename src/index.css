@@ -341,15 +341,17 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/20 max-w-[70ch] mx-auto text-foreground;
+    @apply selection:bg-primary/10 max-w-[65ch] mx-auto text-foreground/80 font-light;
     font-variant-numeric: oldstyle-nums;
     font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
     text-rendering: optimizeLegibility;
+    line-height: 1.85;
+    letter-spacing: 0.015em;
   }
 
   /* Specific Reader Container */
   .reader-container {
-    @apply w-full max-w-[85ch] mx-auto px-6 py-12 md:py-24;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-6 sm:px-12 md:px-20 py-16 md:py-32;
   }
 }
 
