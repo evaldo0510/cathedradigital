@@ -207,6 +207,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta name="twitter:image:alt" content={displayTitle} />
 
 
+      <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
+
       {breadcrumbLD && (
         <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
       )}
