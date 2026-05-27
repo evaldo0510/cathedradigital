@@ -1,14 +1,14 @@
-import { motion, MotionValue } from "framer-motion";
+import { motion, MotionValue, useReducedMotion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { HomeButton } from "@/components/cathedra/HomeButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 0, y: 15 },
   visible: { 
     opacity: 1, y: 0,
-    transition: { duration: 1.4, ease: EASE }
+    transition: { duration: 1.6, ease: EASE }
   },
 };
 
@@ -21,96 +21,105 @@ interface HeroContentProps {
 
 const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContentProps) => {
   const navigate = useNavigate();
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-5xl text-center px-4 flex flex-col items-center justify-center min-h-[65vh]"
+      style={{ 
+        opacity: heroOpacity, 
+        scale: shouldReduceMotion ? 1 : heroScale, 
+        y: shouldReduceMotion ? 0 : heroY 
+      }}
+      className="relative z-10 max-w-6xl text-center px-6 flex flex-col items-center justify-center min-h-[70vh]"
     >
-      {/* Subtle Visual Anchor - The Pillar */}
+      {/* Upper Spiritual Anchor */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 2.2, ease: EASE }}
-        className="mb-14 md:mb-18"
+        transition={{ duration: 2.5, ease: EASE }}
+        className="mb-16 md:mb-20"
       >
-        <div className="flex flex-col items-center gap-6">
-          <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/15 to-transparent opacity-60" />
-          <p className="text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.8em] text-primary/30 leading-none select-none">
-            Sanctuarium Digitale
+        <div className="flex flex-col items-center gap-8">
+          <div className="w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-40" />
+          <p className="text-[10px] font-medium uppercase tracking-[1em] text-primary/20 leading-none select-none">
+            Bibliotheca Divina
           </p>
         </div>
       </motion.div>
 
-      {/* Main Heading - The Cathedral Identity */}
+      {/* Primary Identity - The Portal */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-10 md:mb-14"
+        className="mb-12 md:mb-16"
       >
-        <h2 className="text-6xl md:text-9xl lg:text-[11rem] font-display font-light text-primary leading-none tracking-[0.16em] uppercase select-none">
+        <h2 className="text-7xl md:text-9xl lg:text-[13rem] font-display font-extralight text-primary leading-none tracking-[0.2em] uppercase select-none drop-shadow-sm">
           Cathedra
         </h2>
       </motion.div>
 
-      {/* Description - Editorial Rhythm */}
-      <motion.p
-        variants={fadeInUpVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.4 }}
-        className="max-w-xl mx-auto font-serif text-lg md:text-xl text-foreground/50 italic leading-relaxed mb-18 md:mb-24 tracking-wide px-8 opacity-90"
-      >
-        O silêncio que revela a Verdade. <br className="hidden md:block" />
-        Habite as fontes imutáveis da fé em uma experiência de leitura absoluta.
-      </motion.p>
-
-      {/* CTAs - Sophisticated and Discreet */}
+      {/* Poetic Guidance */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.6 }}
-        className="flex flex-col items-center gap-14 w-full px-6"
+        transition={{ delay: 0.5 }}
+        className="space-y-6 mb-24 md:mb-32"
       >
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 md:gap-10 w-full max-w-5xl">
-          <HomeButton
-            size="lg"
-            variant="primary"
-            onClick={onStart}
-            className="w-full sm:w-auto min-w-[240px] tracking-[0.5em] text-[10px]"
-            aria-label="Continuar leitura"
-          >
-            Continuar Leitura
-          </HomeButton>
+        <p className="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed tracking-wide px-8">
+          O silêncio que revela a Verdade eterna.
+        </p>
+        <p className="max-w-xl mx-auto font-sans text-xs md:text-sm text-primary/20 uppercase tracking-[0.4em] font-light leading-relaxed">
+          Habite a tradição em uma experiência de leitura pura
+        </p>
+      </motion.div>
+
+      {/* Actions - The Sacred Entry */}
+      <motion.div
+        variants={fadeInUpVariants}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.8 }}
+        className="flex flex-col items-center gap-20 w-full"
+      >
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14 w-full">
           <HomeButton
             size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
-            className="w-full sm:w-auto min-w-[240px] tracking-[0.5em] text-[10px]"
+            className="w-full sm:w-auto min-w-[260px] border-primary/5 hover:border-primary/20 text-primary/50 hover:text-primary transition-all duration-700 bg-transparent"
             aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
           </HomeButton>
+          
+          <HomeButton
+            size="lg"
+            variant="primary"
+            onClick={onStart}
+            className="w-full sm:w-auto min-w-[260px] shadow-none hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.1)] transition-all duration-700"
+            aria-label="Continuar leitura"
+          >
+            Continuar Leitura
+          </HomeButton>
+
           <HomeButton
             size="lg"
             variant="ghost"
             onClick={() => navigate('/jornadas')}
-            className="w-full sm:w-auto min-w-[240px] text-primary/40 hover:text-primary transition-all duration-500 tracking-[0.5em] text-[10px]"
+            className="w-full sm:w-auto min-w-[260px] text-primary/30 hover:text-primary transition-all duration-700"
             aria-label="Iniciar jornada espiritual"
           >
             Iniciar Jornada
           </HomeButton>
         </div>
 
-        {/* Elegant Minimal Signature */}
-        <div className="flex items-center gap-6 opacity-[0.05] select-none">
-          <span className="w-12 h-px bg-primary" />
-          <p className="text-[10px] font-bold uppercase tracking-[1em] text-primary translate-x-[0.5em]">
-            Cathedra
-          </p>
-          <span className="w-12 h-px bg-primary" aria-hidden="true" />
+        {/* Lower Monastic Anchor */}
+        <div className="flex items-center gap-10 opacity-[0.03] select-none pointer-events-none">
+          <div className="w-16 h-px bg-primary" />
+          <div className="w-2 h-2 rounded-full border border-primary" />
+          <div className="w-16 h-px bg-primary" />
         </div>
       </motion.div>
     </motion.div>
