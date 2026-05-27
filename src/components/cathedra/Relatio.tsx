@@ -36,6 +36,7 @@ const Relatio: React.FC<RelatioProps> = ({
   onNavigateToBible, 
   onNavigateToCIC, 
   onNavigateToDoc,
+  onSelectLogosQuery,
   className 
 }) => {
   const contextSettings = useReadingSettings();
