@@ -6,7 +6,8 @@ const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // Enhanced validation for CI/Build environments
 if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  const isCI = typeof process !== 'undefined' && (process.env.CI || process.env.NODE_ENV === 'test');
+  const proc = (globalThis as any).process;
+  const isCI = !!(proc && proc.env && (proc.env.CI || proc.env.NODE_ENV === 'test'));
   const errorMsg = '⚠️ Supabase credentials missing (VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY).';
   
   if (isCI) {
