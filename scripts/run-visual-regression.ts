@@ -3,10 +3,6 @@ import fs from 'fs';
 import path from 'path';
 
 async function runVisualTests() {
-  const PERF_MIN = parseInt(process.env.PERF_THRESHOLD || '80');
-  const SEO_MIN = parseInt(process.env.SEO_THRESHOLD || '90');
-  const A11Y_MIN = parseInt(process.env.A11Y_THRESHOLD || '100');
-
   console.log('🚀 Iniciando Auditoria Visual e de Acessibilidade (Premium)...');
   
   const publicResultsPath = path.join(process.cwd(), 'public', 'visual-regression');

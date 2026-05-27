@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('Supabase Client Environment', () => {
-  const originalWindow = (globalThis as any).window;
+  const originalWindow = global.window;
   const originalImportMeta = import.meta.env;
 
   beforeEach(() => {
@@ -10,13 +10,13 @@ describe('Supabase Client Environment', () => {
   });
 
   afterEach(() => {
-    (globalThis as any).window = originalWindow;
+    global.window = originalWindow;
     vi.unstubAllEnvs();
   });
 
   it('should initialize without errors when window is undefined (CI/SSR)', async () => {
     // @ts-ignore - testing missing window scenario
-    delete (globalThis as any).window;
+    delete global.window;
     
     const { supabase } = await import('../client');
     expect(supabase).toBeDefined();
@@ -25,7 +25,7 @@ describe('Supabase Client Environment', () => {
 
   it('should use custom storage that handles missing localStorage safely', async () => {
     // @ts-ignore - testing missing window scenario
-    delete (globalThis as any).window;
+    delete global.window;
     
     const { supabase } = await import('../client');
     // @ts-expect-error - accessing private auth storage to verify it works

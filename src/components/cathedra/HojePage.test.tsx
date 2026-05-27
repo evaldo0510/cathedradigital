@@ -46,25 +46,21 @@ vi.mock('framer-motion', async (importOriginal) => {
 
 // Mock RitualDoDia to simplify testing HojePage
 vi.mock('./RitualDoDia', () => ({
-  __esModule: true,
   default: () => <div data-testid="ritual-do-dia" />
 }));
 
 // Mock NexusBubbles
 vi.mock('./NexusBubbles', () => ({
-  __esModule: true,
   default: () => <div data-testid="nexus-bubbles" />
 }));
 
 // Mock HomeMainDoors
 vi.mock('./HomeMainDoors', () => ({
-  __esModule: true,
   default: () => <div data-testid="home-main-doors" />
 }));
 
 // Mock SaintOfTheDayCard
 vi.mock('./SaintOfTheDayCard', () => ({
-  __esModule: true,
   default: ({ isLoading, saint }: any) => {
     if (isLoading) return <div data-testid="saint-skeleton" />;
     return <div>Nenhum santo encontrado para hoje</div>;
@@ -127,7 +123,7 @@ describe('HojePage - Loading and Error States', () => {
     expect(skeleton).toBeTruthy();
   });
 
-  it('renders nextUp section when data is available', async () => {
+  it('renders nextUp section when data is available', () => {
     (useDashboardDataHooks.useDashboardData as any).mockReturnValue({
       nextUp: { 
         type: 'bible', 
@@ -140,8 +136,7 @@ describe('HojePage - Loading and Error States', () => {
 
     renderWithProviders(<HojePage />);
     
-    // Using findByText because of transitions/lazy renders
-    expect(await screen.findByText('Gênesis 1')).toBeInTheDocument();
+    expect(screen.getByText('Gênesis 1')).toBeInTheDocument();
     expect(screen.getByText(/Continuar Leitura/i)).toBeInTheDocument();
   });
 

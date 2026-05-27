@@ -6,7 +6,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
-import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import React from 'react';
 
 // Mocking related data
@@ -20,14 +19,8 @@ vi.mock('@/hooks/useAuth', () => ({
     user: { id: 'user-123' },
     profile: { name: 'Teste' },
     loading: false,
-    refreshProfile: vi.fn(),
-    signOut: vi.fn(),
-    isPremium: true,
-    userLevel: 'iniciante'
   })),
 }));
-
-const AuthProvider = ({ children }: any) => <>{children}</>;
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { 
@@ -58,15 +51,11 @@ const renderWithProviders = (slug: string) => {
   return render(
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ReadingSettingsProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/temas/:slug" element={<TemaDetailPage />} />
-              </Routes>
-            </BrowserRouter>
-          </ReadingSettingsProvider>
-        </AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/temas/:slug" element={<TemaDetailPage />} />
+          </Routes>
+        </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>
   );

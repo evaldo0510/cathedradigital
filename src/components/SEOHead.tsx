@@ -59,34 +59,28 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   
   const url = `${BASE_URL}${path}`;
 
-  // Google Analytics 4 Script Injection (validated to prevent XSS via DB tampering)
+  // Google Analytics 4 Script Injection
   useEffect(() => {
-    const gaId = seoSettings?.ga4_measurement_id;
-    if (!gaId || typeof window === 'undefined') return;
-    // Strict GA4 measurement ID format: G-XXXXXXXXXX
-    if (!/^G-[A-Z0-9]{4,16}$/.test(gaId)) {
-      console.warn('Invalid GA4 measurement ID format; refusing to inject.');
-      return;
+    if (seoSettings?.ga4_measurement_id && typeof window !== 'undefined') {
+      const script1 = document.createElement('script');
+      script1.async = true;
+      script1.src = `https://www.googletagmanager.com/gtag/js?id=${seoSettings.ga4_measurement_id}`;
+      document.head.appendChild(script1);
+
+      const script2 = document.createElement('script');
+      script2.innerHTML = `
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '${seoSettings.ga4_measurement_id}');
+      `;
+      document.head.appendChild(script2);
+
+      return () => {
+        if (document.head.contains(script1)) document.head.removeChild(script1);
+        if (document.head.contains(script2)) document.head.removeChild(script2);
+      };
     }
-
-    const script1 = document.createElement('script');
-    script1.async = true;
-    script1.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;
-    document.head.appendChild(script1);
-
-    const script2 = document.createElement('script');
-    script2.textContent = `
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', ${JSON.stringify(gaId)});
-    `;
-    document.head.appendChild(script2);
-
-    return () => {
-      if (document.head.contains(script1)) document.head.removeChild(script1);
-      if (document.head.contains(script2)) document.head.removeChild(script2);
-    };
   }, [seoSettings?.ga4_measurement_id]);
 
   const breadcrumbLD = breadcrumbs ? {

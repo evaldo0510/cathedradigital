@@ -76,11 +76,10 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
       }
     } else {
       auditResults.seo.push({ status: 'warning', message: 'No hreflang tags found. Recommended for multi-language or global sites.' });
-    }
 
     // Link validation (internal/external)
     const links = await page.locator('a').all();
-    const brokenLinks = 0;
+    let brokenLinks = 0;
     for (const link of links) {
       const href = await link.getAttribute('href');
       if (!href || href === '#' || href.startsWith('javascript:')) {

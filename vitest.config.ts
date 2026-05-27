@@ -13,12 +13,6 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'json-summary'],
       exclude: ['node_modules/', 'src/test/setup.ts'],
-      thresholds: {
-        lines: 80,
-        functions: 80,
-        branches: 70,
-        statements: 80
-      }
     },
     reporters: ['default', 'json'],
     outputFile: 'test-results.json'

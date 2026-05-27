@@ -25,20 +25,6 @@ serve(async (req) => {
       return json({ error: "Configuração do backend incompleta." }, 500);
     }
 
-    // Require admin auth — this endpoint grants premium and must never be public.
-    const authHeader = req.headers.get("authorization") || "";
-    if (!authHeader.startsWith("Bearer ")) {
-      return json({ error: "Unauthorized" }, 401);
-    }
-    const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY") || "", {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: { user }, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !user) return json({ error: "Unauthorized" }, 401);
-    const { data: roleRow } = await userClient
-      .from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle();
-    if (!roleRow) return json({ error: "Forbidden: admin only" }, 403);
-
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const body = await req.json();
     const { userId, planId, status = "approved", amount = 19.9, isDonation = false } = body;

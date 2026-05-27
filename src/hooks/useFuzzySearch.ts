@@ -137,7 +137,7 @@ export function useFuzzySearch<TRow>(
     return () => {
       cancelled = true;
     };
-     
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rpc, trimmed, primaryField, secondaryField, secondaryWeight, minLength, resultLimit]);
 
   return { results, isSearching, isPending, error };
