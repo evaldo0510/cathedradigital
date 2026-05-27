@@ -58,22 +58,24 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <label htmlFor="bible-search-input" className="sr-only">Buscar nos versículos</label>
+          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/40" />
           <input
+            id="bible-search-input"
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
-            placeholder="Buscar por palavra-chave nos versículos..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="Buscar por palavra-chave..."
+            className="w-full pl-12 pr-4 py-3 rounded-full border border-primary/10 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
             autoFocus
           />
         </div>
         <Button onClick={doSearch} disabled={loading || query.trim().length < 2}
-          className="px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-bold disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
+          className="px-6 py-3 rounded-full bg-primary text-primary-foreground text-sm font-bold disabled:opacity-40 hover:bg-primary/90 transition-all">
           {loading ? '...' : 'Buscar'}
         </Button>
-        <Button onClick={onClose} className="p-2 rounded-full bg-card border border-border hover:bg-muted transition-all">
-          <Icons.ArrowDown className="w-4 h-4 rotate-90 text-foreground" />
+        <Button onClick={onClose} variant="ghost" className="p-3 rounded-full bg-primary/[0.03] border border-primary/10 hover:bg-primary/5 transition-all" aria-label="Fechar busca">
+          <Icons.ArrowDown className="w-4 h-4 rotate-90 text-primary/60" />
         </Button>
       </div>
 
@@ -95,7 +97,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
-                className="w-full text-left p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
+                className="w-full text-left p-4 rounded-3xl bg-card border border-primary/5 hover:border-primary/20 hover:bg-primary/[0.01] transition-all group h-auto block">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
                   <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>

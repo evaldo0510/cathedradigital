@@ -1,4 +1,5 @@
 import React from 'react';
+import SEOHead from '@/components/SEOHead';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Check, X, ChevronRight, Sparkles, Crown, Zap } from 'lucide-react';
@@ -36,10 +37,27 @@ const PricingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen pb-24">
-      <Helmet>
-        <title>Planos e Preços — Cathedra Digital</title>
-        <meta name="description" content="Compare os planos gratuito e premium do Cathedra Digital e escolha o melhor para sua jornada de fé." />
-      </Helmet>
+      <SEOHead 
+        title="Planos e Preços" 
+        description="Compare os planos gratuito e premium do Cathedra Digital e escolha o melhor para sua jornada de fé."
+        path="/pricing"
+        type="website"
+      />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": "Assinatura Cathedra Premium",
+          "description": "Acesso completo a ferramentas de estudo e espiritualidade avançada.",
+          "offers": {
+            "@type": "Offer",
+            "price": "14.90",
+            "priceCurrency": "BRL",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.cathedradigital.com.br/pricing"
+          }
+        })}
+      </script>
 
       <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center space-y-4 mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-primary mb-4">

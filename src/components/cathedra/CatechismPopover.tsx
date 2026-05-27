@@ -37,7 +37,7 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
       <PopoverContent
         side="top"
         align="start"
-        className="w-80 max-h-64 overflow-y-auto p-0 rounded-full border-primary/20"
+        className="w-80 max-h-64 overflow-y-auto p-0 rounded-3xl border-primary/20 bg-card shadow-2xl"
       >
         <div className="p-3 border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-2">

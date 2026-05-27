@@ -741,7 +741,21 @@ const Catechism: React.FC = () => {
       title="Catecismo da Igreja Católica"
       maxW="max-w-6xl"
     >
-      <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" />
+      <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" type="book" />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Book",
+          "name": "Catecismo da Igreja Católica",
+          "author": "Magistério da Igreja Católica",
+          "genre": "Doutrina Católica",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Cathedra Digital"
+          },
+          "about": "Exposição sistemática e orgânica dos conteúdos fundamentais da fé."
+        })}
+      </script>
       
       <div className="space-y-24">
         {/* Search & Suggested */}

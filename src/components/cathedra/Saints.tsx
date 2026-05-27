@@ -174,6 +174,18 @@ const Saints = React.forwardRef<HTMLDivElement>((_props, ref) => {
         keywords="santo do dia, calendário litúrgico, vida dos santos, catolicismo, oração dos santos"
         breadcrumbs={[{ name: "Início", path: "/" }, { name: "Santos", path: "/saints" }]} 
       />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Calendário de Santos",
+          "description": "Lista de santos e beatos da Igreja Católica organizados por data litúrgica.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Cathedra Digital"
+          }
+        })}
+      </script>
 
       <div ref={ref} className="space-y-10 pb-20">
         <header className="text-center space-y-4">
