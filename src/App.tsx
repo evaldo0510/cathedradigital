@@ -48,7 +48,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// Lazy loaded routes with better naming
+// Lazy loaded routes
 const Bible = lazy(() => import('./components/cathedra/Bible'));
 const Catechism = lazy(() => import('./components/cathedra/Catechism'));
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
@@ -58,10 +58,52 @@ const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPa
 const Index = lazy(() => import('./pages/Index'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
+const SaintDetail = lazy(() => import('./components/cathedra/SaintDetail'));
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
+const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
+const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
+const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
 const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage'));
 const CommunityPage = lazy(() => import('./components/cathedra/CommunityPage'));
+const LiturgiaPage = lazy(() => import('./components/cathedra/LiturgiaPage'));
+const LiturgicalCalendarPage = lazy(() => import('./components/cathedra/LiturgicalCalendarPage'));
+const MissalPage = lazy(() => import('./components/cathedra/MissalPage'));
+const BreviaryPage = lazy(() => import('./components/cathedra/BreviaryPage'));
+const Rosary = lazy(() => import('./components/cathedra/Rosary'));
+const ViaCrucis = lazy(() => import('./components/cathedra/ViaCrucis'));
+const LitaniesPage = lazy(() => import('./components/cathedra/LitaniesPage'));
+const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
+const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
+const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
+const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
+const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
+const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
+const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
+const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
+const GlossaryPage = lazy(() => import('./components/cathedra/GlossaryPage'));
+const TemasPage = lazy(() => import('./components/cathedra/TemasPage'));
+const TemaDetailPage = lazy(() => import('./components/cathedra/TemaDetailPage'));
+const FavoritesPage = lazy(() => import('./components/cathedra/FavoritesPage'));
+const AchievementsPage = lazy(() => import('./components/cathedra/AchievementsPage'));
+const SpiritualJournalPage = lazy(() => import('./components/cathedra/SpiritualJournalPage'));
+const ModulesGuidePage = lazy(() => import('./components/cathedra/ModulesGuidePage'));
+const OnboardingPage = lazy(() => import('./components/cathedra/OnboardingPage'));
+const AboutPage = lazy(() => import('./components/cathedra/AboutPage'));
+const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
+const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
+const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
+const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
+const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
+const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
+const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
+const CheckoutResultPage = lazy(() => import('./components/cathedra/CheckoutResultPage'));
+const TransactionsPage = lazy(() => import('./components/cathedra/TransactionsPage'));
+const UserTransactionsPage = lazy(() => import('./components/cathedra/UserTransactionsPage'));
+const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPasswordPage'));
+const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
+const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
+const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
