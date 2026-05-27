@@ -72,7 +72,6 @@ export enum AppRoute {
   TRANSPARENCY = '/transparencia',
   DIARIO = '/diario',
   SEO_VERIFY = '/admin/seo-verify',
-  LIVRO_EVALDO = '/livro-evaldo',
 
   JORNADA_GUIADA = '/jornada-guiada',
   OFFLINE = '/offline',

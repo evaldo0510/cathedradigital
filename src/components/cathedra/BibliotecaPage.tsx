@@ -154,18 +154,6 @@ const sections = [
         color: 'bg-primary/10 text-primary',
       },
     ]
-  },
-  {
-    category: 'Obras Originais',
-    items: [
-      {
-        title: 'Prisão e Liberdade Interior',
-        description: 'Obra completa de Evaldo Poeta sobre cura e liberdade',
-        icon: <Icons.Award className="w-5 h-5" />,
-        route: AppRoute.LIVRO_EVALDO,
-        color: 'bg-primary/10 text-primary',
-      },
-    ]
   }
 ];
 
