@@ -49,7 +49,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-10 md:mb-14"
       >
-        <h1 className="text-6xl md:text-9xl lg:text-[11rem] font-display font-light text-primary leading-none tracking-[0.16em] uppercase select-none">
+        <h2 className="text-6xl md:text-9xl lg:text-[11rem] font-display font-light text-primary leading-none tracking-[0.16em] uppercase select-none">
           Cathedra
         </h1>
       </motion.div>
