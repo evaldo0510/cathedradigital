@@ -18,9 +18,12 @@ const ROUTES = [
 
 const VIEWPORTS = [
   { name: 'desktop-premium', width: 1800, height: 1080 },
-  { name: 'desktop', width: 1280, height: 720 },
+  { name: 'desktop-large', width: 1600, height: 900 },
+  { name: 'desktop-mid', width: 1440, height: 900 },
+  { name: 'desktop-standard', width: 1280, height: 800 },
+  { name: 'tablet-landscape', width: 1024, height: 768 },
+  { name: 'tablet-portrait', width: 768, height: 1024 },
   { name: 'mobile', width: 375, height: 667 },
-  { name: 'tablet', width: 768, height: 1024 },
 ];
 
 test.describe('Visual Regression & WCAG AAA Audit', () => {

@@ -28,9 +28,15 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    screenshot: 'on', // Always take screenshots
     video: 'on-first-retry',
   },
+  /* Configure threshold for visual regression */
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.02,
+      animations: 'disabled',
+    },
 
   /* Configure projects for major browsers */
   projects: [

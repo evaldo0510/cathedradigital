@@ -106,6 +106,7 @@ const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const DesignSystemPlayground = lazy(() => import('./components/cathedra/DesignSystemPlayground'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
+const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
 
 
@@ -379,6 +380,7 @@ const AppLayout: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
+                      <Route path="/seo-verify" element={<SEOVerificationPage />} />
                     </Routes>
                   </AdminGuard>
                 </Suspense>
