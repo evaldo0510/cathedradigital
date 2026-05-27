@@ -314,6 +314,21 @@ const Catechism: React.FC = () => {
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  // Update history
+  useEffect(() => {
+    const currentUrl = window.location.pathname + window.location.search;
+    setHistory(prev => {
+      if (prev[historyIndex] === currentUrl) return prev;
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(currentUrl);
+      setHistoryIndex(newHistory.length - 1);
+      return newHistory;
+    });
+  }, [location.pathname, location.search, historyIndex]);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
@@ -452,15 +467,15 @@ const Catechism: React.FC = () => {
       
       // Accessibility: Reading shortcuts
       if (currentParagraph) {
-        if (e.key.toLowerCase() === 'h') {
+        if (e.key.toLowerCase() === (settings.shortcuts?.highlight || 'h')) {
           e.preventDefault();
           handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
         }
-        if (e.key.toLowerCase() === 'n') {
+        if (e.key.toLowerCase() === (settings.shortcuts?.note || 'n')) {
           e.preventDefault();
           setIsNoteModalOpen(true);
         }
-        if (e.key === 'Escape') {
+        if (e.key === (settings.shortcuts?.clear || 'Escape')) {
           e.preventDefault();
           setActiveHighlight(null);
         }
@@ -471,9 +486,38 @@ const Catechism: React.FC = () => {
         }
         if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
           e.preventDefault();
-          if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+          
+          const behavior = settings.resumeBehavior || 'confirm';
+          let shouldResume = true;
+          
+          if (behavior === 'confirm') {
+            shouldResume = confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`);
+          } else if (behavior === 'once') {
+            if (!sessionResumeUsed) {
+              shouldResume = confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`);
+              if (shouldResume) setSessionResumeUsed(true);
+            }
+          } else if (behavior === 'never') {
+            shouldResume = false;
+          }
+
+          if (shouldResume) {
             navigate(lastReadMark.url);
           }
+        }
+
+        // History navigation (Alt + Left/Right)
+        if (e.altKey && e.key === 'ArrowLeft' && historyIndex > 0) {
+          e.preventDefault();
+          const prevUrl = history[historyIndex - 1];
+          setHistoryIndex(prev => prev - 1);
+          navigate(prevUrl);
+        }
+        if (e.altKey && e.key === 'ArrowRight' && historyIndex < history.length - 1) {
+          e.preventDefault();
+          const nextUrl = history[historyIndex + 1];
+          setHistoryIndex(prev => prev + 1);
+          navigate(nextUrl);
         }
       }
     };
@@ -703,7 +747,13 @@ const Catechism: React.FC = () => {
               }}
               showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
               onResumeLast={() => {
-                if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                const behavior = settings.resumeBehavior || 'confirm';
+                if (behavior === 'always' || (behavior === 'once' && sessionResumeUsed)) {
+                   navigate(lastReadMark.url);
+                } else if (behavior === 'never') {
+                   toast.info('Retomada automática desativada nas configurações.');
+                } else if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                   if (behavior === 'once') setSessionResumeUsed(true);
                    navigate(lastReadMark.url);
                 }
               }}
@@ -788,7 +838,6 @@ const Catechism: React.FC = () => {
           >
             Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
           </Button>
-
         </div>
 
         <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
@@ -852,8 +901,22 @@ const Catechism: React.FC = () => {
             )}
           </aside>
 
-          <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
-            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
+          <div className={`flex-1 w-full max-w-[75ch] mx-auto space-y-8 relative`}>
+                {/* Visual Indicator for Keyboard Shortcuts */}
+                {settings.totalSilence && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[160] px-4 py-2 bg-primary/80 backdrop-blur-md text-primary-foreground rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-3 border border-white/10 shadow-2xl"
+                  >
+                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">{settings.shortcuts?.highlight?.toUpperCase() || 'H'}</kbd> Destacar</span>
+                    <div className="w-px h-3 bg-white/20" />
+                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">{settings.shortcuts?.note?.toUpperCase() || 'N'}</kbd> Nota</span>
+                    <div className="w-px h-3 bg-white/20" />
+                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
+                  </motion.div>
+                )}
+                <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
               <div className="p-8 md:p-20 lg:p-24">
 
                 <div className="space-y-16">
