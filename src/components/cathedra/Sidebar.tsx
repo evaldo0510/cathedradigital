@@ -284,7 +284,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     className="h-12 rounded-xl border-primary/5 bg-muted/30 flex items-center justify-center gap-2 transition-all hover:bg-primary/5 hover:border-primary/10"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
+                    {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
                     <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
@@ -295,7 +295,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       isHighContrast ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-4 h-4" />
+                    <Icons.ShieldCheck />
                     <span className="text-[9px] font-bold uppercase tracking-widest">Contraste</span>
                   </Button>
                 </div>
@@ -308,7 +308,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       isSpeaking ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4 opacity-40" />}
+                    {isSpeaking ? <Icons.MessageCircle className="animate-pulse" /> : <Icons.Volume2 />}
                     <span className="text-[9px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar Áudio' : 'Ouvir Página'}</span>
                   </Button>
                 )}
