@@ -274,12 +274,47 @@ const MagisteriumViewer: React.FC = () => {
       <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
         {/* Elegant side navigation for documents can be implemented if the text has anchors. 
             For now, we'll keep the side column for balance and potential future TOC. */}
-        <aside className="reader-navigation-aside">
+        <aside className="reader-navigation-aside space-y-12">
           <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
             <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
             <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
             <p className="text-xs text-muted-foreground italic text-center leading-relaxed">"O Magistério não está acima da Palavra de Deus, mas ao seu serviço." (Dei Verbum, 10)</p>
           </div>
+
+          {currentDocNotes.length > 0 && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Marcações</p>
+              <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+                {currentDocNotes.map(note => {
+                  const pIdx = note.content_id.includes(':') ? parseInt(note.content_id.split(':')[1]) : null;
+                  
+                  return (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (pIdx !== null) {
+                          const el = document.getElementById(`para-${pIdx}`);
+                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                      }}
+                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Parágrafo {pIdx !== null ? pIdx + 1 : ''}</span>
+                        {note.highlight_color && (
+                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                        )}
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        {note.note_text === 'Destacado para meditação' ? 'Destaque visual' : note.note_text}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </aside>
 
         <motion.div 
