@@ -948,6 +948,19 @@ const Catechism: React.FC = () => {
                 }}
               />
 
+              {/* Logos AI: Contextual Suggestions */}
+              {showCrossRefs && currentParagraph && (
+                <LogosContextualSuggestions
+                  type="catechism"
+                  context={`Catecismo da Igreja Católica, parágrafo ${currentParagraph}`}
+                  onSelectSuggestion={(prompt) => {
+                    setLogosAIInitialQuery(prompt);
+                    setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
+                    setShowLogosAI(true);
+                  }}
+                />
+              )}
+
               {/* Relatio: Intelligent Contextual Connections */}
               {showCrossRefs && (
                 <div className="w-full max-w-[72ch] mx-auto">
