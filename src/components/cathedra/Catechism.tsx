@@ -275,6 +275,7 @@ const Catechism: React.FC = () => {
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
@@ -283,6 +284,10 @@ const Catechism: React.FC = () => {
       return p >= selectedSection.paragraphs[0] && p <= selectedSection.paragraphs[1];
     });
   }, [chapterNotes, selectedSection]);
+
+  const currentChapterHighlights = useMemo(() => {
+    return currentChapterNotes.filter(n => n.highlight_color);
+  }, [currentChapterNotes]);
 
 
   useEffect(() => {
