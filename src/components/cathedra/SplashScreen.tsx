@@ -81,7 +81,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           >
             Cathedra
           </motion.h2>
-          <motion.p
+          <motion.p aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             transition={{ duration: 0.8, delay: 1.3 }}

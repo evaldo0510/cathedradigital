@@ -61,14 +61,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-24 sm:space-y-48 md:space-y-64 lg:space-y-80 pb-32 sm:pb-64 md:pb-96 px-5 sm:px-6 md:px-14 outline-none" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 outline-none" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <h2 className="sr-only">Destaques e Ritual</h2>
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
-          className="mb-12 md:mb-24"
+          className="mb-16 md:mb-32"
         />
         <div className="premium-card responsive-padding">
           <RitualDoDia />
@@ -144,9 +144,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-12 md:mb-24"
+          className="mb-16 md:mb-32"
         />
-        <div className="premium-card responsive-padding md:p-20">
+        <div className="premium-card responsive-padding md:p-32">
           <HomeMainDoors t={t} />
         </div>
       </section>

@@ -15,9 +15,9 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
     const { settings } = useReadingSettings();
     const sizeMap = {
       sm: 'px-6 h-10 text-[9.5px]',
-      md: 'px-8 h-14 text-[10.5px]',
-      lg: 'px-10 h-16 text-[12px]',
-      xl: 'px-12 h-20 text-[14px]',
+      md: 'px-8 h-14 text-[10px] sm:text-[10.5px]',
+      lg: 'px-12 h-16 text-[11px] sm:text-[12px]',
+      xl: 'px-14 h-20 text-[12.5px] sm:text-[14px]',
     };
 
     const variantStyles = {
