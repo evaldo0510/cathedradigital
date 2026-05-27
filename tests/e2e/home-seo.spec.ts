@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { playAudit } from 'playwright-lighthouse';
-import { chromium } from '@playwright/test';
+const { chromium } = require('@playwright/test');
 
 /**
  * Enhanced SEO, Schema.org, Social Cards and Lighthouse Performance Audit for Home Page
