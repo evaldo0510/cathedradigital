@@ -839,13 +839,21 @@ const Bible: React.FC = () => {
                                   </span>
                                 )}
                                 {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && v.text}
+                                
+                                {relatedP && (
+                                  <span className="inline-flex gap-0.5 ml-2">
+                                    {relatedP.map(p => (
+                                      <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
+                                    ))}
+                                  </span>
+                                )}
                               </p>
                               
                               {/* Inline Notes display */}
                               {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
                                 <div key={note.id} className="mt-3 p-4 bg-secondary/5 border-l-2 border-secondary rounded-r-xl text-[13px] italic text-muted-foreground group/note relative">
                                   <div className="flex items-center gap-2 mb-1.5 opacity-40">
-                                    <FileText className="w-3 h-3" />
+                                    <Icons.FileText className="w-3 h-3" />
                                     <span className="text-[10px] font-black uppercase tracking-widest">Minha Reflexão</span>
                                   </div>
                                   {note.note_text}
@@ -853,29 +861,10 @@ const Bible: React.FC = () => {
                                     onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
                                     className="absolute top-2 right-2 opacity-0 group-hover/note:opacity-100 transition-opacity p-1 hover:text-destructive"
                                   >
-                                    <X className="w-3 h-3" />
+                                    <Icons.X className="w-3 h-3" />
                                   </button>
                                 </div>
                               ))}
-                            </div>
-                              saveLastRead({
-                                content_type: 'bible',
-                                content_id: selectedBook.abbr,
-                                chapter: selectedChapter,
-                                position: vNum,
-                                label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
-                                url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
-                                is_last_read: true
-                              });
-                            }}>
-                              <span className="cursor-pointer">{v.text}</span>
-                              {relatedP && (
-                                <span className="inline-flex gap-0.5 ml-2">
-                                  {relatedP.map(p => (
-                                    <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
-                                  ))}
-                                </span>
-                              )}
                             </div>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                               <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
@@ -1049,8 +1038,8 @@ const Bible: React.FC = () => {
           </div>
         )}
 
-          </div>
-        </ContemplativeLayout>
+        </div>
+      </ContemplativeLayout>
     );
   }
 
