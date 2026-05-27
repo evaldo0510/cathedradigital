@@ -191,7 +191,7 @@ const RitualDoDia: React.FC = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       
-      <div className="relative z-10 p-12 md:p-20 lg:p-32 space-y-24">
+      <div className="relative z-10 p-6 md:p-12 lg:p-16 space-y-20">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-border/5 pb-20">
           <div className="flex flex-col gap-4">
@@ -285,77 +285,79 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Content Sections */}
-        <div className="grid grid-cols-1 gap-24">
+        <div className="grid grid-cols-1 gap-16">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-12 max-w-3xl mx-auto text-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
+          <section className="space-y-8 max-w-4xl mx-auto text-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
             <div 
               className={cn(
                 "group cursor-pointer transition-all duration-1000",
-                progress >= 25 ? 'opacity-20 grayscale' : 'opacity-100'
+                progress >= 25 ? 'opacity-20 grayscale scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(25)}
             >
-              <blockquote className="text-4xl md:text-5xl lg:text-7xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5">
+              <blockquote className="text-3xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-10 text-[11px] font-bold text-primary/20 uppercase tracking-[0.6em]">
+              <p className="mt-8 text-[10px] font-bold text-primary/20 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </div>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-12 max-w-2xl mx-auto text-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
+          <section className="space-y-8 max-w-3xl mx-auto text-center">
+            <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
             <div 
               className={cn(
                 "group cursor-pointer transition-all duration-1000",
-                progress >= 50 ? 'opacity-20' : 'opacity-100'
+                progress >= 50 ? 'opacity-20 scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(50)}
             >
-              <p className="text-2xl md:text-4xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5">
+              <p className="text-xl md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5">
                 {ritual.reflection}
               </p>
             </div>
           </section>
 
-          {/* 3. Catechism */}
-          <section className="space-y-12 max-w-2xl mx-auto text-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.8em] text-primary/10">III. Traditio</span>
-            <div 
-              className={cn(
-                "group cursor-pointer transition-all duration-1000",
-                progress >= 75 ? 'opacity-20' : 'opacity-100'
-              )}
-              onClick={() => handleProgress(75)}
-            >
-              <p className="text-2xl md:text-3xl leading-relaxed text-foreground/30 font-serif tracking-tight selection:bg-primary/5">
-                {ritual?.catechism?.text || ''}
-              </p>
-              <p className="mt-8 text-[10px] font-bold text-primary/10 uppercase tracking-[0.6em]">
-                §{ritual?.catechism?.number || ''}
-              </p>
-            </div>
-          </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
+            {/* 3. Catechism */}
+            <section className="space-y-8 text-center p-8 bg-primary/[0.01] rounded-[2.5rem] border border-primary/[0.03]">
+              <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">III. Traditio</span>
+              <div 
+                className={cn(
+                  "group cursor-pointer transition-all duration-1000 h-full flex flex-col justify-center",
+                  progress >= 75 ? 'opacity-20' : 'opacity-100'
+                )}
+                onClick={() => handleProgress(75)}
+              >
+                <p className="text-lg md:text-xl leading-relaxed text-foreground/30 font-serif tracking-tight selection:bg-primary/5">
+                  {ritual?.catechism?.text || ''}
+                </p>
+                <p className="mt-6 text-[9px] font-bold text-primary/10 uppercase tracking-[0.6em]">
+                  §{ritual?.catechism?.number || ''}
+                </p>
+              </div>
+            </section>
 
-          {/* 4. Prayer */}
-          <section className="space-y-12 max-w-3xl mx-auto text-center py-24 bg-primary/[0.01] rounded-[4rem] border border-primary/[0.05]">
-            <span className="text-[9px] font-bold uppercase tracking-[1em] text-primary/20">IV. Oratio</span>
-            <div 
-              className={cn(
-                "group cursor-pointer transition-all duration-1000 px-16",
-                progress >= 100 ? 'opacity-20' : 'opacity-100'
-              )}
-              onClick={() => handleProgress(100)}
-            >
-              <p className="text-4xl md:text-5xl lg:text-6xl leading-tight text-primary/60 font-serif italic selection:bg-primary/5">
-                {ritual?.prayer || ''}
-              </p>
-            </div>
-          </section>
+            {/* 4. Prayer */}
+            <section className="space-y-8 text-center p-8 bg-primary/[0.01] rounded-[2.5rem] border border-primary/[0.03]">
+              <span className="text-[9px] font-black uppercase tracking-[1em] text-primary/20">IV. Oratio</span>
+              <div 
+                className={cn(
+                  "group cursor-pointer transition-all duration-1000 px-4 h-full flex flex-col justify-center",
+                  progress >= 100 ? 'opacity-20' : 'opacity-100'
+                )}
+                onClick={() => handleProgress(100)}
+              >
+                <p className="text-2xl md:text-3xl leading-tight text-primary/60 font-serif italic selection:bg-primary/5">
+                  {ritual?.prayer || ''}
+                </p>
+              </div>
+            </section>
+          </div>
         </div>
 
         {/* Footer Actions */}

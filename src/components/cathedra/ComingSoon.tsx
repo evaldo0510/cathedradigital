@@ -97,25 +97,25 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
 
   return (
-    <div className={cn("space-y-24", className)}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-20 max-w-5xl mx-auto">
+    <div className={cn("space-y-20", className)}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 max-w-5xl mx-auto">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="flex flex-col items-center text-center gap-10 group cursor-default"
+            className="flex flex-col items-center text-center gap-8 group cursor-default"
           >
-            <div className="w-20 h-20 rounded-full bg-primary/[0.05] border border-primary/10 flex items-center justify-center text-primary/40 group-hover:text-primary/60 transition-all duration-1000">
-              <item.icon className="w-8 h-8" strokeWidth={0.5} />
+            <div className="w-14 h-14 rounded-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/30 group-hover:text-primary/50 transition-all duration-1000">
+              <item.icon className="w-6 h-6" strokeWidth={0.5} />
             </div>
-            <div className="space-y-6">
-              <h3 className="text-[11px] font-bold uppercase tracking-[0.5em] text-primary/40 group-hover:text-primary/60 transition-colors duration-500">{item.label}</h3>
-              <p className="text-xs text-muted-foreground/40 leading-relaxed font-serif italic tracking-wider group-hover:text-muted-foreground/60 transition-colors duration-500">{item.description}</p>
+            <div className="space-y-3">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
+              <p className="text-[11px] text-muted-foreground/30 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
             </div>
           </div>
         ))}
       </div>
       
-      <div className="max-w-md mx-auto w-full">
+      <div className="max-w-md mx-auto w-full pt-8">
         {!submitted ? (
           <form onSubmit={handleSubmit} className="relative group">
             <div className="relative">
@@ -125,22 +125,22 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-16 pl-16 pr-40 rounded-full border-border/20 bg-background/50 focus:bg-background transition-all font-serif italic text-base md:text-lg placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-primary/20"
+                className="h-14 pl-14 pr-36 rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/10"
               />
-              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/30" />
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
               <button 
                 type="submit" 
                 disabled={loading}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-12 px-8 rounded-full bg-primary/20 text-primary text-[9px] font-bold uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-500 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-11 px-6 rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-700 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
               >
                 {loading ? "..." : "Notificar"}
               </button>
             </div>
           </form>
         ) : (
-          <div className="flex items-center justify-center gap-3 text-primary/30 py-4 px-8 rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit">
+          <div className="flex items-center justify-center gap-3 text-primary/30 py-4 px-8 rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
             <CheckCircle2 className="w-4 h-4" />
-            <span className="text-[9px] font-bold uppercase tracking-widest">Aguardando novidades</span>
+            <span className="text-[9px] font-black uppercase tracking-widest">Inscrito no Santuário</span>
           </div>
         )}
       </div>
