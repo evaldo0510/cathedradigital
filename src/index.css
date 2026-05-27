@@ -466,17 +466,19 @@
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-10 py-4 h-14 font-bold uppercase tracking-[0.3em] text-[9px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent;
+    @apply relative overflow-hidden px-8 py-4 h-14 font-medium uppercase tracking-[0.4em] text-[9.5px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent;
     border-radius: var(--btn-radius);
     transition: all var(--transition-subtle);
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-premium;
+    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/95;
+    box-shadow: none;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:shadow-premium;
+    @apply btn-premium bg-secondary text-secondary-foreground hover:bg-secondary/95;
+    box-shadow: none;
   }
 
   .btn-premium-outline {
