@@ -85,7 +85,9 @@ interface SensitiveRow {
 }
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
   useEffect(() => {
+
     // Force specific body class for admin layout
     document.body.classList.add('admin-mode');
     return () => document.body.classList.remove('admin-mode');
