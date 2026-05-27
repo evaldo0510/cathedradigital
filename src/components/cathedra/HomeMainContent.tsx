@@ -156,8 +156,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     </div>
   );
 });
-  );
-});
 
 HomeMainContent.displayName = 'HomeMainContent';
 
