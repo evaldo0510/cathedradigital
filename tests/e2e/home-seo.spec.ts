@@ -16,7 +16,12 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     lighthouse: {} as any,
   };
 
-  test('Comprehensive SEO & Social Audit', async ({ page }) => {
+  test('Comprehensive SEO & Social Audit', async ({ page, browserName }) => {
+    // Skip Lighthouse if we can't launch a custom browser instance
+    const isSandbox = !process.env.CI;
+    if (isSandbox && browserName === 'chromium') {
+       console.log('Running in sandbox mode, bypassing separate browser launch.');
+    }
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
