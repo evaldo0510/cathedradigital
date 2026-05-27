@@ -60,7 +60,7 @@ const MagisteriumViewer: React.FC = () => {
       setHistoryIndex(newHistory.length - 1);
       return newHistory;
     });
-  }, [location.pathname, location.search]);
+  }, [location.pathname, location.search, historyIndex]);
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
