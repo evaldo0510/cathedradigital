@@ -21,7 +21,6 @@
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
     "generate:seo": "bun run scripts/generate-sitemap.ts",
-    "test:jsonld": "bun run scripts/validate-jsonld.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
