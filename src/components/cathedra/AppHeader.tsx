@@ -29,17 +29,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
 
   return (
     <>
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all font-bold uppercase tracking-widest text-[10px]"
-      >
-        Pular para o conteúdo
-      </a>
       <header 
         className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
         role="banner"
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0">
+        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0 landscape:min-h-[100px] landscape:py-4">
+
 
           {/* Logo Section - Centralized on Mobile */}
           <div 
@@ -57,8 +52,9 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-4">
-            <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end">
+          <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-4 landscape:border-t-0">
+            <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-3">
+
               {!isDashboard && (
                 <Button
                   variant="outline"
