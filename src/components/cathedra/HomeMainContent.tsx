@@ -68,7 +68,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
-          className="mb-12 md:mb-24"
+          className="mb-16 md:mb-32"
         />
         <div className="premium-card responsive-padding">
           <RitualDoDia />
@@ -144,9 +144,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-12 md:mb-24"
+          className="mb-16 md:mb-32"
         />
-        <div className="premium-card responsive-padding md:p-20">
+        <div className="premium-card responsive-padding md:p-32">
           <HomeMainDoors t={t} />
         </div>
       </section>
