@@ -3,11 +3,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { axe, toHaveNoViolations } from 'vitest-axe';
+import * as axeMatchers from 'vitest-axe';
+import { axe } from 'vitest-axe';
 import { MotionConfig } from 'framer-motion';
 
 // @ts-ignore
-expect.extend(toHaveNoViolations);
+expect.extend(axeMatchers);
 
 // Mocks
 vi.mock('@/hooks/useAuth', () => ({
