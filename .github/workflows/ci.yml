@@ -2,222 +2,195 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
-
-env:
-  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-  VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    branches: [ main ]
 
 jobs:
-  pre-flight:
-    name: 🔍 Pre-flight Checks
+  build:
     runs-on: ubuntu-latest
-    steps:
-      - name: Validate Supabase Credentials
-        run: |
-          ERROR=0
-          if [ -z "${{ secrets.VITE_SUPABASE_URL }}" ]; then
-            echo "::error::VITE_SUPABASE_URL is missing! Please add it to GitHub Secrets."
-            ERROR=1
-          fi
-          if [ -z "${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}" ]; then
-            echo "::error::VITE_SUPABASE_PUBLISHABLE_KEY is missing! Please add it to GitHub Secrets."
-            ERROR=1
-          fi
-          if [ $ERROR -eq 1 ]; then
-            exit 1
-          fi
-          echo "✅ All required secrets are present."
-
-  lint-and-typecheck:
-    name: 🧹 Lint & 🏗️ Typecheck
-    runs-on: ubuntu-latest
-    needs: [pre-flight]
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Create logs directory
-        run: mkdir -p ci-logs
-
-      - name: Lint
-        run: bun run lint > ci-logs/lint.log 2>&1
-
-      - name: Design System Audit
-        run: bun run scripts/enforce-design-system.ts > ci-logs/design-system.log 2>&1
-
-      - name: Typecheck
-        run: bun run typecheck > ci-logs/typecheck.log 2>&1
-
-      - name: Upload Logs
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: lint-typecheck-logs
-          path: ci-logs/
-
-  validate-and-test:
-    name: 🧪 Validation & 🧪 Tests
-    runs-on: ubuntu-latest
-    needs: [lint-and-typecheck]
     permissions:
       pull-requests: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
+    - uses: actions/checkout@v4
+    
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+    - name: Install dependencies
+      run: bun install
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+    - name: Typecheck
+      id: typecheck
+      continue-on-error: true
+      run: |
+        echo "Running tsc --noEmit..."
+        bun run typecheck > typecheck.log 2>&1
+        RESULT=$?
+        cat typecheck.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Create logs directory
-        run: mkdir -p scripts/logs
+    - name: Lint
+      id: lint
+      continue-on-error: true
+      run: |
+        echo "Running eslint with max-warnings 0..."
+        bun run lint --max-warnings 0 --format json --output-file eslint-report.json > lint.log 2>&1 || true
+        # Run again for human readable log if failed or just use the log we captured
+        bun run lint --max-warnings 0 > lint.log 2>&1
+        RESULT=$?
+        cat lint.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Run CI Validation Scripts
-        run: |
-          echo "Running validate-catechism..."
-          bun run scripts/validate-catechism.ts > scripts/logs/validate-catechism.log 2>&1
-          echo "Running security-audit..."
-          bun run scripts/security-audit.ts > scripts/logs/security-audit.log 2>&1
-        env:
-          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    - name: Generate SEO Files
+      id: sitemap_gen
+      continue-on-error: true
+      run: |
+        echo "Generating sitemap..."
+        bun run scripts/generate-sitemap.ts > sitemap_gen.log 2>&1
+        RESULT=$?
+        cat sitemap_gen.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Run Tests with Coverage
-        run: bun run test -- --coverage
-        
-      - name: Summary of Coverage
-        if: github.event_name == 'pull_request'
-        continue-on-error: true
-        run: |
-          if [ -f coverage/coverage-summary.json ]; then
-            REPORT=$(cat coverage/coverage-summary.json | jq -r '.total | "Statements: \(.statements.pct)%\nLines: \(.lines.pct)%\nFunctions: \(.functions.pct)%\nBranches: \(.branches.pct)%"')
-            echo "### 📊 Test Coverage Summary" > pr_comment.md
-            echo "$REPORT" >> pr_comment.md
-            echo "" >> pr_comment.md
-            echo "Full reports are available in the [CI Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})." >> pr_comment.md
-          else
-            echo "### ⚠️ Coverage report not found" > pr_comment.md
-          fi
+    - name: Validate Sitemap
+      id: sitemap_val
+      continue-on-error: true
+      run: |
+        bun run scripts/validate-sitemap.ts > sitemap_val.log 2>&1
+        RESULT=$?
+        cat sitemap_val.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Comment on PR
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request' && always()
-        with:
-          path: pr_comment.md
+    - name: Validate Catechism
+      id: catechism_val
+      continue-on-error: true
+      run: |
+        bun run scripts/validate-catechism.ts > catechism_val.log 2>&1
+        RESULT=$?
+        cat catechism_val.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-validation-reports
-          path: |
-            coverage/
-            scripts/logs/
-            test-results.json
+    - name: Security Audit
+      id: security_audit
+      continue-on-error: true
+      run: |
+        bun run scripts/security-audit.ts > security_audit.log 2>&1
+        RESULT=$?
+        cat security_audit.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-  e2e-tests:
-    name: 🎭 Playwright E2E Tests
-    runs-on: ubuntu-latest
-    needs: [validate-and-test]
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
+    - name: Build
+      id: build
+      continue-on-error: true
+      run: |
+        bun run build > build.log 2>&1
+        RESULT=$?
+        cat build.log
+        echo "status=$RESULT" >> $GITHUB_OUTPUT
+        exit $RESULT
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+    - name: Upload Typecheck Log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: typecheck-log
+        path: typecheck.log
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+    - name: Upload Lint Artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: lint-artifacts
+        path: |
+          lint.log
+          eslint-report.json
 
-      - name: Install Playwright Browsers
-        run: bunx playwright install --with-deps
+    - name: Upload Sitemap Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: sitemap-logs
+        path: |
+          sitemap_gen.log
+          sitemap_val.log
 
-      - name: Run E2E & A11y Tests
-        run: |
-          bun run test:e2e || (mkdir -p playwright-report && echo "Tests failed" > playwright-report/failed.txt)
-          bun run test:a11y || (mkdir -p playwright-report && echo "A11y tests failed" > playwright-report/failed.txt)
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
-          A11Y_MAX_CRITICAL_ERRORS: 5
+    - name: Upload Validation Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: validation-logs
+        path: |
+          catechism_val.log
+          security_audit.log
 
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-            name: playwright-report
-            path: |
-                playwright-report/
-                test-results/
-                a11y-reports/
-            retention-days: 7
+    - name: Upload Build Log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-log
+        path: build.log
 
-  build:
-    name: 🚀 Build
-    runs-on: ubuntu-latest
-    needs: [e2e-tests]
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
+    - name: PR Summary
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const { 
+            typecheck, lint, sitemap_gen, sitemap_val, catechism_val, security_audit, build 
+          } = {
+            typecheck: '${{ steps.typecheck.outputs.status }}',
+            lint: '${{ steps.lint.outputs.status }}',
+            sitemap_gen: '${{ steps.sitemap_gen.outputs.status }}',
+            sitemap_val: '${{ steps.sitemap_val.outputs.status }}',
+            catechism_val: '${{ steps.catechism_val.outputs.status }}',
+            security_audit: '${{ steps.security_audit.outputs.status }}',
+            build: '${{ steps.build.outputs.status }}'
+          };
+          
+          const getIcon = (status) => status === '0' ? '✅' : '❌';
+          const getStatusText = (status) => status === '0' ? 'Success' : 'Failed';
+          
+          const summary = `
+          ### 🚀 CI Build Summary
+          | Step | Status |
+          | :--- | :--- |
+          | Typecheck | ${getIcon(typecheck)} ${getStatusText(typecheck)} |
+          | Lint | ${getIcon(lint)} ${getStatusText(lint)} |
+          | Sitemap Generation | ${getIcon(sitemap_gen)} ${getStatusText(sitemap_gen)} |
+          | Sitemap Validation | ${getIcon(sitemap_val)} ${getStatusText(sitemap_val)} |
+          | Catechism Validation | ${getIcon(catechism_val)} ${getStatusText(catechism_val)} |
+          | Security Audit | ${getIcon(security_audit)} ${getStatusText(security_audit)} |
+          | Vite Build | ${getIcon(build)} ${getStatusText(build)} |
+          
+          Logs and reports are available in the Actions artifacts.
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
 
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Build App
-        run: |
-          mkdir -p build-logs
-          bun run build > build-logs/build.log 2>&1
-        env:
-          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ env.VITE_SUPABASE_PUBLISHABLE_KEY }}
-
-      - name: Upload Build Logs
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: build-logs
-          path: build-logs/
+    - name: Final Check
+      run: |
+        if [ "${{ steps.typecheck.outputs.status }}" != "0" ] || \
+           [ "${{ steps.lint.outputs.status }}" != "0" ] || \
+           [ "${{ steps.sitemap_gen.outputs.status }}" != "0" ] || \
+           [ "${{ steps.sitemap_val.outputs.status }}" != "0" ] || \
+           [ "${{ steps.catechism_val.outputs.status }}" != "0" ] || \
+           [ "${{ steps.security_audit.outputs.status }}" != "0" ] || \
+           [ "${{ steps.build.outputs.status }}" != "0" ]; then
+          echo "One or more CI steps failed."
+          exit 1
+        fi

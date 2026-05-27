@@ -1,5 +1,7 @@
 import React from 'react';
 import { Icons } from '../../constants';
+import { SOCIAL_LINKS } from '@/config/site-config';
+import { trackEvent } from '@/lib/analytics';
 
 const AboutPage: React.FC = () => (
   <div className="w-full space-y-16 py-4 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -45,7 +47,7 @@ const AboutPage: React.FC = () => (
       {/* Missão Section */}
       <div id="missao" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
             <Icons.Target className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa Missão</h2>
@@ -59,7 +61,7 @@ const AboutPage: React.FC = () => (
       {/* História Section */}
       <div id="historia" className="scroll-mt-24 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-premium-sm bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
             <Icons.History className="w-5 h-5 text-primary" />
           </div>
           <h2 className="text-3xl font-serif font-bold text-foreground">Nossa História</h2>
@@ -72,7 +74,7 @@ const AboutPage: React.FC = () => (
     </div>
 
     {/* Social Media Section */}
-    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-premium-sm p-8 md:p-12 border border-border/50">
+    <div id="redes-sociais" className="scroll-mt-24 bg-muted/40 rounded-premium p-8 md:p-12 border border-border/50">
       <div className="text-center space-y-8">
         <div className="space-y-2">
           <h2 className="text-2xl font-serif font-bold text-foreground">Siga-nos nas Redes Sociais</h2>
@@ -81,18 +83,20 @@ const AboutPage: React.FC = () => (
         
         <div className="flex flex-wrap justify-center gap-6">
           {[
-            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: 'https://instagram.com/cathedra.digital', color: 'hover:text-pink-600' },
-            { icon: <Icons.Youtube className="w-6 h-6" />, label: 'YouTube', url: 'https://youtube.com/@cathedradigital', color: 'hover:text-red-600' },
-            { icon: <Icons.Twitter className="w-6 h-6" />, label: 'X (Twitter)', url: 'https://twitter.com/cathedradigital', color: 'hover:text-sky-500' },
-            { icon: <Icons.Facebook className="w-6 h-6" />, label: 'Facebook', url: 'https://facebook.com/cathedradigital', color: 'hover:text-blue-600' },
-            { icon: <Icons.Whatsapp className="w-6 h-6" />, label: 'WhatsApp', url: 'https://wa.me/seulink', color: 'hover:text-green-600' },
+            { icon: <Icons.Instagram className="w-6 h-6" />, label: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM, color: 'hover:text-pink-600' },
+            { icon: <Icons.Youtube className="w-6 h-6" />, label: 'YouTube', url: SOCIAL_LINKS.YOUTUBE, color: 'hover:text-red-600' },
+            { icon: <Icons.Twitter className="w-6 h-6" />, label: 'X (Twitter)', url: SOCIAL_LINKS.TWITTER, color: 'hover:text-sky-500' },
+            { icon: <Icons.Facebook className="w-6 h-6" />, label: 'Facebook', url: SOCIAL_LINKS.FACEBOOK, color: 'hover:text-blue-600' },
+            { icon: <Icons.Whatsapp className="w-6 h-6" />, label: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP, color: 'hover:text-green-600' },
           ].map((social) => (
             <a
               key={social.label}
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-sm transition-all hover:shadow-soft hover:-translate-y-1 ${social.color} group`}
+              aria-label={social.label}
+              onClick={() => trackEvent('social_link_click', { platform: social.label, url: social.url })}
+              className={`flex flex-col items-center gap-2 p-4 rounded-full bg-background border border-border shadow-soft transition-all hover:shadow-premium hover:-translate-y-1 ${social.color} group`}
             >
               <div className="transition-transform duration-300 group-hover:scale-110">
                 {social.icon}
@@ -120,8 +124,8 @@ const AboutPage: React.FC = () => (
           { icon: <Icons.Heart className="w-8 h-8" />, title: 'Oração', desc: 'Rosário, Via Sacra, Missal Romano e um devocionário completo para sua vida espiritual.' },
           { icon: <Icons.Star className="w-8 h-8" />, title: 'Formação', desc: 'Trilhas de estudo progressivas, quizzes de conhecimento e a Suma Teológica de São Tomás.' },
         ].map(pillar => (
-          <div key={pillar.title} className="bg-card border border-border rounded-premium-sm p-6 space-y-4 hover:border-primary/30 transition-colors group">
-            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium-sm flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
+          <div key={pillar.title} className="bg-card border border-border rounded-premium p-6 space-y-4 hover:border-primary/30 transition-colors group">
+            <div className="text-primary bg-primary/5 w-16 h-16 rounded-premium flex items-center justify-center transition-transform duration-500 group-hover:rotate-6">
               {pillar.icon}
             </div>
             <div className="space-y-2">
@@ -137,11 +141,11 @@ const AboutPage: React.FC = () => (
     <div className="pt-16 border-t border-border/40">
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 bg-muted/20 rounded-[2.5rem] p-8 md:p-12 border border-border/30">
         <div className="shrink-0">
-          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium-sm border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
-            <div className="w-full h-full rounded-premium-sm bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
+          <div className="w-48 h-48 md:w-64 md:h-64 rounded-premium border-4 border-background p-2 relative bg-background shadow-premium-hover overflow-hidden group">
+            <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border group-hover:scale-105 transition-transform duration-700">
               <Icons.User className="w-24 h-24 text-muted-foreground/30" />
             </div>
-            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium-sm shadow-lg border-4 border-background">
+            <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-premium border-4 border-background">
               <Icons.Feather className="w-5 h-5" />
             </div>
           </div>
@@ -176,7 +180,7 @@ const AboutPage: React.FC = () => (
     {/* Footer Quote */}
     <div className="py-16 text-center space-y-4">
       <p className="text-2xl font-serif font-bold text-foreground tracking-tight uppercase">Ad Maiorem Dei Gloriam</p>
-      <div className="w-12 h-0.5 bg-primary/30 mx-auto rounded-premium-sm" />
+      <div className="w-12 h-0.5 bg-primary/30 mx-auto rounded-premium" />
       <p className="text-muted-foreground italic">Para a maior glória de Deus.</p>
     </div>
   </div>

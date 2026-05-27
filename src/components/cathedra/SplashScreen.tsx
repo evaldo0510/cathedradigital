@@ -62,7 +62,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium-sm overflow-hidden border-[3px] border-secondary/50 shadow-premium bg-primary">
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium overflow-hidden border-[3px] border-secondary/50 shadow-premium-hover bg-primary">
             <Icons.Logo className="w-full h-full p-4" variant="blue" />
           </div>
         </motion.div>
@@ -91,7 +91,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           </motion.p>
         </motion.div>
 
-        <motion.div className="absolute bottom-12 w-32 h-0.5 bg-white/[0.05] rounded-premium-sm overflow-hidden">
+        <motion.div className="absolute bottom-12 w-32 h-0.5 bg-card/50 rounded-premium overflow-hidden">
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}

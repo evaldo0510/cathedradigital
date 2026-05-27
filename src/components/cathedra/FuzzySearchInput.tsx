@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 /**
  * FuzzySearchInput — shared search input used by Saints, Glossary,
  * Community and Themes pages.
@@ -64,7 +64,7 @@ const SIZE_TOKENS: Record<NonNullable<FuzzySearchInputProps['size']>, {
     clearWrap: 'right-3',
   },
   lg: {
-    input: 'pl-14 pr-14 py-5 text-base rounded-full shadow-sm',
+    input: 'pl-14 pr-14 py-5 text-base rounded-full shadow-soft',
     icon: 'w-5 h-5',
     iconWrap: 'left-6',
     clearWrap: 'right-6',

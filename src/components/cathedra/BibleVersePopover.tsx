@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -68,11 +68,11 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
   return (
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
-        <button
-          className="inline-flex items-center gap-1 font-serif text-[15px] font-bold text-secondary/80 hover:text-secondary border-b border-secondary/10 hover:border-secondary transition-all px-0.5 leading-none"
+        <Button
+          className="px-2.5 py-1 rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {label}
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         side="top"

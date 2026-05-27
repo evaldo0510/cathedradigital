@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Tag } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { AppRoute } from '@/types';
 
 const BackToThemeBanner: React.FC = () => {
@@ -13,7 +13,7 @@ const BackToThemeBanner: React.FC = () => {
   if (from !== 'temas' || !tema) return null;
 
   return (
-    <div className="fixed top-16 left-0 right-0 z-50 px-4 py-2 bg-background  border-b border-primary/20 shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="fixed top-16 left-0 right-0 z-50 px-4 py-2 bg-background  border-b border-primary/20 shadow-soft animate-in fade-in slide-in-from-top-2 duration-300 back-to-theme-banner">
       <div className="max-w-3xl mx-auto">
         <Button
           variant="ghost"

@@ -13,7 +13,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { Icons } from '../../constants';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import ShareButton from './ShareButton';
 
 const STATIONS = [
@@ -41,7 +41,7 @@ const ViaCrucis: React.FC = () => {
     return (
       <motion.div className="max-w-5xl mx-auto space-y-12 pb-12" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
         <motion.div className="text-center space-y-4 pt-4" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium">
             <Cross className="w-4 h-4 text-primary" />
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
@@ -50,7 +50,7 @@ const ViaCrucis: React.FC = () => {
         </motion.div>
 
         <div className="flex justify-center">
-          <Button onClick={() => setIsJourney(true)} size="lg" className="h-16 px-10 gap-3 rounded-full shadow-premium">
+          <Button onClick={() => setIsJourney(true)} size="lg" className="h-16 px-10 gap-3 rounded-full shadow-premium-hover">
             <Play className="w-4 h-4 fill-current" /> Iniciar Via Sacra
           </Button>
         </div>
@@ -58,12 +58,12 @@ const ViaCrucis: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {STATIONS.map((s, i) => (
             <Button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
-              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium hover:-translate-y-1 transition-all group relative overflow-hidden">
+              className="text-left p-6 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                 <Cross className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
               </div>
               <div className="relative z-10 flex items-center gap-5">
-                <div className="w-12 h-12 rounded-premium-sm bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
+                <div className="w-12 h-12 rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
                   <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
                   <p className="text-premium-tiny text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
@@ -82,7 +82,7 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 pb-12 animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-2">
-        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-sm gap-2">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-soft gap-2">
           <ArrowLeft className="w-5 h-5 text-foreground" />
           <span className="text-premium-tiny font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </Button>
@@ -103,13 +103,13 @@ const ViaCrucis: React.FC = () => {
       </div>
 
       {/* Station content */}
-      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-premium shadow-black/[0.02] relative overflow-hidden">
+      <div className="bg-card border border-border rounded-[3rem] p-8 md:p-16 space-y-12 shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
           <Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>
         
         <div className="relative text-center space-y-6">
-          <div className="w-20 h-20 rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-3xl mx-auto shadow-premium border-4 border-background">{station.num}</div>
+          <div className="w-20 h-20 rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
           <div className="space-y-2">
             <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
             <p className="text-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-2">
@@ -167,7 +167,7 @@ const ViaCrucis: React.FC = () => {
         ) : (
           <Button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-premium shadow-primary/20"
+            className="flex-1 max-w-[200px] h-14 rounded-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
           >
             <Icons.Cross className="w-4 h-4" /> Concluir
           </Button>

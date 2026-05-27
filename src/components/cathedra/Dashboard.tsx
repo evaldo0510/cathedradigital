@@ -13,7 +13,7 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { HomeCard } from './HomeCard';
 import { HomeButton } from './HomeButton';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
+import { SpiritualContinuity } from './SpiritualContinuity';
 
 interface DashboardProps {
   user: User | null;
@@ -130,7 +130,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             className="flex justify-center"
           >
             <div className="relative">
-              <Icons.Logo className="w-16 h-16 text-primary" variant="blue" />
+              <Icons.Logo className="w-20 h-20 text-primary" variant="blue" />
             </div>
           </motion.div>
           <div className="space-y-6">
@@ -148,12 +148,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
             {streak > 0 && (
               <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-soft transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
-                <Icons.Zap size={16} className="text-secondary" />
+                <Icons.Zap className="w-5 h-5 text-secondary" />
                 <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
             <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-soft transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
-              <Icons.Star size={16} className="text-primary" />
+              <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
@@ -163,14 +163,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.05}>
         <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="p-6 flex items-center justify-between cursor-pointer group"
+          className="p-6 flex items-center justify-between cursor-pointer group rounded-[2.5rem]"
           role="button"
           tabIndex={0}
           aria-label="Ver Guia dos Módulos"
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-5">
-            <CathedraIcon icon={Icons.HelpCircle} size={IconSizePreset.ACTION} variant="primary" />
+            <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
+              <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
+            </div>
             <div>
               <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
               <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
@@ -190,14 +192,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5"
+              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5 rounded-[2.5rem]"
             >
               {door.suggested && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-sm">
-                  <Icons.Star size={12} className="fill-current" />
+                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
+                  <Icons.Star className="w-3 h-3 fill-current" />
                 </div>
               )}
-              <CathedraIcon icon={door.icon} size={IconSizePreset.CARD_HEADER} variant={door.iconColor.includes('secondary') ? 'secondary' : 'primary'} />
+              <div className={`w-14 h-14 rounded-premium bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
+                <door.icon className="w-7 h-7" strokeWidth={1.25} />
+              </div>
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
@@ -213,33 +217,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         </div>
       </FadeUp>
 
-      {nextUp && (
-        <FadeUp delay={0.18}>
-          <HomeCard 
-            onClick={() => goTo(nextUp.route)}
-            className="p-8 cursor-pointer flex items-center justify-between group"
-            role="button"
-            tabIndex={0}
-            aria-label={`Continuar ${nextUp.label}`}
-            onKeyDown={(e) => e.key === 'Enter' && goTo(nextUp.route)}
-          >
-            <div className="flex items-center gap-6">
-              <CathedraIcon 
-                icon={nextUp.type === 'bible' ? Icons.Bible : nextUp.type === 'catechism' ? Icons.Cross : Icons.Flame} 
-                size={IconSizePreset.CARD_HEADER} 
-                variant="primary" 
-              />
-              <div className="text-left space-y-1">
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary/60">{nextUp.subtitle}</p>
-                <h3 className="text-xl font-bold text-foreground leading-tight group-hover:text-primary transition-colors">{nextUp.label}</h3>
-              </div>
-            </div>
-            <div className="w-12 h-12 rounded-full border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-soft">
-              <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-            </div>
-          </HomeCard>
-        </FadeUp>
-      )}
+      <FadeUp delay={0.18}>
+        <SpiritualContinuity data={nextUp} isLoading={isLoading} profile={profile} />
+      </FadeUp>
 
       {!spiritualProfile && (
         <FadeUp delay={0.15}>

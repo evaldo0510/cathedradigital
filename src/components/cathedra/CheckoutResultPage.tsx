@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
@@ -125,7 +125,7 @@ const CheckoutResultPage: React.FC = () => {
   if (state === 'loading') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-premium-sm animate-spin" />
+        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-premium animate-spin" />
         <p className="text-muted-foreground font-serif italic text-lg">Confirmando seu pagamento...</p>
       </div>
     );

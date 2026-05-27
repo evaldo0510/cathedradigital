@@ -1,8 +1,8 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church, ArrowLeft, ArrowRight } from 'lucide-react';
+import { BookOpen, Heart, Users, Zap, ChevronRight, ChevronLeft, Compass, Sun, Hand, Sparkles, Church } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -37,9 +37,9 @@ const SLIDES = [
   },
   {
     icon: <Zap className="w-10 h-10" />,
-    title: 'Logos: Estudo Profundo',
-    subtitle: 'Mestre Contemplativo',
-    description: 'Dúvidas sobre a fé? O Logos explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
+    title: 'Logos IA: Estudo Profundo',
+    subtitle: 'Inteligência Contemplativa',
+    description: 'Dúvidas sobre a fé? O Logos IA explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
     image: onboardingStudy,
   },
   {
@@ -250,62 +250,37 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const title = categoryNames[recommendedCategory] || 'Formação Integral';
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
-        <div className="w-full max-w-2xl space-y-24 text-center">
-          <div className="space-y-8">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-lg lg:max-w-3xl space-y-6 lg:space-y-12"
+        >
+          <div className="text-center space-y-3">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', delay: 0.2, duration: 1 }}
-              className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5 shadow-[0_0_40px_rgba(0,0,0,0.02)]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', delay: 0.2 }}
+              className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center"
             >
-              <Compass className="w-10 h-10 text-primary/40" />
+              <Compass className="w-10 h-10 text-primary" />
             </motion.div>
-            
-            <div className="space-y-4">
-              <motion.span 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
-              >
-                Caminho Revelado
-              </motion.span>
-              <motion.h1 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="text-4xl md:text-6xl font-display text-primary tracking-tightest"
-              >
-                Sua Jornada
-              </motion.h1>
-            </div>
+            <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
+            <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="p-10 rounded-[3rem] border border-primary/5 bg-primary/[0.01] space-y-10 relative overflow-hidden group"
+          <div className="bg-card border border-primary/20 rounded-premium p-6 space-y-3 text-center">
+            <h2 className="text-xl font-bold text-foreground">{title}</h2>
+            <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
+          </div>
+
+          <Button
+            onClick={handleGoToJourney}
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
-            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-secondary/20 to-transparent" />
-            
-            <div className="space-y-4">
-              <h2 className="text-3xl font-bold text-primary tracking-tight">{title}</h2>
-              <p className="text-lg font-monastery text-primary/40 italic max-w-md mx-auto leading-relaxed">
-                "Onde está o teu tesouro, aí estará também o teu coração." <br />
-                Preparamos uma trilha única para o seu momento.
-              </p>
-            </div>
-            
-            <Button
-              onClick={handleGoToJourney}
-              className="w-full max-w-sm mx-auto h-16 rounded-full gap-4 font-black uppercase text-[10px] tracking-[0.4em] bg-primary text-primary-foreground shadow-premium hover:scale-[1.02] transition-all"
-            >
-              Iniciar Caminhada <ArrowRight className="w-4 h-4" />
-            </Button>
-          </motion.div>
-        </div>
+            Começar Minha Jornada <ChevronRight className="w-4 h-4" />
+          </Button>
+        </motion.div>
       </div>
     );
   }
@@ -316,79 +291,48 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-8 reading-sepia">
-        <div className="w-full max-w-2xl space-y-24 text-center">
-          <div className="space-y-8 max-w-sm mx-auto">
-            <div className="flex items-center justify-between text-primary/20">
-              <span className="text-[10px] font-black uppercase tracking-[0.6em]">Diagnóstico</span>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em]">{diagStep + 1} / {QUESTIONS.length}</span>
-            </div>
-            <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+        <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
+          <div className="flex justify-center mb-6">
+            <Icons.Logo className="w-16 h-16" variant="blue" />
+          </div>
+          
+          <div className="space-y-2 mb-8">
+            <div className="w-full h-1 bg-muted rounded-premium overflow-hidden">
               <motion.div 
-                className="h-full bg-secondary/30"
+                className="h-full bg-primary"
                 initial={{ width: 0 }}
                 animate={{ width: `${diagProgress}%` }}
-                transition={{ type: 'spring', damping: 30, stiffness: 100 }}
               />
             </div>
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
             <motion.div
               key={question.id}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-16"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
             >
-              <div className="space-y-6">
-                <motion.span 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 block"
-                >
-                  Reflexão Inicial
-                </motion.span>
-                <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
-              </div>
-              <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
-                {question.options.map((opt, idx) => (
-                  <motion.button
+              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {question.options.map((opt) => (
+                  <Button
                     key={opt.value}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + (idx * 0.1) }}
-                    whileHover={{ x: 8 }}
-                    whileTap={{ scale: 0.99 }}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center justify-between p-8 rounded-[2rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                    className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
                   >
-                    <div className="flex items-center gap-6">
-                      <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/5 group-hover:border-primary/20 transition-all">
-                        {opt.icon}
-                      </div>
-                      <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                    <div className="p-3 rounded-premium bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      {opt.icon}
                     </div>
-                    <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
-                      <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </motion.button>
+                    <span className="font-bold text-foreground">{opt.label}</span>
+                  </Button>
                 ))}
               </div>
             </motion.div>
           </AnimatePresence>
-
-          <div className="pt-12 flex justify-center">
-            <button 
-              onClick={() => diagStep > 0 && setDiagStep(diagStep - 1)}
-              disabled={diagStep === 0}
-              className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors disabled:opacity-0"
-            >
-              <ArrowLeft className="w-4 h-4" /> Anterior
-            </button>
-          </div>
         </div>
       </div>
     );
@@ -433,7 +377,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               }`}
             />
           ))}
-          <div className="w-2.5 h-2.5 rounded-premium-sm bg-muted-foreground/30" />
+          <div className="w-2.5 h-2.5 rounded-premium bg-muted-foreground/30" />
         </div>
 
         <div className="flex items-center justify-between">

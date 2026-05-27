@@ -172,20 +172,6 @@ export const BADGE_DEFINITIONS: BadgeDef[] = [
     icon: '📒',
     condition: ctx => (ctx as any).notes >= 5,
   },
-  {
-    id: 'reflections_10',
-    name: 'Alma Contemplativa',
-    description: 'Respondeu 10 perguntas de aprofundamento',
-    icon: '✨',
-    condition: ctx => (ctx as any).notes >= 10,
-  },
-  {
-    id: 'streak_15',
-    name: 'Vigia da Noite',
-    description: 'Manteve um streak de 15 dias',
-    icon: '🕯️',
-    condition: ctx => ctx.streak >= 15,
-  },
 ];
 
 /**

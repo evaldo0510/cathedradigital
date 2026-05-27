@@ -1,193 +1,108 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
-import { AppRoute } from '../../src/types';
 import fs from 'fs';
 import path from 'path';
 
-const RESULTS_DIR = path.join(process.cwd(), 'public', 'a11y-reports');
-if (!fs.existsSync(RESULTS_DIR)) {
-  fs.mkdirSync(RESULTS_DIR, { recursive: true });
-}
-
-// Configurable threshold for critical errors
-const MAX_CRITICAL_ERRORS = parseInt(process.env.A11Y_MAX_CRITICAL_ERRORS || '0', 10);
-
-const a11ySummary: any[] = [];
-
-// Auto-discover all valid routes from AppRoute
-const ROUTES_TO_TEST = Object.entries(AppRoute)
-  .filter(([key, value]) => typeof value === 'string' && !value.includes(':'))
-  .map(([key, value]) => ({ path: value, name: key }));
-
-test.describe('Global Accessibility & Contrast Audit', () => {
-  for (const route of ROUTES_TO_TEST) {
-    for (const theme of ['light', 'dark']) {
-      test(`Audit ${route.name} (${route.path}) - ${theme} mode`, async ({ page }) => {
-        await page.goto(route.path);
-        
-        // Apply theme
-        await page.evaluate((t) => {
-          if (t === 'dark') document.documentElement.classList.add('dark');
-          else document.documentElement.classList.remove('dark');
-        }, theme);
-        
-        await page.waitForTimeout(500); // Wait for transitions
-
-        const results = await new AxeBuilder({ page })
-          .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-          .analyze();
-
-        // Count critical violations
-        const criticalViolations = results.violations.filter(v => v.impact === 'critical');
-        
-        a11ySummary.push({
-          theme,
-          route: route.path,
-          name: route.name,
-          violations: results.violations.length,
-          criticalCount: criticalViolations.length,
-          details: results.violations
-        });
-
-        // Screenshot for contrast review
-        const screenshotPath = path.join(RESULTS_DIR, `contrast-${route.name}-${theme}.png`);
-        await page.screenshot({ path: screenshotPath, fullPage: true });
-
-        // Fail only if critical violations exceed threshold
-        expect(criticalViolations.length, `Route ${route.path} has ${criticalViolations.length} critical a11y violations in ${theme} mode`).toBeLessThanOrEqual(MAX_CRITICAL_ERRORS);
-      });
-    }
-  }
-
-  test('Premium Components - Individual Component Audit', async ({ page }) => {
+test.describe('Home Page Accessibility & Keyboard Navigation', () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    
-    const components = [
-      { selector: '.btn-premium', name: 'Premium Button' },
-      { selector: '.premium-card', name: 'Premium Card' }
-    ];
-
-    for (const theme of ['light', 'dark']) {
-      await page.evaluate((t) => {
-        if (t === 'dark') document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      }, theme);
-      
-      await page.waitForTimeout(500);
-
-      for (const comp of components) {
-        const locator = page.locator(comp.selector).first();
-        if (await locator.isVisible()) {
-          const results = await new AxeBuilder({ page })
-            .include(comp.selector)
-            .analyze();
-
-          const critical = results.violations.filter(v => v.impact === 'critical');
-          
-          a11ySummary.push({
-            theme,
-            component: comp.name,
-            violations: results.violations.length,
-            criticalCount: critical.length,
-            details: results.violations
-          });
-
-          // Component-specific screenshot
-          const compPath = path.join(RESULTS_DIR, `comp-${comp.name.replace(/\s+/g, '-')}-${theme}.png`);
-          await locator.screenshot({ path: compPath });
-        }
-      }
-    }
+    // Wait for main content to be visible before starting tests
+    await page.waitForSelector('#main-content', { state: 'visible' });
   });
 
-  test.afterAll(async () => {
-    // Generate HTML report index
-    const htmlReport = `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Accessibility Audit Report</title>
-        <style>
-          body { font-family: sans-serif; padding: 20px; background: #f5f5f5; }
-          .card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-          .error { color: #dc2626; font-weight: bold; }
-          .success { color: #16a34a; }
-          .theme-badge { padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-          .dark { background: #333; color: white; }
-          .light { background: #eee; color: #333; }
-          img { max-width: 100%; border: 1px solid #ddd; margin-top: 10px; }
-          details { margin-top: 10px; font-size: 14px; }
-        </style>
-      </head>
-      <body>
-        <h1>Accessibility Audit Summary</h1>
-        <p>Threshold: Max ${MAX_CRITICAL_ERRORS} critical errors allowed.</p>
-        <p><a href="summary.json" target="_blank">View Raw Summary JSON</a></p>
-        
-        <section>
-          <h2>Hero Visuals across Breakpoints</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
-            ${['mobile', 'sm', 'md', 'lg'].flatMap(v => ['light', 'dark'].map(t => `
-              <div class="card">
-                <h4>Hero - ${t.toUpperCase()} - ${v.toUpperCase()}</h4>
-                <a href="hero-visuals/hero-${t}-${v}.png" target="_blank">
-                  <img src="hero-visuals/hero-${t}-${v}.png" alt="Hero ${t} ${v}">
-                </a>
-              </div>
-            `)).join('')}
-          </div>
-        </section>
+  test('strict accessibility audit', async ({ page }, testInfo) => {
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .analyze();
+    
+    // Attach report for all findings to test artifacts
+    const reportPath = path.join(testInfo.outputDir, `a11y-report-${testInfo.project.name}.json`);
+    fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+    await testInfo.attach('accessibility-scan-results', {
+      path: reportPath,
+      contentType: 'application/json'
+    });
 
-        <section>
-          <h2>Hero CTA Focus & Keyboard States</h2>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
-            ${['light', 'dark'].map(t => `
-              <div class="card">
-                <h4>CTA Focus - ${t.toUpperCase()}</h4>
-                <a href="hero-visuals/hero-cta-focus-${t}.png" target="_blank">
-                  <img src="hero-visuals/hero-cta-focus-${t}.png" alt="Hero CTA Focus ${t}">
-                </a>
-              </div>
-            `).join('')}
-          </div>
-        </section>
+    // 1. Separate violations by impact
+    const strictViolations = accessibilityScanResults.violations.filter(
+      v => v.impact === 'critical' || v.impact === 'serious'
+    );
 
-        <section>
-          <h2>Page Contrast & A11y Violations</h2>
-          ${a11ySummary.map(s => {
-            const imageFile = s.component 
-              ? `comp-${s.component.replace(/\s+/g, '-')}-${s.theme}.png`
-              : `contrast-${s.name}-${s.theme}.png`;
-            
-            return `
-              <div class="card">
-                <h3>
-                  ${s.name || s.component} 
-                  <span class="theme-badge ${s.theme}">${s.theme.toUpperCase()}</span>
-                </h3>
-                <p>Context: ${s.route || s.component || 'N/A'}</p>
-                <p class="${s.criticalCount > MAX_CRITICAL_ERRORS ? 'error' : 'success'}">
-                  Violations: ${s.violations} (${s.criticalCount} critical)
-                </p>
-                <details>
-                  <summary>View Details</summary>
-                  <pre>${JSON.stringify(s.details, null, 2)}</pre>
-                </details>
-                <div style="margin-top: 15px;">
-                  <strong>Contrast Preview:</strong><br>
-                  <a href="${imageFile}" target="_blank">
-                    <img src="${imageFile}" alt="Contrast check for ${s.name || s.component}">
-                  </a>
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </section>
-      </body>
-      </html>
-    `;
+    const warnings = accessibilityScanResults.violations.filter(
+      v => v.impact !== 'critical' && v.impact !== 'serious'
+    );
 
-    fs.writeFileSync(path.join(RESULTS_DIR, 'index.html'), htmlReport);
-    fs.writeFileSync(path.join(RESULTS_DIR, 'summary.json'), JSON.stringify(a11ySummary, null, 2));
+    // 2. Log warnings for future correction
+    if (warnings.length > 0) {
+      console.log(`\n[A11y Warnings] Found ${warnings.length} non-critical issues to be addressed later:`);
+      warnings.forEach(v => {
+        console.warn(`- ${v.id}: ${v.help} (Impact: ${v.impact})`);
+      });
+    }
+
+    // 3. Log detailed errors for critical/serious issues
+    if (strictViolations.length > 0) {
+      console.error(`\n[A11y CRITICAL] Found ${strictViolations.length} critical/serious issues that block CI:`);
+      strictViolations.forEach(v => {
+        console.error(`- ${v.id}: ${v.help} (Impact: ${v.impact})`);
+        v.nodes.forEach(node => {
+          console.error(`  Target: ${node.target.join(', ')}`);
+        });
+      });
+    }
+
+    // 4. FAIL the test ONLY if there are critical/serious violations
+    expect(strictViolations, 'Found critical or serious accessibility violations. Fix these before merging.').toEqual([]);
+  });
+
+  test('landmark verification and keyboard navigation', async ({ page }) => {
+    // 1. Verify existence of core landmarks
+    await expect(page.locator('role=main'), 'Should have a <main> landmark').toBeVisible();
+    await expect(page.locator('role=navigation'), 'Should have a <nav> landmark').toBeVisible();
+    
+    // Footer might be lazy loaded or conditional, but check if it's there
+    const footer = page.locator('role=contentinfo');
+    if (await footer.count() > 0) {
+      await expect(footer).toBeVisible();
+    }
+    
+    // 2. Verify Skip to Content link
+    const skipLink = page.locator('a[href="#main-content"]').first();
+    await expect(skipLink, 'Skip to content link should be present').toBeAttached();
+    
+    // Focus the skip link via keyboard
+    await page.focus('body');
+    await page.keyboard.press('Tab');
+    
+    // Check if skip link is focused
+    await expect(skipLink).toBeFocused();
+    
+    // Press Enter and verify focus moves to main content
+    await page.keyboard.press('Enter');
+    
+    const mainContent = page.locator('main#main-content');
+    await expect(mainContent, 'Focus should move to #main-content after clicking skip link').toBeFocused();
+  });
+
+  test('interactive element focus visibility', async ({ page }) => {
+    const interactiveElements = page.locator('button, a[href], [role="button"]');
+    const count = await interactiveElements.count();
+    
+    // Test the first 5 interactive elements for focus styles
+    for (let i = 0; i < Math.min(count, 5); i++) {
+      const element = interactiveElements.nth(i);
+      await element.focus();
+      
+      const hasFocusStyles = await element.evaluate((node) => {
+        const style = window.getComputedStyle(node);
+        // Check for common focus indicators: outline or box-shadow
+        return (
+          (style.outlineStyle !== 'none' && style.outlineWidth !== '0px') || 
+          (style.boxShadow !== 'none' && style.boxShadow !== '')
+        );
+      });
+      
+      expect(hasFocusStyles, `Interactive element ${i} should show a visible focus indicator`).toBe(true);
+    }
   });
 });

@@ -1,11 +1,10 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { CathedraIcon, IconSizePreset } from './CathedraIcon';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -49,31 +48,29 @@ interface BottomNavItemProps {
 
 const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
   <Button 
+    variant="ghost"
     onClick={(e) => { onRipple(e); onClick(); }}
     onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-1 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation focus-visible:bg-primary/10 outline-none transition-colors ${
-      isActive ? 'text-primary' : 'text-muted-foreground active:text-foreground'
+    className={`flex flex-col items-center justify-center gap-1.5 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-500 shadow-none border-none hover:bg-transparent ${
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary/40'
     }`}
   >
-
-    <div className={`transition-transform duration-150 ${isActive ? 'scale-110 -translate-y-0.5' : 'active:scale-90'}`}>
-      <CathedraIcon 
-        icon={(icon as React.ReactElement).type as any} 
-        size={IconSizePreset.NAV} 
-        variant={isActive ? 'primary' : 'muted'} 
-        containerClassName="bg-transparent border-none p-0 w-auto h-auto"
-      />
+    <div className={`transition-all duration-700 ${isActive ? 'scale-110 -translate-y-1' : 'active:scale-95'}`}>
+      {React.cloneElement(icon as React.ReactElement, { 
+        className: `w-5 h-5`,
+        strokeWidth: 1.2,
+      })}
     </div>
-    <span className={`text-premium-tiny sm:text-premium-tiny font-bold uppercase tracking-tight sm:tracking-widest leading-none ${
-      isActive ? 'opacity-100' : 'opacity-60'
+    <span className={`text-[8px] font-black uppercase tracking-[0.2em] leading-none transition-all duration-700 ${
+      isActive ? 'opacity-100 tracking-[0.3em]' : 'opacity-0 translate-y-2'
     }`}>
       {label}
     </span>
     {isActive && (
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-premium-sm" />
+      <div className="absolute top-1 right-1/2 translate-x-4 w-1 h-1 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_hsla(var(--secondary)/0.5)]" />
     )}
   </Button>
 );
@@ -91,23 +88,23 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: t('home'), icon: <Icons.Home />, route: AppRoute.HOJE },
-    { label: t('journeys'), icon: <Icons.Journeys />, route: AppRoute.JORNADAS },
-    { label: t('explore'), icon: <Icons.Compass />, route: AppRoute.BIBLIOTECA },
-    { label: t('profile'), icon: <Icons.User />, route: AppRoute.PROFILE },
+    { label: t('bible'), icon: <Icons.Bible />, route: AppRoute.BIBLE },
+    { label: t('catechism'), icon: <Icons.Catechism />, route: AppRoute.CATECHISM },
+    { label: 'Magistério', icon: <Icons.ScrollText />, route: AppRoute.MAGISTERIUM },
+    { label: 'Logos', icon: <Icons.Sparkles />, route: '/logos' },
     { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
   ];
 
   return (
-    <div className="bottom-nav fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background border-t border-foreground/5 safe-area-bottom">
-      <div className="flex items-stretch h-16 px-1">
-        {items.map((item: any) => (
+    <div className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-3xl border-t border-primary/5 safe-area-bottom bottom-nav">
+      <div className="flex items-stretch h-20 px-4">
+        {items.map((item: any, i: number) => (
           <BottomNavItem 
-            key={item.label}
+            key={item.label + i}
             label={item.label}
             icon={item.icon}
             route={item.route || ''}
-            isActive={item.route ? (currentPath === item.route || (item.route === AppRoute.BIBLIOTECA && [AppRoute.BIBLE, AppRoute.CATECHISM, AppRoute.MAGISTERIUM, AppRoute.SAINTS, AppRoute.LITURGIA, AppRoute.AQUINAS_OPERA, AppRoute.GLOSSARY, AppRoute.ROSARY, AppRoute.ORACAO, AppRoute.VIA_CRUCIS, AppRoute.AZ_FAITH, AppRoute.ENCYCLOPEDIA, AppRoute.POPES, AppRoute.APARICOES, AppRoute.DOGMAS, AppRoute.MODULES_GUIDE].includes(currentPath as AppRoute))) : false}
+            isActive={item.route ? currentPath === item.route || (item.route !== '/' && currentPath.startsWith(item.route)) : false}
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);

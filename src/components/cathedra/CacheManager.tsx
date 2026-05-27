@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
-import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
   getAllFromStore, 
   deleteFromStore, 
@@ -268,7 +268,7 @@ const CacheManager: React.FC = () => {
             onClick={() => setFilter(f)}
             className={`px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
               filter === f 
-                ? 'bg-primary text-primary-foreground shadow-soft' 
+                ? 'bg-primary text-primary-foreground shadow-premium' 
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted'
             }`}
           >
@@ -280,12 +280,12 @@ const CacheManager: React.FC = () => {
       <div className="grid grid-cols-1 gap-4">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-premium-sm bg-muted/40 animate-pulse" />
+            <div key={i} className="h-24 rounded-premium bg-muted/40 animate-pulse" />
           ))
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
             <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
-              <div className="p-4 rounded-premium-sm bg-background border border-border shadow-inner">
+              <div className="p-4 rounded-premium bg-background border border-border shadow-inner">
                 <Icons.Library className="w-8 h-8 text-muted-foreground/40" />
               </div>
               <p className="text-muted-foreground font-medium italic">Nenhum texto encontrado neste filtro.</p>
@@ -304,7 +304,7 @@ const CacheManager: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="rounded-premium-sm border-border/40 shadow-sm overflow-hidden group hover:shadow-soft transition-all">
+                  <Card className="rounded-premium border-border/40 shadow-soft overflow-hidden group hover:shadow-premium transition-all">
                     <CardContent className="p-5 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>

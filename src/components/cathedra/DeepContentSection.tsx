@@ -1,14 +1,16 @@
-import React, { useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { DeepContent, AppRoute } from '@/types';
 import { useAuth } from '@/hooks/useAuth';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Lock } from 'lucide-react';
+import { Sparkles, Lock, CheckCircle2, Send } from 'lucide-react';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface DeepContentSectionProps {
   content: DeepContent & {
@@ -24,8 +26,56 @@ interface DeepContentSectionProps {
 }
 
 const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title, contentType }) => {
-  const { isPremium } = useAuth();
+  const { isPremium, user } = useAuth();
   const navigate = useNavigate();
+  const [reflectionText, setReflectionText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasReflected, setHasReflected] = useState(false);
+
+  // Load existing reflection if any
+  useEffect(() => {
+    if (!user || !contentType) return;
+    const fetchReflection = async () => {
+      const { data } = await supabase
+        .from('reading_reflections' as any)
+        .select('content')
+        .eq('user_id', user.id)
+        .eq('reading_type', contentType)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (data) {
+        setHasReflected(true);
+      }
+    };
+    fetchReflection();
+  }, [user, contentType]);
+
+  const saveReflection = async () => {
+    if (!user || !reflectionText.trim()) return;
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('reading_reflections' as any)
+        .insert({
+          user_id: user.id,
+          content: reflectionText.trim(),
+          reading_type: contentType || 'other',
+          // Add metadata if needed to link back to specific verse/para
+        } as any);
+
+      if (error) throw error;
+      
+      setHasReflected(true);
+      setReflectionText('');
+      toast.success('Reflexão guardada no seu diário espiritual.');
+    } catch (err) {
+      console.error('Error saving reflection:', err);
+      toast.error('Erro ao guardar reflexão.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const sections = useMemo(() => {
     const s = [
@@ -72,7 +122,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
-              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-lg'}`}
+              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-premium'}`}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className={`p-2 rounded-full ${
@@ -121,7 +171,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-premium-sm bg-muted/30 border border-dashed border-border/50 text-center">
+                  <div className="py-4 px-2 rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
                     <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
@@ -147,11 +197,36 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               </div>
 
               {section.id === 'reflexaoFinal' && !isLocked && (
-                <div className="mt-6 pt-6 border-t border-border/40">
+                <div className="mt-6 pt-6 border-t border-border/40 space-y-4">
                   <div className="flex items-start gap-3">
                     <Icons.MessageSquare className="w-4 h-4 text-primary mt-0.5" />
                     <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
                   </div>
+                  
+                  {!hasReflected ? (
+                    <div className="space-y-3 pt-2">
+                      <textarea 
+                        value={reflectionText}
+                        onChange={(e) => setReflectionText(e.target.value)}
+                        placeholder="Escreva sua reflexão aqui..."
+                        className="w-full min-h-[100px] p-4 rounded-3xl bg-muted/20 border border-border/40 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
+                      />
+                      <div className="flex justify-end">
+                        <Button 
+                          onClick={saveReflection}
+                          disabled={!reflectionText.trim() || isSubmitting}
+                          className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-2"
+                        >
+                          {isSubmitting ? <Icons.Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                          Guardar Reflexão
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/5 border border-emerald-500/20 rounded-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> Reflexão Integrada ao Diário
+                    </div>
+                  )}
                 </div>
               )}
             </motion.div>

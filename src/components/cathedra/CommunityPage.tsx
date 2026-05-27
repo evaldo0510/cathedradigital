@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button   } from '@/components/cathedra/Button';
-import { Card    , CardContent   } from '@/components/cathedra/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -284,9 +284,9 @@ const CommunityPage: React.FC = () => {
           <Icons.ChevronLeft className="w-4 h-4" /> Voltar
         </Button>
 
-        <div className="bg-card border border-border rounded-premium-sm p-6 space-y-4">
+        <div className="bg-card border border-border rounded-premium p-6 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium-sm bg-foreground text-background flex items-center justify-center font-black text-sm">
+            <div className="w-10 h-10 rounded-premium bg-foreground text-background flex items-center justify-center font-black text-sm">
               {(selectedPost.author_name || 'A').charAt(0).toUpperCase()}
             </div>
             <div>
@@ -315,9 +315,9 @@ const CommunityPage: React.FC = () => {
 
         <div className="space-y-3">
           {replies.map(r => (
-            <div key={r.id} className="bg-card border border-border rounded-premium-sm p-4 ml-6">
+            <div key={r.id} className="bg-card border border-border rounded-premium p-4 ml-6">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-7 h-7 rounded-premium-sm bg-muted flex items-center justify-center text-xs font-bold text-foreground">
+                <div className="w-7 h-7 rounded-premium bg-muted flex items-center justify-center text-xs font-bold text-foreground">
                   {(r.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-bold text-foreground">{r.author_name}</span>
@@ -329,7 +329,7 @@ const CommunityPage: React.FC = () => {
         </div>
 
         {user ? (
-          <div className="bg-card border border-border rounded-premium-sm p-4 space-y-3">
+          <div className="bg-card border border-border rounded-premium p-4 space-y-3">
             <textarea
               value={replyContent}
               onChange={e => setReplyContent(e.target.value)}
@@ -362,7 +362,7 @@ const CommunityPage: React.FC = () => {
         ) : (
           <>
             <div className="text-center space-y-4 pt-4 mb-10">
-              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium-sm border border-primary/10 shadow-inner mb-2">
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium border border-primary/10 shadow-inner mb-2">
                 <Icons.Message className="w-4 h-4 text-primary" aria-hidden="true" />
                 <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
@@ -404,7 +404,7 @@ const CommunityPage: React.FC = () => {
                 isSearching={isSearchPending}
                 className="flex-1"
               />
-              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-lg shadow-primary/20">
+              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-12 px-6 font-black uppercase tracking-widest gap-2 bg-primary shadow-premium shadow-primary/20">
                 <Icons.Plus className="w-4 h-4" /> Nova Discussão
               </Button>
             </div>
@@ -414,7 +414,7 @@ const CommunityPage: React.FC = () => {
                 <Card key={post.id} className="premium-card-interactive" onClick={() => openPost(post)}>
                   <CardContent className="p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-premium-sm bg-muted flex items-center justify-center font-black text-sm text-primary">
+                      <div className="w-10 h-10 rounded-premium bg-muted flex items-center justify-center font-black text-sm text-primary">
                         {(post.author_name || 'A').charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -446,7 +446,7 @@ const CommunityPage: React.FC = () => {
               <div className="grid grid-cols-1 gap-3">
                 {leaderboard.map((entry, idx) => (
                   <div key={entry.id} className="flex items-center gap-4 p-5 bg-card border border-border/50 rounded-[2rem]">
-                    <div className="w-8 h-8 rounded-premium-sm bg-muted flex items-center justify-center font-black text-sm">
+                    <div className="w-8 h-8 rounded-premium bg-muted flex items-center justify-center font-black text-sm">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -477,7 +477,7 @@ const CommunityPage: React.FC = () => {
           <div className="space-y-4">
             {leaderboard.slice(0, 3).map((entry, i) => (
               <div key={entry.id} className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-premium-sm bg-muted flex items-center justify-center font-black text-premium-tiny">
+                <div className="w-8 h-8 rounded-premium bg-muted flex items-center justify-center font-black text-premium-tiny">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">

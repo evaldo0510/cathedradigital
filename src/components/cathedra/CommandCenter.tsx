@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
@@ -37,7 +37,7 @@ const PAGE_COMMANDS: CommandItem[] = [
   { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-4 h-4" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
   { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-4 h-4" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
   { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-4 h-4" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
-  { label: 'Logos', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
+  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-4 h-4" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
   { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-4 h-4" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
   { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-4 h-4" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
   { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-4 h-4" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
@@ -365,7 +365,7 @@ const CommandCenter: React.FC = () => {
     <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
       <div className="absolute inset-0 bg-black/60 " />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-premium shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-border rounded-full shadow-premium-hover overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
@@ -394,9 +394,9 @@ const CommandCenter: React.FC = () => {
         {/* Loading indicator */}
         {globalLoading && (
           <div className="h-0.5 w-full bg-muted overflow-hidden">
-            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium-sm" 
+            <div className="h-full w-1/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
-            <div className="h-full bg-primary/60 animate-pulse rounded-premium-sm" />
+            <div className="h-full bg-primary/60 animate-pulse rounded-premium" />
           </div>
         )}
 

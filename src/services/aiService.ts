@@ -20,45 +20,15 @@ export const callColloquium = async (
   mode?: string | null,
   onStream?: (content: string) => void
 ): Promise<AIResponse> => {
-  try {
-    const { data, error } = await supabase.functions.invoke('colloquium', {
-      body: { messages, mode }
-    });
-
-    if (error) throw error;
-    
-    if (data?.content && onStream) {
-      onStream(data.content);
-    }
-
-    return { content: data?.content || '' };
-  } catch (err: any) {
-    console.error('Colloquium error:', err);
-    
-    if (err.message?.includes('402') || err.message?.includes('credits')) {
-      notifyAIStatus('credits_exhausted');
-      return { error: 'Limite de reflexões atingido. Considere o plano Premium.', limit_reached: true };
-    }
-    
-    if (err.message?.includes('429')) {
-      notifyAIStatus('rate_limited');
-      return { error: 'Muitas solicitações. Aguarde um momento.' };
-    }
-
-    return { error: 'Ocorreu um erro ao conectar com o Logos.' };
-  }
+  // Feature strictly disabled for transparency and offline integrity
+  return { 
+    error: "O uso de IA foi desativado nesta plataforma para garantir a integridade doutrinária e o funcionamento offline.",
+    content: "O Logos IA não está mais disponível. Todo o conteúdo da Cathedra agora é gerado e revisado manualmente."
+  };
 };
 
 
 export const getSpiritualInsight = async (query?: string, tag?: string, profileId?: string | null): Promise<AIResponse> => {
-  try {
-    const { data, error } = await supabase.functions.invoke('logos-spiritual-insight', {
-      body: { query, tag, profileId }
-    });
-    if (error) throw error;
-    return { content: data?.insight || '' };
-  } catch (err: any) {
-    return { error: 'Erro ao obter insight espiritual.' };
-  }
+  return { error: "Serviço de IA desativado." };
 };
 

@@ -3,9 +3,9 @@ import {
   Users, Crown, AlertTriangle, Flame, UserCheck, Clock, Star,
   Filter, ChevronDown, ChevronUp, Eye, Download, Search
 } from 'lucide-react';
-import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 
@@ -176,7 +176,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-premium-sm bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">

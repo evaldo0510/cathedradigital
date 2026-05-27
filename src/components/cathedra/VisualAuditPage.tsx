@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card   } from './Card';
-import { Button } from './Button';
+import { CathedraCard } from './CathedraCard';
+import { CathedraButton } from './CathedraButton';
 import { 
   ShieldAlert, CheckCircle2, XCircle, Clock, 
   ChevronRight, FileText, AlertTriangle, ExternalLink,
@@ -87,14 +87,14 @@ const VisualAuditPage: React.FC = () => {
     <div className="max-w-7xl mx-auto p-6 space-y-8 animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <Button 
+          <CathedraButton 
             variant="ghost" 
             size="sm" 
             onClick={() => navigate(-1)}
             className="mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-          </Button>
+          </CathedraButton>
           <h1 className="text-3xl font-black tracking-tight flex items-center gap-3">
             <ShieldAlert className="w-8 h-8 text-primary" />
             Auditoria Visual
@@ -117,7 +117,7 @@ const VisualAuditPage: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="md:col-span-1 p-6 space-y-6">
+        <CathedraCard className="md:col-span-1 p-6 space-y-6">
           <div className="space-y-4">
             <h3 className="text-xs font-black uppercase tracking-widest opacity-50">Resumo</h3>
             <div className="space-y-2">
@@ -139,17 +139,17 @@ const VisualAuditPage: React.FC = () => {
               <input 
                 type="text"
                 placeholder="Filtrar arquivos..."
-                className="w-full bg-muted/20 border border-border/10 rounded-xl py-2 pl-10 pr-4 text-sm outline-none focus:border-primary/50"
+                className="w-full bg-muted/20 border border-border/10 rounded-premium-sm py-2 pl-10 pr-4 text-sm outline-none focus:border-primary/50"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
               />
             </div>
           </div>
-        </Card>
+        </CathedraCard>
 
         <div className="md:col-span-3 space-y-6">
           {Object.entries(violationsByFile).map(([file, violations]) => (
-            <Card key={file} className="overflow-hidden">
+            <CathedraCard key={file} className="overflow-hidden">
               <div className="p-4 bg-muted/10 border-b border-border/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <FileText className="w-4 h-4 opacity-50" />
@@ -174,23 +174,23 @@ const VisualAuditPage: React.FC = () => {
                             Linha {v.line} • Sugestão: Substituir por token premium correspondente.
                           </p>
                         </div>
-                        <Button 
+                        <CathedraButton 
                           variant="ghost" 
                           size="sm" 
                           className="opacity-0 group-hover:opacity-100 h-8 rounded-full text-[9px] font-black uppercase"
                           onClick={() => {
                             // In a real IDE integration we'd open the file
-                            toast.info(`Correção recomendada: use Card ou shadow-premium na linha ${v.line}`);
+                            toast.info(`Correção recomendada: use CathedraCard ou shadow-premium na linha ${v.line}`);
                           }}
                         >
                           Ver Detalhes
-                        </Button>
+                        </CathedraButton>
                       </div>
                     ))}
                   </div>
                 </ScrollArea>
               </div>
-            </Card>
+            </CathedraCard>
           ))}
 
           {Object.keys(violationsByFile).length === 0 && (

@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -74,12 +74,12 @@ const ResetPasswordPage: React.FC = () => {
         <p className="text-muted-foreground font-serif italic">Defina sua nova senha abaixo.</p>
       </div>
 
-      <div className="bg-card border border-border rounded-premium-sm p-8 space-y-6">
+      <div className="bg-card border border-border rounded-premium p-8 space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium-sm text-sm text-destructive font-medium">{error}</div>
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
         {success ? (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium-sm text-sm text-primary font-medium text-center">
+          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium text-center">
             Senha atualizada com sucesso! Redirecionando...
           </div>
         ) : (
@@ -101,7 +101,7 @@ const ResetPasswordPage: React.FC = () => {
               />
             </div>
             <Button type="submit" disabled={loading}
-              className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
+              className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
               {loading ? 'Aguarde...' : 'Atualizar Senha'}
             </Button>
           </form>

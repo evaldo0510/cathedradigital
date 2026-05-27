@@ -1,4 +1,4 @@
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -80,7 +80,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-lg"
+        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-premium"
       >
         {/* Dismiss */}
         <Button
@@ -116,7 +116,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           {/* CTA */}
           <Button
             onClick={() => navigate(AppRoute.UPGRADE)}
-            className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-soft whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
           >
             Desbloquear experiência completa <ArrowRight className="w-3.5 h-3.5" />
           </Button>

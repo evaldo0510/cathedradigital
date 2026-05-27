@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { 
   Search, X, BookOpen, Brain
 } from 'lucide-react';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import AZFaithQuiz from './AZFaithQuiz';
 import { useGlossary } from '@/hooks/useGlossary';
 import AlphabetBar from './encyclopedia/AlphabetBar';
@@ -102,7 +102,7 @@ const AZFaithPage: React.FC = () => {
   if (isLoading && allTerms.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-premium-sm h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-premium h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -117,7 +117,7 @@ const AZFaithPage: React.FC = () => {
 
       <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
         <header className="text-center space-y-6 pt-12 mb-16">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium-sm border border-primary/10 shadow-inner">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium border border-primary/10 shadow-inner">
             <BookOpen className="w-4 h-4 text-primary" />
             <span className="text-premium-small font-bold uppercase tracking-[0.3em] text-primary/60">Glossarium Fidei</span>
           </div>
@@ -171,8 +171,8 @@ const AZFaithPage: React.FC = () => {
                     onClick={() => handleTermClick(term)}
                     className={`px-8 py-4 rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-soft
                       ${isActive
-                        ? 'bg-primary text-primary-foreground border-primary shadow-lg ring-4 ring-primary/10'
-                        : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-soft'
+                        ? 'bg-primary text-primary-foreground border-primary shadow-premium ring-4 ring-primary/10'
+                        : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-premium'
                       }`}
                   >
                     <div className="flex items-center gap-2.5 relative z-10">

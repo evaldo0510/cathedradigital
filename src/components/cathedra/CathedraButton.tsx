@@ -1,55 +1,42 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { motion, HTMLMotionProps } from "framer-motion";
-import { Slot } from "@radix-ui/react-slot";
+import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
-export interface ButtonProps extends HTMLMotionProps<"button"> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'default' | 'destructive' | 'link';
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'icon' | 'xs' | 'icon-xs';
+interface CathedraButtonProps extends HTMLMotionProps<"button"> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   icon?: React.ReactNode;
-  asChild?: boolean;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, icon, children, asChild = false, ...props }, ref) => {
-    const sizeMap: Record<string, string> = {
-      xs: 'px-4 h-9 text-[9px]',
-      sm: 'px-6 h-11 text-[10px]',
-      md: 'px-10 h-14 text-[11px]',
-      lg: 'px-12 h-16 text-[12px]',
-      xl: 'px-14 h-20 text-[14px]',
-      icon: 'h-11 w-11 p-0 flex items-center justify-center rounded-full',
-      'icon-xs': 'h-9 w-9 p-0 flex items-center justify-center rounded-full',
+const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
+  ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
+    const { settings } = useReadingSettings();
+    const sizeMap = {
+      sm: 'px-6 h-10 text-[9.5px]',
+      md: 'px-8 h-14 text-[10.5px]',
+      lg: 'px-10 h-16 text-[12px]',
+      xl: 'px-12 h-20 text-[14px]',
     };
 
-    const variantStyles: Record<string, string> = {
+    const variantStyles = {
       primary: 'btn-premium-primary',
-      default: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
-      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/70 hover:text-primary transition-all rounded-full px-8 py-4 font-bold uppercase tracking-[0.2em] text-[10px]',
-      destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-full font-bold uppercase tracking-widest text-[10px]',
-      link: 'text-primary underline-offset-4 hover:underline bg-transparent p-0 h-auto font-medium',
-    };
-
-    const Comp = asChild ? Slot : motion.button;
-    
-    // motion props only work on motion elements
-    const motionProps = asChild ? {} : {
-      whileTap: { scale: 0.96 }
+      ghost: 'bg-transparent hover:bg-primary/[0.02] text-primary/70 hover:text-primary transition-all rounded-full px-6 py-3 font-bold uppercase tracking-[0.2em] text-[10px]',
     };
 
     return (
-      <Comp
+      <motion.button
         ref={ref as any}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
         className={cn(
-          variantStyles[variant] || variantStyles.primary,
-          sizeMap[size] || sizeMap.md,
+          variantStyles[variant],
+          sizeMap[size],
           isLoading && 'opacity-70 cursor-wait',
           className
         )}
-        {...motionProps}
         {...(props as any)}
       >
         {isLoading ? (
@@ -60,11 +47,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {children}
           </>
         )}
-      </Comp>
+      </motion.button>
     );
   }
 );
 
-Button.displayName = "Button";
+CathedraButton.displayName = "CathedraButton";
 
-export { Button, Button as CathedraButton };
+export { CathedraButton };

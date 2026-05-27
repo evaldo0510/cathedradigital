@@ -15,7 +15,7 @@ describe('Supabase Client Environment', () => {
   });
 
   it('should initialize without errors when window is undefined (CI/SSR)', async () => {
-    // @ts-ignore
+    // @ts-ignore - testing missing window scenario
     delete global.window;
     
     const { supabase } = await import('../client');
@@ -24,11 +24,11 @@ describe('Supabase Client Environment', () => {
   });
 
   it('should use custom storage that handles missing localStorage safely', async () => {
-    // @ts-ignore
+    // @ts-ignore - testing missing window scenario
     delete global.window;
     
     const { supabase } = await import('../client');
-    // @ts-ignore - accessing private auth storage to verify it works
+    // @ts-expect-error - accessing private auth storage to verify it works
     const storage = supabase.auth.storage;
     
     expect(() => storage.getItem('test')).not.toThrow();

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { Button   } from '@/components/cathedra/Button';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { fetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { toast } from 'sonner';
@@ -148,7 +148,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
       animate={{ opacity: 1, scale: 1 }}
       className="reader-text bg-muted/30 border border-border rounded-[2rem] p-8 text-center space-y-6 my-10"
     >
-      <div className="mx-auto w-16 h-16 rounded-premium-sm bg-primary/5 flex items-center justify-center border border-primary/10">
+      <div className="mx-auto w-16 h-16 rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
         <Icons.WifiOff className="w-8 h-8 text-primary/40" />
       </div>
 

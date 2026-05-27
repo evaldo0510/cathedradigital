@@ -1,8 +1,8 @@
-import { Button   } from '@/components/cathedra/Button';
-import React, { useState, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SearchResult {
   bookAbbrev: string;
@@ -12,17 +12,24 @@ interface SearchResult {
   text: string;
 }
 
+const RESULTS_PER_PAGE = 10;
+
 const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(RESULTS_PER_PAGE);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  const isBibleRoute = useMemo(() => pathname.startsWith('/bible'), [pathname]);
 
   const doSearch = useCallback(async () => {
     if (query.trim().length < 2) return;
     setLoading(true);
     setSearched(true);
+    setVisibleCount(RESULTS_PER_PAGE);
     try {
       const { data, error } = await supabase.functions.invoke('bible-search', {
         body: { query: query.trim() },
@@ -36,8 +43,14 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   }, [query]);
 
+  const loadMore = () => setVisibleCount(prev => prev + RESULTS_PER_PAGE);
+
   const goToVerse = (r: SearchResult) => {
-    navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}`);
+    if (isBibleRoute) {
+      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`, { replace: true });
+    } else {
+      navigate(`/bible?book=${r.bookAbbrev}&ch=${r.chapter}&v=${r.verse}`);
+    }
     onClose();
   };
 
@@ -67,7 +80,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       {loading && (
         <div className="space-y-2 py-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-16 bg-muted rounded-premium-sm animate-pulse" />
+            <div key={i} className="h-16 bg-muted rounded-premium animate-pulse" />
           ))}
         </div>
       )}
@@ -80,7 +93,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <div className="space-y-1">
           <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
-            {results.map((r, i) => (
+            {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
                 className="w-full text-left p-3 rounded-full bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group">
                 <div className="flex items-center gap-2 mb-1">
@@ -97,6 +110,15 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 />
               </Button>
             ))}
+            {visibleCount < results.length && (
+              <Button 
+                onClick={loadMore}
+                variant="ghost" 
+                className="w-full text-xs font-bold uppercase tracking-widest text-primary/40 hover:text-primary py-6"
+              >
+                Carregar mais resultados
+              </Button>
+            )}
           </div>
         </div>
       )}
