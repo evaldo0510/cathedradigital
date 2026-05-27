@@ -291,9 +291,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <div className={`w-1 h-1 rounded-full ${history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20'}`} />
+                  <div className={`w-1 h-1 rounded-full ${
+                    settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
+                  }`} />
                   <span className="text-[7px] font-black uppercase tracking-widest text-primary/20">
-                    {history.length > 0 ? 'Histórico Ativo' : 'Estado de Silêncio'}
+                    {settings.totalSilence ? 'Modo Silêncio Ativo' : (history.length > 0 ? 'Histórico Ativo' : 'Estado de Silêncio')}
                   </span>
                 </div>
               </div>
