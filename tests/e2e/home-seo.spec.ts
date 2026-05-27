@@ -159,8 +159,15 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     // 3. Schema.org / Structured Data Validation
     const scripts = await page.locator('script[type="application/ld+json"]').all();
     if (scripts.length === 0) {
-      auditResults.schema.push({ status: 'critical', message: 'No Schema.org (JSON-LD) found. Critical for search snippets.' });
+      auditResults.schema.push({ 
+        status: 'critical', 
+        message: 'No Schema.org (JSON-LD) found.',
+        suggestion: 'Adicione scripts JSON-LD para ajudar o Google a entender o conteúdo e exibir Rich Snippets.'
+      });
     } else {
+      let foundWebSite = false;
+      let foundOrganization = false;
+
       for (const script of scripts) {
         const content = await script.textContent();
         try {
@@ -168,17 +175,29 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
           if (!json['@context'] || !json['@type']) {
             auditResults.schema.push({ status: 'critical', message: 'Invalid Schema.org structure: missing @context or @type.' });
           } else {
-            auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
+            if (json['@type'] === 'WebSite') foundWebSite = true;
+            if (json['@type'] === 'Organization') foundOrganization = true;
             
-            // Specific check for WebSite schema
-            if (json['@type'] === 'WebSite') {
-              if (!json.name) auditResults.schema.push({ status: 'warning', message: 'WebSite schema missing "name".' });
-              if (!json.url) auditResults.schema.push({ status: 'critical', message: 'WebSite schema missing "url".' });
-            }
+            auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
           }
         } catch (e) {
           auditResults.schema.push({ status: 'critical', message: 'Malformed JSON-LD script (Syntax Error).' });
         }
+      }
+
+      if (!foundWebSite) {
+        auditResults.schema.push({ 
+          status: 'critical', 
+          message: 'WebSite Schema.org is missing.',
+          suggestion: 'Adicione o script WebSite JSON-LD no SEOHead para habilitar a Sitelinks Search Box.'
+        });
+      }
+      if (!foundOrganization) {
+        auditResults.schema.push({ 
+          status: 'warning', 
+          message: 'Organization Schema.org is missing.',
+          suggestion: 'Adicione o script Organization JSON-LD para melhorar o Knowledge Graph da marca.'
+        });
       }
     }
 

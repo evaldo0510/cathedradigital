@@ -110,6 +110,30 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
   const globalSchema = seoSettings?.json_ld_schema;
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": siteTitle,
+    "url": BASE_URL,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": `${BASE_URL}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Cathedra Digital",
+    "url": BASE_URL,
+    "logo": "https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/logo-cathedra.png",
+    "sameAs": [
+      "https://instagram.com/cathedradigital",
+      "https://twitter.com/cathedradigital"
+    ]
+  };
+
   const localBusinessLD = seoSettings?.business_name ? {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -182,6 +206,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta name="twitter:image" content={displayImage} />
       <meta name="twitter:image:alt" content={displayTitle} />
 
+
+      <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
 
       {breadcrumbLD && (
         <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
