@@ -12,7 +12,39 @@ serve(async (req) => {
   }
 
   try {
-    const { query, context, selectedText, type, history } = await req.json()
+    const rawBody = await req.json().catch(() => ({}));
+
+    const sanitizeText = (val: unknown, maxLen: number): string => {
+      if (typeof val !== 'string') return '';
+      return val
+        .replace(/[\u0000-\u001F\u007F]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, maxLen);
+    };
+
+    const ALLOWED_TYPES = new Set(['bible', 'catechism', 'magisterium', 'general', 'lectio', 'study']);
+    const rawType = typeof rawBody.type === 'string' ? rawBody.type.toLowerCase().trim() : 'general';
+    const type = ALLOWED_TYPES.has(rawType) ? rawType : 'general';
+
+    const query = sanitizeText(rawBody.query, 2000);
+    const context = sanitizeText(rawBody.context, 2000);
+    const selectedText = sanitizeText(rawBody.selectedText, 2000);
+
+    // History: only keep recent valid user/assistant turns with sanitized content
+    const ALLOWED_ROLES = new Set(['user', 'assistant']);
+    const history = Array.isArray(rawBody.history)
+      ? rawBody.history
+          .slice(-20)
+          .filter((m: any) => m && ALLOWED_ROLES.has(m.role) && typeof m.content === 'string')
+          .map((m: any) => ({ role: m.role, content: sanitizeText(m.content, 2000) }))
+      : [];
+
+    if (!query) {
+      return new Response(JSON.stringify({ error: "Pergunta vazia." }), {
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY')
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
