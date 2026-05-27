@@ -108,8 +108,7 @@ describe('HeroSection Advanced Validation', () => {
     const primaryBtn = screen.getByLabelText(/Continuar leitura/i);
     
     // Verify primary button has high contrast classes
-    expect(primaryBtn).toHaveClass('bg-primary');
-    expect(primaryBtn).toHaveClass('text-primary-foreground');
+    expect(primaryBtn).toHaveClass('btn-premium-primary');
   });
 
   it('renders correctly across mobile and desktop breakpoints (Snapshot)', () => {
