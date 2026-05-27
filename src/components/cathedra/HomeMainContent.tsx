@@ -69,7 +69,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="mb-12 md:mb-24"
         />
-        <div className="premium-card p-4 md:p-8">
+        <div className="premium-card responsive-padding">
           <RitualDoDia />
         </div>
       </section>
@@ -83,7 +83,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="mb-8 md:mb-14"
           />
-          <div className="flex-1 premium-card-interactive p-6 md:p-10">
+          <div className="flex-1 premium-card-interactive responsive-padding">
             <ReadingProgressSection />
           </div>
         </section>
@@ -101,7 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             className="flex-1 p-8 md:p-14 flex flex-col items-center justify-center gap-10 md:gap-12 group"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.02] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.02] group-hover:text-primary/25 transition-all duration-1000">
+            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
@@ -119,7 +119,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/10"
+                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/20"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
                 <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-primary/10 group-hover/input:text-primary/20 transition-colors" />
@@ -142,7 +142,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="mb-12 md:mb-24"
         />
-        <div className="premium-card p-4 md:p-14">
+        <div className="premium-card responsive-padding md:p-20">
           <HomeMainDoors t={t} />
         </div>
       </section>
