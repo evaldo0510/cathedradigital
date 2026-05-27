@@ -3,15 +3,17 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi } from 'vitest';
-import { MotionConfig } from 'framer-motion';
+import { ReadingSettingsProvider } from '../../../../contexts/ReadingSettingsContext';
 
 describe('HeroSection Accessibility and Hierarchy', () => {
   const renderHero = () => {
     return render(
       <HelmetProvider>
-        <BrowserRouter>
-          <HeroSection onStart={() => {}} />
-        </BrowserRouter>
+        <ReadingSettingsProvider>
+          <BrowserRouter>
+            <HeroSection onStart={() => {}} />
+          </BrowserRouter>
+        </ReadingSettingsProvider>
       </HelmetProvider>
     );
   };
@@ -30,8 +32,8 @@ describe('HeroSection Accessibility and Hierarchy', () => {
 
   it('contains proper landmarks', () => {
     renderHero();
-    // Should be wrapped in a section
-    expect(screen.getByRole('region', { name: /Cathedra Digital/i })).toBeInTheDocument();
+    // Should be wrapped in a section with an accessible label
+    expect(screen.getByLabelText(/Cathedra Digital - Introdução/i)).toBeInTheDocument();
   });
 
   it('has accessible CTAs with labels', () => {
