@@ -27,6 +27,7 @@ interface RelatioProps {
   onNavigateToBible?: (abbr: string, chapter: number) => void;
   onNavigateToCIC?: (paragraph: number) => void;
   onNavigateToDoc?: (docId: string) => void;
+  onSelectLogosQuery?: (prompt: string) => void;
   className?: string;
 }
 
