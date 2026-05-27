@@ -307,19 +307,20 @@ const RitualDoDia: React.FC = () => {
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-6 md:space-y-8 max-w-3xl mx-auto text-center">
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
-            <div 
+          <section className="space-y-6 md:space-y-8 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+            <h4 id="meditatio-heading" className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">II. Meditatio</h4>
+            <button 
               className={cn(
-                "group cursor-pointer transition-all duration-1000",
-                progress >= 50 ? 'opacity-20 scale-[0.98]' : 'opacity-100'
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                progress >= 50 ? 'opacity-30 scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(50)}
+              aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-lg md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5 px-4">
+              <p className="text-lg md:text-3xl leading-relaxed text-foreground/50 font-serif italic selection:bg-primary/5 px-4">
                 {ritual.reflection}
               </p>
-            </div>
+            </button>
           </section>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
