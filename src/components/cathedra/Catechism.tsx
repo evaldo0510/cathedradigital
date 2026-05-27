@@ -635,43 +635,41 @@ const Catechism: React.FC = () => {
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
-                  paragraph: currentParagraph
-                });
-              }}
-              onAddNote={() => {
-                const note = prompt('Sua reflexão sobre este parágrafo:');
-                if (note) {
-                  addNote(currentParagraph.toString(), note, 'yellow', {
+                if (activeHighlight) {
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
+                    setActiveHighlight(null);
+                  });
+                } else {
+                  addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
                     paragraph: currentParagraph
                   });
+                }
+              }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteChapterNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
+              onAddNote={() => {
+                if (currentParagraph || activeHighlight) {
+                  setIsNoteModalOpen(true);
+                } else {
+                  toast.info('Clique em um parágrafo primeiro para anotar.');
                 }
               }}
             />
 
-            <ReadingProgress 
-              progress={readingProgress}
-              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
-              onResumeLast={() => navigate(lastReadMark.url)}
-              label={`Catecismo §${currentParagraph}`}
-            />
-            
-            <TextSelectionToolbar 
-              onHighlight={(color) => {
-                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
-                  paragraph: currentParagraph
-                });
-              }}
-              onAddNote={() => {
-                const note = prompt('Sua reflexão sobre este parágrafo:');
-                if (note) {
-                  addNote(currentParagraph.toString(), note, 'yellow', {
-                    paragraph: currentParagraph
-                  });
-                }
-              }}
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 
