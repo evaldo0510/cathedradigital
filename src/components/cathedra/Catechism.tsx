@@ -725,10 +725,10 @@ const Catechism: React.FC = () => {
 
         <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
           {/* Elegant Side Navigation for paragraphs (Desktop) */}
-          <aside className="reader-navigation-aside">
+          <aside className="reader-navigation-aside space-y-12">
             <div className="space-y-4">
               <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
-              <nav className="flex flex-col gap-1 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
+              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
                 {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <button
                     key={p}
@@ -747,6 +747,34 @@ const Catechism: React.FC = () => {
                 ))}
               </nav>
             </div>
+
+            {currentChapterNotes.length > 0 && (
+              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Reflexões</p>
+                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                  {currentChapterNotes.map(note => (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (note.paragraph) jumpToParagraph(note.paragraph);
+                      }}
+                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">§{note.paragraph}</span>
+                        {note.highlight_color && (
+                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                        )}
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        {note.note_text === 'Destacado para meditação' ? 'Destaque sem nota' : note.note_text}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
