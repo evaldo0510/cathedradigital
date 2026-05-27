@@ -614,7 +614,7 @@ const Catechism: React.FC = () => {
 
         </div>
 
-        <div className="flex flex-col xl:flex-row gap-12 items-start mt-12">
+        <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
           {/* Elegant Side Navigation for paragraphs (Desktop) */}
           <aside className="reader-navigation-aside">
             <div className="space-y-4">
@@ -640,9 +640,9 @@ const Catechism: React.FC = () => {
             </div>
           </aside>
 
-          <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
-            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] relative transition-all duration-1000">
-              <div className="p-8 md:p-16">
+          <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
+            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
+              <div className="p-8 md:p-20 lg:p-24">
 
                 <div className="space-y-16">
                   {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (

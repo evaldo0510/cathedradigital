@@ -126,9 +126,9 @@
   }
 
   /* Spacing and Contrast Settings */
-  [data-line-spacing="tight"] .reader-text { line-height: 1.4 !important; }
-  [data-line-spacing="normal"] .reader-text { line-height: 1.85 !important; }
-  [data-line-spacing="wide"] .reader-text { line-height: 2.2 !important; }
+  [data-line-spacing="tight"] .reader-text { line-height: 1.6 !important; }
+  [data-line-spacing="normal"] .reader-text { line-height: 2.1 !important; }
+  [data-line-spacing="wide"] .reader-text { line-height: 2.4 !important; }
 
   [data-letter-spacing="tight"] .reader-text { letter-spacing: -0.02em !important; }
   [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
@@ -382,9 +382,23 @@
     font-variant-numeric: oldstyle-nums;
     font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
     text-rendering: optimizeLegibility;
-    line-height: 1.85;
-    letter-spacing: 0.015em;
+    line-height: 2;
+    letter-spacing: 0.01em;
+    font-size: 1.2rem;
   }
+
+  @screen md {
+    .reader-text {
+      font-size: 1.35rem;
+      line-height: 2.1;
+      letter-spacing: 0.015em;
+    }
+  }
+
+  .font-size-small .reader-text { font-size: 1.1rem !important; }
+  .font-size-medium .reader-text { font-size: 1.35rem !important; }
+  .font-size-large .reader-text { font-size: 1.6rem !important; }
+  .font-size-extra-large .reader-text { font-size: 1.9rem !important; }
 
   /* Specific Reader Container */
   .reader-container {

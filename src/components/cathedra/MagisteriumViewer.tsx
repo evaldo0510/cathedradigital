@@ -252,7 +252,7 @@ const MagisteriumViewer: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-12 items-start">
+      <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
         {/* Elegant side navigation for documents can be implemented if the text has anchors. 
             For now, we'll keep the side column for balance and potential future TOC. */}
         <aside className="reader-navigation-aside">
