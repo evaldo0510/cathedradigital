@@ -61,7 +61,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 lg:px-20 outline-none" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 lg:px-20 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <h2 className="sr-only">Destaques e Ritual</h2>
