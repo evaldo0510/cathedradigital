@@ -109,7 +109,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             </div>
             
             <div className="relative z-10 space-y-5 text-center">
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/60 tracking-tight">Logos</h3>
+              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
               <p className="text-xs md:text-sm text-muted-foreground/20 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
