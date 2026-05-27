@@ -1,4 +1,5 @@
-import { test, expect, chromium } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { playAudit } from 'playwright-lighthouse';
