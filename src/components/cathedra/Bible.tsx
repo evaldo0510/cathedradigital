@@ -37,6 +37,8 @@ import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import { ReadingProgress } from './ReadingProgress';
+import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes } from '@/hooks/useNotes';
 
@@ -121,7 +123,8 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   useRenderPerf('Bible', 15);
-  useReadingAutoHide();
+  const { settings, updateSettings } = useReadingSettings();
+  useReadingAutoHide(settings.visualSilence);
   const navigate = useNavigate();
 
   useAutoFocus();
@@ -151,7 +154,8 @@ const Bible: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
-  const { notes: chapterNotes, deleteNote: deleteChapterNote } = useNotes('bible');
+  const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('bible');
+  const [readingProgress, setReadingProgress] = useState(0);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
@@ -510,6 +514,23 @@ const Bible: React.FC = () => {
   }, [viewMode, isLoading, verses.length]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      if (viewMode !== 'reading' || verses.length === 0) return;
+      
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (window.scrollY / totalHeight) * 100;
+      setReadingProgress(Math.min(100, Math.max(0, progress)));
+      
+      // Persist scroll for resumption
+      if (Math.abs(window.scrollY - parseInt(localStorage.getItem('cathedra_last_bible_scroll') || '0')) > 100) {
+        localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [viewMode, verses.length]);
+
+  useEffect(() => {
 
     if (viewMode === 'reading' && selectedBook && selectedChapter > 0) {
       const cacheKey = `${selectedBook.abbr}_${selectedChapter}`;
@@ -810,6 +831,42 @@ const Bible: React.FC = () => {
                                 url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
                                 is_last_read: true
                               });
+                            }} className="flex-1 cursor-pointer">
+                              <p className="leading-relaxed">
+                                {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
+                                  <span className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1`}>
+                                    {v.text}
+                                  </span>
+                                )}
+                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && v.text}
+                              </p>
+                              
+                              {/* Inline Notes display */}
+                              {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
+                                <div key={note.id} className="mt-3 p-4 bg-secondary/5 border-l-2 border-secondary rounded-r-xl text-[13px] italic text-muted-foreground group/note relative">
+                                  <div className="flex items-center gap-2 mb-1.5 opacity-40">
+                                    <FileText className="w-3 h-3" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Minha Reflexão</span>
+                                  </div>
+                                  {note.note_text}
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
+                                    className="absolute top-2 right-2 opacity-0 group-hover/note:opacity-100 transition-opacity p-1 hover:text-destructive"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                              saveLastRead({
+                                content_type: 'bible',
+                                content_id: selectedBook.abbr,
+                                chapter: selectedChapter,
+                                position: vNum,
+                                label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
+                                url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
+                                is_last_read: true
+                              });
                             }}>
                               <span className="cursor-pointer">{v.text}</span>
                               {relatedP && (
@@ -832,6 +889,43 @@ const Bible: React.FC = () => {
                 )}
               </div>
             </div>
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                if (highlightedVerse) {
+                  addNote(selectedBook.abbr, 'Destacado para meditação', color, {
+                    book_abbr: selectedBook.abbr,
+                    chapter: selectedChapter,
+                    verse: highlightedVerse
+                  });
+                } else {
+                  toast.info('Clique em um versículo primeiro para destacar.');
+                }
+              }}
+              onAddNote={() => {
+                if (highlightedVerse) {
+                  // This is handled by a prompt for now, or opens a sidebar
+                  const note = prompt('Sua reflexão sobre este versículo:');
+                  if (note) {
+                    addNote(selectedBook.abbr, note, 'yellow', {
+                      book_abbr: selectedBook.abbr,
+                      chapter: selectedChapter,
+                      verse: highlightedVerse
+                    });
+                  }
+                } else {
+                  toast.info('Clique em um versículo primeiro para anotar.');
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={`${selectedBook.name} ${selectedChapter}`}
+            />
 
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
