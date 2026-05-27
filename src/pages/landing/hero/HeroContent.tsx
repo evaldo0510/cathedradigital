@@ -91,7 +91,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
       >
         <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full px-6">
           <HomeButton
-            size="xl"
+            size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
             className="w-full md:w-auto min-w-[280px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
@@ -101,7 +101,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           </HomeButton>
           
           <HomeButton
-            size="xl"
+            size="lg"
             variant="primary"
             onClick={onStart}
             className="w-full md:w-auto min-w-[280px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-24 shadow-2xl shadow-primary/10 uppercase tracking-[0.6em] text-[11px] font-black group overflow-hidden relative"
@@ -112,7 +112,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           </HomeButton>
 
           <HomeButton
-            size="xl"
+            size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
             className="w-full md:w-auto min-w-[280px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
