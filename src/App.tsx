@@ -288,12 +288,18 @@ const AppLayout: React.FC = () => {
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
+              <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
+              <Route path="/biblia" element={<Navigate to="/bible" replace />} />
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
+              <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
+              <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
+              <Route path="/search" element={<Navigate to="/buscar" replace />} />
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
