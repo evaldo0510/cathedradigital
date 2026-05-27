@@ -61,10 +61,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                  <Icons.ChevronLeft className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
@@ -72,20 +72,23 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 variant="outline"
                 size="icon"
                 onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label={t('search') || 'Buscar'}
               >
-                <Icons.Search className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                <Icons.Search className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
               </Button>
 
               <Button
                 variant="outline"
                 size="icon"
                 onClick={onToggleDark}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
               >
-                {isDark ? <Icons.Sun className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" /> : <Icons.Moon className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />}
+                {isDark ? 
+                  <Icons.Sun className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" /> : 
+                  <Icons.Moon className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
+                }
               </Button>
 
               {user ? (
@@ -93,19 +96,19 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(AppRoute.PROFILE)}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.02]"
                   aria-label={t('profile') || 'Meu Perfil'}
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
                   ) : (
-                    <Icons.User className="w-5 h-5 opacity-70" />
+                    <Icons.User className="w-[18px] h-[18px] opacity-50" />
                   )}
                 </Button>
               ) : (
                 <Button 
                   onClick={() => navigate(AppRoute.LOGIN)} 
-                  className="btn-premium-primary h-10 px-5 md:px-6 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary"
+                  className="h-11 px-6 rounded-full text-[9px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-lg shadow-primary/5"
                 >
                   {t('enter')}
                 </Button>
@@ -115,10 +118,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 variant="outline"
                 size="icon"
                 onClick={onOpenSidebar}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label="Abrir menu lateral"
               >
-                <Icons.Menu className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                <Icons.Menu className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
               </Button>
             </div>
 
