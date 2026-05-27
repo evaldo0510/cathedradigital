@@ -497,6 +497,21 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <div className="text-[10px] text-muted-foreground mt-1">Ideal: 120-160 chars</div>
                             </div>
                           </div>
+                          
+                          {(page.status === 'missing' || !page.title || !page.description) && (
+                            <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                              <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                <AlertCircle className="w-3.5 h-3.5" /> Sugestões de Melhoria
+                              </h4>
+                              <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-1 list-disc pl-4">
+                                {!page.title && <li>O título está ausente. Use o componente SEOHead para definir um título único.</li>}
+                                {page.title && (page.title.length + 18) > 60 && <li>O título está muito longo e será cortado no Google. Reduza para menos de 60 caracteres.</li>}
+                                {!page.description && <li>A descrição está ausente. Adicione uma meta descrição de 120-160 caracteres para melhorar o CTR.</li>}
+                                {page.description && page.description.length < 120 && <li>A descrição está curta demais. Tente ser mais persuasivo.</li>}
+                                {!page.metaTags?.ogImage && <li>Imagem Open Graph não detectada. Redes sociais usarão o fallback padrão.</li>}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </div>
 
