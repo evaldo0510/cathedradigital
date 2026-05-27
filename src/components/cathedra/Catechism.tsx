@@ -641,7 +641,7 @@ const Catechism: React.FC = () => {
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
-            <div className="reader-container bg-card/30 backdrop-blur-sm border border-border/5 shadow-premium overflow-hidden rounded-3xl relative transition-all duration-1000">
+            <div className="reader-container bg-card/40 backdrop-blur-md border border-primary/[0.04] overflow-hidden rounded-[2.5rem] relative transition-all duration-1000">
               <div className="p-8 md:p-16">
 
                 <div className="space-y-16">
@@ -787,7 +787,7 @@ const Catechism: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <span className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.5em]">{part.part}</span>
-                <h2 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h2>
+                <h3 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h3>
                 <p className="text-sm text-muted-foreground/40 font-serif italic">{part.sections.length} seções doutrinárias</p>
               </div>
             </motion.button>

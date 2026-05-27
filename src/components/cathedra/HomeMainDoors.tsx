@@ -1,3 +1,4 @@
+/* Headings structure: h2 used for section titles in HomeMainContent, h3 for card group titles, h4 for individual cards */
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -90,16 +91,16 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="premium-card-interactive p-10 md:p-14 lg:p-20 flex flex-col items-center text-center gap-10 md:gap-14 focus-visible:ring-primary/40 group border-primary/5 shadow-premium"
+          className="premium-card-interactive p-10 md:p-14 lg:p-20 flex flex-col items-center text-center gap-10 md:gap-14 focus-visible:ring-primary/40 group border-primary/5"
         >
-          <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/30 group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.03]">
+          <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/40 group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.03]">
             <door.icon className="w-8 h-8" strokeWidth={0.5} />
           </div>
           <div className="space-y-6">
-            <h3 className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/20 group-hover:text-primary/40 transition-colors duration-700">
+            <h4 className="text-[9px] font-bold uppercase tracking-[0.5em] text-primary/40 group-hover:text-primary/60 transition-colors duration-700">
               {door.label}
-            </h3>
-            <p className="text-[12px] text-muted-foreground/20 font-serif italic tracking-wider group-hover:text-muted-foreground/40 transition-colors duration-700 leading-relaxed max-w-[160px]">
+            </h4>
+            <p className="text-[12px] text-muted-foreground/30 font-serif italic tracking-wider group-hover:text-muted-foreground/50 transition-colors duration-700 leading-relaxed max-w-[160px]">
               {door.description}
             </p>
           </div>
