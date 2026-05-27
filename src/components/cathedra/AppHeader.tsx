@@ -30,7 +30,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
+        className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
         role="banner"
       >
         <div className="max-w-[var(--layout-max-width)] mx-auto px-6 md:px-14 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[180px] md:h-36 py-12 md:py-0 gap-12 md:gap-0 landscape:min-h-[110px] landscape:py-5">

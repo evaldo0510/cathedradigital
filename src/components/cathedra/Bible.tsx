@@ -36,6 +36,11 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import ChapterNotesList from './ChapterNotesList';
+import { useNotes } from '@/hooks/useNotes';
+
+
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -116,7 +121,9 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   useRenderPerf('Bible', 15);
+  useReadingAutoHide();
   const navigate = useNavigate();
+
   useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
@@ -144,7 +151,15 @@ const Bible: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
+  const { notes: chapterNotes, deleteNote: deleteChapterNote } = useNotes('bible');
+  
+  const currentChapterNotes = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return [];
+    return chapterNotes.filter(n => n.book_abbr === selectedBook.abbr && n.chapter === selectedChapter);
+  }, [chapterNotes, selectedBook, selectedChapter]);
+
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
 
 
   // Track chapters read
@@ -821,31 +836,45 @@ const Bible: React.FC = () => {
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
             {!isLoading && !bibleError && (
-              <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
-                <Relatio 
-                  context={{
-                    type: 'bible',
-                    id: `bible-${selectedBook.abbr}-${selectedChapter}`,
-                    abbr: selectedBook.abbr,
-                    chapter: selectedChapter,
-                    tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
-                  }}
-                  onNavigateToBible={(abbr, ch) => {
-                    const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
-                      .flatMap(cat => cat.books)
-                      .find(b => b.abbr === abbr);
-                    if (book) {
-                      setSelectedBook(book);
-                      setSelectedChapter(ch);
-                      setViewMode('reading');
-                      window.scrollTo(0, 0);
+              <>
+                <ChapterNotesList 
+                  notes={currentChapterNotes} 
+                  onDeleteNote={deleteChapterNote}
+                  onNoteClick={(note) => {
+                    if (note.verse) {
+                      const el = document.getElementById(`v${note.verse}`);
+                      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                   }}
-                  onNavigateToCIC={handleNavigateToCIC}
-                  onNavigateToDoc={handleNavigateToDoc}
                 />
-              </div>
+                
+                <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
+                  <Relatio 
+                    context={{
+                      type: 'bible',
+                      id: `bible-${selectedBook.abbr}-${selectedChapter}`,
+                      abbr: selectedBook.abbr,
+                      chapter: selectedChapter,
+                      tags: [selectedBook.name, 'Biblia', 'Escritura', 'Palavra de Deus']
+                    }}
+                    onNavigateToBible={(abbr, ch) => {
+                      const book = BIBLE_CATEGORIES['Antigo Testamento'].concat(BIBLE_CATEGORIES['Novo Testamento'])
+                        .flatMap(cat => cat.books)
+                        .find(b => b.abbr === abbr);
+                      if (book) {
+                        setSelectedBook(book);
+                        setSelectedChapter(ch);
+                        setViewMode('reading');
+                        window.scrollTo(0, 0);
+                      }
+                    }}
+                    onNavigateToCIC={handleNavigateToCIC}
+                    onNavigateToDoc={handleNavigateToDoc}
+                  />
+                </div>
+              </>
             )}
+
 
 
 

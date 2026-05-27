@@ -14,12 +14,18 @@ import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import Relatio from './Relatio';
-
+import ChapterNotesList from './ChapterNotesList';
+import { useNotes } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+
+
 
 const MagisteriumViewer: React.FC = () => {
+  useReadingAutoHide();
   const { id } = useParams<{ id: string }>();
+
   const [searchParams] = useSearchParams();
   const highlight = searchParams.get('highlight') || searchParams.get('text');
   const navigate = useNavigate();
@@ -32,6 +38,13 @@ const MagisteriumViewer: React.FC = () => {
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { notes: docNotes, deleteNote: deleteDocNote } = useNotes('magisterium');
+  
+  const currentDocNotes = useMemo(() => {
+    if (!id) return [];
+    return docNotes.filter(n => n.content_id.startsWith(id));
+  }, [docNotes, id]);
+
 
   useEffect(() => {
     const fetchLastRead = async () => {
@@ -296,7 +309,13 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {content && (
-        <div className="w-full max-w-[72ch] mx-auto mb-12">
+        <div className="w-full max-w-[72ch] mx-auto mb-12 space-y-12">
+          <ChapterNotesList 
+            notes={currentDocNotes} 
+            onDeleteNote={deleteDocNote}
+            title="Minhas Notas neste Documento"
+          />
+
           <Relatio 
             context={{
               type: 'magisterium',
@@ -309,6 +328,7 @@ const MagisteriumViewer: React.FC = () => {
           />
         </div>
       )}
+
 
       <div className="mt-12 flex justify-center">
         <Button 

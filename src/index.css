@@ -126,6 +126,22 @@
   }
 
   /* Spacing and Contrast Settings */
+  .header-reading-auto-hide {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bottom-nav-reading-auto-hide {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reading-scroll-down .header-reading-auto-hide {
+    transform: translateY(-100%);
+  }
+
+  .reading-scroll-down .bottom-nav-reading-auto-hide {
+    transform: translateY(100%);
+  }
+
   [data-line-spacing="tight"] .reader-text { line-height: 1.6 !important; }
   [data-line-spacing="normal"] .reader-text { line-height: 2.1 !important; }
   [data-line-spacing="wide"] .reader-text { line-height: 2.4 !important; }

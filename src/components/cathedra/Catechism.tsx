@@ -34,6 +34,11 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import ChapterNotesList from './ChapterNotesList';
+import { useNotes } from '@/hooks/useNotes';
+
+
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
@@ -242,7 +247,9 @@ type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
   useRenderPerf('Catechism', 15);
+  useReadingAutoHide();
   const navigate = useNavigate();
+
   useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
@@ -264,6 +271,16 @@ const Catechism: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
+  const { notes: chapterNotes, deleteNote: deleteChapterNote } = useNotes('catechism');
+  
+  const currentChapterNotes = useMemo(() => {
+    if (!selectedSection) return [];
+    return chapterNotes.filter(n => {
+      const p = n.paragraph || 0;
+      return p >= selectedSection.paragraphs[0] && p <= selectedSection.paragraphs[1];
+    });
+  }, [chapterNotes, selectedSection]);
+
 
   useEffect(() => {
     const handleOpenAI = (e: any) => {
@@ -660,22 +677,35 @@ const Catechism: React.FC = () => {
               </div>
             </div>
 
-            {/* Relatio: Intelligent Contextual Connections */}
-            {showCrossRefs && (
-              <div className="w-full max-w-[72ch] mx-auto">
-                <Relatio 
-                  context={{
-                    type: 'catechism',
-                    id: `catechism-${currentParagraph}`,
-                    paragraph: currentParagraph,
-                    tags: CATECHISM_LOCAL_DATA[currentParagraph]?.tags || ['Catecismo', 'Doutrina', 'Igreja']
-                  }}
-                  onNavigateToBible={handleNavigateToBible}
-                  onNavigateToCIC={(p) => setCurrentParagraph(p)}
-                  onNavigateToDoc={handleNavigateToDoc}
-                />
-              </div>
-            )}
+            <div className="space-y-12">
+              <ChapterNotesList 
+                notes={currentChapterNotes} 
+                onDeleteNote={deleteChapterNote}
+                onNoteClick={(note) => {
+                  if (note.paragraph) {
+                    jumpToParagraph(note.paragraph);
+                  }
+                }}
+              />
+
+              {/* Relatio: Intelligent Contextual Connections */}
+              {showCrossRefs && (
+                <div className="w-full max-w-[72ch] mx-auto">
+                  <Relatio 
+                    context={{
+                      type: 'catechism',
+                      id: `catechism-${currentParagraph}`,
+                      paragraph: currentParagraph,
+                      tags: CATECHISM_LOCAL_DATA[currentParagraph]?.tags || ['Catecismo', 'Doutrina', 'Igreja']
+                    }}
+                    onNavigateToBible={handleNavigateToBible}
+                    onNavigateToCIC={(p) => setCurrentParagraph(p)}
+                    onNavigateToDoc={handleNavigateToDoc}
+                  />
+                </div>
+              )}
+            </div>
+
 
             
             {showLogosAI && (
