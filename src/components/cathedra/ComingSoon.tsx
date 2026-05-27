@@ -147,5 +147,3 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
     </div>
   );
 };
-  );
-};
