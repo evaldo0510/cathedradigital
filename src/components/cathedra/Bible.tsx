@@ -486,13 +486,20 @@ const Bible: React.FC = () => {
       if (e.key === 'ArrowRight') navigateChapter(1);
       
       // Accessibility: Reading shortcuts
-      if (viewMode === 'reading' && highlightedVerse && !isNoteModalOpen) {
+      if (viewMode === 'reading' && !isNoteModalOpen) {
         if (e.key.toLowerCase() === 'h') {
-          // Default highlight
-          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          if (highlightedVerse) {
+            handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
+          }
         }
         if (e.key.toLowerCase() === 'n') {
-          setIsNoteModalOpen(true);
+          if (highlightedVerse) {
+            setIsNoteModalOpen(true);
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
+          }
         }
         if (e.key === 'Escape') {
           setHighlightedVerse(null);
