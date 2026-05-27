@@ -36,6 +36,7 @@ const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsP
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
+import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 
 const queryClient = new QueryClient({
   defaultOptions: {
