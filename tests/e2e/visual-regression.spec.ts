@@ -17,6 +17,7 @@ const ROUTES = [
 ];
 
 const VIEWPORTS = [
+  { name: 'desktop-premium', width: 1800, height: 1080 },
   { name: 'desktop', width: 1280, height: 720 },
   { name: 'mobile', width: 375, height: 667 },
   { name: 'tablet', width: 768, height: 1024 },
@@ -88,4 +89,45 @@ test.describe('Visual Regression & WCAG AAA Audit', () => {
       });
     }
   }
+
+  test('Premium Layout Zoom & High Contrast Validation', async ({ page }) => {
+    const viewport = { width: 1800, height: 1080 };
+    await page.setViewportSize(viewport);
+    
+    // Simulate high contrast mode if possible (via emulating media features)
+    await page.emulateMedia({ forcedColors: 'active' });
+    
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // 1. Accessibility Check for Contrast
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2aa', 'wcag2aaa'])
+      .analyze();
+    
+    expect(accessibilityScanResults.violations).toEqual([]);
+
+    // 2. Simulate 200% Zoom (Browser zoom affects layout scale)
+    // In Playwright, we can simulate zoom by scaling the viewport while keeping the same resolution
+    // or by evaluating a script to set zoom, but better is to just check responsiveness at smaller widths 
+    // which mimic zoom effects on layout.
+    await page.setViewportSize({ width: 900, height: 540 }); // Equivalent to 200% zoom on 1800px
+    await page.goto('/');
+    
+    // Ensure critical elements like Hero and Navigation don't overlap or break
+    const heroTitle = page.locator('h1');
+    await expect(heroTitle).toBeVisible();
+    
+    const nav = page.locator('nav');
+    if (await nav.isVisible()) {
+      const box = await nav.boundingBox();
+      expect(box?.height).toBeGreaterThan(0);
+    }
+    
+    // Final Visual Snapshot for Zoom/Contrast
+    await expect(page).toHaveScreenshot('home-premium-high-contrast-zoom.png', {
+      fullPage: true,
+      maxDiffPixelRatio: 0.05,
+    });
+  });
 });

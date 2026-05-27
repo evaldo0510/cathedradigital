@@ -64,25 +64,38 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       }
       expect(accessibilityScanResults.violations).toEqual([]);
 
-      // 3. Skip Link Functionality
+      // 3. Skip Link Functionality & Anchoring
       const skipLink = page.locator('a[href="#main-content"]');
       await expect(skipLink).toBeAttached();
       
-      // Reset focus
-      await page.mouse.click(0, 0);
+      // Reset focus to top
+      await page.keyboard.press('Home');
       await page.keyboard.press('Tab');
       
-      // Skip link should be focused first
+      // Skip link should be focused first and visible
       const isSkipLinkFocused = await skipLink.evaluate(el => document.activeElement === el);
       expect(isSkipLinkFocused).toBeTruthy();
+      
+      // Verify skip link has visible focus styling
+      const skipLinkStyle = await skipLink.evaluate(el => ({
+        opacity: window.getComputedStyle(el).opacity,
+        clip: window.getComputedStyle(el).clip,
+      }));
+      expect(parseFloat(skipLinkStyle.opacity)).toBeGreaterThan(0);
       
       // Press Enter to activate skip link
       await page.keyboard.press('Enter');
       
       // Main content should be focused (it should have tabIndex={-1})
       const mainContent = page.locator('#main-content');
-      const isMainFocused = await mainContent.evaluate(el => document.activeElement === el);
-      expect(isMainFocused).toBeTruthy();
+      await expect(mainContent).toBeFocused();
+      
+      // Verify scroll position (anchoring)
+      const isScrolledToMain = await mainContent.evaluate(el => {
+        const rect = el.getBoundingClientRect();
+        return rect.top >= 0 && rect.top <= 100;
+      });
+      expect(isScrolledToMain).toBeTruthy();
 
       // 4. Focus Order
       await page.keyboard.press('Home');

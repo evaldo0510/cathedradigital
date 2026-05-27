@@ -58,11 +58,11 @@ const Index = () => {
       <LandingHeader />
       
       <SEOHead
-        title="Portal de Espiritualidade Minimalista"
-        description="Aprofunde sua fé com a Sagrada Escritura, Catecismo e Magistério. Use a Logos IA para resumos teológicos e siga sua Leitura Diária com progresso persistente no portal espiritual inteligente."
+        title="Portal Premium de Espiritualidade & Teologia"
+        description="Aprofunde sua fé com uma experiência cinematográfica e contemplativa. Bíblia Sagrada, Catecismo, Magistério e IA Teológica em uma plataforma sofisticada e minimalista para a vida espiritual moderna."
         path="/"
-        keywords="bíblia católica, catecismo online, magistério da igreja, leitura diária, logos ia, espiritualidade minimalista, portal católico premium"
-        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png"
+        keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, cathedra digital"
+        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-premium-home.png"
         breadcrumbs={[
           { name: "Home", path: "/" }
         ]}
