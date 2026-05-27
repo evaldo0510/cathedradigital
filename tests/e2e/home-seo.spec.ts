@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { playAudit } from 'playwright-lighthouse';
+import { SEO_CONFIG } from '../../src/config/seo';
 
 /**
  * Enhanced SEO, Schema.org, Social Cards and Lighthouse Performance Audit for Home Page
