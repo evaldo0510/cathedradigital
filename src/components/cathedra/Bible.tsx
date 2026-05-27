@@ -37,6 +37,10 @@ import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import ChapterNotesList from './ChapterNotesList';
+import { useNotes } from '@/hooks/useNotes';
+
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 
 
 type BibleBook = { name: string; abbr: string; chapters: number };
@@ -148,7 +152,15 @@ const Bible: React.FC = () => {
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
+  const { notes: chapterNotes, deleteNote: deleteChapterNote } = useNotes('bible');
+  
+  const currentChapterNotes = useMemo(() => {
+    if (!selectedBook || !selectedChapter) return [];
+    return chapterNotes.filter(n => n.book_abbr === selectedBook.abbr && n.chapter === selectedChapter);
+  }, [chapterNotes, selectedBook, selectedChapter]);
+
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
+
 
 
   // Track chapters read
