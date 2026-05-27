@@ -864,6 +864,7 @@ const Bible: React.FC = () => {
                       key={note.id}
                       onClick={() => {
                         if (note.verse) {
+                          setHighlightedVerse(note.verse);
                           const el = document.getElementById(`v${note.verse}`);
                           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
