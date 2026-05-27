@@ -70,11 +70,11 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       />
       <div ref={ref} className="space-y-12">
         <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="w-16 h-16 rounded-premium bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+          <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
             <Icons.Search className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold font-serif text-foreground">Logos IA</h1>
-          <p className="text-muted-foreground font-serif italic text-lg max-w-lg mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
+          <p className="text-muted-foreground font-serif italic text-lg max-w-lg mx-auto leading-relaxed">
             "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
