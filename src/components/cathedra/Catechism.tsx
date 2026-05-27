@@ -211,7 +211,16 @@ const CatechismContent: React.FC<{
   );
 };
 
-const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; paragraphsRead: Set<number>; isFavorite: (type: string, title: string) => boolean; toggleFavorite: (item: any) => void; handleNavigateToBible: (abbr: string, chapter: number) => void }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible }) => {
+const LazyParagraph: React.FC<{ 
+  paragraph: number; 
+  currentParagraph: number; 
+  paragraphsRead: Set<number>; 
+  isFavorite: (type: string, title: string) => boolean; 
+  toggleFavorite: (item: any) => void; 
+  handleNavigateToBible: (abbr: string, chapter: number) => void;
+  onHighlightClick?: (note: UserNote) => void;
+  highlights?: UserNote[];
+}> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, highlights = [] }) => {
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
