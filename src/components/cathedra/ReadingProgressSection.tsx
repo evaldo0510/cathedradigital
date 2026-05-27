@@ -34,7 +34,7 @@ export const ReadingProgressSection: React.FC = () => {
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
                 </span>
               </div>
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/80 tracking-tight leading-tight">
+              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight leading-tight">
                 {lastRead.label || 'Continuar de onde parou'}
               </h3>
             </div>
