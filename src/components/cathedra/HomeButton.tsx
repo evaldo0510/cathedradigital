@@ -38,7 +38,7 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
         ref={ref}
         variant={vMap[variant as string] || 'primary'}
         size={size === 'lg' ? 'lg' : (sMap[size as string] || 'md')}
-        className={cn(className, "text-[10px] sm:text-[11px] font-black uppercase tracking-[0.4em] rounded-full transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]")}
+        className={cn(className, "text-[10px] md:text-[12px] font-bold uppercase tracking-[0.5em] md:tracking-[0.6em] rounded-full transition-all duration-1000 hover:scale-[1.02] active:scale-[0.98]")}
 
         {...(filteredProps as any)}
       >
