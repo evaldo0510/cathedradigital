@@ -269,7 +269,20 @@ const Magisterium: React.FC = () => {
         title="Magistério da Igreja | Cathedra" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
         path="/magisterium"
+        type="collection"
       />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Magistério da Igreja Católica",
+          "description": "Coleção de encíclicas, constituições e documentos oficiais da Igreja.",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Cathedra Digital"
+          }
+        })}
+      </script>
 
       <div className="space-y-24">
         {/* Filters */}
