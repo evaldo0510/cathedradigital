@@ -497,8 +497,8 @@ const Bible: React.FC = () => {
 
   useEffect(() => {
     if (viewMode === 'reading' && !isLoading && verses.length > 0) {
-      const savedScroll = localStorage.getItem('cathedra_last_bible_scroll');
-      const savedVerse = localStorage.getItem('cathedra_last_bible_verse');
+      const savedScroll = localStorage.getItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`);
+      const savedVerse = localStorage.getItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`);
       
       // Better resume: only if no specific verse in URL
       if (!searchParams.get('v') && !searchParams.get('verse')) {
