@@ -38,7 +38,7 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, UserNote } from '@/hooks/useNotes';
 
 
 
