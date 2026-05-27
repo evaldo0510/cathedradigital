@@ -28,11 +28,23 @@ function getClientIP(req: Request): string {
     ?? "unknown";
 }
 
+async function logSecurityEvent(supabase: any, event: { type: string, severity: string, description: string, metadata?: any }) {
+  console.log(`[SECURITY ${event.severity.toUpperCase()}] ${event.type}: ${event.description}`);
+  try {
+    await supabase.from("security_audit_logs").insert({
+      event_type: event.type,
+      severity: event.severity,
+      description: event.description,
+      metadata: event.metadata || {}
+    });
+  } catch (err) {
+    console.error("Failed to log security event:", err);
+  }
+}
 
 /**
  * Intelligent Notifications Edge Function.
  * Triggers based on inactivity, reflections, and progress.
- * Now with context (last action) and ignore logic.
  */
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -48,7 +60,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Abuse protection: limit body size to 2KB
     const contentLength = parseInt(req.headers.get("content-length") || "0");
     if (contentLength > 2048) {
       return new Response(
@@ -57,11 +68,11 @@ Deno.serve(async (req) => {
       );
     }
 
-
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Require service-role bearer or X-Cron-Secret — cron-only endpoint
+    // Auth check
     const authHeader = req.headers.get("authorization") || "";
     const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
     const cronSecret = Deno.env.get("CRON_SECRET") || "";
@@ -69,24 +80,23 @@ Deno.serve(async (req) => {
     const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
     const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
     if (!isServiceRole && !isCronSecret) {
-      return new Response(
-        JSON.stringify({ error: "Forbidden" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      await logSecurityEvent(supabase, {
+        type: "UNAUTHORIZED_ACCESS",
+        severity: "critical",
+        description: `Unauthorized attempt to call intelligent-notifications from IP: ${clientIP}`,
+        metadata: { ip: clientIP }
+      });
+      return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
     }
 
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
-
     const now = new Date();
-    const todayStr = now.toISOString().split("T")[0];
 
     // Get all users who haven't been notified today and have push/whatsapp enabled
-    // and weren't notified in the last 20 hours to be safe
     const { data: usersToNotify } = await supabase
       .from("profiles")
       .select("id, name, whatsapp_number, whatsapp_enabled, push_enabled, last_action_at, last_notified_at")
       .or(`last_notified_at.is.null,last_notified_at.lt.${now.toISOString().split('T')[0]}T00:00:00Z`)
-      .limit(50); // Process in batches to avoid timeout
+      .limit(50);
 
     if (!usersToNotify || usersToNotify.length === 0) {
       return new Response(JSON.stringify({ message: "No users to notify today" }), {
@@ -101,7 +111,6 @@ Deno.serve(async (req) => {
       const lastAction = user.last_action_at ? new Date(user.last_action_at) : null;
       const hoursSinceAction = lastAction ? (now.getTime() - lastAction.getTime()) / (1000 * 60 * 60) : 999;
 
-      // 1. Check "Ignore" logic: max 3 notifications without user returning
       if (user.last_notified_at && lastAction && new Date(user.last_notified_at) > lastAction) {
         const { count: ignoredCount } = await supabase
           .from("intelligent_notification_logs")
@@ -109,14 +118,12 @@ Deno.serve(async (req) => {
           .eq("user_id", user.id)
           .gt("sent_at", user.last_action_at);
         
-        // If 3 ignored, wait at least 7 days before trying again (unless they come back)
         if (ignoredCount && ignoredCount >= 3) {
           const daysSinceLastNotify = (now.getTime() - new Date(user.last_notified_at).getTime()) / (1000 * 60 * 60 * 24);
           if (daysSinceLastNotify < 7) continue;
         }
       }
 
-      // 2. Get Context (Last activity)
       const { data: lastHistory } = await supabase
         .from("user_history")
         .select("title, route")
@@ -131,7 +138,6 @@ Deno.serve(async (req) => {
       let title: string = "";
       let message: string = "";
 
-      // 3. Determine Notification Type
       if (hoursSinceAction >= 48 && hoursSinceAction < 72) {
         type = "inactivity_48h";
         title = "🕊️ Algo especial...";
@@ -143,19 +149,14 @@ Deno.serve(async (req) => {
         message = `${firstName}, algo ficou aberto dentro de você...`;
       }
       else if (hoursSinceAction < 1) {
-        // Special case: post-reflection (sent shortly after they finish something, but this function runs daily)
-        // This might be better triggered by a direct hook, but we include it here for manual runs or specific timing.
         type = "post_reflection";
         title = "🌱 Continue assim";
         message = `${firstName}, você começou algo importante hoje... continue.`;
       }
-      else {
-        // Progress check (10% chance)
-        if (Math.random() < 0.1) {
-          type = "progress";
-          title = "✨ Reconhecimento";
-          message = `${firstName}, você avançou mais do que percebe.`;
-        }
+      else if (Math.random() < 0.1) {
+        type = "progress";
+        title = "✨ Reconhecimento";
+        message = `${firstName}, você avançou mais do que percebe.`;
       }
 
       if (type) {
@@ -163,7 +164,6 @@ Deno.serve(async (req) => {
         let sentPush = false;
         let sentWhatsapp = false;
 
-        // --- Send Push ---
         if (user.push_enabled) {
           try {
             const pushRes = await fetch(`${supabaseUrl}/functions/v1/send-push`, {
@@ -185,7 +185,6 @@ Deno.serve(async (req) => {
           }
         }
 
-        // --- Send WhatsApp ---
         if (user.whatsapp_enabled && user.whatsapp_number) {
           const waUrl = Deno.env.get("WHATSAPP_API_URL");
           const waToken = Deno.env.get("WHATSAPP_API_TOKEN");
@@ -209,14 +208,12 @@ Deno.serve(async (req) => {
               console.error(`Failed to send WhatsApp to ${user.whatsapp_number}:`, e);
             }
           } else {
-            // Log as sent in dev mode/placeholder if no credentials
             console.log(`[WA Placeholder] To: ${user.whatsapp_number} - Msg: ${fullMessage}`);
             sentWhatsapp = true;
           }
         }
 
         if (sentPush || sentWhatsapp) {
-          // Log notification
           await supabase.from("intelligent_notification_logs").insert({
             user_id: user.id,
             type,
@@ -226,7 +223,6 @@ Deno.serve(async (req) => {
             metadata: { last_route: lastHistory?.route }
           });
 
-          // Update last_notified_at
           await supabase
             .from("profiles")
             .update({ last_notified_at: now.toISOString() })
