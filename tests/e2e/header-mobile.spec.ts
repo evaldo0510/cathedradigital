@@ -190,6 +190,14 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       .withRules(['color-contrast'])
       .analyze();
     
+    const zoomReportName = 'axe-header-zoom-contrast.json';
+    const zoomReportPath = path.join(reportDir, zoomReportName);
+    fs.writeFileSync(zoomReportPath, JSON.stringify(accessibilityScanResults, null, 2));
+    await test.info().attach('Axe Zoom/Contrast Report', {
+      path: zoomReportPath,
+      contentType: 'application/json',
+    });
+
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
