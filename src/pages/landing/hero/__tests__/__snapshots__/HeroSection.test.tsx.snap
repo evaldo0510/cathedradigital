@@ -43,19 +43,19 @@ exports[`HeroSection Advanced Validation > renders correctly across mobile and d
     >
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(80.95209129248411%) translateY(67.99348180048715%);"
+        style="opacity: 0; transform: translateX(12%) translateY(20%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(89.40665853317655%) translateY(88.04036907464636%);"
+        style="opacity: 0; transform: translateX(37%) translateY(35%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(6.7179121539545195%) translateY(77.86988551895865%);"
+        style="opacity: 0; transform: translateX(62%) translateY(50%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(52.57825127508946%) translateY(21.276370371103525%);"
+        style="opacity: 0; transform: translateX(87%) translateY(65%);"
       />
     </div>
     <div
@@ -212,19 +212,19 @@ exports[`HeroSection Advanced Validation > renders correctly across mobile and d
     >
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(78.89741951942872%) translateY(85.05397211448134%);"
+        style="opacity: 0; transform: translateX(12%) translateY(20%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(6.588491766825966%) translateY(88.272765701026%);"
+        style="opacity: 0; transform: translateX(37%) translateY(35%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(34.57346560224912%) translateY(59.89556473728239%);"
+        style="opacity: 0; transform: translateX(62%) translateY(50%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(92.90202555597872%) translateY(33.63061386362733%);"
+        style="opacity: 0; transform: translateX(87%) translateY(65%);"
       />
     </div>
     <div
@@ -381,19 +381,19 @@ exports[`HeroSection Advanced Validation > respects prefers-reduced-motion in ru
     >
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(96.90144575192494%) translateY(53.68801822159095%);"
+        style="opacity: 0; transform: translateX(12%) translateY(20%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(2.7811714134744703%) translateY(15.679942229332845%);"
+        style="opacity: 0; transform: translateX(37%) translateY(35%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(92.24535056639138%) translateY(38.39171858669093%);"
+        style="opacity: 0; transform: translateX(62%) translateY(50%);"
       />
       <div
         class="absolute w-px h-px bg-primary/40 rounded-full"
-        style="opacity: 0; transform: translateX(28.280944932019402%) translateY(19.145359180450594%);"
+        style="opacity: 0; transform: translateX(87%) translateY(65%);"
       />
     </div>
     <div
