@@ -101,13 +101,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             className="flex-1 p-8 md:p-14 flex flex-col items-center justify-center gap-10 md:gap-12 group"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
+            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.02] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.02] group-hover:text-primary/25 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
-            <div className="relative z-10 space-y-4 md:space-y-5 text-center">
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
-              <p className="text-xs md:text-sm text-muted-foreground/30 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
+            <div className="relative z-10 space-y-5 text-center">
+              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/60 tracking-tight">Logos</h3>
+              <p className="text-xs md:text-sm text-muted-foreground/20 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
             </div>
