@@ -378,8 +378,8 @@ const Catechism: React.FC = () => {
             const p = parseInt(entry.target.id.replace('p', ''));
             if (!isNaN(p)) {
               setCurrentParagraph(p);
-              localStorage.setItem('cathedra_last_catechism_para', p.toString());
-              localStorage.setItem('cathedra_last_catechism_scroll', window.scrollY.toString());
+              localStorage.setItem(`cathedra_last_catechism_para_CIC`, p.toString());
+              localStorage.setItem(`cathedra_last_catechism_scroll_CIC`, window.scrollY.toString());
               
               // Auto-save progress
               saveLastRead({
@@ -413,8 +413,8 @@ const Catechism: React.FC = () => {
   // Auto-restore scroll on first load
   useEffect(() => {
     if (viewMode === 'reading' && selectedSection && selectedPart) {
-      const savedScroll = localStorage.getItem('cathedra_last_catechism_scroll');
-      const savedPara = localStorage.getItem('cathedra_last_catechism_para');
+      const savedScroll = localStorage.getItem(`cathedra_last_catechism_scroll_CIC`);
+      const savedPara = localStorage.getItem(`cathedra_last_catechism_para_CIC`);
       
       if (savedScroll && savedPara && !searchParams.get('p')) {
         const para = parseInt(savedPara);
