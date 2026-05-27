@@ -69,7 +69,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="mb-12 md:mb-24"
         />
-        <div className="bg-card/5 backdrop-blur-sm rounded-[2.5rem] md:rounded-[3.5rem] p-3 md:p-8 border border-primary/[0.03] shadow-premium-sm ring-1 ring-primary/[0.01]">
+        <div className="premium-card p-4 md:p-8">
           <RitualDoDia />
         </div>
       </section>
