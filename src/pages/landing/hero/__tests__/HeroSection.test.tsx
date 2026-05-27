@@ -3,17 +3,24 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi } from 'vitest';
-import { ReadingSettingsProvider } from '../../../../contexts/ReadingSettingsContext';
+
+// Mock high-level contexts to avoid provider nesting issues
+vi.mock('@/hooks/useAuth', () => ({
+  useAuth: () => ({ user: null, profile: null, loading: false })
+}));
+
+vi.mock('@/contexts/ReadingSettingsContext', () => ({
+  useReadingSettings: () => ({ settings: { reduceAnimations: false } }),
+  ReadingSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
+}));
 
 describe('HeroSection Accessibility and Hierarchy', () => {
   const renderHero = () => {
     return render(
       <HelmetProvider>
-        <ReadingSettingsProvider>
-          <BrowserRouter>
-            <HeroSection onStart={() => {}} />
-          </BrowserRouter>
-        </ReadingSettingsProvider>
+        <BrowserRouter>
+          <HeroSection onStart={() => {}} />
+        </BrowserRouter>
       </HelmetProvider>
     );
   };
