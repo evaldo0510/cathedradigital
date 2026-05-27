@@ -67,7 +67,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                   <Icons.X className="w-3 h-3" />
                 </Button>
               )}
-            </div>
+            </button>
           ))}
         </div>
       </div>
