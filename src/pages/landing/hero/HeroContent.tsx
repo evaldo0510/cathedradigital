@@ -32,11 +32,11 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.8, ease: EASE }}
-        className="mb-16 md:mb-24"
+        className="mb-12 md:mb-16"
       >
-        <div className="flex flex-col items-center gap-6">
-          <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
-          <p className="text-[9px] font-medium uppercase tracking-[0.6em] text-primary/30 leading-none">
+        <div className="flex flex-col items-center gap-5">
+          <div className="w-px h-12 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+          <p className="text-[8px] sm:text-[9px] font-medium uppercase tracking-[0.6em] text-primary/40 leading-none">
             Sanctuarium Digitale
           </p>
         </div>
@@ -47,11 +47,11 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-14 md:mb-20"
+        className="mb-10 md:mb-12"
       >
-        <h1 className="text-5xl md:text-8xl lg:text-9xl font-display font-light text-primary leading-none tracking-[0.1em] uppercase">
+        <h2 className="text-6xl md:text-8xl lg:text-[10rem] font-display font-light text-primary leading-none tracking-[0.12em] uppercase">
           Cathedra
-        </h1>
+        </h2>
       </motion.div>
 
       {/* Description - Editorial Rhythm */}
@@ -60,10 +60,10 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.3 }}
-        className="max-w-2xl mx-auto font-serif text-lg md:text-2xl text-foreground/50 italic leading-relaxed mb-20 md:mb-32 tracking-wide"
+        className="max-w-xl mx-auto font-serif text-lg md:text-xl text-foreground/60 italic leading-relaxed mb-16 md:mb-20 tracking-wide px-6"
       >
         O silêncio que revela a Verdade. <br className="hidden md:block" />
-        Explore as fontes imutáveis da fé em uma experiência de leitura pura.
+        Habite as fontes imutáveis da fé em uma experiência de leitura pura.
       </motion.p>
 
       {/* CTAs - Sophisticated and Discreet */}
@@ -72,36 +72,45 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.5 }}
-        className="flex flex-col items-center gap-16 w-full"
+        className="flex flex-col items-center gap-12 w-full px-6"
       >
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 w-full max-w-2xl">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-5 md:gap-8 w-full max-w-4xl">
           <HomeButton
             size="lg"
             variant="primary"
             onClick={onStart}
-            className="w-full md:w-auto min-w-[240px] px-12"
-            aria-label="Entrar no santuário digital"
+            className="w-full sm:w-auto min-w-[220px]"
+            aria-label="Continuar leitura"
           >
-            Entrar no Santuário
+            Continuar Leitura
           </HomeButton>
           <HomeButton
             size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
-            className="w-full md:w-auto min-w-[240px] px-12"
-            aria-label="Explorar as Escrituras"
+            className="w-full sm:w-auto min-w-[220px]"
+            aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
+          </HomeButton>
+          <HomeButton
+            size="lg"
+            variant="ghost"
+            onClick={() => navigate('/jornadas')}
+            className="w-full sm:w-auto min-w-[220px] text-primary/60 hover:text-primary transition-colors"
+            aria-label="Iniciar jornada espiritual"
+          >
+            Iniciar Jornada
           </HomeButton>
         </div>
 
         {/* Elegant Minimal Signature */}
         <div className="flex items-center gap-4 opacity-10">
-          <span className="w-8 h-px bg-primary" />
-          <p className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary">
+          <span className="w-10 h-px bg-primary" />
+          <p className="text-[9px] font-bold uppercase tracking-[0.8em] text-primary translate-x-[0.4em]">
             Cathedra
           </p>
-          <span className="w-8 h-px bg-primary" />
+          <span className="w-10 h-px bg-primary" />
         </div>
       </motion.div>
     </motion.div>

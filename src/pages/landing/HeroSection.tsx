@@ -20,8 +20,12 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, 50]);
 
   return (
-    <section ref={heroRef} className="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background">
-      <h1 className="sr-only">Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital</h1>
+    <section 
+      ref={heroRef} 
+      className="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background"
+      aria-labelledby="hero-title"
+    >
+      <h1 id="hero-title" className="sr-only">Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital</h1>
       <HeroBackground bgY={heroY} />
       <HeroParticles />
       <HeroContent 
