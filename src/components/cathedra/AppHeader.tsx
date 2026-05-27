@@ -155,8 +155,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
         </div>
       </div>
-    </header>
-
+      </header>
+    </>
   );
 });
 
