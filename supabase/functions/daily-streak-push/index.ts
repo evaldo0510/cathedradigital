@@ -18,6 +18,26 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    // Require either the service-role bearer token (used by pg_cron / admin invocations)
+    // or a matching CRON_SECRET header. Reject all other callers.
+    const authHeader = req.headers.get("authorization") || "";
+    const providedBearer = authHeader.toLowerCase().startsWith("bearer ")
+      ? authHeader.slice(7).trim()
+      : "";
+    const cronSecretHeader = req.headers.get("x-cron-secret") || "";
+    const cronSecret = Deno.env.get("CRON_SECRET") || "";
+
+    const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
+    const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
+
+    if (!isServiceRole && !isCronSecret) {
+      return new Response(
+        JSON.stringify({ error: "Forbidden" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Get all users with push subscriptions
