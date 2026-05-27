@@ -543,7 +543,16 @@ const MagisteriumViewer: React.FC = () => {
             title="Minhas Notas neste Documento"
           />
 
+          <LogosContextualSuggestions
+            type="magisterium"
+            context={`Documento do Magistério: ${document.title}`}
+            onSelectSuggestion={(prompt) => {
+              setLogosAIInitialQuery(prompt);
+              setShowLogosAI(true);
+            }}
+          />
           <Relatio 
+
             context={{
               type: 'magisterium',
               id: id,
