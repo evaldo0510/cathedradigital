@@ -223,7 +223,7 @@ const BibliotecaPage: React.FC = () => {
                           handleNavigate(); 
                         }
                       }}
-                      className="cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-premium"
+                      className="group cursor-pointer h-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-premium"
                     >
                       <Card className="premium-card-interactive h-full overflow-hidden">
                         <CardContent className="p-5 flex items-center gap-5 h-full">
