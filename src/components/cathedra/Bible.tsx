@@ -161,6 +161,18 @@ const Bible: React.FC = () => {
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+
+  // Update history on route change
+  useEffect(() => {
+    const currentUrl = window.location.pathname + window.location.search;
+    setHistory(prev => {
+      if (prev[historyIndex] === currentUrl) return prev;
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(currentUrl);
+      setHistoryIndex(newHistory.length - 1);
+      return newHistory;
+    });
+  }, [location.pathname, location.search]);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
@@ -498,27 +510,27 @@ const Bible: React.FC = () => {
         e.preventDefault();
         navigateChapter(1);
       }
-      if (e.key.toLowerCase() === 'h') {
-        e.preventDefault();
-        if (highlightedVerse) {
-          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
-        } else {
-          toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
+        if (e.key.toLowerCase() === (settings.shortcuts?.highlight || 'h')) {
+          e.preventDefault();
+          if (highlightedVerse) {
+            handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
+          }
         }
-      }
-      if (e.key.toLowerCase() === 'n') {
-        e.preventDefault();
-        if (highlightedVerse) {
-          setIsNoteModalOpen(true);
-        } else {
-          toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
+        if (e.key.toLowerCase() === (settings.shortcuts?.note || 'n')) {
+          e.preventDefault();
+          if (highlightedVerse) {
+            setIsNoteModalOpen(true);
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
+          }
         }
-      }
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setHighlightedVerse(null);
-        setActiveHighlight(null);
-      }
+        if (e.key === (settings.shortcuts?.clear || 'Escape')) {
+          e.preventDefault();
+          setHighlightedVerse(null);
+          setActiveHighlight(null);
+        }
       // Progress navigation (Alt + Up/Down)
       if (e.altKey && e.key === 'ArrowUp') {
         e.preventDefault();
