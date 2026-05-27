@@ -172,7 +172,22 @@ const CatechismContent: React.FC<{
           />
         ) : (
           <ReactMarkdown key={i} components={{
-            p: (props) => <span>{props.children}</span>,
+            p: (props) => {
+              const text = typeof props.children === 'string' ? props.children : '';
+              const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
+              
+              if (h) {
+                return (
+                  <span 
+                    onClick={() => onHighlightClick?.(h)}
+                    className={`highlight-${h.highlight_color} px-1 rounded-sm cursor-pointer hover:brightness-95 transition-all`}
+                  >
+                    {props.children}
+                  </span>
+                );
+              }
+              return <span>{props.children}</span>;
+            },
           }}>{seg.value}</ReactMarkdown>
         )
       )}
