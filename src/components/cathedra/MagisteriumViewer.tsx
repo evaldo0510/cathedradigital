@@ -14,6 +14,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
+import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
