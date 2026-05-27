@@ -453,19 +453,31 @@ const Catechism: React.FC = () => {
       // Accessibility: Reading shortcuts
       if (currentParagraph) {
         if (e.key.toLowerCase() === 'h') {
+          e.preventDefault();
           handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
         }
         if (e.key.toLowerCase() === 'n') {
+          e.preventDefault();
           setIsNoteModalOpen(true);
         }
         if (e.key === 'Escape') {
+          e.preventDefault();
           setActiveHighlight(null);
+        }
+        // Progress navigation (Alt + Up/Down)
+        if (e.altKey && e.key === 'ArrowUp') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
+          e.preventDefault();
+          navigate(lastReadMark.url);
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [viewMode, currentParagraph, isNoteModalOpen, handleAddNoteOrHighlight]);
+  }, [viewMode, currentParagraph, isNoteModalOpen, handleAddNoteOrHighlight, lastReadMark, navigate]);
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
