@@ -2,15 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
-import { UserNote } from '@/hooks/useNotes';
 
 interface NoteEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (text: string, color: string) => void;
+  onDelete?: () => void;
   initialText?: string;
   initialColor?: string;
   title?: string;
+  isEditing?: boolean;
 }
 
 const COLORS = [
@@ -24,18 +25,22 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
   isOpen, 
   onClose, 
   onSave, 
+  onDelete,
   initialText = '', 
   initialColor = 'yellow',
-  title = "Minha Reflexão"
+  title = "Minha Reflexão",
+  isEditing = false
 }) => {
   const [text, setText] = useState(initialText);
   const [color, setColor] = useState(initialColor);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setText(initialText);
       setColor(initialColor);
+      setShowDeleteConfirm(false);
       setTimeout(() => textareaRef.current?.focus(), 200);
     }
   }, [isOpen, initialText, initialColor]);
@@ -108,20 +113,56 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                <p className="text-center text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest">Atalho: Ctrl + Enter para salvar</p>
             </div>
 
-            <div className="flex gap-4">
-              <Button 
-                variant="ghost" 
-                onClick={onClose}
-                className="flex-1 h-14 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-muted"
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={() => onSave(text, color)}
-                className="flex-2 h-14 bg-primary text-primary-foreground rounded-2xl px-12 text-[11px] font-bold uppercase tracking-widest shadow-premium hover:shadow-premium-hover transition-all"
-              >
-                Salvar Reflexão
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              {isEditing && onDelete && (
+                <div className="flex-1 flex gap-2">
+                  {!showDeleteConfirm ? (
+                    <Button 
+                      variant="ghost" 
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="flex-1 h-14 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-destructive hover:bg-destructive/5"
+                    >
+                      <Icons.Trash className="w-4 h-4 mr-2" />
+                      Excluir
+                    </Button>
+                  ) : (
+                    <>
+                      <Button 
+                        variant="ghost" 
+                        onClick={() => setShowDeleteConfirm(false)}
+                        className="flex-1 h-14 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
+                        Não
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        onClick={onDelete}
+                        className="flex-1 h-14 rounded-2xl text-[11px] font-bold uppercase tracking-widest"
+                      >
+                        Sim
+                      </Button>
+                    </>
+                  )}
+                </div>
+              )}
+              
+              {!showDeleteConfirm && (
+                <div className="flex-[2] flex gap-4">
+                  <Button 
+                    variant="ghost" 
+                    onClick={onClose}
+                    className="flex-1 h-14 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-muted-foreground hover:bg-muted"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    onClick={() => onSave(text, color)}
+                    className="flex-[1.5] h-14 bg-primary text-primary-foreground rounded-2xl px-8 text-[11px] font-bold uppercase tracking-widest shadow-premium hover:shadow-premium-hover transition-all"
+                  >
+                    {isEditing ? 'Atualizar' : 'Salvar'} Reflexão
+                  </Button>
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
