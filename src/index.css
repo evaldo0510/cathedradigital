@@ -498,16 +498,15 @@
   /* Standardized Vertical Rhythm - More spacious for monastic feel */
   .section-spacing {
     @apply py-24 sm:py-32 md:py-48 lg:py-64; 
+  }
 
   /* Responsive padding for sections */
   .responsive-padding {
     @apply p-8 sm:p-12 md:p-20 lg:p-32;
   }
-}
-
-  }
 
   .stack-spacing {
+
     @apply space-y-10 md:space-y-12 lg:space-y-16;
   }
   
