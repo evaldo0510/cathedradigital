@@ -294,7 +294,7 @@ const AppLayout: React.FC = () => {
 
               {/* Santos & Devoções */}
               <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
-              <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><SaintDetail /></Suspense>} />
+              <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
               <Route path="/papas" element={<Suspense fallback={<LoadingFallback />}><PopesPage /></Suspense>} />
               <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
               <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
