@@ -97,7 +97,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-3xl border-t border-primary/5 safe-area-bottom bottom-nav" aria-label={t('mobile_navigation') || 'Navegação móvel'}>
-      <div className="flex items-stretch h-20 px-4">
+      <div className="flex items-stretch h-24 px-6 gap-2">
         {items.map((item: any, i: number) => (
           <BottomNavItem 
             key={item.label + i}
