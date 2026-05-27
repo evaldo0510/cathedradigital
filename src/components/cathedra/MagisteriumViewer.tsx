@@ -580,8 +580,12 @@ const MagisteriumViewer: React.FC = () => {
         <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <LogosAI 
             isOpen={showLogosAI} 
-            onClose={() => setShowLogosAI(false)} 
+            onClose={() => {
+              setShowLogosAI(false);
+              setLogosAIInitialQuery('');
+            }} 
             context={`Documento do Magistério: ${content.title}`}
+            initialQuery={logosAIInitialQuery}
             type="magisterium"
             variant="integrated"
           />
