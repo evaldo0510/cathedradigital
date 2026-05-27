@@ -317,7 +317,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               Auditoria de SEO & Social
             </h1>
             <p className="text-muted-foreground text-lg">
-              Verifique a aparência, tags e cache das imagens Open Graph para cada rota.
+              Verifique a aparência, tags e cache das imagens Open Graph para cada rota principal.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
