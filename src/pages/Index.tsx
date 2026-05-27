@@ -77,7 +77,7 @@ const Index = () => {
 
       <HeroSection onStart={handleStart} />
 
-      <main className="w-full flex flex-col items-center outline-none">
+      <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
         <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
           <HomeMainContent 
             user={user} 
