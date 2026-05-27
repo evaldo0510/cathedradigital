@@ -493,7 +493,7 @@
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-10 sm:px-12 py-5 h-16 sm:h-18 font-medium uppercase tracking-[0.5em] text-[10px] sm:text-[11px] flex items-center justify-center gap-5 active:scale-[0.99] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-8 focus-visible:ring-offset-background;
+    @apply relative overflow-hidden px-10 sm:px-12 py-5 h-16 sm:h-20 font-medium uppercase tracking-[0.5em] text-[10px] sm:text-[11px] flex items-center justify-center gap-5 active:scale-[0.99] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-8 focus-visible:ring-offset-background;
     border-radius: 9999px;
     transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
