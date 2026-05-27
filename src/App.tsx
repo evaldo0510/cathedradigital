@@ -105,6 +105,8 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const DesignSystemPlayground = lazy(() => import('./components/cathedra/DesignSystemPlayground'));
+const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
+
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
