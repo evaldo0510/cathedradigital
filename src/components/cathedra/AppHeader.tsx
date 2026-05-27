@@ -122,9 +122,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={onOpenSidebar}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 lg:hidden"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group"
+            aria-label="Abrir menu lateral"
           >
-            <Icons.Menu className="w-5 h-5 opacity-40" />
+            <Icons.Menu className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
           </Button>
         </div>
       </div>

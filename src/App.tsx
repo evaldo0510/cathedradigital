@@ -250,6 +250,7 @@ const AppLayout: React.FC = () => {
         )}
         
         <CathedralSidebar 
+          isOpen={isSidebarOpen}
           user={authUserAdapter}
           onClose={handleCloseSidebar}
           isDark={isDark}
