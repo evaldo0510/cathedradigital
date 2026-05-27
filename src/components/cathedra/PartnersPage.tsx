@@ -46,7 +46,7 @@ const PartnersPage: React.FC = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPartners(data || []);
+      setPartners((data as unknown as Partner[]) || []);
     } catch (error) {
       console.error('Error fetching partners:', error);
     } finally {
