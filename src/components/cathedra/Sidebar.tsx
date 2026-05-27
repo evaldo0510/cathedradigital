@@ -89,8 +89,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     ...(user?.role === 'admin' ? [{
       label: t('admin'),
       items: [
-        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
-        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock className="w-5 h-5" /> },
+        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
+        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock className="w-5 h-5 opacity-70" /> },
+
       ]
 
     }] : []),
