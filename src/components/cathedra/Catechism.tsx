@@ -895,8 +895,7 @@ const Catechism: React.FC = () => {
             )}
           </aside>
 
-          <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
-              <div className={`w-full max-w-[75ch] mx-auto space-y-8 relative`}>
+          <div className={`flex-1 w-full max-w-[75ch] mx-auto space-y-8 relative`}>
                 {/* Visual Indicator for Keyboard Shortcuts */}
                 {settings.totalSilence && (
                   <motion.div 
