@@ -191,24 +191,24 @@ const RitualDoDia: React.FC = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       
-      <div className="relative z-10 p-8 md:p-14 lg:p-20 space-y-24">
+      <div className="relative z-10 p-6 md:p-14 lg:p-20 space-y-12 md:space-y-24">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-primary/[0.03] pb-20">
-          <div className="flex flex-col gap-6">
-            <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary/20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
+          <div className="flex flex-col gap-4 md:gap-6">
+            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.6em] text-primary/20">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-6 md:gap-8">
               {progress > 0 && (
-                <div className="flex items-center gap-5">
-                  <div className="h-1 w-32 bg-primary/[0.02] rounded-full overflow-hidden">
+                <div className="flex items-center gap-4 md:gap-5">
+                  <div className="h-1 w-24 md:w-32 bg-primary/[0.02] rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
                       className="h-full bg-primary/10"
                     />
                   </div>
-                  <span className="text-[8px] font-bold text-primary/20 uppercase tracking-[0.5em]">{progress}%</span>
+                  <span className="text-[7px] md:text-[8px] font-bold text-primary/20 uppercase tracking-[0.5em]">{progress}%</span>
                 </div>
               )}
             </div>
