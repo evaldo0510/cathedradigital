@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '../../constants';
 import { Button } from '@/components/ui/button';
@@ -128,7 +128,23 @@ const InnerFreedomBook: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row relative">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row relative print:bg-white print:text-black">
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          aside, footer, .md\\:hidden { display: none !important; }
+          main { width: 100% !important; padding: 0 !important; margin: 0 !important; }
+          .max-w-2xl { max-w-none !important; width: 100% !important; }
+          h2 { font-size: 32pt !important; margin-top: 50pt !important; }
+          p { font-size: 12pt !important; line-height: 1.6 !important; }
+          blockquote { font-size: 18pt !important; border-left: 2pt solid #000; padding-left: 20pt !important; }
+          .page-break { page-break-before: always; }
+          @page {
+            size: 15.5cm 23cm;
+            margin: 2cm;
+          }
+        }
+      `}</style>
       {/* Navigation Sidebar */}
       <aside className="hidden md:flex w-72 border-r border-border/10 p-8 flex-col gap-8 sticky top-20 h-[calc(100vh-80px)]">
         <div className="space-y-2">
