@@ -313,6 +313,7 @@ const Catechism: React.FC = () => {
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
