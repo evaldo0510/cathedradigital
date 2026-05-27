@@ -265,7 +265,13 @@ const LazyParagraph: React.FC<{
         </div>
         <div className="h-px flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
+      <CatechismContent 
+        paragraph={p} 
+        onNavigateToBible={handleNavigateToBible} 
+        isVisible={isVisible} 
+        onHighlightClick={onHighlightClick}
+        highlights={highlights}
+      />
 
       <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
         <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
