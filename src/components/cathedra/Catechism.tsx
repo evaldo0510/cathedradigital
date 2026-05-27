@@ -837,20 +837,32 @@ const Catechism: React.FC = () => {
           </Button>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {selectedPart.sections.map(sec => (
-              <motion.button 
-                key={sec.id} 
-                whileHover={{ x: 8 }}
-                onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-                className="text-left p-10 md:p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-6"
-              >
-                <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h2>
-                  <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
-                </div>
-              </motion.button>
-            ))}
+            {selectedPart.sections.map(sec => {
+              const isLastReadSection = lastReadMark?.content_id === 'CIC' && lastReadMark?.paragraph >= sec.paragraphs[0] && lastReadMark?.paragraph <= sec.paragraphs[1];
+              
+              return (
+                <motion.button 
+                  key={sec.id} 
+                  whileHover={{ x: 8 }}
+                  onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
+                  className={`text-left p-10 md:p-12 rounded-premium bg-card border transition-all group flex flex-col gap-6 relative
+                    ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : 'border-primary/[0.03] hover:border-primary/10'}`}
+                >
+                  <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">
+                    Seção {sec.id} {isLastReadSection && '• Ponto Salvo'}
+                  </span>
+                  <div className="space-y-2">
+                    <h2 className={`text-2xl font-display font-medium group-hover:text-secondary transition-colors ${isLastReadSection ? 'text-secondary' : 'text-primary'}`}>{sec.title}</h2>
+                    <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
+                  </div>
+                  {isLastReadSection && (
+                    <span className="absolute top-4 right-8 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse">
+                      Retomar Leitura
+                    </span>
+                  )}
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </ContemplativeLayout>
