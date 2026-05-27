@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
+import bookDataRaw from '../../data/evaldo-poeta-book.json';
 
 interface Chapter {
   title: string;
@@ -25,26 +26,11 @@ const InnerFreedomBook: React.FC = () => {
   const [bookData, setBookData] = useState<{ parts: Part[] } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Placeholder data until subagent finishes
-  const placeholderData: { parts: Part[] } = {
-    parts: [
-      {
-        title: "PARTE 1 — AS PRIMEIRAS GRADES",
-        chapters: [
-          {
-            title: "O Espelho do Quilombo",
-            content: "Lembro-me do silêncio que gritava na comunidade quilombola onde nasci. A Bahia, com seu sol que arde mas não purifica as feridas da alma, foi o cenário das minhas primeiras grades invisíveis. O bullying não era apenas uma palavra moderna; era o ar que eu respirava, carregado de vergonha por uma aparência que eu não escolhi, mas que o mundo insistia em julgar.",
-            poetry: "Grades de carne e osso,\nOnde o grito é mudo e o medo é poço.\nNasci livre por fora,\nMas prisioneiro da própria aurora."
-          }
-        ]
-      }
-    ]
-  };
-
+  // Use imported data
   useEffect(() => {
-    // In a real scenario, we'd fetch the generated JSON here
-    // For now, use placeholder or wait for subagent
-    setBookData(placeholderData);
+    if (bookDataRaw) {
+      setBookData(bookDataRaw as { parts: Part[] });
+    }
   }, []);
 
   const totalChapters = bookData?.parts.reduce((acc, part) => acc + part.chapters.length, 0) || 0;
