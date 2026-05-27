@@ -2,29 +2,33 @@ import { motion } from "framer-motion";
 
 const HeroParticles = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20 mix-blend-screen">
-      {[...Array(8)].map((_, i) => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
+      {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-[1px] h-[1px] bg-primary/40 rounded-full"
+          className="absolute w-px h-px bg-primary/20 rounded-full"
           initial={{ 
             x: Math.random() * 100 + "%", 
             y: Math.random() * 100 + "%",
-            opacity: Math.random() * 0.1 
+            opacity: 0 
           }}
           animate={{ 
-            y: [null, Math.random() * -50, Math.random() * 50],
-            opacity: [0.05, 0.2, 0.05] 
+            y: [null, "-20%", "20%"],
+            opacity: [0, 0.15, 0],
+            scale: [1, 1.5, 1]
           }}
           transition={{ 
-            duration: 30 + Math.random() * 30, 
+            duration: 40 + Math.random() * 40, 
             repeat: Infinity, 
-            ease: "linear" 
+            ease: "easeInOut",
+            delay: Math.random() * 20
           }}
         />
       ))}
     </div>
   );
 };
+
+export default HeroParticles;
 
 export default HeroParticles;

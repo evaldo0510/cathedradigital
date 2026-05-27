@@ -9,20 +9,23 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     {/* Cinematic base layer */}
     <div className="absolute inset-0 bg-background" />
     
-    {/* Subtle texture/image layer */}
+    {/* Atmospheric Texture - Library/Monastic feel */}
     <img
-      src="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=2000"
+      src="https://images.unsplash.com/photo-1549492423-400259a2e574?auto=format&fit=crop&q=80&w=2000"
       alt="" aria-hidden="true"
-      className="w-full h-full object-cover opacity-[0.01] grayscale scale-100"
+      className="w-full h-full object-cover opacity-[0.03] grayscale transition-opacity duration-1000"
       loading="eager"
     />
 
-    {/* Elegant light vignettes */}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,transparent_0%,hsl(var(--background))_80%)] opacity-60" />
+    {/* Soft Monastic Lighting */}
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,transparent_0%,hsl(var(--background))_85%)] opacity-80" />
+    <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,hsl(var(--background))_100%)] opacity-40" />
     
-    {/* Deep bottom transition */}
-    <div className="absolute bottom-0 left-0 right-0 h-[50vh] bg-gradient-to-t from-background via-background/80 to-transparent" />
+    {/* Subtle Inner Glow */}
+    <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.02)]" />
   </motion.div>
 );
+
+export default HeroBackground;
 
 export default HeroBackground;
