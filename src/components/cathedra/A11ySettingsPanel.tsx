@@ -159,6 +159,33 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
               </section>
 
+              <section className="space-y-6 pt-4">
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Sugestões Logos IA</h3>
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-2">
+                    {(['always', 'first_selection', 'never'] as const).map((mode) => (
+                      <button
+                        key={mode}
+                        onClick={() => updateSettings({ logosSuggestions: mode })}
+                        className={`flex items-center justify-between p-4 rounded-premium border transition-all ${
+                          settings.logosSuggestions === mode 
+                            ? 'bg-primary/5 border-primary/20 text-primary' 
+                            : 'bg-card border-border/10 text-muted-foreground hover:bg-muted/30'
+                        }`}
+                      >
+                        <span className="text-xs font-bold uppercase tracking-widest">
+                          {mode === 'always' ? 'Sempre Exibir' : mode === 'first_selection' ? 'Apenas na Primeira' : 'Nunca Exibir'}
+                        </span>
+                        {settings.logosSuggestions === mode && <Icons.Check className="w-4 h-4" />}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed italic px-1">
+                    Controla o surgimento das sugestões contextuais durante a leitura.
+                  </p>
+                </div>
+              </section>
+
               <section className="space-y-4 pt-4">
                 <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
                 <div className="p-4 rounded-premium bg-primary/5 border border-primary/10 space-y-3">

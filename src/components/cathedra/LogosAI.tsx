@@ -31,16 +31,27 @@ const LogosAI: React.FC<LogosAIProps> = ({
   useRenderPerf('LogosAI', 15);
   const { settings } = useReadingSettings();
   const [query, setQuery] = useState('');
-  const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>(() => {
+    if (variant === 'integrated' && context) {
+      const saved = localStorage.getItem(`logos_history_${context}`);
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
   const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
   const chatEndRef = React.useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (history.length > 0 && variant === 'integrated' && context) {
+      localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
+    }
+  }, [history, context, variant]);
 
   useEffect(() => {
     if (history.length) scrollToBottom();
@@ -120,6 +131,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
       handleQuery(undefined, initialQuery);
     }
   }, [initialQuery, isOpen, history.length, handleQuery]);
+
+  if (settings.totalSilence) return null;
 
   if (variant === 'integrated') {
     return (

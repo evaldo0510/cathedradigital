@@ -543,14 +543,18 @@ const MagisteriumViewer: React.FC = () => {
             title="Minhas Notas neste Documento"
           />
 
-          <LogosContextualSuggestions
-            type="magisterium"
-            context={`Documento do Magistério: ${document.title}`}
-            onSelectSuggestion={(prompt) => {
-              setLogosAIInitialQuery(prompt);
-              setShowLogosAI(true);
-            }}
-          />
+          {!settings.totalSilence && (
+            <LogosContextualSuggestions
+              type="magisterium"
+              context={`Documento do Magistério: ${document.title}`}
+              isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
+              onSelectSuggestion={(prompt) => {
+                setLogosAIInitialQuery(prompt);
+                setShowLogosAI(true);
+                setLogosSelectionsCount(prev => prev + 1);
+              }}
+            />
+          )}
           <Relatio 
 
             context={{
@@ -576,7 +580,7 @@ const MagisteriumViewer: React.FC = () => {
         </Button>
       </div>
 
-      {showLogosAI && (
+      {!settings.totalSilence && showLogosAI && (
         <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <LogosAI 
             isOpen={showLogosAI} 

@@ -949,14 +949,16 @@ const Catechism: React.FC = () => {
               />
 
               {/* Logos AI: Contextual Suggestions */}
-              {showCrossRefs && currentParagraph && (
+              {showCrossRefs && currentParagraph && !settings.totalSilence && (
                 <LogosContextualSuggestions
                   type="catechism"
                   context={`Catecismo da Igreja Católica, parágrafo ${currentParagraph}`}
+                  isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
                   onSelectSuggestion={(prompt) => {
                     setLogosAIInitialQuery(prompt);
                     setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
                     setShowLogosAI(true);
+                    setLogosSelectionsCount(prev => prev + 1);
                   }}
                 />
               )}
@@ -981,7 +983,7 @@ const Catechism: React.FC = () => {
 
 
             
-            {showLogosAI && (
+            {!settings.totalSilence && showLogosAI && (
               <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                 <LogosAI 
                   isOpen={showLogosAI} 
