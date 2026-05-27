@@ -26,12 +26,12 @@ const item = {
     filter: 'blur(0px)',
     transition: { 
       duration: 1.2, 
-      ease: [0.16, 1, 0.3, 1] 
+      ease: [0.16, 1, 0.3, 1] as const
     } 
   },
 };
 
-const StaggeredList: React.FC<StaggeredListProps> = ({ children, className, staggerDelay = 0.08 }) => {
+const StaggeredList: React.FC<StaggeredListProps> = ({ children, className, staggerDelay = 0.12 }) => {
   const containerVariants = {
     hidden: {},
     show: {
