@@ -171,21 +171,21 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-border/10 pt-16 lg:pt-32 pb-24 lg:pb-16 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }} aria-label="Rodapé">
+    <footer className="mt-auto w-full border-t border-border/10 pt-24 lg:pt-40 pb-24 lg:pb-24 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 520px' }} aria-label="Rodapé">
       <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
       
-      <div className="app-container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-20 mb-16">
+      <div className="max-w-[1600px] mx-auto px-8 md:px-12 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-32 mb-24">
           
-          <div className="flex flex-col gap-6">
-             <div className="flex items-center gap-4">
-               <Icons.Logo className="w-10 h-10 flex-shrink-0" variant="blue" />
+          <div className="flex flex-col gap-10">
+             <div className="flex items-center gap-6">
+               <Icons.Logo className="w-12 h-12 flex-shrink-0" variant="blue" />
                <div>
-                 <h3 className="text-xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
-                 <p className="text-premium-tiny font-black uppercase text-primary tracking-[0.3em]">Digital Sanctuarium</p>
+                 <h3 className="text-2xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                 <p className="text-premium-small font-black uppercase text-primary tracking-[0.4em]">Digital Sanctuarium</p>
                </div>
             </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+            <p className="text-base text-muted-foreground leading-relaxed max-w-sm">
               {lang === 'pt' 
                 ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica, unindo a tradição milenar à tecnologia moderna.'
                 : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}
@@ -294,12 +294,12 @@ const Footer: React.FC = React.memo(() => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+        <div className="pt-16 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <p className="text-premium-small font-black uppercase tracking-[0.4em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
+            <p className="text-base font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-2 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
               <Button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
@@ -322,7 +322,7 @@ const Footer: React.FC = React.memo(() => {
                 <React.Fragment key={item.label}>
                   <Button 
                     onClick={() => navigate(item.route)} 
-                    className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-3 py-1.5 rounded"
                     aria-label={item.label}
                   >
                     {item.label}
