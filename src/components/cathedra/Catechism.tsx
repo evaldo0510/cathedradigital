@@ -199,8 +199,8 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-10 border-b border-border/40 last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-80 hover:opacity-100'}`}>
-      {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-premium hidden md:block" />}
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-12 border-b border-primary/[0.03] last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-6 top-0 bottom-0 w-0.5 bg-primary/20 rounded-full hidden md:block" />}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
           <span className="text-xl md:text-2xl font-display font-light tracking-[0.2em] text-primary/40">§{p}</span>
@@ -226,7 +226,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
             <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-border/60 via-border/20 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} />
 
@@ -641,7 +641,7 @@ const Catechism: React.FC = () => {
           </aside>
 
           <div className="flex-1 w-full space-y-8 max-w-3xl mx-auto">
-            <div className="reader-container bg-card/40 backdrop-blur-md border border-primary/[0.04] overflow-hidden rounded-[2.5rem] relative transition-all duration-1000">
+            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] relative transition-all duration-1000">
               <div className="p-8 md:p-16">
 
                 <div className="space-y-16">

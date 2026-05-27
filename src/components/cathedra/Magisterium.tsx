@@ -24,6 +24,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import ContemplativeLayout from './ContemplativeLayout';
+import ReadingMark from './ReadingMark';
 
 const SPIRITUAL_GUIDANCE = [
   {
