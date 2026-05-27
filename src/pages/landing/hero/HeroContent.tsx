@@ -49,9 +49,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-10 md:mb-14"
       >
-        <h1 className="text-6xl md:text-9xl lg:text-[11rem] font-display font-light text-primary leading-none tracking-[0.16em] uppercase select-none">
+        <h2 className="text-6xl md:text-9xl lg:text-[11rem] font-display font-light text-primary leading-none tracking-[0.16em] uppercase select-none">
           Cathedra
-        </h1>
+        </h2>
       </motion.div>
 
       {/* Description - Editorial Rhythm */}
@@ -110,7 +110,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           <p className="text-[10px] font-bold uppercase tracking-[1em] text-primary translate-x-[0.5em]">
             Cathedra
           </p>
-          <span className="w-12 h-px bg-primary" />
+          <span className="w-12 h-px bg-primary" aria-hidden="true" />
         </div>
       </motion.div>
     </motion.div>
