@@ -891,8 +891,19 @@ const Bible: React.FC = () => {
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                if (highlightedVerse) {
+                if (activeHighlight) {
+                  // Update existing highlight
+                  // Assuming updateNote handles color or I need to extend it
+                  // Let's check updateNote signature... it only handles text in hook.
+                  // I might need to update the hook to handle color.
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
+                    setActiveHighlight(null);
+                    // refresh notes
+                  });
+                } else if (highlightedVerse) {
                   addNote(selectedBook.abbr, 'Destacado para meditação', color, {
                     book_abbr: selectedBook.abbr,
                     chapter: selectedChapter,
@@ -902,9 +913,18 @@ const Bible: React.FC = () => {
                   toast.info('Clique em um versículo primeiro para destacar.');
                 }
               }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteChapterNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
               onAddNote={() => {
-                if (highlightedVerse) {
-                  // This is handled by a prompt for now, or opens a sidebar
+                if (activeHighlight) {
+                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
+                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
+                   setActiveHighlight(null);
+                } else if (highlightedVerse) {
                   const note = prompt('Sua reflexão sobre este versículo:');
                   if (note) {
                     addNote(selectedBook.abbr, note, 'yellow', {
