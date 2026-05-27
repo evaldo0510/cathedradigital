@@ -545,15 +545,19 @@ const Bible: React.FC = () => {
       
       // Better resume: only if no specific verse in URL
       if (!searchParams.get('v') && !searchParams.get('verse')) {
-        if (savedScroll && parseInt(savedScroll) > 100) {
+        if (savedScroll && parseInt(savedScroll) > 200) {
           setTimeout(() => {
             window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+            toast('Ponto de leitura restaurado', { icon: '📖', duration: 2000 });
           }, 300);
         } else if (savedVerse) {
           const vNum = parseInt(savedVerse);
           setTimeout(() => {
             const el = document.getElementById(`v${vNum}`);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              toast('Ponto de leitura restaurado', { icon: '📖', duration: 2000 });
+            }
           }, 400);
         }
       }
