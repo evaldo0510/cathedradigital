@@ -2199,11 +2199,13 @@ export type Database = {
       }
       public_seo_settings: {
         Row: {
+          business_address: string | null
+          business_email: string | null
           business_name: string | null
+          business_phone: string | null
+          business_whatsapp: string | null
           created_at: string | null
-          ga4_measurement_id: string | null
           google_maps_url: string | null
-          gsc_verification_code: string | null
           id: string | null
           json_ld_schema: Json | null
           latitude: number | null
@@ -2217,11 +2219,13 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          business_address?: string | null
+          business_email?: string | null
           business_name?: string | null
+          business_phone?: string | null
+          business_whatsapp?: string | null
           created_at?: string | null
-          ga4_measurement_id?: string | null
           google_maps_url?: string | null
-          gsc_verification_code?: string | null
           id?: string | null
           json_ld_schema?: Json | null
           latitude?: number | null
@@ -2235,11 +2239,13 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          business_address?: string | null
+          business_email?: string | null
           business_name?: string | null
+          business_phone?: string | null
+          business_whatsapp?: string | null
           created_at?: string | null
-          ga4_measurement_id?: string | null
           google_maps_url?: string | null
-          gsc_verification_code?: string | null
           id?: string | null
           json_ld_schema?: Json | null
           latitude?: number | null
