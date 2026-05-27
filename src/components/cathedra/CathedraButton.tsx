@@ -24,7 +24,7 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
       primary: 'btn-premium-primary',
       secondary: 'btn-premium-secondary',
       outline: 'btn-premium-outline',
-      ghost: 'bg-transparent hover:bg-primary/[0.03] text-primary/40 hover:text-primary transition-all rounded-full px-6 py-3 font-medium uppercase tracking-[0.3em] text-[10px]',
+      ghost: 'btn-premium-ghost',
     };
 
     return (
