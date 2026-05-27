@@ -70,10 +70,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      // Initial focus on open for a11y
+      // Initial focus on open for a11y - focus the dialog itself first
       setTimeout(() => {
-        const firstButton = sidebarRef.current?.querySelector('button');
-        if (firstButton) firstButton.focus();
+        sidebarRef.current?.focus();
       }, 100);
     } else {
       document.body.style.overflow = '';
@@ -202,6 +201,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
+            tabIndex={-1}
           >
             <div className="flex items-center justify-between mb-12">
               <div 

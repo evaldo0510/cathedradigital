@@ -362,10 +362,16 @@ const CommandCenter: React.FC = () => {
   const hasGlobalResults = globalResults.length > 0;
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" onClick={() => setIsOpen(false)}>
-      <div className="absolute inset-0 bg-black/60 " />
+    <div 
+      className="fixed inset-0 z-[200] flex items-start justify-center pt-[12vh]" 
+      onClick={() => setIsOpen(false)}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Central de comandos e busca"
+    >
+      <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-full shadow-premium-hover overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
+        className="relative w-full max-w-xl bg-card border border-border rounded-[2rem] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
