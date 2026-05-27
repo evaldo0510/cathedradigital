@@ -28,6 +28,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
+import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
