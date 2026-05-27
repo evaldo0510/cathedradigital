@@ -15,7 +15,7 @@
     --secondary: 40 35% 60%;     /* #C5A059 Muted Gold */
     --secondary-foreground: 220 20% 12%;
     --muted: 220 10% 92%;
-    --muted-foreground: 220 12% 40%; 
+    --muted-foreground: 220 12% 45%; 
 
     --accent: 40 35% 60% / 0.05;
     --accent-foreground: 220 20% 12%;
@@ -311,7 +311,7 @@
   }
 
   p { 
-    @apply max-w-[65ch] text-muted-foreground font-normal;
+    @apply max-w-[65ch] text-foreground font-normal;
     font-size: clamp(1rem, 1.2vw, 1.125rem);
     line-height: 1.8;
     letter-spacing: 0.015em;
@@ -343,7 +343,7 @@
 
   .reader-text {
     font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/10 max-w-[65ch] mx-auto text-foreground/80 font-light;
+    @apply selection:bg-primary/20 max-w-[65ch] mx-auto text-foreground;
     font-variant-numeric: oldstyle-nums;
     font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
     text-rendering: optimizeLegibility;
