@@ -64,10 +64,10 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
 
   useEffect(() => {
-    if (initialQuery) {
-      setQuery(initialQuery);
+    if (initialQuery && isOpen && history.length === 0) {
+      handleQuery(undefined, initialQuery);
     }
-  }, [initialQuery]);
+  }, [initialQuery, isOpen]);
 
   const handleQuery = async (e?: React.FormEvent, customQuery?: string) => {
     if (e) e.preventDefault();
