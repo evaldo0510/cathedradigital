@@ -191,7 +191,7 @@ const RitualDoDia: React.FC = () => {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.01] to-transparent pointer-events-none" />
       
-      <div className="relative z-10 p-12 md:p-20 lg:p-32 space-y-24">
+      <div className="relative z-10 p-6 md:p-12 lg:p-16 space-y-20">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-border/5 pb-20">
           <div className="flex flex-col gap-4">
