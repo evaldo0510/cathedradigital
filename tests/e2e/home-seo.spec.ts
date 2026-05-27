@@ -183,9 +183,6 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
         args: ['--remote-debugging-port=9222'],
         headless: true
       });
-        args: ['--remote-debugging-port=9222'],
-        headless: true
-      });
       
       try {
         const lighthousePage = await browser.newPage();
