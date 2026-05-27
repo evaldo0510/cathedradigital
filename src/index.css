@@ -15,14 +15,14 @@
     --secondary: 45 64% 52%;     /* #D4AF37 Gold */
     --secondary-foreground: 222 47% 11%;
     --muted: 45 20% 90%;
-    --muted-foreground: 222 20% 32%; /* Darkened from 35% for better contrast against cream background */
+    --muted-foreground: 222 20% 32%; 
     --accent: 45 64% 52% / 0.05;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 11% / 0.05;
-    --input: 222 47% 11% / 0.05;
-    --ring: 222 47% 11% / 0.1;
+    --border: 222 47% 11% / 0.03; /* Softened border globally */
+    --input: 222 47% 11% / 0.03;
+    --ring: 222 47% 11% / 0.05;
     --radius: 0.75rem;
     --sidebar-background: 45 42% 98%;
     --sidebar-foreground: 222 47% 11%;
@@ -30,7 +30,7 @@
     --sidebar-primary-foreground: 45 42% 96%;
     --sidebar-accent: 45 42% 94%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 222 47% 11% / 0.05;
+    --sidebar-border: 222 47% 11% / 0.03;
     --sidebar-ring: 222 47% 11%;
   }
 
