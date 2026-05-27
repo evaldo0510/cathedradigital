@@ -17,7 +17,7 @@ interface ReadingSettings {
   letterSpacing: 'tight' | 'normal' | 'wide';
   sideMargins: 'standard' | 'comfortable' | 'wide';
   contrast: 'normal' | 'soft' | 'high';
-  resumeBehavior: 'always' | 'never' | 'once';
+  resumeBehavior: 'always' | 'never' | 'once' | 'confirm';
   reminders: {
     enabled: boolean;
     time: string;
@@ -63,7 +63,7 @@ const defaultSettings: ReadingSettings = {
   letterSpacing: 'normal',
   sideMargins: 'standard',
   contrast: 'normal',
-  resumeBehavior: 'always',
+  resumeBehavior: 'confirm',
   reminders: {
     enabled: false,
     time: '08:00',

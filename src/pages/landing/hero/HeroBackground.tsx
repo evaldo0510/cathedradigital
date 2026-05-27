@@ -9,6 +9,14 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     {/* Cinematic base layer - Deep Monastic Shadow */}
     <div className="absolute inset-0 bg-background" />
     
+    {/* Spiritual Library Ambiance - Living background */}
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.15 }}
+      transition={{ duration: 5 }}
+      className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&q=80')] bg-cover bg-center grayscale opacity-10 mix-blend-soft-light" 
+    />
+
     {/* Sacred Geometry Texture - Extremely subtle parchment pattern */}
     <div 
       className="absolute inset-0 opacity-[0.012] grayscale"
@@ -19,17 +27,24 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => (
     />
     
     {/* Chiaroscuro Lighting - Central Illumination Source */}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.035)_0%,transparent_55%)]" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,hsl(var(--background))_85%)] opacity-95" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsla(var(--primary)/0.045)_0%,transparent_60%)]" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,hsl(var(--background))_90%)] opacity-98" />
     
     {/* Atmospheric Depth - Soft Vignette */}
-    <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/60 opacity-40" />
+    <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/80 opacity-60" />
     
     {/* Floating "Light Dust" - Cinematic focus */}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.01)_0%,transparent_100%)] mix-blend-overlay" />
+    <motion.div 
+      animate={{ 
+        opacity: [0.01, 0.03, 0.01],
+        scale: [1, 1.05, 1]
+      }}
+      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.02)_0%,transparent_100%)] mix-blend-overlay" 
+    />
     
     {/* Framing Element - Elegant Border */}
-    <div className="absolute inset-12 md:inset-24 border border-primary/[0.015] rounded-[3rem] pointer-events-none" />
+    <div className="absolute inset-8 md:inset-16 lg:inset-24 border border-primary/[0.025] rounded-[4rem] pointer-events-none" />
   </motion.div>
 );
 

@@ -158,6 +158,9 @@ const Bible: React.FC = () => {
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
@@ -523,10 +526,38 @@ const Bible: React.FC = () => {
       }
       if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
         e.preventDefault();
-        // Confirmation for resuming to avoid context loss
-        if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+        
+        const behavior = settings.resumeBehavior || 'confirm';
+        let shouldResume = true;
+        
+        if (behavior === 'confirm') {
+          shouldResume = confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`);
+        } else if (behavior === 'once') {
+          if (!sessionResumeUsed) {
+            shouldResume = confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`);
+            if (shouldResume) setSessionResumeUsed(true);
+          }
+        } else if (behavior === 'never') {
+          shouldResume = false;
+        }
+
+        if (shouldResume) {
           navigate(lastReadMark.url);
         }
+      }
+
+      // History navigation (Alt + Left/Right)
+      if (e.altKey && e.key === 'ArrowLeft' && historyIndex > 0) {
+        e.preventDefault();
+        const prevUrl = history[historyIndex - 1];
+        setHistoryIndex(prev => prev - 1);
+        navigate(prevUrl);
+      }
+      if (e.altKey && e.key === 'ArrowRight' && historyIndex < history.length - 1) {
+        e.preventDefault();
+        const nextUrl = history[historyIndex + 1];
+        setHistoryIndex(prev => prev + 1);
+        navigate(nextUrl);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -905,7 +936,22 @@ const Bible: React.FC = () => {
                     <Button variant="outline" onClick={() => window.location.reload()}>Recarregar</Button>
                   </div>
                 ) : (
-                  <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} text-foreground/90 transition-all duration-300 reader-text`}>
+                  <div className={`font-size-${settings.fontSize} font-family-${settings.fontFamily} text-foreground/90 transition-all duration-300 reader-text relative`}>
+                    
+                    {/* Visual Indicator for Keyboard Shortcuts */}
+                    {highlightedVerse && settings.totalSilence && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[160] px-4 py-2 bg-primary/80 backdrop-blur-md text-primary-foreground rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-3 border border-white/10 shadow-2xl"
+                      >
+                        <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">H</kbd> Destacar</span>
+                        <div className="w-px h-3 bg-white/20" />
+                        <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">N</kbd> Nota</span>
+                        <div className="w-px h-3 bg-white/20" />
+                        <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
+                      </motion.div>
+                    )}
 
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
