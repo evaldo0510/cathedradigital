@@ -3,6 +3,26 @@
 @tailwind utilities;
 
 @layer base {
+  .admin-mode {
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+  }
+  
+  .admin-mode main#main-content {
+    max-width: 100% !important;
+    padding: 2rem !important;
+    background: hsl(var(--background));
+  }
+}
+
+
+@layer base {
   :root {
     --background: 45 40% 98%;    /* #FDFBF7 Very soft off-white */
     --foreground: 220 15% 15%;   /* #24272E Muted Graphite */
