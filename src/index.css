@@ -15,7 +15,7 @@
     --secondary: 45 64% 52%;     /* #D4AF37 Gold */
     --secondary-foreground: 222 47% 11%;
     --muted: 45 20% 90%;
-    --muted-foreground: 222 20% 35%; /* Slightly darker for better contrast (WCAG AA) */
+    --muted-foreground: 222 20% 32%; /* Darkened from 35% for better contrast against cream background */
     --accent: 45 64% 52% / 0.05;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
