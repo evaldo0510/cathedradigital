@@ -31,6 +31,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 const LogosAI = lazy(() => import('./LogosAI'));
+const LogosContextualSuggestions = lazy(() => import('./LogosContextualSuggestions').then(m => ({ default: m.LogosContextualSuggestions })));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
