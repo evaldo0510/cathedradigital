@@ -144,6 +144,37 @@ const DesignSystemGuide: React.FC = () => {
           </div>
         </section>
 
+        {/* Navigation Section */}
+        <section className="space-y-12">
+          <div className="flex items-center gap-6">
+            <div className="h-px flex-1 bg-border/40" />
+            <h2 className="text-premium-tiny font-black uppercase tracking-[0.4em] text-foreground/30">Protocolo de Navegação</h2>
+            <div className="h-px flex-1 bg-border/40" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <CathedraCard padding="lg" className="space-y-6">
+              <h3 className="text-xl font-serif font-bold text-primary">Sidebar Overlay</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">A navegação lateral agora segue o princípio do <strong>Silêncio Visual</strong>. Ela não ocupa espaço fixo, permitindo que o conteúdo respire.</p>
+              <ul className="space-y-3 text-[11px] font-bold uppercase tracking-wider text-primary/60">
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Abertura via Hamburger Menu</li>
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Overlay com Backdrop Blur</li>
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Transição Suave (800ms)</li>
+              </ul>
+            </CathedraCard>
+
+            <CathedraCard padding="lg" className="space-y-6">
+              <h3 className="text-xl font-serif font-bold text-primary">Header Adaptativo</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">O header atua como uma âncora de clareza, sempre acessível mas nunca intrusivo.</p>
+              <ul className="space-y-3 text-[11px] font-bold uppercase tracking-wider text-primary/60">
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Altura Elevada (h-28)</li>
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Blur Progressivo</li>
+                <li className="flex items-center gap-3"><div className="w-1 h-1 rounded-full bg-secondary" /> Tipografia em Cinzel</li>
+              </ul>
+            </CathedraCard>
+          </div>
+        </section>
+
         {/* Audit Progress Section */}
         <section className="space-y-12">
           <div className="flex items-center gap-6">
