@@ -526,8 +526,8 @@ const Bible: React.FC = () => {
       setReadingProgress(Math.min(100, Math.max(0, progress)));
       
       // Persist scroll for resumption
-      if (Math.abs(window.scrollY - parseInt(localStorage.getItem('cathedra_last_bible_scroll') || '0')) > 100) {
-        localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+      if (Math.abs(window.scrollY - parseInt(localStorage.getItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`) || '0')) > 100) {
+        localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
       }
     };
     window.addEventListener('scroll', handleScroll);
