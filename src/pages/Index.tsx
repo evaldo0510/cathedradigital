@@ -34,13 +34,9 @@ const Index = () => {
   }), []);
 
 
-  useEffect(() => {
-    if (!loading && user) {
-      if (profile?.role === 'admin') {
-        navigate(AppRoute.ADMIN, { replace: true });
-      }
-    }
-  }, [user, profile, loading, navigate]);
+  // Removed automatic admin redirect to ensure everyone starts at the contemplative home experience
+  // Admin interface is now exclusively accessible via the /admin route manually or via sidebar
+
 
   const handleStart = () => {
     const el = document.getElementById('main-content');
