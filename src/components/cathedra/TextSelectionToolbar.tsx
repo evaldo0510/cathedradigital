@@ -16,6 +16,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   onHighlight, 
   onAddNote,
   onDeleteHighlight,
+  onAskLogos,
   activeHighlightId,
   activeColor
 }) => {
