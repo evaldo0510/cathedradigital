@@ -557,7 +557,6 @@ const MagisteriumViewer: React.FC = () => {
             />
           )}
           <Relatio 
-
             context={{
               type: 'magisterium',
               id: id,
@@ -566,6 +565,11 @@ const MagisteriumViewer: React.FC = () => {
             onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&chapter=${ch}`)}
             onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
             onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
+            onSelectLogosQuery={(prompt) => {
+              setLogosAIInitialQuery(prompt);
+              setShowLogosAI(true);
+              setLogosSelectionsCount(prev => prev + 1);
+            }}
           />
         </div>
       )}
