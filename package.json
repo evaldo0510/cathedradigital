@@ -20,7 +20,7 @@
     "test:pdf": "bun run scripts/generate-pdf-report.ts",
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
-    "generate:seo": "bun run scripts/generate-sitemap.ts",
+    "generate:seo": "bun run scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
