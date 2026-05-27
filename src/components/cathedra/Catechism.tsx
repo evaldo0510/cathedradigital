@@ -985,8 +985,12 @@ const Catechism: React.FC = () => {
               <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 <LogosAI 
                   isOpen={showLogosAI} 
-                  onClose={() => setShowLogosAI(false)} 
-                  context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+                  onClose={() => {
+                    setShowLogosAI(false);
+                    setLogosAIInitialQuery('');
+                  }} 
+                  context={logosAIContext || `Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+                  initialQuery={logosAIInitialQuery}
                   type="catechism"
                   variant="integrated"
                 />
