@@ -418,7 +418,7 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card/5 backdrop-blur-sm border border-primary/[0.03] shadow-premium transition-all relative overflow-hidden ring-1 ring-primary/[0.01];
+    @apply bg-card/40 backdrop-blur-md border border-primary/[0.04] shadow-sm transition-all relative overflow-hidden;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
   }
@@ -430,8 +430,8 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-4 focus-visible:outline-none;
-    box-shadow: var(--card-shadow);
+    @apply premium-card cursor-pointer hover:bg-card/60 hover:border-primary/10 active:scale-[0.995] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-2 focus-visible:outline-none;
+    box-shadow: none;
   }
 
   .premium-card-interactive:hover {
