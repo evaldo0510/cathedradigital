@@ -287,74 +287,78 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-16">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-6 md:space-y-8 max-w-4xl mx-auto text-center">
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
-            <div 
+          <section className="space-y-6 md:space-y-8 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+            <h4 id="lectio-heading" className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">I. Lectio</h4>
+            <button 
               className={cn(
-                "group cursor-pointer transition-all duration-1000",
-                progress >= 25 ? 'opacity-20 grayscale scale-[0.98]' : 'opacity-100'
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                progress >= 25 ? 'opacity-30 grayscale scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(25)}
+              aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
               <blockquote className="text-2xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/30 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
-            </div>
+            </button>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-6 md:space-y-8 max-w-3xl mx-auto text-center">
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
-            <div 
+          <section className="space-y-6 md:space-y-8 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+            <h4 id="meditatio-heading" className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">II. Meditatio</h4>
+            <button 
               className={cn(
-                "group cursor-pointer transition-all duration-1000",
-                progress >= 50 ? 'opacity-20 scale-[0.98]' : 'opacity-100'
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                progress >= 50 ? 'opacity-30 scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(50)}
+              aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-lg md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5 px-4">
+              <p className="text-lg md:text-3xl leading-relaxed text-foreground/50 font-serif italic selection:bg-primary/5 px-4">
                 {ritual.reflection}
               </p>
-            </div>
+            </button>
           </section>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-6 md:space-y-8 text-center p-6 md:p-8 bg-primary/[0.01] rounded-[2rem] md:rounded-[2.5rem] border border-primary/[0.03]">
-              <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">III. Traditio</span>
-              <div 
+            <section className="space-y-6 md:space-y-8 text-center p-6 md:p-8 bg-primary/[0.01] rounded-[2rem] md:rounded-[2.5rem] border border-primary/[0.03]" aria-labelledby="traditio-heading">
+              <h4 id="traditio-heading" className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">III. Traditio</h4>
+              <button 
                 className={cn(
-                  "group cursor-pointer transition-all duration-1000 h-full flex flex-col justify-center",
-                  progress >= 75 ? 'opacity-20' : 'opacity-100'
+                  "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                  progress >= 75 ? 'opacity-30' : 'opacity-100'
                 )}
                 onClick={() => handleProgress(75)}
+                aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-base md:text-xl leading-relaxed text-foreground/30 font-serif tracking-tight selection:bg-primary/5 px-2">
+                <p className="text-base md:text-xl leading-relaxed text-foreground/40 font-serif tracking-tight selection:bg-primary/5 px-2">
                   {ritual?.catechism?.text || ''}
                 </p>
-                <p className="mt-4 md:mt-6 text-[8px] md:text-[9px] font-bold text-primary/30 uppercase tracking-[0.6em]">
+                <p className="mt-4 md:mt-6 text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                   §{ritual?.catechism?.number || ''}
                 </p>
-              </div>
+              </button>
             </section>
 
             {/* 4. Prayer */}
-            <section className="space-y-6 md:space-y-8 text-center p-6 md:p-8 bg-primary/[0.01] rounded-[2rem] md:rounded-[2.5rem] border border-primary/[0.03]">
-              <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[1em] text-primary/20">IV. Oratio</span>
-              <div 
+            <section className="space-y-6 md:space-y-8 text-center p-6 md:p-8 bg-primary/[0.01] rounded-[2rem] md:rounded-[2.5rem] border border-primary/[0.03]" aria-labelledby="oratio-heading">
+              <h4 id="oratio-heading" className="text-[8px] md:text-[9px] font-black uppercase tracking-[1em] text-primary/20">IV. Oratio</h4>
+              <button 
                 className={cn(
-                  "group cursor-pointer transition-all duration-1000 px-2 md:px-4 h-full flex flex-col justify-center",
-                  progress >= 100 ? 'opacity-20' : 'opacity-100'
+                  "w-full text-center group transition-all duration-1000 px-2 md:px-4 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                  progress >= 100 ? 'opacity-30' : 'opacity-100'
                 )}
                 onClick={() => handleProgress(100)}
+                aria-label={`Oração do dia. Clique para marcar como concluída.`}
               >
-                <p className="text-xl md:text-3xl leading-tight text-primary/60 font-serif italic selection:bg-primary/5">
+                <p className="text-xl md:text-3xl leading-tight text-primary/70 font-serif italic selection:bg-primary/5">
                   {ritual?.prayer || ''}
                 </p>
-              </div>
+              </button>
             </section>
           </div>
         </div>
