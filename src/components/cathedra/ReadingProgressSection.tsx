@@ -28,7 +28,7 @@ export const ReadingProgressSection: React.FC = () => {
             </div>
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20">
+                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/10">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 
                    lastRead.content_type === 'catechism' ? 'Catecismo' : 
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
