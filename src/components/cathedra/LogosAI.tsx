@@ -233,7 +233,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
   }, [initialQuery, isOpen, history.length, handleQuery]);
 
-  if (settings.totalSilence) return null;
+  // Instead of early return null, we handle silence within the UI for better indicators
+  // if (settings.totalSilence) return null;
+
 
   if (variant === 'integrated') {
     return (
