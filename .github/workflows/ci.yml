@@ -16,9 +16,10 @@ jobs:
         run: bun install
       - name: Run Unit & Integration Tests (A11y, Reduced Motion, Snapshots, Schema Validation)
         run: bun run test:ci
-      - name: Run E2E & Visual Regression Tests
+      - name: Run E2E, Accessibility & Visual Regression Tests
         run: |
           npx playwright install --with-deps chromium
+          bun run test:header-mobile
           bun run test:e2e tests/e2e/stability.spec.ts
           bun run test:visual || echo "Visual regression failed, check artifacts"
           bun run test:seo-audit --reporter=json > test-results/seo-audit-report.json || (echo "SEO Audit failed, checking report..." && exit 1)
@@ -30,5 +31,6 @@ jobs:
           path: |
             test-results/
             test-results.json
-            src/pages/landing/hero/__tests__/__snapshots__/
+            tests/e2e/**/*-snapshots/
+            test-results/axe/
           retention-days: 7

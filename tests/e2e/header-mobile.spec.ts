@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import fs from 'fs';
+import path from 'path';
 
 const viewports = [
   // Portrait
@@ -14,6 +16,12 @@ const viewports = [
 ];
 
 test.describe('Mobile Header Comprehensive Tests', () => {
+  // Ensure report directory exists
+  const reportDir = path.join(process.cwd(), 'test-results', 'axe');
+  if (!fs.existsSync(reportDir)) {
+    fs.mkdirSync(reportDir, { recursive: true });
+  }
+
   for (const vp of viewports) {
     test(`Header on ${vp.name} (${vp.orientation})`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -33,6 +41,17 @@ test.describe('Mobile Header Comprehensive Tests', () => {
         .include('header[role="banner"]')
         .analyze();
       
+      // Save report and attach to Playwright report
+      const reportName = `axe-header-${vp.name.replace(/\s+/g, '-').toLowerCase()}.json`;
+      const reportPath = path.join(reportDir, reportName);
+      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+      
+      await test.info().attach(reportName, {
+        path: reportPath,
+        contentType: 'application/json',
+      });
+
+      // Check for violations
       expect(accessibilityScanResults.violations).toEqual([]);
 
       // 3. Skip Link Functionality
@@ -56,7 +75,6 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       expect(isMainFocused).toBeTruthy();
 
       // 4. Focus Order
-      // Move back to top to start sequence
       await page.keyboard.press('Home');
       await page.mouse.click(0, 0);
       
@@ -65,7 +83,7 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       const logo = page.locator('div[role="link"][aria-label*="inicial"]');
       expect(await logo.evaluate(el => document.activeElement === el)).toBeTruthy();
 
-      await page.keyboard.press('Tab'); // Move to Back Button (on /bible it should be there)
+      await page.keyboard.press('Tab'); // Move to Back Button
       const backBtn = page.locator('button[aria-label*="Voltar"]');
       expect(await backBtn.evaluate(el => document.activeElement === el)).toBeTruthy();
 
@@ -77,7 +95,7 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       const themeBtn = page.locator('button[aria-label*="modo"]');
       expect(await themeBtn.evaluate(el => document.activeElement === el)).toBeTruthy();
 
-      await page.keyboard.press('Tab'); // Move to Profile/Login
+      await page.keyboard.press('Tab'); // Move to Profile
       const profileBtn = page.locator('button[aria-label*="Perfil"], button:has-text("Entrar")');
       expect(await profileBtn.evaluate(el => document.activeElement === el)).toBeTruthy();
 
@@ -87,9 +105,8 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       
       // 5. Hierarchy and Safe Area Check
       const headerBox = await header.boundingBox();
-      expect(headerBox?.height).toBeGreaterThan(60); // Minimum height to avoid collapse
+      expect(headerBox?.height).toBeGreaterThan(60); 
       
-      // Verify no horizontal overflow
       const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
       expect(bodyWidth).toBeLessThanOrEqual(vp.width);
     });
@@ -106,12 +123,10 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       const icon = icons.nth(i);
       const box = await icon.boundingBox();
       
-      // Standard icon size is 18-20px
       expect(box?.width).toBeGreaterThanOrEqual(16);
       expect(box?.width).toBeLessThanOrEqual(24);
       
       const strokeWidth = await icon.evaluate(el => window.getComputedStyle(el).strokeWidth);
-      // We expect 1.2 as defined in constants
       expect(parseFloat(strokeWidth)).toBeCloseTo(1.2, 1);
     }
   });
