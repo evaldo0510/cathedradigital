@@ -141,7 +141,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: (systemPromptOverride || baseSystemPrompt) + safetyPrompt
+            content: ((isServiceCall && clientSystemPrompt) ? clientSystemPrompt : baseSystemPrompt) + safetyPrompt
           },
           ...messages,
         ],
