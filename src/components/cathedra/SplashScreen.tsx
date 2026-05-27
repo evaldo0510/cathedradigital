@@ -88,7 +88,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             className="text-premium-tiny md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
           >
             Digital Sanctuarium
-          </p>
+          </motion.p>
         </motion.div>
 
         <motion.div className="absolute bottom-12 w-32 h-0.5 bg-card/50 rounded-premium overflow-hidden">
