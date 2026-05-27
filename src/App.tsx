@@ -267,17 +267,83 @@ const AppLayout: React.FC = () => {
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
+              <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
-              <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><ProfilePage /></Suspense>} />
-              <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
+              <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
+              <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
+              <Route path="/onboarding" element={<Suspense fallback={<LoadingFallback />}><OnboardingPage /></Suspense>} />
+
+              {/* Hoje & Diário */}
               <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
-              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><JornadasPage /></Suspense>} />
+              <Route path="/dashboard" element={<Navigate to="/hoje" replace />} />
+              <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
+
+              {/* Biblioteca */}
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/temas" element={<Suspense fallback={<LoadingFallback />}><TemasPage /></Suspense>} />
+              <Route path="/temas/:slug" element={<Suspense fallback={<LoadingFallback />}><TemaDetailPage /></Suspense>} />
+              <Route path="/encyclopedia" element={<Suspense fallback={<LoadingFallback />}><AZFaithPage /></Suspense>} />
+              <Route path="/az-faith" element={<Suspense fallback={<LoadingFallback />}><AZFaithPage /></Suspense>} />
+              <Route path="/glossary" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
+              <Route path="/aquinas" element={<Suspense fallback={<LoadingFallback />}><AquinasOpera /></Suspense>} />
+              <Route path="/guia-modulos" element={<Suspense fallback={<LoadingFallback />}><ModulesGuidePage /></Suspense>} />
+
+              {/* Santos & Devoções */}
+              <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
+              <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><SaintDetail /></Suspense>} />
+              <Route path="/papas" element={<Suspense fallback={<LoadingFallback />}><PopesPage /></Suspense>} />
+              <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
+              <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
+
+              {/* Liturgia & Oração */}
+              <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><LiturgiaPage /></Suspense>} />
+              <Route path="/calendar" element={<Suspense fallback={<LoadingFallback />}><LiturgicalCalendarPage /></Suspense>} />
+              <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><MissalPage /></Suspense>} />
+              <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><BreviaryPage /></Suspense>} />
+              <Route path="/rosary" element={<Suspense fallback={<LoadingFallback />}><Rosary /></Suspense>} />
+              <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><ViaCrucis /></Suspense>} />
+              <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><LitaniesPage /></Suspense>} />
+              <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><PrayerPage /></Suspense>} />
+              <Route path="/prayers" element={<Navigate to="/oracao" replace />} />
+              <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
+              <Route path="/confession" element={<Suspense fallback={<LoadingFallback />}><PoenitentiaPage /></Suspense>} />
+
+              {/* Jornadas */}
+              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><JornadasPage /></Suspense>} />
+              <Route path="/jornadas/:id" element={<Suspense fallback={<LoadingFallback />}><JornadaDetailPage /></Suspense>} />
+              <Route path="/jornadas/:id/step" element={<Suspense fallback={<LoadingFallback />}><JornadaStepPage /></Suspense>} />
+              <Route path="/jornadas/:id/complete" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
+
+              {/* Comunidade */}
               <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><CommunityPage /></Suspense>} />
+
+              {/* Conquistas & Favoritos */}
+              <Route path="/favorites" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><FavoritesPage /></AuthGuard></Suspense>} />
+              <Route path="/achievements" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><AchievementsPage /></AuthGuard></Suspense>} />
+
+              {/* Monetização */}
+              <Route path="/pricing" element={<Suspense fallback={<LoadingFallback />}><PricingPage /></Suspense>} />
+              <Route path="/upgrade" element={<Suspense fallback={<LoadingFallback />}><UpgradePage /></Suspense>} />
+              <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><CheckoutPage /></AuthGuard></Suspense>} />
+              <Route path="/checkout/result" element={<Suspense fallback={<LoadingFallback />}><CheckoutResultPage /></Suspense>} />
+              <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
+              <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
+              <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
+
+              {/* Institucional */}
+              <Route path="/about" element={<Suspense fallback={<LoadingFallback />}><AboutPage /></Suspense>} />
+              <Route path="/terms" element={<Suspense fallback={<LoadingFallback />}><TermsPage /></Suspense>} />
+              <Route path="/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
+              <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
+              <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
+
+              {/* Admin */}
+              <Route path="/admin/*" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><AdminDashboard /></AdminGuard></Suspense>} />
+
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </AnimatePresence>
