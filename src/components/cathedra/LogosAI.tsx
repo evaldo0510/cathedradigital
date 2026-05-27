@@ -55,9 +55,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
         abortControllerRef.current.abort();
         abortControllerRef.current = null;
       }
-      setIsLoading(false);
-      setIsTyping(false);
-      setHistory([]);
+      if (isLoading) setIsLoading(false);
+      if (isTyping) setIsTyping(false);
+      if (history.length > 0) setHistory([]);
       return;
     }
 
