@@ -164,15 +164,45 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
   }, [query, isLoading, history, context, selectedText, type]);
 
-  const clearHistory = React.useCallback(() => {
+  const clearHistory = React.useCallback((skipConfirm = false) => {
+    if (history.length === 0) return;
+    
+    if (!skipConfirm) {
+      const confirmed = window.confirm("Deseja redefinir o silêncio e limpar o histórico desta seção?");
+      if (!confirmed) return;
+    }
+
     setHistory([]);
     if (context) {
       localStorage.removeItem(`logos_history_${context}`);
     }
-    toast.success("Histórico da Logos IA redefinido", {
-      description: "O silêncio foi restaurado nesta seção."
-    });
-  }, [context]);
+
+    if (!skipConfirm) {
+      toast.success("Histórico da Logos IA redefinido", {
+        description: "O silêncio foi restaurado nesta seção."
+      });
+    }
+  }, [context, history.length]);
+
+  useEffect(() => {
+    const handleReset = () => clearHistory(true);
+    window.addEventListener('reset-logos-history', handleReset);
+    return () => window.removeEventListener('reset-logos-history', handleReset);
+  }, [clearHistory]);
+
+  const exportHistory = React.useCallback(() => {
+    if (history.length === 0) return;
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", `logos_ia_history_${context || 'geral'}.json`);
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    
+    toast.success("Histórico exportado com sucesso");
+  }, [history, context]);
 
   useEffect(() => {
     if (initialQuery && isOpen && history.length === 0) {
@@ -197,28 +227,49 @@ const LogosAI: React.FC<LogosAIProps> = ({
               
               <div className="absolute top-8 right-8 flex items-center gap-2">
                 {history.length > 0 && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={clearHistory} 
-                    className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
-                    title="Limpar histórico"
-                  >
-                    <Icons.RotateCcw className="w-3.5 h-3.5" />
-                  </Button>
+                  <>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={exportHistory} 
+                      className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
+                      title="Exportar histórico"
+                    >
+                      <Icons.Download className="w-3.5 h-3.5" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => clearHistory()} 
+
+                      className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
+                      title="Limpar histórico"
+                    >
+                      <Icons.RotateCcw className="w-3.5 h-3.5" />
+                    </Button>
+                  </>
                 )}
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8">
                   <Icons.X className="w-3.5 h-3.5" />
                 </Button>
               </div>
 
-              <div className="flex items-center gap-6 mb-16 opacity-40">
-                <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
-                  <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
+              <div className="flex items-center justify-between mb-16 opacity-40">
+                <div className="flex items-center gap-6">
+                  <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
+                    <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
+                  </div>
+                  <div>
+                    <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
+                    <p className="text-[10px] font-serif italic text-primary/30 mt-0.5">Companhia Contemplativa</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
-                  <p className="text-[10px] font-serif italic text-primary/30 mt-0.5">Companhia Contemplativa</p>
+                
+                <div className="flex items-center gap-2">
+                  <div className={`w-1 h-1 rounded-full ${history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20'}`} />
+                  <span className="text-[7px] font-black uppercase tracking-widest text-primary/20">
+                    {history.length > 0 ? 'Histórico Ativo' : 'Estado de Silêncio'}
+                  </span>
                 </div>
               </div>
 
@@ -339,20 +390,43 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 {history.length > 0 && (
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={clearHistory} 
-                    className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
-                    title="Limpar histórico"
-                  >
-                    <Icons.RotateCcw className="w-4 h-4" />
-                  </Button>
+                  <>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={exportHistory} 
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
+                      title="Exportar histórico"
+                    >
+                      <Icons.Download className="w-4 h-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      onClick={() => clearHistory()} 
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
+                      title="Limpar histórico"
+                    >
+                      <Icons.RotateCcw className="w-4 h-4" />
+                    </Button>
+                  </>
                 )}
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
                   <Icons.X className="w-4 h-4" />
                 </Button>
               </div>
+            </div>
+
+            <div className="px-8 md:px-10 py-3 bg-primary/[0.02] border-b border-border/5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className={`w-1 h-1 rounded-full ${history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20'}`} />
+                <span className="text-[7px] font-black uppercase tracking-widest text-primary/20">
+                  {history.length > 0 ? 'Registro de Alma Ativo' : 'Estado de Escuta'}
+                </span>
+              </div>
+              <p className="text-[7px] text-muted-foreground/20 uppercase font-black tracking-widest italic">
+                {context || 'Santuário Universal'}
+              </p>
             </div>
 
             <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-10 scrollbar-hide">
