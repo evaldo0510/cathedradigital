@@ -395,26 +395,40 @@
     padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
-  /* Design System Tokens - Unified Source of Truth */
+  /* Design System Tokens - Unified Source of Truth for Cathedra Digital */
   :root {
-    --card-radius: 2rem;
-    --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.02);
-    --card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+    --card-radius: 2.5rem;
+    --card-radius-mobile: 2rem;
+    --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.01);
+    --card-shadow-hover: 0 10px 40px -10px rgba(0, 0, 0, 0.02);
     --btn-radius: 9999px;
-    --layout-max-width: 800px; /* Reduced for better reading comfort */
-    --transition-premium: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-fast: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --layout-max-width: 1280px;
+    --transition-premium: 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* Standardized Opacities for "Visual Silence" */
+    --opacity-icon-idle: 0.1;
+    --opacity-icon-hover: 0.3;
+    --opacity-border: 0.03;
+    --opacity-text-secondary: 0.25;
+    --opacity-text-tertiary: 0.15;
   }
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card border border-border/5 shadow-premium transition-all relative overflow-hidden;
-    border-radius: var(--card-radius);
+    @apply bg-card/5 backdrop-blur-sm border border-primary/[0.03] shadow-premium transition-all relative overflow-hidden ring-1 ring-primary/[0.01];
+    border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
+  }
+
+  @screen md {
+    .premium-card {
+      border-radius: var(--card-radius);
+    }
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:border-primary/10 active:scale-[0.995];
+    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998];
     box-shadow: var(--card-shadow);
   }
 
