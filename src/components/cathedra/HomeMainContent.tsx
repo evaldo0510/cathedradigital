@@ -63,7 +63,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   return (
     <div className="w-full max-w-6xl mx-auto space-y-32 md:space-y-48 lg:space-y-64 pb-48 md:pb-72 px-5 md:px-12">
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
-      <section className="animate-in fade-in slide-in-from-bottom-12 duration-1000 fill-mode-both">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
@@ -76,7 +76,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 md:gap-40">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
-        <section className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200 fill-mode-both flex flex-col">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <SectionHeader 
             align="left"
             title="Sua Jornada" 
@@ -89,7 +89,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         </section>
 
         {/* 3. LOGOS IA - INTELLIGENT COMPANION */}
-        <section className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300 fill-mode-both flex flex-col">
+        <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both flex flex-col">
           <SectionHeader 
             align="left"
             title="Logos IA" 
@@ -101,7 +101,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             className="flex-1 p-8 md:p-14 flex flex-col items-center justify-center gap-10 md:gap-12 group"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-110 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
+            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
@@ -136,7 +136,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
-      <section className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-400 fill-mode-both">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both">
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
@@ -148,7 +148,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
-      <section className="animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-500 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1000">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1000">
         <SectionHeader 
           title="O Futuro" 
           subtitle="Novas salas sendo preparadas para o seu santuário."
