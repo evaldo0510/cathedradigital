@@ -322,7 +322,7 @@ const Footer: React.FC = React.memo(() => {
                 <React.Fragment key={item.label}>
                   <Button 
                     onClick={() => navigate(item.route)} 
-                    className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-2 py-1 rounded"
+                    className="text-premium-small font-black uppercase tracking-[0.2em] text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none px-3 py-1.5 rounded"
                     aria-label={item.label}
                   >
                     {item.label}
