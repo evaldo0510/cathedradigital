@@ -48,11 +48,11 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
         
         <div className="flex items-center gap-6">
           <span className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Grau {currentDegree}</span>
-          <div className="h-[2px] w-32 bg-border/10 rounded-full overflow-hidden">
+          <div className="h-[2px] w-32 bg-primary/[0.03] rounded-full overflow-hidden">
             <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(5, progressToNextLevel)}%` }}
-              className="h-full bg-secondary/30"
+              className="h-full bg-secondary/20"
               transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
@@ -65,7 +65,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
         {primaryResume && (
           <HomeCard 
             onClick={() => navigate(primaryResume.route)}
-            className="lg:col-span-2 p-8 group relative overflow-hidden flex flex-col justify-between min-h-[220px] rounded-[2.5rem] border-border/20"
+            className="lg:col-span-2 responsive-padding group relative overflow-hidden flex flex-col justify-between min-h-[240px] border-primary/10 shadow-premium"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                {primaryResume.type === 'bible' && <Icons.Bible size={120} strokeWidth={0.5} />}
@@ -83,7 +83,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
                  <Icons.Clock size={14} />
                  <span>Retomar agora</span>
               </div>
-              <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center group-hover:scale-110 transition-transform shadow-premium">
+              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center group-hover:scale-110 transition-transform shadow-premium">
                 <Icons.Play size={20} fill="currentColor" />
               </div>
             </div>
@@ -91,7 +91,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
         )}
 
         {/* Card de Última Reflexão */}
-        <HomeCard className="p-8 flex flex-col justify-between bg-secondary/[0.02] border-secondary/10 rounded-[2.5rem]">
+        <HomeCard className="responsive-padding flex flex-col justify-between bg-secondary/[0.01] border-secondary/10 shadow-premium">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-secondary/60">
               <Icons.Quote size={16} />
@@ -137,7 +137,7 @@ export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, 
                 key={item.id || idx}
                 whileHover={{ y: -4, borderColor: 'rgba(var(--secondary), 0.3)' }}
                 onClick={() => navigate(item.route)}
-                className="flex-shrink-0 w-72 p-6 rounded-[2rem] bg-card border border-border/40 cursor-pointer group transition-all shadow-sm hover:shadow-premium"
+                className="flex-shrink-0 w-72 p-8 rounded-premium bg-card border border-primary/5 cursor-pointer group transition-all shadow-sm hover:shadow-premium"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
