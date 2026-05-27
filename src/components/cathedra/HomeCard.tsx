@@ -20,7 +20,7 @@ const HomeCard = React.forwardRef<
       variant={isClickable ? 'interactive' : 'default'}
       padding="none"
       className={cn(
-        "text-card-foreground focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/40 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
+        "text-card-foreground focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-4 focus-within:border-primary/20 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-4",
         className
       )}
       {...props}

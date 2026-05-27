@@ -15,7 +15,7 @@
     --secondary: 45 64% 52%;     /* #D4AF37 Gold */
     --secondary-foreground: 222 47% 11%;
     --muted: 45 20% 90%;
-    --muted-foreground: 222 20% 40%;
+    --muted-foreground: 222 20% 35%; /* Slightly darker for better contrast (WCAG AA) */
     --accent: 45 64% 52% / 0.05;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
@@ -121,7 +121,7 @@
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-shadow;
+    @apply outline-none ring-2 ring-primary/40 ring-offset-4 ring-offset-background transition-all duration-300;
   }
 
 
@@ -428,7 +428,7 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998];
+    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-4 focus-visible:outline-none;
     box-shadow: var(--card-shadow);
   }
 
@@ -459,7 +459,7 @@
   }
   
   .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/30 transition-all hover:bg-primary/[0.03] hover:text-foreground/50;
+    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40 transition-all hover:bg-primary/[0.03] hover:text-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/20;
   }
 
   /* Global Button Standard - Premium Spiritual */
