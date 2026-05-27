@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 describe('Supabase Client Environment', () => {
-  const originalWindow = global.window;
+  const originalWindow = (globalThis as any).window;
   const originalImportMeta = import.meta.env;
 
   beforeEach(() => {
