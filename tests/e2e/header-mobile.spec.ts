@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y } from 'axe-playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 const viewports = [
   // Portrait
@@ -24,21 +24,16 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       await expect(header).toBeVisible();
 
       // 1. Visual Regression Snapshot
-      // We use a specific name for the snapshot to include viewport info
       await expect(header).toHaveScreenshot(`header-${vp.name.replace(/\s+/g, '-').toLowerCase()}.png`, {
         maxDiffPixelRatio: 0.05,
       });
 
       // 2. Accessibility Check (Axe)
-      await injectAxe(page);
-      await checkA11y(page, 'header[role="banner"]', {
-        axeOptions: {
-          runOnly: {
-            type: 'tag',
-            values: ['wcag2a', 'wcag2aa', 'best-practice'],
-          },
-        },
-      });
+      const accessibilityScanResults = await new AxeBuilder({ page })
+        .include('header[role="banner"]')
+        .analyze();
+      
+      expect(accessibilityScanResults.violations).toEqual([]);
 
       // 3. Skip Link Functionality
       const skipLink = page.locator('a[href="#main-content"]');
@@ -61,9 +56,11 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       expect(isMainFocused).toBeTruthy();
 
       // 4. Focus Order
-      // Order: Skip Link -> Logo -> Back Button (if present) -> Search -> Theme -> Profile/Login -> Menu
-      // We already focused Skip Link. Let's continue.
+      // Move back to top to start sequence
+      await page.keyboard.press('Home');
+      await page.mouse.click(0, 0);
       
+      await page.keyboard.press('Tab'); // Move to Skip Link
       await page.keyboard.press('Tab'); // Move to Logo
       const logo = page.locator('div[role="link"][aria-label*="inicial"]');
       expect(await logo.evaluate(el => document.activeElement === el)).toBeTruthy();
@@ -115,7 +112,7 @@ test.describe('Mobile Header Comprehensive Tests', () => {
       
       const strokeWidth = await icon.evaluate(el => window.getComputedStyle(el).strokeWidth);
       // We expect 1.2 as defined in constants
-      expect(parseFloat(strokeWidth)).toBeCloseTo(1.2, 0.1);
+      expect(parseFloat(strokeWidth)).toBeCloseTo(1.2, 1);
     }
   });
 });
