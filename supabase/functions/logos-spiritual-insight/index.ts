@@ -111,7 +111,10 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'google/gemini-2.0-flash-lite',
-        messages: [{ role: 'system', content: prompt }],
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMessage },
+        ],
         temperature: 0.7,
       }),
     })
