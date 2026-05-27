@@ -201,7 +201,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             className="fixed top-0 left-0 h-full w-[320px] md:w-[380px] bg-card/95 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-8 md:p-12 z-[150] shadow-2xl overflow-hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Menu de navegação"
+            aria-label={t('navigation_menu') || 'Menu de navegação'}
           >
             <div className="flex items-center justify-between mb-12">
               <div 
@@ -231,7 +231,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </div>
 
-            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2">
+            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2" role="navigation">
               {sections.map((section) => (section.items.length > 0 && (
                 <div key={section.label} className="animate-in fade-in slide-in-from-left-4 duration-700">
                   <h3 className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/20 mb-6 px-4">{section.label}</h3>
@@ -245,7 +245,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onClick={() => handleNav(item.path)}
                             onMouseEnter={() => prefetchRoute(item.path)}
                             onTouchStart={() => prefetchRoute(item.path)}
-                            aria-current={isActive ? 'page' : undefined}
+                             aria-current={isActive ? 'page' : undefined}
+                             aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
                             className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-2 outline-none h-auto min-h-[56px] border border-transparent
                               ${isActive
                                 ? 'bg-primary/5 text-primary border-primary/10 shadow-sm'
