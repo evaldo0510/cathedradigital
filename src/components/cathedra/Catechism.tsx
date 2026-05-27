@@ -42,7 +42,13 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 
 
 
-const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
+const CatechismContent: React.FC<{ 
+  paragraph: number; 
+  onNavigateToBible?: (abbr: string, chapter: number) => void; 
+  isVisible?: boolean;
+  onHighlightClick?: (note: UserNote) => void;
+  highlights?: UserNote[];
+}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, highlights = [] }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const settingsContext = useReadingSettings();
