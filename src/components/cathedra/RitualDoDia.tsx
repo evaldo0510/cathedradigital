@@ -299,7 +299,7 @@ const RitualDoDia: React.FC = () => {
               <blockquote className="text-2xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/30 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </div>
