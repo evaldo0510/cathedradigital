@@ -23,6 +23,7 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
     <section 
       ref={heroRef} 
       className="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background"
+      aria-label="Cathedra Digital - Introdução"
     >
       <HeroBackground bgY={heroY} />
       <HeroParticles />

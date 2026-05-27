@@ -110,7 +110,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           <p className="text-[10px] font-bold uppercase tracking-[1em] text-primary translate-x-[0.5em]">
             Cathedra
           </p>
-          <span className="w-12 h-px bg-primary" />
+          <span className="w-12 h-px bg-primary" aria-hidden="true" />
         </div>
       </motion.div>
     </motion.div>
