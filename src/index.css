@@ -483,7 +483,7 @@
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 h-14 font-medium uppercase tracking-[0.4em] text-[9.5px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent;
+    @apply relative overflow-hidden px-6 sm:px-8 py-4 h-12 sm:h-14 font-medium uppercase tracking-[0.4em] text-[9px] sm:text-[9.5px] flex items-center justify-center gap-3 sm:gap-4 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent;
     border-radius: var(--btn-radius);
     transition: all var(--transition-subtle);
   }
@@ -512,11 +512,11 @@
 
 @layer utilities {
   .responsive-padding {
-    @apply p-8 sm:p-10 md:p-14 lg:p-20;
+    @apply p-6 sm:p-10 md:p-14 lg:p-20;
   }
   
   .responsive-gap {
-    @apply gap-8 md:gap-12 lg:gap-16;
+    @apply gap-6 sm:gap-12 lg:gap-16;
   }
 }
 
