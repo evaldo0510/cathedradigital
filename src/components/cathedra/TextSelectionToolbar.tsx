@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Highlighter, FileText, X } from 'lucide-react';
+import { Highlighter, FileText, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface TextSelectionToolbarProps {
