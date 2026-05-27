@@ -216,17 +216,38 @@ const InnerFreedomBook: React.FC = () => {
               </div>
 
               {/* Poetry Section (PCH) */}
-              <div className="bg-muted/30 p-12 md:p-20 rounded-[40px] border border-border/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                  <Icons.Feather className="w-32 h-32 rotate-12" />
-                </div>
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                  transition: { delay: 0.3 }
+                }}
+                className="bg-muted/30 p-12 md:p-20 rounded-[40px] border border-border/5 relative overflow-hidden group"
+              >
+                <motion.div 
+                  animate={{ 
+                    scale: [1, 1.02, 1],
+                    opacity: [0.05, 0.08, 0.05]
+                  }}
+                  transition={{ 
+                    duration: 8, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="absolute top-0 right-0 p-8 pointer-events-none"
+                >
+                  <Icons.Feather className="w-48 h-48 rotate-12" />
+                </motion.div>
                 <div className="relative z-10 space-y-8">
                   <span className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/40 block">Poesia Cognitiva Hipnótica</span>
-                  <blockquote className="text-2xl md:text-4xl font-display italic text-primary leading-tight whitespace-pre-line">
-                    "{currentChapterData?.poetry}"
+                  <blockquote className="text-2xl md:text-4xl font-display italic text-primary leading-tight whitespace-pre-line relative">
+                    <span className="absolute -left-8 -top-4 text-6xl opacity-10">"</span>
+                    {currentChapterData?.poetry}
+                    <span className="absolute -right-4 -bottom-8 text-6xl opacity-10">"</span>
                   </blockquote>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Footer / Controls */}
               <footer className="flex items-center justify-between pt-16 border-t border-border/10 print:hidden">
