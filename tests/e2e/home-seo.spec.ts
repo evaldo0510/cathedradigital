@@ -179,6 +179,10 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     // 4. Lighthouse Performance Audit (Skipped in Sandbox, but configured for CI)
     if (process.env.CI === 'true') {
       const browser = await chromium.launch({
+        executablePath: process.env.CHROME_PATH || undefined,
+        args: ['--remote-debugging-port=9222'],
+        headless: true
+      });
         args: ['--remote-debugging-port=9222'],
         headless: true
       });
