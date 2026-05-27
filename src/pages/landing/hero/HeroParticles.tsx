@@ -1,26 +1,30 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 const HeroParticles = () => {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) return null;
+
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
-      {[...Array(6)].map((_, i) => (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+      {[...Array(5)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-px h-px bg-primary/20 rounded-full"
+          className="absolute w-px h-px bg-primary/30 rounded-full"
           initial={{ 
             x: Math.random() * 100 + "%", 
             y: Math.random() * 100 + "%",
             opacity: 0 
           }}
           animate={{ 
-            y: [null, "-20%", "20%"],
-            opacity: [0, 0.15, 0],
-            scale: [1, 1.5, 1]
+            y: [null, "-10%", "10%"],
+            opacity: [0, 0.1, 0],
+            scale: [1, 1.2, 1]
           }}
           transition={{ 
-            duration: 40 + Math.random() * 40, 
+            duration: 50 + Math.random() * 50, 
             repeat: Infinity, 
-            ease: "easeInOut",
+            ease: "linear",
             delay: Math.random() * 20
           }}
         />
@@ -28,5 +32,7 @@ const HeroParticles = () => {
     </div>
   );
 };
+
+export default HeroParticles;
 
 export default HeroParticles;
