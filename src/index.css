@@ -428,7 +428,7 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998];
+    @apply premium-card cursor-pointer hover:bg-card/[0.08] hover:border-primary/5 active:scale-[0.998] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-4 focus-visible:outline-none;
     box-shadow: var(--card-shadow);
   }
 
