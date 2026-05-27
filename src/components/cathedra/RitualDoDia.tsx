@@ -288,8 +288,8 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-16">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-8 max-w-4xl mx-auto text-center">
-            <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
+          <section className="space-y-6 md:space-y-8 max-w-4xl mx-auto text-center">
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
             <div 
               className={cn(
                 "group cursor-pointer transition-all duration-1000",
@@ -297,18 +297,18 @@ const RitualDoDia: React.FC = () => {
               )}
               onClick={() => handleProgress(25)}
             >
-              <blockquote className="text-3xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight">
+              <blockquote className="text-2xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-8 text-[10px] font-bold text-primary/20 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </div>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-8 max-w-3xl mx-auto text-center">
-            <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
+          <section className="space-y-6 md:space-y-8 max-w-3xl mx-auto text-center">
+            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">II. Meditatio</span>
             <div 
               className={cn(
                 "group cursor-pointer transition-all duration-1000",
@@ -316,7 +316,7 @@ const RitualDoDia: React.FC = () => {
               )}
               onClick={() => handleProgress(50)}
             >
-              <p className="text-xl md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5">
+              <p className="text-lg md:text-3xl leading-relaxed text-foreground/40 font-serif italic selection:bg-primary/5 px-4">
                 {ritual.reflection}
               </p>
             </div>
