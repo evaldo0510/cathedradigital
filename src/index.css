@@ -20,7 +20,7 @@
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 11% / 0.03; /* Softened border globally */
+    --border: 222 47% 11% / 0.05; /* Unified soft border */
     --input: 222 47% 11% / 0.03;
     --ring: 222 47% 11% / 0.05;
     --radius: 0.75rem;
@@ -409,9 +409,9 @@
     /* Standardized Opacities for "Visual Silence" */
     --opacity-icon-idle: 0.1;
     --opacity-icon-hover: 0.3;
-    --opacity-border: 0.03;
-    --opacity-text-secondary: 0.25;
-    --opacity-text-tertiary: 0.15;
+    --opacity-border: 0.05;
+    --opacity-text-secondary: 0.4;
+    --opacity-text-tertiary: 0.2;
   }
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */

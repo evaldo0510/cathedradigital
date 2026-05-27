@@ -11,6 +11,7 @@ const DesignSystemPlayground: React.FC = () => {
       <SEOHead 
         title="Design System Playground | Cathedra" 
         description="Ambiente de testes e documentação dos componentes do Cathedra Digital."
+        path="/design-system"
       />
       
       <div className="app-container py-20 md:py-32 space-y-32">
