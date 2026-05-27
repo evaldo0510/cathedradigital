@@ -21,6 +21,7 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
 
   return (
     <section ref={heroRef} className="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background">
+      <h1 className="sr-only">Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital</h1>
       <HeroBackground bgY={heroY} />
       <HeroParticles />
       <HeroContent 
