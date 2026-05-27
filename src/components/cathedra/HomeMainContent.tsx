@@ -83,9 +83,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Sua Jornada" 
             subtitle="Onde a alma parou para contemplar."
-            className="mb-8 md:mb-14"
+            className="mb-12 md:mb-20"
           />
-          <div className="flex-1 premium-card-interactive responsive-padding">
+          <div className="flex-1 premium-card-interactive p-10 sm:p-20 md:p-24 lg:p-32">
             <ReadingProgressSection />
           </div>
         </section>
