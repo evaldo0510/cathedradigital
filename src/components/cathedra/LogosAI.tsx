@@ -201,16 +201,31 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const exportHistory = React.useCallback(() => {
     if (history.length === 0) return;
     
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(history, null, 2));
+    const exportData = {
+      metadata: {
+        section_id: context || 'global',
+        section_type: type,
+        timestamp: new Date().toISOString(),
+        total_messages: history.length,
+        app: 'Cathedra Digital'
+      },
+      history: history.map((msg, index) => ({
+        ...msg,
+        index,
+        timestamp: new Date().toISOString() // Approximate
+      }))
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportData, null, 2));
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", `logos_ia_history_${context || 'geral'}.json`);
+    downloadAnchorNode.setAttribute("download", `logos_ia_history_${context || 'geral'}_${new Date().getTime()}.json`);
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
     
     toast.success("Histórico exportado com sucesso");
-  }, [history, context]);
+  }, [history, context, type]);
 
   useEffect(() => {
     if (initialQuery && isOpen && history.length === 0) {
