@@ -41,6 +41,7 @@ import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
+import { NoteEditModal } from './NoteEditModal';
 
 
 
@@ -156,6 +157,7 @@ const Bible: React.FC = () => {
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedBook || !selectedChapter) return [];
@@ -163,7 +165,7 @@ const Bible: React.FC = () => {
   }, [chapterNotes, selectedBook, selectedChapter]);
 
   const currentChapterHighlights = useMemo(() => {
-    return currentChapterNotes.filter(n => n.highlight_color);
+    return currentChapterNotes.filter(n => !!n.highlight_color);
   }, [currentChapterNotes]);
 
   const completedBooks = useMemo(() => new Set(profile?.completed_books || []), [profile?.completed_books]);
@@ -482,10 +484,51 @@ const Bible: React.FC = () => {
       if (viewMode !== 'reading' || !selectedBook) return;
       if (e.key === 'ArrowLeft') navigateChapter(-1);
       if (e.key === 'ArrowRight') navigateChapter(1);
+      
+      // Accessibility: Reading shortcuts
+      if (viewMode === 'reading' && !isNoteModalOpen) {
+        if (e.key.toLowerCase() === 'h') {
+          if (highlightedVerse) {
+            handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para destacar.', { icon: '💡' });
+          }
+        }
+        if (e.key.toLowerCase() === 'n') {
+          if (highlightedVerse) {
+            setIsNoteModalOpen(true);
+          } else {
+            toast.info('Selecione um versículo (clique ou toque) para anotar.', { icon: '📝' });
+          }
+        }
+        if (e.key === 'Escape') {
+          setHighlightedVerse(null);
+          setActiveHighlight(null);
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [viewMode, selectedBook, navigateChapter]);
+  }, [viewMode, selectedBook, navigateChapter, highlightedVerse, isNoteModalOpen]);
+
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!selectedBook || !highlightedVerse) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(selectedBook.abbr, text, color, {
+        book_abbr: selectedBook.abbr,
+        chapter: selectedChapter,
+        verse: highlightedVerse
+      });
+    }
+    setIsNoteModalOpen(false);
+  }, [selectedBook, selectedChapter, highlightedVerse, activeHighlight, addNote]);
 
   useEffect(() => {
     const fetchLastRead = async () => {
@@ -502,15 +545,19 @@ const Bible: React.FC = () => {
       
       // Better resume: only if no specific verse in URL
       if (!searchParams.get('v') && !searchParams.get('verse')) {
-        if (savedScroll && parseInt(savedScroll) > 100) {
+        if (savedScroll && parseInt(savedScroll) > 200) {
           setTimeout(() => {
             window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+            toast('Ponto de leitura restaurado', { icon: '📖', duration: 2000 });
           }, 300);
         } else if (savedVerse) {
           const vNum = parseInt(savedVerse);
           setTimeout(() => {
             const el = document.getElementById(`v${vNum}`);
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              toast('Ponto de leitura restaurado', { icon: '📖', duration: 2000 });
+            }
           }, 400);
         }
       }
@@ -926,13 +973,8 @@ const Bible: React.FC = () => {
               activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
                 if (activeHighlight) {
-                  // Update existing highlight
-                  // Assuming updateNote handles color or I need to extend it
-                  // Let's check updateNote signature... it only handles text in hook.
-                  // I might need to update the hook to handle color.
                   supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
                     setActiveHighlight(null);
-                    // refresh notes
                   });
                 } else if (highlightedVerse) {
                   addNote(selectedBook.abbr, 'Destacado para meditação', color, {
@@ -951,23 +993,21 @@ const Bible: React.FC = () => {
                 }
               }}
               onAddNote={() => {
-                if (activeHighlight) {
-                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
-                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
-                   setActiveHighlight(null);
-                } else if (highlightedVerse) {
-                  const note = prompt('Sua reflexão sobre este versículo:');
-                  if (note) {
-                    addNote(selectedBook.abbr, note, 'yellow', {
-                      book_abbr: selectedBook.abbr,
-                      chapter: selectedChapter,
-                      verse: highlightedVerse
-                    });
-                  }
+                if (highlightedVerse || activeHighlight) {
+                  setIsNoteModalOpen(true);
                 } else {
                   toast.info('Clique em um versículo primeiro para anotar.');
                 }
               }}
+            />
+
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 

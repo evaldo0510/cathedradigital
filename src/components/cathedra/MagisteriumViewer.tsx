@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,7 @@ import { useReadingMarks } from '@/hooks/useReadingMarks';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
+import { NoteEditModal } from './NoteEditModal';
 
 
 
@@ -40,6 +41,7 @@ const MagisteriumViewer: React.FC = () => {
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -136,6 +138,42 @@ const MagisteriumViewer: React.FC = () => {
     };
   }, [id, content, saveLastRead]);
 
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!id) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(id, text, color);
+    }
+    setIsNoteModalOpen(false);
+  }, [id, activeHighlight, addNote]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isNoteModalOpen) return;
+      
+      // Accessibility: Reading shortcuts
+      if (id) {
+        if (e.key.toLowerCase() === 'h') {
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        }
+        if (e.key.toLowerCase() === 'n') {
+          setIsNoteModalOpen(true);
+        }
+        if (e.key === 'Escape') {
+          setActiveHighlight(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [id, isNoteModalOpen, handleAddNoteOrHighlight]);
+
   // Restore scroll position
   useEffect(() => {
     if (content && id) {
@@ -143,6 +181,7 @@ const MagisteriumViewer: React.FC = () => {
       if (savedScroll && !highlight) {
         setTimeout(() => {
           window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          toast('Documento restaurado do último ponto', { icon: '📖', duration: 2000 });
         }, 800);
       }
     }
@@ -370,17 +409,19 @@ const MagisteriumViewer: React.FC = () => {
                 }
               }}
               onAddNote={() => {
-                if (activeHighlight) {
-                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
-                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
-                   setActiveHighlight(null);
-                } else if (id) {
-                  const note = prompt('Sua reflexão sobre este documento:');
-                  if (note) {
-                    addNote(id, note, 'yellow');
-                  }
+                if (id || activeHighlight) {
+                  setIsNoteModalOpen(true);
                 }
               }}
+            />
+
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 

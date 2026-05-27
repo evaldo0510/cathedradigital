@@ -39,6 +39,7 @@ import { ReadingProgress } from './ReadingProgress';
 import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
+import { NoteEditModal } from './NoteEditModal';
 
 
 
@@ -312,6 +313,7 @@ const Catechism: React.FC = () => {
   const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
@@ -426,6 +428,44 @@ const Catechism: React.FC = () => {
       }
     }
   }, [viewMode, selectedSection, selectedPart, startPara, endPara, searchParams]);
+
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!currentParagraph) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(currentParagraph.toString(), text, color, {
+        paragraph: currentParagraph
+      });
+    }
+    setIsNoteModalOpen(false);
+  }, [currentParagraph, activeHighlight, addNote]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (viewMode !== 'reading' || isNoteModalOpen) return;
+      
+      // Accessibility: Reading shortcuts
+      if (currentParagraph) {
+        if (e.key.toLowerCase() === 'h') {
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        }
+        if (e.key.toLowerCase() === 'n') {
+          setIsNoteModalOpen(true);
+        }
+        if (e.key === 'Escape') {
+          setActiveHighlight(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, currentParagraph, isNoteModalOpen, handleAddNoteOrHighlight]);
 
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
@@ -595,43 +635,41 @@ const Catechism: React.FC = () => {
             </div>
             
             <TextSelectionToolbar 
+              activeHighlightId={activeHighlight?.id}
+              activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
-                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
-                  paragraph: currentParagraph
-                });
-              }}
-              onAddNote={() => {
-                const note = prompt('Sua reflexão sobre este parágrafo:');
-                if (note) {
-                  addNote(currentParagraph.toString(), note, 'yellow', {
+                if (activeHighlight) {
+                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
+                    setActiveHighlight(null);
+                  });
+                } else {
+                  addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
                     paragraph: currentParagraph
                   });
+                }
+              }}
+              onDeleteHighlight={() => {
+                if (activeHighlight) {
+                  deleteChapterNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                }
+              }}
+              onAddNote={() => {
+                if (currentParagraph || activeHighlight) {
+                  setIsNoteModalOpen(true);
+                } else {
+                  toast.info('Clique em um parágrafo primeiro para anotar.');
                 }
               }}
             />
 
-            <ReadingProgress 
-              progress={readingProgress}
-              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
-              onResumeLast={() => navigate(lastReadMark.url)}
-              label={`Catecismo §${currentParagraph}`}
-            />
-            
-            <TextSelectionToolbar 
-              onHighlight={(color) => {
-                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
-                  paragraph: currentParagraph
-                });
-              }}
-              onAddNote={() => {
-                const note = prompt('Sua reflexão sobre este parágrafo:');
-                if (note) {
-                  addNote(currentParagraph.toString(), note, 'yellow', {
-                    paragraph: currentParagraph
-                  });
-                }
-              }}
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 

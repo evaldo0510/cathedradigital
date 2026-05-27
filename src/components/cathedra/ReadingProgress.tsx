@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { ChevronUp } from 'lucide-react';
+import { Icons } from '@/constants';
 
 interface ReadingProgressProps {
   progress: number;
@@ -46,9 +47,17 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                   onClick={onResumeLast}
                   variant="secondary"
                   size="sm"
-                  className="rounded-full shadow-premium text-[9px] font-black uppercase tracking-widest px-6 h-10 border border-secondary/20"
+                  className="rounded-full shadow-2xl text-[10px] font-black uppercase tracking-widest px-8 h-12 border-2 border-secondary bg-secondary text-primary hover:bg-secondary/90 transition-all group relative overflow-hidden"
                 >
-                  Retomar Leitura
+                  <motion.span 
+                    animate={{ scale: [1, 1.05, 1] }} 
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex items-center gap-2 relative z-10"
+                  >
+                    <Icons.History className="w-4 h-4 group-hover:rotate-[-45deg] transition-transform" />
+                    Retomar de onde parei
+                  </motion.span>
+                  <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 </Button>
               )}
               
@@ -56,10 +65,10 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                 onClick={onScrollToTop}
                 variant="outline"
                 size="icon"
-                className="w-10 h-10 rounded-full shadow-premium bg-background/80 backdrop-blur-md border-primary/5 hover:border-primary/20"
+                className="w-12 h-12 rounded-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30"
                 aria-label="Voltar ao topo"
               >
-                <ChevronUp className="w-4 h-4" />
+                <ChevronUp className="w-5 h-5" />
               </Button>
             </motion.div>
           )}
