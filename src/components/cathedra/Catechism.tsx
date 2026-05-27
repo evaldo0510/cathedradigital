@@ -429,6 +429,44 @@ const Catechism: React.FC = () => {
     }
   }, [viewMode, selectedSection, selectedPart, startPara, endPara, searchParams]);
 
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!currentParagraph) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(currentParagraph.toString(), text, color, {
+        paragraph: currentParagraph
+      });
+    }
+    setIsNoteModalOpen(false);
+  }, [currentParagraph, activeHighlight, addNote]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (viewMode !== 'reading' || isNoteModalOpen) return;
+      
+      // Accessibility: Reading shortcuts
+      if (currentParagraph) {
+        if (e.key.toLowerCase() === 'h') {
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        }
+        if (e.key.toLowerCase() === 'n') {
+          setIsNoteModalOpen(true);
+        }
+        if (e.key === 'Escape') {
+          setActiveHighlight(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, currentParagraph, isNoteModalOpen, handleAddNoteOrHighlight]);
+
   const markParagraphRead = useCallback(async (p: number) => {
     if (!user) return;
     try {
