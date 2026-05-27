@@ -142,7 +142,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="mb-12 md:mb-24"
         />
-        <div className="bg-card/5 backdrop-blur-sm rounded-[2.5rem] md:rounded-[3.5rem] p-4 md:p-14 border border-primary/[0.03] shadow-premium-sm ring-1 ring-primary/[0.01]">
+        <div className="premium-card p-4 md:p-14">
           <HomeMainDoors t={t} />
         </div>
       </section>
