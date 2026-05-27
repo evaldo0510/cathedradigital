@@ -40,6 +40,48 @@ function resolveMercadoPagoAccessToken() {
   };
 }
 
+async function verifyMercadoPagoSignature(
+  req: Request,
+  rawBody: string,
+  dataId: string | null,
+): Promise<boolean> {
+  const secret = Deno.env.get("MERCADO_PAGO_WEBHOOK_SECRET");
+  if (!secret) {
+    // No secret configured — accept (backwards compatible). Configure the secret to enforce.
+    console.warn("[mercadopago-webhook] MERCADO_PAGO_WEBHOOK_SECRET not set; skipping signature verification");
+    return true;
+  }
+
+  const signatureHeader = req.headers.get("x-signature") || "";
+  const requestIdHeader = req.headers.get("x-request-id") || "";
+  if (!signatureHeader || !requestIdHeader) return false;
+
+  const parts = Object.fromEntries(
+    signatureHeader.split(",").map((p) => {
+      const [k, ...v] = p.trim().split("=");
+      return [k, v.join("=")];
+    }),
+  ) as Record<string, string>;
+
+  const ts = parts.ts;
+  const v1 = parts.v1;
+  if (!ts || !v1) return false;
+
+  const manifest = `id:${dataId ?? ""};request-id:${requestIdHeader};ts:${ts};`;
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(manifest));
+  const expected = Array.from(new Uint8Array(sig))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return expected === v1;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
