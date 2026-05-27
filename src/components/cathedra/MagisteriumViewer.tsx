@@ -408,17 +408,19 @@ const MagisteriumViewer: React.FC = () => {
                 }
               }}
               onAddNote={() => {
-                if (activeHighlight) {
-                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
-                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
-                   setActiveHighlight(null);
-                } else if (id) {
-                  const note = prompt('Sua reflexão sobre este documento:');
-                  if (note) {
-                    addNote(id, note, 'yellow');
-                  }
+                if (id || activeHighlight) {
+                  setIsNoteModalOpen(true);
                 }
               }}
+            />
+
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 
