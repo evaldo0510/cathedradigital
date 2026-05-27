@@ -69,8 +69,8 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       label: 'Biblioteca',
       items: [
         { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5" /> },
-        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Layers className="w-5 h-5" /> },
-        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.BookMarked className="w-5 h-5" /> },
+        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5" /> },
+        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary className="w-5 h-5" /> },
         { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type className="w-5 h-5" /> },
         { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather className="w-5 h-5" /> },
         { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass className="w-5 h-5" /> },
@@ -80,7 +80,7 @@ const Sidebar = React.memo(React.forwardRef<HTMLElement, SidebarProps>(({ onClos
       label: 'Santos & Devoções',
       items: [
         { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users className="w-5 h-5" /> },
-        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Crown className="w-5 h-5" /> },
+        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator className="w-5 h-5" /> },
         { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles className="w-5 h-5" /> },
         { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck className="w-5 h-5" /> },
       ]
