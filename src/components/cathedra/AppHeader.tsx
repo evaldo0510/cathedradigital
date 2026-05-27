@@ -30,31 +30,31 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
+        className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
         role="banner"
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0 landscape:min-h-[80px] landscape:py-2">
-
+        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[140px] md:h-28 py-8 md:py-0 gap-8 md:gap-0 landscape:min-h-[90px] landscape:py-3">
 
           {/* Logo Section - Centralized on Mobile */}
           <div 
-            className="flex items-center justify-center md:justify-start landscape:justify-start gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto landscape:w-auto p-2" 
-
+            className="flex flex-col items-center justify-center md:flex-row md:justify-start landscape:flex-row landscape:justify-start gap-4 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto landscape:w-auto p-2" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-10 h-10 md:w-11 md:h-11 transition-all duration-1000" variant="dark" />
-            <div className="flex flex-col min-w-0">
-              <span className="text-lg md:text-xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.65em] transition-all duration-1000">Cathedra</span>
+            <Icons.Logo className="w-12 h-12 md:w-11 md:h-11 transition-all duration-1000 scale-110 md:scale-100" variant="dark" />
+            <div className="flex flex-col items-center md:items-start min-w-0">
+              <span className="text-xl md:text-xl font-display font-light uppercase tracking-[0.7em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.8em] transition-all duration-1000">Cathedra</span>
+              <span className="hidden md:block text-[8px] uppercase tracking-[0.4em] text-muted-foreground/40 mt-1">Biblioteca Digital</span>
             </div>
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-0 landscape:border-none">
-            <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-3">
+          <div className="flex items-center justify-center md:justify-end gap-6 sm:gap-8 w-full md:w-auto border-t border-primary/5 md:border-none pt-8 md:pt-0 landscape:pt-0 landscape:border-none">
+            <div className="flex items-center gap-4 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-4">
+
 
               {!isDashboard && (
                 <Button
