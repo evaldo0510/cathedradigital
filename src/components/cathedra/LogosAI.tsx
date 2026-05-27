@@ -109,6 +109,12 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
   const handleQuery = React.useCallback(async (e?: React.FormEvent, customQuery?: string) => {
     if (e) e.preventDefault();
+    if (settings.totalSilence) {
+      toast.error("O Modo Silêncio Total está ativo", {
+        description: "Desative-o nas configurações para interagir com a Logos IA."
+      });
+      return;
+    }
     const finalQuery = customQuery || query;
     if (!finalQuery.trim() || isLoading) return;
 
