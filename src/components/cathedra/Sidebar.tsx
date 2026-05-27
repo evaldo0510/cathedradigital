@@ -157,16 +157,16 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     {
       label: 'Comunidade',
       items: [
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-70" /> },
-        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
-        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users /> },
+        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart /> },
+        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck /> },
       ]
     },
     {
       label: 'Conta',
       items: [
-        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award className="w-5 h-5 opacity-70" /> },
-        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info className="w-5 h-5 opacity-70" /> },
+        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
+        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info /> },
       ]
     }
 
