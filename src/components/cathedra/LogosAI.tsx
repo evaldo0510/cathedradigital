@@ -48,10 +48,22 @@ const LogosAI: React.FC<LogosAIProps> = ({
   };
 
   useEffect(() => {
-    if (history.length > 0 && variant === 'integrated' && context) {
-      localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
+    if (variant === 'integrated' && context) {
+      if (history.length > 0) {
+        localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
+      } else {
+        localStorage.removeItem(`logos_history_${context}`);
+      }
     }
   }, [history, context, variant]);
+
+  // Sync history when context changes for persistence per reading section
+  useEffect(() => {
+    if (variant === 'integrated' && context) {
+      const saved = localStorage.getItem(`logos_history_${context}`);
+      setHistory(saved ? JSON.parse(saved) : []);
+    }
+  }, [context, variant]);
 
   useEffect(() => {
     if (history.length) scrollToBottom();
@@ -126,6 +138,16 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
   }, [query, isLoading, history, context, selectedText, type]);
 
+  const clearHistory = React.useCallback(() => {
+    setHistory([]);
+    if (context) {
+      localStorage.removeItem(`logos_history_${context}`);
+    }
+    toast.success("Histórico da Logos IA redefinido", {
+      description: "O silêncio foi restaurado nesta seção."
+    });
+  }, [context]);
+
   useEffect(() => {
     if (initialQuery && isOpen && history.length === 0) {
       handleQuery(undefined, initialQuery);
@@ -147,7 +169,18 @@ const LogosAI: React.FC<LogosAIProps> = ({
             <div className="premium-card bg-primary/[0.005] border-primary/[0.02] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
-              <div className="absolute top-8 right-8">
+              <div className="absolute top-8 right-8 flex items-center gap-2">
+                {history.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={clearHistory} 
+                    className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
+                    title="Limpar histórico"
+                  >
+                    <Icons.RotateCcw className="w-3.5 h-3.5" />
+                  </Button>
+                )}
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8">
                   <Icons.X className="w-3.5 h-3.5" />
                 </Button>
@@ -278,9 +311,22 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   <p className="text-[9px] text-muted-foreground/30 uppercase font-black tracking-widest mt-1">Mentor Espiritual</p>
                 </div>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
-                <Icons.X className="w-4 h-4" />
-              </Button>
+              <div className="flex items-center gap-2">
+                {history.length > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={clearHistory} 
+                    className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
+                    title="Limpar histórico"
+                  >
+                    <Icons.RotateCcw className="w-4 h-4" />
+                  </Button>
+                )}
+                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
+                  <Icons.X className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-10 scrollbar-hide">
