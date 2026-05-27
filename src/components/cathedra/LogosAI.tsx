@@ -22,6 +22,7 @@ interface LogosAIProps {
 const LogosAI: React.FC<LogosAIProps> = ({ 
   context, 
   selectedText, 
+  initialQuery,
   isOpen, 
   onClose, 
   type = 'bible',
