@@ -7,6 +7,7 @@ interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
   onAddNote: () => void;
   onDeleteHighlight?: () => void;
+  onAskLogos?: (text: string) => void;
   activeHighlightId?: string | null;
   activeColor?: string | null;
 }
