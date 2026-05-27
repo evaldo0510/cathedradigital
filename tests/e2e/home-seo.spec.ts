@@ -186,14 +186,16 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
               const searchAction = json.potentialAction;
               if (searchAction?.['@type'] === 'SearchAction') {
                 const expectedTarget = `${SEO_CONFIG.BASE_URL}${SEO_CONFIG.SEARCH_PATH}?${SEO_CONFIG.SEARCH_PARAM}={search_term_string}`;
-                if (searchAction.target === expectedTarget) {
+                const queryInput = json['potentialAction']['query-input'];
+                
+                if (searchAction.target === expectedTarget && queryInput === 'required name=search_term_string') {
                   auditResults.schema.push({ status: 'success', message: 'WebSite SearchAction is correctly configured.' });
                 } else {
                   auditResults.schema.push({ 
                     status: 'critical', 
-                    message: 'WebSite SearchAction target is incorrect.',
-                    evidence: `Expected: ${expectedTarget}, Found: ${searchAction.target}`,
-                    suggestion: 'Configure o target do SearchAction para usar os valores centralizados em SEO_CONFIG.'
+                    message: 'WebSite SearchAction configuration is incorrect.',
+                    evidence: `Target: ${searchAction.target}, QueryInput: ${queryInput}`,
+                    suggestion: 'Certifique-se de que o target inclua o placeholder {search_term_string} e que o query-input corresponda ao nome esperado.'
                   });
                 }
               } else {
