@@ -298,15 +298,22 @@ const MagisteriumViewer: React.FC = () => {
                 prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
-              {processedText.split('\n\n').map((para, idx) => (
-                <div key={idx} className="group relative mb-4">
-                  <ReactMarkdown>{para}</ReactMarkdown>
-                  <div className="absolute top-0 -right-12 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity no-print">
-                    <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
-                    <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+              {processedText.split('\n\n').map((para, idx) => {
+                const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
+                
+                return (
+                  <div key={idx} className="group relative mb-4" id={`para-${idx}`}>
+                    <div className={cn(note ? `highlight-${note.highlight_color} px-1 rounded-sm cursor-pointer` : '')}
+                         onClick={() => note && setActiveHighlight(note)}>
+                      <ReactMarkdown>{para}</ReactMarkdown>
+                    </div>
+                    <div className="absolute top-0 -right-12 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity no-print">
+                      <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
+                      <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             </div>
             
