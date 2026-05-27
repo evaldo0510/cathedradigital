@@ -38,6 +38,7 @@ const MagisteriumViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,7 @@ const MagisteriumViewer: React.FC = () => {
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
-    return docNotes.filter(n => n.content_id.startsWith(id));
+    return docNotes.filter(n => n.content_id === id || n.content_id.startsWith(`${id}:`));
   }, [docNotes, id]);
 
 
