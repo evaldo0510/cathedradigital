@@ -61,7 +61,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-32 md:space-y-48 lg:space-y-64 pb-48 md:pb-72 px-5 md:px-12">
+    <div id="main-content" className="w-full max-w-6xl mx-auto space-y-32 md:space-y-48 lg:space-y-64 pb-48 md:pb-72 px-5 md:px-12 outline-none" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <SectionHeader 
