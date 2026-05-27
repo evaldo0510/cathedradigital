@@ -48,6 +48,16 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Abuse protection: limit body size to 2KB
+    const contentLength = parseInt(req.headers.get("content-length") || "0");
+    if (contentLength > 2048) {
+      return new Response(
+        JSON.stringify({ error: "Payload too large" }),
+        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
