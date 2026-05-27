@@ -31,6 +31,6 @@ jobs:
           path: |
             test-results/
             test-results.json
-            tests/e2e/__screenshots__/
+            tests/e2e/**/*-snapshots/
             test-results/axe/
           retention-days: 7
