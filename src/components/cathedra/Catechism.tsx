@@ -433,10 +433,7 @@ const Catechism: React.FC = () => {
     if (!currentParagraph) return;
     
     if (activeHighlight) {
-       await supabase.from('user_notes').update({ 
-         note_text: text, 
-         highlight_color: color 
-       }).eq('id', activeHighlight.id);
+       await updateNote(activeHighlight.id, text, color);
        setActiveHighlight(null);
     } else {
       await addNote(currentParagraph.toString(), text, color, {
