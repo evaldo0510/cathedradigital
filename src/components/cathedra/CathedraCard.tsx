@@ -5,7 +5,7 @@ import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
 interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
 }
 
