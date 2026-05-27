@@ -147,12 +147,12 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
 
           <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
             {streak > 0 && (
-              <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/20 shadow-soft transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
+              <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/10 transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
                 <Icons.Zap className="w-5 h-5 text-secondary" />
                 <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.03] border border-border/40 shadow-soft transition-all hover:bg-primary/[0.06] hover:-translate-y-1">
+            <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.01] border border-primary/10 transition-all hover:bg-primary/[0.03] hover:-translate-y-1">
               <Icons.Star className="w-5 h-5 text-primary" />
               <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
@@ -163,14 +163,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.05}>
         <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="p-6 flex items-center justify-between cursor-pointer group rounded-[2.5rem]"
+          className="responsive-padding flex items-center justify-between cursor-pointer group"
           role="button"
           tabIndex={0}
           aria-label="Ver Guia dos Módulos"
           onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
         >
           <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:scale-110 transition-transform border border-border/30">
+            <div className="w-12 h-12 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/40 group-hover:scale-110 group-hover:bg-primary/[0.03] transition-all border border-primary/10">
               <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
             </div>
             <div>
@@ -192,14 +192,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden p-8 cursor-pointer group flex flex-col items-center text-center gap-5 rounded-[2.5rem]"
+              className="relative overflow-hidden responsive-padding cursor-pointer group flex flex-col items-center text-center gap-6"
             >
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
                   <Icons.Star className="w-3 h-3 fill-current" />
                 </div>
               )}
-              <div className={`w-14 h-14 rounded-premium bg-muted/10 flex items-center justify-center ${door.iconColor} group-hover:scale-105 transition-transform border border-border/30`}>
+              <div className={`w-14 h-14 rounded-full bg-primary/[0.01] flex items-center justify-center ${door.iconColor} group-hover:scale-105 group-hover:bg-primary/[0.03] transition-transform border border-primary/10`}>
                 <door.icon className="w-7 h-7" strokeWidth={1.25} />
               </div>
               <div className="space-y-3">
