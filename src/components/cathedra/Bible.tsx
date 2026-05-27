@@ -1182,6 +1182,11 @@ const Bible: React.FC = () => {
                     }}
                     onNavigateToCIC={handleNavigateToCIC}
                     onNavigateToDoc={handleNavigateToDoc}
+                    onSelectLogosQuery={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setLogosAIContext(`${selectedBook.name} ${selectedChapter}`);
+                      setShowLogosAI(true);
+                    }}
                   />
                 </div>
               </>

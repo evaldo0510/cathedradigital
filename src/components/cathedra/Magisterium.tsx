@@ -229,6 +229,12 @@ const Magisterium: React.FC = () => {
         }}
         onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&ch=${ch}`)}
         onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
+        onSelectLogosQuery={(prompt) => {
+          // In this view we don't have the drawer integrated directly as state
+          // but we can navigate with a prompt if needed or just show a toast for now
+          // Actually, let's just use the toast or a custom event
+          window.dispatchEvent(new CustomEvent('open-logos-ai', { detail: { prompt, context: selectedGuidance.theme } }));
+        }}
       />
     );
   }, [activeTab, selectedGuidance, navigate]);
