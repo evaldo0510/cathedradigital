@@ -126,29 +126,31 @@ const LogosAI: React.FC<LogosAIProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <div className="premium-card bg-primary/[0.01] border-primary/[0.03] p-10 md:p-14 lg:p-20 space-y-12 relative">
+            <div className="premium-card bg-primary/[0.005] border-primary/[0.02] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+              
               <div className="absolute top-8 right-8">
                 <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8">
                   <Icons.X className="w-3.5 h-3.5" />
                 </Button>
               </div>
 
-              <div className="flex flex-col items-center text-center space-y-4 mb-16">
-                <div className="w-12 h-12 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/30 border border-primary/[0.05]">
-                  <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
+              <div className="flex items-center gap-6 mb-16 opacity-40">
+                <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
+                  <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
                 </div>
                 <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20">Logos IA</h4>
-                  <p className="text-sm font-serif italic text-primary/40 mt-1">Consciência Teológica</p>
+                  <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
+                  <p className="text-[10px] font-serif italic text-primary/30 mt-0.5">Companhia Contemplativa</p>
                 </div>
               </div>
 
-              <div className="space-y-12 max-w-4xl mx-auto">
+              <div className="space-y-14 max-w-3xl mx-auto">
                 {history.length > visibleMessages && (
                   <div className="flex justify-center pb-4">
                     <Button 
@@ -157,27 +159,27 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       onClick={() => setVisibleMessages(prev => prev + 10)}
                       className="text-[9px] font-black uppercase tracking-widest text-primary/20 hover:text-primary"
                     >
-                      Carregar mensagens anteriores
+                      Ver registros anteriores
                     </Button>
                   </div>
                 )}
                 {history.slice(-visibleMessages).map((msg, i) => (
                   <motion.div 
                     key={i} 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: i * 0.1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.2, delay: i * 0.1 }}
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}
                   >
-                    <div className={`max-w-[90%] text-lg md:text-xl leading-[1.8] ${
+                    <div className={`max-w-full text-lg md:text-xl leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/50 font-medium italic border-r-2 border-primary/10 pr-6 text-right' 
-                        : 'text-foreground/70 font-serif'
+                        ? 'text-primary/40 font-serif italic border-r-2 border-primary/5 pr-8 text-right' 
+                        : 'text-foreground/60 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-4 opacity-20">
-                          <div className="w-8 h-px bg-primary" />
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em]">Logos</span>
+                        <div className="flex items-center gap-3 mb-6 opacity-10">
+                          <div className="w-6 h-px bg-primary" />
+                          <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
                       )}
                       {msg.content}
@@ -187,48 +189,44 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
                 {(isLoading || isTyping) && (
                   <div className="flex justify-start">
-                    <div className="flex gap-2.5 opacity-20 py-4">
-                      <motion.div 
-                        animate={{ opacity: [0.2, 0.6, 0.2] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                        className="w-1.5 h-1.5 bg-primary rounded-full" 
-                      />
-                      <motion.div 
-                        animate={{ opacity: [0.2, 0.6, 0.2] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.2 }}
-                        className="w-1.5 h-1.5 bg-primary rounded-full" 
-                      />
-                      <motion.div 
-                        animate={{ opacity: [0.2, 0.6, 0.2] }}
-                        transition={{ duration: 1.5, repeat: Infinity, delay: 0.4 }}
-                        className="w-1.5 h-1.5 bg-primary rounded-full" 
-                      />
+                    <div className="flex gap-3 opacity-10 py-6">
+                      {[0, 1, 2].map((i) => (
+                        <motion.div 
+                          key={i}
+                          animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
+                          className="w-1 h-1 bg-primary rounded-full" 
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-2xl mx-auto pt-16 border-t border-primary/5">
-                <form onSubmit={handleQuery} className="relative group flex items-center">
+              <div className="max-w-xl mx-auto pt-16 border-t border-primary/5">
+                <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Sua reflexão ou dúvida..."
-                    className="w-full bg-transparent border-none text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/10 py-4"
+                    placeholder="Sua reflexão silenciosa..."
+                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/10 py-6 transition-all"
                   />
                   <button 
                     type="submit" 
                     disabled={isLoading || isTyping || !query.trim()}
-                    className="absolute right-0 text-primary/20 hover:text-primary transition-all disabled:opacity-0"
+                    className="absolute right-0 text-primary/10 hover:text-primary transition-all disabled:opacity-0 p-2"
                   >
-                    <Icons.ArrowRight className="w-6 h-6" />
+                    <Icons.ArrowRight className="w-5 h-5 stroke-[1]" />
                   </button>
                 </form>
-                <p className="text-[8px] text-center text-primary/10 uppercase tracking-[0.4em] mt-8 font-black">
-                  Em busca da Luz e do Entendimento
-                </p>
+                <div className="flex flex-col items-center gap-3 mt-10">
+                  <div className="w-1 h-1 bg-primary/10 rounded-full" />
+                  <p className="text-[8px] text-center text-primary/10 uppercase tracking-[0.5em] font-black">
+                    O silêncio é a alma do entendimento
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
