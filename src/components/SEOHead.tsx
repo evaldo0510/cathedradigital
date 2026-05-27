@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useSEO } from '@/hooks/useSEO';
 import { useEffect } from 'react';
+import { SEO_CONFIG } from '@/config/seo';
 
 interface BreadcrumbItem {
   name: string;
@@ -23,9 +24,6 @@ interface SEOHeadProps {
   image?: string;
 }
 
-const BASE_URL = 'https://www.cathedradigital.com.br';
-const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png';
-
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
   const { data: seoSettings } = useSEO();
   
@@ -35,36 +33,22 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
   
   const getDynamicImage = (title?: string) => {
-    // If a specific image is provided for the page, use it
     if (image) return image;
-    
-    // Check if we have a global custom OG image in settings
     if (seoSettings?.og_image_url) return seoSettings.og_image_url;
     
-    // Generate a dynamic image URL with "cache" (stable hash/parameters)
     const pageTitle = title || siteTitle;
     const encodedTitle = encodeURIComponent(pageTitle);
+    const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7);
     
-    // Cache buster based on version or month to ensure stability but allow updates
-    const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7); // yyyy-mm
-    
-    // Primary dynamic service (placehold.jp is used as a generator here)
-    // We can use a more "premium" look by styling it
     return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const displayImage = getDynamicImage(title);
   const twitterHandle = seoSettings?.twitter_handle || '@cathedradigital';
+  const url = `${SEO_CONFIG.BASE_URL}${path.split('?')[0]}`;
 
-  
-  // Normalize URL for canonical: remove all query params except essential ones if needed
-  // In most cases for Cathedra, we want to point to the base path to avoid duplicate content from searches
-  const url = `${BASE_URL}${path.split('?')[0]}`;
-
-  // Google Analytics 4 Script Injection
   useEffect(() => {
     const rawId = seoSettings?.ga4_measurement_id;
-    // Strict format allowlist: prevents script injection via tampered DB values
     const safeId = rawId && /^G-[A-Z0-9]{4,20}$/.test(rawId) ? rawId : null;
     if (safeId && typeof window !== 'undefined') {
       const script1 = document.createElement('script');
@@ -73,7 +57,6 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       document.head.appendChild(script1);
 
       const script2 = document.createElement('script');
-      // Use textContent so the value is treated as a string literal, not parsed as code
       script2.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',${JSON.stringify(safeId)});`;
       document.head.appendChild(script2);
 
@@ -92,13 +75,13 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": BASE_URL
+        "item": SEO_CONFIG.BASE_URL
       },
       ...(breadcrumbs || []).map((b, i) => ({
         "@type": "ListItem",
         "position": i + 2,
         "name": b.name,
-        "item": `${BASE_URL}${b.path}`
+        "item": `${SEO_CONFIG.BASE_URL}${b.path}`
       }))
     ]
   };
@@ -116,29 +99,27 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     }))
   } : null;
 
-  const globalSchema = seoSettings?.json_ld_schema;
-
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": siteTitle,
-    "url": BASE_URL,
+    "url": SEO_CONFIG.BASE_URL,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": `${BASE_URL}/search?q={search_term_string}`,
-      "query-input": "required name=search_term_string"
+      "target": `${SEO_CONFIG.BASE_URL}${SEO_CONFIG.SEARCH_PATH}?${SEO_CONFIG.SEARCH_PARAM}={search_term_string}`,
+      "query-input": `required name=search_term_string`
     }
   };
 
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Cathedra Digital",
-    "url": BASE_URL,
-    "logo": "https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/logo-cathedra.png",
+    "name": SEO_CONFIG.ORGANIZATION.name,
+    "url": SEO_CONFIG.BASE_URL,
+    "logo": SEO_CONFIG.ORGANIZATION.logo,
     "sameAs": [
-      "https://instagram.com/cathedradigital",
-      "https://twitter.com/cathedradigital"
+      SEO_CONFIG.ORGANIZATION.instagram,
+      SEO_CONFIG.ORGANIZATION.twitter
     ]
   };
 
@@ -166,6 +147,8 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     } : null
   } : null;
 
+  const globalSchema = seoSettings?.json_ld_schema;
+
   return (
     <Helmet>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -178,7 +161,6 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <link rel="canonical" href={url} />
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
       
-      {/* Google Search Console Verification */}
       {seoSettings?.gsc_verification_code && (
         <meta name="google-site-verification" content={seoSettings.gsc_verification_code} />
       )}
@@ -188,8 +170,6 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta property="og:site_name" content="Cathedra Digital" />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
-      
-      {/* Primary OG image */}
       <meta property="og:image" content={displayImage} />
       <meta property="og:image:secure_url" content={displayImage} />
       <meta property="og:image:width" content="1200" />
@@ -197,10 +177,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:alt" content={displayTitle} />
       
-      {/* Fallback OG images */}
-      {image && image !== DEFAULT_OG_IMAGE && (
+      {image && image !== SEO_CONFIG.DEFAULT_OG_IMAGE && (
         <>
-          <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+          <meta property="og:image" content={SEO_CONFIG.DEFAULT_OG_IMAGE} />
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
         </>
@@ -214,13 +193,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta name="twitter:image" content={displayImage} />
       <meta name="twitter:image:alt" content={displayTitle} />
 
-
-      <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
+      <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
       <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
-
-      {breadcrumbLD && (
-        <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
-      )}
+      <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
       {faqLD && (
         <script type="application/ld+json">{JSON.stringify(faqLD)}</script>
       )}
