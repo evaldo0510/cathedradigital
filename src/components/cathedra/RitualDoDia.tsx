@@ -287,22 +287,23 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-16">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-6 md:space-y-8 max-w-4xl mx-auto text-center">
-            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/10">I. Lectio</span>
-            <div 
+          <section className="space-y-6 md:space-y-8 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+            <h4 id="lectio-heading" className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">I. Lectio</h4>
+            <button 
               className={cn(
-                "group cursor-pointer transition-all duration-1000",
-                progress >= 25 ? 'opacity-20 grayscale scale-[0.98]' : 'opacity-100'
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                progress >= 25 ? 'opacity-30 grayscale scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(25)}
+              aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
               <blockquote className="text-2xl md:text-5xl lg:text-6xl font-serif italic leading-tight text-primary/80 selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/30 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-8 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
-            </div>
+            </button>
           </section>
 
           {/* 2. Reflection */}
