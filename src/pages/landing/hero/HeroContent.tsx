@@ -35,19 +35,19 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
     >
       {/* Upper Spiritual Anchor - Refined Monastic Line */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 3, ease: EASE }}
-        className="mb-24 md:mb-32"
+        transition={{ duration: shouldReduceMotion ? 1.5 : 3, ease: EASE }}
+        className="mb-20 md:mb-28 lg:mb-32"
       >
-        <div className="flex flex-col items-center gap-12">
+        <div className="flex flex-col items-center gap-10 md:gap-12">
           <motion.div 
             initial={{ height: 0 }}
-            animate={{ height: 160 }}
-            transition={{ duration: 2.5, delay: 0.8, ease: EASE }}
+            animate={{ height: shouldReduceMotion ? 80 : 160 }}
+            transition={{ duration: shouldReduceMotion ? 1 : 2.5, delay: 0.8, ease: EASE }}
             className="w-[1.5px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
           />
-          <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[1.4em] text-primary/10 leading-none select-none ml-4">
+          <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[1.2em] md:tracking-[1.4em] text-primary/10 leading-none select-none ml-4">
             Sanctuarium Spiritus
           </p>
         </div>
@@ -58,11 +58,11 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-14 md:mb-20"
+        className="mb-12 md:mb-16 lg:mb-20"
       >
-        <h2 className="text-[5.5rem] md:text-[11rem] lg:text-[15rem] xl:text-[20rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-2000 group">
+        <h2 className="text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-[2000ms] group">
           Cathedra
-          <span className="block h-[1px] w-0 group-hover:w-full bg-primary/10 transition-all duration-3000 mx-auto mt-4" />
+          <span className="block h-[1px] w-0 group-hover:w-full bg-primary/10 transition-all duration-[3000ms] mx-auto mt-4" />
         </h2>
       </motion.div>
 
@@ -72,13 +72,13 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.6 }}
-        className="space-y-12 mb-32 md:mb-48"
+        className="space-y-10 md:space-y-12 mb-28 md:mb-40 lg:mb-48"
       >
-        <p className="max-w-5xl mx-auto font-serif text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-8">
+        <p className="max-w-[90vw] md:max-w-5xl mx-auto font-serif text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-4 md:px-8">
           Habite a profundidade do silêncio, <br /> 
           <span className="text-secondary/70">contemple a clareza da Verdade.</span>
         </p>
-        <p className="max-w-2xl mx-auto font-sans text-[10px] md:text-[11px] text-primary/20 uppercase tracking-[1em] font-black leading-relaxed select-none">
+        <p className="max-w-2xl mx-auto font-sans text-[9px] md:text-[11px] text-primary/20 uppercase tracking-[0.8em] md:tracking-[1em] font-black leading-relaxed select-none">
           O santuário digital para a sabedoria eterna
         </p>
       </motion.div>
