@@ -1,6 +1,8 @@
 import * as React from "react";
 import { CathedraButton } from "./CathedraButton";
 import { type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
 
 export interface HomeButtonProps extends ButtonProps {
   // Keeping this interface to allow future extensions
