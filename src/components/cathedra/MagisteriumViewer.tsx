@@ -17,9 +17,13 @@ import Relatio from './Relatio';
 
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+
 
 const MagisteriumViewer: React.FC = () => {
+  useReadingAutoHide();
   const { id } = useParams<{ id: string }>();
+
   const [searchParams] = useSearchParams();
   const highlight = searchParams.get('highlight') || searchParams.get('text');
   const navigate = useNavigate();

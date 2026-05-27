@@ -36,6 +36,8 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+
 
 type BibleBook = { name: string; abbr: string; chapters: number };
 type BibleCategory = { label: string; icon: React.ElementType; color: string; bgColor: string; books: BibleBook[] };
@@ -116,7 +118,9 @@ const FONT_SIZES = [
 
 const Bible: React.FC = () => {
   useRenderPerf('Bible', 15);
+  useReadingAutoHide();
   const navigate = useNavigate();
+
   useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>(() => {

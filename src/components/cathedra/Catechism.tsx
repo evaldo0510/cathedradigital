@@ -34,6 +34,8 @@ import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
+import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+
 
 const CatechismContent: React.FC<{ paragraph: number; onNavigateToBible?: (abbr: string, chapter: number) => void; isVisible?: boolean }> = ({ paragraph, onNavigateToBible, isVisible = true }) => {
   const { data, isLoading, isError } = useCatechismParagraph(paragraph, isVisible);
@@ -242,7 +244,9 @@ type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
   useRenderPerf('Catechism', 15);
+  useReadingAutoHide();
   const navigate = useNavigate();
+
   useAutoFocus();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
