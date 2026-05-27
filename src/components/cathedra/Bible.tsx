@@ -962,13 +962,8 @@ const Bible: React.FC = () => {
               activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
                 if (activeHighlight) {
-                  // Update existing highlight
-                  // Assuming updateNote handles color or I need to extend it
-                  // Let's check updateNote signature... it only handles text in hook.
-                  // I might need to update the hook to handle color.
                   supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => {
                     setActiveHighlight(null);
-                    // refresh notes
                   });
                 } else if (highlightedVerse) {
                   addNote(selectedBook.abbr, 'Destacado para meditação', color, {
@@ -987,23 +982,21 @@ const Bible: React.FC = () => {
                 }
               }}
               onAddNote={() => {
-                if (activeHighlight) {
-                   const note = prompt('Editar reflexão:', activeHighlight.note_text);
-                   if (note) supabase.from('user_notes').update({ note_text: note }).eq('id', activeHighlight.id);
-                   setActiveHighlight(null);
-                } else if (highlightedVerse) {
-                  const note = prompt('Sua reflexão sobre este versículo:');
-                  if (note) {
-                    addNote(selectedBook.abbr, note, 'yellow', {
-                      book_abbr: selectedBook.abbr,
-                      chapter: selectedChapter,
-                      verse: highlightedVerse
-                    });
-                  }
+                if (highlightedVerse || activeHighlight) {
+                  setIsNoteModalOpen(true);
                 } else {
                   toast.info('Clique em um versículo primeiro para anotar.');
                 }
               }}
+            />
+
+            <NoteEditModal 
+              isOpen={isNoteModalOpen}
+              onClose={() => setIsNoteModalOpen(false)}
+              onSave={handleAddNoteOrHighlight}
+              initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
+              initialColor={activeHighlight?.highlight_color || 'yellow'}
+              title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
             />
 
             <ReadingProgress 
