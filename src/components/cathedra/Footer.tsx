@@ -340,7 +340,7 @@ const Footer: React.FC = React.memo(() => {
               className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
-              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
+              <Icons.ArrowDown className="rotate-180 opacity-100 group-hover:text-primary-foreground" />
             </Button>
 
           </div>
