@@ -246,7 +246,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onMouseEnter={() => prefetchRoute(item.path)}
                             onTouchStart={() => prefetchRoute(item.path)}
                             aria-current={isActive ? 'page' : undefined}
-                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary/20 outline-none h-auto min-h-[56px] border border-transparent
+                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-2 outline-none h-auto min-h-[56px] border border-transparent
                               ${isActive
                                 ? 'bg-primary/5 text-primary border-primary/10 shadow-sm'
                                 : 'text-muted-foreground/60 hover:bg-primary/[0.02] hover:text-primary'}`}
