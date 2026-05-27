@@ -32,9 +32,9 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {notes.map((note) => (
-            <div 
+            <button 
               key={note.id} 
-              className="group p-4 bg-card border border-border/40 rounded-2xl hover:border-primary/20 transition-all cursor-pointer relative"
+              className="group p-5 bg-card border border-border/40 rounded-3xl hover:border-primary/20 transition-all text-left relative focus:outline-none focus:ring-2 focus:ring-primary/20"
               onClick={() => onNoteClick?.(note)}
             >
               <div className="flex items-start gap-3">
