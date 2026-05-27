@@ -211,9 +211,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-700 group-hover:scale-110" variant="blue" />
-                <div className="space-y-0.5">
-                  <h1 className="text-xl font-display font-medium tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
+                <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-1000" variant="dark" />
+                <div className="space-y-1">
+                  <h1 className="text-lg font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
                   <p className="text-[8px] font-bold uppercase text-primary/20 tracking-[0.5em]">
                     Sanctuarium
                   </p>
@@ -259,7 +259,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                               </span>
                             )}
                             {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
-                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 shadow-[0_0_8px_rgba(var(--primary),0.3)]" />}
+                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 rounded-full bg-primary flex-shrink-0" />}
                           </Button>
                         </li>
                       );
