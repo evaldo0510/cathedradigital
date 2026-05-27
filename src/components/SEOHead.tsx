@@ -57,7 +57,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   const twitterHandle = seoSettings?.twitter_handle || '@cathedradigital';
 
   
-  const url = `${BASE_URL}${path}`;
+  // Normalize URL for canonical: remove all query params except essential ones if needed
+  // In most cases for Cathedra, we want to point to the base path to avoid duplicate content from searches
+  const url = `${BASE_URL}${path.split('?')[0]}`;
 
   // Google Analytics 4 Script Injection
   useEffect(() => {
@@ -142,6 +144,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta name="description" content={displayDescription} />
       {displayKeywords && <meta name="keywords" content={displayKeywords} />}
       <link rel="canonical" href={url} />
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
       
       {/* Google Search Console Verification */}
       {seoSettings?.gsc_verification_code && (
@@ -172,6 +175,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       )}
 
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:creator" content={twitterHandle} />
       <meta name="twitter:site" content={twitterHandle} />
       <meta name="twitter:title" content={displayTitle} />
       <meta name="twitter:description" content={displayDescription} />
