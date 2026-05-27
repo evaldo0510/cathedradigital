@@ -137,6 +137,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preload" as="image" href="/src/assets/cathedra-logo.png" />
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
       <title>{displayTitle}</title>
       <meta name="description" content={displayDescription} />
       {displayKeywords && <meta name="keywords" content={displayKeywords} />}
@@ -155,7 +156,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       {/* Multiple OG images for fallback support */}
       <meta property="og:image" content={displayImage} />
       {image && image !== DEFAULT_OG_IMAGE && <meta property="og:image" content={DEFAULT_OG_IMAGE} />}
-      {!image && <meta property="og:image" content={DEFAULT_OG_IMAGE} />}
+      <meta property="og:image" content={DEFAULT_OG_IMAGE} />
       
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />

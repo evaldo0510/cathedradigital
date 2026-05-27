@@ -283,16 +283,16 @@
   }
   
   h3 { 
-    @apply font-light;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.3;
+    @apply font-light text-primary/90;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    line-height: 1.4;
     letter-spacing: 0.03em;
   }
 
   h4 {
-    @apply font-normal;
-    font-size: clamp(1.25rem, 2vw, 1.5rem);
-    line-height: 1.4;
+    @apply font-normal text-primary/80;
+    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    line-height: 1.5;
     letter-spacing: 0.02em;
   }
 
