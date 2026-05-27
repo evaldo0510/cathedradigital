@@ -492,8 +492,8 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1800px;
-    --transition-premium: 1200ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-premium: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 800ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Standardized Opacities for "Visual Silence" */
     --opacity-icon-idle: 0.3;
@@ -505,7 +505,7 @@
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
-    @apply bg-card/30 backdrop-blur-xl border border-primary/[0.05] transition-all relative overflow-hidden;
+    @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
   }
@@ -517,11 +517,13 @@
   }
   
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/50 hover:border-primary/10 active:scale-[0.995] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/8 focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    transition: all var(--transition-premium);
   }
 
   .premium-card-interactive:hover {
-    box-shadow: var(--card-shadow-hover);
+    @apply shadow-[0_40px_100px_-30px_rgba(0,0,0,0.03)] -translate-y-1;
+    border-color: hsla(var(--primary) / 0.08);
   }
 
   /* Specific Card Sizes for Desktop */

@@ -34,12 +34,13 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         className={cn(
           variantStyles[variant],
           paddingMap[padding],
-          hover && !variant.includes('interactive') && 'hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500',
+          hover && !variant.includes('interactive') && 'hover:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.03)] hover:border-primary/10 hover:-translate-y-1 transition-all duration-1000',
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, y: 0 } : (props.initial || { opacity: 0, y: 15 })}
-        animate={props.animate || { opacity: 1, y: 0 }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.6, ease: [0.22, 1, 0.36, 1] })}
+        initial={settings.reduceAnimations ? { opacity: 1, y: 0 } : (props.initial || { opacity: 0, y: 20, filter: 'blur(10px)' })}
+        animate={props.animate || { opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 1.4, ease: [0.16, 1, 0.3, 1] })}
+        whileHover={settings.reduceAnimations ? {} : { y: -4, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
         {...props}
       >
         {children}
