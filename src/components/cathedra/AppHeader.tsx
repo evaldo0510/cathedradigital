@@ -64,7 +64,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   size="sm"
                   onClick={() => navigate(item.route)}
                   className={`px-4 py-2 h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
-                    pathname === item.route ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
+                    pathname === item.route ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
                   }`}
                 >
                   {item.label}
@@ -82,18 +82,20 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group"
+            aria-label={t('search') || 'Buscar'}
           >
-            <Icons.Search className="w-5 h-5 opacity-40" />
+            <Icons.Search className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
           </Button>
 
           <Button
             variant="outline"
             size="icon"
             onClick={onToggleDark}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group"
+            aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
           >
-            {isDark ? <Icons.Sun className="w-5 h-5 opacity-40" /> : <Icons.Moon className="w-5 h-5 opacity-40" />}
+            {isDark ? <Icons.Sun className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" /> : <Icons.Moon className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />}
           </Button>
 
           {user ? (
@@ -102,11 +104,12 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               size="icon"
               onClick={() => navigate(AppRoute.PROFILE)}
               className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden"
+              aria-label={t('profile') || 'Meu Perfil'}
             >
               {user.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
               ) : (
-                <Icons.User className="w-5 h-5 opacity-40" />
+                <Icons.User className="w-5 h-5 opacity-60" />
               )}
             </Button>
           ) : (
@@ -125,7 +128,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group"
             aria-label="Abrir menu lateral"
           >
-            <Icons.Menu className="w-5 h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
+            <Icons.Menu className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
           </Button>
         </div>
       </div>
