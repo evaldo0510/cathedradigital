@@ -305,7 +305,40 @@ const ReadingControlPanel: React.FC = () => {
             </div>
           </div>
           
-          <div className="space-y-4">
+            <div className="space-y-4">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Logos IA & Memória</p>
+              <div className="p-4 rounded-3xl bg-muted/20 border border-border/10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <p className="text-xs font-bold">Sugestões Contextuais</p>
+                    <p className="text-[10px] text-muted-foreground italic">Exibição de prompts</p>
+                  </div>
+                  <select
+                    value={settings.logosSuggestions}
+                    onChange={(e) => updateSettings({ logosSuggestions: e.target.value as any })}
+                    className="bg-transparent text-[10px] font-bold uppercase tracking-widest text-primary border-none focus:ring-0 cursor-pointer text-right"
+                  >
+                    <option value="always">Sempre</option>
+                    <option value="first_selection">1ª Vez</option>
+                    <option value="never">Nunca</option>
+                  </select>
+                </div>
+                
+                <Button 
+                  onClick={() => {
+                    window.dispatchEvent(new CustomEvent('reset-logos-history'));
+                    toast.success("Histórico da seção limpo");
+                  }}
+                  variant="ghost"
+                  className="w-full rounded-2xl flex items-center justify-center gap-2 py-4 border border-dashed border-primary/10 hover:border-primary/30 hover:bg-primary/5 transition-all"
+                >
+                  <Icons.RotateCcw className="w-3 h-3 text-primary/40" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Limpar Seção Atual</span>
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Conexões Relatio</p>
             <div className="p-4 rounded-3xl bg-muted/20 border border-border/10 space-y-4">
               <div className="flex items-center justify-between">
