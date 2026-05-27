@@ -42,10 +42,25 @@ const MagisteriumViewer: React.FC = () => {
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { notes: docNotes, addNote, updateNote, deleteNote: deleteDocNote } = useNotes('magisterium');
+
+  // Update history
+  useEffect(() => {
+    const currentUrl = window.location.pathname + window.location.search;
+    setHistory(prev => {
+      if (prev[historyIndex] === currentUrl) return prev;
+      const newHistory = prev.slice(0, historyIndex + 1);
+      newHistory.push(currentUrl);
+      setHistoryIndex(newHistory.length - 1);
+      return newHistory;
+    });
+  }, [location.pathname, location.search]);
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
