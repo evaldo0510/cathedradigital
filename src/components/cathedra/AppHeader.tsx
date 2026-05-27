@@ -33,7 +33,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
         role="banner"
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[140px] md:h-28 py-8 md:py-0 gap-8 md:gap-0 landscape:min-h-[90px] landscape:py-3">
+        <div className="max-w-[var(--layout-max-width)] mx-auto px-6 md:px-14 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[180px] md:h-36 py-12 md:py-0 gap-12 md:gap-0 landscape:min-h-[110px] landscape:py-5">
 
           {/* Logo Section - Centralized on Mobile */}
           <div 
@@ -44,10 +44,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-12 h-12 md:w-11 md:h-11 transition-all duration-1000 scale-110 md:scale-100" variant="dark" />
+            <Icons.Logo className="w-14 h-14 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100" variant="dark" />
             <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-xl md:text-xl font-display font-light uppercase tracking-[0.7em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.8em] transition-all duration-1000">Cathedra</span>
-              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-muted-foreground/30 mt-1">Biblioteca Digital</span>
+              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1em] transition-all duration-1000">Cathedra</span>
+              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/30 mt-2">Biblioteca Digital</span>
             </div>
           </div>
 

@@ -5,7 +5,7 @@ import { useReadingSettings } from "@/contexts/ReadingSettingsContext";
 
 interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
-  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
 }
 
@@ -14,10 +14,11 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
-      sm: 'p-5 sm:p-6',
-      md: 'p-6 sm:p-8',
-      lg: 'p-8 sm:p-10',
-      xl: 'p-10 sm:p-14 lg:p-16',
+      sm: 'p-5 sm:p-6 md:p-8',
+      md: 'p-6 sm:p-10 md:p-12',
+      lg: 'p-8 sm:p-12 md:p-16',
+      xl: 'p-10 sm:p-16 md:p-24',
+      '2xl': 'p-12 sm:p-24 md:p-32 lg:p-40',
     };
 
     const variantStyles = {

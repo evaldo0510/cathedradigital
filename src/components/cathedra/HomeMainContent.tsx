@@ -61,16 +61,16 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 lg:px-20 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-64 md:space-y-80 lg:space-y-96 pb-80 md:pb-[32rem] px-6 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <h2 className="sr-only">Destaques e Ritual</h2>
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
-          className="mb-16 md:mb-32"
+          className="mb-24 md:mb-40"
         />
-        <div className="premium-card responsive-padding">
+        <div className="premium-card p-10 sm:p-24 md:p-32 lg:p-40">
           <RitualDoDia />
         </div>
       </section>
@@ -83,9 +83,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Sua Jornada" 
             subtitle="Onde a alma parou para contemplar."
-            className="mb-8 md:mb-14"
+            className="mb-12 md:mb-20"
           />
-          <div className="flex-1 premium-card-interactive responsive-padding">
+          <div className="flex-1 premium-card-interactive p-10 sm:p-20 md:p-24 lg:p-32">
             <ReadingProgressSection />
           </div>
         </section>
@@ -97,12 +97,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Logos IA" 
             subtitle="Inteligência artificial a serviço da sua fé."
-            className="mb-8 md:mb-14"
+            className="mb-12 md:mb-20"
           />
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-8 md:p-14 flex flex-col items-center justify-center gap-10 md:gap-12 group"
+            className="flex-1 p-10 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-14 md:gap-16 group"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -144,9 +144,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-16 md:mb-32"
+          className="mb-24 md:mb-40"
         />
-        <div className="premium-card responsive-padding md:p-32">
+        <div className="premium-card p-10 sm:p-24 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </div>
       </section>

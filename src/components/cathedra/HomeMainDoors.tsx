@@ -74,7 +74,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12 lg:gap-16 w-full max-w-5xl mx-auto", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
         <motion.div
           key={idx}
@@ -91,10 +91,10 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="premium-card-interactive p-12 sm:p-14 lg:p-20 flex flex-col items-center text-center gap-10 md:gap-14 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/5"
+          className="premium-card-interactive p-14 sm:p-20 md:p-24 lg:p-32 flex flex-col items-center text-center gap-12 md:gap-16 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/5"
         >
-          <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:text-primary/60 group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.03]">
-            <door.icon className="w-8 h-8" strokeWidth={1} />
+          <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/30 group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.03]">
+            <door.icon className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.8} />
           </div>
           <div className="space-y-6">
             <h4 className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/60 group-hover:text-primary/80 transition-colors duration-700">
