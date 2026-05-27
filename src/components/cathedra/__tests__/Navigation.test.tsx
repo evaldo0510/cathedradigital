@@ -85,8 +85,9 @@ describe('Navigation & Admin Guards', () => {
       { ...mockAuthContext, loading: true }
     );
     
-    expect(screen.getByRole('status', { hidden: true }) || document.querySelector('.animate-spin')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.queryByText('Admin Content')).not.toBeInTheDocument();
   });
+
 });
 
