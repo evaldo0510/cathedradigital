@@ -482,12 +482,19 @@ const Bible: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (viewMode !== 'reading' || !selectedBook) return;
-      if (e.key === 'ArrowLeft') navigateChapter(-1);
-      if (e.key === 'ArrowRight') navigateChapter(1);
       
       // Accessibility: Reading shortcuts
       if (viewMode === 'reading' && !isNoteModalOpen) {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          navigateChapter(-1);
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          navigateChapter(1);
+        }
         if (e.key.toLowerCase() === 'h') {
+          e.preventDefault();
           if (highlightedVerse) {
             handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
           } else {
@@ -495,6 +502,7 @@ const Bible: React.FC = () => {
           }
         }
         if (e.key.toLowerCase() === 'n') {
+          e.preventDefault();
           if (highlightedVerse) {
             setIsNoteModalOpen(true);
           } else {
@@ -502,14 +510,24 @@ const Bible: React.FC = () => {
           }
         }
         if (e.key === 'Escape') {
+          e.preventDefault();
           setHighlightedVerse(null);
           setActiveHighlight(null);
+        }
+        // Progress navigation (Alt + Up/Down)
+        if (e.altKey && e.key === 'ArrowUp') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
+          e.preventDefault();
+          navigate(lastReadMark.url);
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [viewMode, selectedBook, navigateChapter, highlightedVerse, isNoteModalOpen]);
+  }, [viewMode, selectedBook, navigateChapter, highlightedVerse, isNoteModalOpen, lastReadMark, navigate]);
 
   const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
     if (!selectedBook || !highlightedVerse) return;
