@@ -152,6 +152,7 @@ const Bible: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [shouldAutoResume, setShouldAutoResume] = useState(true);
   const [logosAIContext, setLogosAIContext] = useState('');
+  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
