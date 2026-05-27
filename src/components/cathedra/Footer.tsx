@@ -258,7 +258,7 @@ const Footer: React.FC = React.memo(() => {
               {dioceseUrl && (
                 <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-xs text-primary hover:underline">
                   <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
-                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3 opacity-100" />
                   </a>
                 </Button>
               )}
