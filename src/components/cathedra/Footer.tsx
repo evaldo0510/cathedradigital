@@ -287,7 +287,7 @@ const Footer: React.FC = React.memo(() => {
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
                   ) : (
-                    <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
+                    <Icons.ArrowDown className="-rotate-90 opacity-100 text-primary-foreground" />
                   )}
                 </Button>
               </form>
