@@ -10,7 +10,7 @@ describe('Supabase Client Environment', () => {
   });
 
   afterEach(() => {
-    global.window = originalWindow;
+    (globalThis as any).window = originalWindow;
     vi.unstubAllEnvs();
   });
 
