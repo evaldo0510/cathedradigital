@@ -164,20 +164,31 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
   }, [query, isLoading, history, context, selectedText, type]);
 
-  const clearHistory = React.useCallback(() => {
+  const clearHistory = React.useCallback((skipConfirm = false) => {
     if (history.length === 0) return;
     
-    const confirmed = window.confirm("Deseja redefinir o silêncio e limpar o histórico desta seção?");
-    if (!confirmed) return;
+    if (!skipConfirm) {
+      const confirmed = window.confirm("Deseja redefinir o silêncio e limpar o histórico desta seção?");
+      if (!confirmed) return;
+    }
 
     setHistory([]);
     if (context) {
       localStorage.removeItem(`logos_history_${context}`);
     }
-    toast.success("Histórico da Logos IA redefinido", {
-      description: "O silêncio foi restaurado nesta seção."
-    });
+
+    if (!skipConfirm) {
+      toast.success("Histórico da Logos IA redefinido", {
+        description: "O silêncio foi restaurado nesta seção."
+      });
+    }
   }, [context, history.length]);
+
+  useEffect(() => {
+    const handleReset = () => clearHistory(true);
+    window.addEventListener('reset-logos-history', handleReset);
+    return () => window.removeEventListener('reset-logos-history', handleReset);
+  }, [clearHistory]);
 
   const exportHistory = React.useCallback(() => {
     if (history.length === 0) return;
