@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Heart, Coffee, Home, Users } from "lucide-react";
 import { fadeUp } from "./animations";
+import { HomeCard } from "@/components/cathedra/HomeCard";
 
 const AcolhimentoSection = () => {
   return (
@@ -13,7 +14,7 @@ const AcolhimentoSection = () => {
           viewport={{ once: true }} 
           className="text-center space-y-6"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-premium text-primary border border-primary/20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-premium-sm text-primary border border-primary/20">
             <Heart className="w-4 h-4 fill-current" aria-hidden="true" />
             <span className="text-premium-tiny font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
@@ -41,24 +42,21 @@ const AcolhimentoSection = () => {
               desc: "O Cathedra cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos." 
             }
           ].map((item, i) => (
-            <motion.div 
+            <HomeCard 
               key={item.title}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              custom={i + 1}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="space-y-4 p-8 bg-card rounded-[2.5rem] border border-border/50 shadow-soft hover:shadow-premium-hover hover:border-primary/20 transition-all duration-300"
+              padding="md"
+              className="space-y-6 flex flex-col h-full transition-all duration-700"
             >
-              <div className="w-10 h-10 bg-primary/10 rounded-premium flex items-center justify-center text-primary" aria-hidden="true">
+              <div className="w-12 h-12 bg-primary/5 rounded-premium-sm flex items-center justify-center text-primary" aria-hidden="true">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold font-serif">{item.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {item.desc}
-              </p>
-            </motion.div>
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold font-serif">{item.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            </HomeCard>
           ))}
         </div>
       </div>

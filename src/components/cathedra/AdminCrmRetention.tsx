@@ -5,9 +5,9 @@ import {
   AlertTriangle, UserMinus, UserPlus, Download, DollarSign,
   ArrowUp, ArrowDown, Minus
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import {
@@ -288,7 +288,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     if (!active || !payload?.[0]) return null;
     const label = payload[0]?.payload?.label || '';
     return (
-      <div className="rounded-premium bg-popover px-2 py-1 text-premium-tiny font-medium text-popover-foreground shadow-premium border border-border">
+      <div className="rounded-premium-sm bg-popover px-2 py-1 text-premium-tiny font-medium text-popover-foreground shadow-soft border border-border">
         {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );

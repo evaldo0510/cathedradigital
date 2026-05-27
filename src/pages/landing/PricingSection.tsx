@@ -69,19 +69,20 @@ const PricingSection = () => {
           {tiers.map((tier) => (
             <HomeCard
               key={tier.name}
-              className={`p-8 relative flex flex-col h-full ${
-                tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
+              padding="md"
+              className={`relative flex flex-col h-full transition-all duration-700 ${
+                tier.popular ? "border-secondary/10 bg-secondary/[0.01]" : ""
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-tiny font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-premium">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-tiny font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-premium-sm">
                   Mais Escolhido
                 </div>
               )}
 
               <div className="space-y-6 flex-1">
                 <div className="flex justify-between items-center">
-                  <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-premium-sm bg-primary/5 border border-primary/10 flex items-center justify-center">
                     {tier.icon}
                   </div>
                   <h3 className="font-bold font-serif">{tier.name}</h3>

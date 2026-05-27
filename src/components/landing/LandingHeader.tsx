@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/constants";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/cathedra/Button";
 import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
 import { Menu, X, ChevronRight, Globe } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
+import { useAuth } from "@/hooks/useAuth";
 import { HomeButton } from "../cathedra/HomeButton";
 
 const LandingHeader = () => {
@@ -14,6 +15,7 @@ const LandingHeader = () => {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const navigate = useNavigate();
   const { lang, setLang } = useLang();
+  const { user } = useAuth();
 
   const languages: { code: Language; label: string; flag: string }[] = [
     { code: 'pt', label: 'Português', flag: '🇧🇷' },
@@ -33,9 +35,9 @@ const LandingHeader = () => {
   }, []);
 
   const navLinks = [
-    { name: "Bíblia", href: AppRoute.BIBLE },
-    { name: "Catecismo", href: AppRoute.CATECHISM },
-    { name: "Magistério", href: AppRoute.MAGISTERIUM },
+    { name: "Início", href: "#hero" },
+    { name: "Conteúdo", href: "#main-content" },
+    { name: "Sobre", href: AppRoute.ABOUT },
   ];
 
   const handleNavClick = (href: string) => {
@@ -52,25 +54,24 @@ const LandingHeader = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-1000 ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
         isScrolled
-          ? "py-6 bg-background/80 backdrop-blur-3xl border-b border-border/5"
-          : "py-10 bg-transparent"
+          ? "py-4 bg-background border-b border-border/5"
+          : "py-8 bg-transparent"
       }`}
     >
       <div className="app-container flex items-center justify-between">
         <div 
-          className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
+          className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
           onClick={() => navigate(AppRoute.HOME)}
           onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
           tabIndex={0}
           role="button"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-12 h-12 transition-all duration-1000 group-hover:scale-105" variant="gold" />
-          <div className="hidden sm:flex flex-col">
-            <h1 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h1>
-            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-1">Digitalis</span>
+          <Icons.Logo className="w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105" variant="gold" />
+          <div className="hidden sm:block">
+            <h1 className="text-premium-small font-display font-bold text-foreground tracking-[0.3em] uppercase">CATHEDRA</h1>
           </div>
         </div>
 
@@ -110,7 +111,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
+                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button
@@ -132,25 +133,38 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(AppRoute.LOGIN)}
-            className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
-            aria-label="Ir para página de login"
-            type="button"
-          >
-            Entrar
-          </Button>
-          
-          <HomeButton
-            variant="ghost"
-            size="sm"
-            className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
-            onClick={() => navigate(AppRoute.LOGIN)}
-          >
-            Começar <ChevronRight className="w-4 h-4 ml-1" />
-          </HomeButton>
+          {!user ? (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(AppRoute.LOGIN)}
+                className="hidden sm:flex text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+                aria-label="Ir para página de login"
+                type="button"
+              >
+                Entrar
+              </Button>
+              
+              <HomeButton
+                variant="ghost"
+                size="sm"
+                className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+                onClick={() => navigate(AppRoute.LOGIN)}
+              >
+                Começar <ChevronRight className="w-4 h-4 ml-1" />
+              </HomeButton>
+            </>
+          ) : (
+            <HomeButton
+              variant="ghost"
+              size="sm"
+              className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+              onClick={() => navigate(AppRoute.HOJE)}
+            >
+              Ir ao Painel <ChevronRight className="w-4 h-4 ml-1" />
+            </HomeButton>
+          )}
 
           {/* Mobile Menu Toggle */}
           <Button

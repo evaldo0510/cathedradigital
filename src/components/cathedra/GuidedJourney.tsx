@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, ArrowLeft, Sparkles, Book, Cross, MessageSquare, Mail, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { SOCIAL_LINKS } from '@/config/site-config';
-import { trackEvent } from '@/lib/analytics';
 
 interface Step {
   title: string;
@@ -101,7 +99,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   const getWhatsAppLink = () => {
     const theme = answers[0] || "espiritualidade";
     const text = encodeURIComponent(`Olá! Concluí minha jornada guiada no Cathedra sobre o tema "${theme}". Gostaria de aprofundar minha reflexão.`);
-    return `${SOCIAL_LINKS.WHATSAPP}?text=${text}`;
+    return `https://wa.me/5511999999999?text=${text}`;
   };
 
   if (!isOpen) return null;
@@ -111,7 +109,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-2xl bg-card border border-border shadow-premium-hover rounded-[2rem] p-8 md:p-12"
+        className="relative w-full max-w-2xl bg-card border border-border shadow-premium rounded-[2rem] p-8 md:p-12"
       >
         <Button 
           onClick={onClose}
@@ -209,7 +207,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover"
+                  className="w-full h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
@@ -231,7 +229,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             className="space-y-8"
           >
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-4 text-secondary">
+              <div className="w-16 h-16 bg-secondary/10 rounded-premium-sm flex items-center justify-center mx-auto mb-4 text-secondary">
                 <Sparkles className="w-8 h-8" />
               </div>
               <h2 className="text-3xl font-serif font-bold text-primary">Seu Roteiro está pronto!</h2>
@@ -241,7 +239,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
             </div>
 
             <div className="grid gap-6">
-              <div className="p-6 rounded-premium bg-secondary/5 border border-secondary/20 space-y-3">
+              <div className="p-6 rounded-premium-sm bg-secondary/5 border border-secondary/20 space-y-3">
                 <div className="flex items-center gap-2 text-secondary">
                   <Book className="w-4 h-4" />
                   <span className="text-premium-tiny font-black uppercase tracking-widest">A Palavra de Deus</span>
@@ -251,7 +249,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-premium bg-primary/5 border border-primary/10 space-y-3">
+              <div className="p-6 rounded-premium-sm bg-primary/5 border border-primary/10 space-y-3">
                 <div className="flex items-center gap-2 text-primary">
                   <Cross className="w-4 h-4" />
                   <span className="text-premium-tiny font-black uppercase tracking-widest">Catecismo</span>
@@ -261,10 +259,10 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-6 rounded-premium bg-muted/30 border border-border space-y-3">
+              <div className="p-6 rounded-premium-sm bg-muted/30 border border-border space-y-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MessageSquare className="w-4 h-4" />
-                  <span className="text-premium-tiny font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
+                  <span className="text-premium-tiny font-black uppercase tracking-widest">Logos: Apoio Contemplativo</span>
                 </div>
                 <p className="text-sm font-serif italic leading-relaxed">
                   Percebo que você busca paz em meio ao cansaço. Saiba que o silêncio não é ausência, mas a plenitude da presença divina que restaura as forças.
@@ -277,12 +275,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 asChild
                 className="flex-1 h-14 rounded-full text-premium-tiny font-black uppercase tracking-[0.1em]"
               >
-                <a 
-                  href={getWhatsAppLink()} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url: getWhatsAppLink() })}
-                >
+                <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer">
                   Aprofundar via WhatsApp
                 </a>
               </Button>

@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -300,7 +300,7 @@ const DogmasPage: React.FC = () => {
     <SEOHead title="Dogmas da Fé Católica" description="Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo." path="/dogmas" keywords="dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Dogmas", path: "/dogmas" }]} />
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Star className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Depositum Fidei</span>
         </div>
@@ -325,7 +325,7 @@ const DogmasPage: React.FC = () => {
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => setCategory(cat)}
             className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
-              category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
+              category === cat ? 'bg-foreground text-background shadow-lg' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
           </Button>

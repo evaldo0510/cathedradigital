@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Icons } from '../../constants';
 import { Loader2, Play, Pause, Headphones, RotateCcw } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
-import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
 
 interface AudioContentPlayerProps {
@@ -29,10 +28,6 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { isPremium } = useAuth();
-  const { settings } = useReadingSettings();
-
-  const [lastPosition, setLastPosition] = useState(0);
-  const [wasPlayingBeforeSilence, setWasPlayingBeforeSilence] = useState(false);
 
   useEffect(() => {
     // Cleanup audio URL on unmount
@@ -43,34 +38,10 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
     };
   }, [audioUrl]);
 
-  // Handle Total Silence Auto-Pause/Resume
-  useEffect(() => {
-    if (settings.totalSilence) {
-      if (isPlaying) {
-        setWasPlayingBeforeSilence(true);
-        if (audioRef.current) {
-          setLastPosition(audioRef.current.currentTime);
-          audioRef.current.pause();
-        }
-        setIsPlaying(false);
-      }
-    } else if (wasPlayingBeforeSilence) {
-      // Resume if it was playing before silence mode was activated
-      if (audioRef.current) {
-        audioRef.current.currentTime = lastPosition;
-        audioRef.current.play().then(() => {
-          setIsPlaying(true);
-        }).catch(err => console.error("Error resuming audio:", err));
-      }
-      setWasPlayingBeforeSilence(false);
-    }
-  }, [settings.totalSilence]);
-
   const handlePlay = async () => {
     if (audioRef.current && audioUrl) {
       if (isPlaying) {
         audioRef.current.pause();
-        setLastPosition(audioRef.current.currentTime);
       } else {
         audioRef.current.play();
       }
@@ -139,13 +110,9 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      setLastPosition(0);
       setIsPlaying(false);
     }
   };
-
-  // If total silence is active, we don't render the player, but it stays in memory if it was playing
-  if (settings.totalSilence) return null;
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>

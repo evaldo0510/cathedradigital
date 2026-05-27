@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { AppRoute } from '../../types';
+import { useAuth } from '@/hooks/useAuth';
+import { canUserAccess } from '@/utils/auth-utils';
 import { useLang } from '@/hooks/useLang';
-import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
-import { trackEvent } from '@/lib/analytics';
 
 const DIOCESES_BR = [
   // Arquidioceses de SP
@@ -123,22 +123,23 @@ const DIOCESE_URLS: Record<string, string> = {
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { t, lang } = useLang();
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const vaticanLinks = [
-    { title: 'Santa Sé (Vatican)', url: EXTERNAL_URLS.VATICAN },
-    { title: lang === 'pt' ? 'Catecismo Oficial' : 'Official Catechism', url: EXTERNAL_URLS.CATECHISM_OFFICIAL },
-    { title: 'Vatican News', url: EXTERNAL_URLS.VATICAN_NEWS },
-    { title: lang === 'pt' ? 'Dicastérios' : 'Dicasteries', url: `${EXTERNAL_URLS.VATICAN}/content/romancuria/pt.html` },
+    { title: 'Santa Sé (Vatican)', url: 'https://www.vatican.va' },
+    { title: lang === 'pt' ? 'Catecismo Oficial' : 'Official Catechism', url: 'https://www.vatican.va/archive/ccc/index_po.htm' },
+    { title: 'Vatican News', url: 'https://www.vaticannews.va/pt.html' },
+    { title: lang === 'pt' ? 'Dicastérios' : 'Dicasteries', url: 'https://www.vatican.va/content/romancuria/pt.html' },
   ];
 
   const cnbbLinks = [
-    { title: 'CNBB Oficial', url: EXTERNAL_URLS.CNBB },
-    { title: lang === 'pt' ? 'Liturgia Diária CNBB' : 'CNBB Daily Liturgy', url: `${EXTERNAL_URLS.CNBB}/liturgia` },
-    { title: lang === 'pt' ? 'Documentos e Publicações' : 'Documents & Publications', url: `${EXTERNAL_URLS.CNBB}/category/publicacoes` },
+    { title: 'CNBB Oficial', url: 'https://www.cnbb.org.br' },
+    { title: lang === 'pt' ? 'Liturgia Diária CNBB' : 'CNBB Daily Liturgy', url: 'https://www.cnbb.org.br/liturgia' },
+    { title: lang === 'pt' ? 'Documentos e Publicações' : 'Documents & Publications', url: 'https://www.cnbb.org.br/category/publicacoes' },
   ];
 
   const scrollToTop = () => {
@@ -151,7 +152,6 @@ const Footer: React.FC = React.memo(() => {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    trackEvent('newsletter_signup', { email });
     await new Promise(resolve => setTimeout(resolve, 1500));
     alert(lang === 'pt' ? `E-mail ${email} cadastrado com sucesso!` : `Email ${email} registered successfully!`);
     setEmail('');
@@ -164,18 +164,14 @@ const Footer: React.FC = React.memo(() => {
     else localStorage.removeItem('cathedra_diocese');
   };
 
-  const handleSocialClick = (platform: string, url: string) => {
-    trackEvent('social_link_click', { platform, url });
-  };
-
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-border/10 pt-16 lg:pt-32 pb-24 lg:pb-16 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
-      <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
+    <footer className="mt-auto w-full border-t border-primary/5 pt-12 lg:pt-20 pb-24 lg:pb-16 px-6 sm:px-10 md:px-12 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
+      <div className="absolute inset-0 pointer-events-none opacity-[0.02]" />
       
-      <div className="app-container relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-20 mb-16">
+      <div className="max-w-[1100px] mx-auto relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-24 mb-16">
           
           <div className="flex flex-col gap-6">
              <div className="flex items-center gap-4">
@@ -192,12 +188,12 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: <Icons.Instagram className="w-4 h-4" />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
-                { icon: <Icons.Youtube className="w-4 h-4" />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
-                { icon: <Icons.Whatsapp className="w-4 h-4" />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
+                { icon: <Icons.Instagram className="w-4 h-4" />, url: 'https://instagram.com' },
+                { icon: <Icons.Youtube className="w-4 h-4" />, url: 'https://youtube.com' },
+                { icon: <Icons.Whatsapp className="w-4 h-4" />, url: 'https://wa.me' },
               ].map((social, i) => (
                 <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
-                  <a href={social.url} target="_blank" rel="noopener noreferrer" onClick={() => handleSocialClick(social.platform, social.url)} aria-label={social.platform}>
+                  <a href={social.url} target="_blank" rel="noopener noreferrer">
                     {social.icon}
                   </a>
                 </Button>
@@ -284,7 +280,7 @@ const Footer: React.FC = React.memo(() => {
                   className="absolute right-1 top-1 bottom-1 px-3 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
+                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium-sm animate-spin" />
                   ) : (
                     <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
                   )}
@@ -301,12 +297,16 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
-              <Button 
-                onClick={() => navigate(AppRoute.ADMIN)} 
-                className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
-              >
-                Evaldo.os
-              </Button>
+              {canUserAccess(profile?.role, AppRoute.ADMIN) ? (
+                <Button 
+                  onClick={() => navigate(AppRoute.ADMIN)} 
+                  className="cursor-pointer select-none text-primary hover:text-primary/80 transition-colors font-black"
+                >
+                  Evaldo.os
+                </Button>
+              ) : (
+                <span className="font-black text-primary">Evaldo.os</span>
+              )}
             </p>
           </div>
           <div className="flex items-center gap-8">

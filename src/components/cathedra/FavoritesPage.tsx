@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -15,7 +15,7 @@ const FavoritesPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.Heart className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
         </div>
@@ -36,7 +36,7 @@ const FavoritesPage: React.FC = () => {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4 text-center">
-          <div className="w-16 h-16 rounded-premium bg-muted flex items-center justify-center">
+          <div className="w-16 h-16 rounded-premium-sm bg-muted flex items-center justify-center">
             <Icons.Heart className="w-8 h-8 text-muted-foreground" />
           </div>
           <h3 className="text-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
@@ -47,7 +47,7 @@ const FavoritesPage: React.FC = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map(item => (
-            <div key={item.id} className="bg-card border border-border rounded-premium p-5 group hover:border-primary/30 transition-all">
+            <div key={item.id} className="bg-card border border-border rounded-premium-sm p-5 group hover:border-primary/30 transition-all">
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">

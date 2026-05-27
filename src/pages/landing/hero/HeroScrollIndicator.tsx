@@ -5,22 +5,22 @@ const HeroScrollIndicator = () => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    transition={{ delay: 2, duration: 1 }}
-    className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
+    transition={{ delay: 3 }}
+    className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
   >
-    <motion.div
-      animate={{ 
-        y: [0, 8, 0],
-        opacity: [0.1, 0.3, 0.1]
-      }}
-      transition={{ 
-        repeat: Infinity, 
-        duration: 4, 
-        ease: "easeInOut" 
-      }}
-      className="flex flex-col items-center gap-2"
+    <motion.span
+      className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/30 italic"
+      animate={{ opacity: [0.3, 0.6, 0.3] }}
+      transition={{ duration: 2, repeat: Infinity }}
     >
-      <div className="w-px h-12 bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0" />
+      Explorar
+    </motion.span>
+    <motion.div
+      animate={{ y: [0, 8, 0] }}
+      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+      className="text-muted-foreground/30"
+    >
+      <ArrowDown className="w-4 h-4" />
     </motion.div>
   </motion.div>
 );

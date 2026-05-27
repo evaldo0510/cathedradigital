@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import SacredImage from './SacredImage';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card    , CardContent   } from '@/components/cathedra/Card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, Info, Calendar, Scroll, ChevronRight } from 'lucide-react';
@@ -176,7 +176,7 @@ const PopesPage: React.FC = () => {
       />
 
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Icons.ShieldCheck className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>

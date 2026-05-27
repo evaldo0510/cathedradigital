@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card    , CardContent  , CardHeader  , CardTitle  , CardDescription   } from '@/components/cathedra/Card';
 import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
@@ -34,7 +34,7 @@ const TransactionSkeleton: React.FC = () => (
   <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
     <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-premium bg-muted" />
+        <div className="w-10 h-10 rounded-premium-sm bg-muted" />
         <div className="space-y-2">
           <div className="h-4 w-32 bg-muted rounded" />
           <div className="h-3 w-24 bg-muted rounded" />
@@ -45,7 +45,7 @@ const TransactionSkeleton: React.FC = () => (
           <div className="h-5 w-20 bg-muted rounded" />
           <div className="h-2 w-10 bg-muted rounded ml-auto" />
         </div>
-        <div className="h-6 w-16 bg-muted rounded-premium" />
+        <div className="h-6 w-16 bg-muted rounded-premium-sm" />
       </div>
     </CardContent>
   </Card>
@@ -266,7 +266,7 @@ const UserTransactionsPage: React.FC = () => {
         {announcement}
       </div>
         <div className="flex items-center gap-4 animate-pulse">
-          <div className="w-12 h-12 rounded-premium bg-muted" />
+          <div className="w-12 h-12 rounded-premium-sm bg-muted" />
           <div className="space-y-2">
             <div className="h-6 w-48 bg-muted rounded" />
             <div className="h-4 w-64 bg-muted rounded" />
@@ -283,7 +283,7 @@ const UserTransactionsPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8 py-6">
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+          <div className="w-12 h-12 rounded-premium-sm bg-primary/10 flex items-center justify-center text-primary">
             <Icons.History className="w-6 h-6" />
           </div>
           <div>
@@ -427,7 +427,7 @@ const UserTransactionsPage: React.FC = () => {
           )}
 
           {error && transactions.length > 0 && (
-            <div className="p-4 rounded-premium bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+            <div className="p-4 rounded-premium-sm bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
               <p className="text-xs text-destructive font-medium">{error}</p>
               <Button 
                 variant="ghost" 
@@ -442,7 +442,7 @@ const UserTransactionsPage: React.FC = () => {
           
           {hasMore && !loadingMore && !error && (
             <div ref={loaderRef} className="flex flex-col items-center justify-center py-8 space-y-4">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-premium animate-spin opacity-50" />
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-premium-sm animate-spin opacity-50" />
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -501,7 +501,7 @@ const UserTransactionsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 bg-muted/30 p-4 rounded-premium border border-border/50">
+              <div className="space-y-3 bg-muted/30 p-4 rounded-premium-sm border border-border/50">
                 <div className="flex justify-between items-center">
                   <span className="text-premium-tiny font-bold text-muted-foreground uppercase">Descrição</span>
                   <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
@@ -539,7 +539,7 @@ const UserTransactionsPage: React.FC = () => {
 
               {selectedTx.status === 'approved' && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-premium bg-green-500/5 border border-green-500/10 flex items-center gap-3">
+                  <div className="p-4 rounded-premium-sm bg-green-500/5 border border-green-500/10 flex items-center gap-3">
                     <Icons.CheckCircle className="w-5 h-5 text-green-500" />
                     <div>
                       <p className="text-premium-tiny font-black uppercase text-green-600">Aprovado</p>
@@ -558,7 +558,7 @@ const UserTransactionsPage: React.FC = () => {
               )}
 
               {selectedTx.error_message && (
-                <div className="p-4 rounded-premium bg-destructive/5 border border-destructive/10">
+                <div className="p-4 rounded-premium-sm bg-destructive/5 border border-destructive/10">
                   <p className="text-premium-tiny font-black uppercase text-destructive mb-1">Motivo do Problema</p>
                   <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
                 </div>

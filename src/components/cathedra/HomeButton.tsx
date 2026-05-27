@@ -1,11 +1,8 @@
 import * as React from "react";
-import { CathedraButton } from "./CathedraButton";
-import { type ButtonProps } from "@/components/ui/button";
+import { Button } from "@/components/cathedra/CathedraButton";
+import { type ButtonProps } from "@/components/cathedra/Button";
 
-export interface HomeButtonProps extends ButtonProps {
-  // Keeping this interface to allow future extensions
-  _member?: never;
-}
+export interface HomeButtonProps extends ButtonProps {}
 
 const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
   ({ variant, size, children, className, ...props }, ref) => {
@@ -32,7 +29,7 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
     delete (filteredProps as any).onDragStart;
 
     return (
-      <CathedraButton
+      <Button
         ref={ref}
         variant={vMap[variant as string] || 'primary'}
         size={sMap[size as string] || 'md'}
@@ -40,7 +37,7 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
         {...(filteredProps as any)}
       >
         {children}
-      </CathedraButton>
+      </Button>
     );
   }
 );

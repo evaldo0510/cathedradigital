@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/cathedra/Button';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
@@ -11,11 +11,7 @@ import SearchResultCard from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { AppRoute } from '@/types';
 import { useRovingTabindex } from './TabUtils';
-import { useAutoFocus } from '@/hooks/useAutoFocus';
 import type { Tables } from '@/integrations/supabase/types';
-import ContemplativeLayout from './ContemplativeLayout';
-import { ListSkeleton } from './SacredSkeleton';
-
 
 type Saint = Tables<'saints'>;
 type GlossaryRow = Tables<'glossary'>;
@@ -25,7 +21,6 @@ type Journey = Tables<'journeys'>;
 
 const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const navigate = useNavigate();
-  useAutoFocus();
   const [query, setQuery] = useState('');
   const tagsRef = React.useRef<HTMLDivElement>(null);
 
@@ -53,71 +48,25 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   );
 
   return (
-    <ContemplativeLayout
-      subtitle="O Verbo de Deus"
-      title="Logos IA"
-      maxW="max-w-4xl"
-    >
-      <SEOHead 
-        title="Logos IA | Sabedoria Teológica e Espiritual" 
-        description="Pesquise e dialogue com a Logos IA sobre a Bíblia, Catecismo e Magistério. O seu assistente inteligente para aprofundamento na fé católica." 
-        path="/buscar" 
-        keywords="logos ia, busca teológica, assistente espiritual, bíblia, catecismo, magistério"
-        breadcrumbs={[
-          { name: "Home", path: "/" },
-          { name: "Logos IA", path: "/buscar" }
-        ]}
-      />
-      <div ref={ref} className="space-y-12">
-        <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="w-16 h-16 rounded-premium bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500">
-            <Icons.Search className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-3xl md:text-5xl font-bold font-serif text-foreground">Logos IA</h1>
-          <p className="text-muted-foreground font-serif italic text-lg max-w-lg mx-auto">
-            "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
-          </p>
+    <>
+      <SEOHead title="Busca Global" description="Pesquise santos, glossário, discussões, temas e jornadas em um só lugar." path="/buscar" />
+      <div ref={ref} className="space-y-6 max-w-2xl mx-auto pb-24 px-2 sm:px-4">
+        <motion.div className="text-center space-y-3 pt-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <Icons.Search className="w-8 h-8 mx-auto text-primary" />
+          <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">Busca Global</h1>
+          <p className="text-muted-foreground font-serif italic text-sm">Encontre tudo em um só lugar</p>
         </motion.div>
 
-        {/* LOGOS IA CHAT INTERFACE */}
-        <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12 shadow-premium space-y-8">
-           <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icons.Sparkles className="w-4 h-4 text-primary" />
-                 </div>
-                 <h2 className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
-              </p>
-           </div>
-           
-           <FuzzySearchInput
-            value={query}
-            onChange={setQuery}
-            placeholder="Qual é a sua dúvida espiritual hoje?"
-            isSearching={anyPending}
-            size="lg"
-            className="max-w-none"
-          />
-        </div>
+        <FuzzySearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Buscar santos, termos, discussões, temas, jornadas…"
+          isSearching={anyPending}
+          size="lg"
+          className="max-w-xl mx-auto"
+        />
 
-        <div className="space-y-6">
-          <div className="flex items-center gap-8">
-            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
-              Resultados da Pesquisa
-            </h2>
-            <div className="h-px flex-1 bg-border/30" />
-          </div>
-
-        {anyPending && (
-          <div className="mt-8">
-            <ListSkeleton count={4} />
-          </div>
-        )}
-
-        {isAllEmpty && !anyPending && (
+        {isAllEmpty && (
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
@@ -130,7 +79,6 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </div>
           </motion.div>
         )}
-
 
         {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-6">
@@ -233,7 +181,6 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             </TabsContent>
           </Tabs>
         )}
-      </div>
 
         {!hasQuery && (
           <div className="text-center py-12 text-muted-foreground">
@@ -242,7 +189,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           </div>
         )}
       </div>
-    </ContemplativeLayout>
+    </>
   );
 });
 

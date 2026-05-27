@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button   } from '@/components/ui/button';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -11,7 +11,7 @@ const AboutCreatorSection = () => {
   return (
     <section className="py-24 px-6 relative overflow-hidden">
       {/* Decorative background elements simplified */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/2 rounded-premium pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/2 rounded-premium-sm pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12 md:gap-20">
@@ -22,8 +22,8 @@ const AboutCreatorSection = () => {
             className="w-full md:w-1/3 flex justify-center"
           >
             <div className="relative">
-              <div className="w-40 h-40 md:w-48 md:h-48 rounded-premium border border-border/10 p-1 relative bg-background">
-                <div className="w-full h-full rounded-premium bg-muted flex items-center justify-center overflow-hidden border border-border/10">
+              <div className="w-40 h-40 md:w-48 md:h-48 rounded-premium-sm border border-border/10 p-1 relative bg-background">
+                <div className="w-full h-full rounded-premium-sm bg-muted flex items-center justify-center overflow-hidden border border-border/10">
                   <Icons.User className="w-16 h-16 text-muted-foreground/30" />
                 </div>
               </div>
@@ -36,7 +36,7 @@ const AboutCreatorSection = () => {
             viewport={{ once: true }}
             className="w-full md:w-2/3 space-y-6 text-center md:text-left"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-premium">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 rounded-premium-sm">
               <span className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-primary/60 italic">O Fundador</span>
             </div>
             

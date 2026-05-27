@@ -23,37 +23,35 @@ async function runVisualTests() {
   };
 
   try {
-    // Generate SEO assets first
-    console.log('  - Gerando assets de SEO (sitemap, robots)...');
-    execSync('bun run generate:seo', { stdio: 'inherit' });
-
-    // Run Playwright tests - specifically the visual, accessibility and SEO ones
-    console.log('  - Executando Auditoria Visual, Acessibilidade e SEO...');
-    execSync('npx playwright test tests/e2e/visual.spec.ts tests/e2e/accessibility.spec.ts tests/e2e/home-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts', {
+    // Run Playwright tests
+    console.log('  - Executando Playwright com Snapshots e Axe-core...');
+    // Add A11y limit if provided
+    const a11yLimit = process.env.A11Y_MAX_CRITICAL_ERRORS || '0';
+    execSync(`A11Y_MAX_CRITICAL_ERRORS=${a11yLimit} npx playwright test tests/e2e/*.spec.ts`, {
       stdio: 'inherit',
       env: { ...process.env, CI: 'true' }
     });
 
     console.log('  - Executando Auditoria de Tokens (Design System)...');
-    // Ensure we have bun or fallback to node
-    try {
-      execSync('bun run scripts/visual-audit.ts', { stdio: 'inherit' });
-    } catch {
-      execSync('npx ts-node scripts/visual-audit.ts', { stdio: 'inherit' });
-    }
+    execSync('bun run scripts/visual-audit.ts', { stdio: 'inherit' });
     if (fs.existsSync('visual-audit-report.json')) {
       fs.copyFileSync('visual-audit-report.json', 'public/visual-audit-report.json');
     }
 
-    if (fs.existsSync('test-results/seo-audit-report.html')) {
-      fs.copyFileSync('test-results/seo-audit-report.html', 'public/seo-audit-report.html');
-      console.log('  - Relatório SEO copiado para public/');
+    const a11yReportsDir = path.join(process.cwd(), 'test-results', 'a11y-reports');
+    const publicA11yPath = path.join(process.cwd(), 'public', 'a11y-reports');
+    if (fs.existsSync(a11yReportsDir)) {
+      if (!fs.existsSync(publicA11yPath)) fs.mkdirSync(publicA11yPath, { recursive: true });
+      const a11yFiles = fs.readdirSync(a11yReportsDir);
+      a11yFiles.forEach(file => {
+        fs.copyFileSync(path.join(a11yReportsDir, file), path.join(publicA11yPath, file));
+      });
     }
 
     results.status = 'success';
 
   } catch (error) {
-    console.error('❌ Falhas detectadas nos testes de regressão, auditoria ou SEO.');
+    console.error('❌ Diferenças visuais ou falhas de acessibilidade encontradas.');
     results.status = 'failed';
   }
   // Continue anyway to generate report from any available data
@@ -187,64 +185,35 @@ async function runVisualTests() {
             </div>
         </section>
 
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="space-y-6">
-                <h2 class="text-xl font-premium font-black">Validação WCAG AAA & Acessibilidade</h2>
-                <div class="grid grid-cols-1 gap-6">
-                    ${a11yDetails.map(audit => `
-                        <div class="premium-card p-6 border-l-4 ${audit.violations.length > 0 ? 'border-red-500' : 'border-emerald-500'}">
-                            <h3 class="font-bold text-sm mb-4 truncate">${audit.file.replace('a11y-', '').replace('.json', '')}</h3>
-                            <div class="flex gap-4 mb-4">
-                                <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
-                                    <p class="text-[10px] opacity-40 font-black">Falhas</p>
-                                    <p class="text-lg font-black ${audit.violations.length > 0 ? 'text-red-500' : 'text-emerald-500'}">${audit.violations.length}</p>
-                                </div>
-                                <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
-                                    <p class="text-[10px] opacity-40 font-black">Passaram</p>
-                                    <p class="text-lg font-black">${audit.passes}</p>
-                                </div>
+        <section class="space-y-6">
+            <h2 class="text-xl font-premium font-black">Validação WCAG AAA & Acessibilidade</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                ${a11yDetails.map(audit => `
+                    <div class="premium-card p-6 border-l-4 ${audit.violations.length > 0 ? 'border-red-500' : 'border-emerald-500'}">
+                        <h3 class="font-bold text-sm mb-4 truncate">${audit.file.replace('a11y-', '').replace('.json', '')}</h3>
+                        <div class="flex gap-4 mb-4">
+                            <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
+                                <p class="text-[10px] opacity-40 font-black">Falhas</p>
+                                <p class="text-lg font-black ${audit.violations.length > 0 ? 'text-red-500' : 'text-emerald-500'}">${audit.violations.length}</p>
                             </div>
-                            ${audit.violations.length > 0 ? `
-                                <ul class="space-y-2">
-                                    ${audit.violations.map((v: any) => `
-                                        <li class="p-3 bg-red-500/5 border border-red-500/10 rounded-xl text-xs">
-                                            <p class="font-black text-red-400 mb-1 uppercase tracking-widest">${v.id}</p>
-                                            <p class="opacity-70">${v.help}</p>
-                                            <p class="text-[10px] opacity-40 mt-1">Impacto: ${v.impact}</p>
-                                        </li>
-                                    `).join('')}
-                                </ul>
-                            ` : '<p class="text-xs text-emerald-500/60 flex items-center gap-2"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Conforme WCAG AAA</p>'}
+                            <div class="text-center px-3 py-1 bg-white/5 rounded-lg">
+                                <p class="text-[10px] opacity-40 font-black">Passaram</p>
+                                <p class="text-lg font-black">${audit.passes}</p>
+                            </div>
                         </div>
-                    `).join('')}
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <h2 class="text-xl font-premium font-black">SEO & Infraestrutura de Busca</h2>
-                <div class="premium-card p-8 flex flex-col items-center justify-center text-center space-y-6 h-full">
-                    <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center">
-                        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-lg mb-2">Relatório SEO Completo</h3>
-                        <p class="text-sm opacity-60 max-w-xs mx-auto mb-6">Auditoria detalhada de meta tags, Open Graph, Twitter Cards e dados estruturados Schema.org.</p>
-                        <a href="seo-audit-report.html" class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-900/20 uppercase tracking-widest text-xs">Ver Relatório SEO</a>
-                    </div>
-                    <div class="w-full pt-6 border-t border-white/5 grid grid-cols-2 gap-4">
-                        <div class="text-left">
-                            <p class="text-[10px] opacity-40 font-black uppercase mb-1">Assets Gerados</p>
-                            <ul class="text-[10px] space-y-1">
-                                <li class="flex items-center gap-2 text-emerald-500">✅ sitemap.xml</li>
-                                <li class="flex items-center gap-2 text-emerald-500">✅ robots.txt</li>
+                        ${audit.violations.length > 0 ? `
+                            <ul class="space-y-2">
+                                ${audit.violations.map((v: any) => `
+                                    <li class="p-3 bg-red-500/5 border border-red-500/10 rounded-xl text-xs">
+                                        <p class="font-black text-red-400 mb-1 uppercase tracking-widest">${v.id}</p>
+                                        <p class="opacity-70">${v.help}</p>
+                                        <p class="text-[10px] opacity-40 mt-1">Impacto: ${v.impact}</p>
+                                    </li>
+                                `).join('')}
                             </ul>
-                        </div>
-                        <div class="text-left">
-                            <p class="text-[10px] opacity-40 font-black uppercase mb-1">Indexação</p>
-                            <p class="text-[10px] text-blue-400">Pronto para Google Search Console</p>
-                        </div>
+                        ` : '<p class="text-xs text-emerald-500/60 flex items-center gap-2"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Conforme WCAG AAA</p>'}
                     </div>
-                </div>
+                `).join('')}
             </div>
         </section>
 
@@ -310,6 +279,7 @@ async function runVisualTests() {
   console.log(`✅ Relatório HTML gerado em: ${reportPath}`);
   
   if (results.status === 'failed') {
+    console.error('❌ Auditoria visual falhou. Verifique o relatório para mais detalhes.');
     process.exit(1);
   }
 }

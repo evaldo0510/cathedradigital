@@ -15,7 +15,7 @@ const AchievementsPage: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium-sm">
           <Trophy className="w-4 h-4 text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Conquistas</span>
         </div>
@@ -24,7 +24,7 @@ const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Summary */}
-      <div className="bg-card border border-border rounded-premium p-5 space-y-3">
+      <div className="bg-card border border-border rounded-premium-sm p-5 space-y-3">
         <div className="flex items-center justify-between text-sm">
           <span className="font-bold text-foreground">{totalEarned} de {BADGE_DEFINITIONS.length} conquistas</span>
           <span className="font-bold text-primary">{progress}%</span>
@@ -44,7 +44,7 @@ const AchievementsPage: React.FC = () => {
               transition={{ delay: i * 0.06 }}
               className={`relative rounded-full border p-5 transition-all ${
                 unlocked
-                  ? 'bg-primary/5 border-primary/30 shadow-premium'
+                  ? 'bg-primary/5 border-primary/30 shadow-soft'
                   : 'bg-card border-border opacity-60'
               }`}
             >
@@ -60,7 +60,7 @@ const AchievementsPage: React.FC = () => {
                   <p className="text-xs text-muted-foreground">{badge.description}</p>
                 </div>
                 {unlocked && (
-                  <div className="flex-shrink-0 px-2.5 py-1 bg-primary/15 rounded-premium">
+                  <div className="flex-shrink-0 px-2.5 py-1 bg-primary/15 rounded-premium-sm">
                     <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conquistado</span>
                   </div>
                 )}

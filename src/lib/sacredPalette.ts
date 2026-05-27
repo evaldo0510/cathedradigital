@@ -1,11 +1,11 @@
 export const SACRED_PALETTE: Record<string, { primary: string; accent: string; depth: string }> = {
-  green: { primary: '#0D2442', accent: '#BFA366', depth: '#061221' }, // Muted blue-green
-  red: { primary: '#BFA366', accent: '#0D2442', depth: '#7A6438' }, // Muted gold-red
-  purple: { primary: '#0D2442', accent: '#BFA366', depth: '#061221' },
-  rose: { primary: '#BFA366', accent: '#0D2442', depth: '#7A6438' },
-  black: { primary: '#1A1A1A', accent: '#BFA366', depth: '#000000' },
-  white: { primary: '#FFFFFF', accent: '#BFA366', depth: '#F5F5F5' },
-  gold: { primary: '#0D2442', accent: '#BFA366', depth: '#061221' },
+  green: { primary: '#0B1F3A', accent: '#C8A96A', depth: '#050D19' },
+  red: { primary: '#C8A96A', accent: '#0B1F3A', depth: '#8A713F' },
+  purple: { primary: '#0B1F3A', accent: '#C8A96A', depth: '#050D19' },
+  rose: { primary: '#C8A96A', accent: '#0B1F3A', depth: '#8A713F' },
+  black: { primary: '#1A1A1A', accent: '#C8A96A', depth: '#000000' },
+  white: { primary: '#FFFFFF', accent: '#C8A96A', depth: '#F0F0F0' },
+  gold: { primary: '#0B1F3A', accent: '#C8A96A', depth: '#050D19' },
 };
 
 export function getInitials(name: string): string {

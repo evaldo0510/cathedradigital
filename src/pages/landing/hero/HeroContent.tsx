@@ -1,14 +1,24 @@
 import { motion, MotionValue } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import { HomeButton } from "@/components/cathedra/HomeButton";
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.3,
+    }
+  }
+};
+
 const fadeInUpVariants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, y: 12 },
   visible: { 
     opacity: 1, y: 0,
-    transition: { duration: 1.2, ease: EASE }
+    transition: { duration: 1.8, ease: EASE }
   },
 };
 
@@ -17,82 +27,77 @@ interface HeroContentProps {
   heroScale?: number;
   heroY: MotionValue<number>;
   onStart: () => void;
+  onAbout: () => void;
+  user: any;
 }
 
-const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContentProps) => {
-  const navigate = useNavigate();
-
+const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart, onAbout, user }: HeroContentProps) => {
   return (
     <motion.div
       style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
-      className="relative z-10 max-w-5xl text-center px-4 flex flex-col items-center justify-center min-h-[60vh]"
+      className="relative z-10 w-full max-w-7xl mx-auto text-center px-6 md:px-12"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
     >
-      {/* Subtle Visual Anchor */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: EASE }}
-        className="mb-12 md:mb-20"
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-px h-12 bg-primary/10" />
-          <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/30">
-            Mosteiro Digital
-          </p>
-        </div>
-      </motion.div>
+      <div className="space-y-16 sm:space-y-24 md:space-y-32">
+        {/* Subtle Identity */}
+        <motion.div
+          variants={fadeInUpVariants}
+          className="flex flex-col items-center"
+        >
+          <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.6em] text-primary/15 select-none">
+            Logos · Mestre Contemplativo
+          </div>
+        </motion.div>
 
-      {/* Main Heading - Refined Hierarchy */}
-      <motion.div
-        variants={fadeInUpVariants}
-        initial="hidden"
-        animate="visible"
-        className="mb-12 md:mb-16"
-      >
-        <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-display font-medium text-primary leading-tight tracking-tighter">
-          Cathedra
-        </h1>
-      </motion.div>
+        {/* Title - Iconic Signature */}
+        <motion.div 
+          variants={fadeInUpVariants}
+          className="space-y-8 sm:space-y-12"
+        >
+          <h1 
+            className="max-w-4xl mx-auto text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-normal text-primary leading-[1.1] tracking-tightest px-4 sm:px-0"
+            aria-label="Nem toda prisão é visível"
+          > 
+            Nem toda <br/> 
+            <span className="text-primary/70">prisão é</span> <br/> 
+            <span className="text-secondary/60 italic font-serif font-light">visível</span> 
+          </h1>
+          
+          <motion.p
+            className="max-w-lg mx-auto font-serif text-base sm:text-lg md:text-xl text-primary/60 italic leading-relaxed font-light px-6 sm:px-0"
+          >
+            Uma plataforma de direção espiritual guiada <br className="hidden sm:block" /> pela Tradição e Inteligência Contemplativa.
+          </motion.p>
 
-      {/* Description - Cleaner and More Contemplative */}
-      <motion.p
-        variants={fadeInUpVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.2 }}
-        className="max-w-xl mx-auto font-serif text-xl md:text-2xl text-foreground/20 italic leading-relaxed mb-16 md:mb-24"
-      >
-        A jornada espiritual guiada pela Tradição.
-      </motion.p>
+        </motion.div>
 
-      {/* CTAs - Simplified and Focused */}
-      <motion.div
-        variants={fadeInUpVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 0.4 }}
-        className="flex flex-col items-center gap-12"
-      >
-        <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+        {/* CTA - Refined Focus */}
+        <motion.div
+          variants={fadeInUpVariants}
+          className="flex flex-col items-center pt-4 sm:pt-8"
+        >
           <HomeButton
             size="lg"
             variant="primary"
+            className="w-full sm:w-auto sm:min-w-[320px] h-16 text-[10px] sm:text-[11px] uppercase tracking-[0.4em] font-black shadow-premium hover:shadow-premium-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background outline-none transition-all duration-1000"
             onClick={onStart}
-            aria-label="Entrar no santuário digital"
+            aria-label={user ? "Acessar Interior" : "Iniciar Caminhada Espiritual"}
           >
-            Entrar no Santuário
+            {user ? 'Acessar Interior' : 'Iniciar Caminhada'}
           </HomeButton>
-        </div>
+          
+          <button 
+            onClick={onAbout}
+            className="mt-12 text-[9px] sm:text-[10px] uppercase tracking-[0.3em] font-bold text-primary/15 hover:text-primary/40 focus-visible:text-primary focus-visible:ring-2 focus-visible:ring-primary/10 focus-visible:rounded-full px-4 py-2 outline-none transition-all duration-700"
+            aria-label="Saiba mais sobre a obra Cathedra"
+          >
+            Sobre a Obra
+          </button>
 
-        {/* Elegant Minimal Signature */}
-        <div className="flex items-center gap-4 opacity-10">
-          <span className="w-8 h-px bg-primary" />
-          <p className="text-[8px] font-bold uppercase tracking-[0.5em] text-primary">
-            Cathedra
-          </p>
-          <span className="w-8 h-px bg-primary" />
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 };

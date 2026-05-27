@@ -3,7 +3,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, AreaChart, Area
 } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card    , CardContent  , CardDescription  , CardHeader  , CardTitle   } from '@/components/cathedra/Card';
 
 interface Props {
   userGrowth: any[];

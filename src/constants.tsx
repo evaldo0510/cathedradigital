@@ -119,10 +119,8 @@ import {
   Layers,
   Languages,
   BookMarked,
-  Wifi,
-  Printer
+  Wifi
 } from 'lucide-react';
-
 import { cn } from './lib/utils';
 
 export const COLORS = {
@@ -299,9 +297,7 @@ const IconsInternal = {
   Facebook: createIcon(Facebook),
   Twitter: createIcon(Twitter),
   Youtube: createIcon(Youtube),
-  Printer: createIcon(Printer),
 };
-
 
 // Semantic Groups for better organization
 export const Icons = {
@@ -470,11 +466,9 @@ export const Icons = {
   Facebook: IconsInternal.Facebook,
   Twitter: IconsInternal.Twitter,
   Youtube: IconsInternal.Youtube,
-  Printer: IconsInternal.Printer,
   Whatsapp: IconsInternal.MessageCircle,
   Google: IconsInternal.Globe, 
   Apple: IconsInternal.Smartphone,
-
 };
 
 // Runtime Consistency Check

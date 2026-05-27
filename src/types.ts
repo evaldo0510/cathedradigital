@@ -71,9 +71,9 @@ export enum AppRoute {
   CATECHISM_VERIFY = '/catechism/verify',
   TRANSPARENCY = '/transparencia',
   DIARIO = '/diario',
-  SEO_VERIFY = '/admin/seo-verify',
+  AUDIT_LOGS = '/admin/audit-logs',
+  PROGRESS = '/progresso',
 
-  JORNADA_GUIADA = '/jornada-guiada',
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager'
 }

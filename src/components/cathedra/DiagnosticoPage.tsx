@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, ArrowRight, ArrowLeft, Sparkles, Heart, BookOpen, Church, Hand, Sun } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button   } from '@/components/cathedra/Button';
+import { Card     } from '@/components/cathedra/Card';
 import { Progress } from '@/components/ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -138,35 +138,73 @@ const DiagnosticoPage: React.FC = () => {
     const rec = getRecommendation();
     return (
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-lg mx-auto space-y-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6 bg-background reading-sepia"
       >
-        <div className="text-center space-y-3">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', delay: 0.2 }}
-            className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center"
-          >
-            <Compass className="w-10 h-10 text-primary" />
-          </motion.div>
-          <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
-          <p className="text-muted-foreground">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
-        </div>
-
-        <Card className="p-6 space-y-4 border-primary/20">
-          <h2 className="text-xl font-bold text-foreground">{rec.title}</h2>
-          <p className="text-muted-foreground">{rec.description}</p>
-          <div className="flex gap-3">
-            <Button onClick={() => navigate(AppRoute.JORNADAS)} className="flex-1">
-              Ver Jornadas <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-            <Button variant="outline" onClick={() => navigate(AppRoute.HOJE)}>
-              Ir para Hoje
-            </Button>
+        <div className="w-full max-w-2xl space-y-16 text-center">
+          <div className="space-y-8">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', delay: 0.2, duration: 1 }}
+              className="w-24 h-24 rounded-full bg-primary/[0.02] mx-auto flex items-center justify-center border border-primary/5"
+            >
+              <Compass className="w-10 h-10 text-primary/40" />
+            </motion.div>
+            
+            <div className="space-y-4">
+              <motion.span 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20 block"
+              >
+                Caminho Revelado
+              </motion.span>
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="text-4xl md:text-6xl font-display text-primary tracking-tightest"
+              >
+                Sua Jornada
+              </motion.h1>
+            </div>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="text-lg md:text-xl font-monastery text-primary/40 italic leading-relaxed max-w-lg mx-auto"
+            >
+              Com base na sua realidade interior, preparamos uma trilha de aprofundamento e oração.
+            </motion.p>
           </div>
-        </Card>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2 }}
+            className="p-10 rounded-[3rem] border border-primary/5 bg-primary/[0.01] space-y-8 relative overflow-hidden group"
+          >
+            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-secondary/20 to-transparent" />
+            
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-primary tracking-tight">{rec.title}</h2>
+              <p className="text-sm font-monastery text-primary/60 italic">{rec.description}</p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button onClick={() => navigate(AppRoute.JORNADAS)} className="rounded-full h-14 px-10 gap-3 font-black uppercase text-[10px] tracking-[0.2em] bg-primary text-primary-foreground shadow-premium">
+                Iniciar Caminhada <ArrowRight className="w-4 h-4" />
+              </Button>
+              <Button variant="outline" onClick={() => navigate(AppRoute.HOJE)} className="rounded-full h-14 px-10 font-black uppercase text-[10px] tracking-[0.2em] border-primary/10 text-primary">
+                Ir para o Hoje
+              </Button>
+            </div>
+          </motion.div>
+        </div>
       </motion.div>
     );
   }
@@ -174,55 +212,82 @@ const DiagnosticoPage: React.FC = () => {
   const question = QUESTIONS[currentStep];
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
-      <div className="text-center space-y-2">
-        <Compass className="w-10 h-10 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
-        <p className="text-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
-      </div>
-
-      <Progress value={progress} className="h-2" />
-      <p className="text-xs text-muted-foreground text-center">
-        Pergunta {currentStep + 1} de {QUESTIONS.length}
-      </p>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={question.id}
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -40 }}
-          transition={{ duration: 0.25 }}
-          className="space-y-4"
-        >
-          <h2 className="text-lg font-semibold text-foreground text-center">{question.question}</h2>
-
-          <div className="space-y-3">
-            {question.options.map((opt) => (
-              <motion.button
-                key={opt.value}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleAnswer(opt.value)}
-                className={`w-full flex items-center gap-3 p-4 rounded-full border transition-all text-left
-                  ${answers[question.id] === opt.value
-                    ? 'border-primary bg-primary/10 text-foreground'
-                    : 'border-border bg-card text-foreground hover:border-primary/40'
-                  }`}
-              >
-                <span className="text-primary">{opt.icon}</span>
-                <span className="text-sm font-medium">{opt.label}</span>
-              </motion.button>
-            ))}
+    <div className="min-h-[80vh] flex flex-col items-center justify-center py-12 px-6 bg-background reading-sepia">
+      <div className="w-full max-w-2xl space-y-16 text-center">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em]">Exame de Alma</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">{currentStep + 1} / {QUESTIONS.length}</span>
           </div>
-        </motion.div>
-      </AnimatePresence>
+          <div className="h-0.5 bg-primary/[0.03] rounded-full overflow-hidden">
+            <motion.div 
+              className="h-full bg-secondary/30"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ type: 'spring', damping: 30, stiffness: 100 }}
+            />
+          </div>
+        </div>
 
-      {currentStep > 0 && (
-        <Button variant="ghost" size="sm" onClick={() => setCurrentStep(currentStep - 1)}>
-          <ArrowLeft className="w-4 h-4 mr-1" /> Voltar
-        </Button>
-      )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={question.id}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-12"
+          >
+            <div className="space-y-4">
+              <motion.span 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/20 block"
+              >
+                Reflexão
+              </motion.span>
+              <h2 className="text-3xl md:text-5xl font-display text-primary tracking-tight leading-tight">{question.question}</h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+              {question.options.map((opt, idx) => (
+                <motion.button
+                  key={opt.value}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 + (idx * 0.1) }}
+                  whileHover={{ x: 8 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => handleAnswer(opt.value)}
+                  className="flex items-center justify-between p-8 rounded-[1.5rem] border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] hover:border-primary/20 transition-all text-left group"
+                >
+                  <div className="flex items-center gap-6">
+                    <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center border border-primary/5 group-hover:border-primary/20 transition-all">
+                      {opt.icon}
+                    </div>
+                    <span className="text-lg font-monastery text-primary/70 group-hover:text-primary transition-colors">{opt.label}</span>
+                  </div>
+                  <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/40 transition-colors">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {currentStep > 0 && (
+          <div className="pt-12 flex justify-center">
+            <button 
+              onClick={() => setCurrentStep(currentStep - 1)}
+              className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-primary/10 hover:text-primary/30 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Anterior
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
