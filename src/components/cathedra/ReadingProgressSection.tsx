@@ -42,7 +42,7 @@ export const ReadingProgressSection: React.FC = () => {
 
           <div className="flex items-center gap-8">
             <div className="text-right hidden sm:block">
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10 group-hover:text-primary/30 transition-colors">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/10 group-hover:text-primary/20 transition-colors">
                 Retomar
               </p>
             </div>
