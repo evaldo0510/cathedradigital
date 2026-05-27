@@ -54,7 +54,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-12 md:mb-16"
       >
-        <h2 className="text-7xl md:text-9xl lg:text-[13rem] font-display font-extralight text-primary leading-none tracking-[0.2em] uppercase select-none drop-shadow-sm">
+        <h2 className="text-8xl md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-extralight text-primary leading-none tracking-[0.25em] md:tracking-[0.3em] uppercase select-none drop-shadow-sm transition-all duration-1000">
           Cathedra
         </h2>
       </motion.div>
