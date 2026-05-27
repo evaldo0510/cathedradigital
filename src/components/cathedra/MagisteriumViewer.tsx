@@ -160,19 +160,31 @@ const MagisteriumViewer: React.FC = () => {
       // Accessibility: Reading shortcuts
       if (id) {
         if (e.key.toLowerCase() === 'h') {
+          e.preventDefault();
           handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
         }
         if (e.key.toLowerCase() === 'n') {
+          e.preventDefault();
           setIsNoteModalOpen(true);
         }
         if (e.key === 'Escape') {
+          e.preventDefault();
           setActiveHighlight(null);
+        }
+        // Progress navigation (Alt + Up/Down)
+        if (e.altKey && e.key === 'ArrowUp') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
+          e.preventDefault();
+          navigate(lastReadMark.url);
         }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [id, isNoteModalOpen, handleAddNoteOrHighlight]);
+  }, [id, isNoteModalOpen, handleAddNoteOrHighlight, lastReadMark, navigate]);
 
   // Restore scroll position
   useEffect(() => {
