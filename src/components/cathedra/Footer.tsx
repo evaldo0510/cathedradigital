@@ -294,12 +294,12 @@ const Footer: React.FC = React.memo(() => {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <p className="text-premium-tiny font-black uppercase tracking-[0.3em] text-muted-foreground/60 dark:text-muted-foreground/70">
+        <div className="pt-16 border-t border-foreground/10 dark:border-foreground/15 flex flex-col md:flex-row items-center justify-between gap-10">
+          <div className="flex flex-col items-center md:items-start gap-4">
+            <p className="text-premium-small font-black uppercase tracking-[0.4em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-premium-small font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-1.5 tracking-widest">
+            <p className="text-base font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-2 tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
               <Button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
