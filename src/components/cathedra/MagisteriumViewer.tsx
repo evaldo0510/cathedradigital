@@ -14,6 +14,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
+import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
@@ -39,6 +40,7 @@ const MagisteriumViewer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
+  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -541,7 +543,16 @@ const MagisteriumViewer: React.FC = () => {
             title="Minhas Notas neste Documento"
           />
 
+          <LogosContextualSuggestions
+            type="magisterium"
+            context={`Documento do Magistério: ${document.title}`}
+            onSelectSuggestion={(prompt) => {
+              setLogosAIInitialQuery(prompt);
+              setShowLogosAI(true);
+            }}
+          />
           <Relatio 
+
             context={{
               type: 'magisterium',
               id: id,
@@ -569,8 +580,12 @@ const MagisteriumViewer: React.FC = () => {
         <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
           <LogosAI 
             isOpen={showLogosAI} 
-            onClose={() => setShowLogosAI(false)} 
+            onClose={() => {
+              setShowLogosAI(false);
+              setLogosAIInitialQuery('');
+            }} 
             context={`Documento do Magistério: ${content.title}`}
+            initialQuery={logosAIInitialQuery}
             type="magisterium"
             variant="integrated"
           />

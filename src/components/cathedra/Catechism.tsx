@@ -28,6 +28,7 @@ import CatechismOfflineFallback from './CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from './ReadingControlPanel';
 import LogosAI from './LogosAI';
+import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
@@ -309,6 +310,7 @@ const Catechism: React.FC = () => {
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
+  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
@@ -946,6 +948,19 @@ const Catechism: React.FC = () => {
                 }}
               />
 
+              {/* Logos AI: Contextual Suggestions */}
+              {showCrossRefs && currentParagraph && (
+                <LogosContextualSuggestions
+                  type="catechism"
+                  context={`Catecismo da Igreja Católica, parágrafo ${currentParagraph}`}
+                  onSelectSuggestion={(prompt) => {
+                    setLogosAIInitialQuery(prompt);
+                    setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
+                    setShowLogosAI(true);
+                  }}
+                />
+              )}
+
               {/* Relatio: Intelligent Contextual Connections */}
               {showCrossRefs && (
                 <div className="w-full max-w-[72ch] mx-auto">
@@ -970,8 +985,12 @@ const Catechism: React.FC = () => {
               <div className="w-full max-w-[72ch] mx-auto mt-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                 <LogosAI 
                   isOpen={showLogosAI} 
-                  onClose={() => setShowLogosAI(false)} 
-                  context={`Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+                  onClose={() => {
+                    setShowLogosAI(false);
+                    setLogosAIInitialQuery('');
+                  }} 
+                  context={logosAIContext || `Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+                  initialQuery={logosAIInitialQuery}
                   type="catechism"
                   variant="integrated"
                 />

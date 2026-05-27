@@ -31,6 +31,7 @@ import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
 const LogosAI = lazy(() => import('./LogosAI'));
+const LogosContextualSuggestions = lazy(() => import('./LogosContextualSuggestions').then(m => ({ default: m.LogosContextualSuggestions })));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
@@ -151,6 +152,7 @@ const Bible: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [shouldAutoResume, setShouldAutoResume] = useState(true);
   const [logosAIContext, setLogosAIContext] = useState('');
+  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
@@ -1077,6 +1079,11 @@ const Bible: React.FC = () => {
                   toast.info('Clique em um versículo primeiro para anotar.');
                 }
               }}
+              onAskLogos={(text) => {
+                setLogosAIInitialQuery(`Explique esta passagem da Bíblia: "${text}"`);
+                setLogosAIContext(`${selectedBook.name} ${selectedChapter}${highlightedVerse ? ':' + highlightedVerse : ''}`);
+                setShowLogosAI(true);
+              }}
             />
 
             <NoteEditModal 
@@ -1133,6 +1140,18 @@ const Bible: React.FC = () => {
                   }}
                 />
                 
+                <Suspense fallback={null}>
+                  <LogosContextualSuggestions
+                    type="bible"
+                    context={`${selectedBook.name} ${selectedChapter}`}
+                    onSelectSuggestion={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setLogosAIContext(`${selectedBook.name} ${selectedChapter}`);
+                      setShowLogosAI(true);
+                    }}
+                  />
+                </Suspense>
+
                 <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
                   <Relatio 
                     context={{
@@ -1231,8 +1250,12 @@ const Bible: React.FC = () => {
             <React.Suspense fallback={<BibleChapterSkeleton />}>
               <LogosAI 
                 isOpen={showLogosAI} 
-                onClose={() => setShowLogosAI(false)} 
+                onClose={() => {
+                  setShowLogosAI(false);
+                  setLogosAIInitialQuery('');
+                }} 
                 context={logosAIContext}
+                initialQuery={logosAIInitialQuery}
                 type="bible"
                 variant="integrated"
               />
