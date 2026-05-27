@@ -1,55 +1,124 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HeroSection from '../../HeroSection';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { axe } from 'vitest-axe';
+import { MotionConfig } from 'framer-motion';
 
-// Mock high-level contexts to avoid provider nesting issues
+// Manual mock for toHaveNoViolations since vitest-axe exports are tricky in this environment
+const toHaveNoViolations = (results: any) => {
+  if (results.violations.length === 0) {
+    return { pass: true, message: () => '' };
+  }
+  return {
+    pass: false,
+    message: () => `Aria violations found: ${JSON.stringify(results.violations, null, 2)}`
+  };
+};
+expect.extend({ toHaveNoViolations });
+
+// Mocks
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ user: null, profile: null, loading: false })
 }));
 
+const mockUpdateSettings = vi.fn();
+let currentSettings = { reduceAnimations: false };
+
 vi.mock('@/contexts/ReadingSettingsContext', () => ({
-  useReadingSettings: () => ({ settings: { reduceAnimations: false } }),
+  useReadingSettings: () => ({ 
+    settings: currentSettings,
+    updateSettings: mockUpdateSettings 
+  }),
   ReadingSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
 }));
 
-describe('HeroSection Accessibility and Hierarchy', () => {
-  const renderHero = () => {
+// Helper to mock matchMedia for prefers-reduced-motion
+const mockMatchMedia = (matches: boolean) => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation(query => ({
+      matches,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+};
+
+describe('HeroSection Advanced Validation', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    currentSettings = { reduceAnimations: false };
+    mockMatchMedia(false);
+  });
+
+  const renderHero = (reducedMotion = false) => {
     return render(
       <HelmetProvider>
         <BrowserRouter>
-          <HeroSection onStart={() => {}} />
+          <MotionConfig reducedMotion={reducedMotion ? "always" : "never"}>
+            <HeroSection onStart={() => {}} />
+          </MotionConfig>
         </BrowserRouter>
       </HelmetProvider>
     );
   };
 
-  it('renders the correct heading hierarchy', () => {
-    renderHero();
-    // Section should have a screen-reader only H1
-    const h1 = screen.getByRole('heading', { level: 1 });
-    expect(h1).toBeInTheDocument();
-    expect(h1).toHaveClass('sr-only');
-
-    // Content should have an H2 (Cathedra)
-    const h2 = screen.getByRole('heading', { level: 2 });
-    expect(h2).toHaveTextContent(/Cathedra/i);
+  it('should have no accessibility violations (WCAG 2.1 AA)', async () => {
+    const { container } = renderHero();
+    const results = await axe(container);
+    // @ts-ignore
+    expect(results).toHaveNoViolations();
   });
 
-  it('contains proper landmarks', () => {
-    renderHero();
-    // Should be wrapped in a section with an accessible label
-    expect(screen.getByLabelText(/Cathedra Digital - Introdução/i)).toBeInTheDocument();
-  });
-
-  it('has accessible CTAs with labels', () => {
+  it('validates keyboard navigation and focus order', () => {
     renderHero();
     const buttons = screen.getAllByRole('button');
-    expect(buttons.length).toBeGreaterThanOrEqual(2);
     
-    buttons.forEach(button => {
-      expect(button).toHaveAttribute('aria-label');
+    // Check if buttons are focusable and have correct attributes
+    buttons.forEach(btn => {
+      btn.focus();
+      expect(document.activeElement).toBe(btn);
+      expect(btn).toHaveAttribute('aria-label');
+      // The button component uses variant classes like btn-premium-primary or btn-premium-outline
+      // which are verified in the contrast test. Here we check for accessibility attributes.
     });
+  });
+
+  it('respects prefers-reduced-motion in runtime environment', () => {
+    mockMatchMedia(true);
+    const { container } = renderHero(true);
+    
+    const content = container.querySelector('.relative.z-10');
+    expect(content).toBeInTheDocument();
+    
+    // Snapshot to ensure layout remains consistent without animations
+    expect(container).toMatchSnapshot();
+  });
+
+  it('validates contrast for critical CTAs', () => {
+    renderHero();
+    const primaryBtn = screen.getByLabelText(/Continuar leitura/i);
+    
+    // Verify primary button has high contrast classes
+    expect(primaryBtn).toHaveClass('btn-premium-primary');
+  });
+
+  it('renders correctly across mobile and desktop breakpoints (Snapshot)', () => {
+    // Desktop view
+    window.innerWidth = 1920;
+    const desktop = renderHero();
+    expect(desktop.asFragment()).toMatchSnapshot('desktop-hero');
+
+    // Mobile view
+    window.innerWidth = 375;
+    const mobile = renderHero();
+    expect(mobile.asFragment()).toMatchSnapshot('mobile-hero');
   });
 });

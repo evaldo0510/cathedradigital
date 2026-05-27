@@ -7,28 +7,32 @@ const HeroParticles = () => {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.15]">
-      {[...Array(4)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-px h-px bg-primary/40 rounded-full"
-          initial={{ 
-            x: Math.random() * 100 + "%", 
-            y: Math.random() * 100 + "%",
-            opacity: 0 
-          }}
-          animate={{ 
-            y: [null, "-5%", "5%"],
-            opacity: [0, 0.08, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ 
-            duration: 60 + Math.random() * 60, 
-            repeat: Infinity, 
-            ease: "linear",
-            delay: Math.random() * 30
-          }}
-        />
-      ))}
+      {[...Array(4)].map((_, i) => {
+        const xPos = (i * 25 + 12) + "%";
+        const yPos = (i * 15 + 20) + "%";
+        return (
+          <motion.div
+            key={i}
+            className="absolute w-px h-px bg-primary/40 rounded-full"
+            initial={{ 
+              x: xPos, 
+              y: yPos,
+              opacity: 0 
+            }}
+            animate={{ 
+              y: [null, "-5%", "5%"],
+              opacity: [0, 0.08, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              duration: 60 + (i * 10), 
+              repeat: Infinity, 
+              ease: "linear",
+              delay: i * 5
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
