@@ -52,6 +52,12 @@ const Index = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background text-foreground overflow-x-hidden selection:bg-primary/10">
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:ring-2 focus:ring-primary/40 focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-widest text-[10px]"
+      >
+        Pular para o conteúdo
+      </a>
       
       <LandingHeader />
       
