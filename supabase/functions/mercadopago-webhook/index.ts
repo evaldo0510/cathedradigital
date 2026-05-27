@@ -112,7 +112,16 @@ serve(async (req) => {
 
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
     const url = new URL(req.url);
-    const body = req.method === "POST" ? await req.json().catch(() => null) : null;
+    const rawBody = req.method === "POST" ? await req.text() : "";
+    const body = rawBody
+      ? (() => {
+          try {
+            return JSON.parse(rawBody);
+          } catch {
+            return null;
+          }
+        })()
+      : null;
 
     const eventType =
       url.searchParams.get("type") ||
@@ -127,6 +136,17 @@ serve(async (req) => {
       body?.id ||
       url.searchParams.get("id") ||
       (typeof body?.resource === "string" ? body.resource.split("/").pop() : null);
+
+    // Verify HMAC signature (required when MERCADO_PAGO_WEBHOOK_SECRET is configured)
+    const signatureValid = await verifyMercadoPagoSignature(
+      req,
+      rawBody,
+      rawPaymentId ? String(rawPaymentId) : null,
+    );
+    if (!signatureValid) {
+      console.warn("[mercadopago-webhook] invalid signature");
+      return json({ error: "Assinatura inválida." }, 401);
+    }
 
     if (eventType && eventType !== "payment") {
       return json({ ok: true, ignored: true });
