@@ -129,7 +129,7 @@ describe('LogosAI Persistence and Silence', () => {
       />
     );
 
-    expect(screen.getByText('msg 2')).toBeDefined();
+    expect(await screen.findByText('msg 2')).toBeDefined();
     expect(screen.queryByText('msg 1')).toBeNull();
   });
 });
