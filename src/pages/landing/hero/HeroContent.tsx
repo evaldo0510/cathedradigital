@@ -33,52 +33,53 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
       }}
       className="relative z-10 max-w-[var(--layout-max-width)] text-center px-6 md:px-14 flex flex-col items-center justify-center min-h-[85vh] w-full"
     >
-      {/* Upper Spiritual Anchor */}
+      {/* Upper Spiritual Anchor - Refined Monastic Line */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 2.5, ease: EASE }}
-        className="mb-20 md:mb-24"
+        transition={{ duration: 3, ease: EASE }}
+        className="mb-24 md:mb-32"
       >
-        <div className="flex flex-col items-center gap-10">
+        <div className="flex flex-col items-center gap-12">
           <motion.div 
             initial={{ height: 0 }}
-            animate={{ height: 120 }}
-            transition={{ duration: 2, delay: 0.5 }}
-            className="w-px bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
+            animate={{ height: 160 }}
+            transition={{ duration: 2.5, delay: 0.8, ease: EASE }}
+            className="w-[1.5px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
           />
-          <p className="text-[11px] font-bold uppercase tracking-[1.2em] text-primary/10 leading-none select-none">
+          <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[1.4em] text-primary/10 leading-none select-none ml-4">
             Sanctuarium Spiritus
           </p>
         </div>
       </motion.div>
 
-      {/* Primary Identity - The Portal */}
+      {/* Primary Identity - The Architectural Focus */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-12 md:mb-16"
+        className="mb-14 md:mb-20"
       >
-        <h2 className="text-8xl md:text-[11rem] lg:text-[16rem] xl:text-[22rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] transition-all duration-1000">
+        <h2 className="text-[5.5rem] md:text-[11rem] lg:text-[15rem] xl:text-[20rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-2000 group">
           Cathedra
+          <span className="block h-[1px] w-0 group-hover:w-full bg-primary/10 transition-all duration-3000 mx-auto mt-4" />
         </h2>
       </motion.div>
 
-      {/* Poetic Guidance */}
+      {/* Editorial Headline - Emotionally Deep */}
       <motion.div
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        transition={{ delay: 0.5 }}
-        className="space-y-10 mb-28 md:mb-40"
+        transition={{ delay: 0.6 }}
+        className="space-y-12 mb-32 md:mb-48"
       >
-        <p className="max-w-4xl mx-auto font-serif text-3xl md:text-5xl text-foreground/40 italic leading-snug tracking-tight px-8">
-          A profundidade do silêncio, <br /> 
-          <span className="text-secondary/60">a clareza da Verdade.</span>
+        <p className="max-w-5xl mx-auto font-serif text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-8">
+          Habite a profundidade do silêncio, <br /> 
+          <span className="text-secondary/70">contemple a clareza da Verdade.</span>
         </p>
-        <p className="max-w-2xl mx-auto font-sans text-[10px] md:text-xs text-primary/15 uppercase tracking-[0.8em] font-black leading-relaxed">
-          O santuário digital para a alma que busca sabedoria
+        <p className="max-w-2xl mx-auto font-sans text-[10px] md:text-[11px] text-primary/20 uppercase tracking-[1em] font-black leading-relaxed select-none">
+          O santuário digital para a sabedoria eterna
         </p>
       </motion.div>
 
@@ -90,12 +91,12 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         transition={{ delay: 0.8 }}
         className="flex flex-col items-center gap-20 w-full"
       >
-        <div className="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full px-6">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-14 md:gap-20 w-full px-6">
           <HomeButton
             size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
-            className="w-full md:w-auto min-w-[280px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
             aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
@@ -105,10 +106,10 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="primary"
             onClick={onStart}
-            className="w-full md:w-auto min-w-[280px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-24 shadow-2xl shadow-primary/10 uppercase tracking-[0.6em] text-[11px] font-black group overflow-hidden relative"
-            aria-label="Continuar leitura"
+            className="w-full md:w-auto min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-24 shadow-2xl shadow-primary/10 uppercase tracking-[0.6em] text-[11px] font-black group overflow-hidden relative border-none"
+            aria-label="Continuar jornada"
           >
-            <span className="relative z-10">Continuar Jornada</span>
+            <span className="relative z-10">Continuar jornada</span>
             <div className="absolute inset-0 bg-white/5 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
           </HomeButton>
 
@@ -116,10 +117,10 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
-            className="w-full md:w-auto min-w-[280px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
-            aria-label="Acessar biblioteca completa"
+            className="w-full md:w-auto min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
+            aria-label="Iniciar leitura"
           >
-            Iniciar Leitura
+            Iniciar leitura
           </HomeButton>
         </div>
 
