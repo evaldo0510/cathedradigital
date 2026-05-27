@@ -98,7 +98,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
   if (sections.length === 0) return null;
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500" aria-label="Aprofundamento teológico">
       {title && (
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px flex-1 bg-border/40" />

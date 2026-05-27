@@ -163,14 +163,14 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <div className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)}>
+    <section className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
             <Icons.Sparkles className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary">Relatio Contextual</h3>
+            <h3 id="relatio-heading" className="text-xs font-black uppercase tracking-[0.2em] text-primary">Relatio Contextual</h3>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Conexões na Tradição</p>
           </div>
         </div>
