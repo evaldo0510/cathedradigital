@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
+import { Highlighter, FileText } from 'lucide-react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { 
@@ -16,6 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 const ReadingControlPanel: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
   const { marks } = useReadingMarks();
+  const navigate = useNavigate();
   const [includeNotes, setIncludeNotes] = useState(true);
 
   const themes = [
@@ -397,8 +400,8 @@ const ReadingControlPanel: React.FC = () => {
             <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Personalizar Atalhos</p>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { id: 'highlight', label: 'Destaque', icon: <Icons.Highlighter className="w-3 h-3" /> },
-                { id: 'note', label: 'Nota', icon: <Icons.FileText className="w-3 h-3" /> },
+                { id: 'highlight', label: 'Destaque', icon: <Highlighter className="w-3 h-3" /> },
+                { id: 'note', label: 'Nota', icon: <FileText className="w-3 h-3" /> },
               ].map((s) => (
                 <div key={s.id} className="flex flex-col gap-1">
                   <p className="text-[8px] font-bold uppercase text-muted-foreground/40 px-1">{s.label}</p>
