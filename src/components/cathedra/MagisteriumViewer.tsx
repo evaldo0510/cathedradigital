@@ -342,7 +342,11 @@ const MagisteriumViewer: React.FC = () => {
                       onClick={() => {
                         if (pIdx !== null) {
                           const el = document.getElementById(`para-${pIdx}`);
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
+                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
+                          }
                         }
                       }}
                       className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
