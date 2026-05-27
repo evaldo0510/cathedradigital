@@ -925,3 +925,20 @@
     widows: 3;
   }
 }
+
+/* Text Highlights */
+.highlight-yellow { @apply bg-yellow-200/60 dark:bg-yellow-500/30 rounded-sm; }
+.highlight-green { @apply bg-green-200/60 dark:bg-green-500/30 rounded-sm; }
+.highlight-blue { @apply bg-blue-200/60 dark:bg-blue-500/30 rounded-sm; }
+.highlight-red { @apply bg-red-200/60 dark:bg-red-500/30 rounded-sm; }
+
+/* Silence Mode transition */
+.visual-silence main {
+  transition: padding 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reading-scroll-down.visual-silence .reading-controls-floating {
+  opacity: 0;
+  pointer-events: none;
+}
+

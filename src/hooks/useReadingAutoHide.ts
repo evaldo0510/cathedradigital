@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-const useReadingAutoHide = () => {
+const useReadingAutoHide = (enabled: boolean = true) => {
   useEffect(() => {
+    if (!enabled) {
+      document.documentElement.classList.remove('reading-scroll-down');
+      return;
+    }
     let lastScrollY = window.scrollY;
     let ticking = false;
 
