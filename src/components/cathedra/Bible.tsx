@@ -1135,6 +1135,18 @@ const Bible: React.FC = () => {
                   }}
                 />
                 
+                <Suspense fallback={null}>
+                  <LogosContextualSuggestions
+                    type="bible"
+                    context={`${selectedBook.name} ${selectedChapter}`}
+                    onSelectSuggestion={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setLogosAIContext(`${selectedBook.name} ${selectedChapter}`);
+                      setShowLogosAI(true);
+                    }}
+                  />
+                </Suspense>
+
                 <div className="w-full max-w-[65ch] mx-auto opacity-80 hover:opacity-100 transition-opacity">
                   <Relatio 
                     context={{
