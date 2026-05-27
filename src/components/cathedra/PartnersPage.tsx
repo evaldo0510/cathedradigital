@@ -41,13 +41,12 @@ const PartnersPage: React.FC = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('partners')
+        .from('public_partners' as any)
         .select('id, name, description, logo_url, website_url')
-        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setPartners(data || []);
+      setPartners((data as unknown as Partner[]) || []);
     } catch (error) {
       console.error('Error fetching partners:', error);
     } finally {
