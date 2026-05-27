@@ -175,7 +175,7 @@ const createIcon = (IconComponent: any) =>
       ref={ref} 
       strokeWidth={strokeWidth} 
       size={size}
-      className={cn("transition-all duration-300 shrink-0", className)}
+      className={cn("transition-all duration-500 shrink-0 opacity-60 group-hover:opacity-100", className)}
       {...props} 
     />
   ));
