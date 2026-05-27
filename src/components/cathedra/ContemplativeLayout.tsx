@@ -17,7 +17,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   title, 
   subtitle, 
   className,
-  maxW = 'max-w-[75ch]'
+  maxW = 'max-w-[1200px]'
 }) => {
   const { settings } = useReadingSettings();
   
