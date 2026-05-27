@@ -98,7 +98,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         {/* Elegant Minimal Signature */}
         <div className="flex items-center gap-4 opacity-10">
           <span className="w-8 h-px bg-primary" />
-          <p className="text-[8px] font-bold uppercase tracking-[0.5em] text-primary">
+          <p className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary">
             Cathedra
           </p>
           <span className="w-8 h-px bg-primary" />
