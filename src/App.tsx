@@ -105,6 +105,8 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const DesignSystemPlayground = lazy(() => import('./components/cathedra/DesignSystemPlayground'));
+const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
+
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
@@ -365,7 +367,9 @@ const AppLayout: React.FC = () => {
 
               {/* Admin */}
               <Route path="/admin/*" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><AdminDashboard /></AdminGuard></Suspense>} />
+              <Route path="/admin/security" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><SecurityDashboard /></AdminGuard></Suspense>} />
               <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemPlayground /></Suspense>} />
+
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

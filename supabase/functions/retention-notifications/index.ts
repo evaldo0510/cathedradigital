@@ -28,6 +28,19 @@ function getClientIP(req: Request): string {
     ?? "unknown";
 }
 
+async function logSecurityEvent(supabase: any, event: { type: string, severity: string, description: string, metadata?: any }) {
+  console.log(`[SECURITY ${event.severity.toUpperCase()}] ${event.type}: ${event.description}`);
+  try {
+    await supabase.from("security_audit_logs").insert({
+      event_type: event.type,
+      severity: event.severity,
+      description: event.description,
+      metadata: event.metadata || {}
+    });
+  } catch (err) {
+    console.error("Failed to log security event:", err);
+  }
+}
 
 /**
  * Retention notifications edge function.
@@ -43,25 +56,36 @@ Deno.serve(async (req) => {
 
   try {
     const clientIP = getClientIP(req);
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+
     if (isRateLimited(clientIP)) {
+      await logSecurityEvent(supabase, {
+        type: "RATE_LIMIT_EXCEEDED",
+        severity: "warning",
+        description: `Rate limit hit for IP: ${clientIP}`,
+        metadata: { ip: clientIP, function: "retention-notifications" }
+      });
       return new Response(
         JSON.stringify({ error: "Rate limit exceeded" }),
         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
       );
     }
 
-    // Abuse protection: limit body size to 2KB (cron trigered usually has no body or small config)
     const contentLength = parseInt(req.headers.get("content-length") || "0");
     if (contentLength > 2048) {
+      await logSecurityEvent(supabase, {
+        type: "PAYLOAD_TOO_LARGE",
+        severity: "critical",
+        description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
+        metadata: { ip: clientIP, size: contentLength, function: "retention-notifications" }
+      });
       return new Response(
         JSON.stringify({ error: "Payload too large" }),
         { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     // Require service-role bearer or X-Cron-Secret — cron-only endpoint
     const authHeader = req.headers.get("authorization") || "";
@@ -71,13 +95,17 @@ Deno.serve(async (req) => {
     const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
     const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
     if (!isServiceRole && !isCronSecret) {
+      await logSecurityEvent(supabase, {
+        type: "UNAUTHORIZED_ACCESS",
+        severity: "critical",
+        description: `Unauthorized attempt to call retention-notifications from IP: ${clientIP}`,
+        metadata: { ip: clientIP }
+      });
       return new Response(
         JSON.stringify({ error: "Forbidden" }),
         { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     const now = new Date();
     const threeDaysAgo = new Date(now);
@@ -104,7 +132,6 @@ Deno.serve(async (req) => {
     // --- Daily journey reminders for active users ---
     if (activeUsers?.length) {
       for (const user of activeUsers) {
-        // Check if user has an ongoing journey (has progress but hasn't completed all steps)
         const { data: progress } = await supabase
           .from("journey_progress")
           .select("journey_id, step_id")
@@ -116,7 +143,6 @@ Deno.serve(async (req) => {
 
         const lastJourneyId = progress[0].journey_id;
 
-        // Check if journey is complete
         const { count: totalSteps } = await supabase
           .from("journey_steps")
           .select("id", { count: "exact", head: true })
@@ -128,12 +154,10 @@ Deno.serve(async (req) => {
           .eq("user_id", user.id)
           .eq("journey_id", lastJourneyId);
 
-        // Only notify if journey is NOT complete
         if ((completedSteps ?? 0) < (totalSteps ?? 0)) {
           const firstName = user.name?.split(" ")[0] || "";
           const stepNumber = (completedSteps ?? 0) + 1;
 
-          // Check if we already sent a notification today
           const { count: todayNotifs } = await supabase
             .from("notifications")
             .select("id", { count: "exact", head: true })
@@ -150,7 +174,6 @@ Deno.serve(async (req) => {
               link: "/jornadas",
             });
 
-            // Also send push if subscribed
             try {
               await supabase.functions.invoke("send-push", {
                 body: {
@@ -160,7 +183,7 @@ Deno.serve(async (req) => {
                   url: "/jornadas",
                 },
               });
-            } catch (_) { /* push is best-effort */ }
+            } catch (_) { }
 
             sentReminders++;
           }
@@ -176,7 +199,6 @@ Deno.serve(async (req) => {
           (now.getTime() - new Date(user.last_visit!).getTime()) / (1000 * 60 * 60 * 24)
         );
 
-        // Only send once per 3-day cycle (avoid spamming)
         const { count: recentNotifs } = await supabase
           .from("notifications")
           .select("id", { count: "exact", head: true })
@@ -205,7 +227,6 @@ Deno.serve(async (req) => {
           link: "/jornadas",
         });
 
-        // Push notification
         try {
           await supabase.functions.invoke("send-push", {
             body: {
@@ -215,7 +236,7 @@ Deno.serve(async (req) => {
               url: "/jornadas",
             },
           });
-        } catch (_) { /* best-effort */ }
+        } catch (_) { }
 
         sentReengagement++;
       }

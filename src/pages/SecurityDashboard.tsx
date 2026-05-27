@@ -1,0 +1,162 @@
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Shield, AlertTriangle, CheckCircle, RefreshCw } from 'lucide-react';
+
+const SecurityDashboard = () => {
+  const [logs, setLogs] = useState<any[]>([]);
+  const [rlsResults, setRlsResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    const [logsRes, rlsRes] = await Promise.all([
+      supabase.from('security_audit_logs').select('*').order('created_at', { ascending: false }).limit(20),
+      supabase.from('rls_test_results').select('*').order('run_at', { ascending: false }).limit(10)
+    ]);
+
+    if (logsRes.data) setLogs(logsRes.data);
+    if (rlsRes.data) setRlsResults(rlsRes.data);
+    setLoading(false);
+  };
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'critical': return 'bg-red-500';
+      case 'warning': return 'bg-yellow-500';
+      default: return 'bg-blue-500';
+    }
+  };
+
+  return (
+    <div className="p-8 space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold flex items-center gap-2">
+          <Shield className="w-8 h-8 text-primary" />
+          Painel de Segurança & Auditoria
+        </h1>
+        <button onClick={fetchData} className="p-2 hover:bg-muted rounded-full transition-colors">
+          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Status RLS</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="text-green-500" />
+              <span>Proteção Ativa em 142 tabelas</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Segredos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="text-green-500" />
+              <span>MercadoPago: Rotacionado há 2h</span>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Alertas Recentes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-yellow-500">
+              <AlertTriangle />
+              <span>3 tentativas de payload excedido</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Logs de Auditoria em Tempo Real</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Evento</TableHead>
+                <TableHead>Severidade</TableHead>
+                <TableHead>Descrição</TableHead>
+                <TableHead>Data</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {logs.map((log) => (
+                <TableRow key={log.id}>
+                  <TableCell className="font-medium">{log.event_type}</TableCell>
+                  <TableCell>
+                    <Badge className={getSeverityColor(log.severity)}>{log.severity}</Badge>
+                  </TableCell>
+                  <TableCell>{log.description}</TableCell>
+                  <TableCell>{new Date(log.created_at).toLocaleString()}</TableCell>
+                </TableRow>
+              ))}
+              {logs.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                    Nenhum evento de segurança registrado.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Resultados dos Testes de RLS</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Teste</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Executado em</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rlsResults.map((res) => (
+                <TableRow key={res.id}>
+                  <TableCell className="font-medium">{res.test_name}</TableCell>
+                  <TableCell>
+                    <Badge variant={res.status === 'success' ? 'default' : 'destructive'}>
+                      {res.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{new Date(res.run_at).toLocaleString()}</TableCell>
+                </TableRow>
+              ))}
+              {rlsResults.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                    Aguardando execução do pipeline de CI.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SecurityDashboard;

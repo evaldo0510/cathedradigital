@@ -2,13 +2,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Rate limiter: max requests per window (in-memory, resets on cold start)
 const rateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT = 20; // max requests per minute
+const RATE_LIMIT = 20;
 const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(key: string): boolean {
@@ -20,12 +18,6 @@ function isRateLimited(key: string): boolean {
   }
   timestamps.push(now);
   rateLimitMap.set(key, timestamps);
-  // Basic cleanup to prevent memory leak
-  if (rateLimitMap.size > 1000) {
-    for (const [k, v] of rateLimitMap) {
-      if (v.every(t => now - t >= RATE_WINDOW_MS)) rateLimitMap.delete(k);
-    }
-  }
   return false;
 }
 
@@ -35,8 +27,21 @@ function getClientIP(req: Request): string {
     ?? "unknown";
 }
 
-const VAPID_PUBLIC_KEY = "BKVIOXhXSUD1UyFZHbRue5ITwT0pn-v5RdvHYwpYIMkKJ1VrRPWuHpckyeg8K_61LrN4t9tdzYp4OC5wkdbJ2Z4";
+async function logSecurityEvent(supabase: any, event: { type: string, severity: string, description: string, metadata?: any }) {
+  console.log(`[SECURITY ${event.severity.toUpperCase()}] ${event.type}: ${event.description}`);
+  try {
+    await supabase.from("security_audit_logs").insert({
+      event_type: event.type,
+      severity: event.severity,
+      description: event.description,
+      metadata: event.metadata || {}
+    });
+  } catch (err) {
+    console.error("Failed to log security event:", err);
+  }
+}
 
+const VAPID_PUBLIC_KEY = "BKVIOXhXSUD1UyFZHbRue5ITwT0pn-v5RdvHYwpYIMkKJ1VrRPWuHpckyeg8K_61LrN4t9tdzYp4OC5wkdbJ2Z4";
 const VAPID_PRIVATE_KEY = Deno.env.get("VAPID_PRIVATE_KEY") || "";
 const VAPID_SUBJECT = "mailto:cathedra@cathedradigital.app";
 
@@ -148,51 +153,52 @@ async function sendPushToSubscription(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabase = createClient(supabaseUrl, serviceRoleKey);
+  const clientIP = getClientIP(req);
+
+  if (isRateLimited(clientIP)) {
+    await logSecurityEvent(supabase, {
+      type: "RATE_LIMIT_EXCEEDED",
+      severity: "warning",
+      description: `Rate limit hit for IP: ${clientIP}`,
+      metadata: { ip: clientIP, function: "send-push" }
+    });
+    return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: corsHeaders });
+  }
+
+  const contentLength = parseInt(req.headers.get("content-length") || "0");
+  if (contentLength > 10240) {
+    await logSecurityEvent(supabase, {
+      type: "PAYLOAD_TOO_LARGE",
+      severity: "critical",
+      description: `Payload size ${contentLength} exceeds limit for IP: ${clientIP}`,
+      metadata: { ip: clientIP, size: contentLength, function: "send-push" }
+    });
+    return new Response(JSON.stringify({ error: "Payload too large" }), { status: 413, headers: corsHeaders });
+  }
+
+  // Auth check
+  const authHeader = req.headers.get("authorization") || "";
+  const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+  const cronSecret = Deno.env.get("CRON_SECRET") || "";
+  const cronSecretHeader = req.headers.get("x-cron-secret") || "";
+  
+  if (providedBearer !== serviceRoleKey && cronSecretHeader !== cronSecret) {
+    await logSecurityEvent(supabase, {
+      type: "UNAUTHORIZED_ACCESS",
+      severity: "critical",
+      description: `Unauthorized attempt to call send-push from IP: ${clientIP}`,
+      metadata: { ip: clientIP }
+    });
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: corsHeaders });
   }
 
   try {
-    const clientIP = getClientIP(req);
-    if (isRateLimited(clientIP)) {
-      return new Response(
-        JSON.stringify({ error: "Rate limit exceeded" }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "60" } }
-      );
-    }
-
-    // Abuse protection: limit body size to 10KB
-    const contentLength = parseInt(req.headers.get("content-length") || "0");
-    if (contentLength > 10240) {
-      return new Response(
-        JSON.stringify({ error: "Payload too large" }),
-        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
-    // Require service-role bearer or X-Cron-Secret header — push broadcasts are admin/cron-only
-    const authHeader = req.headers.get("authorization") || "";
-    const providedBearer = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
-    const cronSecret = Deno.env.get("CRON_SECRET") || "";
-    const cronSecretHeader = req.headers.get("x-cron-secret") || "";
-    const isServiceRole = providedBearer && providedBearer === serviceRoleKey;
-    const isCronSecret = cronSecret && cronSecretHeader === cronSecret;
-    if (!isServiceRole && !isCronSecret) {
-      return new Response(
-        JSON.stringify({ error: "Forbidden" }),
-        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-
-    const supabase = createClient(supabaseUrl, serviceRoleKey);
-
     const { mode, user_id, title, body: msgBody, url: msgUrl } = await req.json();
-
     const payload = {
       title: title || "📖 Liturgia do Dia",
       body: msgBody || "Pare por um instante... hoje Deus quer falar com você.",
@@ -200,22 +206,15 @@ Deno.serve(async (req) => {
     };
 
     let subscriptions: any[] = [];
-
     if (mode === "broadcast") {
-      // Send to all subscribers
       const { data } = await supabase.from("push_subscriptions").select("*");
       subscriptions = data || [];
     } else if (user_id) {
-      // Send to specific user
-      const { data } = await supabase
-        .from("push_subscriptions")
-        .select("*")
-        .eq("user_id", user_id);
+      const { data } = await supabase.from("push_subscriptions").select("*").eq("user_id", user_id);
       subscriptions = data || [];
     }
 
     console.log(`Sending push to ${subscriptions.length} subscriber(s)`);
-
     const results = await Promise.allSettled(
       subscriptions.map((sub) => sendPushToSubscription(sub, payload))
     );
