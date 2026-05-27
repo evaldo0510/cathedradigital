@@ -72,6 +72,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
   // Sync history when context changes for persistence per reading section
   useEffect(() => {
+    // Cancel any pending requests when moving to a new section
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setIsTyping(false);
+
     if (variant === 'integrated' && context) {
       const saved = localStorage.getItem(`logos_history_${context}`);
       setHistory(saved ? JSON.parse(saved) : []);
