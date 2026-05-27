@@ -21,7 +21,7 @@ jobs:
           npx playwright install --with-deps chromium
           bun run test:e2e tests/e2e/stability.spec.ts
           bun run test:visual || echo "Visual regression failed, check artifacts"
-          bun run test:e2e tests/e2e/home-seo.spec.ts # SEO & Schema Validation Step
+          bun run test:seo-audit --reporter=json > test-results/seo-audit-report.json || (echo "SEO Audit failed, checking report..." && exit 1)
       - name: Upload Test Results & Snapshots
         if: always()
         uses: actions/upload-artifact@v4
