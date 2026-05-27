@@ -4,6 +4,9 @@ import LogosAI from '@/components/cathedra/LogosAI';
 import React from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
+// Mock scrollIntoView for JSDOM
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
+
 // Mock context and supabase
 vi.mock('@/contexts/ReadingSettingsContext', () => ({
   useReadingSettings: vi.fn(),
