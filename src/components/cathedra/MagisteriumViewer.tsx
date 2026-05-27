@@ -15,7 +15,7 @@ import NotesPanel from './NotesPanel';
 import LogosAI from './LogosAI';
 import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
-import { useNotes } from '@/hooks/useNotes';
+import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
