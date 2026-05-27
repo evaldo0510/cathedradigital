@@ -181,18 +181,18 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
 
             if (type === 'WebSite') {
               foundWebSite = true;
-              // Validate SearchAction
+              // Validate SearchAction with config values
               const searchAction = json.potentialAction;
               if (searchAction?.['@type'] === 'SearchAction') {
-                const target = searchAction.target;
-                if (target && target.includes('/search?q={search_term_string}')) {
+                const expectedTarget = `${SEO_CONFIG.BASE_URL}${SEO_CONFIG.SEARCH_PATH}?${SEO_CONFIG.SEARCH_PARAM}={search_term_string}`;
+                if (searchAction.target === expectedTarget) {
                   auditResults.schema.push({ status: 'success', message: 'WebSite SearchAction is correctly configured.' });
                 } else {
                   auditResults.schema.push({ 
                     status: 'critical', 
                     message: 'WebSite SearchAction target is incorrect.',
-                    evidence: target,
-                    suggestion: 'Configure o target do SearchAction para apontar para a URL de busca real com o placeholder {search_term_string}.'
+                    evidence: `Expected: ${expectedTarget}, Found: ${searchAction.target}`,
+                    suggestion: 'Configure o target do SearchAction para usar os valores centralizados em SEO_CONFIG.'
                   });
                 }
               } else {
