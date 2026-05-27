@@ -335,7 +335,7 @@ const RitualDoDia: React.FC = () => {
                 <p className="text-base md:text-xl leading-relaxed text-foreground/30 font-serif tracking-tight selection:bg-primary/5 px-2">
                   {ritual?.catechism?.text || ''}
                 </p>
-                <p className="mt-4 md:mt-6 text-[8px] md:text-[9px] font-bold text-primary/10 uppercase tracking-[0.6em]">
+                <p className="mt-4 md:mt-6 text-[8px] md:text-[9px] font-bold text-primary/30 uppercase tracking-[0.6em]">
                   §{ritual?.catechism?.number || ''}
                 </p>
               </div>
