@@ -484,10 +484,44 @@ const Bible: React.FC = () => {
       if (viewMode !== 'reading' || !selectedBook) return;
       if (e.key === 'ArrowLeft') navigateChapter(-1);
       if (e.key === 'ArrowRight') navigateChapter(1);
+      
+      // Accessibility: Reading shortcuts
+      if (viewMode === 'reading' && highlightedVerse && !isNoteModalOpen) {
+        if (e.key.toLowerCase() === 'h') {
+          // Default highlight
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        }
+        if (e.key.toLowerCase() === 'n') {
+          setIsNoteModalOpen(true);
+        }
+        if (e.key === 'Escape') {
+          setHighlightedVerse(null);
+          setActiveHighlight(null);
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [viewMode, selectedBook, navigateChapter]);
+  }, [viewMode, selectedBook, navigateChapter, highlightedVerse, isNoteModalOpen]);
+
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!selectedBook || !highlightedVerse) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(selectedBook.abbr, text, color, {
+        book_abbr: selectedBook.abbr,
+        chapter: selectedChapter,
+        verse: highlightedVerse
+      });
+    }
+    setIsNoteModalOpen(false);
+  }, [selectedBook, selectedChapter, highlightedVerse, activeHighlight, addNote]);
 
   useEffect(() => {
     const fetchLastRead = async () => {
