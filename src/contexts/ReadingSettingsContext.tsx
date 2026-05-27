@@ -17,6 +17,7 @@ interface ReadingSettings {
   letterSpacing: 'tight' | 'normal' | 'wide';
   sideMargins: 'standard' | 'comfortable' | 'wide';
   contrast: 'normal' | 'soft' | 'high';
+  resumeBehavior: 'always' | 'never' | 'once';
   reminders: {
     enabled: boolean;
     time: string;
@@ -26,6 +27,9 @@ interface ReadingSettings {
     catechism: string;
     magisterium: string;
     logos: string;
+    highlight: string;
+    note: string;
+    clear: string;
   };
   logosHistoryLimit: number;
   relatio: {
@@ -59,6 +63,7 @@ const defaultSettings: ReadingSettings = {
   letterSpacing: 'normal',
   sideMargins: 'standard',
   contrast: 'normal',
+  resumeBehavior: 'always',
   reminders: {
     enabled: false,
     time: '08:00',
@@ -69,6 +74,9 @@ const defaultSettings: ReadingSettings = {
     catechism: 'c',
     magisterium: 'm',
     logos: 'l',
+    highlight: 'h',
+    note: 'n',
+    clear: 'Escape',
   },
   logosHistoryLimit: 20,
   relatio: {
