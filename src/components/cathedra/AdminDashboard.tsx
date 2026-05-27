@@ -1,5 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Users, TrendingUp, Download, DollarSign, ArrowUpRight,
@@ -85,6 +85,15 @@ interface SensitiveRow {
 }
 
 const AdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+
+    // Force specific body class for admin layout
+    document.body.classList.add('admin-mode');
+    return () => document.body.classList.remove('admin-mode');
+  }, []);
+
+
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [recentJournal, setRecentJournal] = useState<any[]>([]);
@@ -424,8 +433,16 @@ const AdminDashboard: React.FC = () => {
           <h1 className="text-xl sm:text-3xl font-display font-black uppercase tracking-tight text-primary">Painel Administrativo</h1>
           <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider opacity-70">CRM & Gestão completa da plataforma.</p>
         </div>
-        {/* Redundant back button removed */}
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => navigate('/')} className="rounded-full gap-2 font-bold uppercase tracking-widest text-[10px]">
+            <Home className="w-4 h-4" /> Ver Portal
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => navigate('/admin/security')} className="rounded-full gap-2 font-bold uppercase tracking-widest text-[10px]">
+            <Shield className="w-4 h-4" /> Segurança
+          </Button>
+        </div>
       </div>
+
 
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
         <div className="px-4 sm:px-0 -mx-4 sm:mx-0">

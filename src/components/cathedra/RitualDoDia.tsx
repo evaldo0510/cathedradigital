@@ -190,7 +190,7 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-6 md:p-14 lg:p-20 space-y-12 md:space-y-24">
+      <div className="relative z-10 p-6 md:p-14 lg:p-20 space-y-12 md:space-y-24 max-w-7xl mx-auto">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
