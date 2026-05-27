@@ -61,7 +61,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-6xl mx-auto space-y-32 md:space-y-48 lg:space-y-64 pb-48 md:pb-72 px-5 md:px-12 outline-none" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-48 md:space-y-64 lg:space-y-80 pb-64 md:pb-96 px-6 md:px-14 outline-none" tabIndex={-1}>
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <SectionHeader 
@@ -74,7 +74,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 md:gap-40">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <SectionHeader 
