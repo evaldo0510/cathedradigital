@@ -28,7 +28,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const isDashboard = pathname === '/';
 
   return (
-    <header className="border-b border-border/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color]">
+    <header className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color]">
       <div className="app-container flex items-center justify-between h-20 sm:h-24">
         <div className="flex items-center gap-8 min-w-0">
           <div className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
@@ -43,7 +43,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               variant="outline"
               size="sm"
               onClick={() => navigate(-1)}
-              className="h-10 px-4 rounded-full border-border/10 hover:bg-primary/5"
+              className="h-10 px-4 rounded-full border-primary/10 hover:bg-primary/5"
             >
               <Icons.ChevronLeft className="w-4 h-4" />
               <span className="text-[10px] font-bold uppercase tracking-widest hidden sm:inline-block ml-2">{t('back')}</span>
@@ -51,7 +51,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           )}
 
           {isDashboard && (
-            <nav className="hidden xl:flex items-center gap-2 border-l border-border/10 pl-8 ml-4">
+            <nav className="hidden xl:flex items-center gap-2 border-l border-primary/10 pl-8 ml-4">
               {[
                 { label: t('bible'), route: AppRoute.BIBLE },
                 { label: t('catechism'), route: AppRoute.CATECHISM },
@@ -64,7 +64,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   size="sm"
                   onClick={() => navigate(item.route)}
                   className={`px-4 py-2 h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
-                    pathname === item.route ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'
+                    pathname === item.route ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
                   }`}
                 >
                   {item.label}
@@ -82,7 +82,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10"
           >
             <Icons.Search className="w-5 h-5 opacity-40" />
           </Button>
@@ -91,7 +91,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={onToggleDark}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10"
           >
             {isDark ? <Icons.Sun className="w-5 h-5 opacity-40" /> : <Icons.Moon className="w-5 h-5 opacity-40" />}
           </Button>
@@ -101,7 +101,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
               variant="outline"
               size="icon"
               onClick={() => navigate(AppRoute.PROFILE)}
-              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10 overflow-hidden"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden"
             >
               {user.avatar ? (
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
@@ -112,7 +112,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           ) : (
             <Button 
               onClick={() => navigate(AppRoute.LOGIN)} 
-              className="h-10 px-6 rounded-full text-[10px] font-bold uppercase tracking-widest"
+              className="btn-premium-primary h-10 px-6 rounded-full text-[10px] font-bold uppercase tracking-widest"
             >
               {t('enter')}
             </Button>
@@ -122,7 +122,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             variant="outline"
             size="icon"
             onClick={onOpenSidebar}
-            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-border/10 lg:hidden"
+            className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 lg:hidden"
           >
             <Icons.Menu className="w-5 h-5 opacity-40" />
           </Button>
