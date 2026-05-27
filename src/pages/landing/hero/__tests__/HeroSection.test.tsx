@@ -3,12 +3,20 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as axeMatchers from 'vitest-axe';
 import { axe } from 'vitest-axe';
 import { MotionConfig } from 'framer-motion';
 
-// @ts-ignore
-expect.extend(axeMatchers);
+// Manual mock for toHaveNoViolations since vitest-axe exports are tricky in this environment
+const toHaveNoViolations = (results: any) => {
+  if (results.violations.length === 0) {
+    return { pass: true, message: () => '' };
+  }
+  return {
+    pass: false,
+    message: () => `Aria violations found: ${JSON.stringify(results.violations, null, 2)}`
+  };
+};
+expect.extend({ toHaveNoViolations });
 
 // Mocks
 vi.mock('@/hooks/useAuth', () => ({
