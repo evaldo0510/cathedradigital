@@ -720,7 +720,7 @@ const Catechism: React.FC = () => {
                 key={sec.id} 
                 whileHover={{ x: 8 }}
                 onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-                className="text-left p-10 md:p-12 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group flex flex-col gap-6"
+                className="text-left p-10 md:p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-6"
               >
                 <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
                 <div className="space-y-2">
@@ -745,7 +745,7 @@ const Catechism: React.FC = () => {
       
       <div className="space-y-24">
         {/* Search & Suggested */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-border/5 pb-12">
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
           <div className="relative group w-full md:w-96">
             <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
             <input
@@ -780,7 +780,7 @@ const Catechism: React.FC = () => {
               key={part.part} 
               whileHover={{ y: -8 }}
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-              className="text-left p-12 md:p-16 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group flex flex-col gap-8"
+              className="text-left p-12 md:p-16 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-8"
             >
               <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20">
                 <Icons.Logo className="w-6 h-6" />

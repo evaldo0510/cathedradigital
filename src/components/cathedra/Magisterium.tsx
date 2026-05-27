@@ -273,7 +273,7 @@ const Magisterium: React.FC = () => {
 
       <div className="space-y-24">
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-border/5 pb-12">
+        <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
           <div className="relative group w-full md:w-96">
             <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
             <input
@@ -312,7 +312,7 @@ const Magisterium: React.FC = () => {
               key={doc.id}
               whileHover={{ y: -8 }}
               onClick={() => navigate(`/magisterium/${doc.id}`)}
-              className="text-left flex flex-col gap-8 p-12 rounded-premium bg-card border border-border/5 hover:border-primary/10 hover:shadow-premium transition-all group h-full"
+              className="text-left flex flex-col gap-8 p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group h-full"
             >
               <div className="flex justify-between items-start">
                 <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:text-primary/40 transition-colors">

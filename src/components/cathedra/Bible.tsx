@@ -985,7 +985,7 @@ const Bible: React.FC = () => {
       />
       
       <div className="space-y-20">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-border/5 pb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
           <div className="flex gap-4">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
