@@ -853,8 +853,8 @@ const Bible: React.FC = () => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
                               setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
-                              localStorage.setItem('cathedra_last_bible_verse', vNum.toString());
-                              localStorage.setItem('cathedra_last_bible_scroll', window.scrollY.toString());
+                              localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
+                              localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
                               
                               // Seamless auto-save on verse click/selection
                               saveLastRead({
