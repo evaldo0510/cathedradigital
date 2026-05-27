@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { renderHook } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { LogosContextualSuggestions } from '@/components/cathedra/LogosContextualSuggestions';
 import React from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
@@ -64,23 +64,13 @@ describe('LogosContextualSuggestions Rules', () => {
       },
     });
 
-    const { getByText } = render(
+    const { container } = render(
       <LogosContextualSuggestions 
         context="test" 
         type="bible" 
         onSelectSuggestion={mockOnSelect} 
       />
     );
-    expect(getByText('Aprofundar Mistério')).toBeDefined();
+    expect(screen.getByText('Aprofundar Mistério')).toBeDefined();
   });
 });
-
-// Helper for rendering since we are using a simplified environment here
-function render(ui: React.ReactElement) {
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  
-  // Minimal React render for testing logic
-  const { render: rtlRender } = require('@testing-library/react');
-  return rtlRender(ui);
-}

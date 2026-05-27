@@ -124,13 +124,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
           type,
           history: history.slice(-5) // Send last 5 messages for context
         },
-        abortSignal: abortControllerRef.current.signal
+        headers: {
+          'x-abort-signal': 'true' // Custom header as a hint if needed, though standard signal is preferred
+        }
       });
 
       if (error) throw error;
       
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
-      // setResponse(assistantMsg); // Removed local state setResponse usage
       
       // Simulate typing for premium feel
       setIsTyping(true);
@@ -140,6 +141,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       setHistory(prev => [...prev, { role: 'assistant', content: '' }]);
       
       for (let i = 0; i < words.length; i++) {
+        if (abortControllerRef.current?.signal.aborted) break;
         currentText += (i === 0 ? '' : ' ') + words[i];
         const textToSet = currentText; // closure
         setHistory(prev => {
@@ -150,8 +152,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
         await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 40));
       }
       setIsTyping(false);
-    } catch (err) {
-      if (err.name === 'AbortError') {
+    } catch (err: any) {
+      if (err.name === 'AbortError' || (err.message && err.message.includes('abort'))) {
         console.log('Logos IA request aborted');
         return;
       }
