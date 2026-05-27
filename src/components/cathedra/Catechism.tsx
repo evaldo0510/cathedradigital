@@ -269,7 +269,6 @@ const Catechism: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
-  const { settings } = useReadingSettings();
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
@@ -553,6 +552,30 @@ const Catechism: React.FC = () => {
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{startPara} — §{endPara}</p>
             </div>
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
+                  paragraph: currentParagraph
+                });
+              }}
+              onAddNote={() => {
+                const note = prompt('Sua reflexão sobre este parágrafo:');
+                if (note) {
+                  addNote(currentParagraph.toString(), note, 'yellow', {
+                    paragraph: currentParagraph
+                  });
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={`Catecismo §${currentParagraph}`}
+            />
             
             <TextSelectionToolbar 
               onHighlight={(color) => {

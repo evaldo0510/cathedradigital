@@ -19,11 +19,14 @@ import { useNotes } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import { ReadingProgress } from './ReadingProgress';
+import { TextSelectionToolbar } from './TextSelectionToolbar';
 
 
 
 const MagisteriumViewer: React.FC = () => {
-  useReadingAutoHide();
+  const { settings, updateSettings } = useReadingSettings();
+  useReadingAutoHide(settings.visualSilence);
   const { id } = useParams<{ id: string }>();
 
   const [searchParams] = useSearchParams();
@@ -34,11 +37,11 @@ const MagisteriumViewer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
-  const { settings } = useReadingSettings();
+  const [readingProgress, setReadingProgress] = useState(0);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { notes: docNotes, deleteNote: deleteDocNote } = useNotes('magisterium');
+  const { notes: docNotes, addNote, deleteNote: deleteDocNote } = useNotes('magisterium');
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
@@ -303,7 +306,35 @@ const MagisteriumViewer: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
+            </div>
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                if (id) {
+                  addNote(id, 'Destacado para meditação', color, {
+                    content_id: id
+                  });
+                }
+              }}
+              onAddNote={() => {
+                if (id) {
+                  const note = prompt('Sua reflexão sobre este documento:');
+                  if (note) {
+                    addNote(id, note, 'yellow', {
+                      content_id: id
+                    });
+                  }
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={content.title}
+            />
         </motion.div>
       </div>
 
