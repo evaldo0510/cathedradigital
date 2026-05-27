@@ -33,7 +33,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
         role="banner"
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[140px] md:h-28 py-8 md:py-0 gap-8 md:gap-0 landscape:min-h-[90px] landscape:py-3">
+        <div className="max-w-[var(--layout-max-width)] mx-auto px-6 md:px-14 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[160px] md:h-32 py-10 md:py-0 gap-10 md:gap-0 landscape:min-h-[100px] landscape:py-4">
 
           {/* Logo Section - Centralized on Mobile */}
           <div 
