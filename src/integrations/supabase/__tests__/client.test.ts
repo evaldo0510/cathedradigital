@@ -25,7 +25,7 @@ describe('Supabase Client Environment', () => {
 
   it('should use custom storage that handles missing localStorage safely', async () => {
     // @ts-ignore - testing missing window scenario
-    delete global.window;
+    delete (globalThis as any).window;
     
     const { supabase } = await import('../client');
     // @ts-expect-error - accessing private auth storage to verify it works
