@@ -30,15 +30,61 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
   const [cacheCount, setCacheCount] = useState<number | null>(null);
   const { settings } = useReadingSettings();
 
+  const sidebarRef = React.useRef<HTMLElement>(null);
+
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
     
     const handleCacheUpdate = () => {
       getCacheStats().then(stats => setCacheCount(stats.total));
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+
+      if (e.key === 'Tab' && isOpen && sidebarRef.current) {
+        const focusableElements = sidebarRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0] as HTMLElement;
+        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
     window.addEventListener('cathedra_cache_updated', handleCacheUpdate);
-    return () => window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      // Initial focus on open for a11y
+      setTimeout(() => {
+        const firstButton = sidebarRef.current?.querySelector('button');
+        if (firstButton) firstButton.focus();
+      }, 100);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
   
   const sections = [
     ...(user?.role === 'admin' ? [{
@@ -147,11 +193,15 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
           {/* Premium Retractable Sidebar */}
           <motion.aside
+            ref={sidebarRef}
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-0 left-0 h-full w-[320px] md:w-[380px] bg-card/95 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-8 md:p-12 z-[150] shadow-2xl overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navegação"
           >
             <div className="flex items-center justify-between mb-12">
               <div 
