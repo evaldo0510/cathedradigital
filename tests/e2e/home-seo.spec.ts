@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { playAudit } from 'playwright-lighthouse';
+import { SEO_CONFIG } from '../../src/config/seo';
 
 /**
  * Enhanced SEO, Schema.org, Social Cards and Lighthouse Performance Audit for Home Page
@@ -181,18 +182,20 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
 
             if (type === 'WebSite') {
               foundWebSite = true;
-              // Validate SearchAction
+              // Validate SearchAction with config values
               const searchAction = json.potentialAction;
               if (searchAction?.['@type'] === 'SearchAction') {
-                const target = searchAction.target;
-                if (target && target.includes('/search?q={search_term_string}')) {
+                const expectedTarget = `${SEO_CONFIG.BASE_URL}${SEO_CONFIG.SEARCH_PATH}?${SEO_CONFIG.SEARCH_PARAM}={search_term_string}`;
+                const queryInput = json['potentialAction']['query-input'];
+                
+                if (searchAction.target === expectedTarget && queryInput === 'required name=search_term_string') {
                   auditResults.schema.push({ status: 'success', message: 'WebSite SearchAction is correctly configured.' });
                 } else {
                   auditResults.schema.push({ 
                     status: 'critical', 
-                    message: 'WebSite SearchAction target is incorrect.',
-                    evidence: target,
-                    suggestion: 'Configure o target do SearchAction para apontar para a URL de busca real com o placeholder {search_term_string}.'
+                    message: 'WebSite SearchAction configuration is incorrect.',
+                    evidence: `Target: ${searchAction.target}, QueryInput: ${queryInput}`,
+                    suggestion: 'Certifique-se de que o target inclua o placeholder {search_term_string} e que o query-input corresponda ao nome esperado.'
                   });
                 }
               } else {
