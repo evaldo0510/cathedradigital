@@ -152,12 +152,26 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('change-lang', handleGlobalLang);
   }, [setLang]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    const saved = localStorage.getItem('cathedra_sidebar_open');
+    return saved === 'true';
+  });
   const [isSpeaking, setIsSpeaking] = useState(false);
   
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const mainContentRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    localStorage.setItem('cathedra_sidebar_open', isSidebarOpen.toString());
+  }, [isSidebarOpen]);
+
+  // Close sidebar on route change
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
 
   const isDark = settings.theme === 'dark' || settings.theme === 'night';
   const isHighContrast = settings.highContrast;
@@ -171,7 +185,13 @@ const AppLayout: React.FC = () => {
   }, [isHighContrast, updateSettings]);
 
   const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
-  const handleCloseSidebar = useCallback(() => setIsSidebarOpen(false), []);
+  const handleCloseSidebar = useCallback(() => {
+    setIsSidebarOpen(false);
+    // Focus content for accessibility after closing
+    setTimeout(() => {
+      mainContentRef.current?.focus();
+    }, 100);
+  }, []);
   const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
 
@@ -262,7 +282,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 pt-28 px-6 md:px-12 lg:px-16 max-w-[1400px] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 pt-28 px-6 md:px-12 lg:px-16 max-w-[1400px] mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
