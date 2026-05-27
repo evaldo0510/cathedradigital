@@ -18,7 +18,6 @@ interface LogosAIProps {
   variant?: 'drawer' | 'integrated';
 }
 
-
 const LogosAI: React.FC<LogosAIProps> = ({ 
   context, 
   selectedText, 
@@ -34,14 +33,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const abortControllerRef = React.useRef<AbortController | null>(null);
-  const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>(() => {
-    if (settings.totalSilence) return [];
-    if (variant === 'integrated' && context) {
-      const saved = localStorage.getItem(`logos_history_${context}`);
-      return saved ? JSON.parse(saved) : [];
-    }
-    return [];
-  });
+  const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const lastLoadedContextRef = React.useRef<string | undefined>(undefined);
   const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
   const chatEndRef = React.useRef<HTMLDivElement>(null);
 
@@ -49,19 +42,36 @@ const LogosAI: React.FC<LogosAIProps> = ({
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Sync history when context changes for persistence per reading section
   useEffect(() => {
+    // Cancel any pending requests when moving to a new section or when silence is enabled
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    if (isLoading) setIsLoading(false);
+    if (isTyping) setIsTyping(false);
+
     if (settings.totalSilence) {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        abortControllerRef.current = null;
-      }
-      if (isLoading) setIsLoading(false);
-      if (isTyping) setIsTyping(false);
       if (history.length > 0) setHistory([]);
+      lastLoadedContextRef.current = undefined;
       return;
     }
 
     if (variant === 'integrated' && context) {
+      const saved = localStorage.getItem(`logos_history_${context}`);
+      const loadedHistory = saved ? JSON.parse(saved) : [];
+      setHistory(loadedHistory);
+      lastLoadedContextRef.current = context;
+    } else {
+      if (history.length > 0) setHistory([]);
+      lastLoadedContextRef.current = undefined;
+    }
+  }, [context, variant, settings.totalSilence]);
+
+  useEffect(() => {
+    // Only save if history belongs to the context we think we have loaded and silence is NOT active
+    if (!settings.totalSilence && variant === 'integrated' && context && context === lastLoadedContextRef.current) {
       if (history.length > 0) {
         localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
       } else {
@@ -70,26 +80,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
   }, [history, context, variant, settings.totalSilence]);
 
-  // Sync history when context changes for persistence per reading section
-  useEffect(() => {
-    // Cancel any pending requests when moving to a new section
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-      abortControllerRef.current = null;
-    }
-    setIsLoading(false);
-    setIsTyping(false);
-
-    if (variant === 'integrated' && context) {
-      const saved = localStorage.getItem(`logos_history_${context}`);
-      setHistory(saved ? JSON.parse(saved) : []);
-    }
-  }, [context, variant]);
-
   useEffect(() => {
     if (history.length) scrollToBottom();
   }, [history.length, isTyping, isLoading]);
-
 
   const springConfig = useMemo(() => {
     if (settings.reduceAnimations) {
@@ -98,14 +91,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
     return { type: 'spring' as const, damping: 25, stiffness: 200 };
   }, [settings.reduceAnimations]);
 
-
-
   useEffect(() => {
     if (selectedText) {
       setQuery(`Explique o significado de: "${selectedText}"`);
     }
   }, [selectedText]);
-
 
   const handleQuery = React.useCallback(async (e?: React.FormEvent, customQuery?: string) => {
     if (e) e.preventDefault();
@@ -139,7 +129,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
           history: history.slice(-5) // Send last 5 messages for context
         },
         headers: {
-          'x-abort-signal': 'true' // Custom header as a hint if needed, though standard signal is preferred
+          'x-abort-signal': 'true'
         }
       });
 
@@ -147,7 +137,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
       
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
       
-      // Simulate typing for premium feel
       setIsTyping(true);
       const words = assistantMsg.split(' ');
       let currentText = '';
@@ -157,7 +146,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       for (let i = 0; i < words.length; i++) {
         if (abortControllerRef.current?.signal.aborted) break;
         currentText += (i === 0 ? '' : ' ') + words[i];
-        const textToSet = currentText; // closure
+        const textToSet = currentText;
         setHistory(prev => {
           const next = [...prev];
           next[next.length - 1] = { role: 'assistant', content: textToSet };
@@ -176,7 +165,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [query, isLoading, history, context, selectedText, type]);
+  }, [query, isLoading, history, context, selectedText, type, settings.totalSilence]);
 
   const clearHistory = React.useCallback((skipConfirm = false) => {
     if (history.length === 0) return;
@@ -218,7 +207,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       history: history.map((msg, index) => ({
         ...msg,
         index,
-        timestamp: new Date().toISOString() // Approximate
+        timestamp: new Date().toISOString()
       }))
     };
 
@@ -234,14 +223,10 @@ const LogosAI: React.FC<LogosAIProps> = ({
   }, [history, context, type]);
 
   useEffect(() => {
-    if (initialQuery && isOpen && history.length === 0) {
+    if (initialQuery && isOpen && history.length === 0 && !settings.totalSilence) {
       handleQuery(undefined, initialQuery);
     }
-  }, [initialQuery, isOpen, history.length, handleQuery]);
-
-  // Instead of early return null, we handle silence within the UI for better indicators
-  // if (settings.totalSilence) return null;
-
+  }, [initialQuery, isOpen, history.length, handleQuery, settings.totalSilence]);
 
   if (variant === 'integrated') {
     return (
@@ -272,7 +257,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="icon" 
                       onClick={() => clearHistory()} 
-
                       className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
                       title="Limpar histórico"
                     >
@@ -366,12 +350,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Sua reflexão silenciosa..."
+                    placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
+                    disabled={settings.totalSilence}
                     className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/10 py-6 transition-all"
                   />
                   <button 
                     type="submit" 
-                    disabled={isLoading || isTyping || !query.trim()}
+                    disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
                     className="absolute right-0 text-primary/10 hover:text-primary transition-all disabled:opacity-0 p-2"
                   >
                     <Icons.ArrowRight className="w-5 h-5 stroke-[1]" />
@@ -380,7 +365,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div className="flex flex-col items-center gap-3 mt-10">
                   <div className="w-1 h-1 bg-primary/10 rounded-full" />
                   <p className="text-[8px] text-center text-primary/10 uppercase tracking-[0.5em] font-black">
-                    O silêncio é a alma do entendimento
+                    {settings.totalSilence ? "O silêncio é a oração perfeita" : "O silêncio é a alma do entendimento"}
                   </p>
                 </div>
               </div>
@@ -408,7 +393,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
             transition={springConfig}
-
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-2xl flex flex-col"
           >
             <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
@@ -469,8 +453,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div className="text-center py-20 space-y-8">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/10 mx-auto animate-pulse" />
                   <p className="text-lg text-muted-foreground/40 font-serif italic leading-relaxed max-w-[280px] mx-auto">
-                    "O silêncio é a primeira língua de Deus."<br/>
-                    <span className="text-sm uppercase tracking-widest font-black mt-4 block">Como posso iluminar sua jornada?</span>
+                    {settings.totalSilence 
+                      ? '"No silêncio, Deus fala ao coração."' 
+                      : '"O silêncio é a primeira língua de Deus."'}
+                    <br/>
+                    <span className="text-sm uppercase tracking-widest font-black mt-4 block">
+                      {settings.totalSilence ? 'Modo Silêncio Ativo' : 'Como posso iluminar sua jornada?'}
+                    </span>
                   </p>
                 </div>
               )}
@@ -520,12 +509,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Busque por luz e entendimento..."
+                  placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Busque por luz e entendimento..."}
+                  disabled={settings.totalSilence}
                   className="w-full bg-transparent border-b border-border/10 py-5 px-0 text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/20 font-serif italic"
                 />
                 <button 
                   type="submit"
-                  disabled={isLoading || isTyping}
+                  disabled={isLoading || isTyping || settings.totalSilence}
                   className="absolute right-0 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all disabled:opacity-30"
                 >
                   <Icons.ArrowRight className="w-5 h-5" />
@@ -533,7 +523,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </form>
               <div className="mt-8">
                 <p className="text-[8px] text-muted-foreground/20 uppercase tracking-[0.4em] text-center font-bold">
-                  Sempre em comunhão com o Magistério
+                  {settings.totalSilence ? "Silêncio em Adoração" : "Sempre em comunhão com o Magistério"}
                 </p>
               </div>
             </div>
