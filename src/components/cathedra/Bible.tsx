@@ -1005,9 +1005,17 @@ const Bible: React.FC = () => {
               isOpen={isNoteModalOpen}
               onClose={() => setIsNoteModalOpen(false)}
               onSave={handleAddNoteOrHighlight}
+              onDelete={() => {
+                if (activeHighlight) {
+                  deleteChapterNote(activeHighlight.id);
+                  setActiveHighlight(null);
+                  setIsNoteModalOpen(false);
+                }
+              }}
               initialText={activeHighlight?.note_text === 'Destacado para meditação' ? '' : activeHighlight?.note_text}
               initialColor={activeHighlight?.highlight_color || 'yellow'}
               title={activeHighlight ? 'Editar Reflexão' : 'Nova Reflexão'}
+              isEditing={!!activeHighlight}
             />
 
             <ReadingProgress 
