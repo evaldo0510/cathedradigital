@@ -165,6 +165,7 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
         suggestion: 'Adicione scripts JSON-LD para ajudar o Google a entender o conteúdo e exibir Rich Snippets.'
       });
     } else {
+      const typeCounts: Record<string, number> = {};
       let foundWebSite = false;
       let foundOrganization = false;
 
@@ -175,25 +176,58 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
           if (!json['@context'] || !json['@type']) {
             auditResults.schema.push({ status: 'critical', message: 'Invalid Schema.org structure: missing @context or @type.' });
           } else {
-            if (json['@type'] === 'WebSite') foundWebSite = true;
-            if (json['@type'] === 'Organization') foundOrganization = true;
-            if (json['@type'] === 'BreadcrumbList') {
+            const type = json['@type'];
+            typeCounts[type] = (typeCounts[type] || 0) + 1;
+
+            if (type === 'WebSite') {
+              foundWebSite = true;
+              // Validate SearchAction
+              const searchAction = json.potentialAction;
+              if (searchAction?.['@type'] === 'SearchAction') {
+                const target = searchAction.target;
+                if (target && target.includes('/search?q={search_term_string}')) {
+                  auditResults.schema.push({ status: 'success', message: 'WebSite SearchAction is correctly configured.' });
+                } else {
+                  auditResults.schema.push({ 
+                    status: 'critical', 
+                    message: 'WebSite SearchAction target is incorrect.',
+                    evidence: target,
+                    suggestion: 'Configure o target do SearchAction para apontar para a URL de busca real com o placeholder {search_term_string}.'
+                  });
+                }
+              } else {
+                auditResults.schema.push({ status: 'warning', message: 'WebSite SearchAction is missing.' });
+              }
+            }
+            if (type === 'Organization') foundOrganization = true;
+            if (type === 'BreadcrumbList') {
               if (json.itemListElement?.length > 0) {
                 auditResults.schema.push({ status: 'success', message: 'Found valid BreadcrumbList Schema.' });
               } else {
                 auditResults.schema.push({ status: 'critical', message: 'BreadcrumbList Schema found but is empty.' });
               }
             }
-            if (json['@type'] === 'LocalBusiness') {
+            if (type === 'LocalBusiness') {
               auditResults.schema.push({ status: 'success', message: 'Found valid LocalBusiness Schema.' });
             }
             
-            auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
+            auditResults.schema.push({ status: 'success', message: `Found valid ${type} Schema.` });
           }
         } catch (e) {
           auditResults.schema.push({ status: 'critical', message: 'Malformed JSON-LD script (Syntax Error).' });
         }
       }
+
+      // Check for duplicate critical schemas
+      ['WebSite', 'Organization'].forEach(type => {
+        if (typeCounts[type] > 1) {
+          auditResults.schema.push({ 
+            status: 'critical', 
+            message: `Duplicate ${type} schema found (${typeCounts[type]} instances).`,
+            suggestion: 'Mantenha apenas uma instância de cada esquema global para evitar confusão no Google.'
+          });
+        }
+      });
 
       if (!foundWebSite) {
         auditResults.schema.push({ 
