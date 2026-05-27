@@ -16,7 +16,7 @@ describe('Supabase Client Environment', () => {
 
   it('should initialize without errors when window is undefined (CI/SSR)', async () => {
     // @ts-ignore - testing missing window scenario
-    delete global.window;
+    delete (globalThis as any).window;
     
     const { supabase } = await import('../client');
     expect(supabase).toBeDefined();
