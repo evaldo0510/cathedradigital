@@ -1,0 +1,508 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HeroSection Advanced Validation > renders correctly across mobile and desktop breakpoints (Snapshot) > desktop-hero 1`] = `
+<DocumentFragment>
+  <section
+    aria-label="Cathedra Digital - Introdução"
+    class="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background"
+  >
+    <h1
+      class="sr-only"
+    >
+      Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital
+    </h1>
+    <div
+      class="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none"
+      style="transform: none;"
+    >
+      <div
+        class="absolute inset-0 bg-background"
+      />
+      <div
+        class="absolute inset-0 opacity-[0.012] grayscale"
+        style="background-size: 160px 160px;"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.035)_0%,transparent_55%)]"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,hsl(var(--background))_85%)] opacity-95"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/60 opacity-40"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.01)_0%,transparent_100%)] mix-blend-overlay"
+      />
+      <div
+        class="absolute inset-12 md:inset-24 border border-primary/[0.015] rounded-[3rem] pointer-events-none"
+      />
+    </div>
+    <div
+      class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.15]"
+    >
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(80.95209129248411%) translateY(67.99348180048715%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(89.40665853317655%) translateY(88.04036907464636%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(6.7179121539545195%) translateY(77.86988551895865%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(52.57825127508946%) translateY(21.276370371103525%);"
+      />
+    </div>
+    <div
+      class="relative z-10 max-w-6xl text-center px-6 flex flex-col items-center justify-center min-h-[70vh]"
+      style="opacity: 1; transform: none;"
+    >
+      <div
+        class="mb-16 md:mb-20"
+        style="opacity: 0; transform: translateY(30px);"
+      >
+        <div
+          class="flex flex-col items-center gap-8"
+        >
+          <div
+            class="w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-40"
+          />
+          <p
+            class="text-[10px] font-medium uppercase tracking-[1em] text-primary/20 leading-none select-none"
+          >
+            Bibliotheca Divina
+          </p>
+        </div>
+      </div>
+      <div
+        class="mb-12 md:mb-16"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <h2
+          class="text-7xl md:text-9xl lg:text-[13rem] font-display font-extralight text-primary leading-none tracking-[0.2em] uppercase select-none drop-shadow-sm"
+        >
+          Cathedra
+        </h2>
+      </div>
+      <div
+        class="space-y-6 mb-24 md:mb-32"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <p
+          class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed tracking-wide px-8"
+        >
+          O silêncio que revela a Verdade eterna.
+        </p>
+        <p
+          class="max-w-xl mx-auto font-sans text-xs md:text-sm text-primary/20 uppercase tracking-[0.4em] font-light leading-relaxed"
+        >
+          Habite a tradição em uma experiência de leitura pura
+        </p>
+      </div>
+      <div
+        class="flex flex-col items-center gap-20 w-full"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14 w-full"
+        >
+          <button
+            aria-label="Explorar Escrituras"
+            class="btn-premium-outline px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] border-primary/5 hover:border-primary/20 text-primary/50 hover:text-primary transition-all duration-700 bg-transparent"
+            tabindex="0"
+          >
+            Explorar Escrituras
+          </button>
+          <button
+            aria-label="Continuar leitura"
+            class="btn-premium-primary px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] shadow-none hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.1)] transition-all duration-700"
+            tabindex="0"
+          >
+            Continuar Leitura
+          </button>
+          <button
+            aria-label="Iniciar jornada espiritual"
+            class="btn-premium-ghost px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] text-primary/30 hover:text-primary transition-all duration-700"
+            tabindex="0"
+          >
+            Iniciar Jornada
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-10 opacity-[0.03] select-none pointer-events-none"
+        >
+          <div
+            class="w-16 h-px bg-primary"
+          />
+          <div
+            class="w-2 h-2 rounded-full border border-primary"
+          />
+          <div
+            class="w-16 h-px bg-primary"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="sr-only"
+    >
+      Rolar para baixo para explorar o santuário digital
+    </div>
+    <div
+      class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
+      style="opacity: 0;"
+    >
+      <div
+        class="flex flex-col items-center gap-2"
+      >
+        <div
+          class="w-px h-12 bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0"
+        />
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`HeroSection Advanced Validation > renders correctly across mobile and desktop breakpoints (Snapshot) > mobile-hero 1`] = `
+<DocumentFragment>
+  <section
+    aria-label="Cathedra Digital - Introdução"
+    class="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background"
+  >
+    <h1
+      class="sr-only"
+    >
+      Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital
+    </h1>
+    <div
+      class="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none"
+      style="transform: none;"
+    >
+      <div
+        class="absolute inset-0 bg-background"
+      />
+      <div
+        class="absolute inset-0 opacity-[0.012] grayscale"
+        style="background-size: 160px 160px;"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.035)_0%,transparent_55%)]"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,hsl(var(--background))_85%)] opacity-95"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/60 opacity-40"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.01)_0%,transparent_100%)] mix-blend-overlay"
+      />
+      <div
+        class="absolute inset-12 md:inset-24 border border-primary/[0.015] rounded-[3rem] pointer-events-none"
+      />
+    </div>
+    <div
+      class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.15]"
+    >
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(78.89741951942872%) translateY(85.05397211448134%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(6.588491766825966%) translateY(88.272765701026%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(34.57346560224912%) translateY(59.89556473728239%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(92.90202555597872%) translateY(33.63061386362733%);"
+      />
+    </div>
+    <div
+      class="relative z-10 max-w-6xl text-center px-6 flex flex-col items-center justify-center min-h-[70vh]"
+      style="opacity: 1; transform: none;"
+    >
+      <div
+        class="mb-16 md:mb-20"
+        style="opacity: 0; transform: translateY(30px);"
+      >
+        <div
+          class="flex flex-col items-center gap-8"
+        >
+          <div
+            class="w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-40"
+          />
+          <p
+            class="text-[10px] font-medium uppercase tracking-[1em] text-primary/20 leading-none select-none"
+          >
+            Bibliotheca Divina
+          </p>
+        </div>
+      </div>
+      <div
+        class="mb-12 md:mb-16"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <h2
+          class="text-7xl md:text-9xl lg:text-[13rem] font-display font-extralight text-primary leading-none tracking-[0.2em] uppercase select-none drop-shadow-sm"
+        >
+          Cathedra
+        </h2>
+      </div>
+      <div
+        class="space-y-6 mb-24 md:mb-32"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <p
+          class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed tracking-wide px-8"
+        >
+          O silêncio que revela a Verdade eterna.
+        </p>
+        <p
+          class="max-w-xl mx-auto font-sans text-xs md:text-sm text-primary/20 uppercase tracking-[0.4em] font-light leading-relaxed"
+        >
+          Habite a tradição em uma experiência de leitura pura
+        </p>
+      </div>
+      <div
+        class="flex flex-col items-center gap-20 w-full"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14 w-full"
+        >
+          <button
+            aria-label="Explorar Escrituras"
+            class="btn-premium-outline px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] border-primary/5 hover:border-primary/20 text-primary/50 hover:text-primary transition-all duration-700 bg-transparent"
+            tabindex="0"
+          >
+            Explorar Escrituras
+          </button>
+          <button
+            aria-label="Continuar leitura"
+            class="btn-premium-primary px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] shadow-none hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.1)] transition-all duration-700"
+            tabindex="0"
+          >
+            Continuar Leitura
+          </button>
+          <button
+            aria-label="Iniciar jornada espiritual"
+            class="btn-premium-ghost px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] text-primary/30 hover:text-primary transition-all duration-700"
+            tabindex="0"
+          >
+            Iniciar Jornada
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-10 opacity-[0.03] select-none pointer-events-none"
+        >
+          <div
+            class="w-16 h-px bg-primary"
+          />
+          <div
+            class="w-2 h-2 rounded-full border border-primary"
+          />
+          <div
+            class="w-16 h-px bg-primary"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="sr-only"
+    >
+      Rolar para baixo para explorar o santuário digital
+    </div>
+    <div
+      class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
+      style="opacity: 0;"
+    >
+      <div
+        class="flex flex-col items-center gap-2"
+      >
+        <div
+          class="w-px h-12 bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0"
+        />
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`HeroSection Advanced Validation > respects prefers-reduced-motion in runtime environment 1`] = `
+<div>
+  <section
+    aria-label="Cathedra Digital - Introdução"
+    class="relative w-full min-h-screen flex items-center justify-center px-6 overflow-hidden bg-background"
+  >
+    <h1
+      class="sr-only"
+    >
+      Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital
+    </h1>
+    <div
+      class="absolute inset-0 z-0 overflow-hidden select-none pointer-events-none"
+      style="transform: none;"
+    >
+      <div
+        class="absolute inset-0 bg-background"
+      />
+      <div
+        class="absolute inset-0 opacity-[0.012] grayscale"
+        style="background-size: 160px 160px;"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,hsl(var(--primary)/0.035)_0%,transparent_55%)]"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,hsl(var(--background))_85%)] opacity-95"
+      />
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/60 opacity-40"
+      />
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(255,255,255,0.01)_0%,transparent_100%)] mix-blend-overlay"
+      />
+      <div
+        class="absolute inset-12 md:inset-24 border border-primary/[0.015] rounded-[3rem] pointer-events-none"
+      />
+    </div>
+    <div
+      class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.15]"
+    >
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(96.90144575192494%) translateY(53.68801822159095%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(2.7811714134744703%) translateY(15.679942229332845%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(92.24535056639138%) translateY(38.39171858669093%);"
+      />
+      <div
+        class="absolute w-px h-px bg-primary/40 rounded-full"
+        style="opacity: 0; transform: translateX(28.280944932019402%) translateY(19.145359180450594%);"
+      />
+    </div>
+    <div
+      class="relative z-10 max-w-6xl text-center px-6 flex flex-col items-center justify-center min-h-[70vh]"
+      style="opacity: 1; transform: none;"
+    >
+      <div
+        class="mb-16 md:mb-20"
+        style="opacity: 0; transform: translateY(30px);"
+      >
+        <div
+          class="flex flex-col items-center gap-8"
+        >
+          <div
+            class="w-px h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-40"
+          />
+          <p
+            class="text-[10px] font-medium uppercase tracking-[1em] text-primary/20 leading-none select-none"
+          >
+            Bibliotheca Divina
+          </p>
+        </div>
+      </div>
+      <div
+        class="mb-12 md:mb-16"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <h2
+          class="text-7xl md:text-9xl lg:text-[13rem] font-display font-extralight text-primary leading-none tracking-[0.2em] uppercase select-none drop-shadow-sm"
+        >
+          Cathedra
+        </h2>
+      </div>
+      <div
+        class="space-y-6 mb-24 md:mb-32"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <p
+          class="max-w-2xl mx-auto font-serif text-xl md:text-2xl text-foreground/40 italic leading-relaxed tracking-wide px-8"
+        >
+          O silêncio que revela a Verdade eterna.
+        </p>
+        <p
+          class="max-w-xl mx-auto font-sans text-xs md:text-sm text-primary/20 uppercase tracking-[0.4em] font-light leading-relaxed"
+        >
+          Habite a tradição em uma experiência de leitura pura
+        </p>
+      </div>
+      <div
+        class="flex flex-col items-center gap-20 w-full"
+        style="opacity: 0; transform: translateY(15px);"
+      >
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-14 w-full"
+        >
+          <button
+            aria-label="Explorar Escrituras"
+            class="btn-premium-outline px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] border-primary/5 hover:border-primary/20 text-primary/50 hover:text-primary transition-all duration-700 bg-transparent"
+            tabindex="0"
+          >
+            Explorar Escrituras
+          </button>
+          <button
+            aria-label="Continuar leitura"
+            class="btn-premium-primary px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] shadow-none hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.1)] transition-all duration-700"
+            tabindex="0"
+          >
+            Continuar Leitura
+          </button>
+          <button
+            aria-label="Iniciar jornada espiritual"
+            class="btn-premium-ghost px-12 h-16 text-[11px] sm:text-[12px] w-full sm:w-auto min-w-[260px] text-primary/30 hover:text-primary transition-all duration-700"
+            tabindex="0"
+          >
+            Iniciar Jornada
+          </button>
+        </div>
+        <div
+          class="flex items-center gap-10 opacity-[0.03] select-none pointer-events-none"
+        >
+          <div
+            class="w-16 h-px bg-primary"
+          />
+          <div
+            class="w-2 h-2 rounded-full border border-primary"
+          />
+          <div
+            class="w-16 h-px bg-primary"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="sr-only"
+    >
+      Rolar para baixo para explorar o santuário digital
+    </div>
+    <div
+      class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-4"
+      style="opacity: 0;"
+    >
+      <div
+        class="flex flex-col items-center gap-2"
+      >
+        <div
+          class="w-px h-12 bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0"
+        />
+      </div>
+    </div>
+  </section>
+</div>
+`;
