@@ -310,7 +310,7 @@ const Catechism: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
-  const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
+  const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
