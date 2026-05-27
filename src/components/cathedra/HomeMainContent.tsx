@@ -97,12 +97,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Logos IA" 
             subtitle="Inteligência artificial a serviço da sua fé."
-            className="mb-8 md:mb-14"
+            className="mb-12 md:mb-20"
           />
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-8 md:p-14 flex flex-col items-center justify-center gap-10 md:gap-12 group"
+            className="flex-1 p-10 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-14 md:gap-16 group"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
