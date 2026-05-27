@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { HelmetProvider } from 'react-helmet-async';
-import SEOHead from '../SEOHead';
+import SEOHead from '../../SEOHead';
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock useSEO hook
