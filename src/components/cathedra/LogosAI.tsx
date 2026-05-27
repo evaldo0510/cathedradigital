@@ -98,7 +98,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       if (error) throw error;
       
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
-      setResponse(assistantMsg);
+      // setResponse(assistantMsg); // Removed local state setResponse usage
       
       // Simulate typing for premium feel
       setIsTyping(true);

@@ -41,6 +41,7 @@ const MagisteriumViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
+  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);

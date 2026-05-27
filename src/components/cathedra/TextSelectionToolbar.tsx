@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Highlighter, FileText, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
@@ -20,6 +21,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   activeHighlightId,
   activeColor
 }) => {
+  const { settings } = useReadingSettings();
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
