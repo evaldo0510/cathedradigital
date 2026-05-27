@@ -181,6 +181,7 @@ const MagisteriumViewer: React.FC = () => {
       if (savedScroll && !highlight) {
         setTimeout(() => {
           window.scrollTo({ top: parseInt(savedScroll), behavior: 'smooth' });
+          toast('Documento restaurado do último ponto', { icon: '📖', duration: 2000 });
         }, 800);
       }
     }
