@@ -24,25 +24,54 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
     // 1. Core SEO Elements (Titles, Descriptions, Headings)
     const title = await page.title();
     if (!title) {
-      auditResults.seo.push({ status: 'critical', message: 'Title is missing.' });
+      auditResults.seo.push({ 
+        status: 'critical', 
+        message: 'Title is missing.',
+        suggestion: 'Adicione uma tag <title> dentro do <head>.'
+      });
     } else if (title.length < 30 || title.length > 65) {
-      auditResults.seo.push({ status: 'warning', message: `Title "${title}" length (${title.length}) is outside recommended 30-65 range.` });
+      auditResults.seo.push({ 
+        status: 'warning', 
+        message: `Title length (${title.length}) is outside recommended 30-65 range.`,
+        evidence: title,
+        suggestion: 'Ajuste o título para ter entre 30 e 65 caracteres para melhor exibição no Google.'
+      });
     } else {
       auditResults.seo.push({ status: 'success', message: `Title: ${title}` });
     }
 
     const description = await page.getAttribute('meta[name="description"]', 'content');
     if (!description) {
-      auditResults.seo.push({ status: 'critical', message: 'Meta description is missing.' });
+      auditResults.seo.push({ 
+        status: 'critical', 
+        message: 'Meta description is missing.',
+        suggestion: 'Adicione uma tag <meta name="description" content="...">.'
+      });
     } else if (description.length < 120 || description.length > 165) {
-      auditResults.seo.push({ status: 'warning', message: `Description length (${description.length}) is outside recommended 120-165 range.` });
+      auditResults.seo.push({ 
+        status: 'warning', 
+        message: `Description length (${description.length}) is outside recommended 120-165 range.`,
+        evidence: description,
+        suggestion: 'Ajuste a meta descrição para ter entre 120 e 165 caracteres para melhorar a taxa de clique (CTR).'
+      });
     } else {
       auditResults.seo.push({ status: 'success', message: 'Meta description is present and properly sized.' });
     }
 
     const h1Count = await page.locator('h1').count();
-    if (h1Count !== 1) {
-      auditResults.seo.push({ status: 'critical', message: `Found ${h1Count} H1 tags. Exactly one is required for SEO.` });
+    if (h1Count === 0) {
+      auditResults.seo.push({ 
+        status: 'critical', 
+        message: 'H1 tag is missing.',
+        suggestion: 'Adicione exatamente um H1 na página (pode ser sr-only no Hero) para definir o tópico principal.'
+      });
+    } else if (h1Count > 1) {
+      auditResults.seo.push({ 
+        status: 'critical', 
+        message: `Found ${h1Count} H1 tags.`,
+        evidence: 'Múltiplos elementos <h1> detectados.',
+        suggestion: 'Mantenha apenas um H1 por página para evitar confusão dos mecanismos de busca.'
+      });
     } else {
       auditResults.seo.push({ status: 'success', message: 'Found exactly one H1 tag.' });
     }
