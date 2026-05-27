@@ -15,6 +15,7 @@ interface ReadingSettings {
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
   letterSpacing: 'tight' | 'normal' | 'wide';
+  sideMargins: 'standard' | 'comfortable' | 'wide';
   contrast: 'normal' | 'soft' | 'high';
   reminders: {
     enabled: boolean;
@@ -56,6 +57,7 @@ const defaultSettings: ReadingSettings = {
   contemplativeMode: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
+  sideMargins: 'standard',
   contrast: 'normal',
   reminders: {
     enabled: false,
@@ -136,6 +138,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     // Apply Spacing
     root.setAttribute('data-line-spacing', settings.lineSpacing);
     root.setAttribute('data-letter-spacing', settings.letterSpacing);
+    root.setAttribute('data-side-margins', settings.sideMargins);
     
     if (settings.visualSilence) {
       root.classList.add('visual-silence');

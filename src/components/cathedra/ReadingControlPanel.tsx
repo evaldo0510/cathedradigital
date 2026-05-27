@@ -132,6 +132,23 @@ const ReadingControlPanel: React.FC = () => {
               </div>
 
               <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Espaçamento Lateral</p>
+                <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+                  {(['standard', 'comfortable', 'wide'] as const).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => updateSettings({ sideMargins: m })}
+                      className={`flex-1 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full transition-all ${
+                        settings.sideMargins === m ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                      }`}
+                    >
+                      {m === 'standard' ? 'Std' : m === 'comfortable' ? 'Médio' : 'Largo'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Contraste</p>
                 <div className="flex bg-muted/50 rounded-full p-1 gap-1">
                   {(['soft', 'normal', 'high'] as const).map((c) => (
