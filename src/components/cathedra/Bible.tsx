@@ -1105,7 +1105,13 @@ const Bible: React.FC = () => {
               }}
               showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
               onResumeLast={() => {
-                if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                const behavior = settings.resumeBehavior || 'confirm';
+                if (behavior === 'always' || (behavior === 'once' && sessionResumeUsed)) {
+                   navigate(lastReadMark.url);
+                } else if (behavior === 'never') {
+                   toast.info('Retomada automática desativada nas configurações.');
+                } else if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+                   if (behavior === 'once') setSessionResumeUsed(true);
                    navigate(lastReadMark.url);
                 }
               }}
