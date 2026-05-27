@@ -144,9 +144,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-16 md:mb-32"
+          className="mb-24 md:mb-40"
         />
-        <div className="premium-card responsive-padding md:p-32">
+        <div className="premium-card p-10 sm:p-24 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </div>
       </section>
