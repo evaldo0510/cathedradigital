@@ -113,7 +113,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
           />
         ))}
       </div>
-    </div>
+    </nav>
   );
 };
 
