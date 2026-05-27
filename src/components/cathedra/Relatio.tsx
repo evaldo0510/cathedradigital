@@ -314,7 +314,7 @@ const Relatio: React.FC<RelatioProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 };
 

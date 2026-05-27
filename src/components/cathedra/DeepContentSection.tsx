@@ -233,7 +233,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
           );
         })}
       </div>
-    </div>
+    </section>
   );
 };
 
