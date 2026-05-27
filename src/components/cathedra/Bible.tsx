@@ -1021,7 +1021,7 @@ const Bible: React.FC = () => {
                 <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
                   <cat.icon className="w-4 h-4 text-primary/30" />
                 </div>
-                <h3 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h3>
+                <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
                 <div className="h-px flex-1 bg-border/5" />
               </div>
               

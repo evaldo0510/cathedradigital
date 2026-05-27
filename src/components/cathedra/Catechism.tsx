@@ -724,7 +724,7 @@ const Catechism: React.FC = () => {
               >
                 <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">Seção {sec.id}</span>
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h3>
+                  <h2 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors">{sec.title}</h2>
                   <p className="text-[10px] text-muted-foreground/40 font-bold uppercase tracking-[0.2em]">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
                 </div>
               </motion.button>
@@ -787,7 +787,7 @@ const Catechism: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <span className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.5em]">{part.part}</span>
-                <h3 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h3>
+                <h2 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h2>
                 <p className="text-sm text-muted-foreground/40 font-serif italic">{part.sections.length} seções doutrinárias</p>
               </div>
             </motion.button>

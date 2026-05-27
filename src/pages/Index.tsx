@@ -77,7 +77,7 @@ const Index = () => {
 
       <HeroSection onStart={handleStart} />
 
-      <div className="w-full flex flex-col items-center outline-none">
+      <main className="w-full flex flex-col items-center outline-none">
         <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
           <HomeMainContent 
             user={user} 
@@ -90,7 +90,7 @@ const Index = () => {
         <Suspense fallback={null}>
           <CookieConsent />
         </Suspense>
-      </div>
+      </main>
     </div>
   );
 };

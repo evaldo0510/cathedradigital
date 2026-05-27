@@ -137,7 +137,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preload" as="image" href="/src/assets/cathedra-logo.png" />
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="robots" content="index, follow, max-image-preview:large" />
       <title>{displayTitle}</title>
       <meta name="description" content={displayDescription} />
       {displayKeywords && <meta name="keywords" content={displayKeywords} />}
