@@ -309,6 +309,7 @@ const Catechism: React.FC = () => {
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
+  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
