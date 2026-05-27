@@ -138,6 +138,42 @@ const MagisteriumViewer: React.FC = () => {
     };
   }, [id, content, saveLastRead]);
 
+  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+    if (!id) return;
+    
+    if (activeHighlight) {
+       await supabase.from('user_notes').update({ 
+         note_text: text, 
+         highlight_color: color 
+       }).eq('id', activeHighlight.id);
+       setActiveHighlight(null);
+    } else {
+      await addNote(id, text, color);
+    }
+    setIsNoteModalOpen(false);
+  }, [id, activeHighlight, addNote]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isNoteModalOpen) return;
+      
+      // Accessibility: Reading shortcuts
+      if (id) {
+        if (e.key.toLowerCase() === 'h') {
+          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+        }
+        if (e.key.toLowerCase() === 'n') {
+          setIsNoteModalOpen(true);
+        }
+        if (e.key === 'Escape') {
+          setActiveHighlight(null);
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [id, isNoteModalOpen, handleAddNoteOrHighlight]);
+
   // Restore scroll position
   useEffect(() => {
     if (content && id) {
