@@ -253,10 +253,11 @@ const AppLayout: React.FC = () => {
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
-          className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[200] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[250] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
         >
           {t('skip_to_content')}
         </a>
+
 
         <ScrollToTop />
         {location.pathname !== '/' && (
