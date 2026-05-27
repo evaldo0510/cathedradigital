@@ -547,7 +547,7 @@ const MagisteriumViewer: React.FC = () => {
           {!settings.totalSilence && (
             <LogosContextualSuggestions
               type="magisterium"
-              context={`Documento do Magistério: ${document.title}`}
+              context={`Documento do Magistério: ${content.title}`}
               isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
               onSelectSuggestion={(prompt) => {
                 setLogosAIInitialQuery(prompt);

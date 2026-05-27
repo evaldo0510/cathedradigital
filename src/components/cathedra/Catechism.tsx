@@ -55,6 +55,7 @@ const CatechismContent: React.FC<{
   const prefetch = usePrefetchCatechismParagraph();
   const settingsContext = useReadingSettings();
   const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
+  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
