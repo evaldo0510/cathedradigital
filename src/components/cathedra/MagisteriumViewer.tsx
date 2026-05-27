@@ -266,9 +266,9 @@ const MagisteriumViewer: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 w-full"
+          className="flex-1 w-full max-w-[75ch] mx-auto"
         >
-          <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[2.5rem] relative">
+          <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[3rem] md:rounded-[5rem] relative">
             <div 
               ref={contentRef}
               onScroll={() => {
