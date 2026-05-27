@@ -10,9 +10,9 @@ import { chromium } from '@playwright/test';
  */
 test.describe('SEO & Metadata Audit - Home Page', () => {
   const auditResults = {
-    seo: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
-    schema: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
-    social: [] as { status: 'critical' | 'warning' | 'success'; message: string }[],
+    seo: [] as { status: 'critical' | 'warning' | 'success'; message: string; evidence?: string; suggestion?: string }[],
+    schema: [] as { status: 'critical' | 'warning' | 'success'; message: string; evidence?: string; suggestion?: string }[],
+    social: [] as { status: 'critical' | 'warning' | 'success'; message: string; evidence?: string; suggestion?: string }[],
     performance: [] as { metric: string; value: string; score?: number }[],
     lighthouse: {} as any,
   };
