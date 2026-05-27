@@ -41,12 +41,15 @@ test.describe('Mobile Header Comprehensive Tests', () => {
         .include('header[role="banner"]')
         .analyze();
       
-      // Save report
+      // Save report and attach to Playwright report
       const reportName = `axe-header-${vp.name.replace(/\s+/g, '-').toLowerCase()}.json`;
-      fs.writeFileSync(
-        path.join(reportDir, reportName),
-        JSON.stringify(accessibilityScanResults, null, 2)
-      );
+      const reportPath = path.join(reportDir, reportName);
+      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+      
+      await test.info().attach(reportName, {
+        path: reportPath,
+        contentType: 'application/json',
+      });
 
       // Check for violations
       expect(accessibilityScanResults.violations).toEqual([]);
