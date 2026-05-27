@@ -2164,6 +2164,63 @@ export type Database = {
         }
         Relationships: []
       }
+      public_seo_settings: {
+        Row: {
+          business_name: string | null
+          created_at: string | null
+          ga4_measurement_id: string | null
+          google_maps_url: string | null
+          gsc_verification_code: string | null
+          id: string | null
+          json_ld_schema: Json | null
+          latitude: number | null
+          longitude: number | null
+          og_image_url: string | null
+          opening_hours: string | null
+          site_description: string | null
+          site_keywords: string | null
+          site_title: string | null
+          twitter_handle: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          created_at?: string | null
+          ga4_measurement_id?: string | null
+          google_maps_url?: string | null
+          gsc_verification_code?: string | null
+          id?: string | null
+          json_ld_schema?: Json | null
+          latitude?: number | null
+          longitude?: number | null
+          og_image_url?: string | null
+          opening_hours?: string | null
+          site_description?: string | null
+          site_keywords?: string | null
+          site_title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          created_at?: string | null
+          ga4_measurement_id?: string | null
+          google_maps_url?: string | null
+          gsc_verification_code?: string | null
+          id?: string | null
+          json_ld_schema?: Json | null
+          latitude?: number | null
+          longitude?: number | null
+          og_image_url?: string | null
+          opening_hours?: string | null
+          site_description?: string | null
+          site_keywords?: string | null
+          site_title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       user_management_stats: {
         Row: {
           classification: string | null
