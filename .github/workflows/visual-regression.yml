@@ -1,4 +1,4 @@
-name: Visual Regression & A11y Audit
+name: Quality Audit (Visual, A11y & SEO)
 
 on:
   push:
