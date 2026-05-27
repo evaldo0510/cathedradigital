@@ -838,7 +838,14 @@ const Bible: React.FC = () => {
                             }}>
                               <p className="leading-relaxed">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                  <span className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1`}>
+                                  <span 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
+                                      if (note) setActiveHighlight(note);
+                                    }}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all`}
+                                  >
                                     {v.text}
                                   </span>
                                 )}
