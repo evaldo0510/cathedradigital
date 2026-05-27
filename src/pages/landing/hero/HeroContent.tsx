@@ -49,9 +49,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-14 md:mb-20"
       >
-        <h2 className="text-5xl md:text-8xl lg:text-9xl font-display font-light text-primary leading-none tracking-[0.1em] uppercase">
+        <h1 className="text-5xl md:text-8xl lg:text-9xl font-display font-light text-primary leading-none tracking-[0.1em] uppercase">
           Cathedra
-        </h2>
+        </h1>
       </motion.div>
 
       {/* Description - Editorial Rhythm */}
