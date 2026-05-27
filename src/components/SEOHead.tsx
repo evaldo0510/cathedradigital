@@ -84,16 +84,24 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     }
   }, [seoSettings?.ga4_measurement_id]);
 
-  const breadcrumbLD = breadcrumbs ? {
+  const breadcrumbLD = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbs.map((b, i) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "name": b.name,
-      "item": `${BASE_URL}${b.path}`
-    }))
-  } : null;
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": BASE_URL
+      },
+      ...(breadcrumbs || []).map((b, i) => ({
+        "@type": "ListItem",
+        "position": i + 2,
+        "name": b.name,
+        "item": `${BASE_URL}${b.path}`
+      }))
+    ]
+  };
 
   const faqLD = faqs && faqs.length > 0 ? {
     "@context": "https://schema.org",
@@ -207,7 +215,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <meta name="twitter:image:alt" content={displayTitle} />
 
 
-      <script type="application/ld+json">{JSON.stringify(websiteSchema)}</script>
+      <script type="application/ld+json">{JSON.stringify(breadcrumbLD)}</script>
       <script type="application/ld+json">{JSON.stringify(organizationSchema)}</script>
 
       {breadcrumbLD && (

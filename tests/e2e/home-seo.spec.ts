@@ -177,6 +177,16 @@ test.describe('SEO & Metadata Audit - Home Page', () => {
           } else {
             if (json['@type'] === 'WebSite') foundWebSite = true;
             if (json['@type'] === 'Organization') foundOrganization = true;
+            if (json['@type'] === 'BreadcrumbList') {
+              if (json.itemListElement?.length > 0) {
+                auditResults.schema.push({ status: 'success', message: 'Found valid BreadcrumbList Schema.' });
+              } else {
+                auditResults.schema.push({ status: 'critical', message: 'BreadcrumbList Schema found but is empty.' });
+              }
+            }
+            if (json['@type'] === 'LocalBusiness') {
+              auditResults.schema.push({ status: 'success', message: 'Found valid LocalBusiness Schema.' });
+            }
             
             auditResults.schema.push({ status: 'success', message: `Found valid ${json['@type']} Schema.` });
           }
