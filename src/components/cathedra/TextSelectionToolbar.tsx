@@ -58,9 +58,10 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
       {position && (
         <motion.div
           ref={containerRef}
-          initial={{ opacity: 0, y: 10, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 10, scale: 0.9 }}
+          initial={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: 15, scale: 0.9, filter: 'blur(10px)' }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           style={{ 
             position: 'absolute', 
             top: position.top, 
@@ -68,41 +69,74 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
             transform: 'translateX(-50%)',
             zIndex: 1000
           }}
-          className="flex items-center gap-1.5 p-1.5 bg-background/90 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-premium-hover"
+          className="flex flex-col gap-2 p-2 bg-card/90 backdrop-blur-2xl border border-primary/10 rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] min-w-[240px]"
         >
-          <div className="flex gap-1 pr-1.5 border-r border-primary/5">
-            {highlightColors.map((color) => (
-              <button
-                key={color.name}
+          <div className="flex items-center justify-between px-2 pt-1">
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">
+              {activeHighlightId ? 'Editar Destaque' : 'Ações de Leitura'}
+            </p>
+            <button 
+              onClick={() => setPosition(null)}
+              className="text-primary/20 hover:text-primary transition-colors"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1.5 p-1 bg-muted/30 rounded-2xl">
+            <div className="flex gap-1 pr-1.5 border-r border-primary/5">
+              {highlightColors.map((color) => (
+                <button
+                  key={color.name}
+                  onClick={() => {
+                    onHighlight(color.name);
+                    setPosition(null);
+                  }}
+                  className={`w-7 h-7 rounded-full ${color.value} border-2 transition-all hover:scale-110 ${
+                    activeColor === color.name ? 'border-primary shadow-sm' : 'border-white/20'
+                  }`}
+                  title={`Destaque ${color.name}`}
+                />
+              ))}
+            </div>
+            
+            <div className="flex items-center gap-1 flex-1">
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
-                  onHighlight(color.name);
+                  onAddNote();
                   setPosition(null);
                 }}
-                className={`w-6 h-6 rounded-full ${color.value} border border-white/20 hover:scale-110 transition-transform`}
-              />
-            ))}
+                className="h-9 rounded-xl px-3 text-[10px] font-bold uppercase tracking-widest gap-2 hover:bg-primary/5 flex-1"
+              >
+                <FileText className="w-3.5 h-3.5" /> Nota
+              </Button>
+
+              {activeHighlightId && onDeleteHighlight && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    onDeleteHighlight();
+                    setPosition(null);
+                  }}
+                  className="h-9 w-9 rounded-xl text-destructive hover:bg-destructive/5"
+                  title="Excluir Destaque"
+                >
+                  <Highlighter className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
           </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              onAddNote();
-              setPosition(null);
-            }}
-            className="h-8 rounded-xl px-2.5 text-[10px] font-bold uppercase tracking-widest gap-2"
-          >
-            <FileText className="w-3.5 h-3.5" /> Nota
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setPosition(null)}
-            className="h-8 w-8 rounded-xl opacity-40 hover:opacity-100"
-          >
-            <X className="w-3 h-3" />
-          </Button>
+          {selectedText && !activeHighlightId && (
+            <div className="px-3 py-2 border-t border-primary/5 mt-1">
+              <p className="text-[10px] text-muted-foreground italic line-clamp-1 leading-relaxed">
+                "{selectedText}"
+              </p>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
