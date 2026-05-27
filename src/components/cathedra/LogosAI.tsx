@@ -11,6 +11,7 @@ import { LogosChatSkeleton } from './SacredSkeleton';
 interface LogosAIProps {
   context?: string;
   selectedText?: string;
+  initialQuery?: string;
   isOpen: boolean;
   onClose: () => void;
   type?: 'bible' | 'catechism' | 'magisterium';
