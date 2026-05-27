@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Highlighter, FileText, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
@@ -20,6 +21,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   activeHighlightId,
   activeColor
 }) => {
+  const { settings } = useReadingSettings();
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,10 +122,10 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                 size="sm"
                 onClick={() => {
                   if (onAskLogos) onAskLogos(selectedText);
-                  setPosition(null);
+                  if (!settings.totalSilence) setPosition(null);
                 }}
                 className="h-9 rounded-xl px-3 text-[10px] font-bold uppercase tracking-widest gap-2 hover:bg-primary/5 flex-1 text-primary/60"
-                title="Aprofundar com Logos IA"
+                title={settings.totalSilence ? "Aprofundar em silêncio (Logos IA)" : "Aprofundar com Logos IA"}
               >
                 <Sparkles className="w-3.5 h-3.5 stroke-[1]" /> Logos
               </Button>

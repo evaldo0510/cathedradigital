@@ -55,6 +55,7 @@ const CatechismContent: React.FC<{
   const prefetch = usePrefetchCatechismParagraph();
   const settingsContext = useReadingSettings();
   const settings = settingsContext?.settings || { fontSize: 'medium', fontFamily: 'serif' };
+  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
 
   useEffect(() => {
     if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
@@ -311,6 +312,7 @@ const Catechism: React.FC = () => {
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
+  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
@@ -949,14 +951,16 @@ const Catechism: React.FC = () => {
               />
 
               {/* Logos AI: Contextual Suggestions */}
-              {showCrossRefs && currentParagraph && (
+              {showCrossRefs && currentParagraph && !settings.totalSilence && (
                 <LogosContextualSuggestions
                   type="catechism"
                   context={`Catecismo da Igreja Católica, parágrafo ${currentParagraph}`}
+                  isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
                   onSelectSuggestion={(prompt) => {
                     setLogosAIInitialQuery(prompt);
                     setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
                     setShowLogosAI(true);
+                    setLogosSelectionsCount(prev => prev + 1);
                   }}
                 />
               )}
@@ -981,7 +985,7 @@ const Catechism: React.FC = () => {
 
 
             
-            {showLogosAI && (
+            {!settings.totalSilence && showLogosAI && (
               <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
                 <LogosAI 
                   isOpen={showLogosAI} 

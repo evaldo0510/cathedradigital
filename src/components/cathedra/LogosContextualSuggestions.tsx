@@ -15,12 +15,14 @@ interface LogosContextualSuggestionsProps {
   context: string;
   type: 'bible' | 'catechism' | 'magisterium';
   onSelectSuggestion: (prompt: string) => void;
+  isVisible?: boolean;
 }
 
 export const LogosContextualSuggestions: React.FC<LogosContextualSuggestionsProps> = ({
   context,
   type,
-  onSelectSuggestion
+  onSelectSuggestion,
+  isVisible = true
 }) => {
   const { settings } = useReadingSettings();
 
@@ -45,7 +47,7 @@ export const LogosContextualSuggestions: React.FC<LogosContextualSuggestionsProp
     }
   ];
 
-  if (settings.totalSilence) return null;
+  if (settings.totalSilence || !isVisible || settings.logosSuggestions === 'never') return null;
 
   return (
     <div className="mt-16 py-10 border-t border-primary/5">

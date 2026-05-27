@@ -41,6 +41,7 @@ interface ReadingSettings {
     showSaints: boolean;
     relevanceByProgress: boolean;
   };
+  logosSuggestions: 'always' | 'first_selection' | 'never';
 }
 
 interface ReadingSettingsContextType {
@@ -88,6 +89,7 @@ const defaultSettings: ReadingSettings = {
     showSaints: true,
     relevanceByProgress: true,
   },
+  logosSuggestions: 'always',
 };
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);

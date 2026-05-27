@@ -153,6 +153,7 @@ const Bible: React.FC = () => {
   const [shouldAutoResume, setShouldAutoResume] = useState(true);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
+  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const { toggleFavorite, isFavorite } = useFavorites();
   const { user, profile } = useAuth();
@@ -1080,9 +1081,16 @@ const Bible: React.FC = () => {
                 }
               }}
               onAskLogos={(text) => {
-                setLogosAIInitialQuery(`Explique esta passagem da Bíblia: "${text}"`);
-                setLogosAIContext(`${selectedBook.name} ${selectedChapter}${highlightedVerse ? ':' + highlightedVerse : ''}`);
-                setShowLogosAI(true);
+                const currentContext = `${selectedBook.name} ${selectedChapter}${highlightedVerse ? ':' + highlightedVerse : ''}`;
+                setLogosAIInitialQuery(`Ajude-me a contemplar esta passagem sob a luz da Tradição: "${text}"`);
+                setLogosAIContext(currentContext);
+                setLogosSelectionsCount(prev => prev + 1);
+                
+                if (!settings.totalSilence) {
+                  setShowLogosAI(true);
+                } else {
+                  toast.success("Reflexão Logos preparada para leitura posterior.");
+                }
               }}
             />
 
@@ -1245,7 +1253,7 @@ const Bible: React.FC = () => {
             )}
           </div>
         </div>
-        {showLogosAI && (
+        {!settings.totalSilence && showLogosAI && (
           <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <React.Suspense fallback={<BibleChapterSkeleton />}>
               <LogosAI 
