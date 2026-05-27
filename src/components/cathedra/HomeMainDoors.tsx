@@ -90,16 +90,16 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="premium-card-interactive p-12 md:p-14 lg:p-16 flex flex-col items-center text-center gap-12 focus-visible:ring-primary/40"
+          className="premium-card-interactive p-10 md:p-14 lg:p-20 flex flex-col items-center text-center gap-10 md:gap-14 focus-visible:ring-primary/40 group"
         >
-          <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/25 group-hover:bg-primary/[0.02] transition-all duration-1000 border border-primary/[0.02]">
+          <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/30 group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.03]">
             <door.icon className="w-8 h-8" strokeWidth={0.5} />
           </div>
           <div className="space-y-6">
-            <h3 className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 group-hover:text-primary/25 transition-colors duration-700">
+            <h3 className="text-[9px] font-bold uppercase tracking-[0.4em] text-primary/20 group-hover:text-primary/40 transition-colors duration-700">
               {door.label}
             </h3>
-            <p className="text-[12px] text-muted-foreground/15 font-serif italic tracking-wider group-hover:text-muted-foreground/25 transition-colors duration-700 leading-relaxed max-w-[160px]">
+            <p className="text-[12px] text-muted-foreground/20 font-serif italic tracking-wider group-hover:text-muted-foreground/40 transition-colors duration-700 leading-relaxed max-w-[160px]">
               {door.description}
             </p>
           </div>
