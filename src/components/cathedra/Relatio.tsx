@@ -282,8 +282,8 @@ const Relatio: React.FC<RelatioProps> = ({
                                   <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
                                     {item.reason}
                                   </span>
-                                  <div className="w-1 h-1 rounded-full bg-primary/10" />
-                                  <span className="text-[7px] font-black uppercase tracking-widest text-secondary/60">
+                                  <div className={cn("w-1 h-1 rounded-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
+                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-secondary/60")}>
                                     {strengthLabel}
                                   </span>
                                 </div>
