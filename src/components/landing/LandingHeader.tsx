@@ -69,7 +69,7 @@ const LandingHeader = () => {
         >
           <Icons.Logo className="w-12 h-12 transition-all duration-1000 group-hover:scale-105" variant="gold" />
           <div className="hidden sm:flex flex-col">
-            <h1 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h1>
+            <h2 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h2>
             <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-1">Digital Sanctuarium</span>
           </div>
         </div>
