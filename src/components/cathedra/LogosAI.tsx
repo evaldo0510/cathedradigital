@@ -33,7 +33,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const abortControllerRef = React.useRef<AbortController | null>(null);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>(() => {
+    if (settings.totalSilence) return [];
     if (variant === 'integrated' && context) {
       const saved = localStorage.getItem(`logos_history_${context}`);
       return saved ? JSON.parse(saved) : [];
@@ -48,6 +50,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
   };
 
   useEffect(() => {
+    if (settings.totalSilence) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      setIsLoading(false);
+      setIsTyping(false);
+      setHistory([]);
+      return;
+    }
+
     if (variant === 'integrated' && context) {
       if (history.length > 0) {
         localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
@@ -55,7 +68,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
         localStorage.removeItem(`logos_history_${context}`);
       }
     }
-  }, [history, context, variant]);
+  }, [history, context, variant, settings.totalSilence]);
 
   // Sync history when context changes for persistence per reading section
   useEffect(() => {
@@ -95,6 +108,12 @@ const LogosAI: React.FC<LogosAIProps> = ({
     setHistory(prev => [...prev, { role: 'user', content: userMsg }]);
     setQuery('');
     setIsLoading(true);
+    
+    // Abort previous request if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
 
     try {
       const { data, error } = await supabase.functions.invoke('logos-ai', {
@@ -104,13 +123,15 @@ const LogosAI: React.FC<LogosAIProps> = ({
           selectedText,
           type,
           history: history.slice(-5) // Send last 5 messages for context
+        },
+        headers: {
+          'x-abort-signal': 'true' // Custom header as a hint if needed, though standard signal is preferred
         }
       });
 
       if (error) throw error;
       
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
-      // setResponse(assistantMsg); // Removed local state setResponse usage
       
       // Simulate typing for premium feel
       setIsTyping(true);
@@ -120,6 +141,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       setHistory(prev => [...prev, { role: 'assistant', content: '' }]);
       
       for (let i = 0; i < words.length; i++) {
+        if (abortControllerRef.current?.signal.aborted) break;
         currentText += (i === 0 ? '' : ' ') + words[i];
         const textToSet = currentText; // closure
         setHistory(prev => {
@@ -130,7 +152,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
         await new Promise(resolve => setTimeout(resolve, 30 + Math.random() * 40));
       }
       setIsTyping(false);
-    } catch (err) {
+    } catch (err: any) {
+      if (err.name === 'AbortError' || (err.message && err.message.includes('abort'))) {
+        console.log('Logos IA request aborted');
+        return;
+      }
       console.error('Logos IA Error:', err);
       toast.error('Erro ao conectar com Logos IA');
     } finally {
