@@ -20,12 +20,40 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || "";
 
     if (!supabaseUrl || !serviceRoleKey) {
       return json({ error: "Configuração do backend incompleta." }, 500);
     }
 
+    // AUTH GUARD: only admins (verified via user_roles) may simulate payments.
+    const authHeader = req.headers.get("authorization") || "";
+    const token = authHeader.toLowerCase().startsWith("bearer ") ? authHeader.slice(7).trim() : "";
+    if (!token) {
+      return json({ error: "Não autorizado." }, 401);
+    }
+
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data: userData, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userData?.user) {
+      return json({ error: "Sessão inválida." }, 401);
+    }
+
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    const { data: roleRow } = await adminClient
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userData.user.id)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (!roleRow) {
+      return json({ error: "Acesso restrito a administradores." }, 403);
+    }
+
     const body = await req.json();
     const { userId, planId, status = "approved", amount = 19.9, isDonation = false } = body;
 

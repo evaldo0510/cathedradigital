@@ -61,19 +61,18 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
   // Google Analytics 4 Script Injection
   useEffect(() => {
-    if (seoSettings?.ga4_measurement_id && typeof window !== 'undefined') {
+    const rawId = seoSettings?.ga4_measurement_id;
+    // Strict format allowlist: prevents script injection via tampered DB values
+    const safeId = rawId && /^G-[A-Z0-9]{4,20}$/.test(rawId) ? rawId : null;
+    if (safeId && typeof window !== 'undefined') {
       const script1 = document.createElement('script');
       script1.async = true;
-      script1.src = `https://www.googletagmanager.com/gtag/js?id=${seoSettings.ga4_measurement_id}`;
+      script1.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(safeId)}`;
       document.head.appendChild(script1);
 
       const script2 = document.createElement('script');
-      script2.innerHTML = `
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${seoSettings.ga4_measurement_id}');
-      `;
+      // Use textContent so the value is treated as a string literal, not parsed as code
+      script2.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',${JSON.stringify(safeId)});`;
       document.head.appendChild(script2);
 
       return () => {
