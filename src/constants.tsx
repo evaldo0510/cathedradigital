@@ -142,21 +142,21 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   return (
     <div ref={ref} className={cn(
       "relative flex items-center justify-center group overflow-hidden", 
-      variant === 'blue' && "bg-primary rounded-full p-2 shadow-lg border border-primary/20",
+      variant === 'blue' && "bg-primary rounded-full p-2 border border-primary/10",
       className
     )}>
       <img 
         src={cathedraLogo} 
         alt="Cathedra" 
         className={cn(
-          "w-full h-full object-contain transition-all duration-700 group-hover:scale-105",
-          variant === 'light' && "brightness-0 invert",
-          variant === 'dark' && "brightness-0",
+          "w-full h-full object-contain transition-all duration-1000 group-hover:scale-105",
+          variant === 'light' && "brightness-0 invert opacity-80",
+          variant === 'dark' && "brightness-0 opacity-80",
           variant === 'blue' && "brightness-0 invert"
         )}
       />
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-secondary/5 rounded-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute inset-0 bg-secondary/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
       )}
     </div>
   );

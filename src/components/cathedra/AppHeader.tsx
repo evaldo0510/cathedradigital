@@ -28,13 +28,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const isDashboard = pathname === '/';
 
   return (
-    <header className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] shadow-sm shadow-primary/[0.02]">
-      <div className="app-container flex items-center justify-between h-20 sm:h-28">
+    <header className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color]">
+      <div className="app-container flex items-center justify-between h-20 sm:h-24">
         <div className="flex items-center gap-8 min-w-0">
-          <div className="flex items-center gap-3 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary/20 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
-            <Icons.Logo className="w-10 h-10 transition-all duration-700 group-hover:scale-105" variant="blue" />
+          <div className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/10 outline-none" role="button" tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && navigate('/')} onClick={() => navigate('/')}>
+            <Icons.Logo className="w-9 h-9 transition-all duration-1000" variant="dark" />
             <div className="flex flex-col min-w-0">
-              <span className="text-xl font-display font-medium uppercase tracking-[0.4em] text-primary leading-none group-hover:tracking-[0.45em] transition-all duration-1000">Cathedra</span>
+              <span className="text-lg font-display font-light uppercase tracking-[0.5em] text-primary leading-none group-hover:tracking-[0.55em] transition-all duration-1000">Cathedra</span>
             </div>
           </div>
           

@@ -284,7 +284,7 @@ const AppLayout: React.FC = () => {
           onSignOut={signOut}
         />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 pt-28 px-6 md:px-12 lg:px-16 max-w-[1400px] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 pt-28 px-6 md:px-12 lg:px-16 max-w-[1100px] mx-auto min-h-screen")}>
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />

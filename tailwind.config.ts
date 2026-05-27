@@ -83,12 +83,12 @@ export default {
         'full': '9999px',
       },
       boxShadow: {
-        'premium': '0 4px 20px -5px rgba(0, 0, 0, 0.01)', 
-        'premium-hover': '0 10px 40px -10px rgba(0, 0, 0, 0.03)', 
-        'premium-active': '0 2px 10px -2px rgba(0, 0, 0, 0.01)',
-        'soft': '0 2px 10px -1px rgba(0, 0, 0, 0.01)',
+        'premium': 'none', 
+        'premium-hover': 'none', 
+        'premium-active': 'none',
+        'soft': '0 2px 10px -1px rgba(0, 0, 0, 0.02)',
         'inner-soft': 'inset 0 1px 2px 0 rgba(0, 0, 0, 0.01)',
-        'depth': '0 20px 50px -12px rgba(0, 0, 0, 0.05)',
+        'depth': 'none',
       },
       keyframes: {
         "accordion-down": {

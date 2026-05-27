@@ -203,7 +203,7 @@ const LazyParagraph: React.FC<{ paragraph: number; currentParagraph: number; par
       {currentParagraph === p && <div className="absolute -left-4 top-0 bottom-0 w-1 bg-primary rounded-premium hidden md:block" />}
       <div className="flex items-center gap-4 mb-6">
         <div className="flex items-center gap-2">
-          <span className="text-3xl font-serif font-bold text-primary">§{p}</span>
+          <span className="text-xl md:text-2xl font-display font-light tracking-[0.2em] text-primary/40">§{p}</span>
           <div className="flex items-center gap-1">
             <Button onClick={() => {
               toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` });

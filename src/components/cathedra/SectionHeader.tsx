@@ -21,11 +21,11 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       className
     )}>
       <div className="w-px h-16 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
-      <h2 className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+      <h2 className="text-[10px] md:text-[11px] font-medium uppercase tracking-[0.5em] text-primary/40 whitespace-nowrap">
         {title}
       </h2>
       {subtitle && (
-        <p className="font-serif italic text-muted-foreground/40 text-base md:text-xl max-w-2xl leading-relaxed tracking-wide">
+        <p className="font-serif italic text-muted-foreground/60 text-base md:text-lg max-w-2xl leading-relaxed tracking-wide">
           {subtitle}
         </p>
       )}
