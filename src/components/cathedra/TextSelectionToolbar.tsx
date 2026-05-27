@@ -114,6 +114,18 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                 <FileText className="w-3.5 h-3.5" /> Nota
               </Button>
 
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (onAskLogos) onAskLogos(selectedText);
+                  setPosition(null);
+                }}
+                className="h-9 rounded-xl px-3 text-[10px] font-bold uppercase tracking-widest gap-2 hover:bg-primary/5 flex-1 text-primary/60"
+              >
+                <Sparkles className="w-3.5 h-3.5" /> Logos
+              </Button>
+
               {activeHighlightId && onDeleteHighlight && (
                 <Button
                   variant="ghost"
