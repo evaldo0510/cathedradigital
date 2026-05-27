@@ -8,6 +8,7 @@ import { Icons } from '@/constants';
 interface ReadingProgressProps {
   progress: number;
   onScrollToTop: () => void;
+  onScrollToPercentage?: (p: number) => void;
   showResume?: boolean;
   onResumeLast?: () => void;
   label?: string;
@@ -16,6 +17,7 @@ interface ReadingProgressProps {
 export const ReadingProgress: React.FC<ReadingProgressProps> = ({ 
   progress, 
   onScrollToTop, 
+  onScrollToPercentage,
   showResume, 
   onResumeLast,
   label 
@@ -83,7 +85,17 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
               {Math.round(progress)}%
             </span>
           </div>
-          <Progress value={progress} className="h-1.5 bg-primary/5" />
+          <Progress 
+            value={progress} 
+            className="h-1.5 bg-primary/5 cursor-pointer" 
+            onClick={(e) => {
+              if (!onScrollToPercentage) return;
+              const rect = e.currentTarget.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const p = (x / rect.width) * 100;
+              onScrollToPercentage(p);
+            }}
+          />
         </div>
       </div>
     </div>

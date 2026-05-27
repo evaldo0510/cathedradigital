@@ -445,7 +445,10 @@ const Catechism: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (viewMode !== 'reading' || isNoteModalOpen) return;
+      // Ignore if user is typing or modal is open
+      const activeElement = document.activeElement;
+      const isTyping = activeElement?.tagName === 'INPUT' || activeElement?.tagName === 'TEXTAREA' || (activeElement as HTMLElement)?.isContentEditable;
+      if (isTyping || isNoteModalOpen || viewMode !== 'reading') return;
       
       // Accessibility: Reading shortcuts
       if (currentParagraph) {
@@ -468,7 +471,9 @@ const Catechism: React.FC = () => {
         }
         if (e.altKey && e.key === 'ArrowDown' && lastReadMark?.url) {
           e.preventDefault();
-          navigate(lastReadMark.url);
+          if (confirm(`Deseja retomar a leitura em: ${lastReadMark.label}?`)) {
+            navigate(lastReadMark.url);
+          }
         }
       }
     };
