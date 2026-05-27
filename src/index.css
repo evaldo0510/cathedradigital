@@ -150,6 +150,10 @@
   [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
   [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
 
+  [data-side-margins="standard"] .reader-container { max-width: 80ch !important; padding-left: 1.5rem; padding-right: 1.5rem; }
+  [data-side-margins="comfortable"] .reader-container { max-width: 65ch !important; padding-left: 4rem; padding-right: 4rem; }
+  [data-side-margins="wide"] .reader-container { max-width: 55ch !important; padding-left: 8rem; padding-right: 8rem; }
+
   .contrast-soft .reader-text { filter: contrast(0.9) brightness(1.05); }
   .contrast-high .reader-text { filter: contrast(1.2) saturate(1.1); }
 }
@@ -682,12 +686,17 @@
 }
 
 .reading-theme-night {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 70%;
-  --card: 0 0% 5%;
-  --primary: 0 0% 90%;
-  --muted-foreground: 0 0% 40%;
-  --border: 0 0% 100% / 0.1;
+  --background: 240 10% 3.9%;
+  --foreground: 45 15% 75%;
+  --card: 240 10% 5%;
+  --primary: 40 35% 60%;
+  --muted-foreground: 240 5% 45%;
+  --border: 240 5% 15%;
+  --accent: 40 35% 60% / 0.05;
+}
+
+.reading-night body {
+  transition: background-color 1.5s cubic-bezier(0.16, 1, 0.3, 1), color 1.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* --- Visual Silence & Contemplation --- */
@@ -916,3 +925,20 @@
     widows: 3;
   }
 }
+
+/* Text Highlights */
+.highlight-yellow { @apply bg-yellow-200/60 dark:bg-yellow-500/30 rounded-sm; }
+.highlight-green { @apply bg-green-200/60 dark:bg-green-500/30 rounded-sm; }
+.highlight-blue { @apply bg-blue-200/60 dark:bg-blue-500/30 rounded-sm; }
+.highlight-red { @apply bg-red-200/60 dark:bg-red-500/30 rounded-sm; }
+
+/* Silence Mode transition */
+.visual-silence main {
+  transition: padding 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reading-scroll-down.visual-silence .reading-controls-floating {
+  opacity: 0;
+  pointer-events: none;
+}
+

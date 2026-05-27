@@ -19,11 +19,14 @@ import { useNotes } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import { ReadingProgress } from './ReadingProgress';
+import { TextSelectionToolbar } from './TextSelectionToolbar';
 
 
 
 const MagisteriumViewer: React.FC = () => {
-  useReadingAutoHide();
+  const { settings, updateSettings } = useReadingSettings();
+  useReadingAutoHide(settings.visualSilence);
   const { id } = useParams<{ id: string }>();
 
   const [searchParams] = useSearchParams();
@@ -34,11 +37,11 @@ const MagisteriumViewer: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showLogosAI, setShowLogosAI] = useState(false);
-  const { settings } = useReadingSettings();
+  const [readingProgress, setReadingProgress] = useState(0);
   const { saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { notes: docNotes, deleteNote: deleteDocNote } = useNotes('magisterium');
+  const { notes: docNotes, addNote, deleteNote: deleteDocNote } = useNotes('magisterium');
   
   const currentDocNotes = useMemo(() => {
     if (!id) return [];
@@ -103,10 +106,11 @@ const MagisteriumViewer: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (id && content) {
-        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (window.scrollY / totalHeight) * 100;
+        setReadingProgress(Math.min(100, Math.max(0, progress)));
         
-        // Throttled DB save would be better, but for now we'll save on certain intervals
-        // For simplicity, we save when the effect runs or on scroll end
+        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
       }
     };
     
@@ -303,7 +307,31 @@ const MagisteriumViewer: React.FC = () => {
                 </div>
               ))}
             </div>
-          </div>
+            </div>
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                if (id) {
+                  addNote(id, 'Destacado para meditação', color);
+                }
+              }}
+              onAddNote={() => {
+                if (id) {
+                  const note = prompt('Sua reflexão sobre este documento:');
+                  if (note) {
+                    addNote(id, note, 'yellow');
+                  }
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={content.title}
+            />
         </motion.div>
       </div>
 

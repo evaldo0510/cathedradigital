@@ -35,6 +35,8 @@ import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
+import { ReadingProgress } from './ReadingProgress';
+import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes } from '@/hooks/useNotes';
 
@@ -247,7 +249,8 @@ type ViewMode = 'parts' | 'sections' | 'reading';
 
 const Catechism: React.FC = () => {
   useRenderPerf('Catechism', 15);
-  useReadingAutoHide();
+  const { settings, updateSettings } = useReadingSettings();
+  useReadingAutoHide(settings.visualSilence);
   const navigate = useNavigate();
 
   useAutoFocus();
@@ -266,12 +269,12 @@ const Catechism: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
-  const { settings } = useReadingSettings();
   const { marks, saveLastRead, getLastRead } = useReadingMarks();
   const [lastReadMark, setLastReadMark] = useState<any>(null);
   const [logosAIContext, setLogosAIContext] = useState('');
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
-  const { notes: chapterNotes, deleteNote: deleteChapterNote } = useNotes('catechism');
+  const { notes: chapterNotes, addNote, deleteNote: deleteChapterNote } = useNotes('catechism');
+  const [readingProgress, setReadingProgress] = useState(0);
   
   const currentChapterNotes = useMemo(() => {
     if (!selectedSection) return [];
@@ -548,7 +551,55 @@ const Catechism: React.FC = () => {
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
             <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
             <p className="text-sm text-muted-foreground">§{startPara} — §{endPara}</p>
-          </div>
+            </div>
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
+                  paragraph: currentParagraph
+                });
+              }}
+              onAddNote={() => {
+                const note = prompt('Sua reflexão sobre este parágrafo:');
+                if (note) {
+                  addNote(currentParagraph.toString(), note, 'yellow', {
+                    paragraph: currentParagraph
+                  });
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={`Catecismo §${currentParagraph}`}
+            />
+            
+            <TextSelectionToolbar 
+              onHighlight={(color) => {
+                addNote(currentParagraph.toString(), 'Destacado para meditação', color, {
+                  paragraph: currentParagraph
+                });
+              }}
+              onAddNote={() => {
+                const note = prompt('Sua reflexão sobre este parágrafo:');
+                if (note) {
+                  addNote(currentParagraph.toString(), note, 'yellow', {
+                    paragraph: currentParagraph
+                  });
+                }
+              }}
+            />
+
+            <ReadingProgress 
+              progress={readingProgress}
+              onScrollToTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              showResume={lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search}
+              onResumeLast={() => navigate(lastReadMark.url)}
+              label={`Catecismo §${currentParagraph}`}
+            />
 
           <div className="flex items-center gap-2">
             {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
