@@ -276,7 +276,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       );
                     })}
                   </ul>
-                </div>
+                </motion.div>
               )))}
             </nav>
 
