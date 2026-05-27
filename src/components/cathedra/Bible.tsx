@@ -1062,18 +1062,27 @@ const Bible: React.FC = () => {
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-4">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
+              const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
+              
               return (
                 <motion.button 
                   key={ch} 
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
-                  className={`aspect-square flex items-center justify-center rounded-full border text-sm font-bold transition-all
+                  className={`aspect-square flex flex-col items-center justify-center rounded-2xl border text-sm font-bold transition-all relative group
                     ${isRead 
                       ? 'bg-primary text-primary-foreground border-primary' 
-                      : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
+                      : isLastReadChapter
+                        ? 'bg-secondary/10 border-secondary text-primary'
+                        : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
                 >
-                  {ch}
+                  <span>{ch}</span>
+                  {isLastReadChapter && (
+                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
+                      Retomar
+                    </span>
+                  )}
                 </motion.button>
               );
             })}
