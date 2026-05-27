@@ -33,7 +33,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
             </p>
           )}
           {title && (
-            <h1 className="text-5xl md:text-7xl font-display font-medium text-primary tracking-tighter">
+            <h1 className="text-4xl md:text-6xl font-display font-light text-primary tracking-widest uppercase">
               {title}
             </h1>
           )}

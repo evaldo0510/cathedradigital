@@ -49,7 +49,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         animate="visible"
         className="mb-12 md:mb-16"
       >
-        <h1 className="text-6xl md:text-8xl lg:text-[7rem] font-display font-medium text-primary leading-tight tracking-tighter">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light text-primary leading-tight tracking-[0.05em] uppercase">
           Cathedra
         </h1>
       </motion.div>
@@ -60,7 +60,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.2 }}
-        className="max-w-xl mx-auto font-serif text-xl md:text-2xl text-foreground/20 italic leading-relaxed mb-16 md:mb-24"
+        className="max-w-xl mx-auto font-serif text-lg md:text-xl text-foreground/40 italic leading-relaxed mb-16 md:mb-24"
       >
         A jornada espiritual guiada pela Tradição.
       </motion.p>
