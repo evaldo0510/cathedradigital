@@ -106,10 +106,11 @@ const MagisteriumViewer: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       if (id && content) {
-        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (window.scrollY / totalHeight) * 100;
+        setReadingProgress(Math.min(100, Math.max(0, progress)));
         
-        // Throttled DB save would be better, but for now we'll save on certain intervals
-        // For simplicity, we save when the effect runs or on scroll end
+        localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
       }
     };
     
@@ -311,18 +312,14 @@ const MagisteriumViewer: React.FC = () => {
             <TextSelectionToolbar 
               onHighlight={(color) => {
                 if (id) {
-                  addNote(id, 'Destacado para meditação', color, {
-                    content_id: id
-                  });
+                  addNote(id, 'Destacado para meditação', color);
                 }
               }}
               onAddNote={() => {
                 if (id) {
                   const note = prompt('Sua reflexão sobre este documento:');
                   if (note) {
-                    addNote(id, note, 'yellow', {
-                      content_id: id
-                    });
+                    addNote(id, note, 'yellow');
                   }
                 }
               }}
