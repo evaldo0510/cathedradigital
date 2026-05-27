@@ -226,18 +226,22 @@ const Relatio: React.FC<RelatioProps> = ({
 
             {/* Dynamic Connections */}
             {connections.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {connections.map((item) => {
                   const isFav = isFavorite('relatio', item.title);
+                  // Calculate connection strength based on matches or metadata
+                  const strength = (item as any).relevanceScore || 0;
+                  const strengthLabel = strength > 20 ? 'Conexão Profunda' : strength > 10 ? 'Conexão Clara' : 'Vínculo Sutil';
                   
                   return (
                     <motion.div
                       key={item.id}
-                      whileHover={{ y: -1 }}
+                      whileHover={{ y: -2 }}
+                      transition={{ duration: 0.5 }}
                       className="group relative"
                     >
                       <Card 
-                        className="p-4 bg-card/30 backdrop-blur-sm border border-border/20 group-hover:border-primary/20 transition-all rounded-premium shadow-none cursor-pointer"
+                        className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden"
                         onClick={() => {
                           if (item.type === 'bible') {
                             const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
@@ -256,52 +260,86 @@ const Relatio: React.FC<RelatioProps> = ({
                           }
                         }}
                       >
-                        <div className="flex gap-3">
-                          <div className="w-8 h-8 rounded-premium bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
-                            {item.type === 'bible' && <Icons.Cross className="w-4 h-4" />}
-                            {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" />}
-                            {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" />}
-                            {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-4 h-4" />}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center justify-between">
-                              <div className="flex flex-col">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/[0.01] rounded-full -mr-16 -mt-16 group-hover:bg-primary/[0.03] transition-colors duration-1000" />
+                        
+                        <div className="flex flex-col h-full relative z-10">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-premium bg-primary/[0.03] border border-primary/[0.05] flex-shrink-0 flex items-center justify-center text-primary/40 group-hover:text-primary group-hover:bg-primary/[0.05] transition-all duration-700">
+                                {item.type === 'bible' && <Icons.Bible className="w-4 h-4" strokeWidth={1} />}
+                                {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" strokeWidth={1} />}
+                                {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" strokeWidth={1} />}
+                                {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-4 h-4" strokeWidth={1} />}
+                              </div>
+                              <div className="space-y-0.5">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors">
                                   {item.type === 'bible' ? 'Escritura' : 
                                    item.type === 'catechism' ? 'Catecismo' : 
                                    item.type === 'magisterium' ? 'Magistério' : 
-                                   item.type === 'saint' ? 'Santos' : 'Jornada'}
+                                   item.type === 'saint' ? 'Tradição' : 'Jornada'}
                                 </p>
-                                <span className="text-[8px] text-muted-foreground/50 uppercase tracking-tighter opacity-70 mt-0.5">
-                                  {item.reason}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
+                                    {item.reason}
+                                  </span>
+                                  <div className="w-1 h-1 rounded-full bg-primary/10" />
+                                  <span className="text-[7px] font-black uppercase tracking-widest text-secondary/60">
+                                    {strengthLabel}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                            <h4 className="text-sm font-bold font-serif truncate mt-0.5">{item.title}</h4>
-                            <p className="text-xs text-muted-foreground line-clamp-1 mt-1 font-serif italic">
+                            
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              {onSelectLogosQuery && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary"
+                                  title="Pedir explicação à Logos IA"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSelectLogosQuery(`Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}".`);
+                                  }}
+                                >
+                                  <Icons.Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="w-7 h-7 rounded-full hover:bg-primary/5"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleFavorite({
+                                    type: 'relatio',
+                                    title: item.title,
+                                    content: item.content_text,
+                                  });
+                                  toast.success(isFav ? 'Removido dos favoritos' : 'Conexão salva', {
+                                    description: item.title,
+                                    icon: <Icons.Star className="w-4 h-4 fill-secondary text-secondary" />
+                                  });
+                                }}
+                              >
+                                <Icons.Star className={cn("w-3.5 h-3.5", isFav ? "fill-secondary text-secondary" : "text-primary/20")} strokeWidth={1.5} />
+                              </Button>
+                            </div>
+                          </div>
+                          
+                          <div className="flex-1 space-y-2">
+                            <h4 className="text-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
+                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
                             </p>
                           </div>
+                          
+                          <div className="mt-4 pt-4 border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/30">Explorar Conexão</span>
+                            <Icons.ArrowRight className="w-3 h-3 text-primary/30" strokeWidth={1.5} />
+                          </div>
                         </div>
                       </Card>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="absolute top-2 right-2 p-1 h-auto opacity-0 group-hover:opacity-100 transition-opacity rounded-full hover:bg-primary/10"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleFavorite({
-                            type: 'relatio',
-                            title: item.title,
-                            content: item.content_text,
-                          });
-                          toast.success(isFav ? 'Removido dos favoritos' : 'Conexão salva nos favoritos', {
-                            description: item.title
-                          });
-                        }}
-                      >
-                        <Icons.Star className={cn("w-3 h-3", isFav ? "fill-primary text-primary" : "text-muted-foreground")} />
-                      </Button>
                     </motion.div>
                   );
                 })}
