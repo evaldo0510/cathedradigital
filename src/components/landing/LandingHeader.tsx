@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
@@ -59,12 +60,9 @@ const LandingHeader = () => {
       }`}
     >
       <div className="app-container flex items-center justify-between">
-        <div 
+        <Link 
+          to={AppRoute.HOME}
           className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
-          onClick={() => navigate(AppRoute.HOME)}
-          onKeyDown={(e) => e.key === 'Enter' && navigate(AppRoute.HOME)}
-          tabIndex={0}
-          role="button"
           aria-label="Cathedra - Página Inicial"
         >
           <Icons.Logo className="w-12 h-12 transition-all duration-1000 group-hover:scale-105" variant="gold" />
@@ -72,7 +70,7 @@ const LandingHeader = () => {
             <h2 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h2>
             <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-1">Digital Sanctuarium</span>
           </div>
-        </div>
+        </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-6">
