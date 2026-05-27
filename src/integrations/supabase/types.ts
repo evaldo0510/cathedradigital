@@ -1233,6 +1233,30 @@ export type Database = {
         }
         Relationships: []
       }
+      rls_test_results: {
+        Row: {
+          details: string | null
+          id: string
+          run_at: string
+          status: string
+          test_name: string
+        }
+        Insert: {
+          details?: string | null
+          id?: string
+          run_at?: string
+          status: string
+          test_name: string
+        }
+        Update: {
+          details?: string | null
+          id?: string
+          run_at?: string
+          status?: string
+          test_name?: string
+        }
+        Relationships: []
+      }
       saints: {
         Row: {
           bible_refs: Json | null
@@ -1305,6 +1329,33 @@ export type Database = {
           updated_at?: string | null
           virtues?: string[] | null
           works?: Json | null
+        }
+        Relationships: []
+      }
+      security_audit_logs: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_type: string
+          id: string
+          metadata: Json | null
+          severity: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_type: string
+          id?: string
+          metadata?: Json | null
+          severity?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          metadata?: Json | null
+          severity?: string
         }
         Relationships: []
       }
