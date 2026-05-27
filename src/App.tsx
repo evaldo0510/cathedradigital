@@ -371,9 +371,18 @@ const AppLayout: React.FC = () => {
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
 
-              {/* Admin */}
-              <Route path="/admin/*" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><AdminDashboard /></AdminGuard></Suspense>} />
-              <Route path="/admin/security" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><SecurityDashboard /></AdminGuard></Suspense>} />
+              {/* Admin Routes with dedicated Layout */}
+              <Route path="/admin/*" element={
+                <Suspense fallback={<LoadingFallback />}>
+                  <AdminGuard>
+                    <Routes>
+                      <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/security" element={<SecurityDashboard />} />
+                    </Routes>
+                  </AdminGuard>
+                </Suspense>
+              } />
+
               <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemPlayground /></Suspense>} />
 
 
