@@ -240,7 +240,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={clearHistory} 
+                      onClick={() => clearHistory()} 
+
                       className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
                       title="Limpar histórico"
                     >
@@ -402,7 +403,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={clearHistory} 
+                      onClick={() => clearHistory()} 
                       className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
                       title="Limpar histórico"
                     >
