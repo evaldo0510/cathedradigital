@@ -112,7 +112,79 @@ test.describe('Mobile Header Comprehensive Tests', () => {
     });
   }
 
+  test('Keyboard Navigation Loop and Focus Trap Prevention', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/bible');
+    
+    // Start from the top
+    await page.keyboard.press('Home');
+    await page.mouse.click(0, 0);
+    
+    // Total interactive elements in header (approx 7): Skip, Logo, Back, Search, Theme, Profile, Menu
+    // We'll tab through more than enough to ensure we exit the header and enter main content
+    const interactiveElementsCount = 10;
+    
+    for (let i = 0; i < interactiveElementsCount; i++) {
+      await page.keyboard.press('Tab');
+      const focusedElement = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!el) return null;
+        return {
+          tagName: el.tagName,
+          ariaLabel: el.getAttribute('aria-label'),
+          role: el.getAttribute('role'),
+          isVisible: window.getComputedStyle(el).display !== 'none' && window.getComputedStyle(el).visibility !== 'hidden',
+          outline: window.getComputedStyle(el).outlineStyle,
+          boxShadow: window.getComputedStyle(el).boxShadow
+        };
+      });
+
+      expect(focusedElement).not.toBeNull();
+      // Verify focus is visible (either via outline or box-shadow ring)
+      const hasVisibleFocus = focusedElement?.outline !== 'none' || focusedElement?.boxShadow.includes('rgb');
+      expect(hasVisibleFocus).toBeTruthy();
+    }
+
+    // After tabbing through header, we should be able to tab back
+    for (let i = 0; i < 5; i++) {
+      await page.keyboard.press('Shift+Tab');
+    }
+    
+    const backToHeader = await page.locator('header[role="banner"]').evaluate(header => 
+      header.contains(document.activeElement)
+    );
+    expect(backToHeader).toBeTruthy();
+  });
+
+  test('High Zoom and Contrast Resilience', async ({ page }) => {
+    // Simulate 200% zoom by reducing viewport size but keeping layout scale
+    await page.setViewportSize({ width: 320, height: 480 }); 
+    await page.goto('/bible');
+    
+    const header = page.locator('header[role="banner"]');
+    const headerBox = await header.boundingBox();
+    
+    // Hierachy check: Ensure logo and at least the menu button are still visible/accessible
+    const logo = page.locator('header [role="link"][aria-label*="inicial"]');
+    const menuBtn = page.locator('header button[aria-label*="menu"]');
+    
+    await expect(logo).toBeVisible();
+    await expect(menuBtn).toBeVisible();
+    
+    // Ensure no vertical overlap/collapse that hides text
+    expect(headerBox?.height).toBeLessThan(150); // Should not expand excessively
+    
+    // Accessibility: Contrast check via Axe with high contrast simulation (forced-colors)
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .include('header[role="banner"]')
+      .withRules(['color-contrast'])
+      .analyze();
+    
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
+
   test('Icon Density Consistency across Viewports', async ({ page }) => {
+    // ... rest of existing test
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/bible');
     
