@@ -46,7 +46,7 @@ export const ReadingProgressSection: React.FC = () => {
                 Retomar
               </p>
             </div>
-            <div className="w-14 h-14 rounded-full border border-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium-sm">
+            <div className="w-14 h-14 rounded-full border border-primary/[0.03] flex items-center justify-center text-primary/30 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium-sm">
               <ArrowRight className="w-5 h-5" />
             </div>
           </div>
