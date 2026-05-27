@@ -41,17 +41,27 @@ test.describe('Mobile Header Comprehensive Tests', () => {
         .include('header[role="banner"]')
         .analyze();
       
-      // Save report and attach to Playwright report
+      // Save report and attach to Playwright report for CI inspection
       const reportName = `axe-header-${vp.name.replace(/\s+/g, '-').toLowerCase()}.json`;
       const reportPath = path.join(reportDir, reportName);
-      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
       
-      await test.info().attach(reportName, {
+      // Ensure specific violation details are captured in the JSON
+      fs.writeFileSync(reportPath, JSON.stringify({
+        viewport: vp,
+        violations: accessibilityScanResults.violations,
+        incomplete: accessibilityScanResults.incomplete,
+        timestamp: new Date().toISOString()
+      }, null, 2));
+      
+      await test.info().attach(`Axe Report - ${vp.name}`, {
         path: reportPath,
         contentType: 'application/json',
       });
 
-      // Check for violations
+      // Assert zero violations
+      if (accessibilityScanResults.violations.length > 0) {
+        console.error(`A11y violations found on ${vp.name}:`, JSON.stringify(accessibilityScanResults.violations, null, 2));
+      }
       expect(accessibilityScanResults.violations).toEqual([]);
 
       // 3. Skip Link Functionality
