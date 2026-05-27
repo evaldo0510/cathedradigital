@@ -15,14 +15,14 @@
     --secondary: 45 64% 52%;     /* #D4AF37 Gold */
     --secondary-foreground: 222 47% 11%;
     --muted: 45 20% 90%;
-    --muted-foreground: 222 20% 32%; /* Darkened from 35% for better contrast against cream background */
+    --muted-foreground: 222 20% 32%; 
     --accent: 45 64% 52% / 0.05;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 222 47% 11% / 0.05;
-    --input: 222 47% 11% / 0.05;
-    --ring: 222 47% 11% / 0.1;
+    --border: 222 47% 11% / 0.03; /* Softened border globally */
+    --input: 222 47% 11% / 0.03;
+    --ring: 222 47% 11% / 0.05;
     --radius: 0.75rem;
     --sidebar-background: 45 42% 98%;
     --sidebar-foreground: 222 47% 11%;
@@ -30,7 +30,7 @@
     --sidebar-primary-foreground: 45 42% 96%;
     --sidebar-accent: 45 42% 94%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 222 47% 11% / 0.05;
+    --sidebar-border: 222 47% 11% / 0.03;
     --sidebar-ring: 222 47% 11%;
   }
 
@@ -464,21 +464,21 @@
 
   /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 h-14 font-bold uppercase tracking-[0.25em] text-[10px] flex items-center justify-center gap-4 active:scale-[0.96] disabled:opacity-30 disabled:cursor-not-allowed;
+    @apply relative overflow-hidden px-10 py-4 h-14 font-bold uppercase tracking-[0.3em] text-[9px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent;
     border-radius: var(--btn-radius);
-    transition: all var(--transition-fast);
+    transition: all var(--transition-subtle);
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:shadow-premium-hover;
+    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-premium;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:shadow-premium-hover;
+    @apply btn-premium bg-secondary text-secondary-foreground hover:bg-secondary/90 hover:shadow-premium;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border border-border/20 text-primary hover:border-primary/10 hover:bg-primary/[0.005];
+    @apply btn-premium bg-transparent border-primary/10 text-primary/60 hover:border-primary/20 hover:text-primary hover:bg-primary/[0.01];
   }
 }
 
