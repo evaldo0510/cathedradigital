@@ -89,8 +89,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     ...(user?.role === 'admin' ? [{
       label: t('admin'),
       items: [
-        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
-        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock className="w-5 h-5 opacity-70" /> },
+        { label: 'Painel Administrativo', path: AppRoute.ADMIN, icon: <Icons.ShieldCheck /> },
+        { label: 'Segurança & Logs', path: '/admin/security', icon: <Icons.Lock /> },
 
       ]
 
@@ -98,75 +98,75 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     {
       label: 'Hoje',
       items: [
-        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun className="w-5 h-5 opacity-70" /> },
-        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
-        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
-        { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award className="w-5 h-5 opacity-70" /> },
+        { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun /> },
+        { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen /> },
+        { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart /> },
+        { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award /> },
       ]
     },
     {
       label: 'Portal Sagrado',
       items: [
-        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible className="w-5 h-5 opacity-70" /> },
-        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism className="w-5 h-5 opacity-70" /> },
-        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-5 h-5 opacity-70" /> },
-        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
+        { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible /> },
+        { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
+        { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText /> },
+        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
       ]
     },
     {
       label: 'Biblioteca',
       items: [
-        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library className="w-5 h-5 opacity-70" /> },
-        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes className="w-5 h-5 opacity-70" /> },
-        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary className="w-5 h-5 opacity-70" /> },
-        { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type className="w-5 h-5 opacity-70" /> },
-        { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather className="w-5 h-5 opacity-70" /> },
-        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass className="w-5 h-5 opacity-70" /> },
+        { label: 'Biblioteca', path: AppRoute.BIBLIOTECA, icon: <Icons.Library /> },
+        { label: 'Temas', path: AppRoute.TEMAS, icon: <Icons.Themes /> },
+        { label: 'Enciclopédia', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Glossary /> },
+        { label: 'Glossário', path: AppRoute.GLOSSARY, icon: <Icons.Type /> },
+        { label: 'Aquinas Opera', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Feather /> },
+        { label: 'Guia de Módulos', path: AppRoute.MODULES_GUIDE, icon: <Icons.Compass /> },
       ]
     },
     {
       label: 'Santos & Devoções',
       items: [
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users className="w-5 h-5 opacity-70" /> },
-        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator className="w-5 h-5 opacity-70" /> },
-        { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
-        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
+        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users /> },
+        { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator /> },
+        { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles /> },
+        { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck /> },
       ]
     },
     {
       label: 'Liturgia & Oração',
       items: [
-        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.ScrollText className="w-5 h-5 opacity-70" /> },
-        { label: 'Calendário', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.Calendar className="w-5 h-5 opacity-70" /> },
-        { label: 'Missal', path: AppRoute.MISSAL, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
-        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock className="w-5 h-5 opacity-70" /> },
-        { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
-        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-5 h-5 opacity-70" /> },
-        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music className="w-5 h-5 opacity-70" /> },
-        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Sparkles className="w-5 h-5 opacity-70" /> },
-        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen className="w-5 h-5 opacity-70" /> },
-        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather className="w-5 h-5 opacity-70" /> },
+        { label: 'Liturgia', path: AppRoute.LITURGIA, icon: <Icons.ScrollText /> },
+        { label: 'Calendário', path: AppRoute.LITURGICAL_CALENDAR, icon: <Icons.Calendar /> },
+        { label: 'Missal', path: AppRoute.MISSAL, icon: <Icons.BookOpen /> },
+        { label: 'Breviário', path: AppRoute.BREVIARY, icon: <Icons.Clock /> },
+        { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart /> },
+        { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross /> },
+        { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music /> },
+        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Sparkles /> },
+        { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen /> },
+        { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather /> },
       ]
     },
     {
       label: 'Jornadas',
       items: [
-        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys className="w-5 h-5 opacity-70" /> },
+        { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys /> },
       ]
     },
     {
       label: 'Comunidade',
       items: [
-        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users className="w-5 h-5 opacity-70" /> },
-        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart className="w-5 h-5 opacity-70" /> },
-        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck className="w-5 h-5 opacity-70" /> },
+        { label: 'Comunidade', path: AppRoute.COMMUNITY, icon: <Icons.Users /> },
+        { label: 'Parceiros', path: AppRoute.PARTNERS, icon: <Icons.Heart /> },
+        { label: 'Transparência', path: AppRoute.TRANSPARENCY, icon: <Icons.ShieldCheck /> },
       ]
     },
     {
       label: 'Conta',
       items: [
-        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award className="w-5 h-5 opacity-70" /> },
-        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info className="w-5 h-5 opacity-70" /> },
+        { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
+        { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info /> },
       ]
     }
 
@@ -284,7 +284,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     className="h-12 rounded-xl border-primary/5 bg-muted/30 flex items-center justify-center gap-2 transition-all hover:bg-primary/5 hover:border-primary/10"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
+                    {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
                     <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
@@ -295,7 +295,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       isHighContrast ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-4 h-4" />
+                    <Icons.ShieldCheck />
                     <span className="text-[9px] font-bold uppercase tracking-widest">Contraste</span>
                   </Button>
                 </div>
@@ -308,7 +308,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       isSpeaking ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.Message className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4 opacity-40" />}
+                    {isSpeaking ? <Icons.MessageCircle className="animate-pulse" /> : <Icons.Volume2 />}
                     <span className="text-[9px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar Áudio' : 'Ouvir Página'}</span>
                   </Button>
                 )}

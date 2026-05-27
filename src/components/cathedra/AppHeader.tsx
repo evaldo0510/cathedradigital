@@ -30,41 +30,41 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="border-b border-primary/5 bg-background/40 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
+        className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide"
         role="banner"
       >
-        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[120px] md:h-28 py-6 md:py-0 gap-6 md:gap-0 landscape:min-h-[80px] landscape:py-2">
-
+        <div className="max-w-[1800px] mx-auto px-6 md:px-12 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[140px] md:h-28 py-8 md:py-0 gap-8 md:gap-0 landscape:min-h-[90px] landscape:py-3">
 
           {/* Logo Section - Centralized on Mobile */}
           <div 
-            className="flex items-center justify-center md:justify-start landscape:justify-start gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto landscape:w-auto p-2" 
-
+            className="flex flex-col items-center justify-center md:flex-row md:justify-start landscape:flex-row landscape:justify-start gap-4 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto landscape:w-auto p-2" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-10 h-10 md:w-11 md:h-11 transition-all duration-1000" variant="dark" />
-            <div className="flex flex-col min-w-0">
-              <span className="text-lg md:text-xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.65em] transition-all duration-1000">Cathedra</span>
+            <Icons.Logo className="w-12 h-12 md:w-11 md:h-11 transition-all duration-1000 scale-110 md:scale-100" variant="dark" />
+            <div className="flex flex-col items-center md:items-start min-w-0">
+              <span className="text-xl md:text-xl font-display font-light uppercase tracking-[0.7em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.8em] transition-all duration-1000">Cathedra</span>
+              <span className="text-[7px] md:text-[8px] uppercase tracking-[0.4em] text-muted-foreground/30 mt-1">Biblioteca Digital</span>
             </div>
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-between md:justify-end gap-4 sm:gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0 landscape:pt-0 landscape:border-none">
-            <div className="flex items-center gap-2 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-3">
+          <div className="flex items-center justify-center md:justify-end gap-6 sm:gap-8 w-full md:w-auto border-t border-primary/5 md:border-none pt-8 md:pt-0 landscape:pt-0 landscape:border-none">
+            <div className="flex items-center gap-4 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-4">
+
 
               {!isDashboard && (
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+                  <Icons.ChevronLeft className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
@@ -72,20 +72,23 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 variant="outline"
                 size="icon"
                 onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label={t('search') || 'Buscar'}
               >
-                <Icons.Search className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                <Icons.Search className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
               </Button>
 
               <Button
                 variant="outline"
                 size="icon"
                 onClick={onToggleDark}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
               >
-                {isDark ? <Icons.Sun className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" /> : <Icons.Moon className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />}
+                {isDark ? 
+                  <Icons.Sun className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" /> : 
+                  <Icons.Moon className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
+                }
               </Button>
 
               {user ? (
@@ -93,19 +96,19 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(AppRoute.PROFILE)}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 overflow-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.02]"
                   aria-label={t('profile') || 'Meu Perfil'}
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
                   ) : (
-                    <Icons.User className="w-5 h-5 opacity-70" />
+                    <Icons.User className="w-[18px] h-[18px] opacity-50" />
                   )}
                 </Button>
               ) : (
                 <Button 
                   onClick={() => navigate(AppRoute.LOGIN)} 
-                  className="btn-premium-primary h-10 px-5 md:px-6 rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary"
+                  className="h-11 px-6 rounded-full text-[9px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-lg shadow-primary/5"
                 >
                   {t('enter')}
                 </Button>
@@ -115,10 +118,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 variant="outline"
                 size="icon"
                 onClick={onOpenSidebar}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-primary/10 transition-all hover:bg-primary/5 group focus-visible:ring-2 focus-visible:ring-primary"
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label="Abrir menu lateral"
               >
-                <Icons.Menu className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
+                <Icons.Menu className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
               </Button>
             </div>
 

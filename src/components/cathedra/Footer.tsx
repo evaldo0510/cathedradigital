@@ -192,9 +192,9 @@ const Footer: React.FC = React.memo(() => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: <Icons.Instagram className="w-5 h-5" />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
-                { icon: <Icons.Youtube className="w-5 h-5" />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
-                { icon: <Icons.Whatsapp className="w-5 h-5" />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
+                { icon: <Icons.Instagram />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
+                { icon: <Icons.Youtube />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
+                { icon: <Icons.Whatsapp />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
 
               ].map((social, i) => (
                 <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-10 h-10 p-0 flex items-center justify-center">
@@ -258,7 +258,7 @@ const Footer: React.FC = React.memo(() => {
               {dioceseUrl && (
                 <Button variant="link" size="sm" asChild className="inline-flex items-center gap-2 mt-3 p-0 h-auto text-xs text-primary hover:underline">
                   <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
-                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3" />
+                    {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-3 h-3 opacity-100" />
                   </a>
                 </Button>
               )}
@@ -287,7 +287,7 @@ const Footer: React.FC = React.memo(() => {
                   {isSubmitting ? (
                     <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
                   ) : (
-                    <Icons.ArrowDown className="w-4 h-4 -rotate-90" />
+                    <Icons.ArrowDown className="-rotate-90 opacity-100 text-primary-foreground" />
                   )}
                 </Button>
               </form>
@@ -340,7 +340,7 @@ const Footer: React.FC = React.memo(() => {
               className="p-2.5 bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
-              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
+              <Icons.ArrowDown className="rotate-180 opacity-100 group-hover:text-primary-foreground" />
             </Button>
 
           </div>
