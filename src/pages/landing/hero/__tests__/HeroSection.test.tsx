@@ -5,8 +5,10 @@ import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import * as axeMatchers from 'vitest-axe';
 import { axe } from 'vitest-axe';
+import { MotionConfig } from 'framer-motion';
 
-expect.extend(axeMatchers);
+// Manual matchers extension to avoid type issues with vitest-axe exports
+expect.extend(axeMatchers as any);
 
 // Mocks
 vi.mock('@/hooks/useAuth', () => ({
@@ -63,6 +65,7 @@ describe('HeroSection Advanced Validation', () => {
   it('should have no accessibility violations (WCAG 2.1 AA)', async () => {
     const { container } = renderHero();
     const results = await axe(container);
+    // Use string check if types are failing
     expect(results).toHaveNoViolations();
   });
 
@@ -70,12 +73,7 @@ describe('HeroSection Advanced Validation', () => {
     renderHero();
     const buttons = screen.getAllByRole('button');
     
-    // Check if buttons are in focusable order
-    buttons[0].focus();
-    expect(document.activeElement).toBe(buttons[0]);
-    
-    fireEvent.keyDown(document.activeElement!, { key: 'Tab' });
-    // Note: RTL doesn't actually move focus with Tab, we test focusability and labels
+    // Check if buttons are focusable and have correct attributes
     buttons.forEach(btn => {
       btn.focus();
       expect(document.activeElement).toBe(btn);
@@ -89,12 +87,10 @@ describe('HeroSection Advanced Validation', () => {
     mockMatchMedia(true);
     const { container } = renderHero(true);
     
-    // Check if motion styles are suppressed (framer-motion handles this via MotionConfig)
     const content = container.querySelector('.relative.z-10');
     expect(content).toBeInTheDocument();
     
-    // In a real browser, we would check computed styles, here we check the implementation property
-    // HeroContent uses useReducedMotion() which we verify via rendering snapshot
+    // Snapshot to ensure layout remains consistent without animations
     expect(container).toMatchSnapshot();
   });
 
