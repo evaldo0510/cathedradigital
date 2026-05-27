@@ -5,6 +5,7 @@ import { Icons } from '@/constants';
 import { Highlighter, FileText } from 'lucide-react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
+import { toast } from 'sonner';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
