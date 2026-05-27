@@ -399,6 +399,74 @@ const ReadingControlPanel: React.FC = () => {
                 ));
               })()}
             </div>
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Comportamento de Retomada</p>
+            <div className="flex bg-muted/50 rounded-full p-1 gap-1">
+              {(['always', 'confirm', 'once', 'never'] as const).map((b) => (
+                <button
+                  key={b}
+                  onClick={() => updateSettings({ resumeBehavior: b })}
+                  className={`flex-1 py-1.5 text-[8px] font-black uppercase tracking-widest rounded-full transition-all ${
+                    settings.resumeBehavior === b ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/60 hover:text-primary'
+                  }`}
+                  title={b === 'always' ? 'Sempre' : b === 'confirm' ? 'Confirmar' : b === 'once' ? 'Uma vez' : 'Nunca'}
+                >
+                  {b === 'always' ? 'Sim' : b === 'confirm' ? 'Conf' : b === 'once' ? '1x' : 'Não'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Personalizar Atalhos</p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'highlight', label: 'Destaque', icon: <Icons.Highlighter className="w-3 h-3" /> },
+                { id: 'note', label: 'Nota', icon: <Icons.FileText className="w-3 h-3" /> },
+              ].map((s) => (
+                <div key={s.id} className="flex flex-col gap-1">
+                  <p className="text-[8px] font-bold uppercase text-muted-foreground/40 px-1">{s.label}</p>
+                  <div className="flex items-center gap-2 p-2 rounded-xl bg-muted/30 border border-transparent">
+                    {s.icon}
+                    <input 
+                      type="text"
+                      maxLength={1}
+                      value={settings.shortcuts[s.id as keyof typeof settings.shortcuts]}
+                      onChange={(e) => updateSettings({ shortcuts: { ...settings.shortcuts, [s.id]: e.target.value.toLowerCase() } })}
+                      className="w-full bg-transparent text-[10px] font-black uppercase text-primary border-none focus:ring-0 p-0 text-center"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <DropdownMenuSeparator className="bg-border/20" />
+          
+          <div className="space-y-4">
+            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Marcas de Leitura</p>
+            <div className="max-h-40 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {(() => {
+                const marksData = JSON.parse(localStorage.getItem('cathedra_reading_marks') || '{}');
+                const entries = Object.entries(marksData);
+                if (entries.length === 0) return <p className="text-[10px] text-muted-foreground italic text-center py-2">Nenhuma marca recente</p>;
+                return entries.map(([key, mark]: [string, any]) => (
+                  <button
+                    key={key}
+                    onClick={() => navigate(mark.url)}
+                    className="w-full text-left p-2.5 rounded-xl bg-muted/20 hover:bg-primary/5 border border-transparent hover:border-primary/10 transition-all group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icons.Bookmark className="w-3 h-3 text-primary/40 group-hover:text-primary transition-colors" />
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-bold truncate">{mark.label}</p>
+                        <p className="text-[9px] text-muted-foreground">{new Date(mark.timestamp).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                  </button>
+                ));
+              })()}
+            </div>
           </div>
         </DropdownMenuContent>
 
