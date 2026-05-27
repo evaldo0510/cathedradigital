@@ -171,7 +171,7 @@ const Footer: React.FC = React.memo(() => {
   const dioceseUrl = DIOCESE_URLS[selectedDiocese];
 
   return (
-    <footer className="mt-auto w-full border-t border-border/10 pt-16 lg:pt-32 pb-24 lg:pb-16 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }}>
+    <footer className="mt-auto w-full border-t border-border/10 pt-16 lg:pt-32 pb-24 lg:pb-16 bg-background relative overflow-hidden contain-layout" style={{ contentVisibility: 'auto', containIntrinsicSize: '0 420px' }} aria-label="Rodapé">
       <div className="absolute inset-0 pointer-events-none opacity-[0.01]" />
       
       <div className="app-container relative z-10">
@@ -209,7 +209,7 @@ const Footer: React.FC = React.memo(() => {
             <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🏛️</span> Santa Sé
             </h4>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-4" role="list">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
                   <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
@@ -227,7 +227,7 @@ const Footer: React.FC = React.memo(() => {
             <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-6 flex items-center gap-2">
               <span className="text-lg">🇧🇷</span> CNBB
             </h4>
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-4" role="list">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
                   <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-2 group decoration-transparent">
@@ -310,7 +310,7 @@ const Footer: React.FC = React.memo(() => {
             </p>
           </div>
           <div className="flex items-center gap-8">
-            <nav className="flex items-center">
+            <nav className="flex items-center" aria-label="Links institucionais">
               {[
                 { label: t('about') || 'Sobre', route: AppRoute.ABOUT }, 
                 { label: t('partners') || 'Parceiros', route: AppRoute.PARTNERS },
