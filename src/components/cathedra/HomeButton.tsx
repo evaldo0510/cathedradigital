@@ -35,7 +35,7 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
       <CathedraButton
         ref={ref}
         variant={vMap[variant as string] || 'primary'}
-        size={size === 'lg' ? 'xl' : (sMap[size as string] || 'md')}
+        size={size === 'lg' ? 'lg' : (sMap[size as string] || 'md')}
         className={className}
         {...(filteredProps as any)}
       >
