@@ -100,14 +100,21 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
                   <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
                 </div>
-                <p className="text-sm text-foreground/80 font-serif line-clamp-2"
-                  dangerouslySetInnerHTML={{
-                    __html: r.text.replace(
-                      new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'),
-                      '<mark class="bg-primary/20 text-primary font-bold rounded px-0.5">$1</mark>'
-                    ),
-                  }}
-                />
+                <p className="text-sm text-foreground/80 font-serif line-clamp-2">
+                  {(() => {
+                    const plain = (r.text || '').replace(/<[^>]+>/g, '');
+                    if (!query) return plain;
+                    const safe = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const parts = plain.split(new RegExp(`(${safe})`, 'gi'));
+                    return parts.map((part, idx) =>
+                      idx % 2 === 1 ? (
+                        <mark key={idx} className="bg-primary/20 text-primary font-bold rounded px-0.5">{part}</mark>
+                      ) : (
+                        <span key={idx}>{part}</span>
+                      )
+                    );
+                  })()}
+                </p>
               </Button>
             ))}
             {visibleCount < results.length && (
