@@ -55,6 +55,39 @@ const ItinerariumDetailPage: React.FC = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (!user || !id) return;
+
+    const channel = supabase
+      .channel('itinerarium_detail_sync')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'itineraria_progress',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setCompletedSteps(prev => new Set([...Array.from(prev), payload.new.step_id]));
+            if (payload.new.reflection) {
+              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            }
+          } else if (payload.eventType === 'UPDATE') {
+            if (payload.new.reflection) {
+              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, id]);
+
   const exportFullPDF = () => {
     if (!itinerarium || !steps.length) return;
     
