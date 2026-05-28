@@ -278,6 +278,54 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     };
   }, [updateSettings, settings.totalSilence]);
 
+  // Auto-hide UI ao rolar (mobile / contemplativo)
+  useEffect(() => {
+    if (!settings.autoHideUI && !settings.contemplativeMode) {
+      document.documentElement.classList.remove('reading-scroll-down');
+      return;
+    }
+    let lastY = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (Math.abs(y - lastY) > 8) {
+          if (y > lastY && y > 80) {
+            document.documentElement.classList.add('reading-scroll-down');
+            document.documentElement.classList.remove('reveal-chrome');
+          } else {
+            document.documentElement.classList.remove('reading-scroll-down');
+          }
+          lastY = y;
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [settings.autoHideUI, settings.contemplativeMode]);
+
+  // Modo noturno agendado (transição gradual via CSS)
+  useEffect(() => {
+    const sch = settings.nightSchedule;
+    if (!sch?.enabled) return;
+    const check = () => {
+      const now = new Date();
+      const m = now.getHours() * 60 + now.getMinutes();
+      const [sh, sm] = sch.start.split(':').map(Number);
+      const [eh, em] = sch.end.split(':').map(Number);
+      const a = sh * 60 + sm;
+      const b = eh * 60 + em;
+      const inNight = a <= b ? (m >= a && m < b) : (m >= a || m < b);
+      if (inNight && settings.theme !== 'night') updateSettings({ theme: 'night' });
+      else if (!inNight && settings.theme === 'night') updateSettings({ theme: 'paper' });
+    };
+    check();
+    const id = window.setInterval(check, 60_000);
+    return () => window.clearInterval(id);
+  }, [settings.nightSchedule, settings.theme, updateSettings]);
 
   return (
     <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>
