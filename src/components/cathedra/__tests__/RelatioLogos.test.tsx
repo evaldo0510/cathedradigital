@@ -3,6 +3,16 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Relatio from '../Relatio';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { AuthProvider } from '@/hooks/useAuth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MemoryRouter } from 'react-router-dom';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 // Mock dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -52,14 +62,18 @@ describe('Relatio Integration with Logos IA', () => {
     const onSelectLogosQuery = vi.fn();
     
     render(
-      <AuthProvider>
-        <ReadingSettingsProvider>
-          <Relatio 
-            context={mockContext} 
-            onSelectLogosQuery={onSelectLogosQuery}
-          />
-        </ReadingSettingsProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>
+            <ReadingSettingsProvider>
+              <Relatio 
+                context={mockContext} 
+                onSelectLogosQuery={onSelectLogosQuery}
+              />
+            </ReadingSettingsProvider>
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     // Wait for dynamic connections to load
@@ -80,14 +94,18 @@ describe('Relatio Integration with Logos IA', () => {
     const onSelectLogosQuery = vi.fn();
     
     render(
-      <AuthProvider>
-        <ReadingSettingsProvider>
-          <Relatio 
-            context={mockContext} 
-            onSelectLogosQuery={onSelectLogosQuery}
-          />
-        </ReadingSettingsProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>
+            <ReadingSettingsProvider>
+              <Relatio 
+                context={mockContext} 
+                onSelectLogosQuery={onSelectLogosQuery}
+              />
+            </ReadingSettingsProvider>
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     const logosButton = await screen.findByTitle(/Pedir explicação à Logos IA/i);
@@ -97,10 +115,6 @@ describe('Relatio Integration with Logos IA', () => {
     fireEvent.click(logosButton);
     fireEvent.click(logosButton);
 
-    // Should only trigger once if handled correctly (though Relatio just calls the callback)
-    // The actual debouncing/loading state is usually in the parent or LogosAI itself,
-    // but we verify the call to the handler.
     expect(onSelectLogosQuery).toHaveBeenCalledTimes(3); 
-    // Note: If we want to test request debouncing, we should test LogosAI.tsx
   });
 });
