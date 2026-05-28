@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
-import { getSpiritualContext, rankConnections, deduplicateRelatio, SpiritualContext } from '@/lib/spiritual-relevance';
+import { getSpiritualContext, rankConnectionsIntelligently, deduplicateRelatio, SpiritualContext } from '@/lib/spiritual-relevance';
 import { toast } from 'sonner';
 
 interface RelatioProps {
@@ -138,7 +138,7 @@ const Relatio: React.FC<RelatioProps> = ({
         // Advanced Ranking
         let ranked: (TagContent & { reason?: string })[] = [];
         if ((relatioConfig as any).relevanceByProgress && spiritualContext) {
-          ranked = rankConnections(unique, spiritualContext, context.tags);
+          ranked = rankConnectionsIntelligently(unique, spiritualContext, context.tags);
         } else {
           // Fallback simple reason assignment
           ranked = unique.map(item => ({
