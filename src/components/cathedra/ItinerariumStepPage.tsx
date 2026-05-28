@@ -34,6 +34,45 @@ const ItinerariumStepPage: React.FC = () => {
   const [logosQuery, setLogosQuery] = useState('');
   const [allSteps, setAllSteps] = useState<any[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
+  const { settings } = useReadingSettings();
+  const isMobile = useIsMobile();
+  const autoSaveTimer = useRef<number | null>(null);
+  const lastSavedReflection = useRef<string>('');
+
+  // Auto-save reflexão (debounced) e progresso de leitura local
+  useEffect(() => {
+    if (!user || !stepId || reflection === lastSavedReflection.current) return;
+    if (autoSaveTimer.current) window.clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = window.setTimeout(async () => {
+      try {
+        await supabase.from('itineraria_progress').upsert({
+          user_id: user.id,
+          itinerarium_id: itinerariumId!,
+          step_id: stepId,
+          reflection: reflection || null,
+          completed_at: completed ? new Date().toISOString() : new Date().toISOString(),
+        }, { onConflict: 'user_id,step_id' });
+        lastSavedReflection.current = reflection;
+      } catch (e) {
+        console.warn('auto-save reflection failed', e);
+      }
+    }, 1500);
+    return () => {
+      if (autoSaveTimer.current) window.clearTimeout(autoSaveTimer.current);
+    };
+  }, [reflection, user, stepId, itinerariumId, completed]);
+
+  // Persistir último ponto visitado (retomada natural)
+  useEffect(() => {
+    if (!stepId || !itinerariumId) return;
+    try {
+      localStorage.setItem('cathedra:last-itineraria-step', JSON.stringify({
+        itinerariumId,
+        stepId,
+        at: Date.now(),
+      }));
+    } catch {}
+  }, [stepId, itinerariumId]);
 
   useEffect(() => {
     if (stepId) {
