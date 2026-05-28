@@ -67,10 +67,6 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
-          data={{ 
-            history: [{ title: 'Evangelho de João', route: '/bible/john/1', label: 'Capítulo 1' }],
-            nextBible: { label: 'Salmo 23', route: '/bible/psalms/23', subtitle: 'O Senhor é meu Pastor' }
-          }} 
           profile={profile} 
         />
         <div className="flex justify-center -mt-10 mb-20">
