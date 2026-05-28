@@ -566,15 +566,43 @@ const MagisteriumViewer: React.FC = () => {
       )}
 
 
-      <div className="mt-12 flex justify-center">
+      <div className="mt-32 pt-16 border-t border-primary/5 flex flex-col items-center gap-12">
+        <div className="text-center space-y-4">
+          <Icons.CheckCircle2 className="w-12 h-12 text-primary/20 mx-auto" />
+          <div className="space-y-1">
+            <h3 className="text-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
+            <p className="text-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>
+          </div>
+          <Button 
+            onClick={() => {
+              saveLastRead({
+                content_type: 'magisterium',
+                content_id: id || '',
+                label: content.title,
+                url: window.location.pathname,
+                position: document.documentElement.scrollHeight
+              });
+              toast.success("Progresso salvo com sucesso", {
+                icon: '✨'
+              });
+              navigate(-1);
+            }}
+            className="rounded-full px-12 py-6 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium"
+          >
+            Concluir e Voltar
+          </Button>
+        </div>
+
         <Button 
-          variant="outline" 
+          variant="ghost" 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="rounded-full px-6"
+          className="rounded-full px-8 py-6 text-muted-foreground/40 hover:text-primary transition-all group"
         >
-          <Icons.ChevronUp className="w-4 h-4 mr-2" /> Topo do Documento
+          <Icons.ChevronUp className="w-4 h-4 mr-2 group-hover:-translate-y-1 transition-transform" /> 
+          Voltar ao Topo do Documento
         </Button>
       </div>
+
 
       {!settings.totalSilence && showLogosAI && (
         <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
