@@ -194,7 +194,21 @@ const Relatio: React.FC<RelatioProps> = ({
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Conexões na Tradição</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
+            {(['subtle', 'normal', 'deep'] as const).map((d) => (
+              <button
+                key={d}
+                onClick={() => updateDensity(d)}
+                className={cn(
+                  "px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-full transition-all duration-300",
+                  density === d ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-primary"
+                )}
+              >
+                {d === 'subtle' ? 'Subtil' : d === 'normal' ? 'Normal' : 'Profunda'}
+              </button>
+            ))}
+          </div>
           <Button 
             variant="ghost" 
             size="sm" 
@@ -204,6 +218,7 @@ const Relatio: React.FC<RelatioProps> = ({
             {isVisible ? 'Ocultar' : 'Revelar'}
           </Button>
         </div>
+
       </div>
 
       <AnimatePresence>
