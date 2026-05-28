@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Relatio from '../Relatio';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '@/hooks/useAuth';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Mock child components to isolate Relatio

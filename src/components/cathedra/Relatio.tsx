@@ -216,7 +216,7 @@ const Relatio: React.FC<RelatioProps> = ({
             )}
             title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
           >
-            <Icons.Layers className="w-3.5 h-3.5" />
+            <Icons.Library className="w-3.5 h-3.5" />
           </Button>
 
           <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
