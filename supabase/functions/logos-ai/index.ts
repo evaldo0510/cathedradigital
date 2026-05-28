@@ -30,6 +30,7 @@ serve(async (req) => {
     const query = sanitizeText(rawBody.query, 2000);
     const context = sanitizeText(rawBody.context, 2000);
     const selectedText = sanitizeText(rawBody.selectedText, 2000);
+    const journeyId = typeof rawBody.journeyId === 'string' ? rawBody.journeyId : null;
 
     // History: only keep recent valid user/assistant turns with sanitized content
     const ALLOWED_ROLES = new Set(['user', 'assistant']);
