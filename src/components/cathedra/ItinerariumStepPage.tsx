@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +14,9 @@ import LogosAI from './LogosAI';
 import { Icons } from '@/constants';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useSwipeNavigation } from '@/hooks/useSwipeNavigation';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ItinerariumStepPage: React.FC = () => {
   const { id: itinerariumId } = useParams<{ id: string }>();
