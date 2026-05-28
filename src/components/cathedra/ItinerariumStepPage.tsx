@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Sparkles, BookOpen, Clock, ChevronDown, Check, PenLine, Hand, Save } from 'lucide-react';
+import { X, Sparkles, BookOpen, Clock, ChevronDown, Check, PenLine, Hand, Save, ChevronLeft, ChevronRight, FileText } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,8 @@ import { toast } from 'sonner';
 import Relatio from './Relatio';
 import LogosAI from './LogosAI';
 import { Icons } from '@/constants';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const ItinerariumStepPage: React.FC = () => {
   const { id: itinerariumId } = useParams<{ id: string }>();
@@ -27,10 +29,29 @@ const ItinerariumStepPage: React.FC = () => {
   const [reflection, setReflection] = useState('');
   const [isLogosOpen, setIsLogosOpen] = useState(false);
   const [logosQuery, setLogosQuery] = useState('');
+  const [allSteps, setAllSteps] = useState<any[]>([]);
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1);
 
   useEffect(() => {
-    if (stepId) loadStep();
+    if (stepId) {
+      loadStep();
+      loadAllSteps();
+    }
   }, [stepId, user]);
+
+  const loadAllSteps = async () => {
+    if (!itinerariumId) return;
+    const { data } = await supabase
+      .from('itineraria_steps')
+      .select('id, title, step_order')
+      .eq('itinerarium_id', itinerariumId)
+      .order('step_order', { ascending: true });
+    
+    if (data) {
+      setAllSteps(data);
+      setCurrentStepIndex(data.findIndex(s => s.id === stepId));
+    }
+  };
 
   const loadStep = async () => {
     setLoading(true);
@@ -63,6 +84,53 @@ const ItinerariumStepPage: React.FC = () => {
     }
   };
 
+  const checkAchievements = async () => {
+    if (!user) return;
+    
+    // Check total steps completed
+    const { count } = await supabase
+      .from('itineraria_progress')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+    
+    if (count) {
+      const { data: achievements } = await supabase
+        .from('achievements')
+        .select('*')
+        .eq('requirement_type', 'steps_completed')
+        .lte('requirement_value', count);
+      
+      if (achievements) {
+        for (const ach of achievements) {
+          await supabase.from('user_achievements').upsert({
+            user_id: user.id,
+            achievement_id: ach.id
+          }, { onConflict: 'user_id,achievement_id' });
+        }
+      }
+    }
+
+    // Update weekly goals
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+    const weekStart = new Date(today.setDate(diff)).toISOString().split('T')[0];
+
+    const { data: goal } = await supabase
+      .from('weekly_goals_history')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('week_start_date', weekStart)
+      .maybeSingle();
+    
+    if (goal) {
+      await supabase
+        .from('weekly_goals_history')
+        .update({ achieved_count: goal.achieved_count + 1 })
+        .eq('id', goal.id);
+    }
+  };
+
   const handleComplete = async () => {
     if (!user || !stepId || !itinerariumId) return;
     setSaving(true);
@@ -76,14 +144,80 @@ const ItinerariumStepPage: React.FC = () => {
       }, { onConflict: 'user_id,step_id' });
 
       if (error) throw error;
+      
+      await checkAchievements();
+      
       setCompleted(true);
-      toast.success("Passo concluído!");
+      toast.success("Passo concluído! Caminhada honrada.");
     } catch (err) {
       console.error(err);
       toast.error("Erro ao salvar progresso.");
     } finally {
       setSaving(false);
     }
+  };
+
+  // Real-time sync subscription
+  useEffect(() => {
+    if (!user || !itinerariumId) return;
+
+    const channel = supabase
+      .channel('itineraria_sync')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'itineraria_progress',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            if (payload.new.step_id === stepId) {
+              setCompleted(true);
+              setReflection(payload.new.reflection || '');
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, stepId]);
+
+  const navigateToStep = (index: number) => {
+    const targetStep = allSteps[index];
+    if (targetStep) {
+      navigate(`/itineraria/${itinerariumId}/step?step=${targetStep.id}`);
+    }
+  };
+
+  const exportStepPDF = () => {
+    if (!step) return;
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor(41, 128, 185);
+    doc.text(step.title, 20, 30);
+    
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(`Itinerarium Step ${step.step_order} - ${step.step_type}`, 20, 40);
+    
+    // Content
+    doc.setTextColor(0);
+    doc.setFontSize(14);
+    doc.text("Sua Reflexão:", 20, 60);
+    
+    doc.setFontSize(12);
+    const splitReflection = doc.splitTextToSize(reflection || "Nenhuma reflexão registrada.", 170);
+    doc.text(splitReflection, 20, 70);
+    
+    doc.save(`reflexao-${step.title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    toast.success("PDF gerado com sucesso!");
   };
 
   if (loading || !step) return <div className="p-24 text-center">Iniciando passo contemplativo...</div>;
@@ -102,14 +236,25 @@ const ItinerariumStepPage: React.FC = () => {
             </p>
           </div>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="gap-2 text-[10px] font-black uppercase tracking-widest border-primary/20"
-          onClick={() => setIsLogosOpen(true)}
-        >
-          <Sparkles className="w-3.5 h-3.5" /> Logos IA
-        </Button>
+        
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 text-[10px] font-black uppercase tracking-widest hidden md:flex"
+            onClick={exportStepPDF}
+          >
+            <FileText className="w-3.5 h-3.5" /> PDF
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 text-[10px] font-black uppercase tracking-widest border-primary/20"
+            onClick={() => setIsLogosOpen(true)}
+          >
+            <Sparkles className="w-3.5 h-3.5" /> Logos IA
+          </Button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -157,13 +302,33 @@ const ItinerariumStepPage: React.FC = () => {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
-        <div className="max-w-2xl mx-auto flex justify-center pointer-events-auto">
+        <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 pointer-events-auto">
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/10"
+            disabled={currentStepIndex <= 0}
+            onClick={() => navigateToStep(currentStepIndex - 1)}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </Button>
+
           <Button 
-            className="w-full max-w-xs h-14 rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em]"
+            className="flex-1 h-14 rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em]"
             onClick={handleComplete}
             disabled={saving}
           >
-            {completed ? 'Concluído' : saving ? 'Salvando...' : 'Concluir Passo'}
+            {completed ? 'Passo Concluído' : saving ? 'Salvando...' : 'Concluir Passo'}
+          </Button>
+
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/10"
+            disabled={currentStepIndex === -1 || currentStepIndex >= allSteps.length - 1}
+            onClick={() => navigateToStep(currentStepIndex + 1)}
+          >
+            <ChevronRight className="w-6 h-6" />
           </Button>
         </div>
       </div>

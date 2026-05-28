@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Icons } from '@/constants';
-import { ChevronRight, ArrowLeft, Check, Lock, Clock } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Check, Lock, Clock, FileDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const ItinerariumDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +19,7 @@ const ItinerariumDetailPage: React.FC = () => {
   const [itinerarium, setItinerarium] = useState<any>(null);
   const [steps, setSteps] = useState<any[]>([]);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [reflections, setReflections] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,10 +37,98 @@ const ItinerariumDetailPage: React.FC = () => {
     if (stepsRes.data) setSteps(stepsRes.data);
 
     if (user && id) {
-      const { data: progress } = await supabase.from('itineraria_progress').select('step_id').eq('user_id', user.id).eq('itinerarium_id', id);
-      if (progress) setCompletedSteps(new Set(progress.map(p => p.step_id)));
+      const { data: progress } = await supabase
+        .from('itineraria_progress')
+        .select('step_id, reflection')
+        .eq('user_id', user.id)
+        .eq('itinerarium_id', id);
+      
+      if (progress) {
+        setCompletedSteps(new Set(progress.map(p => p.step_id)));
+        const reflectionsMap: Record<string, string> = {};
+        progress.forEach(p => {
+          if (p.reflection) reflectionsMap[p.step_id] = p.reflection;
+        });
+        setReflections(reflectionsMap);
+      }
     }
     setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!user || !id) return;
+
+    const channel = supabase
+      .channel('itinerarium_detail_sync')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'itineraria_progress',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setCompletedSteps(prev => new Set([...Array.from(prev), payload.new.step_id]));
+            if (payload.new.reflection) {
+              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            }
+          } else if (payload.eventType === 'UPDATE') {
+            if (payload.new.reflection) {
+              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, id]);
+
+  const exportFullPDF = () => {
+    if (!itinerarium || !steps.length) return;
+    
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(26);
+    doc.setTextColor(41, 128, 185);
+    doc.text(itinerarium.title, 20, 30);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(100);
+    const splitDesc = doc.splitTextToSize(itinerarium.description, 170);
+    doc.text(splitDesc, 20, 45);
+    
+    doc.setFontSize(12);
+    doc.text(`Progresso: ${Math.round((completedSteps.size / steps.length) * 100)}%`, 20, 70);
+    
+    // Reflections Table
+    const tableData = steps.map((step, idx) => [
+      `Passo ${step.step_order}: ${step.title}`,
+      completedSteps.has(step.id) ? 'Concluído' : 'Pendente',
+      reflections[step.id] || '-'
+    ]);
+
+    autoTable(doc, {
+      startY: 80,
+      head: [['Passo', 'Status', 'Minhas Reflexões']],
+      body: tableData,
+      theme: 'striped',
+      headStyles: { fillColor: [41, 128, 185] },
+      styles: { font: 'helvetica', fontSize: 10 },
+      columnStyles: {
+        0: { cellWidth: 50 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 100 }
+      }
+    });
+    
+    doc.save(`jornada-${itinerarium.title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    toast.success("PDF da trilha gerado com sucesso!");
   };
 
   if (loading || !itinerarium) return <div className="p-24 text-center">Carregando jornada...</div>;
@@ -60,9 +152,19 @@ const ItinerariumDetailPage: React.FC = () => {
       </motion.div>
 
       <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-6 bg-primary/20 rounded-full" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-primary/20 rounded-full" />
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full gap-2 border-primary/10 text-[10px] font-black uppercase tracking-widest"
+            onClick={exportFullPDF}
+          >
+            <FileDown className="w-4 h-4" /> Exportar Reflexões
+          </Button>
         </div>
         <p className="text-lg md:text-xl text-muted-foreground/80 font-serif italic leading-relaxed">{itinerarium.description}</p>
       </div>
