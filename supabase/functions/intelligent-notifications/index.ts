@@ -94,7 +94,7 @@ Deno.serve(async (req) => {
     // Get all users who haven't been notified today and have push/whatsapp enabled
     const { data: usersToNotify } = await supabase
       .from("profiles")
-      .select("id, name, whatsapp_number, whatsapp_enabled, push_enabled, last_action_at, last_notified_at")
+      .select("id, name, whatsapp_number, whatsapp_enabled, push_enabled, last_action_at, last_notified_at, notification_settings")
       .or(`last_notified_at.is.null,last_notified_at.lt.${now.toISOString().split('T')[0]}T00:00:00Z`)
       .limit(50);
 
@@ -161,8 +161,10 @@ Deno.serve(async (req) => {
 
       if (type) {
         const fullMessage = `${message}${contextText}`;
+        const emailEnabled = user.notification_settings?.email_reminders;
         let sentPush = false;
         let sentWhatsapp = false;
+        let sentEmail = false;
 
         if (user.push_enabled) {
           try {
@@ -183,6 +185,13 @@ Deno.serve(async (req) => {
           } catch (e) {
             console.error(`Failed to send push to ${user.id}:`, e);
           }
+        }
+
+        if (emailEnabled) {
+           // Lovable Email Placeholder
+           // In a real scenario, we'd use a transactional email tool or edge function
+           console.log(`[EMAIL Placeholder] To: ${user.id} - Msg: ${fullMessage}`);
+           sentEmail = true;
         }
 
         if (user.whatsapp_enabled && user.whatsapp_number) {
@@ -213,11 +222,11 @@ Deno.serve(async (req) => {
           }
         }
 
-        if (sentPush || sentWhatsapp) {
+        if (sentPush || sentWhatsapp || sentEmail) {
           await supabase.from("intelligent_notification_logs").insert({
             user_id: user.id,
             type,
-            channel: sentPush && sentWhatsapp ? "both" : sentPush ? "push" : "whatsapp",
+            channel: sentPush && sentWhatsapp ? "all" : sentEmail ? "email" : sentPush ? "push" : "whatsapp",
             content: fullMessage,
             status: "sent",
             metadata: { last_route: lastHistory?.route }

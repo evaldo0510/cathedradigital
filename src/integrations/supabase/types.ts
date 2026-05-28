@@ -1116,6 +1116,7 @@ export type Database = {
           badges: string[] | null
           bio: string | null
           completed_books: string[] | null
+          contemplative_preferences: Json | null
           created_at: string
           diocese: string | null
           estado: string | null
@@ -1139,6 +1140,7 @@ export type Database = {
           ritual_reminder_time: string | null
           ritual_silent_mode: boolean | null
           role: string | null
+          spiritual_themes: string[] | null
           streak: number | null
           total_minutes_read: number | null
           updated_at: string
@@ -1150,6 +1152,7 @@ export type Database = {
           badges?: string[] | null
           bio?: string | null
           completed_books?: string[] | null
+          contemplative_preferences?: Json | null
           created_at?: string
           diocese?: string | null
           estado?: string | null
@@ -1173,6 +1176,7 @@ export type Database = {
           ritual_reminder_time?: string | null
           ritual_silent_mode?: boolean | null
           role?: string | null
+          spiritual_themes?: string[] | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
@@ -1184,6 +1188,7 @@ export type Database = {
           badges?: string[] | null
           bio?: string | null
           completed_books?: string[] | null
+          contemplative_preferences?: Json | null
           created_at?: string
           diocese?: string | null
           estado?: string | null
@@ -1207,6 +1212,7 @@ export type Database = {
           ritual_reminder_time?: string | null
           ritual_silent_mode?: boolean | null
           role?: string | null
+          spiritual_themes?: string[] | null
           streak?: number | null
           total_minutes_read?: number | null
           updated_at?: string
