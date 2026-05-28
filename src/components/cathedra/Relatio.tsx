@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Icons } from '../../constants';
 import { fetchNexusTagContent, TagContent } from '@/lib/nexusContent';
 import { BIBLE_TO_CIC, CIC_TO_BIBLE, getBibleDocs, getCatechismDocs } from '@/data/cross-references';
@@ -39,6 +39,7 @@ const Relatio: React.FC<RelatioProps> = ({
   onSelectLogosQuery,
   className 
 }) => {
+  const containerRef = useRef<HTMLElement>(null);
   const contextSettings = useReadingSettings();
   const settings = contextSettings?.settings || { relatio: { enabled: true } };
   const { user } = useAuth();
@@ -47,6 +48,9 @@ const Relatio: React.FC<RelatioProps> = ({
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [autoCollapse, setAutoCollapse] = useState(() => {
+    return localStorage.getItem('cathedra-relatio-autocollapse') === 'true';
+  });
   const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
     return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
   });
@@ -170,7 +174,15 @@ const Relatio: React.FC<RelatioProps> = ({
   const updateDensity = (newDensity: 'subtle' | 'normal' | 'deep') => {
     setDensity(newDensity);
     localStorage.setItem('cathedra-relatio-density', newDensity);
+    window.dispatchEvent(new CustomEvent('cathedra-relatio-density-changed', { detail: newDensity }));
     toast.info(`Densidade: ${newDensity === 'subtle' ? 'Subtil' : newDensity === 'normal' ? 'Normal' : 'Profunda'}`);
+  };
+
+  const toggleAutoCollapse = () => {
+    const newVal = !autoCollapse;
+    setAutoCollapse(newVal);
+    localStorage.setItem('cathedra-relatio-autocollapse', String(newVal));
+    toast.info(`Recolhimento Automático: ${newVal ? 'Ativado' : 'Desativado'}`);
   };
 
 
@@ -183,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -195,6 +207,19 @@ const Relatio: React.FC<RelatioProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleAutoCollapse}
+            className={cn(
+              "w-8 h-8 rounded-full transition-all duration-300",
+              autoCollapse ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary"
+            )}
+            title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
+          >
+            <Icons.Library className="w-3.5 h-3.5" />
+          </Button>
+
           <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
             {(['subtle', 'normal', 'deep'] as const).map((d) => (
               <button
@@ -230,6 +255,7 @@ const Relatio: React.FC<RelatioProps> = ({
             transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="space-y-6"
           >
+            <LayoutGroup id="relatio-cards">
             {/* Static References */}
             {(staticRefs.cicParagraphs.length > 0 || staticRefs.bibleRefs.length > 0 || staticRefs.documents.length > 0) && (
               <div className="flex flex-wrap gap-2">
@@ -342,11 +368,12 @@ const Relatio: React.FC<RelatioProps> = ({
                                     if (isOpeningLogos) return;
                                     
                                     setIsOpeningLogos(true);
+                                    if (autoCollapse) setShowAll(false);
                                     const prompt = `Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}". Contexto: ${item.type}, Tags: ${item.metadata?.tags?.join(', ') || 'N/A'}.`;
                                     onSelectLogosQuery(prompt);
                                     
                                     // Reset lock after a short delay to allow drawer to open
-                                    setTimeout(() => setIsOpeningLogos(false), 2000);
+                                    setTimeout(() => setIsOpeningLogos(false), 1500);
                                   }}
                                 >
                                   <Icons.Sparkles className={cn("w-3.5 h-3.5", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
@@ -392,6 +419,16 @@ const Relatio: React.FC<RelatioProps> = ({
                   );
                 })}
                 </div>
+
+                {loading && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {[1, 2].map((i) => (
+                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -405,7 +442,7 @@ const Relatio: React.FC<RelatioProps> = ({
                     const nextShowAll = !showAll;
                     setShowAll(nextShowAll);
                     if (!nextShowAll) {
-                      document.getElementById('relatio-heading')?.scrollIntoView({ behavior: 'smooth' });
+                      containerRef.current?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                   className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-full"
@@ -422,18 +459,12 @@ const Relatio: React.FC<RelatioProps> = ({
               </div>
             )}
 
-            {loading && (
-              <div className="flex items-center justify-center py-4">
-                <Icons.Loader2 className="w-5 h-5 animate-spin text-primary/30" />
-              </div>
-            )}
+            </LayoutGroup>
           </motion.div>
         )}
       </AnimatePresence>
     </section>
   );
 };
-
-
 
 export default Relatio;

@@ -29,6 +29,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
 }) => {
   useRenderPerf('LogosAI', 15);
   const { settings } = useReadingSettings();
+  const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
+    return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
+  });
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
@@ -189,8 +192,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
   useEffect(() => {
     const handleReset = () => clearHistory(true);
+    const handleDensityChange = () => {
+      const newDensity = localStorage.getItem('cathedra-relatio-density') as any;
+      if (newDensity) setDensity(newDensity);
+    };
+
     window.addEventListener('reset-logos-history', handleReset);
-    return () => window.removeEventListener('reset-logos-history', handleReset);
+    window.addEventListener('cathedra-relatio-density-changed', handleDensityChange);
+    return () => {
+      window.removeEventListener('reset-logos-history', handleReset);
+      window.removeEventListener('cathedra-relatio-density-changed', handleDensityChange);
+    };
   }, [clearHistory]);
 
   const exportHistory = React.useCallback(() => {
