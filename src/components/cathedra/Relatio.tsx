@@ -459,17 +459,15 @@ const Relatio: React.FC<RelatioProps> = ({
               </div>
             )}
 
-            {loading && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[1, 2].map((i) => (
-                  <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
-                  </div>
-                ))}
-              </div>
-            )}
+            </LayoutGroup>
           </motion.div>
         )}
+      </AnimatePresence>
+    </section>
+  );
+};
+
+export default Relatio;
       </AnimatePresence>
     </section>
   );
