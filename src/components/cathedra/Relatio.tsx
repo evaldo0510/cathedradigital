@@ -349,8 +349,10 @@ const Relatio: React.FC<RelatioProps> = ({
                     </motion.div>
                   );
                 })}
+                </div>
               </div>
             )}
+
 
             {connections.length > 4 && (
               <div className="flex flex-col items-center gap-4 pt-4">
@@ -389,6 +391,7 @@ const Relatio: React.FC<RelatioProps> = ({
     </section>
   );
 };
+
 
 
 export default Relatio;
