@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import Relatio from './Relatio';
 import LogosAI from './LogosAI';
+import { Icons } from '@/constants';
 
 const ItinerariumStepPage: React.FC = () => {
   const { id: itinerariumId } = useParams<{ id: string }>();
