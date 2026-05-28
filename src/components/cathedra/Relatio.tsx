@@ -47,7 +47,12 @@ const Relatio: React.FC<RelatioProps> = ({
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
+    return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
+  });
+  const [isOpeningLogos, setIsOpeningLogos] = useState(false);
   const [spiritualContext, setSpiritualContext] = useState<SpiritualContext | null>(null);
+
 
   // Relatio Settings Destructuring with fallbacks
   const relatioConfig = settings.relatio || {
@@ -109,12 +114,13 @@ const Relatio: React.FC<RelatioProps> = ({
       
       setLoading(true);
       try {
-        const intensity = (relatioConfig as any).intensity || 'standard';
+        const intensity = density;
+        // Limit number of tags to fetch to maintain performance/focus
         const tagCount = intensity === 'subtle' ? 1 : intensity === 'deep' ? 4 : 2;
+        
         // Density Control: limit based on intensity settings
-        const densityLimits = { subtle: 4, standard: 8, deep: 16 };
-        const resultLimit = densityLimits[intensity as keyof typeof densityLimits] || 8;
-
+        const densityLimits = { subtle: 4, normal: 8, deep: 16 };
+        const resultLimit = densityLimits[density] || 8;
 
         const tagPromises = context.tags.slice(0, tagCount).map(tag => 
           fetchNexusTagContent({ label: tag, slug: tag.toLowerCase() })
@@ -159,7 +165,14 @@ const Relatio: React.FC<RelatioProps> = ({
     };
 
     fetchRelated();
-  }, [context.tags, context.id, relatioConfig, spiritualContext]);
+  }, [context.tags, context.id, relatioConfig, spiritualContext, density]);
+
+  const updateDensity = (newDensity: 'subtle' | 'normal' | 'deep') => {
+    setDensity(newDensity);
+    localStorage.setItem('cathedra-relatio-density', newDensity);
+    toast.info(`Densidade: ${newDensity === 'subtle' ? 'Subtil' : newDensity === 'normal' ? 'Normal' : 'Profunda'}`);
+  };
+
 
   const hasAnyConnections = 
     staticRefs.cicParagraphs.length > 0 || 
@@ -181,7 +194,21 @@ const Relatio: React.FC<RelatioProps> = ({
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Conexões na Tradição</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
+            {(['subtle', 'normal', 'deep'] as const).map((d) => (
+              <button
+                key={d}
+                onClick={() => updateDensity(d)}
+                className={cn(
+                  "px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-full transition-all duration-300",
+                  density === d ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-primary"
+                )}
+              >
+                {d === 'subtle' ? 'Subtil' : d === 'normal' ? 'Normal' : 'Profunda'}
+              </button>
+            ))}
+          </div>
           <Button 
             variant="ghost" 
             size="sm" 
@@ -191,6 +218,7 @@ const Relatio: React.FC<RelatioProps> = ({
             {isVisible ? 'Ocultar' : 'Revelar'}
           </Button>
         </div>
+
       </div>
 
       <AnimatePresence>
@@ -242,12 +270,17 @@ const Relatio: React.FC<RelatioProps> = ({
                   return (
                     <motion.div
                       key={item.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.5 }}
                       className="group relative"
                     >
                       <Card 
                         className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden"
+
                         onClick={() => {
                           if (item.type === 'bible') {
                             const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
@@ -301,16 +334,25 @@ const Relatio: React.FC<RelatioProps> = ({
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary"
+                                  disabled={isOpeningLogos}
+                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary disabled:opacity-30"
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    onSelectLogosQuery(`Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}".`);
+                                    if (isOpeningLogos) return;
+                                    
+                                    setIsOpeningLogos(true);
+                                    const prompt = `Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}". Contexto: ${item.type}, Tags: ${item.metadata?.tags?.join(', ') || 'N/A'}.`;
+                                    onSelectLogosQuery(prompt);
+                                    
+                                    // Reset lock after a short delay to allow drawer to open
+                                    setTimeout(() => setIsOpeningLogos(false), 2000);
                                   }}
                                 >
-                                  <Icons.Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                  <Icons.Sparkles className={cn("w-3.5 h-3.5", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
                                 </Button>
                               )}
+
                               <Button
                                 variant="ghost"
                                 size="icon"

@@ -88,14 +88,15 @@ describe('Relatio Integration with Logos IA', () => {
     // Click Logos button
     fireEvent.click(logosButton);
 
-    // Verify callback was called with correct context
+    // Verify callback was called with correct context and prompt format
     expect(onSelectLogosQuery).toHaveBeenCalledTimes(1);
-    expect(onSelectLogosQuery).toHaveBeenCalledWith(
-      expect.stringContaining('Conexão Teste')
-    );
+    const lastCall = onSelectLogosQuery.mock.calls[0][0];
+    expect(lastCall).toContain('Conexão Teste');
+    expect(lastCall).toContain('Contexto: bible');
+    expect(lastCall).toContain('Tags: test');
   });
 
-  it('does not trigger multiple requests when clicking quickly', async () => {
+  it('does not trigger multiple requests when clicking quickly (debouncing/locking)', async () => {
     const onSelectLogosQuery = vi.fn();
     
     render(
@@ -120,6 +121,8 @@ describe('Relatio Integration with Logos IA', () => {
     fireEvent.click(logosButton);
     fireEvent.click(logosButton);
 
-    expect(onSelectLogosQuery).toHaveBeenCalledTimes(3); 
+    // Should only be called once due to isOpeningLogos lock
+    expect(onSelectLogosQuery).toHaveBeenCalledTimes(1); 
   });
+
 });

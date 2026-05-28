@@ -221,9 +221,9 @@ export function rankConnectionsIntelligently(
       if (reason === 'Tradição Conectada') reason = 'Tema Relacionado';
     }
 
-    // 6. Natural selection (randomness factor to keep it fresh/organic)
-    // Small random boost to allow "surprising" but relevant connections
-    score += Math.random() * 5;
+    // 6. Natural selection (Stability boost)
+    // Removed randomness to ensure stability as requested.
+
 
     return { 
       ...item, 
