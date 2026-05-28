@@ -111,8 +111,9 @@ const Relatio: React.FC<RelatioProps> = ({
       try {
         const intensity = (relatioConfig as any).intensity || 'standard';
         const tagCount = intensity === 'subtle' ? 1 : intensity === 'deep' ? 4 : 2;
-        // Density Control: increased limit for fetch, but we control display via state
-        const resultLimit = 16; 
+        // Density Control: limit based on intensity settings
+        const densityLimits = { subtle: 4, standard: 8, deep: 16 };
+        const resultLimit = densityLimits[intensity as keyof typeof densityLimits] || 8;
 
 
         const tagPromises = context.tags.slice(0, tagCount).map(tag => 
@@ -134,8 +135,8 @@ const Relatio: React.FC<RelatioProps> = ({
         // Advanced Deduplication
         const unique = deduplicateRelatio(filtered);
         
-        // Advanced Ranking if enabled
-        let ranked: (TagContent & { reason?: string })[] = unique;
+        // Advanced Ranking
+        let ranked: (TagContent & { reason?: string })[] = [];
         if ((relatioConfig as any).relevanceByProgress && spiritualContext) {
           ranked = rankConnections(unique, spiritualContext, context.tags);
         } else {
@@ -149,6 +150,7 @@ const Relatio: React.FC<RelatioProps> = ({
         }
         
         setConnections(ranked.slice(0, resultLimit));
+
       } catch (error) {
         console.error('Error fetching Relatio connections:', error);
       } finally {
@@ -348,19 +350,35 @@ const Relatio: React.FC<RelatioProps> = ({
                   );
                 })}
               </div>
+            )}
 
+            {connections.length > 4 && (
+              <div className="flex flex-col items-center gap-4 pt-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const nextShowAll = !showAll;
+                    setShowAll(nextShowAll);
+                    if (!nextShowAll) {
+                      // Scroll back to top of section when collapsing
+                      document.getElementById('relatio-heading')?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-full"
+                >
+                  <span className="mr-2">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
+                  <Icons.ChevronDown className={cn("w-3 h-3 transition-transform duration-500", showAll && "rotate-180")} />
+                </Button>
+                
+                {showAll && (
+                  <p className="text-[8px] text-muted-foreground/30 uppercase tracking-[0.3em] italic">
+                    Fim das conexões contextuais para esta seção
+                  </p>
+                )}
+              </div>
+            )}
 
-                {connections.length > 4 && (
-                  <div className="flex justify-center pt-4">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowAll(!showAll)}
-                      className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group"
-                    >
-                      <span className="mr-2">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
-                      <Icons.ChevronDown className={cn("w-3 h-3 transition-transform duration-500", showAll && "rotate-180")} />
-                    </Button>
                   </div>
                 )}
               </div>
