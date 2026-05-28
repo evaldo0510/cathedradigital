@@ -270,12 +270,17 @@ const Relatio: React.FC<RelatioProps> = ({
                   return (
                     <motion.div
                       key={item.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
                       whileHover={{ y: -2 }}
                       transition={{ duration: 0.5 }}
                       className="group relative"
                     >
                       <Card 
                         className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden"
+
                         onClick={() => {
                           if (item.type === 'bible') {
                             const abbr = item.metadata?.book_abbr || item.metadata?.abbr;
