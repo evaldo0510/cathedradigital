@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { Highlighter, FileText } from 'lucide-react';
+import { Highlighter, FileText, Settings2, Sliders } from 'lucide-react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { toast } from 'sonner';
+import { 
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -15,6 +22,7 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const ReadingControlPanel: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
@@ -29,16 +37,191 @@ const ReadingControlPanel: React.FC = () => {
     { id: 'night', label: 'Noite', color: 'bg-black border-zinc-800' },
   ];
 
+  const SettingsContent = () => (
+    <div className="space-y-10 py-6">
+      <div className="text-center space-y-1">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-black">Sanctuarium Scriptis</p>
+        <h2 className="text-2xl font-display font-light text-primary uppercase tracking-widest">Atmosfera</h2>
+      </div>
+      
+      <div className="space-y-4">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Tons da Alma</p>
+        <div className="grid grid-cols-4 gap-4">
+          {themes.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => updateSettings({ theme: t.id as any })}
+              className={`w-full aspect-square rounded-full border-2 transition-all duration-500 ${t.color} ${
+                settings.theme === t.id ? 'ring-4 ring-primary/20 ring-offset-4 scale-110' : 'hover:scale-105 opacity-80'
+              }`}
+              title={t.label}
+            >
+               {settings.theme === t.id && <Icons.Check className={`w-4 h-4 mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Escala Tipográfica</p>
+        <div className="flex bg-muted/30 rounded-2xl p-1.5 gap-1 border border-primary/5">
+          {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => updateSettings({ fontSize: s })}
+              className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all duration-500 ${
+                settings.fontSize === s ? 'bg-background text-primary shadow-premium scale-105' : 'text-muted-foreground/40 hover:text-primary'
+              }`}
+            >
+              {s === 'small' ? 'A' : s === 'medium' ? 'A+' : s === 'large' ? 'A++' : 'A+++'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Ritmo & Espaço</p>
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={() => updateSettings({ fontFamily: 'serif' })}
+            className={`flex items-center justify-center gap-2 py-4 rounded-2xl border transition-all duration-500 font-serif ${
+              settings.fontFamily === 'serif' ? 'bg-primary text-primary-foreground border-primary shadow-premium' : 'bg-muted/20 border-transparent text-muted-foreground/60 hover:bg-muted/40'
+            }`}
+          >
+            <Icons.Feather className="w-4 h-4" /> Serifada
+          </button>
+          <button
+            onClick={() => updateSettings({ fontFamily: 'sans' })}
+            className={`flex items-center justify-center gap-2 py-4 rounded-2xl border transition-all duration-500 ${
+              settings.fontFamily === 'sans' ? 'bg-primary text-primary-foreground border-primary shadow-premium' : 'bg-muted/20 border-transparent text-muted-foreground/60 hover:bg-muted/40'
+            }`}
+          >
+            <Icons.Type className="w-4 h-4" /> Sans
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-6">
+          <div className="space-y-3">
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Espaçamento Entre Linhas</p>
+            <div className="flex bg-muted/20 rounded-full p-1 border border-primary/5">
+              {(['tight', 'normal', 'wide'] as const).map((l) => (
+                <button
+                  key={l}
+                  onClick={() => updateSettings({ lineSpacing: l })}
+                  className={`flex-1 py-2 text-[9px] font-black uppercase tracking-widest rounded-full transition-all duration-500 ${
+                    settings.lineSpacing === l ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/40 hover:text-primary'
+                  }`}
+                >
+                  {l === 'tight' ? 'Snug' : l === 'normal' ? 'Std' : 'Wide'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 px-1">Margens Laterais</p>
+            <div className="flex bg-muted/20 rounded-full p-1 border border-primary/5">
+              {(['standard', 'comfortable', 'wide'] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => updateSettings({ sideMargins: m })}
+                  className={`flex-1 py-2 text-[9px] font-black uppercase tracking-widest rounded-full transition-all duration-500 ${
+                    settings.sideMargins === m ? 'bg-background text-primary shadow-soft' : 'text-muted-foreground/40 hover:text-primary'
+                  }`}
+                >
+                  {m === 'standard' ? 'Std' : m === 'Médio' ? 'Médio' : 'Largo'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4 pt-4 border-t border-primary/5">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1">Foco Contemplativo</p>
+        <div className="grid grid-cols-1 gap-2">
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold">Silêncio Visual</p>
+              <p className="text-[10px] text-muted-foreground italic">Oculta distrações</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.visualSilence}
+              onChange={(e) => updateSettings({ visualSilence: e.target.checked })}
+              className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary"
+            />
+          </div>
+
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold">Modo de Leitura Focada</p>
+              <p className="text-[10px] text-muted-foreground italic">Tela cheia</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.fullScreen}
+              onChange={(e) => updateSettings({ fullScreen: e.target.checked })}
+              className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-4">
+        <Button 
+          onClick={() => window.print()}
+          variant="outline"
+          className="w-full rounded-2xl flex items-center justify-center gap-3 py-8 border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-700"
+        >
+          <Icons.Printer className="w-5 h-5 text-primary/40" />
+          <div className="text-left">
+            <p className="text-xs font-bold uppercase tracking-widest">Gerar PDF Premium</p>
+            <p className="text-[10px] text-muted-foreground">Otimizado para arquivo espiritual</p>
+          </div>
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="flex items-center gap-2">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="rounded-full flex items-center gap-2">
-            <Icons.Settings className="w-4 h-4" />
-            <span className="hidden sm:inline">Configurações</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-80 p-6 space-y-8 rounded-[2rem] shadow-premium-hover border-border/40" align="end">
+    <>
+      {/* Mobile Trigger (Drawer/Sheet) */}
+      <div className="sm:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 text-primary/40 hover:text-primary hover:bg-primary/5 transition-all">
+              <Settings2 className="w-4 h-4" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[85vh] rounded-t-[3rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl">
+            <ScrollArea className="h-full px-2">
+              <SettingsContent />
+            </ScrollArea>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* Desktop Trigger (Dropdown) */}
+      <div className="hidden sm:block">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="rounded-full flex items-center gap-2 border-primary/10 hover:border-primary/30 transition-all">
+              <Icons.Settings className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Estética</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-[400px] p-8 space-y-8 rounded-[3rem] shadow-premium-hover border-primary/5 bg-background/95 backdrop-blur-2xl" align="end">
+            <ScrollArea className="max-h-[70vh]">
+              <SettingsContent />
+            </ScrollArea>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </>
+  );
+};
+
           <div className="text-center space-y-1">
             <DropdownMenuLabel className="px-0 pt-0 text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Sanctuarium Scriptis</DropdownMenuLabel>
             <p className="text-[10px] text-muted-foreground uppercase tracking-widest italic">Ajustes de Leitura</p>
