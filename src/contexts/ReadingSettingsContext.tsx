@@ -163,6 +163,14 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     root.setAttribute('data-line-spacing', settings.lineSpacing);
     root.setAttribute('data-letter-spacing', settings.letterSpacing);
     root.setAttribute('data-side-margins', settings.sideMargins);
+    root.style.setProperty('--reader-column-width', `${settings.columnWidth}ch`);
+
+    if (settings.autoHideUI) {
+      root.classList.add('auto-hide-ui');
+    } else {
+      root.classList.remove('auto-hide-ui');
+    }
+    
     
     if (settings.visualSilence) {
       root.classList.add('visual-silence');

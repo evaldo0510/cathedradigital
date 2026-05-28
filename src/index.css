@@ -150,9 +150,9 @@
   [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
   [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
 
-  [data-side-margins="standard"] .reader-container { max-width: 80ch !important; padding-left: 1.5rem; padding-right: 1.5rem; }
-  [data-side-margins="comfortable"] .reader-container { max-width: 70ch !important; padding-left: 2rem; padding-right: 2rem; }
-  [data-side-margins="wide"] .reader-container { max-width: 60ch !important; padding-left: 2.5rem; padding-right: 2.5rem; }
+  [data-side-margins="standard"] .reader-container { max-width: var(--reader-column-width, 80ch) !important; padding-left: 1.25rem; padding-right: 1.25rem; }
+  [data-side-margins="comfortable"] .reader-container { max-width: var(--reader-column-width, 70ch) !important; padding-left: 1.75rem; padding-right: 1.75rem; }
+  [data-side-margins="wide"] .reader-container { max-width: var(--reader-column-width, 60ch) !important; padding-left: 2.25rem; padding-right: 2.25rem; }
 
 
   @screen md {
