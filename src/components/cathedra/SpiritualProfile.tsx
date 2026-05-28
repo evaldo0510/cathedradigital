@@ -39,15 +39,26 @@ const SpiritualProfile: React.FC = () => {
           .select('*')
           .eq('user_id', user.id)
           .order('visited_at', { ascending: false })
-          .limit(5);
+          .limit(6);
 
-        // Fetch active journeys
+        // Fetch active journeys (completed steps)
         const { data: journeyData } = await supabase
           .from('journey_progress')
-          .select('*, journeys(title)')
+          .select('journey_id, journeys(title), completed_at')
           .eq('user_id', user.id)
-          .order('last_visited_at', { ascending: false })
-          .limit(3);
+          .order('completed_at', { ascending: false });
+
+        // Group by journey_id and get last completed_at
+        const uniqueJourneys = Array.from(new Set((journeyData || []).map(j => j.journey_id)));
+        const journeyList: JourneyProgress[] = uniqueJourneys.slice(0, 3).map(id => {
+          const matching = journeyData?.filter(j => j.journey_id === id) || [];
+          return {
+            id,
+            title: (matching[0] as any)?.journeys?.title || 'Jornada',
+            progress: Math.min(Math.round((matching.length / 10) * 100), 100), // Mocked total steps as 10 for now
+            last_visited: matching[0]?.completed_at
+          };
+        });
 
         // Fetch favorite reflections
         const { data: reflectionsData } = await supabase
@@ -58,12 +69,7 @@ const SpiritualProfile: React.FC = () => {
           .limit(3);
 
         setRecentReadings(historyData || []);
-        setActiveJourneys((journeyData || []).map(j => ({
-          id: j.journey_id,
-          title: j.journeys?.title || 'Jornada Sem Título',
-          progress: j.progress_percent || 0,
-          last_visited: j.last_visited_at
-        })));
+        setActiveJourneys(journeyList);
         setFavoriteReflections(reflectionsData || []);
         
         // Extract themes from history or reflections (mocked for now based on what we have)
