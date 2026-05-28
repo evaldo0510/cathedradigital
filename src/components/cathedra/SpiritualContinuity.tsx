@@ -12,8 +12,40 @@ interface SpiritualContinuityProps {
   profile?: Profile | null;
 }
 
-const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, isLoading, profile }) => {
+const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propData, isLoading: propLoading, profile: propProfile }) => {
   const navigate = useNavigate();
+  const [internalData, setInternalData] = React.useState<any>(null);
+  const [internalLoading, setInternalLoading] = React.useState(false);
+  const { user } = useAuth();
+
+  React.useEffect(() => {
+    if (propData || !user) return;
+    
+    const fetchLastActivity = async () => {
+      setInternalLoading(true);
+      try {
+        const { data: historyData } = await supabase
+          .from('user_history')
+          .select('title, route, visited_at')
+          .eq('user_id', user.id)
+          .order('visited_at', { ascending: false })
+          .limit(1);
+        
+        if (historyData?.[0]) {
+          setInternalData({ history: historyData });
+        }
+      } catch (err) {
+        console.error('Continuity Internal Error:', err);
+      } finally {
+        setInternalLoading(false);
+      }
+    };
+
+    fetchLastActivity();
+  }, [propData, user]);
+
+  const isLoading = propLoading || internalLoading;
+  const data = propData || internalData;
 
   if (isLoading || !data) return null;
 
