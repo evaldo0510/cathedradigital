@@ -920,8 +920,9 @@ const Catechism: React.FC = () => {
                     <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
                   </motion.div>
                 )}
-                <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
-              <div className="p-8 md:p-20 lg:p-24">
+                <div className="w-full relative">
+              <div className="py-8 md:py-24">
+
 
                 <div className="space-y-16">
                   {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
