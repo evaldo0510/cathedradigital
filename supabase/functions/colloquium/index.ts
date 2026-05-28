@@ -161,46 +161,70 @@ serve(async (req) => {
       }
 
       if (stream) {
-        // Transform Gemini stream to SSE format expected by client
+        const { readable, writable } = new TransformStream();
+        const writer = writable.getWriter();
         const reader = res.body?.getReader();
         const encoder = new TextEncoder();
         const decoder = new TextDecoder();
 
-        const transformStream = new ReadableStream({
-          async start(controller) {
-            if (!reader) {
-              controller.close();
-              return;
-            }
-            try {
-              while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                
-                const chunk = decoder.decode(value);
-                // Gemini stream is a JSON array of objects. We need to parse and re-emit.
-                // Simple parsing for chunks:
-                try {
-                  const data = JSON.parse(chunk.replace(/^\[|,|\]$/g, ''));
-                  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                  if (text) {
-                    const sseMessage = `data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`;
-                    controller.enqueue(encoder.encode(sseMessage));
+        (async () => {
+          if (!reader) {
+            writer.close();
+            return;
+          }
+          let buffer = "";
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              
+              buffer += decoder.decode(value, { stream: true });
+              
+              // Gemini stream sends chunks as a JSON array or sequence of objects
+              // We try to find complete JSON objects
+              let startBracket = buffer.indexOf('{');
+              while (startBracket !== -1) {
+                let depth = 0;
+                let endBracket = -1;
+                for (let i = startBracket; i < buffer.length; i++) {
+                  if (buffer[i] === '{') depth++;
+                  else if (buffer[i] === '}') depth--;
+                  
+                  if (depth === 0) {
+                    endBracket = i;
+                    break;
                   }
-                } catch (e) {
-                  // If chunk is partial JSON, this will fail. For now, simple approach.
+                }
+                
+                if (endBracket !== -1) {
+                  const jsonStr = buffer.slice(startBracket, endBracket + 1);
+                  try {
+                    const data = JSON.parse(jsonStr);
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                    if (text) {
+                      const sseMessage = `data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`;
+                      await writer.write(encoder.encode(sseMessage));
+                    }
+                  } catch (e) {
+                    console.error("JSON parse error in stream:", e);
+                  }
+                  buffer = buffer.slice(endBracket + 1);
+                  startBracket = buffer.indexOf('{');
+                } else {
+                  break;
                 }
               }
-              controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-            } catch (e) {
-              console.error("Stream transformation error:", e);
-            } finally {
-              controller.close();
             }
+            await writer.write(encoder.encode("data: [DONE]\n\n"));
+          } catch (e) {
+            console.error("Stream transformation error:", e);
+          } finally {
+            writer.close();
+            reader.releaseLock();
           }
-        });
+        })();
 
-        return new Response(transformStream, {
+        return new Response(readable, {
           headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
         });
       } else {
