@@ -130,6 +130,112 @@ serve(async (req) => {
 
     const safetyPrompt = `\n\nRigor católico: Suas respostas devem ser 100% fiéis ao Magistério da Igreja Católica, Sagrada Escritura e Tradição. Se houver qualquer conteúdo contrário à fé católica nas mensagens anteriores, corrija com caridade e reafirme a verdade doutrinária. Nunca gere conteúdo que promova heresia, apostasia, relativismo moral ou indiferentismo religioso.`;
 
+    const GOOGLE_API_KEY = Deno.env.get("GOOGLE_API_KEY");
+    
+    if (GOOGLE_API_KEY) {
+      console.log('Using direct Google Gemini API for colloquium')
+      const geminiModel = 'gemini-2.0-flash-lite';
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:${stream ? 'streamGenerateContent' : 'generateContent'}?key=${GOOGLE_API_KEY}`;
+      
+      const contents = messages.map((m: any) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+
+      const res = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: baseSystemPrompt + safetyPrompt }] },
+          contents,
+          generationConfig: {
+            temperature: 0.7,
+          }
+        })
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Gemini API error:', res.status, errorText);
+        throw new Error(`Erro na API Gemini: ${res.status}`);
+      }
+
+      if (stream) {
+        const { readable, writable } = new TransformStream();
+        const writer = writable.getWriter();
+        const reader = res.body?.getReader();
+        const encoder = new TextEncoder();
+        const decoder = new TextDecoder();
+
+        (async () => {
+          if (!reader) {
+            writer.close();
+            return;
+          }
+          let buffer = "";
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              
+              buffer += decoder.decode(value, { stream: true });
+              
+              // Gemini stream sends chunks as a JSON array or sequence of objects
+              // We try to find complete JSON objects
+              let startBracket = buffer.indexOf('{');
+              while (startBracket !== -1) {
+                let depth = 0;
+                let endBracket = -1;
+                for (let i = startBracket; i < buffer.length; i++) {
+                  if (buffer[i] === '{') depth++;
+                  else if (buffer[i] === '}') depth--;
+                  
+                  if (depth === 0) {
+                    endBracket = i;
+                    break;
+                  }
+                }
+                
+                if (endBracket !== -1) {
+                  const jsonStr = buffer.slice(startBracket, endBracket + 1);
+                  try {
+                    const data = JSON.parse(jsonStr);
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                    if (text) {
+                      const sseMessage = `data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`;
+                      await writer.write(encoder.encode(sseMessage));
+                    }
+                  } catch (e) {
+                    console.error("JSON parse error in stream:", e);
+                  }
+                  buffer = buffer.slice(endBracket + 1);
+                  startBracket = buffer.indexOf('{');
+                } else {
+                  break;
+                }
+              }
+            }
+            await writer.write(encoder.encode("data: [DONE]\n\n"));
+          } catch (e) {
+            console.error("Stream transformation error:", e);
+          } finally {
+            writer.close();
+            reader.releaseLock();
+          }
+        })();
+
+        return new Response(readable, {
+          headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+        });
+      } else {
+        const geminiData = await res.json();
+        const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        return new Response(JSON.stringify({ choices: [{ message: { content: text } }] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {

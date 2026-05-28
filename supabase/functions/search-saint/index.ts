@@ -67,18 +67,49 @@ serve(async (req) => {
     Se o santo não for encontrado ou não existir, retorne um objeto com "error": "not_found".
     Responda APENAS o JSON.`
 
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.0-flash',
-        messages: [{ role: 'system', content: prompt }],
-        temperature: 0.1,
-      }),
-    })
+    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
+    let aiResponse;
+
+    if (GOOGLE_API_KEY) {
+      console.log('Using direct Google Gemini API for saint search')
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GOOGLE_API_KEY}`
+      
+      const res = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.1,
+            responseMimeType: "application/json"
+          }
+        })
+      })
+
+      if (!res.ok) {
+        const errorText = await res.text()
+        console.error('Gemini API error:', res.status, errorText)
+        throw new Error(`Erro na API Gemini: ${res.status}`)
+      }
+
+      const geminiData = await res.json()
+      const content = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || ""
+      
+      aiResponse = { ok: true, json: async () => ({ choices: [{ message: { content } }] }) }
+    } else {
+      aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'google/gemini-2.0-flash',
+          messages: [{ role: 'system', content: prompt }],
+          temperature: 0.1,
+        }),
+      })
+    }
 
     if (!aiResponse.ok) throw new Error('AI gateway error')
 

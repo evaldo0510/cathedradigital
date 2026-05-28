@@ -129,6 +129,45 @@ serve(async (req) => {
       { role: 'user', content: userContent }
     ];
 
+    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
+    
+    if (GOOGLE_API_KEY) {
+      console.log('Using direct Google Gemini API with GOOGLE_API_KEY')
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GOOGLE_API_KEY}`
+      
+      const contents = messages
+        .filter(m => m.role !== 'system')
+        .map(m => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }]
+        }))
+
+      const geminiResponse = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents,
+          generationConfig: {
+            temperature: 0.6,
+          }
+        })
+      })
+
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        console.error('Gemini API error:', geminiResponse.status, errorText)
+        throw new Error(`Erro na API Gemini: ${geminiResponse.status}`)
+      }
+
+      const geminiData = await geminiResponse.json()
+      const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, não consegui gerar uma resposta."
+      
+      return new Response(JSON.stringify({ text }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
