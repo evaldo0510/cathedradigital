@@ -361,7 +361,6 @@ const Relatio: React.FC<RelatioProps> = ({
                     const nextShowAll = !showAll;
                     setShowAll(nextShowAll);
                     if (!nextShowAll) {
-                      // Scroll back to top of section when collapsing
                       document.getElementById('relatio-heading')?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
@@ -379,11 +378,6 @@ const Relatio: React.FC<RelatioProps> = ({
               </div>
             )}
 
-                  </div>
-                )}
-              </div>
-            )}
-
             {loading && (
               <div className="flex items-center justify-center py-4">
                 <Icons.Loader2 className="w-5 h-5 animate-spin text-primary/30" />
@@ -395,5 +389,6 @@ const Relatio: React.FC<RelatioProps> = ({
     </section>
   );
 };
+
 
 export default Relatio;
