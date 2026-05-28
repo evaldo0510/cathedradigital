@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Relatio from '../Relatio';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
@@ -34,6 +34,11 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 describe('Relatio Ranking Stability', () => {
+  beforeEach(() => {
+    // Mock scrollIntoView which is not present in JSDOM
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+  });
+
   it('maintains the same order when showing more and collapsing', async () => {
     const onSelectLogosQuery = vi.fn();
     render(
@@ -91,7 +96,7 @@ describe('Relatio Logos Integration', () => {
       expect.stringContaining('Test Connection 1')
     );
     expect(onSelectLogosQuery).toHaveBeenCalledWith(
-      expect.stringContaining('Context: bible')
+      expect.stringContaining('Contexto: bible')
     );
   });
 

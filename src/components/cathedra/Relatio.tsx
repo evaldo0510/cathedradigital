@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Icons } from '../../constants';
 import { fetchNexusTagContent, TagContent } from '@/lib/nexusContent';
 import { BIBLE_TO_CIC, CIC_TO_BIBLE, getBibleDocs, getCatechismDocs } from '@/data/cross-references';
@@ -39,6 +39,7 @@ const Relatio: React.FC<RelatioProps> = ({
   onSelectLogosQuery,
   className 
 }) => {
+  const containerRef = useRef<HTMLElement>(null);
   const contextSettings = useReadingSettings();
   const settings = contextSettings?.settings || { relatio: { enabled: true } };
   const { user } = useAuth();
@@ -194,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -254,6 +255,7 @@ const Relatio: React.FC<RelatioProps> = ({
             transition={{ duration: 1.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="space-y-6"
           >
+            <LayoutGroup id="relatio-cards">
             {/* Static References */}
             {(staticRefs.cicParagraphs.length > 0 || staticRefs.bibleRefs.length > 0 || staticRefs.documents.length > 0) && (
               <div className="flex flex-wrap gap-2">
@@ -417,6 +419,16 @@ const Relatio: React.FC<RelatioProps> = ({
                   );
                 })}
                 </div>
+
+                {loading && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {[1, 2].map((i) => (
+                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -430,7 +442,7 @@ const Relatio: React.FC<RelatioProps> = ({
                     const nextShowAll = !showAll;
                     setShowAll(nextShowAll);
                     if (!nextShowAll) {
-                      document.getElementById('relatio-heading')?.scrollIntoView({ behavior: 'smooth' });
+                      containerRef.current?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                   className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-full"
