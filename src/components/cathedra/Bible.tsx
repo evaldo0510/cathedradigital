@@ -938,9 +938,10 @@ const Bible: React.FC = () => {
             )}
           </aside>
 
-          <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
-            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
-              <div className="p-8 md:p-20 lg:p-24">
+          <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+            <div className="w-full relative">
+              <div className="py-8 md:py-20 lg:py-24">
+
 
 
                 {isLoading ? (
