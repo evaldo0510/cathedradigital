@@ -47,6 +47,9 @@ const Relatio: React.FC<RelatioProps> = ({
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [autoCollapse, setAutoCollapse] = useState(() => {
+    return localStorage.getItem('cathedra-relatio-autocollapse') === 'true';
+  });
   const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
     return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
   });
@@ -170,7 +173,15 @@ const Relatio: React.FC<RelatioProps> = ({
   const updateDensity = (newDensity: 'subtle' | 'normal' | 'deep') => {
     setDensity(newDensity);
     localStorage.setItem('cathedra-relatio-density', newDensity);
+    window.dispatchEvent(new CustomEvent('cathedra-relatio-density-changed', { detail: newDensity }));
     toast.info(`Densidade: ${newDensity === 'subtle' ? 'Subtil' : newDensity === 'normal' ? 'Normal' : 'Profunda'}`);
+  };
+
+  const toggleAutoCollapse = () => {
+    const newVal = !autoCollapse;
+    setAutoCollapse(newVal);
+    localStorage.setItem('cathedra-relatio-autocollapse', String(newVal));
+    toast.info(`Recolhimento Automático: ${newVal ? 'Ativado' : 'Desativado'}`);
   };
 
 
@@ -195,6 +206,19 @@ const Relatio: React.FC<RelatioProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleAutoCollapse}
+            className={cn(
+              "w-8 h-8 rounded-full transition-all duration-300",
+              autoCollapse ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary"
+            )}
+            title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
+          >
+            <Icons.Layers className="w-3.5 h-3.5" />
+          </Button>
+
           <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
             {(['subtle', 'normal', 'deep'] as const).map((d) => (
               <button
@@ -342,11 +366,12 @@ const Relatio: React.FC<RelatioProps> = ({
                                     if (isOpeningLogos) return;
                                     
                                     setIsOpeningLogos(true);
+                                    if (autoCollapse) setShowAll(false);
                                     const prompt = `Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}". Contexto: ${item.type}, Tags: ${item.metadata?.tags?.join(', ') || 'N/A'}.`;
                                     onSelectLogosQuery(prompt);
                                     
                                     // Reset lock after a short delay to allow drawer to open
-                                    setTimeout(() => setIsOpeningLogos(false), 2000);
+                                    setTimeout(() => setIsOpeningLogos(false), 1500);
                                   }}
                                 >
                                   <Icons.Sparkles className={cn("w-3.5 h-3.5", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
@@ -423,8 +448,12 @@ const Relatio: React.FC<RelatioProps> = ({
             )}
 
             {loading && (
-              <div className="flex items-center justify-center py-4">
-                <Icons.Loader2 className="w-5 h-5 animate-spin text-primary/30" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[1, 2].map((i) => (
+                  <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
+                  </div>
+                ))}
               </div>
             )}
           </motion.div>
