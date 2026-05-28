@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
+import SpiritualGoals from './SpiritualGoals';
 
 const ItinerariaPage: React.FC = () => {
   const navigate = useNavigate();
@@ -47,6 +48,10 @@ const ItinerariaPage: React.FC = () => {
             "Aquele que me segue não andará em trevas, mas terá a luz da vida." — João 8,12
           </p>
         </motion.div>
+
+        <div className="max-w-3xl mx-auto">
+          <SpiritualGoals />
+        </div>
 
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
