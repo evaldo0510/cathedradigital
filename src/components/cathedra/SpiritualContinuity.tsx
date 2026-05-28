@@ -1,174 +1,105 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
-import { HomeCard } from './HomeCard';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useLang } from '@/hooks/useLang';
-import { formatDistanceToNow } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { HomeCard } from './HomeCard';
+import { Button } from '@/components/ui/button';
 
-interface SpiritualContinuityProps {
-  data: any;
-  isLoading?: boolean;
-  profile?: any;
-}
-
-export const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, isLoading, profile }) => {
+const SpiritualContinuity: React.FC = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const { t } = useLang();
+  const [lastItem, setLastItem] = useState<{ title: string; route: string; type: 'reading' | 'journey' } | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (isLoading || !data) return null;
+  useEffect(() => {
+    if (!user) return;
 
-  const { nextBible, nextCatechism, nextJourney, lastReflection, lastJournal, history, primaryResume: dashboardPrimary } = data;
+    const fetchLastActivity = async () => {
+      setLoading(true);
+      try {
+        // Get last visited history
+        const { data: historyData } = await supabase
+          .from('user_history')
+          .select('title, route, visited_at')
+          .eq('user_id', user.id)
+          .order('visited_at', { ascending: false })
+          .limit(1);
 
-  // Calculo discreto de maturidade baseado em XP
-  const xp = profile?.xp || 0;
-  const historyItems = history || [];
+        // Get last journey progress
+        const { data: journeyData } = await supabase
+          .from('journey_progress')
+          .select('journey_id, journeys(title), completed_at')
+          .eq('user_id', user.id)
+          .order('completed_at', { ascending: false })
+          .limit(1);
 
-  // Degrees: I, II, III, IV, V... based on XP
-  const romanDegrees = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
-  const degreeIndex = Math.floor(xp / 1000);
-  const currentDegree = romanDegrees[degreeIndex] || `X+${degreeIndex - 9}`;
-  const progressToNextLevel = (xp % 1000) / 10; 
+        const history = historyData?.[0];
+        const journey = journeyData?.[0];
 
-  // Prioridade de retomada: use a marca de leitura exata se disponível, senão caia nos calculados
-  const primaryResume = dashboardPrimary || nextJourney || nextBible || nextCatechism;
+        if (history && journey) {
+          if (new Date(history.visited_at) > new Date(journey.completed_at)) {
+            setLastItem({ title: history.title || 'Leitura', route: history.route, type: 'reading' });
+          } else {
+            setLastItem({ 
+              title: (journey as any).journeys?.title || 'Jornada', 
+              route: `/jornadas/${journey.journey_id}`, 
+              type: 'journey' 
+            });
+          }
+        } else if (history) {
+          setLastItem({ title: history.title || 'Leitura', route: history.route, type: 'reading' });
+        } else if (journey) {
+          setLastItem({ 
+            title: (journey as any).journeys?.title || 'Jornada', 
+            route: `/jornadas/${journey.journey_id}`, 
+            type: 'journey' 
+          });
+        }
+      } catch (err) {
+        console.error('Continuity Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!primaryResume && historyItems.length === 0) return null;
+    fetchLastActivity();
+  }, [user]);
+
+  if (loading || !lastItem) return null;
 
   return (
-    <div className="space-y-12">
-      {/* Visual Progress - Minimalista e Nobre */}
-      <div className="flex flex-col items-center gap-6">
-        <div className="flex items-center gap-8 w-full">
-           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-           <h3 className="text-premium-tiny font-black uppercase tracking-[0.6em] text-primary/30">Caminho de Maturidade</h3>
-           <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/10 to-transparent" />
-        </div>
-        
-        <div className="flex items-center gap-6">
-          <span className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Grau {currentDegree}</span>
-          <div className="h-[2px] w-32 bg-primary/[0.03] rounded-full overflow-hidden">
-            <motion.div 
-              initial={{ width: 0 }}
-              animate={{ width: `${Math.max(5, progressToNextLevel)}%` }}
-              className="h-full bg-secondary/20"
-              transition={{ duration: 2, ease: [0.22, 1, 0.36, 1] }}
-            />
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-4xl mx-auto mb-16 px-6"
+    >
+      <HomeCard className="p-8 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-6">
+            <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/30">
+              {lastItem.type === 'journey' ? <Icons.Compass className="w-6 h-6" /> : <Icons.BookOpen className="w-6 h-6" />}
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">Bem-vindo de volta</p>
+              <h3 className="text-xl font-serif font-bold text-primary/80">
+                {lastItem.type === 'journey' ? 'Retomar jornada:' : 'Continuar leitura:'} {lastItem.title}
+              </h3>
+            </div>
           </div>
-          <span className="text-[10px] font-black text-secondary/40 uppercase tracking-[0.3em]">Grau {romanDegrees[degreeIndex + 1] || '?'}</span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Card de Retomada Principal */}
-        {primaryResume && (
-          <HomeCard 
-            onClick={() => navigate(primaryResume.route)}
-            className="lg:col-span-2 responsive-padding group relative overflow-hidden flex flex-col justify-between min-h-[240px] border-primary/10 shadow-premium"
+          
+          <Button 
+            variant="ghost" 
+            className="rounded-full px-10 h-12 border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] transition-all duration-700"
+            onClick={() => navigate(lastItem.route)}
           >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-               {primaryResume.type === 'bible' && <Icons.Bible size={120} strokeWidth={0.5} />}
-               {primaryResume.type === 'journey' && <Icons.Journeys size={120} strokeWidth={0.5} />}
-               {primaryResume.type === 'catechism' && <Icons.Catechism size={120} strokeWidth={0.5} />}
-            </div>
-
-            <div className="space-y-4 relative z-10">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-secondary/60">{primaryResume.subtitle}</span>
-              <h4 className="text-3xl font-display font-medium text-primary leading-tight max-w-md">{primaryResume.label}</h4>
-            </div>
-
-            <div className="flex items-center justify-between relative z-10 pt-4">
-              <div className="flex items-center gap-3 text-sm text-muted-foreground font-serif italic opacity-60">
-                 <Icons.Clock size={14} />
-                 <span>Retomar agora</span>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center group-hover:scale-110 transition-transform shadow-premium">
-                <Icons.Play size={20} fill="currentColor" />
-              </div>
-            </div>
-          </HomeCard>
-        )}
-
-        {/* Card de Última Reflexão */}
-        <HomeCard className="responsive-padding flex flex-col justify-between bg-secondary/[0.01] border-secondary/10 shadow-premium">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-secondary/60">
-              <Icons.Quote size={16} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Sua Última Reflexão</span>
-            </div>
-            {lastReflection ? (
-              <p className="text-base font-serif italic text-primary/70 line-clamp-4 leading-relaxed">
-                "{lastReflection.content}"
-              </p>
-            ) : lastJournal ? (
-              <p className="text-base font-serif italic text-primary/70 line-clamp-4 leading-relaxed">
-                "{lastJournal.content}"
-              </p>
-            ) : (
-              <p className="text-sm text-muted-foreground/30 font-serif italic">Nenhuma reflexão recente registrada.</p>
-            )}
-          </div>
-
-          {(lastReflection || lastJournal) && (
-            <div className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-tighter pt-4">
-              {(() => {
-                const date = lastReflection?.date || lastJournal?.date;
-                if (!date) return '';
-                try {
-                  return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ptBR });
-                } catch (e) {
-                  return '';
-                }
-              })()}
-            </div>
-          )}
-        </HomeCard>
-      </div>
-
-      {/* Histórico Elegante */}
-      {historyItems.length > 0 && (
-        <div className="space-y-4">
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/30 px-2">Caminho da Fé</p>
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0">
-            {historyItems.map((item: any, idx: number) => (
-
-              <motion.div
-                key={item.id || idx}
-                whileHover={{ y: -4, borderColor: 'rgba(var(--secondary), 0.3)' }}
-                onClick={() => navigate(item.route)}
-                className="flex-shrink-0 w-72 p-8 rounded-premium bg-card border border-primary/5 cursor-pointer group transition-all shadow-sm hover:shadow-premium"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
-                       <Icons.History size={14} />
-                    </div>
-                    <span className="text-[9px] font-bold text-muted-foreground/30 uppercase tracking-tighter">
-                      {(() => {
-                        if (!item.visited_at) return '';
-                        try {
-                          return formatDistanceToNow(new Date(item.visited_at), { addSuffix: true, locale: ptBR });
-                        } catch (e) {
-                          return '';
-                        }
-                      })()}
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-black text-primary/60 uppercase tracking-widest truncate">
-                      {item.title || item.route?.split('/').pop()?.replace(/-/g, ' ') || 'Peregrinação'}
-                    </p>
-                    <p className="text-xs font-serif italic text-muted-foreground/60 truncate">
-                      Retomar leitura profunda
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+            Retomar agora
+          </Button>
         </div>
-      )}
-    </div>
+      </HomeCard>
+    </motion.div>
   );
 };
+
+export default SpiritualContinuity;
