@@ -430,18 +430,19 @@ const MagisteriumViewer: React.FC = () => {
                 <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
               </motion.div>
             )}
-            <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[3rem] md:rounded-[5rem] relative">
+            <div className="w-full relative">
             <div 
               ref={contentRef}
               onScroll={() => {
                 if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
               }}
-              className={`p-8 md:p-16 lg:p-24 prose prose-slate dark:prose-invert max-w-none reader-text
+              className={`py-8 md:py-24 prose prose-slate dark:prose-invert max-w-none reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
                 prose-headings:font-serif prose-headings:text-primary 
-                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
+                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-3xl prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
+
               {processedText.split('\n\n').map((para, idx) => {
                 const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
                 
