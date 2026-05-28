@@ -1,101 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
+import { Profile } from '@/hooks/useAuth';
 
-const SpiritualContinuity: React.FC = () => {
-  const { user } = useAuth();
+interface SpiritualContinuityProps {
+  data?: any;
+  isLoading?: boolean;
+  profile?: Profile | null;
+}
+
+const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data, isLoading, profile }) => {
   const navigate = useNavigate();
-  const [lastItem, setLastItem] = useState<{ title: string; route: string; type: 'reading' | 'journey' } | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user) return;
+  if (isLoading || !data) return null;
 
-    const fetchLastActivity = async () => {
-      setLoading(true);
-      try {
-        // Get last visited history
-        const { data: historyData } = await supabase
-          .from('user_history')
-          .select('title, route, visited_at')
-          .eq('user_id', user.id)
-          .order('visited_at', { ascending: false })
-          .limit(1);
+  // Extract relevant item from data (nextBible, nextCatechism, or history)
+  const nextItem = data.nextBible || data.nextCatechism || (data.history && data.history[0]);
 
-        // Get last journey progress
-        const { data: journeyData } = await supabase
-          .from('journey_progress')
-          .select('journey_id, journeys(title), completed_at')
-          .eq('user_id', user.id)
-          .order('completed_at', { ascending: false })
-          .limit(1);
+  if (!nextItem) return null;
 
-        const history = historyData?.[0];
-        const journey = journeyData?.[0];
-
-        if (history && journey) {
-          if (new Date(history.visited_at) > new Date(journey.completed_at)) {
-            setLastItem({ title: history.title || 'Leitura', route: history.route, type: 'reading' });
-          } else {
-            setLastItem({ 
-              title: (journey as any).journeys?.title || 'Jornada', 
-              route: `/jornadas/${journey.journey_id}`, 
-              type: 'journey' 
-            });
-          }
-        } else if (history) {
-          setLastItem({ title: history.title || 'Leitura', route: history.route, type: 'reading' });
-        } else if (journey) {
-          setLastItem({ 
-            title: (journey as any).journeys?.title || 'Jornada', 
-            route: `/jornadas/${journey.journey_id}`, 
-            type: 'journey' 
-          });
-        }
-      } catch (err) {
-        console.error('Continuity Error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLastActivity();
-  }, [user]);
-
-  if (loading || !lastItem) return null;
+  const title = nextItem.label || nextItem.title || 'Continuação';
+  const subtitle = nextItem.subtitle || 'Onde você parou';
+  const route = nextItem.route || '/';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full max-w-4xl mx-auto mb-16 px-6"
+      className="w-full mb-16"
     >
-      <HomeCard className="p-8 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+      <HomeCard className="p-8 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.01] rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
+        
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div className="flex items-center gap-6">
-            <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/30">
-              {lastItem.type === 'journey' ? <Icons.Compass className="w-6 h-6" /> : <Icons.BookOpen className="w-6 h-6" />}
+            <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary/30 border border-primary/5">
+              <Icons.Compass className="w-6 h-6" strokeWidth={1} />
             </div>
-            <div className="space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">Bem-vindo de volta</p>
-              <h3 className="text-xl font-serif font-bold text-primary/80">
-                {lastItem.type === 'journey' ? 'Retomar jornada:' : 'Continuar leitura:'} {lastItem.title}
+            <div className="space-y-1 text-center md:text-left">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">
+                {profile?.name ? `Paz e Bem, ${profile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
+              </p>
+              <h3 className="text-xl md:text-2xl font-serif font-bold text-primary/80">
+                {title}
               </h3>
+              <p className="text-xs text-primary/30 italic font-serif">{subtitle}</p>
             </div>
           </div>
           
-          <Button 
-            variant="ghost" 
-            className="rounded-full px-10 h-12 border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] transition-all duration-700"
-            onClick={() => navigate(lastItem.route)}
-          >
-            Retomar agora
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Button 
+              variant="ghost" 
+              className="rounded-full px-12 h-14 border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] transition-all duration-700"
+              onClick={() => navigate(route)}
+            >
+              Retomar Contemplação
+            </Button>
+          </div>
         </div>
       </HomeCard>
     </motion.div>
