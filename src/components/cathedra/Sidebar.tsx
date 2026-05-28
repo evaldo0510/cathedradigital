@@ -99,6 +99,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
       label: 'Hoje',
       items: [
         { label: 'Hoje', path: AppRoute.HOJE, icon: <Icons.Sun /> },
+        { label: 'Perfil Espiritual', path: '/spiritual-profile', icon: <Icons.User /> },
         { label: 'Diário Espiritual', path: AppRoute.DIARIO, icon: <Icons.BookOpen /> },
         { label: 'Favoritos', path: AppRoute.FAVORITES, icon: <Icons.Heart /> },
         { label: 'Conquistas', path: AppRoute.ACHIEVEMENTS, icon: <Icons.Award /> },
