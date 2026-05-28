@@ -244,6 +244,17 @@ const ProfilePage: React.FC = () => {
         )}
       </AnimatePresence>
 
+      <div className="flex justify-center mb-8">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/spiritual-profile')}
+          className="rounded-full px-8 h-12 border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
+        >
+          <Icons.Sparkles className="w-4 h-4 mr-2" />
+          Ver Perfil Espiritual Contemplativo
+        </Button>
+      </div>
+
       <div className="text-center space-y-4">
         <div className="relative w-24 h-24 mx-auto group">
           <Avatar className="w-24 h-24 border-4 border-primary/20">
