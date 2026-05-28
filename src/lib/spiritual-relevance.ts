@@ -178,14 +178,17 @@ export function rankConnectionsIntelligently(
 
     // 3. Spiritual Psychology Alignment
     if (context.psychology) {
-      // Virtue alignment
-      if (context.psychology.dominant_virtue) {
-        const virtue = context.psychology.dominant_virtue.toLowerCase();
-        if (normalized.tags.includes(virtue)) {
-          score += 25;
-          reason = 'Virtue Relacionada';
+      // Traits-based virtue/inclination alignment
+      if (context.psychology.traits) {
+        const traitMatches = normalized.tags.filter(t => 
+          context.psychology?.traits?.[t]
+        ).length;
+        if (traitMatches > 0) {
+          score += traitMatches * 10;
+          reason = 'Inclinação Espiritual';
         }
       }
+
       
       // Emotional medicine (healing resonance)
       if (context.psychology.dominant_emotion) {
