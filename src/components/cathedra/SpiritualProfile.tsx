@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +10,10 @@ import ContemplativeLayout from './ContemplativeLayout';
 import { getLevelInfo } from '@/lib/levels';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Database } from '@/integrations/supabase/types';
+
+type UserHistory = Database['public']['Tables']['user_history']['Row'];
+type JourneyProgressRow = Database['public']['Tables']['journey_progress']['Row'] & { journeys: { title: string } | null };
 
 interface JourneyProgress {
   id: string;
@@ -21,7 +25,7 @@ interface JourneyProgress {
 const SpiritualProfile: React.FC = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const [recentReadings, setRecentReadings] = useState<any[]>([]);
+  const [recentReadings, setRecentReadings] = useState<UserHistory[]>([]);
   const [activeJourneys, setActiveJourneys] = useState<JourneyProgress[]>([]);
   const [contemplatedThemes, setContemplatedThemes] = useState<string[]>([]);
   const [favoriteReflections, setFavoriteReflections] = useState<any[]>([]);
@@ -51,12 +55,12 @@ const SpiritualProfile: React.FC = () => {
         // Group by journey_id and get last completed_at
         const uniqueJourneys = Array.from(new Set((journeyData || []).map(j => j.journey_id)));
         const journeyList: JourneyProgress[] = uniqueJourneys.slice(0, 3).map(id => {
-          const matching = journeyData?.filter(j => j.journey_id === id) || [];
+          const matching = (journeyData as any[])?.filter(j => j.journey_id === id) || [];
           return {
             id,
-            title: (matching[0] as any)?.journeys?.title || 'Jornada',
-            progress: Math.min(Math.round((matching.length / 10) * 100), 100), // Mocked total steps as 10 for now
-            last_visited: matching[0]?.completed_at
+            title: matching[0]?.journeys?.title || 'Jornada',
+            progress: Math.min(Math.round((matching.length / 10) * 100), 100),
+            last_visited: matching[0]?.completed_at || new Date().toISOString()
           };
         });
 
