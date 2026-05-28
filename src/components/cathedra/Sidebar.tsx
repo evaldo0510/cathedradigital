@@ -152,6 +152,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
       label: 'Jornadas',
       items: [
         { label: 'Jornadas', path: AppRoute.JORNADAS, icon: <Icons.Journeys /> },
+        { label: 'Itineraria', path: AppRoute.ITINERARIA, icon: <Icons.Compass /> },
       ]
     },
     {
