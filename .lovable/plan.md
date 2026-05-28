@@ -1,29 +1,40 @@
-The consolidation of Cathedra Digital will focus on creating a premium, minimalist, and contemplative spiritual experience.
+Implementarei um sistema de **Trilhas Espirituais Guiadas (Itineraria)**, transformando o Cathedra em uma jornada progressiva e contemplativa.
 
-### Technical Consolidation
-- Streamline `App.tsx` by removing redundant routes and simplifying the layout structure.
-- Consolidate providers and ensure consistent state management.
-- Remove unused or experimental components to reduce bundle size and complexity.
+### 1. Estrutura de Dados e Backend
+- Já foram criadas as tabelas `itineraria`, `itineraria_steps` e `itineraria_progress` via migração.
+- A view `view_itineraria_with_stats` foi configurada para facilitar a listagem no frontend com segurança.
 
-### Home Page Transformation (Contemplative Portal)
-- Redesign the Home to be a silent, guided journey.
-- Maintain only: Hero, Ritual of the Day, Continue Reading, Bible, Catechism, Magisterium, Logos AI, and an elegant "Coming Soon" section.
-- Remove all visual clutter, duplicate modules, and excessive information cards.
+### 2. Interface de Listagem (ItinerariaPage)
+- Criar `src/components/cathedra/ItinerariaPage.tsx` inspirada na `JornadasPage.tsx`, mas com um design editorial premium.
+- Foco em tipografia elegante, espaçamento generoso e iconografia minimalista.
+- Categorias como "Purificação", "Iluminação" e "União" (Três Vias da Vida Espiritual).
 
-### Design System & UI Refinement
-- Standardize all UI elements (cards, buttons, grids) for a premium look.
-- Increase whitespace (respiro visual) and ensure perfect alignments.
-- Apply a "silent premium" aesthetic with refined shadows, borders, and typography.
+### 3. Detalhes da Trilha (ItinerariumDetailPage)
+- Criar `src/components/cathedra/ItinerariumDetailPage.tsx`.
+- Visual imersivo com banner de cobertura e resumo da jornada.
+- Timeline vertical elegante para os passos, diferenciando tipos de atividades (Leitura, Oração, Logos IA).
 
-### Premium Reading Experience
-- Refactor Bible, Catechism, and Magisterium views for maximum focus.
-- Implement comfortable reading widths and refined typography.
-- Minimize distractions during study and contemplation.
+### 4. Experiência do Passo (ItinerariumStepPage)
+- Criar `src/components/cathedra/ItinerariumStepPage.tsx`.
+- Interface focada em "Silêncio Visual", ocultando distrações.
+- Suporte a múltiplos tipos de conteúdo:
+    - **Leitura:** Markdown rico com referências bíblicas/catequéticas.
+    - **Oração:** Espaço para meditação com áudio ambiente (opcional).
+    - **Logos IA:** Drawer integrado para aprofundamento contextual.
+    - **Reflexão:** Journal espiritual integrado para salvar insights.
 
-### Logos IA Integration
-- Redesign the Logos IA interface to act as a spiritual mentor rather than a chatbot.
-- Seamlessly integrate it into the content flow.
+### 5. Integração Logos IA
+- Refinar o prompt da Logos IA dentro das trilhas para que ela atue como um "Mentor de Caminhada", sugerindo conexões entre os passos anteriores e o atual.
 
-### Verification
-- Run typechecks and linting to ensure technical stability.
-- Visual review of the "monastic" digital experience.
+### 6. Navegação e SEO
+- Registrar as novas rotas em `src/App.tsx`.
+- Adicionar metadados SEO específicos para as trilhas.
+
+---
+
+### Detalhes Técnicos
+
+- **Tecnologias:** React, Framer Motion (para transições suaves), Lucide React (ícones), Tailwind CSS, Supabase.
+- **Transições:** Uso de `AnimatePresence` e `motion` para garantir que a mudança entre passos pareça uma caminhada fluida, não um carregamento de página.
+- **Persistência:** Sincronização em tempo real do progresso via Supabase.
+- **Componentização:** Reutilização de `Relatio.tsx` e `LogosAI.tsx` para manter a consistência do ecossistema.
