@@ -814,10 +814,34 @@ const Bible: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Toolbar */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-card p-2 rounded-premium border border-border shadow-soft">
-          <div className="flex items-center gap-2">
-            <AudioButton variant="default" className="px-6" />
+        {/* Atmospheric Floating Header - Only visible on interaction or scroll up */}
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+          <div className="flex items-center gap-1">
+            <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
+            <ReadingControlPanel />
+          </div>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
+              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/30'}`} />
+            </Button>
+            <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
+          </div>
+        </div>
+
+        {/* Desktop Toolbar */}
+        <div className="hidden md:flex items-center justify-between gap-4 bg-card/40 backdrop-blur-xl p-3 rounded-premium border border-border/40 shadow-soft mb-16">
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={goBack}
+              className="rounded-full hover:bg-primary/5"
+              title="Voltar ao Sumário"
+            >
+              <Icons.ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="h-8 w-px bg-border/20 mx-2" />
+            <AudioButton variant="default" className="px-6 rounded-full" />
             <ShareButton
               title={`${selectedBook.name} ${selectedChapter}${highlightedVerse ? `:${highlightedVerse}` : ''}`}
               text={`Leia ${selectedBook.name}, capítulo ${selectedChapter} na Cathedra Digital`}
@@ -826,57 +850,39 @@ const Bible: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button disabled={selectedChapter <= 1} onClick={() => navigateChapter(-1)}
-              className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+            <Button 
+              disabled={selectedChapter <= 1} 
+              onClick={() => navigateChapter(-1)}
+              variant="outline"
+              className="rounded-full border-primary/5 hover:border-primary/20"
+            >
               ← Anterior
             </Button>
-            <Button disabled={selectedChapter >= selectedBook.chapters} onClick={() => navigateChapter(1)}
-              className="px-3 py-2 rounded-full bg-card border border-border text-sm font-bold disabled:opacity-30 hover:bg-primary/10 transition-all">
+            <Button 
+              disabled={selectedChapter >= selectedBook.chapters} 
+              onClick={() => navigateChapter(1)}
+              variant="outline"
+              className="rounded-full border-primary/5 hover:border-primary/20"
+            >
               Próximo →
             </Button>
           </div>
+
           <div className="flex items-center gap-2">
-            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={() => navigate(lastReadMark.url)}
-                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
-              >
-                <Icons.History className="w-4 h-4" />
-                <span className="hidden sm:inline">Continuar de onde parei</span>
-              </Button>
-            )}
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => navigate('/diario')}
-              className="rounded-full flex items-center gap-2 border-primary/10 hover:bg-primary/5"
-            >
-              <LayoutPanelLeft className="w-4 h-4 text-primary" />
-              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Meu Diário</span>
-            </Button>
             <ReadingControlPanel />
-            {(crossRefs.length > 0 || docsRefs.length > 0) && (
-              <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Conexões Sagradas (Catecismo & Magistério)">
-                <Compass className={`w-4 h-4 ${showCrossRefs ? 'animate-spin-slow' : ''}`} />
-                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Conexões</span>
-                <span className="text-xs font-bold bg-primary/10 px-1.5 rounded-full">{crossRefs.length + docsRefs.length}</span>
-              </Button>
-            )}
             <Button 
               variant="outline" 
               size="sm" 
               onClick={() => setShowLogosAI(!showLogosAI)}
-              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : 'border-primary/10'}`}
             >
               <Icons.Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Logos IA</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Logos IA</span>
             </Button>
+            <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
           </div>
         </div>
+
 
 
         {/* Content with Side Nav */}
@@ -938,9 +944,10 @@ const Bible: React.FC = () => {
             )}
           </aside>
 
-          <div className="flex-1 w-full space-y-8 max-w-[75ch] mx-auto">
-            <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
-              <div className="p-8 md:p-20 lg:p-24">
+          <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+            <div className="w-full relative">
+              <div className="py-8 md:py-20 lg:py-24">
+
 
 
                 {isLoading ? (
@@ -1048,6 +1055,75 @@ const Bible: React.FC = () => {
                 )}
               </div>
             </div>
+
+            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+                <Button 
+                  variant="ghost" 
+                  disabled={selectedChapter <= 1}
+                  onClick={() => {
+                    if (selectedChapter > 1) {
+                      const prevCh = selectedChapter - 1;
+                      setSelectedChapter(prevCh);
+                      setVerses([]);
+                      navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                    <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                    {selectedBook.name} {selectedChapter - 1}
+                  </div>
+                </Button>
+
+                <Button 
+                  variant="ghost" 
+                  disabled={selectedChapter >= selectedBook.chapters}
+                  onClick={() => {
+                    if (selectedChapter < selectedBook.chapters) {
+                      const nextCh = selectedChapter + 1;
+                      setSelectedChapter(nextCh);
+                      setVerses([]);
+                      navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                    }
+                  }}
+                  className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
+                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                    {selectedBook.name} {selectedChapter + 1}
+                    <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
+                  </div>
+                </Button>
+              </div>
+
+              <div className="text-center space-y-8 py-16">
+                <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                  <p className="text-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Button 
+                    onClick={() => {
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                      toast.success("Capítulo contemplado!", { icon: '📖' });
+                      setViewMode('chapters');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                  >
+                    Finalizar e Voltar
+                  </Button>
+                </div>
+              </div>
+            </div>
+
             
             <TextSelectionToolbar 
               activeHighlightId={activeHighlight?.id}

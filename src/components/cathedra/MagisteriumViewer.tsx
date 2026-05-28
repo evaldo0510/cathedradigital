@@ -318,63 +318,53 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="max-w-[1400px] mx-auto pb-24 px-4 sm:px-6 relative">
+    <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
         path={`/magisterium/${id}`}
       />
 
-      <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-md py-4 mb-12 border-b border-border flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 min-w-0">
+      {/* Atmospheric Header - More minimal on mobile */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-3xl py-3 px-4 sm:px-6 mb-8 md:mb-16 border-b border-primary/5 flex items-center justify-between gap-4 header-reading-auto-hide transition-all duration-700">
+        <div className="flex items-center gap-2 min-w-0">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)}
-            className="rounded-full hover:bg-muted"
+            className="rounded-full hover:bg-primary/5 h-9 w-9 shrink-0"
           >
-            <Icons.ArrowLeft className="w-5 h-5" />
+            <Icons.ArrowLeft className="w-4 h-4" />
           </Button>
           <div className="min-w-0">
-            <h1 className="text-sm font-black uppercase tracking-widest text-primary truncate">{content.title}</h1>
-            <p className="text-premium-tiny text-muted-foreground uppercase tracking-tighter">Magistério da Igreja</p>
+            <h1 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 truncate leading-none mb-1">{content.title}</h1>
+            <p className="text-[8px] text-muted-foreground/60 uppercase tracking-widest font-bold">Magistério</p>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              onClick={() => navigate(lastReadMark.url)}
-              className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
-            >
-              <Icons.History className="w-4 h-4" />
-              <span className="hidden sm:inline">Continuar de onde parei</span>
-            </Button>
-          )}
-          <AudioButton variant="outline" className="rounded-full h-10 w-10 p-0" />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 mr-2">
+            <AudioButton variant="outline" className="rounded-full h-9 w-9 p-0 border-primary/10" />
+            <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
+          </div>
           <ReadingControlPanel />
           <Button 
-            variant="outline" 
-            size="sm" 
+            variant="ghost" 
+            size="icon" 
             onClick={() => setShowLogosAI(!showLogosAI)}
-            className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
+            className={`rounded-full h-9 w-9 p-0 transition-all ${showLogosAI ? 'bg-primary text-white scale-110' : 'hover:bg-primary/5 text-primary/40'}`}
+            title="Logos IA"
           >
             <Icons.Sparkles className="w-4 h-4" />
-            <span className="hidden sm:inline">Logos IA</span>
           </Button>
-          <Button variant="outline" size="icon" className="rounded-full h-10 w-10 p-0" onClick={() => window.print()} title="Imprimir / PDF">
-            <Icons.Printer className="w-4 h-4" />
-          </Button>
-          <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
         </div>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
-        {/* Elegant side navigation for documents can be implemented if the text has anchors. 
-            For now, we'll keep the side column for balance and potential future TOC. */}
-        <aside className="reader-navigation-aside space-y-12">
+
+      <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
+        {/* Elegant side navigation - Hidden on mobile for focused reading */}
+        <aside className="hidden lg:flex flex-col w-full max-w-[280px] space-y-12 sticky top-32">
+
           <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
             <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
             <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
@@ -440,18 +430,19 @@ const MagisteriumViewer: React.FC = () => {
                 <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
               </motion.div>
             )}
-            <div className="reader-container bg-card border border-border/40 shadow-soft overflow-hidden rounded-[3rem] md:rounded-[5rem] relative">
+            <div className="w-full relative">
             <div 
               ref={contentRef}
               onScroll={() => {
                 if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
               }}
-              className={`p-8 md:p-16 lg:p-24 prose prose-slate dark:prose-invert max-w-none reader-text
+              className={`py-8 md:py-24 prose prose-slate dark:prose-invert max-w-none reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
                 prose-headings:font-serif prose-headings:text-primary 
-                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-full prose-blockquote:italic
+                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-3xl prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
+
               {processedText.split('\n\n').map((para, idx) => {
                 const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
                 
@@ -575,15 +566,43 @@ const MagisteriumViewer: React.FC = () => {
       )}
 
 
-      <div className="mt-12 flex justify-center">
+      <div className="mt-32 pt-16 border-t border-primary/5 flex flex-col items-center gap-12">
+        <div className="text-center space-y-4">
+          <Icons.CheckCircle2 className="w-12 h-12 text-primary/20 mx-auto" />
+          <div className="space-y-1">
+            <h3 className="text-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
+            <p className="text-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>
+          </div>
+          <Button 
+            onClick={() => {
+              saveLastRead({
+                content_type: 'magisterium',
+                content_id: id || '',
+                label: content.title,
+                url: window.location.pathname,
+                position: document.documentElement.scrollHeight
+              });
+              toast.success("Progresso salvo com sucesso", {
+                icon: '✨'
+              });
+              navigate(-1);
+            }}
+            className="rounded-full px-12 py-6 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium"
+          >
+            Concluir e Voltar
+          </Button>
+        </div>
+
         <Button 
-          variant="outline" 
+          variant="ghost" 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="rounded-full px-6"
+          className="rounded-full px-8 py-6 text-muted-foreground/40 hover:text-primary transition-all group"
         >
-          <Icons.ChevronUp className="w-4 h-4 mr-2" /> Topo do Documento
+          <Icons.ChevronUp className="w-4 h-4 mr-2 group-hover:-translate-y-1 transition-transform" /> 
+          Voltar ao Topo do Documento
         </Button>
       </div>
+
 
       {!settings.totalSilence && showLogosAI && (
         <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">

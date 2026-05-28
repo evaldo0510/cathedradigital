@@ -655,47 +655,235 @@ const Catechism: React.FC = () => {
     return null;
   }, [paragraphsRead]);
 
-  // Reading view
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const fromDashboard = searchParams.get('from') === 'dashboard';
 
     return (
-      <ContemplativeLayout
-        subtitle={selectedPart.part}
-        title={selectedSection.title}
-        maxW="max-w-[1200px]"
-      >
-        <BackToThemeBanner />
-        {fromDashboard && (
-          <Button onClick={() => navigate('/')} className="mb-6 flex items-center gap-1.5 text-xs text-primary hover:underline">
-            <ArrowLeft className="w-3.5 h-3.5" /> Voltar ao Dashboard
-          </Button>
-        )}
-        
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            onClick={goBack} 
-            className="p-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Voltar para o Sumário"
-          >
-            <Icons.ArrowDown className="w-5 h-5 rotate-90 text-foreground" />
-          </Button>
+      <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
+        <SEOHead 
+          title={`${selectedSection.title} | Catecismo`}
+          description={`Leia o Catecismo da Igreja Católica: ${selectedSection.title}`}
+          path={`/catechism?p=${currentParagraph}`}
+        />
 
-          <Button 
-            onClick={goToExplorer} 
-            className="px-4 py-2.5 rounded-full bg-card border border-border hover:bg-primary/10 transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none flex items-center gap-2"
-            title="Explorar por Temas"
-          >
-            <Icons.Search className="w-4 h-4 text-primary" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest hidden sm:inline">Explorar</span>
-          </Button>
+        {/* Atmospheric Header - Mobile Only */}
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+          <div className="flex items-center gap-1">
+            <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
+            <ReadingControlPanel />
+          </div>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
+              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/30'}`} />
+            </Button>
+            <ReadingMark contentType="catechism" contentId={`${currentParagraph}`} label={`Catecismo §${currentParagraph}`} paragraph={currentParagraph} />
+          </div>
+        </div>
 
-          <div className="flex-1 min-w-0">
-            <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedPart.part}</span>
-            <h1 className="text-xl md:text-2xl font-serif font-bold text-foreground truncate">{selectedSection.title}</h1>
-            <p className="text-sm text-muted-foreground">§{startPara} — §{endPara}</p>
+        {/* Desktop Toolbar */}
+        <div className="hidden md:flex items-center justify-between gap-4 bg-card/40 backdrop-blur-xl p-3 rounded-premium border border-border/40 shadow-soft mb-16">
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={goBack}
+              className="rounded-full hover:bg-primary/5"
+              title="Voltar"
+            >
+              <Icons.ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="h-8 w-px bg-border/20 mx-2" />
+            <AudioButton variant="default" className="px-6 rounded-full" />
+            <Button 
+              disabled={selectedSection.id <= 1} 
+              onClick={() => {
+                const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                if (prevSec) {
+                  setSelectedSection(prevSec);
+                  setCurrentParagraph(prevSec.paragraphs[0]);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              variant="outline"
+              className="rounded-full border-primary/5 hover:border-primary/20"
+            >
+              ← Anterior
+            </Button>
+            <Button 
+              disabled={selectedSection.id >= 10} 
+              onClick={() => {
+                const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                if (nextSec) {
+                  setSelectedSection(nextSec);
+                  setCurrentParagraph(nextSec.paragraphs[0]);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              variant="outline"
+              className="rounded-full border-primary/5 hover:border-primary/20"
+            >
+              Próximo →
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <ReadingControlPanel />
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : 'border-primary/10'}`}
+            >
+              <Icons.Sparkles className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Logos IA</span>
+            </Button>
+            <ReadingMark contentType="catechism" contentId={`${currentParagraph}`} label={`Catecismo §${currentParagraph}`} paragraph={currentParagraph} />
+          </div>
+        </div>
+
+        <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
+          {/* Navigation Sidebar - Desktop Only */}
+          <aside className="hidden lg:flex flex-col w-full max-w-[280px] space-y-12 sticky top-32">
+            <div className="bg-primary/5 border border-primary/10 rounded-3xl p-8 space-y-6">
+              <div className="flex justify-center">
+                <Icons.Scroll className="w-10 h-10 text-primary/40" />
+              </div>
+              <div className="space-y-2 text-center">
+                <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/60">Seção {selectedSection.id}</p>
+                <h3 className="text-xl font-display font-light text-primary">{selectedSection.title}</h3>
+              </div>
+              <p className="text-[10px] text-muted-foreground/60 italic text-center leading-relaxed">
+                Navegando entre os parágrafos §{startPara} e §{endPara}
+              </p>
             </div>
-            
+
+            {currentChapterHighlights.length > 0 && (
+              <div className="space-y-6">
+                <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 px-4">Minhas Reflexões</p>
+                <div className="flex flex-col gap-3">
+                  {currentChapterHighlights.map(note => (
+                    <button
+                      key={note.id}
+                      onClick={() => {
+                        if (note.paragraph) jumpToParagraph(note.paragraph);
+                      }}
+                      className={`flex flex-col gap-2 px-5 py-4 rounded-2xl border text-left transition-all hover:bg-primary/5 group
+                        ${note.highlight_color ? `bg-${note.highlight_color}-50/30 border-${note.highlight_color}-200/20` : 'bg-card/50 border-primary/5'}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">§{note.paragraph}</span>
+                        <div className={`w-1.5 h-1.5 rounded-full highlight-${note.highlight_color}`} />
+                      </div>
+                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground group-hover:text-primary transition-colors">
+                        {note.note_text === 'Destacado para meditação' ? 'Destaque visual' : note.note_text}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </aside>
+
+          <main className="flex-1 w-full">
+            <div className="w-full relative">
+              <div className="py-8 md:py-24">
+                <div className="space-y-16">
+                  {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
+                    <LazyParagraph 
+                      key={p} 
+                      paragraph={p} 
+                      currentParagraph={currentParagraph}
+                      paragraphsRead={paragraphsRead}
+                      isFavorite={isFavorite}
+                      toggleFavorite={toggleFavorite}
+                      handleNavigateToBible={handleNavigateToBible}
+                      onHighlightClick={(note) => {
+                        setActiveHighlight(note);
+                        setIsNoteModalOpen(true);
+                      }}
+                      highlights={currentChapterNotes}
+                    />
+                  ))}
+                </div>
+
+                {/* Kindle-style Navigation Footer */}
+                <div className="mt-32 pt-24 border-t border-primary/5 space-y-20">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+                    <Button 
+                      variant="ghost" 
+                      disabled={selectedSection.id <= 1}
+                      onClick={() => {
+                        const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                        if (prevSec) {
+                          setSelectedSection(prevSec);
+                          setCurrentParagraph(prevSec.paragraphs[0]);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+                    >
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Seção Anterior</span>
+                      <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                        <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                        {selectedPart.sections.find(s => s.id === selectedSection.id - 1)?.title || 'Anterior'}
+                      </div>
+                    </Button>
+
+                    <Button 
+                      variant="ghost" 
+                      disabled={selectedSection.id >= 10}
+                      onClick={() => {
+                        const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                        if (nextSec) {
+                          setSelectedSection(nextSec);
+                          setCurrentParagraph(nextSec.paragraphs[0]);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
+                    >
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próxima Seção</span>
+                      <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                        {selectedPart.sections.find(s => s.id === selectedSection.id + 1)?.title || 'Próxima'}
+                        <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
+                      </div>
+                    </Button>
+                  </div>
+
+                  <div className="text-center space-y-8 py-16">
+                    <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                      <p className="text-xs text-muted-foreground/50 italic font-serif">"A luz de Cristo ilumina todos os homens." (Catecismo, 1)</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <Button 
+                        onClick={() => {
+                          toast.success("Seção contemplada!", { icon: '📖' });
+                          setViewMode('sections');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                      >
+                        Finalizar e Voltar
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Relatio 
+                    context={{
+                      type: 'catechism',
+                      paragraph: currentParagraph,
+                      tags: [selectedSection.title, 'Catecismo', 'Tradicao', 'Igreja']
+                    }}
+                    onNavigateToBible={handleNavigateToBible}
+                    onNavigateToCIC={(p) => jumpToParagraph(p)}
+                    onNavigateToDoc={handleNavigateToDoc}
+                  />
+                </div>
+              </div>
+            </div>
+
             <TextSelectionToolbar 
               activeHighlightId={activeHighlight?.id}
               activeColor={activeHighlight?.highlight_color}
@@ -763,254 +951,28 @@ const Catechism: React.FC = () => {
               }}
               label={`Catecismo §${currentParagraph}`}
             />
-
-          <div className="flex items-center gap-2">
-            {lastReadMark && lastReadMark.url !== window.location.pathname + window.location.search && (
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                onClick={() => navigate(lastReadMark.url)}
-                className="rounded-full flex items-center gap-2 border-secondary/20 shadow-premium animate-in fade-in slide-in-from-right-4 duration-700"
-              >
-                <Icons.History className="w-4 h-4" />
-                <span className="hidden sm:inline">Continuar de onde parei</span>
-              </Button>
-            )}
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => navigate('/diario')}
-              className="rounded-full flex items-center gap-2 border-primary/10 hover:bg-primary/5"
-            >
-              <Icons.Layout className="w-4 h-4 text-primary" />
-              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Meu Diário</span>
-            </Button>
-            <ReadingControlPanel />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setShowLogosAI(!showLogosAI)}
-              className={`rounded-full flex items-center gap-2 ${showLogosAI ? 'bg-primary text-white' : ''}`}
-            >
-              <Icons.Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline text-xs font-bold uppercase tracking-widest">Logos IA</span>
-            </Button>
-            {(crossRefs.length > 0 || docsRefs.length > 0) && (
-              <Button onClick={() => setShowCrossRefs(!showCrossRefs)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${showCrossRefs ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground'}`}
-                title="Conexões Sagradas (Bíblia & Magistério)">
-                <Icons.Compass className={`w-4 h-4 ${showCrossRefs ? 'animate-spin-slow' : ''}`} />
-                <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">Conexões</span>
-              </Button>
-            )}
-          </div>
+          </main>
         </div>
 
-        {/* Section navigator */}
-        <div className="flex items-center gap-3 justify-center">
-          <Button 
-            disabled={selectedSection.id <= 1} 
-            onClick={() => {
-              const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
-              if (prevSec) {
-                setSelectedSection(prevSec);
-                setCurrentParagraph(prevSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Seção anterior"
-          >
-            <Icons.ArrowDown className="w-3.5 h-3.5 rotate-90" /> Seção Anterior
-          </Button>
-
-          <div className="px-4 py-2 bg-primary/5 border border-primary/20 rounded-premium text-xs font-black uppercase tracking-widest text-primary">
-            Lendo Seção {selectedSection.id}
+        {!settings.totalSilence && showLogosAI && (
+          <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <LogosAI 
+              isOpen={showLogosAI} 
+              onClose={() => {
+                setShowLogosAI(false);
+                setLogosAIInitialQuery('');
+              }} 
+              context={logosAIContext || `Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
+              initialQuery={logosAIInitialQuery}
+              type="catechism"
+              variant="integrated"
+            />
           </div>
-          <Button 
-            disabled={selectedSection.id >= 10} 
-            onClick={() => {
-              const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
-              if (nextSec) {
-                setSelectedSection(nextSec);
-                setCurrentParagraph(nextSec.paragraphs[0]);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-            className="px-3 py-2 rounded-full bg-card border border-border text-xs font-bold disabled:opacity-30 hover:bg-primary/10 transition-all flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary outline-none"
-            aria-label="Próxima seção"
-          >
-            Próxima Seção <Icons.ArrowDown className="w-3.5 h-3.5 -rotate-90" />
-          </Button>
-        </div>
-
-        <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
-          {/* Elegant Side Navigation for paragraphs (Desktop) */}
-          <aside className="reader-navigation-aside space-y-12">
-            <div className="space-y-4">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Navegação na Seção</p>
-              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
-                  <button
-                    key={p}
-                    onClick={() => jumpToParagraph(p)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
-                      ${currentParagraph === p 
-                        ? 'bg-primary text-white shadow-soft' 
-                        : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
-                  >
-                    <span className="opacity-50 text-[10px] w-8">§{p}</span>
-                    <span className="truncate text-left flex-1">Parágrafo {p}</span>
-                    {paragraphsRead.has(p) && (
-                      <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
-                    )}
-                  </button>
-                ))}
-              </nav>
-            </div>
-
-            {currentChapterNotes.length > 0 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
-                <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Reflexões</p>
-                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                  {currentChapterNotes.map(note => (
-                    <button
-                      key={note.id}
-                      onClick={() => {
-                        if (note.paragraph) {
-                          jumpToParagraph(note.paragraph);
-                          const el = document.getElementById(`p${note.paragraph}`);
-                          if (el) {
-                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
-                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
-                          }
-                        }
-                      }}
-                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
-                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">§{note.paragraph}</span>
-                        {note.highlight_color && (
-                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
-                        )}
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
-                        {note.note_text === 'Destacado para meditação' ? 'Destaque sem nota' : note.note_text}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </aside>
-
-          <div className={`flex-1 w-full max-w-[75ch] mx-auto space-y-8 relative`}>
-                {/* Visual Indicator for Keyboard Shortcuts */}
-                {settings.totalSilence && (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[160] px-4 py-2 bg-primary/80 backdrop-blur-md text-primary-foreground rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-3 border border-white/10 shadow-2xl"
-                  >
-                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">{settings.shortcuts?.highlight?.toUpperCase() || 'H'}</kbd> Destacar</span>
-                    <div className="w-px h-3 bg-white/20" />
-                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">{settings.shortcuts?.note?.toUpperCase() || 'N'}</kbd> Nota</span>
-                    <div className="w-px h-3 bg-white/20" />
-                    <span className="flex items-center gap-1.5"><kbd className="bg-white/20 px-1.5 py-0.5 rounded">Esc</kbd> Limpar</span>
-                  </motion.div>
-                )}
-                <div className="reader-container bg-card/10 backdrop-blur-xl border border-primary/[0.03] overflow-hidden rounded-[3rem] md:rounded-[5rem] relative transition-all duration-1000">
-              <div className="p-8 md:p-20 lg:p-24">
-
-                <div className="space-y-16">
-                  {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
-                    <LazyParagraph 
-                      key={p} 
-                      paragraph={p} 
-                      currentParagraph={currentParagraph}
-                      paragraphsRead={paragraphsRead}
-                      isFavorite={isFavorite}
-                      toggleFavorite={toggleFavorite}
-                      handleNavigateToBible={handleNavigateToBible}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-12">
-              <ChapterNotesList 
-                notes={currentChapterNotes} 
-                onDeleteNote={deleteChapterNote}
-                onNoteClick={(note) => {
-                  if (note.paragraph) {
-                    jumpToParagraph(note.paragraph);
-                  }
-                }}
-              />
-
-              {/* Logos AI: Contextual Suggestions */}
-              {showCrossRefs && currentParagraph && !settings.totalSilence && (
-                <LogosContextualSuggestions
-                  type="catechism"
-                  context={`Catecismo da Igreja Católica, parágrafo ${currentParagraph}`}
-                  isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
-                  onSelectSuggestion={(prompt) => {
-                    setLogosAIInitialQuery(prompt);
-                    setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
-                    setShowLogosAI(true);
-                    setLogosSelectionsCount(prev => prev + 1);
-                  }}
-                />
-              )}
-
-              {/* Relatio: Intelligent Contextual Connections */}
-              {showCrossRefs && (
-                <div className="w-full max-w-[72ch] mx-auto">
-                  <Relatio 
-                    context={{
-                      type: 'catechism',
-                      id: `catechism-${currentParagraph}`,
-                      paragraph: currentParagraph,
-                      tags: CATECHISM_LOCAL_DATA[currentParagraph]?.tags || ['Catecismo', 'Doutrina', 'Igreja']
-                    }}
-                    onNavigateToBible={handleNavigateToBible}
-                    onNavigateToCIC={(p) => setCurrentParagraph(p)}
-                    onNavigateToDoc={handleNavigateToDoc}
-                    onSelectLogosQuery={(prompt) => {
-                      setLogosAIInitialQuery(prompt);
-                      setLogosAIContext(`Catecismo: Parágrafo ${currentParagraph}`);
-                      setShowLogosAI(true);
-                      setLogosSelectionsCount(prev => prev + 1);
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-
-
-            
-            {!settings.totalSilence && showLogosAI && (
-              <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <LogosAI 
-                  isOpen={showLogosAI} 
-                  onClose={() => {
-                    setShowLogosAI(false);
-                    setLogosAIInitialQuery('');
-                  }} 
-                  context={logosAIContext || `Catecismo da Igreja Católica, parágrafo §${currentParagraph}`}
-                  initialQuery={logosAIInitialQuery}
-                  type="catechism"
-                  variant="integrated"
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </ContemplativeLayout>
+        )}
+      </div>
     );
   }
+
 
 
   // Section selection
