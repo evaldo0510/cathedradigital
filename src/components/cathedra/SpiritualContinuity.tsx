@@ -102,4 +102,5 @@ const SpiritualContinuity: React.FC = () => {
   );
 };
 
+export { SpiritualContinuity };
 export default SpiritualContinuity;
