@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Icons } from '@/constants';
-import { ChevronRight, ArrowLeft, Check, Lock, Clock } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Check, Lock, Clock, FileDown } from 'lucide-react';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const ItinerariumDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -60,9 +63,19 @@ const ItinerariumDetailPage: React.FC = () => {
       </motion.div>
 
       <div className="space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-6 bg-primary/20 rounded-full" />
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-primary/20 rounded-full" />
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-full gap-2 border-primary/10 text-[10px] font-black uppercase tracking-widest"
+            onClick={exportFullPDF}
+          >
+            <FileDown className="w-4 h-4" /> Exportar Reflexões
+          </Button>
         </div>
         <p className="text-lg md:text-xl text-muted-foreground/80 font-serif italic leading-relaxed">{itinerarium.description}</p>
       </div>
