@@ -46,6 +46,7 @@ const Relatio: React.FC<RelatioProps> = ({
   const [connections, setConnections] = useState<(TagContent & { reason?: string })[]>([]);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [spiritualContext, setSpiritualContext] = useState<SpiritualContext | null>(null);
 
   // Relatio Settings Destructuring with fallbacks
@@ -110,7 +111,9 @@ const Relatio: React.FC<RelatioProps> = ({
       try {
         const intensity = (relatioConfig as any).intensity || 'standard';
         const tagCount = intensity === 'subtle' ? 1 : intensity === 'deep' ? 4 : 2;
-        const resultLimit = intensity === 'subtle' ? 3 : intensity === 'deep' ? 12 : 6;
+        // Density Control: increased limit for fetch, but we control display via state
+        const resultLimit = 16; 
+
 
         const tagPromises = context.tags.slice(0, tagCount).map(tag => 
           fetchNexusTagContent({ label: tag, slug: tag.toLowerCase() })
@@ -226,8 +229,9 @@ const Relatio: React.FC<RelatioProps> = ({
 
             {/* Dynamic Connections */}
             {connections.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {connections.map((item) => {
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {(showAll ? connections : connections.slice(0, 4)).map((item) => {
                   const isFav = isFavorite('relatio', item.title);
                   // Calculate connection strength based on matches or metadata
                   const strength = (item as any).relevanceScore || 0;
@@ -343,6 +347,22 @@ const Relatio: React.FC<RelatioProps> = ({
                     </motion.div>
                   );
                 })}
+              </div>
+
+
+                {connections.length > 4 && (
+                  <div className="flex justify-center pt-4">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowAll(!showAll)}
+                      className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group"
+                    >
+                      <span className="mr-2">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
+                      <Icons.ChevronDown className={cn("w-3 h-3 transition-transform duration-500", showAll && "rotate-180")} />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 

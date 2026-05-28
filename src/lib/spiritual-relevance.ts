@@ -62,41 +62,60 @@ export function rankConnections(
     let score = 0;
     let reason = 'Tradição Conectada';
 
-    // 1. Match with current content tags (primary)
-    const itemTags = item.metadata?.tags || [];
-    const currentMatches = itemTags.filter((t: string) => currentContextTags.includes(t)).length || 0;
-    score += currentMatches * 10;
-    if (currentMatches > 0) reason = 'Contexto Similar';
-
-    // 2. Match with user psychology (virtues/traits)
-    if (context.psychology?.traits) {
-      const traitMatches = itemTags.filter((t: string) => 
-        context.psychology?.traits?.[t.toLowerCase()]
-      ).length || 0;
-      score += traitMatches * 5;
-      if (traitMatches > 0 && score < 15) reason = 'Inclinação Espiritual';
-    }
-
-    // 3. Continuity bonus
-    if (context.lastReading) {
-      score += 3;
-      if (reason === 'Tradição Conectada') reason = 'Continuidade da Leitura';
-    }
-
-    // 4. Match with dominant emotion (virtue alignment)
-    if (context.psychology?.dominant_emotion) {
-      const emotionMatch = itemTags.some((t: string) => 
-        t.toLowerCase() === context.psychology?.dominant_emotion?.toLowerCase()
-      );
-      if (emotionMatch) {
-        score += 15;
-        reason = 'Remédio da Alma';
+    // Normalize tags for robust matching
+    const itemTags = (item.metadata?.tags || []).map((t: string) => t.toLowerCase());
+    const normalizedContextTags = currentContextTags.map(t => t.toLowerCase());
+    
+    // 1. Semantic overlap (Tags matching) - Weighted by importance
+    const matches = itemTags.filter((t: string) => normalizedContextTags.includes(t));
+    const matchCount = matches.length;
+    score += matchCount * 15; // Increased weight for direct context matches
+    
+    if (matchCount > 0) {
+      reason = 'Contexto Similar';
+      // Priority tags boost (if matches include specific key theological terms)
+      const highValueTerms = ['graça', 'fé', 'cristo', 'eucaristia', 'maria', 'trindade'];
+      if (matches.some(t => highValueTerms.includes(t))) {
+        score += 20;
+        reason = 'Doutrina Central';
       }
     }
 
-    // 5. Theme specific content
+    // 2. Type-based relevance (Bible usually ranks higher for spiritual depth)
+    if (item.type === 'bible') {
+      score += 10;
+    }
+
+    // 3. Match with user psychology (virtues/traits)
+    if (context.psychology?.traits) {
+      const traitMatches = itemTags.filter((t: string) => 
+        context.psychology?.traits?.[t]
+      ).length || 0;
+      score += traitMatches * 8;
+      if (traitMatches > 0 && score < 30) reason = 'Inclinação Espiritual';
+    }
+
+    // 4. Continuity and Recency
+    if (context.lastReading) {
+      // Bonus if it's the same book/type
+      if (item.type === context.lastReading.type) {
+        score += 5;
+      }
+      if (reason === 'Tradição Conectada') reason = 'Fluxo de Contemplação';
+    }
+
+    // 5. Emotional Resonance (Remédio da Alma)
+    if (context.psychology?.dominant_emotion) {
+      const emotion = context.psychology.dominant_emotion.toLowerCase();
+      if (itemTags.includes(emotion)) {
+        score += 25;
+        reason = 'Consolo Espiritual';
+      }
+    }
+
+    // 6. Theme specific content
     if (item.metadata?.is_theme_content) {
-      score += 5;
+      score += 12;
       if (reason === 'Tradição Conectada') reason = 'Tema Relacionado';
     }
 
