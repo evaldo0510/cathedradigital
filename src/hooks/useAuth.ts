@@ -282,6 +282,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (resolvedProfile) setProfile(resolvedProfile);
   }, [user, fetchProfile]);
 
+  // Realtime: sincroniza perfil entre dispositivos
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`profile-sync-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${user.id}` },
+        () => { refreshProfile(); }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, refreshProfile]);
+
+
   const signOut = useCallback(async () => {
     authRequestId.current += 1;
     await supabase.auth.signOut();
