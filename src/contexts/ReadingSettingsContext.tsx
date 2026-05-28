@@ -7,20 +7,27 @@ interface ReadingSettings {
   fontSize: 'small' | 'medium' | 'large' | 'extra-large';
   fontFamily: 'serif' | 'sans';
   theme: 'paper' | 'sepia' | 'dark' | 'night';
-  visualSilence: boolean; // Hides non-essential UI
+  visualSilence: boolean;
   reduceAnimations: boolean;
-  totalSilence: boolean; // Removes all sounds and even more UI (loaders/skeletons)
+  totalSilence: boolean;
   highContrast: boolean;
   contemplativeMode: boolean;
+  autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
   letterSpacing: 'tight' | 'normal' | 'wide';
   sideMargins: 'standard' | 'comfortable' | 'wide';
+  columnWidth: number; // ch — coluna ideal (45-90)
   contrast: 'normal' | 'soft' | 'high';
   resumeBehavior: 'always' | 'never' | 'once' | 'confirm';
   reminders: {
     enabled: boolean;
     time: string;
+  };
+  nightSchedule: {
+    enabled: boolean;
+    start: string;
+    end: string;
   };
   shortcuts: {
     bible: string;
@@ -60,14 +67,21 @@ const defaultSettings: ReadingSettings = {
   totalSilence: false,
   highContrast: false,
   contemplativeMode: false,
+  autoHideUI: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
   sideMargins: 'standard',
+  columnWidth: 68,
   contrast: 'normal',
   resumeBehavior: 'confirm',
   reminders: {
     enabled: false,
     time: '08:00',
+  },
+  nightSchedule: {
+    enabled: false,
+    start: '20:00',
+    end: '06:00',
   },
   fullScreen: false,
   shortcuts: {
