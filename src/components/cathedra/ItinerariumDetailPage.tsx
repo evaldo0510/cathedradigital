@@ -19,6 +19,7 @@ const ItinerariumDetailPage: React.FC = () => {
   const [itinerarium, setItinerarium] = useState<any>(null);
   const [steps, setSteps] = useState<any[]>([]);
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
+  const [reflections, setReflections] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,10 +37,65 @@ const ItinerariumDetailPage: React.FC = () => {
     if (stepsRes.data) setSteps(stepsRes.data);
 
     if (user && id) {
-      const { data: progress } = await supabase.from('itineraria_progress').select('step_id').eq('user_id', user.id).eq('itinerarium_id', id);
-      if (progress) setCompletedSteps(new Set(progress.map(p => p.step_id)));
+      const { data: progress } = await supabase
+        .from('itineraria_progress')
+        .select('step_id, reflection')
+        .eq('user_id', user.id)
+        .eq('itinerarium_id', id);
+      
+      if (progress) {
+        setCompletedSteps(new Set(progress.map(p => p.step_id)));
+        const reflectionsMap: Record<string, string> = {};
+        progress.forEach(p => {
+          if (p.reflection) reflectionsMap[p.step_id] = p.reflection;
+        });
+        setReflections(reflectionsMap);
+      }
     }
     setLoading(false);
+  };
+
+  const exportFullPDF = () => {
+    if (!itinerarium || !steps.length) return;
+    
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(26);
+    doc.setTextColor(41, 128, 185);
+    doc.text(itinerarium.title, 20, 30);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(100);
+    const splitDesc = doc.splitTextToSize(itinerarium.description, 170);
+    doc.text(splitDesc, 20, 45);
+    
+    doc.setFontSize(12);
+    doc.text(`Progresso: ${Math.round((completedSteps.size / steps.length) * 100)}%`, 20, 70);
+    
+    // Reflections Table
+    const tableData = steps.map((step, idx) => [
+      `Passo ${step.step_order}: ${step.title}`,
+      completedSteps.has(step.id) ? 'Concluído' : 'Pendente',
+      reflections[step.id] || '-'
+    ]);
+
+    autoTable(doc, {
+      startY: 80,
+      head: [['Passo', 'Status', 'Minhas Reflexões']],
+      body: tableData,
+      theme: 'striped',
+      headStyles: { fillColor: [41, 128, 185] },
+      styles: { font: 'helvetica', fontSize: 10 },
+      columnStyles: {
+        0: { cellWidth: 50 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 100 }
+      }
+    });
+    
+    doc.save(`jornada-${itinerarium.title.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    toast.success("PDF da trilha gerado com sucesso!");
   };
 
   if (loading || !itinerarium) return <div className="p-24 text-center">Carregando jornada...</div>;
