@@ -14,8 +14,9 @@ interface LogosAIProps {
   initialQuery?: string;
   isOpen: boolean;
   onClose: () => void;
-  type?: 'bible' | 'catechism' | 'magisterium';
+  type?: 'bible' | 'catechism' | 'magisterium' | 'journey';
   variant?: 'drawer' | 'integrated';
+  journeyId?: string;
 }
 
 const LogosAI: React.FC<LogosAIProps> = ({ 
@@ -25,7 +26,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
   isOpen, 
   onClose, 
   type = 'bible',
-  variant = 'drawer'
+  variant = 'drawer',
+  journeyId
 }) => {
   useRenderPerf('LogosAI', 15);
   const { settings } = useReadingSettings();
@@ -129,6 +131,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
           context, 
           selectedText,
           type,
+          journeyId,
           history: history.slice(-5) // Send last 5 messages for context
         },
         headers: {

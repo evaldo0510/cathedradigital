@@ -7,8 +7,10 @@ import RitualDoDia from './RitualDoDia';
 import { ReadingProgressSection } from './ReadingProgressSection';
 import { ComingSoonSection } from './ComingSoon';
 import { Input } from '@/components/ui/input';
-import { Sparkles, ArrowRight, MessageSquare } from 'lucide-react';
+import { Sparkles, ArrowRight, MessageSquare, User } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
+import { SpiritualContinuity } from './SpiritualContinuity';
+import { Button } from '@/components/ui/button';
 
 interface HomeMainContentProps {
   user: any;
@@ -62,6 +64,28 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
   return (
     <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-64 md:space-y-80 lg:space-y-96 pb-80 md:pb-[32rem] px-6 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+      {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
+      <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
+        <SpiritualContinuity 
+          data={{ 
+            history: [{ title: 'Evangelho de João', route: '/bible/john/1', label: 'Capítulo 1' }],
+            nextBible: { label: 'Salmo 23', route: '/bible/psalms/23', subtitle: 'O Senhor é meu Pastor' }
+          }} 
+          profile={profile} 
+        />
+        <div className="flex justify-center -mt-10 mb-20">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => navigate('/spiritual-profile')}
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 hover:text-primary transition-all duration-700"
+          >
+            <User className="w-3 h-3 mr-2" />
+            Ver Perfil Espiritual
+          </Button>
+        </div>
+      </section>
+
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
         <h2 className="sr-only">Destaques e Ritual</h2>
