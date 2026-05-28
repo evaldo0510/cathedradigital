@@ -213,7 +213,7 @@ const SpiritualProfile: React.FC = () => {
                     <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">
                       {format(new Date(reading.visited_at), "d 'de' MMM", { locale: ptBR })}
                     </p>
-                    <h4 className="text-base font-serif font-bold text-primary/80 line-clamp-1">{reading.page_title || 'Leitura'}</h4>
+                    <h4 className="text-base font-serif font-bold text-primary/80 line-clamp-1">{reading.title || 'Leitura'}</h4>
                     <p className="text-xs text-primary/40 italic line-clamp-2">Continuar contemplação...</p>
                   </div>
                 ))
