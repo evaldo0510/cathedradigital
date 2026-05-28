@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Relatio from '../Relatio';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { AuthProvider } from '@/hooks/useAuth';
@@ -17,12 +17,17 @@ const queryClient = new QueryClient({
 // Mock dependencies
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
+    auth: {
+      onAuthStateChange: vi.fn().mockReturnValue({ data: { subscription: { unsubscribe: vi.fn() } } }),
+      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+    },
     from: vi.fn(() => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn(() => ({
             limit: vi.fn(() => ({
-              maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null }))
+              maybeSingle: vi.fn(() => Promise.resolve({ data: null, error: null })),
+              single: vi.fn(() => Promise.resolve({ data: null, error: null }))
             }))
           }))
         }))
