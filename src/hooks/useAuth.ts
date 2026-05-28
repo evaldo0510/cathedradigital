@@ -35,6 +35,9 @@ export interface Profile {
   reading_settings?: Record<string, any>;
   journey_reminder_time?: string;
   weekly_goal?: number;
+  spiritual_themes?: string[];
+  contemplative_preferences?: Record<string, any>;
+  notification_settings?: Record<string, any>;
   _sensitive?: SensitiveData;
 }
 
