@@ -661,6 +661,166 @@ export type Database = {
         }
         Relationships: []
       }
+      itineraria: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          difficulty: string | null
+          estimated_days: number | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          is_premium: boolean | null
+          sort_order: number | null
+          subtitle: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          estimated_days?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          sort_order?: number | null
+          subtitle?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: string | null
+          estimated_days?: number | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          sort_order?: number | null
+          subtitle?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      itineraria_progress: {
+        Row: {
+          completed_at: string
+          id: string
+          itinerarium_id: string
+          reflection: string | null
+          step_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          itinerarium_id: string
+          reflection?: string | null
+          step_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          itinerarium_id?: string
+          reflection?: string | null
+          step_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itineraria_progress_itinerarium_id_fkey"
+            columns: ["itinerarium_id"]
+            isOneToOne: false
+            referencedRelation: "itineraria"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itineraria_progress_itinerarium_id_fkey"
+            columns: ["itinerarium_id"]
+            isOneToOne: false
+            referencedRelation: "view_itineraria_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itineraria_progress_step_id_fkey"
+            columns: ["step_id"]
+            isOneToOne: false
+            referencedRelation: "itineraria_steps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      itineraria_steps: {
+        Row: {
+          content: Json
+          created_at: string
+          duration_minutes: number | null
+          id: string
+          is_free: boolean | null
+          itinerarium_id: string
+          step_order: number
+          step_type: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: Json
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          is_free?: boolean | null
+          itinerarium_id: string
+          step_order?: number
+          step_type?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          duration_minutes?: number | null
+          id?: string
+          is_free?: boolean | null
+          itinerarium_id?: string
+          step_order?: number
+          step_type?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itineraria_steps_itinerarium_id_fkey"
+            columns: ["itinerarium_id"]
+            isOneToOne: false
+            referencedRelation: "itineraria"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itineraria_steps_itinerarium_id_fkey"
+            columns: ["itinerarium_id"]
+            isOneToOne: false
+            referencedRelation: "view_itineraria_with_stats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journey_progress: {
         Row: {
           completed_at: string
@@ -2271,6 +2431,63 @@ export type Database = {
           name: string | null
           plan: string | null
           reflections_count: number | null
+        }
+        Relationships: []
+      }
+      view_itineraria_with_stats: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string | null
+          description: string | null
+          difficulty: string | null
+          estimated_days: number | null
+          icon: string | null
+          id: string | null
+          is_active: boolean | null
+          is_premium: boolean | null
+          sort_order: number | null
+          steps_count: number | null
+          subtitle: string | null
+          tags: string[] | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          estimated_days?: number | null
+          icon?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          sort_order?: number | null
+          steps_count?: never
+          subtitle?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string | null
+          description?: string | null
+          difficulty?: string | null
+          estimated_days?: number | null
+          icon?: string | null
+          id?: string | null
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          sort_order?: number | null
+          steps_count?: never
+          subtitle?: string | null
+          tags?: string[] | null
+          title?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
