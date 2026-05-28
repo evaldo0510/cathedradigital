@@ -329,16 +329,25 @@ const Relatio: React.FC<RelatioProps> = ({
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary"
+                                  disabled={isOpeningLogos}
+                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary disabled:opacity-30"
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    onSelectLogosQuery(`Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}".`);
+                                    if (isOpeningLogos) return;
+                                    
+                                    setIsOpeningLogos(true);
+                                    const prompt = `Por favor, explique a conexão teológica e espiritual entre o que estou lendo e esta referência: "${item.title}". Contexto: ${item.type}, Tags: ${item.metadata?.tags?.join(', ') || 'N/A'}.`;
+                                    onSelectLogosQuery(prompt);
+                                    
+                                    // Reset lock after a short delay to allow drawer to open
+                                    setTimeout(() => setIsOpeningLogos(false), 2000);
                                   }}
                                 >
-                                  <Icons.Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />
+                                  <Icons.Sparkles className={cn("w-3.5 h-3.5", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
                                 </Button>
                               )}
+
                               <Button
                                 variant="ghost"
                                 size="icon"
