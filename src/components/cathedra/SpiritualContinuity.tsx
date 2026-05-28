@@ -22,18 +22,29 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
   React.useEffect(() => {
     if (propData || !user) return;
     
-    const fetchLastActivity = async () => {
+    const fetchContinuity = async () => {
       setInternalLoading(true);
       try {
-        const { data: historyData } = await supabase
-          .from('user_history')
-          .select('title, route, visited_at')
-          .eq('user_id', user.id)
-          .order('visited_at', { ascending: false })
-          .limit(1);
+        const { data: continuityData, error } = await supabase.functions.invoke('spiritual-continuity');
         
-        if (historyData?.[0]) {
-          setInternalData({ history: historyData });
+        if (!error && continuityData) {
+          setInternalData(continuityData);
+        } else {
+          // Fallback to basic history if AI fails
+          const { data: historyData } = await supabase
+            .from('user_history')
+            .select('title, route, visited_at')
+            .eq('user_id', user.id)
+            .order('visited_at', { ascending: false })
+            .limit(1);
+          
+          if (historyData?.[0]) {
+            setInternalData({ recommendations: [{
+              title: historyData[0].title,
+              route: historyData[0].route,
+              description: 'Onde você parou'
+            }] });
+          }
         }
       } catch (err) {
         console.error('Continuity Internal Error:', err);
@@ -42,7 +53,7 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
       }
     };
 
-    fetchLastActivity();
+    fetchContinuity();
   }, [propData, user]);
 
   const isLoading = propLoading || internalLoading;
@@ -50,13 +61,13 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
 
   if (isLoading || !data) return null;
 
-  // Extract relevant item from data (nextBible, nextCatechism, or history)
-  const nextItem = data.nextBible || data.nextCatechism || (data.history && data.history[0]);
+  // Extract relevant item from data
+  const nextItem = data.recommendations?.[0];
 
   if (!nextItem) return null;
 
-  const title = nextItem.label || nextItem.title || 'Continuação';
-  const subtitle = nextItem.subtitle || 'Onde você parou';
+  const title = nextItem.title || 'Continuação';
+  const subtitle = nextItem.description || 'Onde você parou';
   const route = nextItem.route || '/';
 
   return (
