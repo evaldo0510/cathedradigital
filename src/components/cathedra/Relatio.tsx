@@ -47,7 +47,12 @@ const Relatio: React.FC<RelatioProps> = ({
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [showAll, setShowAll] = useState(false);
+  const [density, setDensity] = useState<'subtle' | 'normal' | 'deep'>(() => {
+    return (localStorage.getItem('cathedra-relatio-density') as any) || 'normal';
+  });
+  const [isOpeningLogos, setIsOpeningLogos] = useState(false);
   const [spiritualContext, setSpiritualContext] = useState<SpiritualContext | null>(null);
+
 
   // Relatio Settings Destructuring with fallbacks
   const relatioConfig = settings.relatio || {
