@@ -84,6 +84,53 @@ const ItinerariumStepPage: React.FC = () => {
     }
   };
 
+  const checkAchievements = async () => {
+    if (!user) return;
+    
+    // Check total steps completed
+    const { count } = await supabase
+      .from('itineraria_progress')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id);
+    
+    if (count) {
+      const { data: achievements } = await supabase
+        .from('achievements')
+        .select('*')
+        .eq('requirement_type', 'steps_completed')
+        .lte('requirement_value', count);
+      
+      if (achievements) {
+        for (const ach of achievements) {
+          await supabase.from('user_achievements').upsert({
+            user_id: user.id,
+            achievement_id: ach.id
+          }, { onConflict: 'user_id,achievement_id' });
+        }
+      }
+    }
+
+    // Update weekly goals
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1);
+    const weekStart = new Date(today.setDate(diff)).toISOString().split('T')[0];
+
+    const { data: goal } = await supabase
+      .from('weekly_goals_history')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('week_start_date', weekStart)
+      .maybeSingle();
+    
+    if (goal) {
+      await supabase
+        .from('weekly_goals_history')
+        .update({ achieved_count: goal.achieved_count + 1 })
+        .eq('id', goal.id);
+    }
+  };
+
   const handleComplete = async () => {
     if (!user || !stepId || !itinerariumId) return;
     setSaving(true);
@@ -97,8 +144,11 @@ const ItinerariumStepPage: React.FC = () => {
       }, { onConflict: 'user_id,step_id' });
 
       if (error) throw error;
+      
+      await checkAchievements();
+      
       setCompleted(true);
-      toast.success("Passo concluído!");
+      toast.success("Passo concluído! Caminhada honrada.");
     } catch (err) {
       console.error(err);
       toast.error("Erro ao salvar progresso.");
@@ -106,6 +156,36 @@ const ItinerariumStepPage: React.FC = () => {
       setSaving(false);
     }
   };
+
+  // Real-time sync subscription
+  useEffect(() => {
+    if (!user || !itinerariumId) return;
+
+    const channel = supabase
+      .channel('itineraria_sync')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'itineraria_progress',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+            if (payload.new.step_id === stepId) {
+              setCompleted(true);
+              setReflection(payload.new.reflection || '');
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, stepId]);
 
   const navigateToStep = (index: number) => {
     const targetStep = allSteps[index];
