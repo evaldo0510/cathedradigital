@@ -7,20 +7,27 @@ interface ReadingSettings {
   fontSize: 'small' | 'medium' | 'large' | 'extra-large';
   fontFamily: 'serif' | 'sans';
   theme: 'paper' | 'sepia' | 'dark' | 'night';
-  visualSilence: boolean; // Hides non-essential UI
+  visualSilence: boolean;
   reduceAnimations: boolean;
-  totalSilence: boolean; // Removes all sounds and even more UI (loaders/skeletons)
+  totalSilence: boolean;
   highContrast: boolean;
   contemplativeMode: boolean;
+  autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
   letterSpacing: 'tight' | 'normal' | 'wide';
   sideMargins: 'standard' | 'comfortable' | 'wide';
+  columnWidth: number; // ch — coluna ideal (45-90)
   contrast: 'normal' | 'soft' | 'high';
   resumeBehavior: 'always' | 'never' | 'once' | 'confirm';
   reminders: {
     enabled: boolean;
     time: string;
+  };
+  nightSchedule: {
+    enabled: boolean;
+    start: string;
+    end: string;
   };
   shortcuts: {
     bible: string;
@@ -60,14 +67,21 @@ const defaultSettings: ReadingSettings = {
   totalSilence: false,
   highContrast: false,
   contemplativeMode: false,
+  autoHideUI: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
   sideMargins: 'standard',
+  columnWidth: 68,
   contrast: 'normal',
   resumeBehavior: 'confirm',
   reminders: {
     enabled: false,
     time: '08:00',
+  },
+  nightSchedule: {
+    enabled: false,
+    start: '20:00',
+    end: '06:00',
   },
   fullScreen: false,
   shortcuts: {
@@ -149,6 +163,14 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     root.setAttribute('data-line-spacing', settings.lineSpacing);
     root.setAttribute('data-letter-spacing', settings.letterSpacing);
     root.setAttribute('data-side-margins', settings.sideMargins);
+    root.style.setProperty('--reader-column-width', `${settings.columnWidth}ch`);
+
+    if (settings.autoHideUI) {
+      root.classList.add('auto-hide-ui');
+    } else {
+      root.classList.remove('auto-hide-ui');
+    }
+    
     
     if (settings.visualSilence) {
       root.classList.add('visual-silence');
@@ -256,6 +278,54 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     };
   }, [updateSettings, settings.totalSilence]);
 
+  // Auto-hide UI ao rolar (mobile / contemplativo)
+  useEffect(() => {
+    if (!settings.autoHideUI && !settings.contemplativeMode) {
+      document.documentElement.classList.remove('reading-scroll-down');
+      return;
+    }
+    let lastY = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (Math.abs(y - lastY) > 8) {
+          if (y > lastY && y > 80) {
+            document.documentElement.classList.add('reading-scroll-down');
+            document.documentElement.classList.remove('reveal-chrome');
+          } else {
+            document.documentElement.classList.remove('reading-scroll-down');
+          }
+          lastY = y;
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [settings.autoHideUI, settings.contemplativeMode]);
+
+  // Modo noturno agendado (transição gradual via CSS)
+  useEffect(() => {
+    const sch = settings.nightSchedule;
+    if (!sch?.enabled) return;
+    const check = () => {
+      const now = new Date();
+      const m = now.getHours() * 60 + now.getMinutes();
+      const [sh, sm] = sch.start.split(':').map(Number);
+      const [eh, em] = sch.end.split(':').map(Number);
+      const a = sh * 60 + sm;
+      const b = eh * 60 + em;
+      const inNight = a <= b ? (m >= a && m < b) : (m >= a || m < b);
+      if (inNight && settings.theme !== 'night') updateSettings({ theme: 'night' });
+      else if (!inNight && settings.theme === 'night') updateSettings({ theme: 'paper' });
+    };
+    check();
+    const id = window.setInterval(check, 60_000);
+    return () => window.clearInterval(id);
+  }, [settings.nightSchedule, settings.theme, updateSettings]);
 
   return (
     <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>

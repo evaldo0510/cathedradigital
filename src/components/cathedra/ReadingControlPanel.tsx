@@ -144,7 +144,80 @@ const ReadingControlPanel: React.FC = () => {
               className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
             />
           </div>
+
+          <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-0.5">
+              <p className="text-xs font-bold">Auto-ocultar Interface</p>
+              <p className="text-[10px] text-muted-foreground italic leading-none">Mobile: toque para revelar</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={settings.autoHideUI}
+              onChange={(e) => updateSettings({ autoHideUI: e.target.checked })}
+              className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+            />
+          </div>
         </div>
+      </div>
+
+      {/* Largura da Coluna */}
+      <div className="space-y-3 pt-4 border-t border-primary/5">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Largura da Coluna</p>
+        <div className="px-2">
+          <input
+            type="range"
+            min={45}
+            max={90}
+            step={1}
+            value={settings.columnWidth}
+            onChange={(e) => updateSettings({ columnWidth: Number(e.target.value) })}
+            className="w-full accent-primary"
+          />
+          <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/60 mt-2">
+            <span>Estreita</span>
+            <span className="text-primary font-bold">{settings.columnWidth}ch</span>
+            <span>Larga</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Modo Noturno Agendado */}
+      <div className="space-y-3 pt-4 border-t border-primary/5">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Noite Contemplativa</p>
+        <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/20">
+          <div className="space-y-0.5">
+            <p className="text-xs font-bold">Ativar por Horário</p>
+            <p className="text-[10px] text-muted-foreground italic leading-none">Transição gradual</p>
+          </div>
+          <input
+            type="checkbox"
+            checked={settings.nightSchedule.enabled}
+            onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, enabled: e.target.checked } })}
+            className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+          />
+        </div>
+        {settings.nightSchedule.enabled && (
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1">
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Início</span>
+              <input
+                type="time"
+                value={settings.nightSchedule.start}
+                onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, start: e.target.value } })}
+                className="bg-muted/30 border border-primary/10 rounded-xl px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Fim</span>
+              <input
+                type="time"
+                value={settings.nightSchedule.end}
+                onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, end: e.target.value } })}
+                className="bg-muted/30 border border-primary/10 rounded-xl px-3 py-2 text-sm"
+              />
+            </label>
+          </div>
+        )}
       </div>
 
       <div className="space-y-4 pt-4">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +14,9 @@ import LogosAI from './LogosAI';
 import { Icons } from '@/constants';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useSwipeNavigation } from '@/hooks/useSwipeNavigation';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const ItinerariumStepPage: React.FC = () => {
   const { id: itinerariumId } = useParams<{ id: string }>();
@@ -31,6 +34,45 @@ const ItinerariumStepPage: React.FC = () => {
   const [logosQuery, setLogosQuery] = useState('');
   const [allSteps, setAllSteps] = useState<any[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
+  const { settings } = useReadingSettings();
+  const isMobile = useIsMobile();
+  const autoSaveTimer = useRef<number | null>(null);
+  const lastSavedReflection = useRef<string>('');
+
+  // Auto-save reflexão (debounced) e progresso de leitura local
+  useEffect(() => {
+    if (!user || !stepId || reflection === lastSavedReflection.current) return;
+    if (autoSaveTimer.current) window.clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = window.setTimeout(async () => {
+      try {
+        await supabase.from('itineraria_progress').upsert({
+          user_id: user.id,
+          itinerarium_id: itinerariumId!,
+          step_id: stepId,
+          reflection: reflection || null,
+          completed_at: completed ? new Date().toISOString() : new Date().toISOString(),
+        }, { onConflict: 'user_id,step_id' });
+        lastSavedReflection.current = reflection;
+      } catch (e) {
+        console.warn('auto-save reflection failed', e);
+      }
+    }, 1500);
+    return () => {
+      if (autoSaveTimer.current) window.clearTimeout(autoSaveTimer.current);
+    };
+  }, [reflection, user, stepId, itinerariumId, completed]);
+
+  // Persistir último ponto visitado (retomada natural)
+  useEffect(() => {
+    if (!stepId || !itinerariumId) return;
+    try {
+      localStorage.setItem('cathedra:last-itineraria-step', JSON.stringify({
+        itinerariumId,
+        stepId,
+        at: Date.now(),
+      }));
+    } catch {}
+  }, [stepId, itinerariumId]);
 
   useEffect(() => {
     if (stepId) {
@@ -187,12 +229,39 @@ const ItinerariumStepPage: React.FC = () => {
     };
   }, [user, stepId]);
 
-  const navigateToStep = (index: number) => {
+  const navigateToStep = useCallback((index: number) => {
     const targetStep = allSteps[index];
     if (targetStep) {
       navigate(`/itineraria/${itinerariumId}/step?step=${targetStep.id}`);
     }
-  };
+  }, [allSteps, itinerariumId, navigate]);
+
+  // Navegação por gestos (mobile) e tap-to-reveal da UI
+  const revealTimer = useRef<number | null>(null);
+  const revealChrome = useCallback(() => {
+    document.documentElement.classList.add('reveal-chrome');
+    if (revealTimer.current) window.clearTimeout(revealTimer.current);
+    revealTimer.current = window.setTimeout(() => {
+      document.documentElement.classList.remove('reveal-chrome');
+    }, 2800);
+  }, []);
+
+  useSwipeNavigation({
+    enabled: isMobile,
+    onSwipeLeft: () => {
+      if (currentStepIndex >= 0 && currentStepIndex < allSteps.length - 1) {
+        navigateToStep(currentStepIndex + 1);
+      }
+    },
+    onSwipeRight: () => {
+      if (currentStepIndex > 0) {
+        navigateToStep(currentStepIndex - 1);
+      }
+    },
+    onTap: () => {
+      if (settings.autoHideUI || settings.contemplativeMode) revealChrome();
+    },
+  });
 
   const exportStepPDF = () => {
     if (!step) return;
@@ -224,7 +293,7 @@ const ItinerariumStepPage: React.FC = () => {
 
   return createPortal(
     <div className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden">
-      <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
+      <div data-reading-chrome className="reading-chrome px-6 py-4 border-b border-border/50 flex items-center justify-between bg-background/80 backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate(`/itineraria/${itinerariumId}`)}>
             <X className="w-5 h-5" />
@@ -257,8 +326,9 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="max-w-2xl mx-auto px-6 py-12 space-y-12 pb-32">
+      <div className="flex-1 overflow-y-auto custom-scrollbar reader-container" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
+        <div className="mx-auto px-4 md:px-6 py-12 space-y-12 pb-32 reader-text">
+
           <header className="text-center space-y-4">
             <Badge variant="outline" className="text-primary/60 border-primary/10">{step.step_type}</Badge>
             <h2 className="text-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
@@ -301,7 +371,7 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+      <div data-reading-chrome className="reading-chrome fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 pointer-events-auto">
           <Button
             variant="outline"
