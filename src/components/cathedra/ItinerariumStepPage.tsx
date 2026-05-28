@@ -118,9 +118,14 @@ const ItinerariumStepPage: React.FC = () => {
             <h2 className="text-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
           </header>
 
-          <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg leading-relaxed text-foreground/90">
-             <div dangerouslySetInnerHTML={{ __html: step.content.html || '' }} />
-             {!step.content.html && <p className="italic text-muted-foreground text-center">Conteúdo em contemplação...</p>}
+          <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg md:text-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
+             <div className="space-y-6" dangerouslySetInnerHTML={{ __html: step.content.html || '' }} />
+             {!step.content.html && (
+               <div className="flex flex-col items-center justify-center py-20 space-y-6 opacity-30">
+                 <Icons.Sparkles className="w-12 h-12 animate-pulse" />
+                 <p className="italic text-center font-serif">O conteúdo deste passo está sendo preparado em silêncio...</p>
+               </div>
+             )}
           </article>
 
           <div className="space-y-4 pt-12 border-t border-border/10">
