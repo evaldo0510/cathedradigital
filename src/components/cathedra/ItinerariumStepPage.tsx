@@ -326,8 +326,9 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="max-w-2xl mx-auto px-6 py-12 space-y-12 pb-32">
+      <div className="flex-1 overflow-y-auto custom-scrollbar reader-container" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
+        <div className="mx-auto px-4 md:px-6 py-12 space-y-12 pb-32 reader-text">
+
           <header className="text-center space-y-4">
             <Badge variant="outline" className="text-primary/60 border-primary/10">{step.step_type}</Badge>
             <h2 className="text-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
@@ -370,7 +371,7 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+      <div data-reading-chrome className="reading-chrome fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 pointer-events-auto">
           <Button
             variant="outline"
