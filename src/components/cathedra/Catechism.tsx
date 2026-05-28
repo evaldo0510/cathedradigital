@@ -937,8 +937,72 @@ const Catechism: React.FC = () => {
                     />
                   ))}
                 </div>
-              </div>
-            </div>
+
+                {/* Kindle-style Navigation Footer */}
+                <div className="mt-32 pt-24 border-t border-primary/5 space-y-20">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+                    <Button 
+                      variant="ghost" 
+                      disabled={selectedSection.id <= 1}
+                      onClick={() => {
+                        const prevSec = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                        if (prevSec) {
+                          setSelectedSection(prevSec);
+                          setCurrentParagraph(prevSec.paragraphs[0]);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+                    >
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Seção Anterior</span>
+                      <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                        <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                        {selectedPart.sections.find(s => s.id === selectedSection.id - 1)?.label || 'Anterior'}
+                      </div>
+                    </Button>
+
+                    <Button 
+                      variant="ghost" 
+                      disabled={selectedSection.id >= 10}
+                      onClick={() => {
+                        const nextSec = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                        if (nextSec) {
+                          setSelectedSection(nextSec);
+                          setCurrentParagraph(nextSec.paragraphs[0]);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
+                      className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
+                    >
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próxima Seção</span>
+                      <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                        {selectedPart.sections.find(s => s.id === selectedSection.id + 1)?.label || 'Próxima'}
+                        <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
+                      </div>
+                    </Button>
+                  </div>
+
+                  <div className="text-center space-y-8 py-16">
+                    <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                      <p className="text-xs text-muted-foreground/50 italic font-serif">"A luz de Cristo ilumina todos os homens." (Catecismo, 1)</p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <Button 
+                        onClick={() => {
+                          toast.success("Seção concluída!", { icon: '📖' });
+                          setViewMode('sections');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                      >
+                        Finalizar e Voltar
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
 
             <div className="space-y-12">
               <ChapterNotesList 
