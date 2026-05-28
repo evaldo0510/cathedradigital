@@ -114,12 +114,13 @@ const Relatio: React.FC<RelatioProps> = ({
       
       setLoading(true);
       try {
-        const intensity = (relatioConfig as any).intensity || 'standard';
+        const intensity = density;
+        // Limit number of tags to fetch to maintain performance/focus
         const tagCount = intensity === 'subtle' ? 1 : intensity === 'deep' ? 4 : 2;
+        
         // Density Control: limit based on intensity settings
-        const densityLimits = { subtle: 4, standard: 8, deep: 16 };
-        const resultLimit = densityLimits[intensity as keyof typeof densityLimits] || 8;
-
+        const densityLimits = { subtle: 4, normal: 8, deep: 16 };
+        const resultLimit = densityLimits[density] || 8;
 
         const tagPromises = context.tags.slice(0, tagCount).map(tag => 
           fetchNexusTagContent({ label: tag, slug: tag.toLowerCase() })
@@ -164,7 +165,14 @@ const Relatio: React.FC<RelatioProps> = ({
     };
 
     fetchRelated();
-  }, [context.tags, context.id, relatioConfig, spiritualContext]);
+  }, [context.tags, context.id, relatioConfig, spiritualContext, density]);
+
+  const updateDensity = (newDensity: 'subtle' | 'normal' | 'deep') => {
+    setDensity(newDensity);
+    localStorage.setItem('cathedra-relatio-density', newDensity);
+    toast.info(`Densidade: ${newDensity === 'subtle' ? 'Subtil' : newDensity === 'normal' ? 'Normal' : 'Profunda'}`);
+  };
+
 
   const hasAnyConnections = 
     staticRefs.cicParagraphs.length > 0 || 
