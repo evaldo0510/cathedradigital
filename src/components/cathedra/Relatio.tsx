@@ -468,11 +468,3 @@ const Relatio: React.FC<RelatioProps> = ({
 };
 
 export default Relatio;
-      </AnimatePresence>
-    </section>
-  );
-};
-
-
-
-export default Relatio;
