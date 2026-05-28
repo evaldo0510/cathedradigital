@@ -4,7 +4,8 @@ import { Icons } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { HomeCard } from './HomeCard';
 import { Button } from '@/components/ui/button';
-import { Profile } from '@/hooks/useAuth';
+import { Profile, useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SpiritualContinuityProps {
   data?: any;
@@ -74,7 +75,7 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
             </div>
             <div className="space-y-1 text-center md:text-left">
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">
-                {profile?.name ? `Paz e Bem, ${profile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
+                {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
               <h3 className="text-xl md:text-2xl font-serif font-bold text-primary/80">
                 {title}
