@@ -103,6 +103,38 @@ serve(async (req) => {
 
     const userMessage = `Tema buscado pelo usuário: "${query || tag}"`;
 
+    const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
+
+    if (GOOGLE_API_KEY) {
+      console.log('Using direct Google Gemini API for insight')
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${GOOGLE_API_KEY}`
+      
+      const geminiResponse = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+          generationConfig: {
+            temperature: 0.7,
+          }
+        })
+      })
+
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        console.error('Gemini API error:', geminiResponse.status, errorText)
+        throw new Error(`Erro na API Gemini: ${geminiResponse.status}`)
+      }
+
+      const geminiData = await geminiResponse.json()
+      const insight = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Não foi possível gerar a síntese espiritual."
+      
+      return new Response(JSON.stringify({ insight }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {

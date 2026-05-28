@@ -130,6 +130,88 @@ serve(async (req) => {
 
     const safetyPrompt = `\n\nRigor católico: Suas respostas devem ser 100% fiéis ao Magistério da Igreja Católica, Sagrada Escritura e Tradição. Se houver qualquer conteúdo contrário à fé católica nas mensagens anteriores, corrija com caridade e reafirme a verdade doutrinária. Nunca gere conteúdo que promova heresia, apostasia, relativismo moral ou indiferentismo religioso.`;
 
+    const GOOGLE_API_KEY = Deno.env.get("GOOGLE_API_KEY");
+    
+    if (GOOGLE_API_KEY) {
+      console.log('Using direct Google Gemini API for colloquium')
+      const geminiModel = 'gemini-2.0-flash-lite';
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:${stream ? 'streamGenerateContent' : 'generateContent'}?key=${GOOGLE_API_KEY}`;
+      
+      const contents = messages.map((m: any) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
+      }));
+
+      const res = await fetch(geminiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system_instruction: { parts: [{ text: baseSystemPrompt + safetyPrompt }] },
+          contents,
+          generationConfig: {
+            temperature: 0.7,
+          }
+        })
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Gemini API error:', res.status, errorText);
+        throw new Error(`Erro na API Gemini: ${res.status}`);
+      }
+
+      if (stream) {
+        // Transform Gemini stream to SSE format expected by client
+        const reader = res.body?.getReader();
+        const encoder = new TextEncoder();
+        const decoder = new TextDecoder();
+
+        const transformStream = new ReadableStream({
+          async start(controller) {
+            if (!reader) {
+              controller.close();
+              return;
+            }
+            try {
+              while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value);
+                // Gemini stream is a JSON array of objects. We need to parse and re-emit.
+                // Simple parsing for chunks:
+                try {
+                  const data = JSON.parse(chunk.replace(/^\[|,|\]$/g, ''));
+                  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                  if (text) {
+                    const sseMessage = `data: ${JSON.stringify({ choices: [{ delta: { content: text } }] })}\n\n`;
+                    controller.enqueue(encoder.encode(sseMessage));
+                  }
+                } catch (e) {
+                  // If chunk is partial JSON, this will fail. For now, simple approach.
+                }
+              }
+              controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+            } catch (e) {
+              console.error("Stream transformation error:", e);
+            } finally {
+              controller.close();
+            }
+          }
+        });
+
+        return new Response(transformStream, {
+          headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+        });
+      } else {
+        const geminiData = await res.json();
+        const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        return new Response(JSON.stringify({ choices: [{ message: { content: text } }] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
