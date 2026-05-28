@@ -229,12 +229,39 @@ const ItinerariumStepPage: React.FC = () => {
     };
   }, [user, stepId]);
 
-  const navigateToStep = (index: number) => {
+  const navigateToStep = useCallback((index: number) => {
     const targetStep = allSteps[index];
     if (targetStep) {
       navigate(`/itineraria/${itinerariumId}/step?step=${targetStep.id}`);
     }
-  };
+  }, [allSteps, itinerariumId, navigate]);
+
+  // Navegação por gestos (mobile) e tap-to-reveal da UI
+  const revealTimer = useRef<number | null>(null);
+  const revealChrome = useCallback(() => {
+    document.documentElement.classList.add('reveal-chrome');
+    if (revealTimer.current) window.clearTimeout(revealTimer.current);
+    revealTimer.current = window.setTimeout(() => {
+      document.documentElement.classList.remove('reveal-chrome');
+    }, 2800);
+  }, []);
+
+  useSwipeNavigation({
+    enabled: isMobile,
+    onSwipeLeft: () => {
+      if (currentStepIndex >= 0 && currentStepIndex < allSteps.length - 1) {
+        navigateToStep(currentStepIndex + 1);
+      }
+    },
+    onSwipeRight: () => {
+      if (currentStepIndex > 0) {
+        navigateToStep(currentStepIndex - 1);
+      }
+    },
+    onTap: () => {
+      if (settings.autoHideUI || settings.contemplativeMode) revealChrome();
+    },
+  });
 
   const exportStepPDF = () => {
     if (!step) return;
@@ -266,7 +293,7 @@ const ItinerariumStepPage: React.FC = () => {
 
   return createPortal(
     <div className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden">
-      <div className="px-6 py-4 border-b border-border/50 flex items-center justify-between">
+      <div data-reading-chrome className="reading-chrome px-6 py-4 border-b border-border/50 flex items-center justify-between bg-background/80 backdrop-blur-xl">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate(`/itineraria/${itinerariumId}`)}>
             <X className="w-5 h-5" />
