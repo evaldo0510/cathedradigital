@@ -58,6 +58,7 @@ const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const Index = lazy(() => import('./pages/Index'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
@@ -335,6 +336,7 @@ const AppLayout: React.FC = () => {
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
+              <Route path="/spiritual-profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualProfile /></AuthGuard></Suspense>} />
               <Route path="/onboarding" element={<Suspense fallback={<LoadingFallback />}><OnboardingPage /></Suspense>} />
 
               {/* Hoje & Diário */}
