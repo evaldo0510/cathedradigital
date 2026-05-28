@@ -346,7 +346,9 @@ const Relatio: React.FC<RelatioProps> = ({
                       </Card>
                     </motion.div>
                   );
-                </div>
+                })}
+              </div>
+
 
                 {connections.length > 4 && (
                   <div className="flex justify-center pt-4">
