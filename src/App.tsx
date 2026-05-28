@@ -344,6 +344,12 @@ const AppLayout: React.FC = () => {
 
               {/* Biblioteca */}
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              
+              {/* Itineraria */}
+              <Route path="/itineraria" element={<Suspense fallback={<LoadingFallback />}><ItinerariaPage /></Suspense>} />
+              <Route path="/itineraria/:id" element={<Suspense fallback={<LoadingFallback />}><ItinerariumDetailPage /></Suspense>} />
+              <Route path="/itineraria/:id/step" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ItinerariumStepPage /></AuthGuard></Suspense>} />
+
               <Route path="/temas" element={<Suspense fallback={<LoadingFallback />}><TemasPage /></Suspense>} />
               <Route path="/temas/:slug" element={<Suspense fallback={<LoadingFallback />}><TemaDetailPage /></Suspense>} />
               <Route path="/encyclopedia" element={<Suspense fallback={<LoadingFallback />}><AZFaithPage /></Suspense>} />
