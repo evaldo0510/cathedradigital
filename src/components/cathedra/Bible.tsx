@@ -1055,6 +1055,75 @@ const Bible: React.FC = () => {
                 )}
               </div>
             </div>
+
+            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+                <Button 
+                  variant="ghost" 
+                  disabled={selectedChapter <= 1}
+                  onClick={() => {
+                    if (selectedChapter > 1) {
+                      const prevCh = selectedChapter - 1;
+                      setSelectedChapter(prevCh);
+                      setVerses([]);
+                      navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                    <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                    {selectedBook.name} {selectedChapter - 1}
+                  </div>
+                </Button>
+
+                <Button 
+                  variant="ghost" 
+                  disabled={selectedChapter >= selectedBook.chapters}
+                  onClick={() => {
+                    if (selectedChapter < selectedBook.chapters) {
+                      const nextCh = selectedChapter + 1;
+                      setSelectedChapter(nextCh);
+                      setVerses([]);
+                      navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                    }
+                  }}
+                  className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
+                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                    {selectedBook.name} {selectedChapter + 1}
+                    <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
+                  </div>
+                </Button>
+              </div>
+
+              <div className="text-center space-y-8 py-16">
+                <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                  <p className="text-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Button 
+                    onClick={() => {
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                      toast.success("Capítulo contemplado!", { icon: '📖' });
+                      setViewMode('chapters');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                  >
+                    Finalizar e Voltar
+                  </Button>
+                </div>
+              </div>
+            </div>
+
             
             <TextSelectionToolbar 
               activeHighlightId={activeHighlight?.id}
