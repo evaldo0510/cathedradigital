@@ -6,6 +6,7 @@ import { BADGE_DEFINITIONS } from '@/lib/badges';
 import { Progress } from '@/components/ui/progress';
 import { Trophy, Lock, Star, Award, Shield, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 
 const AchievementsPage: React.FC = () => {
   const { user, profile } = useAuth();
@@ -149,9 +150,5 @@ const AchievementsPage: React.FC = () => {
     </div>
   );
 };
-
-const Card: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={`bg-card rounded-xl border border-border ${className}`}>{children}</div>
-);
 
 export default AchievementsPage;
