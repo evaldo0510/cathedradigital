@@ -93,10 +93,10 @@
     --space-mobile-header-mb: 1.5rem;
     
     --space-desktop-base: 2.5rem;
-    --space-desktop-section: 14rem;
-    --space-desktop-stack: 5rem;
-    --space-desktop-padding: 3rem;
-    --space-desktop-header-mb: 8rem;
+    --space-desktop-section: 6rem;
+    --space-desktop-stack: 3rem;
+    --space-desktop-padding: 2.5rem;
+    --space-desktop-header-mb: 4rem;
   }
 
   .dark, [data-theme='dark'] {
