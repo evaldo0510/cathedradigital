@@ -9,7 +9,8 @@ const BreathWrapper: React.FC<{ children: React.ReactNode; className?: string }>
 );
 
 export const BibleSkeleton = () => (
-  <div className="w-full max-w-7xl mx-auto space-y-16 py-12 px-6">
+  <div className="w-full max-w-7xl mx-auto space-y-16 py-12 px-6" role="status" aria-live="polite" aria-busy="true">
+    <span className="sr-only">Carregando Bíblia Sagrada...</span>
     <BreathWrapper className="space-y-8 text-center">
       <div className="w-16 h-16 rounded-[2rem] bg-primary/[0.03] border border-primary/10 mx-auto" />
       <div className="h-12 w-80 bg-primary/[0.05] rounded-full mx-auto" />
@@ -27,7 +28,8 @@ export const BibleSkeleton = () => (
 );
 
 export const CatechismSkeleton = () => (
-  <div className="w-full max-w-5xl mx-auto space-y-16 py-12 px-6">
+  <div className="w-full max-w-5xl mx-auto space-y-16 py-12 px-6" role="status" aria-live="polite" aria-busy="true">
+    <span className="sr-only">Carregando Catecismo da Igreja Católica...</span>
     <BreathWrapper className="space-y-8 text-center">
       <div className="w-16 h-16 rounded-[2rem] bg-primary/[0.03] border border-primary/10 mx-auto" />
       <div className="h-12 w-96 bg-primary/[0.05] rounded-full mx-auto" />
@@ -49,7 +51,8 @@ export const CatechismSkeleton = () => (
 );
 
 export const LogosSkeleton = () => (
-  <div className="w-full max-w-4xl mx-auto h-[75vh] flex flex-col space-y-8 md:space-y-12 py-8 md:py-12 px-6">
+  <div className="w-full max-w-4xl mx-auto h-[75vh] flex flex-col space-y-8 md:space-y-12 py-8 md:py-12 px-6" role="status" aria-live="polite" aria-busy="true">
+    <span className="sr-only">Carregando Logos IA...</span>
     <BreathWrapper className="flex items-center gap-6 border-b border-primary/[0.02] pb-10">
       <div className="w-16 h-16 rounded-[2rem] bg-primary/[0.03] border border-primary/10" />
       <div className="space-y-3">

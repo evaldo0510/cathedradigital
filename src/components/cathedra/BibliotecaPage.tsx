@@ -202,8 +202,11 @@ const BibliotecaPage: React.FC = () => {
         )}
         {filtered.map((group, groupIdx) => (
           <div key={group.category} className="space-y-4">
-            <h2 className="text-premium-small font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3">
-              <div className="h-px w-6 bg-primary/20" /> {group.category}
+            <h2 
+              className="text-premium-small font-black uppercase tracking-[0.3em] text-primary/60 flex items-center gap-3"
+              aria-level={2}
+            >
+              <div className="h-px w-6 bg-primary/20" aria-hidden="true" /> {group.category}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {group.items.map((item, i) => {
