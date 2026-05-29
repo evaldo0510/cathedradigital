@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { saveUserPsychology } from '@/lib/psychologicalProfile';
 import { AppRoute } from '@/types';
 import ProConversionBanner from './ProConversionBanner';
@@ -40,6 +41,7 @@ const JornadaStepPage: React.FC = () => {
   const stepId = searchParams.get('step');
   const navigate = useNavigate();
   const { user, profile, userLevel: userLevelClass, isPremium: isUserPremium } = useAuth();
+  const { saveLastRead } = useReadingMarks();
 
   const [step, setStep] = useState<any>(null);
   const [journeyTitle, setJourneyTitle] = useState('');
@@ -64,8 +66,27 @@ const JornadaStepPage: React.FC = () => {
   }, [step?.subtitle]);
 
   useEffect(() => {
-    if (stepId && journeyId) loadData();
-  }, [stepId, journeyId]);
+    if (stepId && journeyId && step?.title) {
+      loadData();
+      
+      // Persistir ponto de leitura sincronizado
+      saveLastRead({
+        content_type: 'journey',
+        content_id: stepId,
+        label: `${step.title} (${journeyTitle || 'Jornada'})`,
+        url: `/jornadas/${journeyId}/step?step=${stepId}`,
+        is_last_read: true
+      });
+      
+      // Histórico geral
+      supabase.from('user_history').insert({
+        user_id: user?.id,
+        title: step.title,
+        route: `/jornadas/${journeyId}/step?step=${stepId}`,
+        type: 'journey'
+      });
+    }
+  }, [stepId, journeyId, step?.title, journeyTitle, user?.id]);
 
   const loadData = async () => {
     setLoading(true);

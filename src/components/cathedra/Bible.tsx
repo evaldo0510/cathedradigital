@@ -767,7 +767,7 @@ const Bible: React.FC = () => {
         />
         
         <div className="space-y-12">
-          <div className="flex items-center justify-between gap-4 border-b border-border/5 pb-8">
+          <div className="space-y-12">
             <Button 
               variant="ghost" 
               onClick={goBack}
@@ -1039,9 +1039,9 @@ const Bible: React.FC = () => {
                         </div>
                       );
                     })}
+                    </div>
                   </div>
                 )}
-
               </div>
             </div>
           </div>
@@ -1111,9 +1111,8 @@ const Bible: React.FC = () => {
               </div>
             </aside>
           </div>
-        </div>
 
-        <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+          <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
             <Button 
               variant="ghost" 
@@ -1391,27 +1390,28 @@ const Bible: React.FC = () => {
                 </Card>
               </motion.div>
             )}
-          </div>
+          {!settings.totalSilence && showLogosAI && (
+            <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+              <React.Suspense fallback={<BibleChapterSkeleton />}>
+                <LogosAI 
+                  isOpen={showLogosAI} 
+                  onClose={() => {
+                    setShowLogosAI(false);
+                    setLogosAIInitialQuery('');
+                  }} 
+                  context={logosAIContext}
+                  initialQuery={logosAIInitialQuery}
+                  type="bible"
+                  variant="integrated"
+                />
+              </React.Suspense>
+            </div>
+          )}
         </div>
-        {!settings.totalSilence && showLogosAI && (
-          <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <React.Suspense fallback={<BibleChapterSkeleton />}>
-              <LogosAI 
-                isOpen={showLogosAI} 
-                onClose={() => {
-                  setShowLogosAI(false);
-                  setLogosAIInitialQuery('');
-                }} 
-                context={logosAIContext}
-                initialQuery={logosAIInitialQuery}
-                type="bible"
-                variant="integrated"
-              />
-            </React.Suspense>
-          </div>
       </ContemplativeLayout>
     );
   }
+
 
 
 
@@ -1465,6 +1465,7 @@ const Bible: React.FC = () => {
                 </motion.button>
               );
             })}
+          </div>
         </div>
       </ContemplativeLayout>
     );
