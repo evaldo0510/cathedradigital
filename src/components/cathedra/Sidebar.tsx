@@ -112,6 +112,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText /> },
         { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
+        { label: 'Busca Global', path: '#', onClick: () => { onClose(); (window as any).dispatchEvent(new CustomEvent('open-command-center')); }, icon: <Icons.Search /> },
       ]
     },
     {
