@@ -38,10 +38,12 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 
 const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
 const SplashScreen = lazy(() => import('./components/cathedra/SplashScreen'));
-const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI'));
-const SpacingDebugger = lazy(() => import('./components/cathedra/SpacingDebugger'));
+const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI').then(m => ({ default: m.GlobalLogosAI })));
+const SpacingDebugger = lazy(() => import('./components/cathedra/SpacingDebugger').then(m => ({ default: m.SpacingDebugger })));
 const SwipeNavigation = lazy(() => import('./components/cathedra/SwipeNavigation'));
 const Atmosphere = lazy(() => import('./components/cathedra/Atmosphere').then(m => ({ default: m.Atmosphere })));
+import ContemplativeLayout from './components/cathedra/ContemplativeLayout';
+
 
 
 const queryClient = new QueryClient({
