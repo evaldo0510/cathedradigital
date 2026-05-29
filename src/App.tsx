@@ -186,7 +186,13 @@ const AppLayout: React.FC = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [settings.theme]);
+    
+190:     if (settings.reduceAnimations) {
+191:       document.documentElement.classList.add('reduce-motion');
+192:     } else {
+193:       document.documentElement.classList.remove('reduce-motion');
+194:     }
+195:   }, [settings.theme, settings.reduceAnimations]);
 
   // Enable automatic accessibility check
   useA11yGuard(true);

@@ -497,6 +497,19 @@
 /* Layout Density & Reading Rhythm */
 [data-line-spacing='tight'] .reader-text { line-height: 1.5; }
 [data-line-spacing='normal'] .reader-text { line-height: 1.9; }
+501: [data-line-spacing='wide'] .reader-text { line-height: 2.4; }
+502: 
+503: /* Global Reduced Motion Overrides */
+504: .reduce-motion * {
+505:   transition-duration: 0.1s !important;
+506:   animation-duration: 0.1s !important;
+507: }
+508: 
+509: .reduce-motion .animate-pulse,
+510: .reduce-motion .animate-bounce,
+511: .reduce-motion .animate-spin {
+512:   animation: none !important;
+513: }
 [data-line-spacing='wide'] .reader-text { line-height: 2.4; }
 
 [data-letter-spacing='tight'] .reader-text { letter-spacing: -0.01em; }
