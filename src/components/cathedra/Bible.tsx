@@ -118,9 +118,10 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-base', leading: 'leading-relaxed' },
-  { label: 'M', size: 'text-lg md:text-xl', leading: 'leading-[1.8]' },
-  { label: 'G', size: 'text-xl md:text-2xl', leading: 'leading-[1.9]' },
+  { label: 'P', size: 'text-[1.05rem] md:text-[1.15rem]', leading: 'leading-[1.85]' },
+  { label: 'M', size: 'text-[1.25rem] md:text-[1.4rem]', leading: 'leading-[2]' },
+  { label: 'G', size: 'text-[1.5rem] md:text-[1.75rem]', leading: 'leading-[2.1]' },
+  { label: 'Extra', size: 'text-[1.75rem] md:text-[2.2rem]', leading: 'leading-[2.2]' },
 ];
 
 const Bible: React.FC = () => {
