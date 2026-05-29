@@ -44,6 +44,8 @@ const MagisteriumViewer: React.FC = () => {
   const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
+
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
