@@ -110,7 +110,7 @@ const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPassword
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
-const DesignSystemPlayground = lazy(() => import('./components/cathedra/DesignSystemGuide'));
+const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
