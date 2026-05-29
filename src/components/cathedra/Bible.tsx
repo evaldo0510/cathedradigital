@@ -119,10 +119,10 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-[1.1rem] md:text-[1.2rem]', leading: 'leading-[1.9]', letterSpacing: 'tracking-[0.01em]' },
-  { label: 'M', size: 'text-[1.3rem] md:text-[1.5rem]', leading: 'leading-[2.1]', letterSpacing: 'tracking-[0.02em]' },
-  { label: 'G', size: 'text-[1.6rem] md:text-[1.9rem]', leading: 'leading-[2.3]', letterSpacing: 'tracking-[0.025em]' },
-  { label: 'Extra', size: 'text-[1.9rem] md:text-[2.4rem]', leading: 'leading-[2.4]', letterSpacing: 'tracking-[0.03em]' },
+  { label: 'P', size: 'text-[1.05rem] md:text-[1.15rem]', leading: 'leading-[1.8]', letterSpacing: 'tracking-[0.01em]' },
+  { label: 'M', size: 'text-[1.25rem] md:text-[1.45rem]', leading: 'leading-[2.0]', letterSpacing: 'tracking-[0.015em]' },
+  { label: 'G', size: 'text-[1.55rem] md:text-[1.85rem]', leading: 'leading-[2.2]', letterSpacing: 'tracking-[0.02em]' },
+  { label: 'EX', size: 'text-[1.85rem] md:text-[2.3rem]', leading: 'leading-[2.3]', letterSpacing: 'tracking-[0.025em]' },
 ];
 
 const Bible: React.FC = () => {

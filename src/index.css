@@ -100,36 +100,36 @@
   }
 
   .dark, [data-theme='dark'] {
-    /* Sophisticated Dark Mode - Avoid absolute black, use deep architectural grays */
-    --background: 220 35% 2.8% / var(--atmosphere-dark-opacity, 0.96); /* Slightly warmer, architectural gray-black */
-    --foreground: 45 12% 82%; /* Softer ivory for reading comfort */
+    /* Sophisticated Dark Mode - Architectural Deep Obsidian */
+    --background: 220 35% 2.2% / var(--atmosphere-dark-opacity, 0.98); 
+    --foreground: 45 15% 85%; /* Divine Ivory for reading comfort */
     
-    --card: 220 30% 5% / calc(var(--atmosphere-dark-opacity, 0.96) * 0.5); /* Semi-transparent layering */
-    --card-foreground: 45 12% 82%;
+    --card: 220 35% 3.5% / calc(var(--atmosphere-dark-opacity, 0.98) * 0.6); 
+    --card-foreground: 45 15% 85%;
     
-    --popover: 220 35% 4%;
-    --popover-foreground: 45 12% 82%;
+    --popover: 220 35% 3.2%;
+    --popover-foreground: 45 15% 85%;
     
-    --primary: 42 25% 65%; /* Muted sovereign gold */
-    --primary-foreground: 220 50% 2%;
+    --primary: 42 30% 68%; /* Muted sovereign gold */
+    --primary-foreground: 220 50% 1.5%;
     
-    --secondary: 220 25% 8%;      
-    --secondary-foreground: 42 25% 65%;
+    --secondary: 220 25% 6%;      
+    --secondary-foreground: 42 30% 68%;
     
-    --muted: 220 20% 7%; /* Deep gray for subtle sections */
-    --muted-foreground: 220 10% 45%; /* Subdued secondary text */
+    --muted: 220 20% 5%; 
+    --muted-foreground: 220 12% 48%; 
     
-    --accent: 42 25% 65% / 0.04;
-    --accent-foreground: 42 25% 65%;
+    --accent: 42 30% 68% / 0.03;
+    --accent-foreground: 42 30% 68%;
     
-    --destructive: 0 50% 50%;
+    --destructive: 0 55% 52%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
-    --input: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
-    --ring: 42 25% 65% / 0.15;
+    --border: 220 20% 70% / calc(var(--atmosphere-border-intensity, 0.3) * 0.06);
+    --input: 220 20% 70% / calc(var(--atmosphere-border-intensity, 0.3) * 0.06);
+    --ring: 42 30% 68% / 0.12;
     
-    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 1.8));
+    --shadow-premium: 0 50px 200px -50px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 2.2));
   }
 
   .high-contrast {
