@@ -31,6 +31,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
   const { settings } = useReadingSettings();
 
   const sidebarRef = React.useRef<HTMLElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
@@ -40,17 +41,25 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
         onClose();
+        return;
       }
 
-      if (e.key === 'Tab' && isOpen && sidebarRef.current) {
-        const focusableElements = sidebarRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const focusableElements = sidebarRef.current?.querySelectorAll(
+        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      
+      if (!focusableElements || focusableElements.length === 0) return;
 
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+
+      // Focus Trap
+      if (e.key === 'Tab') {
         if (e.shiftKey) {
           if (document.activeElement === firstElement) {
             lastElement.focus();
@@ -63,6 +72,17 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           }
         }
       }
+
+      // Arrow Key Navigation
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        let nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
+        
+        if (nextIndex >= focusableElements.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = focusableElements.length - 1;
+        
+        (focusableElements[nextIndex] as HTMLElement).focus();
+      }
     };
 
     window.addEventListener('cathedra_cache_updated', handleCacheUpdate);
@@ -70,9 +90,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      // Initial focus on open for a11y - focus the dialog itself first
+      // Focus close button on open for immediate exit capability
       setTimeout(() => {
-        sidebarRef.current?.focus();
+        closeButtonRef.current?.focus();
       }, 100);
     } else {
       document.body.style.overflow = '';
