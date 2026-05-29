@@ -19,8 +19,6 @@ export default defineConfig({
     ['html', { open: 'never' }],
     ['json', { outputFile: 'test-results/report.json' }],
     ['list'],
-    ['github'],
-    ["@chromatic-com/playwright"],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
