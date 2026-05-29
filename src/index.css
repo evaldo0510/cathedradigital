@@ -267,13 +267,13 @@
     max-width: 80ch;
   }
 
-  /* Reading Core */
+  /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/20 max-w-[65ch] mx-auto;
-    font-size: clamp(1.2rem, 1.4vw, 1.5rem);
-    line-height: 2.1;
-    letter-spacing: 0.015em;
-    font-weight: 300;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    line-height: 1.8; /* Adjusted for better vertical flow */
+    letter-spacing: 0.01em;
+    font-weight: 350;
     font-variant-numeric: oldstyle-nums;
   }
 
