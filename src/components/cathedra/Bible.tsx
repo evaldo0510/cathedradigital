@@ -890,8 +890,6 @@ const Bible: React.FC = () => {
           <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
             <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
 
-              </nav>
-            </div>
 
             {currentChapterNotes.length > 0 && (
               <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
@@ -924,11 +922,13 @@ const Bible: React.FC = () => {
                 </div>
               </div>
             )}
-          </aside>
+            </div>
+          </div>
 
           <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
             <div className="w-full relative">
               <div className="py-8 md:py-20 lg:py-24">
+
 
 
 
@@ -1445,11 +1445,11 @@ const Bible: React.FC = () => {
                 </motion.button>
               );
             })}
-          </div>
         </div>
       </ContemplativeLayout>
     );
   }
+
 
   return (
     <ContemplativeLayout 
