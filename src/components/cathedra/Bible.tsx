@@ -1417,6 +1417,7 @@ const Bible: React.FC = () => {
 
 
 
+
   if (viewMode === 'chapters' && selectedBook) {
     return (
       <ContemplativeLayout
