@@ -7,6 +7,8 @@ import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { ShortcutInput } from './ShortcutInput';
 import { Slider } from '@/components/ui/slider';
+import { runDesignSystemAudit, exportAuditReport, AuditResult } from '@/lib/design-system-audit';
+import { useLocation } from 'react-router-dom';
 
 interface A11ySettingsPanelProps {
   isOpen: boolean;
@@ -19,6 +21,33 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 }) => {
   const { t } = useLang();
   const { settings, updateSettings } = useReadingSettings();
+  const location = useLocation();
+  const [auditResult, setAuditResult] = React.useState<AuditResult | null>(null);
+  const [isAuditing, setIsAuditing] = React.useState(false);
+
+  const runAudit = async () => {
+    setIsAuditing(true);
+    try {
+      const result = await runDesignSystemAudit(location.pathname);
+      setAuditResult(result);
+    } catch (error) {
+      console.error('Audit failed:', error);
+    } finally {
+      setIsAuditing(false);
+    }
+  };
+
+  const handleExport = () => {
+    if (auditResult) {
+      exportAuditReport(auditResult);
+    } else {
+      runAudit().then(() => {
+        // If it was null, we run it and then we'd need to wait for result to be set
+        // But runDesignSystemAudit returns the result directly too
+        runDesignSystemAudit(location.pathname).then(res => exportAuditReport(res));
+      });
+    }
+  };
 
   const handleShortcutChange = (key: keyof typeof settings.shortcuts, newValue: string) => {
     updateSettings({
@@ -221,6 +250,61 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   <p className="text-[11px] text-primary/60 leading-relaxed italic">
                     A plataforma utiliza semântica WCAG 2.1 para garantir que a navegação via teclado e leitores de tela seja fluida e contínua.
                   </p>
+                </div>
+              </section>
+              
+              <section className="space-y-6 pt-8 border-t border-border/10">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60">Auditoria Técnica</h3>
+                  {auditResult && (
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${auditResult.status === 'premium' ? 'text-green-500' : 'text-amber-500'}`}>
+                      Score: {auditResult.wcagScore}%
+                    </span>
+                  )}
+                </div>
+                
+                <div className="space-y-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
+                    onClick={runAudit}
+                    disabled={isAuditing}
+                  >
+                    {isAuditing ? 'Auditoria em curso...' : 'Verificar Conformidade WCAG'}
+                  </Button>
+                  
+                  <Button 
+                    variant="ghost" 
+                    className="w-full h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60"
+                    onClick={handleExport}
+                  >
+                    <Icons.Download className="w-3.5 h-3.5 mr-2" />
+                    Exportar Relatório (JSON)
+                  </Button>
+
+                  {auditResult && auditResult.contrastIssues.length > 0 && (
+                    <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
+                      <div className="flex items-center gap-2 text-[10px] font-bold text-amber-600 uppercase tracking-widest">
+                        <Icons.AlertTriangle className="w-3.5 h-3.5" />
+                        <span>Ajustes de Contraste Necessários</span>
+                      </div>
+                      <ul className="space-y-2">
+                        {auditResult.contrastIssues.slice(0, 3).map((issue, idx) => (
+                          <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic">
+                            Elemento: <span className="font-bold">{issue.element}</span> - Ratio: {issue.ratio} (Min: {issue.expected})
+                          </li>
+                        ))}
+                        {auditResult.contrastIssues.length > 3 && (
+                          <li className="text-[8px] text-amber-600/40 uppercase font-bold tracking-widest pt-2">
+                            + {auditResult.contrastIssues.length - 3} outros problemas
+                          </li>
+                        )}
+                      </ul>
+                      <p className="text-[8px] text-primary/40 leading-relaxed pt-2">
+                        Consulte o <a href="/design-system" className="underline hover:text-primary">Design System</a> para tokens oficiais.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </section>
             </div>
