@@ -95,4 +95,34 @@ test.describe('Logos IA Contrast Validation', () => {
 
     expect(accessibilityScanResults.violations, 'Contrast violations found during loading state').toEqual([]);
   });
+
+  test('Validate contrast of error messages', async ({ page }) => {
+    // 1. Force an error by triggering silence mode and trying to chat
+    await page.goto('/chat');
+    
+    await page.evaluate(() => {
+      const key = 'cathedra_reading_settings';
+      const settings = JSON.parse(localStorage.getItem(key) || '{}');
+      localStorage.setItem(key, JSON.stringify({ ...settings, totalSilence: true }));
+    });
+    
+    await page.reload();
+    
+    // 2. Try to type and send
+    const input = page.locator('input[placeholder*="Silêncio"]');
+    await input.click(); // Should show toast or we can try to press enter
+    await page.keyboard.press('Enter');
+    
+    // 3. Wait for toast error
+    const toast = page.locator('[data-sonner-toast]');
+    await expect(toast).toBeVisible();
+    
+    // 4. Check contrast of the toast
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .include('[data-sonner-toast]')
+      .withRules(['color-contrast'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations, 'Contrast violations found in error toast').toEqual([]);
+  });
 });
