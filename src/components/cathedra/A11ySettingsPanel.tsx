@@ -164,7 +164,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     <Switch 
                       id="high-contrast-toggle" 
                       checked={settings.highContrast} 
-                      onCheckedChange={(val) => updateSettings({ highContrast: val })} 
+                      onCheckedChange={(val) => updateSettings({ highContrast: val, contrast: val ? 'high' : 'normal' })} 
                     />
                   </div>
                   <div className="flex items-center justify-between group pt-4">

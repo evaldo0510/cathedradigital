@@ -143,7 +143,17 @@
     --primary-foreground: 0 0% 100%;
     --muted: 0 0% 90%;
     --muted-foreground: 0 0% 0% !important;
-    --border: 0 0% 0% / 0.6;
+    --border: 0 0% 0% / 0.8;
+  }
+
+  .high-contrast .dark, .high-contrast.dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 100% !important;
+    --border: 0 0% 100% / 0.8;
   }
 
   .high-contrast * {
