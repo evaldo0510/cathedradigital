@@ -55,8 +55,8 @@ const LandingHeader = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-1000 ${
         isScrolled
-          ? "py-6 bg-background/80 backdrop-blur-3xl border-b border-border/5"
-          : "py-10 bg-transparent"
+          ? "py-4 bg-background/60 backdrop-blur-3xl border-b border-border/5"
+          : "py-6 bg-transparent"
       }`}
     >
       <div className="app-container flex items-center justify-between">
