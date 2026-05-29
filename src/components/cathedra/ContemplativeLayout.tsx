@@ -22,28 +22,28 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-12 md:pt-72 pb-24 md:pb-96 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-24 md:pt-96 pb-32 md:pb-[24rem] will-change-transform", className)}>
 
       {(title || subtitle) && (
-        <header className={cn("header-margin-rhythm px-8 md:px-12 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-6 duration-[2000ms] ease-out")}>
-          <div className="w-[0.5px] h-24 md:h-80 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-16 md:mb-40 opacity-30" />
+        <header className={cn("header-margin-rhythm px-10 md:px-24 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[2500ms] ease-out")}>
+          <div className="w-[0.5px] h-32 md:h-96 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-20 md:mb-52 opacity-20" />
           {subtitle && (
-            <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.8em] md:tracking-[1.4em] text-primary/20 mb-10 md:mb-20">
+            <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[1em] md:tracking-[1.8em] text-primary/15 mb-14 md:mb-28">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-6xl md:text-[10rem] lg:text-[12rem] tracking-tight text-primary/80 font-display leading-[0.8] filter blur-[0.4px]">
+            <h1 className="text-7xl md:text-[12rem] lg:text-[15rem] tracking-tighter text-primary/90 font-display leading-[0.75] filter blur-[0.2px] selection:bg-primary/10">
               {title}
             </h1>
           )}
         </header>
       )}
       <motion.main 
-        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 30 }}
+        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 1.8, 
+          duration: settings.reduceAnimations ? 0.1 : 2.5, 
           ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1] 
         }}
 

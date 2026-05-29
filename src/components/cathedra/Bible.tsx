@@ -1037,14 +1037,14 @@ const Bible: React.FC = () => {
                             <motion.div 
                               key={v.number} 
                               id={`v${v.number}`}
-                              initial={{ opacity: 0, y: 30 }}
+                              initial={{ opacity: 0, y: 40 }}
                               whileInView={{ opacity: 1, y: 0 }}
-                              viewport={{ once: true, margin: "-5%" }}
-                              transition={{ duration: 1.8, delay: Math.min(index * 0.05, 0.5), ease: [0.16, 1, 0.3, 1] }}
-                              className={`group relative transition-all duration-[1500ms]
-                                ${isHighlighted ? 'bg-primary/[0.015] -mx-6 px-6 py-4 rounded-[2rem]' : ''}`}>
-                              <div className="flex items-start gap-8 md:gap-14">
-                                <span className="text-[0.55em] font-display font-light text-primary/5 mt-4 select-none group-hover:text-primary/20 transition-all duration-1000 min-w-[2rem] text-right italic">
+                              viewport={{ once: true, margin: "-10%" }}
+                              transition={{ duration: 2.2, delay: Math.min(index * 0.08, 0.6), ease: [0.19, 1, 0.22, 1] }}
+                              className={`group relative transition-all duration-[2000ms]
+                                ${isHighlighted ? 'bg-primary/[0.01] -mx-8 px-8 py-10 rounded-[3rem]' : 'py-4'}`}>
+                              <div className="flex items-start gap-10 md:gap-16">
+                                <span className="text-[0.5em] font-display font-light text-primary/3 mt-6 select-none group-hover:text-primary/15 transition-all duration-[1500ms] min-w-[2.5rem] text-right italic tracking-widest">
                                   {v.number}
                                 </span>
                                 
@@ -1249,19 +1249,19 @@ const Bible: React.FC = () => {
               </Button>
             </div>
 
-            <div className="text-center space-y-12 py-32 bg-primary/[0.01] rounded-[4rem] border border-primary/[0.02] relative overflow-hidden">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-primary/10 to-transparent" />
+            <div className="text-center space-y-20 py-48 bg-transparent border-none relative overflow-hidden">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[0.5px] h-32 bg-gradient-to-b from-primary/20 to-transparent" />
               
-              <Icons.CheckCircle2 className="w-20 h-20 text-primary/40 mx-auto" strokeWidth={0.5} />
+              <Icons.CheckCircle2 className="w-24 h-24 text-primary/10 mx-auto" strokeWidth={0.5} />
               
-              <div className="space-y-6 px-8">
-                <h3 className="text-3xl md:text-5xl font-display text-primary/70 uppercase tracking-[0.4em] font-light">Contemplação Concluída</h3>
-                <p className="text-sm md:text-base text-muted-foreground/40 italic font-serif max-w-xl mx-auto leading-relaxed px-6">
-                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." <br/><span className="text-[10px] uppercase tracking-widest mt-2 block">(Salmo 119, 105)</span>
+              <div className="space-y-10 px-8">
+                <h3 className="text-4xl md:text-7xl font-display text-primary/40 uppercase tracking-[0.6em] font-light filter blur-[0.2px]">Contemplação Concluída</h3>
+                <p className="text-base md:text-xl text-muted-foreground/30 italic font-serif max-w-2xl mx-auto leading-relaxed px-10 tracking-widest">
+                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." <br/><span className="text-[11px] font-black uppercase tracking-[0.6em] mt-6 block opacity-40">(Salmo 119, 105)</span>
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-10 pt-16">
                 <Button 
                   onClick={() => {
                     markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
@@ -1269,9 +1269,10 @@ const Bible: React.FC = () => {
                     setViewMode('chapters');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="rounded-full px-16 py-8 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-[10px] font-black uppercase tracking-[0.4em]"
+                  variant="ghost"
+                  className="rounded-full px-20 py-10 h-auto bg-primary/[0.03] border border-primary/5 text-primary/60 hover:text-primary hover:bg-primary/[0.05] transition-all duration-1000 text-[11px] font-black uppercase tracking-[0.5em]"
                 >
-                  Finalizar e Voltar
+                  Finalizar Contemplação
                 </Button>
               </div>
             </div>

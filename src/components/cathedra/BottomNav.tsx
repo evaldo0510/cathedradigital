@@ -155,8 +155,8 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[92vw] max-w-[400px] h-14 bg-white/60 dark:bg-black/60 backdrop-blur-[40px] rounded-[40px] border border-black/[0.015] dark:border-white/[0.015] bottom-nav bottom-nav-reading-auto-hide px-4 overflow-hidden transition-all shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] dark:shadow-none",
-        shouldReduceMotion ? "duration-0" : "duration-1000"
+        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[85vw] max-w-[360px] h-14 bg-white/40 dark:bg-black/40 backdrop-blur-[60px] rounded-[50px] border border-black/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-none",
+        shouldReduceMotion ? "duration-0" : "duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1)"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
