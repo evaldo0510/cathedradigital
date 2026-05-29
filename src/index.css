@@ -232,10 +232,10 @@
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/10 max-w-[60ch] mx-auto;
-    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
-    line-height: 1.9;
-    letter-spacing: 0.015em;
+    @apply font-reader text-foreground/90 selection:bg-primary/10 max-w-[62ch] mx-auto transition-all duration-[1500ms];
+    font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+    line-height: 2.1;
+    letter-spacing: 0.018em;
     font-weight: 300;
     font-variant-numeric: oldstyle-nums;
   }

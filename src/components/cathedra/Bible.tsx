@@ -1554,12 +1554,12 @@ const Bible: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-[2.5rem] border text-sm font-bold transition-all duration-[1200ms] relative group overflow-hidden",
+                    "aspect-square flex flex-col items-center justify-center rounded-[2.8rem] border text-sm font-bold transition-all duration-[1500ms] relative group overflow-hidden",
                     isRead 
-                      ? "bg-primary text-primary-foreground border-primary shadow-[0_15px_40px_-10px_rgba(0,0,0,0.2)]" 
+                      ? "bg-primary text-primary-foreground border-primary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)]" 
                       : isLastReadChapter
-                        ? "bg-secondary/5 border-secondary text-primary ring-1 ring-secondary/20 shadow-premium"
-                        : "bg-card/20 backdrop-blur-md border-primary/[0.04] text-primary hover:border-primary/10 hover:bg-card hover:shadow-premium-hover hover:text-primary"
+                        ? "bg-secondary/[0.03] border-secondary/30 text-primary ring-1 ring-secondary/10 shadow-premium"
+                        : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.02] dark:border-white/[0.015] text-primary/60 hover:border-primary/10 hover:bg-card/40 hover:shadow-premium-hover hover:text-primary"
                   )}
                 >
                   <span className="text-2xl md:text-3xl font-display font-light transition-transform duration-1000 group-hover:scale-110">{ch}</span>
@@ -1665,10 +1665,10 @@ const Bible: React.FC = () => {
                       whileTap={{ scale: 0.97 }}
                       onClick={() => selectBook(book)}
                       className={cn(
-                        "flex flex-col items-center justify-center aspect-square md:aspect-[3/4] p-6 md:p-10 rounded-[2.5rem] border transition-all duration-[1200ms] relative group overflow-hidden",
+                        "flex flex-col items-center justify-center aspect-[4/5] p-6 md:p-12 rounded-[3rem] border transition-all duration-[1500ms] relative group overflow-hidden",
                         isRead 
-                          ? "bg-primary text-primary-foreground border-primary shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)]" 
-                          : "bg-card/20 backdrop-blur-md border-primary/[0.03] text-primary/70 hover:bg-card hover:border-primary/10 hover:shadow-premium-hover hover:text-primary"
+                          ? "bg-primary text-primary-foreground border-primary shadow-[0_30px_70px_-20px_rgba(0,0,0,0.18)]" 
+                          : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.015] dark:border-white/[0.01] text-primary/50 hover:bg-card/40 hover:border-primary/10 hover:shadow-premium-hover hover:text-primary"
                       )}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />

@@ -294,7 +294,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[7px] font-bold uppercase tracking-[0.5em] text-primary/20 dark:text-primary/40 mb-5 px-4">{section.label}</h3>
+                  <h3 className="text-[7.5px] font-black uppercase tracking-[0.6em] text-primary/15 dark:text-primary/30 mb-6 px-5">{section.label}</h3>
                   <ul className="space-y-1.5">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
