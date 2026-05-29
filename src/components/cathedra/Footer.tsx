@@ -317,7 +317,8 @@ const Footer: React.FC = React.memo(() => {
                 { label: t('partners') || 'Parceiros', route: AppRoute.PARTNERS },
                 { label: t('privacy') || 'Privacidade', route: AppRoute.PRIVACY }, 
                 { label: t('terms') || 'Termos', route: AppRoute.TERMS },
-                { label: 'Transparência', route: AppRoute.TRANSPARENCY }
+                { label: 'Transparência', route: AppRoute.TRANSPARENCY },
+                { label: 'Design System', route: '/design-system' }
 
               ].map((item, index, array) => (
                 <React.Fragment key={item.label}>
