@@ -129,9 +129,9 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="desktop-layout py-6 sm:py-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="desktop-main px-4">
-        <header className="space-y-4 text-center mb-8 sm:mb-16">
+    <div className="desktop-layout section-rhythm animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="desktop-main px-4 stack-rhythm">
+        <header className="space-y-4 text-center header-margin-rhythm">
           <div className="flex justify-center mb-4">
             <div className="w-16 h-1.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
@@ -143,7 +143,7 @@ const TemasPage = () => {
           </p>
         </header>
 
-        <div className="space-y-4 sm:space-y-8">
+        <div className="stack-rhythm">
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 bg-card/60 p-2 sm:p-3 rounded-premium border border-border/40 shadow-premium-hover sticky top-2 sm:top-4 z-20 transition-all duration-500 hover:shadow-premium-hover hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
