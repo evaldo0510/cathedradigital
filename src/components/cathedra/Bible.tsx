@@ -44,6 +44,9 @@ import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
+import { SacredVirtualList } from './SacredVirtualList';
+import { BibleVerseItem } from './BibleVerseItem';
+
 
 
 
@@ -1017,7 +1020,7 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
-                    <div className="flex flex-col gap-16 md:gap-24 pb-64">
+                    <div className="flex flex-col pb-64 min-h-[60vh]">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={`${selectedBook.abbr}-${selectedChapter}`}
@@ -1025,116 +1028,61 @@ const Bible: React.FC = () => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-                        className="space-y-16 md:space-y-24"
+                        className="space-y-4"
                       >
                         {isLoading && verses.length === 0 ? (
                           <BibleChapterSkeleton />
-                        ) : verses.map((v, index) => {
-                          const relatedP = verseToCic[v.number];
-                          const isHighlighted = highlightedVerse === v.number;
-                          const sizeMap = { 'small': 0, 'medium': 1, 'large': 2, 'extra-large': 3 };
-                          const activeFont = FONT_SIZES[sizeMap[settings.fontSize] || 1] || FONT_SIZES[1];
-                          
-                          return (
-                            <motion.div 
-                              key={v.number} 
-                              id={`v${v.number}`}
-                              initial={{ opacity: 0, y: 40 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              viewport={{ once: true, margin: "-10%" }}
-                              transition={{ duration: 2.2, delay: Math.min(index * 0.08, 0.6), ease: [0.19, 1, 0.22, 1] }}
-                              className={`group relative transition-all duration-[2000ms]
-                                ${isHighlighted ? 'bg-primary/[0.01] -mx-8 px-8 py-10 rounded-[3rem]' : 'py-4'}`}>
-                              <div className="flex items-start gap-10 md:gap-16">
-                                <span className="text-[0.5em] font-display font-light text-primary/3 mt-6 select-none group-hover:text-primary/15 transition-all duration-[1500ms] min-w-[2.5rem] text-right italic tracking-widest">
-                                  {v.number}
-                                </span>
+                        ) : (
+                          <div className="h-[70vh]">
+                            <SacredVirtualList
+                              items={verses}
+                              estimateSize={120}
+                              renderItem={(v, index) => {
+                                const relatedP = verseToCic[v.number];
+                                const isHighlighted = highlightedVerse === v.number;
+                                const sizeMap = { 'small': 0, 'medium': 1, 'large': 2, 'extra-large': 3 };
+                                const activeFont = FONT_SIZES[sizeMap[settings.fontSize] || 1] || FONT_SIZES[1];
                                 
-                                <div className="flex-1 cursor-text" onClick={() => {
-                                  const vNum = v.number;
-                                  setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
-                                  setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
-                                  localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
-                                  
-                                  saveLastRead({
-                                    content_type: 'bible',
-                                    content_id: selectedBook.abbr,
-                                    chapter: selectedChapter,
-                                    position: vNum,
-                                    label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
-                                    url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
-                                    is_last_read: true
-                                  });
-                                }}>
-                                  <p className={cn(
-                                    "font-reader text-foreground/80 group-hover:text-foreground/95 transition-all duration-[1200ms] ease-out-quint",
-                                    settings.fontSize || activeFont.size,
-                                    activeFont.leading,
-                                    activeFont.letterSpacing
-                                  )}>
-                                    {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                      <span 
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
-                                          if (note) setActiveHighlight(note);
-                                        }}
-                                        className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1.5 py-0.5 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all decoration-secondary/20 decoration-1 underline-offset-[6px]`}
-                                      >
-                                        {v.text}
-                                      </span>
-                                    )}
-                                    {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                      <span className="opacity-90 leading-relaxed">{v.text}</span>
-                                    )}
-
-                                    {relatedP && (
-                                      <span className="inline-flex gap-1.5 ml-4 align-middle opacity-20 group-hover:opacity-100 transition-all duration-1000">
-                                        {relatedP.map(p => (
-                                          <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
-                                        ))}
-                                      </span>
-                                    )}
-                                  </p>
-                                  
-                                  {/* Inline Notes display */}
-                                  <AnimatePresence>
-                                    {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
-                                      <motion.div 
-                                        key={note.id}
-                                        initial={{ opacity: 0, height: 0, y: 10 }}
-                                        animate={{ opacity: 1, height: 'auto', y: 0 }}
-                                        exit={{ opacity: 0, height: 0, y: 10 }}
-                                        transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-                                        className="mt-8 p-8 bg-primary/[0.01] border-l border-primary/10 rounded-r-[2.5rem] text-sm italic text-muted-foreground/60 group/note relative"
-                                      >
-                                        <div className="flex items-center gap-3 mb-4 opacity-30">
-                                          <Icons.Feather className="w-3.5 h-3.5" />
-                                          <span className="text-[8px] font-black uppercase tracking-[0.4em]">Meditação Pessoal</span>
-                                        </div>
-                                        <span className="leading-relaxed font-serif">{note.note_text}</span>
-                                        <button 
-                                          onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
-                                          className="absolute top-6 right-6 opacity-0 group-hover/note:opacity-100 transition-opacity p-2 hover:text-destructive/60"
-                                        >
-                                          <Icons.X className="w-3.5 h-3.5" strokeWidth={1.5} />
-                                        </button>
-                                      </motion.div>
-                                    ))}
-                                  </AnimatePresence>
-                                </div>
-                                
-                                <div className="flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-all duration-1000 translate-x-4 group-hover:translate-x-0 pt-3">
-                                  <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
-                                  <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
-                                </div>
-                              </div>
-                            </motion.div>
-                          );
-                        })}
+                                return (
+                                  <BibleVerseItem
+                                    key={v.number}
+                                    verse={v}
+                                    index={index}
+                                    isHighlighted={isHighlighted}
+                                    onHighlight={(vNum) => {
+                                      setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
+                                      setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
+                                      localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
+                                      
+                                      saveLastRead({
+                                        content_type: 'bible',
+                                        content_id: selectedBook.abbr,
+                                        chapter: selectedChapter,
+                                        position: vNum,
+                                        label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
+                                        url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
+                                        is_last_read: true
+                                      });
+                                    }}
+                                    fontSize={settings.fontSize}
+                                    activeFont={activeFont}
+                                    currentChapterNotes={currentChapterNotes}
+                                    relatedP={relatedP}
+                                    selectedBook={selectedBook}
+                                    selectedChapter={selectedChapter}
+                                    onNavigateToCIC={handleNavigateToCIC}
+                                    onDeleteNote={deleteChapterNote}
+                                    onSetActiveHighlight={setActiveHighlight}
+                                  />
+                                );
+                              }}
+                            />
+                          </div>
+                        )}
                       </motion.div>
                     </AnimatePresence>
                     </div>
+
                   </div>
                 )}
               </div>
