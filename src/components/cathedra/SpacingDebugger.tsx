@@ -105,6 +105,32 @@ export const SpacingDebugger: React.FC = () => {
           [class*="mx-"]:not(.header-margin-rhythm), [class*="my-"], [class*="m-"] {
             background-color: rgba(255, 255, 0, 0.05);
             outline: 1px solid rgba(255, 255, 0, 0.5);
+            position: relative;
+          }
+
+          /* Tooltips for Font Size and Line Height */
+          .section-rhythm, .stack-rhythm, .stack-rhythm-lg, .padding-rhythm, .header-margin-rhythm,
+          [class*="px-"], [class*="py-"], [class*="p-"], [class*="text-"], [class*="leading-"], h1, h2, h3, h4, p {
+            position: relative;
+          }
+
+          .section-rhythm:hover::after, 
+          .stack-rhythm:hover::after,
+          .padding-rhythm:hover::after,
+          h1:hover::after, h2:hover::after, h3:hover::after, h4:hover::after, p:hover::after {
+            content: attr(data-spacing-info);
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 2px 6px;
+            font-size: 10px;
+            z-index: 10001;
+            white-space: nowrap;
+            border-radius: 4px;
+            pointer-events: none;
+            text-transform: none;
           }
 
           /* Rhythm Grid Overlay */
@@ -120,6 +146,25 @@ export const SpacingDebugger: React.FC = () => {
           }
         `}} />
       )}
+      <script dangerouslySetInnerHTML={{ __html: `
+        (function() {
+          if (!window.__spacingDebuggerSet) {
+            window.__spacingDebuggerSet = true;
+            const updateTooltips = () => {
+              document.querySelectorAll('.section-rhythm, .stack-rhythm, .padding-rhythm, [class*="text-"], h1, h2, h3, h4, p').forEach(el => {
+                const style = window.getComputedStyle(el);
+                const info = "FS: " + style.fontSize + " | LH: " + style.lineHeight;
+                el.setAttribute('data-spacing-info', info);
+              });
+            };
+            
+            const observer = new MutationObserver(updateTooltips);
+            observer.observe(document.body, { childList: true, subtree: true });
+            setInterval(updateTooltips, 2000);
+            updateTooltips();
+          }
+        })();
+      `}} />
     </>
   );
 };
