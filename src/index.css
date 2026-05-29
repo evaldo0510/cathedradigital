@@ -502,7 +502,8 @@
   --radius: 0;
   --radius-lg: 0;
   --radius-sm: 0;
-  --atmosphere-blur: 80px; /* Stronger blur for visual silence */
+  /* Visual silence by default intensifies the blur if not overridden by the slider */
+  --atmosphere-blur: calc(80px * var(--atmosphere-blur-intensity, 1));
 }
 
 .visual-silence * {
