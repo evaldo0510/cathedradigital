@@ -1015,7 +1015,10 @@ const Bible: React.FC = () => {
                                     {v.text}
                                   </span>
                                 )}
-                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && v.text}
+                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
+                                  <span className="opacity-90 leading-[1.85]">{v.text}</span>
+                                )}
+
                                 
                                 {relatedP && (
                                   <span className="inline-flex gap-0.5 ml-2">
