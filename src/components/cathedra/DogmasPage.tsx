@@ -353,7 +353,7 @@ const DogmasPage: React.FC = () => {
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
               className="w-full text-left p-6 flex items-start gap-4"
             >
-              <span className="text-2xl font-serif font-bold text-primary/30 shrink-0 w-8">{dogma.id}</span>
+              <span className="text-2xl font-serif font-bold text-primary/60 shrink-0 w-8">{dogma.id}</span>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
                   <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>

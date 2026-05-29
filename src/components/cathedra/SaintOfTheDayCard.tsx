@@ -116,7 +116,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             {saint.bio?.slice(0, 100)}...
           </p>
         </div>
-        <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0" />
+        <ChevronRight className="w-5 h-5 text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
       </HomeCard>
     );
   }

@@ -190,7 +190,7 @@ const ItinerariumDetailPage: React.FC = () => {
 
       <div className="space-y-6">
         <div className="flex items-center gap-3 mb-8">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Caminho de Contemplação</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Caminho de Contemplação</span>
           <div className="flex-1 h-px bg-primary/5" />
         </div>
         
@@ -223,7 +223,7 @@ const ItinerariumDetailPage: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="text-lg md:text-xl font-bold font-serif text-foreground truncate">{step.title}</h3>
-                        {!step.is_free && <Icons.Lock className="w-3 h-3 text-primary/20" />}
+                        {!step.is_free && <Icons.Lock className="w-3 h-3 text-primary/60" />}
                       </div>
                       <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                         <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {step.duration_minutes} MIN</span>

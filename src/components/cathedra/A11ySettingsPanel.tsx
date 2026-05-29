@@ -72,7 +72,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
             <div className="space-y-8 overflow-y-auto pr-2 custom-scrollbar flex-1">
               <section className="space-y-6">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Aparência e Leitura</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-2">Aparência e Leitura</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between group">
@@ -114,7 +114,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-6 pt-4">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Atalhos de Teclado</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-2">Atalhos de Teclado</h3>
                 <div className="grid gap-3">
                   <ShortcutInput 
                     label="Bíblia" 
@@ -141,7 +141,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
               <section className="space-y-6 pt-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30">Histórico Logos IA</h3>
+                  <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60">Histórico Logos IA</h3>
                   <span className="text-xs font-bold text-primary">{settings.logosHistoryLimit} itens</span>
                 </div>
                 <div className="px-2">
@@ -160,7 +160,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-6 pt-4">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Sugestões Logos IA</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-2">Sugestões Logos IA</h3>
                 <div className="space-y-4">
                   <div className="flex flex-col gap-2">
                     {(['always', 'first_selection', 'never'] as const).map((mode) => (
@@ -187,7 +187,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-4 pt-4">
-                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/30 border-b border-border/10 pb-2">Impacto na Leitura</h3>
+                <h3 className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-2">Impacto na Leitura</h3>
                 <div className="p-4 rounded-premium bg-primary/5 border border-primary/10 space-y-3">
                   <div className="flex items-center gap-2 text-[11px] font-bold text-primary">
                     <Icons.Info className="w-3.5 h-3.5" />

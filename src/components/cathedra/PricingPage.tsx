@@ -93,7 +93,7 @@ const PricingPage: React.FC = () => {
                     {item.free ? (
                       <Check className="w-4 h-4 text-primary shrink-0" />
                     ) : (
-                      <X className="w-4 h-4 text-muted-foreground/30 shrink-0" />
+                      <X className="w-4 h-4 text-muted-foreground/60 shrink-0" />
                     )}
                     <span className={item.free ? '' : 'text-muted-foreground/40'}>{item.feature}</span>
                   </li>
@@ -164,7 +164,7 @@ const PricingPage: React.FC = () => {
             <div key={item.feature} className={`grid grid-cols-3 px-6 py-3.5 items-center ${i % 2 === 0 ? '' : 'bg-muted/10'} ${i < FREE_VS_PRO.length - 1 ? 'border-b border-border/10' : ''}`}>
               <span className="text-sm">{item.feature}</span>
               <span className="text-center">
-                {item.free ? <Check className="w-4 h-4 text-primary mx-auto" /> : <X className="w-4 h-4 text-muted-foreground/30 mx-auto" />}
+                {item.free ? <Check className="w-4 h-4 text-primary mx-auto" /> : <X className="w-4 h-4 text-muted-foreground/60 mx-auto" />}
               </span>
               <span className="text-center">
                 <Check className="w-4 h-4 text-primary mx-auto" />

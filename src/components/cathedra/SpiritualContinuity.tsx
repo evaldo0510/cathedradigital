@@ -109,17 +109,17 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div className="flex items-center gap-6">
-            <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary/30 border border-primary/5">
+            <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
               <Icons.Compass className="w-6 h-6" strokeWidth={1} />
             </div>
             <div className="space-y-1 text-center md:text-left">
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60">
                 {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
               <h3 className="text-xl md:text-2xl font-serif font-bold text-primary/80">
                 {title}
               </h3>
-              <p className="text-xs text-primary/30 italic font-serif">{subtitle}</p>
+              <p className="text-xs text-primary/60 italic font-serif">{subtitle}</p>
             </div>
           </div>
           

@@ -100,7 +100,7 @@ const DesignSystemPlayground: React.FC = () => {
                 Clique para explorar os caminhos da alma.
               </p>
               <div className="flex justify-end pt-4">
-                <Icons.ChevronRight className="w-6 h-6 text-primary/20 group-hover:text-primary transition-all" />
+                <Icons.ChevronRight className="w-6 h-6 text-primary/60 group-hover:text-primary transition-all" />
               </div>
             </CathedraCard>
           </div>

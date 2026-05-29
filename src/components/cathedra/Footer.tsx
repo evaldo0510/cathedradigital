@@ -330,7 +330,7 @@ const Footer: React.FC = React.memo(() => {
                   </Button>
 
                   {index < array.length - 1 && (
-                    <span className="mx-3 text-muted-foreground/20 font-light select-none">|</span>
+                    <span className="mx-3 text-muted-foreground/60 font-light select-none">|</span>
                   )}
                 </React.Fragment>
               ))}

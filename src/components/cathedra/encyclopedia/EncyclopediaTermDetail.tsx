@@ -36,7 +36,7 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             exit={{ opacity: 0 }}
             className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-full border border-dashed border-border/40"
           >
-            <Sparkles className="h-10 w-10 text-primary/30 mb-4" />
+            <Sparkles className="h-10 w-10 text-primary/60 mb-4" />
             <h3 className="text-xl font-bold text-foreground mb-2">Selecione um termo</h3>
             <p className="text-muted-foreground text-sm">Escolha um termo da lista para explorar sua profundidade teológica.</p>
           </motion.div>

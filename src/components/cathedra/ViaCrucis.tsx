@@ -125,7 +125,7 @@ const ViaCrucis: React.FC = () => {
           </div>
           
           <div className="bg-primary/5 rounded-[2.5rem] p-8 md:p-12 border border-primary/10 relative">
-            <Flame className="absolute -top-3 -right-3 w-8 h-8 text-primary/20 rotate-12" />
+            <Flame className="absolute -top-3 -right-3 w-8 h-8 text-primary/60 rotate-12" />
             <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-6">Oração</h3>
             <p className="text-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>

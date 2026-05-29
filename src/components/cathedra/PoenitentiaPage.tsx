@@ -117,7 +117,7 @@ const PoenitentiaPage: React.FC = () => {
 
           {activeStep === 0 && (
             <div className="mt-12 p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-4 shadow-soft">
-              <Icons.BookOpen className="w-8 h-8 text-primary/30 mx-auto" />
+              <Icons.BookOpen className="w-8 h-8 text-primary/60 mx-auto" />
               <p className="text-lg text-foreground/80 font-serif italic max-w-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
               </p>

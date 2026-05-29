@@ -568,7 +568,7 @@ const MagisteriumViewer: React.FC = () => {
 
       <div className="mt-32 pt-16 border-t border-primary/5 flex flex-col items-center gap-12">
         <div className="text-center space-y-4">
-          <Icons.CheckCircle2 className="w-12 h-12 text-primary/20 mx-auto" />
+          <Icons.CheckCircle2 className="w-12 h-12 text-primary/60 mx-auto" />
           <div className="space-y-1">
             <h3 className="text-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
             <p className="text-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>

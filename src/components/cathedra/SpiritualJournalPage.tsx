@@ -192,7 +192,7 @@ const SpiritualJournalPage = () => {
             <section className="space-y-12 max-w-4xl mx-auto w-full">
               <div className="flex items-center gap-10">
                 <div className="h-px flex-1 bg-border/40" />
-                <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap uppercase">
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap uppercase">
                   Memória da Alma
                 </h2>
                 <div className="h-px flex-1 bg-border/40" />
@@ -265,7 +265,7 @@ const SpiritualJournalPage = () => {
           >
             <div className="flex items-center gap-10">
               <div className="h-px flex-1 bg-border/40" />
-              <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+              <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap">
                 Relatio Favoritos
               </h2>
               <div className="h-px flex-1 bg-border/40" />

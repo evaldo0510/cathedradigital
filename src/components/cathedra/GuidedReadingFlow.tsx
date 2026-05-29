@@ -71,7 +71,7 @@ export const GuidedReadingFlow: React.FC = () => {
           className={`premium-card p-12 md:p-20 flex flex-col items-center text-center gap-12 ${step.color} border-none shadow-none`}
         >
           <div className="space-y-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/20">
+            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/60">
               {step.tag}
             </span>
             <div className="w-20 h-20 rounded-premium bg-background/50 border border-border/5 flex items-center justify-center text-primary/40 mx-auto shadow-premium-hover transition-transform duration-1000 hover:scale-105">

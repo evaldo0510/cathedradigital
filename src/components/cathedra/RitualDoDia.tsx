@@ -241,7 +241,7 @@ const RitualDoDia: React.FC = () => {
                       className="h-full bg-primary/20"
                     />
                   </div>
-                  <span className="text-[7px] md:text-[8px] font-bold text-primary/30 uppercase tracking-[0.5em]">{progress}%</span>
+                  <span className="text-[7px] md:text-[8px] font-bold text-primary/60 uppercase tracking-[0.5em]">{progress}%</span>
                 </div>
               )}
             </div>
@@ -251,7 +251,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className={cn("w-10 h-10 p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/20 hover:text-primary')}
+              className={cn("w-10 h-10 p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
               onClick={() => updateSettings(!isSilent, reminderTime)}
             >
               {isSilent ? <VolumeX className="w-5 h-5" /> : <Sparkles className="w-5 h-5" strokeWidth={0.5} />}
@@ -260,7 +260,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className="w-10 h-10 p-0 rounded-full text-primary/20 hover:text-primary transition-colors"
+              className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
               onClick={exportPDF}
             >
               <Download className="w-5 h-5" />
@@ -271,7 +271,7 @@ const RitualDoDia: React.FC = () => {
                 <CathedraButton 
                   variant="ghost" 
                   size="sm" 
-                  className="w-10 h-10 p-0 rounded-full text-primary/20 hover:text-primary transition-colors"
+                  className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
                 >
                   <Settings2 className="w-5 h-5" />
                 </CathedraButton>
@@ -413,7 +413,7 @@ const RitualDoDia: React.FC = () => {
               <CathedraButton 
                 variant="ghost" 
                 size="sm"
-                className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/30 hover:text-primary transition-all"
+                className="text-[10px] font-bold uppercase tracking-[0.5em] text-muted-foreground/60 hover:text-primary transition-all"
                 onClick={() => {
                   setProgress(0);
                   if (user) {

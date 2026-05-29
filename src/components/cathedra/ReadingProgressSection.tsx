@@ -23,7 +23,7 @@ export const ReadingProgressSection: React.FC = () => {
     >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-10">
           <div className="flex items-center gap-10">
-            <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:text-primary/50 transition-all duration-1000 border border-primary/[0.02]">
+            <div className="w-16 h-16 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:text-primary/50 transition-all duration-1000 border border-primary/[0.02]">
               <Clock className="w-8 h-8" strokeWidth={1} />
             </div>
             <div className="space-y-4">
@@ -46,7 +46,7 @@ export const ReadingProgressSection: React.FC = () => {
                 Retomar
               </p>
             </div>
-            <div className="w-14 h-14 rounded-full border border-primary/[0.03] flex items-center justify-center text-primary/30 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium-sm">
+            <div className="w-14 h-14 rounded-full border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-1000 shadow-premium-sm">
               <ArrowRight className="w-5 h-5" />
             </div>
           </div>

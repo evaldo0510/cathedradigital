@@ -822,7 +822,7 @@ const Bible: React.FC = () => {
           </div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
-              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/30'}`} />
+              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/60'}`} />
             </Button>
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
           </div>
@@ -889,46 +889,42 @@ const Bible: React.FC = () => {
         <div className="mt-12 md:mt-24">
           <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
             <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
-
-
-
-            {currentChapterNotes.length > 0 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
-                <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
-                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                  {currentChapterNotes.map(note => (
-                    <button
-                      key={note.id}
-                      onClick={() => {
-                        if (note.verse) {
-                          setHighlightedVerse(note.verse);
-                          const el = document.getElementById(`v${note.verse}`);
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }}
-                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
-                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
-                        {note.highlight_color && (
-                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
-                        )}
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
-                        {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
-                      </p>
-                    </button>
-                  ))}
+              {currentChapterNotes.length > 0 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+                  <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
+                  <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                    {currentChapterNotes.map(note => (
+                      <button
+                        key={note.id}
+                        onClick={() => {
+                          if (note.verse) {
+                            setHighlightedVerse(note.verse);
+                            const el = document.getElementById(`v${note.verse}`);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }}
+                        className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                          ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
+                          {note.highlight_color && (
+                            <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                          )}
+                        </div>
+                        <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                          {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
-          </div>
 
-          <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
-            <div className="w-full relative">
-              <div className="py-8 md:py-20 lg:py-24">
+            <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+              <div className="w-full relative">
+                <div className="py-8 md:py-20 lg:py-24">
 
 
 
@@ -1044,10 +1040,6 @@ const Bible: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
-        </div>
-
-
 
             <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
               <div className="w-full relative">
@@ -1085,8 +1077,6 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-
-
             <aside className="reader-navigation-aside space-y-12 shrink-0">
               <div className="space-y-4">
                 <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
@@ -1111,6 +1101,8 @@ const Bible: React.FC = () => {
               </div>
             </aside>
           </div>
+        </div>
+
 
           <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
@@ -1128,7 +1120,7 @@ const Bible: React.FC = () => {
               }}
               className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
             >
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
               <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
                 <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
                 {selectedBook.name} {selectedChapter - 1}
@@ -1152,7 +1144,7 @@ const Bible: React.FC = () => {
                   }}
                   className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
                 >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
                   <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
                     {selectedBook.name} {selectedChapter + 1}
                     <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
@@ -1161,7 +1153,7 @@ const Bible: React.FC = () => {
               </div>
 
               <div className="text-center space-y-8 py-16">
-                <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                <Icons.CheckCircle2 className="w-16 h-16 text-primary/60 mx-auto" strokeWidth={1} />
                 <div className="space-y-2">
                   <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
                   <p className="text-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
@@ -1407,6 +1399,7 @@ const Bible: React.FC = () => {
               </React.Suspense>
             </div>
           )}
+          </div>
         </div>
       </ContemplativeLayout>
     );
@@ -1518,11 +1511,11 @@ const Bible: React.FC = () => {
           </div>
           
           <div className="relative group w-full md:w-80">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20 group-focus-within:text-primary/40 transition-colors" />
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60 group-focus-within:text-primary/40 transition-colors" />
             <input
               type="text"
               placeholder="Buscar livro..."
-              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/10"
+              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/60"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1534,7 +1527,7 @@ const Bible: React.FC = () => {
             <section key={cat.label} className="space-y-12">
               <div className="flex items-center gap-6">
                 <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
-                  <cat.icon className="w-4 h-4 text-primary/30" />
+                  <cat.icon className="w-4 h-4 text-primary/60" />
                 </div>
                 <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
                 <div className="h-px flex-1 bg-border/5" />

@@ -504,7 +504,7 @@ const LiturgicalCalendarPage: React.FC = () => {
               </div>
             ) : (
               <div className="bg-muted/30 border-2 border-dashed border-border rounded-premium p-12 text-center space-y-3">
-                <Icons.LiturgicalCalendar className="w-12 h-12 text-muted-foreground/30 mx-auto" />
+                <Icons.LiturgicalCalendar className="w-12 h-12 text-muted-foreground/60 mx-auto" />
                 <p className="text-sm text-muted-foreground font-serif italic">Selecione um dia para ver os detalhes</p>
               </div>
             )}

@@ -55,13 +55,13 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isAct
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={`flex flex-col items-center justify-center gap-2 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent ${
-      isActive ? 'text-primary' : 'text-muted-foreground/15 hover:text-primary/30'
+      isActive ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary/60'
     }`}
   >
     <div className={`transition-all duration-700 ${isActive ? 'scale-110 -translate-y-1' : 'active:scale-95'}`}>
       {React.cloneElement(icon as React.ReactElement, { 
         className: `w-5 h-5`,
-        strokeWidth: 1.2,
+        strokeWidth: 1.8,
       })}
     </div>
     <span className={`text-[8px] font-black uppercase tracking-[0.2em] leading-none transition-all duration-700 ${

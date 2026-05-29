@@ -311,7 +311,7 @@ const AdminThemesTab = () => {
             <Card className="border-dashed h-[400px] flex items-center justify-center">
               <CardContent className="flex flex-col items-center justify-center text-center">
                 <div className="w-16 h-16 rounded-premium bg-muted/30 flex items-center justify-center mb-4">
-                  <Tag className="w-8 h-8 text-muted-foreground/30" />
+                  <Tag className="w-8 h-8 text-muted-foreground/60" />
                 </div>
                 <h3 className="font-bold text-lg mb-1">Nenhum tema selecionado</h3>
                 <p className="text-muted-foreground text-sm max-w-[250px]">Selecione um tema à esquerda para gerenciar seus conteúdos conectados.</p>
@@ -375,7 +375,7 @@ const AdminThemesTab = () => {
               </div>
 
               {loadingContents ? (
-                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary/30" /></div>
+                <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary/60" /></div>
               ) : (
                 <div className="space-y-6">
                   {Object.entries(contentsByType).map(([type, items]) => {

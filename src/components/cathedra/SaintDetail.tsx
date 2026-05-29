@@ -236,7 +236,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
             </div>
             <div className="bg-secondary/30 p-8 rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
-              <Quote className="absolute top-4 right-4 w-12 h-12 text-primary/5 group-hover:text-primary/10 transition-colors" />
+              <Quote className="absolute top-4 right-4 w-12 h-12 text-primary/5 group-hover:text-primary/60 transition-colors" />
               <p className="text-xl font-serif italic text-foreground relative z-10 leading-relaxed">
                 {parseTheologicalReferences(saint.quotes?.[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -254,7 +254,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
             </div>
             <div className="bg-primary/5 p-8 rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
-              <Lightbulb className="absolute top-4 right-4 w-12 h-12 text-primary/10 group-hover:scale-110 transition-all" />
+              <Lightbulb className="absolute top-4 right-4 w-12 h-12 text-primary/60 group-hover:scale-110 transition-all" />
               <p className="text-sm font-medium text-foreground relative z-10 leading-relaxed italic">
                 {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;

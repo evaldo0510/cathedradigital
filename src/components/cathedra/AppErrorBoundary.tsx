@@ -37,7 +37,7 @@ class AppErrorBoundary extends Component<Props, State> {
         <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-8 text-center bg-background/50 backdrop-blur-sm rounded-[2.5rem] border border-border/10 space-y-8 animate-in fade-in duration-700">
           <div className="relative">
             <div className="w-16 h-16 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
-              <Icons.History className="w-6 h-6 text-primary/20" />
+              <Icons.History className="w-6 h-6 text-primary/60" />
             </div>
           </div>
 

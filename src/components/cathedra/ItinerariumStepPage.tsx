@@ -324,12 +324,17 @@ const ItinerariumStepPage: React.FC = () => {
     <div className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden">
       <div data-reading-chrome className="reading-chrome px-6 py-4 border-b border-border/50 flex items-center justify-between bg-background/80 backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(`/itineraria/${itinerariumId}`)}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate(`/itineraria/${itinerariumId}`)}
+            aria-label="Voltar para o itinerário"
+          >
             <X className="w-5 h-5" />
           </Button>
-          <div className="space-y-0.5">
+          <div className="space-y-0.5" aria-live="polite">
             <h1 className="text-sm font-bold truncate max-w-[200px]">{step.title}</h1>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+            <p className="text-[10px] text-foreground/70 uppercase tracking-widest flex items-center gap-2">
               <Clock className="w-3 h-3" /> {step.duration_minutes} min • Passo {step.step_order}
             </p>
           </div>
@@ -405,15 +410,16 @@ const ItinerariumStepPage: React.FC = () => {
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/10"
+            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex <= 0}
             onClick={() => navigateToStep(currentStepIndex - 1)}
+            aria-label="Passo anterior"
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
 
           <Button 
-            className="flex-1 h-14 rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em]"
+            className="flex-1 h-14 rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:opacity-90"
             onClick={handleComplete}
             disabled={saving}
           >
@@ -423,9 +429,10 @@ const ItinerariumStepPage: React.FC = () => {
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/10"
+            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex === -1 || currentStepIndex >= allSteps.length - 1}
             onClick={() => navigateToStep(currentStepIndex + 1)}
+            aria-label="Próximo passo"
           >
             <ChevronRight className="w-6 h-6" />
           </Button>
