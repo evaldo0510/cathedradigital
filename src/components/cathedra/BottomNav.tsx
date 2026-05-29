@@ -69,7 +69,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/10 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
     )}
   >
     {isActive && (
@@ -86,7 +86,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       animate={{ 
         scale: isActive ? (shouldReduceMotion ? 1 : 1.05) : 1,
         y: isActive ? (shouldReduceMotion ? 0 : -1) : 0,
-        opacity: isActive ? 1 : 0.4
+        opacity: isActive ? 1 : 0.5
       }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-10"
@@ -105,7 +105,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 0.9 : 0.2,
+        opacity: isActive ? 0.9 : 0.3,
         scale: isActive ? 1 : 0.98,
         y: isActive ? 0 : 1
       }}

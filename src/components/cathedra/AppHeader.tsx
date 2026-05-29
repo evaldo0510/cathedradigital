@@ -46,13 +46,13 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-40 dark:opacity-30" variant="dark" />
+            <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-60 dark:opacity-50" variant="dark" />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[10px] md:text-2xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.8em] text-primary/40 leading-none transition-premium-slow group-hover:text-primary">
+              <span className="text-[10px] md:text-2xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.8em] text-primary/60 leading-none transition-premium-slow group-hover:text-primary">
 
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1)) || 'Cathedra'}
               </span>
-              <span className="hidden md:block h5 !text-[8px] !text-muted-foreground/40 mt-2 group-hover:text-primary/40 transition-premium-slow uppercase tracking-widest font-bold">Digital Library</span>
+              <span className="hidden md:block h5 !text-[8px] !text-muted-foreground/50 mt-2 group-hover:text-primary/60 transition-premium-slow uppercase tracking-widest font-bold">Digital Library</span>
             </div>
           </div>
 

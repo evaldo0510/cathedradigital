@@ -340,7 +340,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </motion.div>
                 ))}
 
-                {(isLoading || isTyping) && (
+                {isLoading && history.length === 0 ? (
+                  <LogosChatSkeleton />
+                ) : (isLoading || isTyping) && (
                   <div className="flex justify-start">
                     <div className="flex gap-3 opacity-10 py-6">
                       {[0, 1, 2].map((i) => (
