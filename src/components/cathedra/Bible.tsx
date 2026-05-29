@@ -1592,29 +1592,31 @@ const Bible: React.FC = () => {
       </script>
       
       <div className="space-y-20">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
-          <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-primary/[0.04] pb-16">
+          <div className="flex gap-2 p-1 bg-primary/[0.02] rounded-full border border-primary/[0.03]">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
-                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
-                  ${testament === t 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground/40 hover:text-primary'}`}
+                className={cn(
+                  "px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-700",
+                  testament === t 
+                    ? "bg-primary text-primary-foreground shadow-premium" 
+                    : "text-muted-foreground/30 hover:text-primary hover:bg-primary/[0.02]"
+                )}
               >
                 {t}
               </Button>
             ))}
           </div>
           
-          <div className="relative group w-full md:w-80">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60 group-focus-within:text-primary/40 transition-colors" />
+          <div className="relative group w-full md:w-96">
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 group-focus-within:text-primary transition-colors" strokeWidth={1.5} />
             <input
               type="text"
-              placeholder="Buscar livro..."
-              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/60"
+              placeholder="Buscar nas Escrituras..."
+              className="w-full pl-14 pr-8 py-5 bg-primary/[0.01] border border-border/10 rounded-[2.5rem] focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-display italic text-lg placeholder:text-primary/20 placeholder:font-light"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
