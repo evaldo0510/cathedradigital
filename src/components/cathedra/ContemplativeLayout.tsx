@@ -22,13 +22,13 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-8 md:pt-32 pb-16 md:pb-48 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-24 md:pt-96 pb-32 md:pb-[24rem] will-change-transform", className)}>
 
       {(title || subtitle) && (
-        <header className={cn("header-margin-rhythm px-6 md:px-24 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[2500ms] ease-out")}>
-          <div className="w-[0.5px] h-20 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-12 md:mb-32 opacity-20" />
+        <header className={cn("header-margin-rhythm px-10 md:px-24 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[2500ms] ease-out")}>
+          <div className="w-[0.5px] h-32 md:h-96 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-20 md:mb-52 opacity-20" />
           {subtitle && (
-            <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.8em] md:tracking-[1.8em] text-primary/30 mb-10 md:mb-20 selection:bg-primary/20">
+            <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[1em] md:tracking-[1.8em] text-primary/15 mb-14 md:mb-28">
               {subtitle}
             </p>
           )}
@@ -40,12 +40,11 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         </header>
       )}
       <motion.main 
-        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
+        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 2.2, 
-          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1],
-          delay: 0.2 // Small delay so it starts after the main page transition begins
+          duration: settings.reduceAnimations ? 0.1 : 2.5, 
+          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1] 
         }}
 
         className={cn("app-container", className)}

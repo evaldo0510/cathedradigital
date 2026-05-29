@@ -131,8 +131,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
         { label: t('bible'), path: AppRoute.BIBLE, icon: <Icons.Bible /> },
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText /> },
-        { label: 'Logos IA', path: AppRoute.LOGOS, icon: <Icons.Sparkles /> },
-        { label: 'Estudo', path: AppRoute.STUDY_MODE, icon: <Icons.Feather /> },
+        { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
         { label: 'Busca Global', path: AppRoute.BUSCAR, onClick: () => { onClose(); (window as any).dispatchEvent(new CustomEvent('open-command-center')); }, icon: <Icons.Search /> },
       ]
     },
@@ -244,7 +243,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               duration: settings.reduceAnimations ? 0.3 : 0.8, 
               ease: [0.22, 1, 0.36, 1] 
             }}
-            className="fixed top-6 left-6 bottom-6 w-[70vw] sm:w-[300px] bg-white/80 dark:bg-neutral-950/80 backdrop-blur-[32px] border border-black/[0.03] dark:border-white/[0.03] rounded-[3rem] flex flex-col p-10 z-[150] shadow-2xl shadow-black/10 overflow-hidden admin-hide touch-none pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-6 left-6 bottom-6 w-[70vw] sm:w-[300px] bg-white/60 dark:bg-neutral-950/60 backdrop-blur-[60px] border border-black/[0.01] dark:border-white/[0.01] rounded-[3rem] flex flex-col p-10 z-[150] shadow-none overflow-hidden admin-hide touch-none pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}

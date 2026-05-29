@@ -1,1 +1,0 @@
-ALTER VIEW public.public_seo_settings SET (security_invoker = true);

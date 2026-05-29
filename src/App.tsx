@@ -41,8 +41,6 @@ import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
-import ContemplativeLayout from './components/cathedra/ContemplativeLayout';
-import { Atmosphere } from './components/cathedra/Atmosphere';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -116,7 +114,6 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
-const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
@@ -332,12 +329,6 @@ const AppLayout: React.FC = () => {
   }, [handleOpenA11y]);
 
   useEffect(() => {
-    const handleOpenSidebarGlobal = () => setIsSidebarOpen(true);
-    window.addEventListener('open-sidebar', handleOpenSidebarGlobal);
-    return () => window.removeEventListener('open-sidebar', handleOpenSidebarGlobal);
-  }, []);
-
-  useEffect(() => {
     const handleOpenA11yGlobal = () => setShowA11ySettings(true);
     window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
     return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
@@ -406,7 +397,11 @@ const AppLayout: React.FC = () => {
         "min-h-screen bg-background text-foreground transition-colors duration-[2000ms] selection:bg-primary/10",
         settings.visualSilence && "visual-silence"
       )}>
-        <Atmosphere />
+        {/* Cinematic Atmosphere Layer */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 dark:opacity-20">
+          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse duration-[10s]" />
+          <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary/3 blur-[120px] rounded-full animate-pulse duration-[15s]" />
+        </div>
 
         <a 
           href="#main-content" 
@@ -425,7 +420,7 @@ const AppLayout: React.FC = () => {
             lang={lang}
             onChangeLang={setLang}
             onSignOut={signOut}
-            onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))}
+            onOpenSidebar={handleOpenSidebar}
           />
         )}
         
@@ -445,18 +440,18 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         <SpacingDebugger />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 md:pb-40 pt-16 md:pt-48 px-4 md:px-12 lg:px-20 xl:px-32 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-48 md:pb-80 pt-24 md:pt-80 px-8 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 15, scale: 0.995, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -15, scale: 1.005, filter: "blur(10px)" }}
+                initial={{ opacity: 0, scale: 0.995, filter: "blur(20px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 1.005, filter: "blur(20px)" }}
 
                 transition={{ 
-                  duration: settings.reduceAnimations ? 0.35 : 1.2, // Cinematic but fluid
-                  ease: [0.19, 1, 0.22, 1] 
+                  duration: settings.reduceAnimations ? 0.4 : 2.2,
+                  ease: [0.19, 1, 0.22, 1] // Even slower, more architectural transition
                 }}
                 className="w-full flex-1 flex flex-col"
               >
@@ -472,11 +467,9 @@ const AppLayout: React.FC = () => {
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><ContemplativeLayout title="Logos" subtitle="Inteligência Teológica"><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></ContemplativeLayout></Suspense>} />
+              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
-              <Route path="/study" element={<Suspense fallback={<LoadingFallback />}><StudyMode /></Suspense>} />
-              <Route path="/estudo" element={<Navigate to="/study" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
@@ -577,7 +570,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))} />
+        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
           <A11ySettingsPanel 

@@ -6,6 +6,8 @@ export interface SEOSettings {
   site_title: string;
   site_description: string;
   site_keywords: string;
+  ga4_measurement_id?: string;
+  gsc_verification_code?: string;
   og_image_url?: string;
   twitter_handle?: string;
   json_ld_schema?: any;
@@ -25,7 +27,7 @@ export const useSEO = () => {
     queryKey: ['seo-settings'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('public_seo_settings')
+        .from('seo_settings')
         .select('*')
         .maybeSingle();
 

@@ -1,147 +1,141 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+
 
 /**
- * Cinematic breathing animation for premium skeletons
+ * Standardized skeleton styles:
+ * - Layout: matching the domain layout (page header, grid, list)
+ * - Height: consistent with actual components
+ * - Animations: standard pulse or shimmer
  */
-const BreathWrapper: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <div className={cn("animate-cinematic-breath", className)}>
-    {children}
+
+export const PageHeaderSkeleton: React.FC = () => (
+  <div className="text-center space-y-4 pt-8 mb-10 animate-pulse">
+    <div className="w-12 h-12 mx-auto rounded-premium bg-muted" />
+    <div className="h-10 w-64 mx-auto bg-muted rounded-premium" />
+    <div className="h-4 w-80 mx-auto bg-muted/60 rounded-premium" />
   </div>
 );
 
-export const PageHeaderSkeleton: React.FC = () => (
-  <BreathWrapper className="text-center space-y-6 pt-12 mb-16">
-    <div className="w-16 h-16 mx-auto rounded-premium bg-primary/[0.03] border border-primary/5 shadow-premium" />
-    <div className="h-12 w-80 mx-auto bg-primary/[0.05] rounded-premium" />
-    <div className="h-4 w-64 mx-auto bg-primary/[0.02] rounded-full" />
-  </BreathWrapper>
-);
-
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <BreathWrapper key={i}>
-        <Card className="h-64 rounded-[3rem] bg-primary/[0.015] border border-primary/[0.03] shadow-soft" />
-      </BreathWrapper>
+      <Card key={i} className="h-56 rounded-premium bg-muted/30 border border-border/40 shadow-soft" />
     ))}
   </div>
 );
 
 export const ListSkeleton: React.FC<{ count?: number }> = ({ count = 5 }) => (
-  <div className="space-y-6">
+  <div className="space-y-4 animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <BreathWrapper key={i}>
-        <div className="h-24 rounded-[2rem] bg-primary/[0.01] border border-primary/[0.02]" />
-      </BreathWrapper>
+      <div key={i} className="h-20 rounded-premium bg-muted/20 border border-border/30" />
     ))}
   </div>
 );
 
+
+export const SaintCardSkeleton: React.FC = () => (
+  <div className="bg-card border border-border rounded-[2.5rem] overflow-hidden animate-pulse h-96">
+    <div className="flex flex-col md:flex-row h-full">
+      <div className="w-full md:w-1/3 bg-muted h-64 md:h-auto" />
+      <div className="flex-1 p-8 space-y-6">
+        <div className="h-4 w-32 bg-muted rounded" />
+        <div className="h-8 w-64 bg-muted rounded" />
+        <div className="space-y-3">
+          <div className="h-3 w-full bg-muted rounded" />
+          <div className="h-3 w-full bg-muted rounded" />
+          <div className="h-3 w-3/4 bg-muted rounded" />
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 animate-pulse">
+    {Array.from({ length: count }).map((_, i) => (
+      <div key={i} className="h-48 rounded-premium bg-muted" />
+    ))}
+  </div>
+);
+
+
 export const BibleChapterSkeleton: React.FC = () => (
-  <div className="space-y-16 max-w-[65ch] mx-auto py-24">
-    <BreathWrapper className="text-center">
-      <div className="h-12 w-56 bg-primary/[0.05] rounded-full mx-auto mb-20 opacity-40" />
-    </BreathWrapper>
-    <div className="space-y-16">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <BreathWrapper key={i} className="flex gap-10">
-          <div className="h-5 w-8 bg-primary/[0.04] rounded-full shrink-0 mt-1.5" />
-          <div className="space-y-4 flex-1">
-            <div className="h-5 w-full bg-primary/[0.03] rounded-full" />
-            <div className="h-5 w-[92%] bg-primary/[0.02] rounded-full" />
-            {i % 2 === 0 && <div className="h-5 w-[85%] bg-primary/[0.01] rounded-full" />}
+  <div className="space-y-12 animate-pulse max-w-[65ch] mx-auto py-20">
+    <div className="h-10 w-48 bg-muted rounded-full mx-auto mb-16 opacity-40" />
+    <div className="space-y-12">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="flex gap-8">
+          <div className="h-4 w-6 bg-muted/20 rounded-full shrink-0 mt-1" />
+          <div className="space-y-3 flex-1">
+            <div className="h-4 w-full bg-muted/40 rounded-full" />
+            <div className="h-4 w-[90%] bg-muted/30 rounded-full" />
+            {i % 2 === 0 && <div className="h-4 w-[80%] bg-muted/20 rounded-full" />}
           </div>
-        </BreathWrapper>
+        </div>
       ))}
     </div>
   </div>
 );
 
 export const CatechismParagraphSkeleton: React.FC<{ paragraph?: number }> = ({ paragraph }) => (
-  <BreathWrapper className="space-y-6 py-12 max-w-[65ch] mx-auto">
-    <div className="flex items-center gap-4">
-      <div className="h-10 w-16 bg-primary/[0.05] rounded-xl" />
-      <div className="h-[0.5px] flex-1 bg-primary/[0.03]" />
+  <div className="space-y-4 animate-pulse py-4">
+    <div className="flex items-center gap-2">
+      <div className="h-8 w-12 bg-muted rounded" />
+      <div className="h-px flex-1 bg-muted/30" />
     </div>
-    <div className="space-y-4">
-      <div className="h-5 w-full bg-primary/[0.03] rounded-full" />
-      <div className="h-5 w-full bg-primary/[0.02] rounded-full" />
-      <div className="h-5 w-[80%] bg-primary/[0.01] rounded-full" />
+    <div className="space-y-3">
+      <div className="h-4 w-full bg-muted rounded" />
+      <div className="h-4 w-full bg-muted rounded" />
+      <div className="h-4 w-5/6 bg-muted rounded" />
     </div>
-  </BreathWrapper>
+  </div>
 );
 
 export const LogosChatSkeleton = () => (
-  <div className="flex flex-col h-full space-y-10 p-6">
-    <BreathWrapper className="flex justify-start gap-4">
-      <div className="w-10 h-10 rounded-full bg-primary/[0.04] shrink-0" />
-      <div className="space-y-3">
-        <div className="h-20 w-[240px] rounded-3xl rounded-tl-none bg-primary/[0.02] border border-primary/[0.01]" />
-        <div className="h-3 w-16 bg-primary/[0.02] rounded-full" />
+  <div className="flex flex-col h-full space-y-6 p-4 animate-pulse">
+    <div className="flex justify-start gap-3">
+      <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
+      <div className="space-y-2">
+        <div className="h-16 w-[200px] rounded-2xl rounded-tl-none bg-muted/60" />
+        <div className="h-3 w-12 bg-muted/30 rounded" />
       </div>
-    </BreathWrapper>
-    <BreathWrapper className="flex justify-end gap-4">
-      <div className="space-y-3 items-end flex flex-col">
-        <div className="h-16 w-[180px] rounded-3xl rounded-tr-none bg-primary/[0.05] border border-primary/[0.02]" />
-        <div className="h-3 w-16 bg-primary/[0.02] rounded-full" />
+    </div>
+    <div className="flex justify-end gap-3">
+      <div className="space-y-2">
+        <div className="h-12 w-[150px] rounded-2xl rounded-tr-none bg-primary/10" />
+        <div className="h-3 w-12 bg-muted/30 rounded ml-auto" />
       </div>
-      <div className="w-10 h-10 rounded-full bg-primary/[0.06] shrink-0" />
-    </BreathWrapper>
-    <BreathWrapper className="flex justify-start gap-4 pt-4">
-      <div className="w-10 h-10 rounded-full bg-primary/[0.04] shrink-0" />
-      <div className="space-y-3">
-        <div className="h-32 w-[300px] rounded-3xl rounded-tl-none bg-primary/[0.02] border border-primary/[0.01]" />
-        <div className="h-3 w-16 bg-primary/[0.02] rounded-full" />
+      <div className="w-8 h-8 rounded-full bg-primary/10 shrink-0" />
+    </div>
+    <div className="flex justify-start gap-3 pt-4">
+      <div className="w-8 h-8 rounded-full bg-muted shrink-0" />
+      <div className="space-y-2">
+        <div className="h-24 w-[240px] rounded-2xl rounded-tl-none bg-muted/60" />
+        <div className="h-3 w-12 bg-muted/30 rounded" />
       </div>
-    </BreathWrapper>
+    </div>
   </div>
 );
 
 export const ReadingSkeleton = () => (
-  <div className="w-full max-w-[65ch] mx-auto space-y-12 py-20">
-    <BreathWrapper className="space-y-6 text-center">
-      <div className="h-5 w-32 mx-auto bg-primary/[0.04] rounded-full" />
-      <div className="h-12 w-4/5 mx-auto bg-primary/[0.06] rounded-full" />
-    </BreathWrapper>
-    <div className="space-y-8 pt-12">
+  <div className="w-full max-w-3xl mx-auto space-y-8 py-12 animate-in fade-in duration-700">
+    <div className="space-y-4">
+      <div className="h-4 w-24 mx-auto bg-muted rounded-full" />
+      <div className="h-10 w-3/4 mx-auto bg-muted rounded-full" />
+    </div>
+    <div className="space-y-6 pt-8">
       {[1, 2, 3, 4, 5, 6].map((i) => (
-        <BreathWrapper key={i} className="flex gap-6">
-          <div className="h-5 w-8 shrink-0 mt-1 bg-primary/[0.03] rounded-full" />
-          <div className="space-y-3 flex-1">
-            <div className={cn("h-5 bg-primary/[0.04] rounded-full", i % 2 === 0 ? 'w-full' : 'w-[95%]')} />
-            <div className={cn("h-5 bg-primary/[0.02] rounded-full", i % 3 === 0 ? 'w-4/5' : 'w-[90%]')} />
+        <div key={i} className="flex gap-4">
+          <div className="h-4 w-6 shrink-0 mt-1 bg-muted/30 rounded-full" />
+          <div className="space-y-2 flex-1">
+            <div className={`h-4 bg-muted/60 rounded-full ${i % 2 === 0 ? 'w-full' : 'w-[95%]'}`} />
+            <div className={`h-4 bg-muted/40 rounded-full ${i % 3 === 0 ? 'w-4/5' : 'w-[90%]'}`} />
           </div>
-        </BreathWrapper>
+        </div>
       ))}
     </div>
   </div>
 );
 
-export const SaintCardSkeleton: React.FC = () => (
-  <BreathWrapper className="bg-card border border-border/10 rounded-[2.5rem] overflow-hidden h-[30rem] md:h-96">
-    <div className="flex flex-col md:flex-row h-full">
-      <div className="w-full md:w-1/3 bg-primary/[0.03] h-64 md:h-auto" />
-      <div className="flex-1 p-8 space-y-6">
-        <div className="h-4 w-32 bg-primary/[0.04] rounded-full" />
-        <div className="h-10 w-64 bg-primary/[0.05] rounded-full" />
-        <div className="space-y-3">
-          <div className="h-4 w-full bg-primary/[0.02] rounded-full" />
-          <div className="h-4 w-full bg-primary/[0.02] rounded-full" />
-          <div className="h-4 w-3/4 bg-primary/[0.01] rounded-full" />
-        </div>
-      </div>
-    </div>
-  </BreathWrapper>
-);
-
-export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-    {Array.from({ length: count }).map((_, i) => (
-      <BreathWrapper key={i}>
-        <div className="h-56 rounded-[2.5rem] bg-primary/[0.02] border border-primary/[0.03]" />
-      </BreathWrapper>
-    ))}
-  </div>
-);

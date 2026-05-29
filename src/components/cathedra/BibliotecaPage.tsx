@@ -7,8 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
-import ContemplativeLayout from './ContemplativeLayout';
-import SEOHead from '@/components/SEOHead';
 
 const sections = [
   {
@@ -175,16 +173,12 @@ const BibliotecaPage: React.FC = () => {
   }, [query]);
 
   return (
-    <ContemplativeLayout
-      title="Explorar"
-      subtitle="Sacrum Archivum"
-    >
-      <SEOHead 
-        title="Biblioteca | Cathedra Digital" 
-        description="Mergulhe na profundidade da tradição católica através da nossa biblioteca de módulos."
-        path="/biblioteca"
-      />
-      <div className="section-rhythm stack-rhythm max-w-2xl mx-auto pb-24">
+    <div className="section-rhythm stack-rhythm max-w-2xl mx-auto pb-24">
+      <div className="text-center space-y-4 header-margin-rhythm">
+        <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">Explorar</h1>
+        <p className="text-muted-foreground font-serif italic text-lg md:text-xl">Mergulhe na profundidade da tradição católica.</p>
+      </div>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -251,8 +245,7 @@ const BibliotecaPage: React.FC = () => {
           </div>
         ))}
       </div>
-      </div>
-    </ContemplativeLayout>
+    </div>
   );
 };
 

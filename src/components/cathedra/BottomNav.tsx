@@ -69,7 +69,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/10 hover:text-primary'
     )}
   >
     {isActive && (
@@ -86,7 +86,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       animate={{ 
         scale: isActive ? (shouldReduceMotion ? 1 : 1.05) : 1,
         y: isActive ? (shouldReduceMotion ? 0 : -1) : 0,
-        opacity: isActive ? 1 : 0.5
+        opacity: isActive ? 1 : 0.4
       }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-10"
@@ -105,7 +105,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 0.9 : 0.3,
+        opacity: isActive ? 0.9 : 0.2,
         scale: isActive ? 1 : 0.98,
         y: isActive ? 0 : 1
       }}
@@ -148,14 +148,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
-    { label: 'Logos', icon: Icons.Sparkles, route: AppRoute.LOGOS },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: () => window.dispatchEvent(new CustomEvent('open-sidebar')) },
+    { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
   ];
 
   return (
     <nav 
       className={cn(
-        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] md:hidden w-[85vw] max-w-[360px] h-14 bg-white/60 dark:bg-black/60 backdrop-blur-[32px] rounded-[50px] border border-black/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-xl shadow-black/5",
+        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[85vw] max-w-[360px] h-14 bg-white/40 dark:bg-black/40 backdrop-blur-[60px] rounded-[50px] border border-black/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-none",
         shouldReduceMotion ? "duration-0" : "duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1)"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

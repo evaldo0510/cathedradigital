@@ -166,49 +166,49 @@ const ReadingControlPanel: React.FC = () => {
         <div className="space-y-6 px-2">
           <div className="space-y-2">
             <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Intensidade de Luz</span>
-              <span className="text-primary">{Math.round((settings.atmosphere?.atmosphereIntensity || 0) * 100)}%</span>
+              <span>Intensidade de Bordas</span>
+              <span className="text-primary">{Math.round((settings.atmosphere?.borderIntensity || 0) * 100)}%</span>
             </div>
             <input
               type="range"
               min={0}
               max={1}
-              step={0.01}
-              value={settings.atmosphere?.atmosphereIntensity || 0}
-              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, atmosphereIntensity: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary cursor-pointer"
+              step={0.05}
+              value={settings.atmosphere?.borderIntensity || 0}
+              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, borderIntensity: Number(e.target.value) } })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
             />
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Profundidade do Blur</span>
-              <span className="text-primary">{Math.round((settings.atmosphere?.blurIntensity || 0) * 100)}%</span>
+              <span>Profundidade de Sombras</span>
+              <span className="text-primary">{Math.round((settings.atmosphere?.shadowDepth || 0) * 100)}%</span>
             </div>
             <input
               type="range"
               min={0}
               max={1}
-              step={0.01}
-              value={settings.atmosphere?.blurIntensity || 0}
-              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, blurIntensity: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary cursor-pointer"
+              step={0.05}
+              value={settings.atmosphere?.shadowDepth || 0}
+              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, shadowDepth: Number(e.target.value) } })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
             />
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Opacidade das Camadas</span>
+              <span>Opacidade Dark Mode</span>
               <span className="text-primary">{Math.round((settings.atmosphere?.darkOpacity || 0) * 100)}%</span>
             </div>
             <input
               type="range"
-              min={0}
+              min={0.5}
               max={1}
               step={0.01}
-              value={settings.atmosphere?.darkOpacity || 0}
+              value={settings.atmosphere?.darkOpacity || 0.9}
               onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, darkOpacity: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary cursor-pointer"
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
             />
           </div>
         </div>
