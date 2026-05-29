@@ -1511,7 +1511,7 @@ const Bible: React.FC = () => {
             Todos os Livros
           </Button>
 
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-2 md:gap-4">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 md:gap-6">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
@@ -1519,21 +1519,26 @@ const Bible: React.FC = () => {
               return (
                 <motion.button 
                   key={ch} 
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ y: -4, scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
-                  className={`aspect-square flex flex-col items-center justify-center rounded-2xl border text-sm font-bold transition-all relative group
-                    ${isRead 
-                      ? 'bg-primary text-primary-foreground border-primary' 
+                  className={cn(
+                    "aspect-square flex flex-col items-center justify-center rounded-[2rem] border text-sm font-bold transition-all relative group overflow-hidden",
+                    isRead 
+                      ? "bg-primary text-primary-foreground border-primary shadow-premium" 
                       : isLastReadChapter
-                        ? 'bg-secondary/10 border-secondary text-primary'
-                        : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
+                        ? "bg-secondary/5 border-secondary text-primary ring-1 ring-secondary/20"
+                        : "bg-card/40 backdrop-blur-sm border-primary/[0.05] text-primary hover:border-primary/20 hover:bg-card hover:shadow-premium-hover"
+                  )}
                 >
-                  <span>{ch}</span>
+                  <span className="text-xl md:text-2xl font-display font-light">{ch}</span>
                   {isLastReadChapter && (
-                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
+                    <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
                       Retomar
                     </span>
+                  )}
+                  {isRead && !isLastReadChapter && (
+                    <Icons.CheckCircle2 className="absolute top-2 right-2 w-3 h-3 text-primary-foreground/30" strokeWidth={3} />
                   )}
                 </motion.button>
               );
