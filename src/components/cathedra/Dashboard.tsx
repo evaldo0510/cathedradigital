@@ -163,7 +163,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       <FadeUp delay={0.05}>
         <HomeCard 
           onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="responsive-padding flex items-center justify-between cursor-pointer group"
+          className="padding-rhythm flex items-center justify-between cursor-pointer group"
           role="button"
           tabIndex={0}
           aria-label="Ver Guia dos Módulos"
@@ -183,7 +183,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.1}>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[var(--space-mobile-padding)] md:gap-6">
           {MAIN_DOORS.map((door, idx) => (
             <HomeCard
               key={idx}
@@ -192,7 +192,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               tabIndex={0}
               aria-label={`Abrir ${door.label}`}
               onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden responsive-padding cursor-pointer group flex flex-col items-center text-center gap-6"
+              className="relative overflow-hidden padding-rhythm cursor-pointer group flex flex-col items-center text-center gap-6"
             >
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">

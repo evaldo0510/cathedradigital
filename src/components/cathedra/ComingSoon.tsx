@@ -98,7 +98,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
 
   return (
     <div className={cn("space-y-20", className)}>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-16 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-mobile-stack)] md:gap-16 max-w-5xl mx-auto">
         {items.map((item, idx) => (
           <div
             key={idx}
