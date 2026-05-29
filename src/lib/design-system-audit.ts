@@ -193,7 +193,7 @@ export const exportAuditReport = async (result: AuditResult, format: 'json' | 'p
       import('jspdf-autotable'),
     ]);
     const autoTable = (autoTableModule as any).default;
-    const doc = new jsPDF() as jsPDFWithAutoTable;
+    const doc = new jsPDF();
     
     // Add Header
     doc.setFontSize(24);
