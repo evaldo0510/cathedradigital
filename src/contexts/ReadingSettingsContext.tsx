@@ -118,7 +118,10 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<ReadingSettings>(() => {
     const stored = localStorage.getItem('cathedra_reading_settings');
-    return stored ? JSON.parse(stored) : defaultSettings;
+    const parsed = stored ? JSON.parse(stored) : defaultSettings;
+    
+    // Ensure all keys from defaultSettings exist in stored settings
+    return { ...defaultSettings, ...parsed };
   });
 
   // Sync with profile if available
