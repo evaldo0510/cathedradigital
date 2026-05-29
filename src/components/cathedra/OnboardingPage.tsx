@@ -7,10 +7,12 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import SacredImage from './SacredImage';
 import onboardingBible from '@/assets/onboarding-bible.jpg';
 import onboardingPrayer from '@/assets/onboarding-prayer.jpg';
 import onboardingStudy from '@/assets/onboarding-study.jpg';
 import onboardingCommunity from '@/assets/onboarding-community.jpg';
+
 
 /* ── Intro slides ── */
 const SLIDES = [
