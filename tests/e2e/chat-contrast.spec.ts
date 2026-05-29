@@ -25,14 +25,15 @@ const THEMES = [
 test.describe('Logos IA Contrast Validation', () => {
   for (const theme of THEMES) {
     test(`Validate contrast in ${theme.name} mode`, async ({ page }) => {
-      // 1. Navigate to Logos AI (Chat)
-      await page.goto('/logos');
+      // 1. Navigate to Chat (redirects to Logos AI)
+      await page.goto('/chat');
       
       // 2. Inject settings into localStorage to force the theme
       await page.evaluate((settings) => {
-        localStorage.setItem('cathedra_reading_settings', JSON.stringify({
-          // Preserve existing settings but override theme/contrast
-          ...JSON.parse(localStorage.getItem('cathedra_reading_settings') || '{}'),
+        const key = 'cathedra_reading_settings';
+        const current = JSON.parse(localStorage.getItem(key) || '{}');
+        localStorage.setItem(key, JSON.stringify({
+          ...current,
           ...settings,
           lastUpdated: Date.now()
         }));
