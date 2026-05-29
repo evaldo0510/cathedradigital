@@ -238,8 +238,14 @@
     [data-side-margins="wide"] .reader-container { padding-left: 12rem !important; padding-right: 12rem !important; }
   }
 
-  .contrast-soft .reader-text { opacity: 0.85; filter: contrast(0.95) brightness(1.02); }
-  .contrast-high .reader-text { opacity: 1; filter: contrast(1.1) brightness(0.98); font-weight: 400; }
+  .contrast-soft .reader-text { opacity: 0.9; filter: contrast(1.0) brightness(1.0); }
+  .contrast-high .reader-text { opacity: 1; filter: contrast(1.15) brightness(0.96); font-weight: 400; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.05); }
+  
+  /* Standard/Normal contrast is now sharper by default */
+  .reader-text {
+    opacity: 1 !important;
+    filter: contrast(1.05) brightness(0.98);
+  }
 
 }
 
