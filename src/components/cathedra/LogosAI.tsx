@@ -303,7 +303,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-14 max-w-3xl mx-auto">
+              <div className="space-y-10 md:space-y-14 max-w-3xl mx-auto">
                 {history.length > visibleMessages && (
                   <div className="flex justify-center pb-4">
                     <Button 
