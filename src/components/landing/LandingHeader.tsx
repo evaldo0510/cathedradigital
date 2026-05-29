@@ -160,11 +160,11 @@ const LandingHeader = () => {
             Começar <ChevronRight className="w-4 h-4 ml-1" />
           </HomeButton>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle - Hidden when BottomNav is likely present */}
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="lg:hidden hidden md:flex" // Show on tablet, hide on small mobile where BottomNav exists
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={isMobileMenuOpen}
