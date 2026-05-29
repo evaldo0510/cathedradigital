@@ -8,6 +8,7 @@ interface RGB {
   r: number;
   g: number;
   b: number;
+  a?: number;
 }
 
 const getLuminance = (r: number, g: number, b: number): number => {
@@ -18,13 +19,48 @@ const getLuminance = (r: number, g: number, b: number): number => {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 };
 
-const hexToRgb = (hex: string): RGB | null => {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
+const parseColor = (color: string): RGB | null => {
+  if (!color) return null;
+  
+  // Handle rgb/rgba
+  const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+  if (rgbaMatch) {
+    return {
+      r: parseInt(rgbaMatch[1]),
+      g: parseInt(rgbaMatch[2]),
+      b: parseInt(rgbaMatch[3]),
+      a: rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1
+    };
+  }
+
+  // Handle hsl/hsla
+  const hslaMatch = color.match(/hsla?\((\d+),\s*([\d.]+)%,\s*([\d.]+)%(?:,\s*([\d.]+))?\)/);
+  if (hslaMatch) {
+    return {
+      ...hslToRgb(parseFloat(hslaMatch[1]), parseFloat(hslaMatch[2]), parseFloat(hslaMatch[3])),
+      a: hslaMatch[4] ? parseFloat(hslaMatch[4]) : 1
+    };
+  }
+
+  // Handle Hex
+  if (color.startsWith('#')) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(color);
+    if (result) {
+      return {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+        a: result[4] ? parseInt(result[4], 16) / 255 : 1
+      };
+    }
+  }
+
+  // Handle raw HSL strings from CSS variables (e.g. "220 30% 6%")
+  if (color.includes('%')) {
+    return { ...parseHslString(color), a: 1 };
+  }
+
+  return null;
 };
 
 const hslToRgb = (h: number, s: number, l: number): RGB => {
@@ -41,9 +77,6 @@ const hslToRgb = (h: number, s: number, l: number): RGB => {
   };
 };
 
-/**
- * Parses HSL string from CSS variables like "45 40% 98.8%"
- */
 const parseHslString = (hslStr: string): RGB => {
   const parts = hslStr.trim().split(/\s+/);
   const h = parseFloat(parts[0]);
@@ -52,11 +85,34 @@ const parseHslString = (hslStr: string): RGB => {
   return hslToRgb(h, s, l);
 };
 
-export const getContrastRatio = (color1: string, color2: string): number => {
-  const rgb1 = color1.includes('%') ? parseHslString(color1) : hexToRgb(color1);
-  const rgb2 = color2.includes('%') ? parseHslString(color2) : hexToRgb(color2);
+/**
+ * Blends a foreground color (potentially with alpha) over a background color.
+ */
+export const blendColors = (foreground: RGB, background: RGB): RGB => {
+  const alpha = foreground.a ?? 1;
+  if (alpha >= 1) return foreground;
+  
+  return {
+    r: Math.round((1 - alpha) * background.r + alpha * foreground.r),
+    g: Math.round((1 - alpha) * background.g + alpha * foreground.g),
+    b: Math.round((1 - alpha) * background.b + alpha * foreground.b),
+    a: 1
+  };
+};
+
+export const getContrastRatio = (color1: string, color2: string, backgroundForColor1?: string): number => {
+  let rgb1 = parseColor(color1);
+  const rgb2 = parseColor(color2);
 
   if (!rgb1 || !rgb2) return 1;
+
+  // If color1 has transparency, blend it with the background
+  if (rgb1.a !== undefined && rgb1.a < 1 && backgroundForColor1) {
+    const bgRgb = parseColor(backgroundForColor1);
+    if (bgRgb) {
+      rgb1 = blendColors(rgb1, bgRgb);
+    }
+  }
 
   const l1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
   const l2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);

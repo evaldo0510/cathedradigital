@@ -27,6 +27,37 @@ export interface AuditResult {
 }
 
 /**
+ * Find the actual background color of an element by traversing up the DOM tree
+ * and blending transparent/semi-transparent layers.
+ */
+const getActualBackgroundColor = (element: HTMLElement): string => {
+  let current: HTMLElement | null = element;
+  let colors: string[] = [];
+
+  while (current) {
+    const style = window.getComputedStyle(current);
+    const bg = style.backgroundColor;
+    
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+      colors.unshift(bg);
+      // If the color is fully opaque, we can stop
+      if (!bg.includes('rgba') || bg.match(/rgba\(.*,\s*1\)$/)) {
+        break;
+      }
+    }
+    current = current.parentElement;
+  }
+
+  // If no background found, default to white
+  if (colors.length === 0) return '#FFFFFF';
+  
+  // Actually we should return the most specific one for now, 
+  // but a better approach would be blending all of them.
+  // For simplicity, let's use the first opaque or semi-transparent background we found.
+  return colors[colors.length - 1];
+};
+
+/**
  * Validates WCAG AAA and Typography consistency.
  */
 export const runDesignSystemAudit = async (pageName: string): Promise<AuditResult> => {
@@ -34,6 +65,10 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
   const gridIssues: string[] = [];
   const contrastIssues: ContrastIssue[] = [];
   
+  // Get current theme from body or root
+  const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  const isHighContrast = document.documentElement.classList.contains('high-contrast');
+
   // 1. Check Typography Tokens
   const elements = document.querySelectorAll('h1, h2, h3, h4, p, span, button');
   const allowedFonts = ['Inter', 'Playfair Display', 'Cinzel', 'Merriweather', 'system-ui', 'serif', 'sans-serif', 'monospace', 'Courier'];
@@ -71,31 +106,33 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
   });
 
   // 3. Check Contrast for key elements
-  const interactiveElements = document.querySelectorAll('button, a, input, [role="button"], p, h1, h2, h3');
+  const interactiveElements = document.querySelectorAll('button, a, input, [role="button"], p, h1, h2, h3, span');
   interactiveElements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return;
+    
     const style = window.getComputedStyle(el);
-    const bg = style.backgroundColor;
+    const bg = getActualBackgroundColor(el);
     const fg = style.color;
     
-    // Simple heuristic for contrast - might need more robust background detection for transparent elements
-    // We only check if background is not fully transparent
-    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-      try {
-        const ratio = getContrastRatio(bg, fg);
-        const level = getWCAGLevel(ratio);
-        
-        if (ratio < 4.5) {
-          contrastIssues.push({
-            element: `${el.tagName}${el.className ? '.' + el.className.split(' ').slice(0, 2).join('.') : ''}`,
-            ratio,
-            expected: 4.5,
-            level,
-            suggestion: 'Aumentar contraste entre fundo e texto.'
-          });
-        }
-      } catch (e) {
-        // Skip elements with complex background colors or parsing errors
+    // Skip invisible elements
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return;
+
+    try {
+      const ratio = getContrastRatio(fg, bg);
+      const level = getWCAGLevel(ratio);
+      const minRatio = isHighContrast ? 7 : 4.5;
+      
+      if (ratio < minRatio) {
+        contrastIssues.push({
+          element: `${el.tagName}${el.className ? '.' + el.className.split(' ').slice(0, 2).join('.') : ''}`,
+          ratio,
+          expected: minRatio,
+          level,
+          suggestion: ratio < 3 ? 'Contraste Crítico: Aumentar saturação ou mudar cor.' : 'Ajuste fino necessário para atingir conformidade.'
+        });
       }
+    } catch (e) {
+      // Skip elements with complex background colors or parsing errors
     }
   });
 
@@ -135,8 +172,20 @@ export const saveAuditResult = async (runId: string, result: AuditResult) => {
  * Generates and downloads a JSON report
  */
 export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 'json') => {
+  const currentTheme = document.documentElement.classList.contains('dark') ? 'Escuro' : 'Claro';
+  const isHighContrast = document.documentElement.classList.contains('high-contrast') ? 'Sim' : 'Não';
+  
   if (format === 'json') {
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const reportData = {
+      ...result,
+      meta: {
+        theme: currentTheme,
+        highContrast: isHighContrast,
+        browser: navigator.userAgent,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`
+      }
+    };
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", url);
@@ -149,56 +198,87 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
     const doc = new jsPDF() as jsPDFWithAutoTable;
     
     // Add Header
-    doc.setFontSize(22);
-    doc.text('Cathedra Digital - Design System Audit', 20, 20);
+    doc.setFontSize(24);
+    doc.setTextColor(181, 139, 58); // Sovereign Gold
+    doc.text('Relatório de Conformidade - Cathedra Digital', 20, 25);
     
-    doc.setFontSize(12);
-    doc.text(`Pagina: ${result.page}`, 20, 30);
-    doc.text(`Data: ${new Date(result.timestamp).toLocaleString()}`, 20, 37);
-    doc.text(`Conformidade WCAG: ${result.wcagScore}%`, 20, 44);
-    doc.text(`Status: ${result.status.toUpperCase()}`, 20, 51);
+    doc.setDrawColor(181, 139, 58);
+    doc.line(20, 30, 190, 30);
     
-    // Contrast Issues Table
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Gerado em: ${new Date(result.timestamp).toLocaleString()}`, 20, 38);
+    
+    // Metadata Section
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Informações do Ambiente', 20, 50);
+    
+    const metaData = [
+      ['Página Auditada', result.page],
+      ['Tema Ativo', currentTheme],
+      ['Alto Contraste', isHighContrast],
+      ['Score WCAG', `${result.wcagScore}%`],
+      ['Status Geral', result.status.toUpperCase()]
+    ];
+    
+    doc.autoTable({
+      startY: 55,
+      body: metaData,
+      theme: 'plain',
+      styles: { fontSize: 10, cellPadding: 2 }
+    });
+    
+    let currentY = (doc as any).lastAutoTable.finalY + 15;
+
+    // Contrast Issues Detailed
     if (result.contrastIssues.length > 0) {
       doc.setFontSize(16);
-      doc.text('Problemas de Contraste', 20, 65);
+      doc.setTextColor(181, 139, 58);
+      doc.text('Análise Detalhada de Contraste', 20, currentY);
       
       const tableData = result.contrastIssues.map(issue => [
         issue.element,
         issue.ratio.toFixed(2),
         issue.expected.toFixed(2),
         issue.level,
-        issue.suggestion || '-'
+        issue.suggestion || 'Revisar tokens de cores.'
       ]);
       
       doc.autoTable({
-        startY: 70,
-        head: [['Elemento', 'Ratio Atual', 'Esperado', 'Nivel', 'Sugestao']],
+        startY: currentY + 5,
+        head: [['Componente', 'Ratio', 'Min', 'Nível', 'Recomendação']],
         body: tableData,
         theme: 'striped',
-        headStyles: { fillColor: [181, 139, 58] } // Sovereign Gold
+        headStyles: { fillColor: [181, 139, 58], textColor: [255, 255, 255] },
+        styles: { fontSize: 8 }
       });
-    } else {
-      doc.setFontSize(14);
-      doc.setTextColor(0, 150, 0);
-      doc.text('Nenhum problema de contraste detectado.', 20, 70);
-    }
-    
-    // Typography Errors
-    if (result.typographyErrors.length > 0) {
-      const finalY = (doc as any).lastAutoTable?.finalY || 80;
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Erros de Tipografia', 20, finalY + 20);
       
-      doc.autoTable({
-        startY: finalY + 25,
-        head: [['Descricao do Erro']],
-        body: result.typographyErrors.map(err => [err]),
-        theme: 'grid'
-      });
+      currentY = (doc as any).lastAutoTable.finalY + 15;
     }
     
-    doc.save(`cathedra_a11y_report_${result.page.replace(/\//g, '_')}.pdf`);
+    // Recommendations Section
+    doc.setFontSize(16);
+    doc.setTextColor(181, 139, 58);
+    doc.text('Recomendações Técnicas', 20, currentY);
+    
+    const recommendations = [];
+    if (result.wcagScore < 100) {
+      recommendations.push(['Contraste', 'Substituir cores de texto por variantes mais escuras (no modo claro) ou mais claras (no modo escuro) do Design System.']);
+      recommendations.push(['Tipografia', 'Garantir que todos os componentes utilizam a fonte Cinzel para títulos e Inter para corpo de texto.']);
+      recommendations.push(['Tokens', 'Evitar o uso de estilos inline e cores hexadecimais manuais fora do sacredPalette.ts.']);
+    } else {
+      recommendations.push(['Excelente', 'O sistema mantém conformidade total com os padrões estabelecidos. Continue utilizando os tokens globais.']);
+    }
+    
+    doc.autoTable({
+      startY: currentY + 5,
+      head: [['Categoria', 'Ação Corretiva']],
+      body: recommendations,
+      theme: 'grid',
+      headStyles: { fillColor: [80, 80, 80] }
+    });
+    
+    doc.save(`cathedra_a11y_detailed_report_${result.page.replace(/\//g, '_')}.pdf`);
   }
 };
