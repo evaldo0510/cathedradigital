@@ -176,25 +176,25 @@ const DesignSystemGuide: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="space-y-4">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium shadow-premium transition-premium hover:shadow-premium-hover flex items-center justify-center">
-                <Icons.Layers className="w-8 h-8 text-primary/20" />
+                <Icons.Layout className="w-8 h-8 text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Premium Shadow</p>
             </div>
             <div className="space-y-4">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium-sm flex items-center justify-center">
-                <Icons.Square className="w-8 h-8 text-primary/20" />
+                <Icons.Menu className="w-8 h-8 text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius SM (1.25rem)</p>
             </div>
             <div className="space-y-4">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium flex items-center justify-center">
-                <Icons.Square className="w-12 h-12 text-primary/20" />
+                <Icons.Plus className="w-12 h-12 text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius MD (2rem)</p>
             </div>
             <div className="space-y-4">
               <div className="aspect-square bg-card border border-primary/5 rounded-premium-lg flex items-center justify-center">
-                <Icons.Square className="w-16 h-16 text-primary/20" />
+                <Icons.Maximize className="w-16 h-16 text-primary/20" />
               </div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-center">Radius LG (2.5rem)</p>
             </div>
