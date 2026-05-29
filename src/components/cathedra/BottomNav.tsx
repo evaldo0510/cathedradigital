@@ -115,7 +115,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const triggerRipple = useRipple();
-  const { t } = useContext(LangContext);
+  const { t, lang } = useContext(LangContext);
 
   const items = [
     { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
