@@ -304,7 +304,57 @@ const Catechism: React.FC = () => {
     const p = searchParams.get('p');
     return p ? parseInt(p) : 1;
   });
+  // Track visible paragraph for bookmarking
+  useEffect(() => {
+    if (viewMode !== 'reading') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveParagraphId(entry.target.id);
+            const pNum = parseInt(entry.target.id.replace('p', ''));
+            if (!isNaN(pNum)) setCurrentParagraph(pNum);
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
+    );
+
+    const paragraphElements = document.querySelectorAll('[id^="p"]');
+    paragraphElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [viewMode, selectedSection]);
+
+  const handleReturnToParagraph = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('bg-primary/10');
+      setTimeout(() => el.classList.remove('bg-primary/10'), 2000);
+    }
+  };
+
+  const handleBookmarkCurrent = () => {
+    if (activeParagraphId) {
+      const pNum = parseInt(activeParagraphId.replace('p', ''));
+      saveLastRead({
+        content_type: 'catechism',
+        content_id: pNum.toString(),
+        paragraph: pNum,
+        label: `Catecismo §${pNum}`,
+        url: `/catechism?p=${pNum}`,
+        is_last_read: true
+      });
+      toast.success('Posição salva', {
+        description: `Você parou no parágrafo §${pNum}`
+      });
+    }
+  };
+
   const [paragraphsRead, setParagraphsRead] = useState<Set<number>>(new Set());
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showCrossRefs, setShowCrossRefs] = useState(true);
   const [showLogosAI, setShowLogosAI] = useState(false);
@@ -316,6 +366,8 @@ const Catechism: React.FC = () => {
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
+
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
@@ -950,7 +1002,12 @@ const Catechism: React.FC = () => {
                 }
               }}
               label={`Catecismo §${currentParagraph}`}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeParagraphId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
           </main>
         </div>
 

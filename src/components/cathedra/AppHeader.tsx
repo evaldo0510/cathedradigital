@@ -61,7 +61,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
                   <Icons.ChevronLeft className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
@@ -73,7 +73,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
                   <Icons.Search className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
@@ -83,7 +83,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={onToggleDark}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
+
                   aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
                 >
                   {isDark ? 
@@ -99,7 +100,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                     variant="outline"
                     size="icon"
                     onClick={() => navigate(AppRoute.PROFILE)}
-                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03]"
+                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03] tap-premium"
                     aria-label={t('profile') || 'Meu Perfil'}
                   >
                     {user.avatar ? (
@@ -121,7 +122,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={onOpenSidebar}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label="Abrir menu lateral"
                 >
                   <Icons.Menu className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />

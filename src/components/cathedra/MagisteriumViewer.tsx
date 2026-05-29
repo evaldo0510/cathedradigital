@@ -44,6 +44,8 @@ const MagisteriumViewer: React.FC = () => {
   const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
+  const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
+
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
@@ -124,7 +126,55 @@ const MagisteriumViewer: React.FC = () => {
     fetchDoc();
   }, [id]);
 
+  // Track visible paragraph for bookmarking
+  useEffect(() => {
+    if (loading || !content) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveParagraphId(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
+    );
+
+    const paragraphElements = document.querySelectorAll('[id^="para-"]');
+    paragraphElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [loading, content]);
+
+  const handleReturnToParagraph = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('bg-primary/10');
+      setTimeout(() => el.classList.remove('bg-primary/10'), 2000);
+    }
+  };
+
+  const handleBookmarkCurrent = () => {
+    if (activeParagraphId && id && content) {
+      const pIdx = parseInt(activeParagraphId.replace('para-', ''));
+      saveLastRead({
+        content_type: 'magisterium',
+        content_id: id,
+        position: pIdx,
+        label: `${content.title} §${pIdx + 1}`,
+        url: `/magisterium/${id}?p=${pIdx}`,
+        is_last_read: true
+      });
+      toast.success('Posição salva', {
+        description: `Você parou no parágrafo ${pIdx + 1}`
+      });
+    }
+  };
+
   // Auto-save scroll position
+
   useEffect(() => {
     const handleScroll = () => {
       if (id && content) {
@@ -522,7 +572,12 @@ const MagisteriumViewer: React.FC = () => {
                 }
               }}
               label={content.title}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeParagraphId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
         </motion.div>
       </div>
 

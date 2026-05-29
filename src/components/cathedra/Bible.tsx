@@ -159,6 +159,8 @@ const Bible: React.FC = () => {
   const { user, profile } = useAuth();
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeVerseId, setActiveVerseId] = useState<string | null>(null);
+
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
@@ -190,7 +192,57 @@ const Bible: React.FC = () => {
 
 
 
+  // Track visible verse for bookmarking
+  useEffect(() => {
+    if (viewMode !== 'reading') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveVerseId(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
+    );
+
+    const verseElements = document.querySelectorAll('[id^="v"]');
+    verseElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [viewMode, verses]);
+
+  const handleReturnToParagraph = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Add a brief highlight effect
+      el.classList.add('bg-primary/10');
+      setTimeout(() => el.classList.remove('bg-primary/10'), 2000);
+    }
+  };
+
+  const handleBookmarkCurrent = () => {
+    if (activeVerseId && selectedBook) {
+      const verseNum = parseInt(activeVerseId.replace('v', ''));
+      saveLastRead({
+        content_type: 'bible',
+        content_id: selectedBook.abbr,
+        chapter: selectedChapter,
+        position: verseNum,
+        label: `${selectedBook.name} ${selectedChapter}:${verseNum}`,
+        url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${verseNum}`,
+        is_last_read: true
+      });
+      toast.success('Posição salva', {
+        description: `Você parou em ${selectedBook.name} ${selectedChapter}:${verseNum}`
+      });
+    }
+  };
+
   // Track chapters read
+
   const [chaptersRead, setChaptersRead] = useState<Record<string, Set<number>>>({});
 
   const loadChaptersRead = useCallback(async () => {
@@ -1257,7 +1309,12 @@ const Bible: React.FC = () => {
                 }
               }}
               label={`${selectedBook.name} ${selectedChapter}`}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeVerseId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
 
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
