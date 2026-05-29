@@ -173,7 +173,62 @@
     @apply font-ui font-normal text-foreground/85;
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
     line-height: 1.7;
+    max-width: 80ch;
   }
+
+  /* Reading Core - Optimized Rhythm */
+  .reader-text {
+    @apply font-reader text-foreground selection:bg-primary/20 max-w-[65ch] mx-auto;
+    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+    font-weight: 350;
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  @screen sm {
+    .reader-text { font-size: 1.4rem; }
+  }
+
+  @screen md {
+    .reader-text {
+      font-size: 1.55rem;
+      line-height: 2.3;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .font-size-small .reader-text { font-size: 1.25rem !important; }
+  .font-size-medium .reader-text { font-size: 1.45rem !important; }
+  .font-size-large .reader-text { font-size: 1.75rem !important; }
+  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
+
+  /* Specific Reader Container */
+  .reader-container {
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-8 sm:px-14 md:px-24 py-16 md:py-36 transition-all duration-1000;
+    scroll-behavior: smooth;
+  }
+
+  /* Premium Editorial Styling for Bible/Catechism */
+  .prose-premium {
+    @apply font-serif text-foreground selection:bg-primary/15;
+  }
+
+  .prose-premium p {
+    @apply mb-10 leading-[1.95] text-xl md:text-2xl font-light;
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .prose-premium blockquote {
+    @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
+  }
+
+  /* Kindle-like atmospheric transitions */
+  .reading-theme-paper { background-color: #F8F5EE; }
+  .reading-theme-sepia { background-color: #E1D7C1; }
+  .reading-theme-dark { background-color: #0F172A; }
+  .reading-theme-night { background-color: #000000; }
 }
 
 @layer components {
