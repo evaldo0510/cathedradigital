@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useSwipeNavigation } from '@/hooks/useSwipeNavigation';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const ItinerariumStepPage: React.FC = () => {
@@ -35,6 +36,7 @@ const ItinerariumStepPage: React.FC = () => {
   const [allSteps, setAllSteps] = useState<any[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
   const { settings } = useReadingSettings();
+  const { saveLastRead } = useReadingMarks();
   const isMobile = useIsMobile();
   const autoSaveTimer = useRef<number | null>(null);
   const lastSavedReflection = useRef<string>('');
@@ -62,17 +64,42 @@ const ItinerariumStepPage: React.FC = () => {
     };
   }, [reflection, user, stepId, itinerariumId, completed]);
 
-  // Persistir último ponto visitado (retomada natural)
+  // Persistir último ponto visitado (retomada natural sincronizada)
   useEffect(() => {
-    if (!stepId || !itinerariumId) return;
-    try {
-      localStorage.setItem('cathedra:last-itineraria-step', JSON.stringify({
-        itinerariumId,
-        stepId,
-        at: Date.now(),
-      }));
-    } catch {}
-  }, [stepId, itinerariumId]);
+    if (!stepId || !itinerariumId || !step?.title) return;
+    
+    const persistReadingMark = async () => {
+      try {
+        // Local fallback
+        localStorage.setItem('cathedra:last-itineraria-step', JSON.stringify({
+          itinerariumId,
+          stepId,
+          at: Date.now(),
+        }));
+
+        // Sync to DB for global resumption
+        await saveLastRead({
+          content_type: 'itinerarium',
+          content_id: stepId,
+          label: `${step.title} (Itinerarium)`,
+          url: `/itineraria/${itinerariumId}/step?step=${stepId}`,
+          is_last_read: true
+        });
+        
+        // Update general history
+        await supabase.from('user_history').insert({
+          user_id: user?.id,
+          title: step.title,
+          route: `/itineraria/${itinerariumId}/step?step=${stepId}`,
+          type: 'itinerarium'
+        });
+      } catch (e) {
+        console.warn('Failed to persist reading mark', e);
+      }
+    };
+
+    persistReadingMark();
+  }, [stepId, itinerariumId, step?.title, user?.id]);
 
   useEffect(() => {
     if (stepId) {
