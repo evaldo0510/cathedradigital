@@ -35,10 +35,16 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({
 
   const mainSrc = sources[currentSrcIndex];
   
-  // Create optimized variants if they aren't already optimized
+  // Create optimized variants and srcset
+  const srcSet = useMemo(() => {
+    if (!mainSrc || !mainSrc.includes('unsplash.com')) return undefined;
+    const base = mainSrc.split('?')[0];
+    return [400, 800, 1200, 1600].map(w => `${buildImageSrc(base, priority, w)} ${w}w`).join(', ');
+  }, [mainSrc, priority]);
+
   const webpSrc = useMemo(() => {
     if (!mainSrc) return null;
-    if (mainSrc.includes('unsplash.com')) return mainSrc; // Unsplash handles format automatically
+    if (mainSrc.includes('unsplash.com')) return mainSrc; 
     return mainSrc.replace(/\.(jpg|jpeg|png)$/i, '.webp');
   }, [mainSrc]);
 
@@ -47,6 +53,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({
     if (mainSrc.includes('unsplash.com')) return mainSrc;
     return mainSrc.replace(/\.(jpg|jpeg|png)$/i, '.avif');
   }, [mainSrc]);
+
 
   const colors = useMemo(() => resolveColors(liturgicalColor, dominantColor), [liturgicalColor, dominantColor]);
   const initials = useMemo(() => getInitials(alt || ''), [alt]);
