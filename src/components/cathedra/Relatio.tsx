@@ -195,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-16 pt-16 border-t border-border/5 space-y-8", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-24 pt-24 border-t border-border/5 space-y-10 mb-20", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -285,8 +285,9 @@ const Relatio: React.FC<RelatioProps> = ({
 
             {/* Dynamic Connections */}
             {connections.length > 0 && (
-              <div className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                   {(showAll ? connections : connections.slice(0, 4)).map((item) => {
                   const isFav = isFavorite('relatio', item.title);
                   // Calculate connection strength based on matches or metadata
@@ -305,7 +306,8 @@ const Relatio: React.FC<RelatioProps> = ({
                       className="group relative"
                     >
                       <Card 
-                        className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden"
+                        className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden flex flex-col"
+
 
                         onClick={() => {
                           if (item.type === 'bible') {
@@ -404,10 +406,11 @@ const Relatio: React.FC<RelatioProps> = ({
                           
                           <div className="flex-1 space-y-2">
                             <h4 className="text-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
-                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
+                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
                             </p>
                           </div>
+
                           
                           <div className="mt-4 pt-4 border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
                             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/30">Explorar Conexão</span>

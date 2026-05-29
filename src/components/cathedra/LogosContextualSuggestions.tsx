@@ -50,11 +50,12 @@ export const LogosContextualSuggestions: React.FC<LogosContextualSuggestionsProp
   if (settings.totalSilence || !isVisible || settings.logosSuggestions === 'never') return null;
 
   return (
-    <div className="mt-16 py-10 border-t border-primary/5">
-      <div className="flex items-center gap-4 mb-8 opacity-20">
-        <div className="w-px h-10 bg-gradient-to-b from-transparent via-primary to-transparent" />
-        <p className="text-[9px] font-black uppercase tracking-[0.5em] text-primary">Caminhos de Aprofundamento</p>
+    <div className="mt-24 py-12 border-t border-primary/5">
+      <div className="flex items-center gap-5 mb-10 opacity-30">
+        <div className="w-px h-12 bg-gradient-to-b from-transparent via-primary to-transparent" />
+        <p className="text-[10px] font-black uppercase tracking-[0.6em] text-primary">Caminhos de Aprofundamento</p>
       </div>
+
       
       <div className="flex flex-wrap gap-4">
         {suggestions.map((suggestion) => (
