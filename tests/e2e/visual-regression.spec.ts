@@ -23,7 +23,9 @@ const VIEWPORTS = [
   { name: 'desktop-standard', width: 1280, height: 800 },
   { name: 'tablet-landscape', width: 1024, height: 768 },
   { name: 'tablet-portrait', width: 768, height: 1024 },
-  { name: 'mobile', width: 375, height: 667 },
+  { name: 'mobile-small', width: 360, height: 800 },
+  { name: 'mobile-standard', width: 390, height: 844 },
+  { name: 'mobile-large', width: 430, height: 932 },
 ];
 
 test.describe('Visual Regression & WCAG AAA Audit', () => {
