@@ -64,13 +64,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm pb-20 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-24 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
         />
-        <div className="flex justify-center -mt-8 md:-mt-10 mb-10 md:mb-20">
+        <div className="flex justify-center -mt-6 md:-mt-10 mb-8 md:mb-20">
           <CathedraButton 
             variant="ghost" 
             size="sm"
@@ -91,12 +91,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="padding-rhythm md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="p-4 md:p-32 lg:p-40">
           <RitualDoDia />
         </CathedraCard>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-48 lg:gap-64">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <h2 className="sr-only">Sua Jornada de Leitura</h2>
@@ -167,7 +167,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="padding-rhythm md:p-40 lg:p-64">
+        <CathedraCard padding="none" className="p-4 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
