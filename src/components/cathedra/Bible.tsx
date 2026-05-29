@@ -1037,11 +1037,11 @@ const Bible: React.FC = () => {
                             </div>
                           </div>
                         </div>
-                        </div>
                       );
                     })}
                   </div>
                 )}
+
               </div>
             </div>
           </div>
@@ -1409,10 +1409,10 @@ const Bible: React.FC = () => {
               />
             </React.Suspense>
           </div>
-        </div>
       </ContemplativeLayout>
     );
   }
+
 
 
 
