@@ -1411,6 +1411,7 @@ const Bible: React.FC = () => {
       </ContemplativeLayout>
     );
   }
+  }
 
 
 
