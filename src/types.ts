@@ -6,6 +6,7 @@ export enum AppRoute {
   STUDY_MODE = '/study',
   BIBLE = '/bible',
   CATECHISM = '/catechism',
+  LOGOS = '/logos',
    SAINTS = '/santos',
    SAINT_DETAIL = '/santos/:id',
   MAGISTERIUM = '/magisterium',
