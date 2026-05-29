@@ -118,3 +118,30 @@ export const ReadingSkeleton = () => (
     </div>
   </div>
 );
+
+export const SaintCardSkeleton: React.FC = () => (
+  <BreathWrapper className="bg-card border border-border/10 rounded-[2.5rem] overflow-hidden h-[30rem] md:h-96">
+    <div className="flex flex-col md:flex-row h-full">
+      <div className="w-full md:w-1/3 bg-primary/[0.03] h-64 md:h-auto" />
+      <div className="flex-1 p-8 space-y-6">
+        <div className="h-4 w-32 bg-primary/[0.04] rounded-full" />
+        <div className="h-10 w-64 bg-primary/[0.05] rounded-full" />
+        <div className="space-y-3">
+          <div className="h-4 w-full bg-primary/[0.02] rounded-full" />
+          <div className="h-4 w-full bg-primary/[0.02] rounded-full" />
+          <div className="h-4 w-3/4 bg-primary/[0.01] rounded-full" />
+        </div>
+      </div>
+    </div>
+  </BreathWrapper>
+);
+
+export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) => (
+  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+    {Array.from({ length: count }).map((_, i) => (
+      <BreathWrapper key={i}>
+        <div className="h-56 rounded-[2.5rem] bg-primary/[0.02] border border-primary/[0.03]" />
+      </BreathWrapper>
+    ))}
+  </div>
+);
