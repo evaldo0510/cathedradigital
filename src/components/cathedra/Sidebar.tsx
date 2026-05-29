@@ -226,8 +226,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/5 dark:bg-primary/10 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
-                  <Icons.Logo className="w-full h-full opacity-80" variant="dark" />
+                <div className="w-10 h-10 rounded-xl bg-primary/5 dark:bg-white/5 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
+                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
                 </div>
                 <div className="space-y-0.5">
                   <h1 className="text-base font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
