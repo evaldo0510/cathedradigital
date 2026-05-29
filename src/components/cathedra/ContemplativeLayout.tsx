@@ -22,18 +22,18 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-12 md:pt-48 pb-20 md:pb-64 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-12 md:pt-64 pb-24 md:pb-80 will-change-transform", className)}>
 
       {(title || subtitle) && (
-        <header className={cn("header-margin-rhythm px-6 md:px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-1000")}>
-          <div className="w-[1px] h-8 md:h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-6 md:mb-16" />
+        <header className={cn("header-margin-rhythm px-6 md:px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-1500")}>
+          <div className="w-[1px] h-12 md:h-48 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-8 md:mb-24" />
           {subtitle && (
-            <p className="text-[10px] md:h5 font-bold uppercase tracking-[0.4em] text-primary/60 mb-4 md:mb-10">
+            <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.5em] md:tracking-[0.8em] text-primary/40 mb-6 md:mb-12">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-4xl md:text-8xl tracking-tight text-primary font-display">
+            <h1 className="text-4xl md:text-8xl lg:text-[7rem] tracking-tight text-primary font-display leading-[0.9] filter blur-[0.2px]">
               {title}
             </h1>
           )}

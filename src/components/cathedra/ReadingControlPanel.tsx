@@ -34,10 +34,10 @@ const ReadingControlPanel: React.FC = () => {
   ];
 
   const SettingsContent = () => (
-    <div className="space-y-10 py-6">
-      <div className="text-center space-y-1">
-        <p className="text-[10px] text-muted-foreground uppercase tracking-[0.3em] font-black">Sanctuarium Scriptis</p>
-        <h2 className="text-2xl font-display font-light text-primary uppercase tracking-widest leading-relaxed">Atmosfera de Leitura</h2>
+    <div className="space-y-12 py-10">
+      <div className="text-center space-y-4">
+        <p className="text-[9px] text-primary/30 uppercase tracking-[0.6em] font-bold">Atmosphæra</p>
+        <h2 className="text-3xl font-display font-light text-primary uppercase tracking-[0.3em] leading-tight">Leitura</h2>
       </div>
       
       <div className="space-y-4">
@@ -60,7 +60,7 @@ const ReadingControlPanel: React.FC = () => {
 
       <div className="space-y-4">
         <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Escala Tipográfica</p>
-        <div className="flex bg-muted/30 rounded-2xl p-1.5 gap-1 border border-primary/5">
+        <div className="flex bg-primary/[0.01] rounded-full p-1.5 gap-1">
           {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
             <button
               key={s}
@@ -80,16 +80,16 @@ const ReadingControlPanel: React.FC = () => {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => updateSettings({ fontFamily: 'serif' })}
-            className={`flex items-center justify-center gap-2 py-4 rounded-2xl border transition-all duration-500 font-serif ${
-              settings.fontFamily === 'serif' ? 'bg-primary text-primary-foreground border-primary shadow-premium scale-[1.02]' : 'bg-muted/20 border-transparent text-muted-foreground/60 hover:bg-muted/40'
+            className={`flex items-center justify-center gap-2 py-4 rounded-full transition-all duration-700 font-serif ${
+              settings.fontFamily === 'serif' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
             <Feather className="w-4 h-4" /> Serifada
           </button>
           <button
             onClick={() => updateSettings({ fontFamily: 'sans' })}
-            className={`flex items-center justify-center gap-2 py-4 rounded-2xl border transition-all duration-500 ${
-              settings.fontFamily === 'sans' ? 'bg-primary text-primary-foreground border-primary shadow-premium scale-[1.02]' : 'bg-muted/20 border-transparent text-muted-foreground/60 hover:bg-muted/40'
+            className={`flex items-center justify-center gap-2 py-4 rounded-full transition-all duration-700 ${
+              settings.fontFamily === 'sans' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
             <Type className="w-4 h-4" /> Sans

@@ -136,7 +136,7 @@ const HojePage: React.FC = () => {
           initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
           transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center space-y-12 md:space-y-24 max-w-6xl mx-auto"
+          className="text-center space-y-16 md:space-y-32 max-w-6xl mx-auto"
         >
           <div className="flex flex-col items-center gap-4 md:gap-6">
             <motion.div 
@@ -179,7 +179,7 @@ const HojePage: React.FC = () => {
                 <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
-                <div className="h-px flex-1 bg-border/20 md:bg-border/30" />
+                <div className="h-px flex-1 bg-primary/[0.03]" />
               </div>
               <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2" />
             </section>
@@ -190,7 +190,7 @@ const HojePage: React.FC = () => {
                 <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
                   Ritual de Hoje
                 </h2>
-                <div className="h-px flex-1 bg-border/20 md:bg-border/30" />
+                <div className="h-px flex-1 bg-primary/[0.03]" />
               </div>
               <RitualDoDia />
             </section>
@@ -198,7 +198,7 @@ const HojePage: React.FC = () => {
 
           <aside className="lg:col-span-4 space-y-12">
             {/* FRASES DO DIA - CONTEMPLAÇÃO */}
-            <div className="pt-8 px-6 text-center bg-primary/[0.005] rounded-[2.5rem] p-10 border border-primary/5 transition-all hover:bg-primary/[0.01] duration-1000">
+            <div className="pt-8 px-6 text-center bg-primary/[0.003] rounded-[2.5rem] p-10 transition-all hover:bg-primary/[0.008] duration-1000">
                <Icons.Quote className="w-6 h-6 text-secondary/20 mx-auto mb-6" />
                <p className="text-lg text-primary/30 font-serif italic leading-relaxed selection:bg-primary/5">
                 {todayQuote}

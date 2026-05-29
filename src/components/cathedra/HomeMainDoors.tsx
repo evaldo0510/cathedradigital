@@ -92,9 +92,9 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-6 md:p-24 lg:p-32 flex flex-col items-center text-center gap-4 md:gap-16 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/5"
+          className="p-8 md:p-28 lg:p-40 flex flex-col items-center text-center gap-6 md:gap-20 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-transparent hover:bg-primary/[0.005] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[3rem] md:rounded-[5rem]"
         >
-          <div className="w-12 h-12 md:w-24 md:h-24 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/80 group-hover:scale-105 group-hover:text-primary group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.05]">
+          <div className="w-16 h-16 md:w-32 md:h-32 rounded-full bg-primary/[0.005] flex items-center justify-center text-primary/40 group-hover:scale-105 group-hover:text-primary group-hover:bg-primary/[0.02] transition-all duration-1000">
             <door.icon className="w-6 h-6 md:w-10 md:h-10" strokeWidth={1} />
           </div>
           <div className="space-y-4 md:space-y-6">

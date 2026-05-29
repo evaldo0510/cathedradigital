@@ -43,18 +43,18 @@
     --secondary-foreground: 220 30% 5%;
     
     /* Interface Colors - Subdued Contrast */
-    --muted: 220 10% 94%;
-    --muted-foreground: 220 20% 18%; /* Sharp enough for reading */
+    --muted: 220 10% 96%;        /* Softer muted background */
+    --muted-foreground: 220 20% 25%; /* Subtler secondary text */
     
-    --accent: 40 35% 55% / 0.1;
+    --accent: 40 35% 55% / 0.08;
     --accent-foreground: 220 20% 10%;
     
     --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.12;
-    --input: 220 20% 10% / 0.08;
-    --ring: 40 45% 45% / 0.4;
+    --border: 220 20% 10% / 0.04; /* Reduced from 0.12 - almost invisible */
+    --input: 220 20% 10% / 0.05;
+    --ring: 40 45% 45% / 0.2;
     
     /* Design Tokens */
     --radius: 2rem;
@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 45% 2%;    /* Deepest Midnight Navy */
-    --foreground: 45 20% 96%;     /* Cleaner off-white */
+    --background: 220 45% 1.8%;    /* Even deeper, softer Navy */
+    --foreground: 45 20% 92%;     /* Softer off-white for reduced contrast */
     
-    --card: 220 40% 4%;           /* Slightly lighter Navy for cards */
-    --card-foreground: 45 20% 96%;
+    --card: 220 40% 3.5%;           /* Subtle card separation */
+    --card-foreground: 45 20% 92%;
     
     --popover: 220 40% 4%;
-    --popover-foreground: 45 20% 96%;
+    --popover-foreground: 45 20% 92%;
     
-    --primary: 40 35% 65%;        /* More elegant, less saturated Gold */
-    --primary-foreground: 220 45% 2%;
+    --primary: 40 30% 60%;        /* More atmospheric Gold */
+    --primary-foreground: 220 45% 1.8%;
     
-    --secondary: 220 30% 6%;      /* Deep Navy secondary */
-    --secondary-foreground: 40 35% 65%;
+    --secondary: 220 30% 5%;      
+    --secondary-foreground: 40 30% 60%;
     
-    --muted: 220 30% 8%;
-    --muted-foreground: 220 15% 75%; /* Improved legibility for muted text */
+    --muted: 220 30% 6%;
+    --muted-foreground: 220 10% 65%; /* Subtler secondary text in dark mode */
     
-    --accent: 40 35% 65% / 0.12;
-    --accent-foreground: 40 35% 65%;
+    --accent: 40 30% 60% / 0.08;
+    --accent-foreground: 40 30% 60%;
     
-    --destructive: 0 80% 60%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 25% 12%;        /* Subtle but visible borders */
-    --input: 220 25% 12%;
-    --ring: 40 35% 65% / 0.4;
+    --border: 220 25% 10% / 0.08;  /* Subtler dark borders */
+    --input: 220 25% 10% / 0.08;
+    --ring: 40 30% 60% / 0.2;
     
-    --shadow-premium: 0 30px 100px -20px rgba(0, 0, 0, 0.6);
+    --shadow-premium: 0 30px 120px -30px rgba(0, 0, 0, 0.8);
   }
 
   .high-contrast {
@@ -161,41 +161,42 @@
   }
 
   h1, .h1 {
-    @apply font-display font-light uppercase tracking-[0.15em] text-primary;
-    font-size: clamp(2rem, 8vw, 6rem);
-    line-height: 1.1;
+    @apply font-display font-light uppercase tracking-[0.2em] text-primary;
+    font-size: clamp(2.2rem, 9vw, 6.5rem);
+    line-height: 1.05;
+    filter: blur(0.1px); /* Subtlest softening */
   }
 
   h2, .h2 {
-    @apply font-display font-light uppercase tracking-[0.12em] text-primary/95;
-    font-size: clamp(1.5rem, 6vw, 3.8rem);
-    line-height: 1.2;
+    @apply font-display font-light uppercase tracking-[0.15em] text-primary/80;
+    font-size: clamp(1.6rem, 7vw, 4rem);
+    line-height: 1.15;
   }
 
   h3, .h3 {
-    @apply font-display font-light tracking-[0.06em] text-primary/90;
-    font-size: clamp(1.25rem, 4vw, 2.4rem);
-    line-height: 1.3;
+    @apply font-display font-light tracking-[0.1em] text-primary/70;
+    font-size: clamp(1.3rem, 5vw, 2.6rem);
+    line-height: 1.25;
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/90;
-    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
-    line-height: 1.7;
-    max-width: 80ch;
+    @apply font-ui font-normal text-foreground/75;
+    font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+    line-height: 1.75;
+    max-width: 75ch;
   }
 
   .dark p, .dark .body-text {
-    @apply text-foreground/85;
+    @apply text-foreground/70;
   }
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/20 max-w-[65ch] mx-auto;
-    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
-    line-height: 1.8;
-    letter-spacing: 0.01em;
-    font-weight: 350;
+    @apply font-reader text-foreground selection:bg-primary/10 max-w-[60ch] mx-auto;
+    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+    line-height: 1.9;
+    letter-spacing: 0.015em;
+    font-weight: 300;
     font-variant-numeric: oldstyle-nums;
   }
 
@@ -266,25 +267,22 @@
   }
 
   .premium-card {
-    @apply bg-card/25 backdrop-blur-3xl border border-primary/[0.03] transition-all relative overflow-hidden shadow-premium;
+    @apply bg-card/[0.15] backdrop-blur-2xl border-none transition-all relative overflow-hidden shadow-premium;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
   }
 
-  .dark .premium-card {
-    @apply border-white/[0.03] bg-white/[0.01] shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.03)];
-  }
 
   .premium-card-interactive {
     @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.08)] -translate-y-1.5;
+    @apply bg-primary/[0.005] shadow-[0_60px_140px_-30px_rgba(0,0,0,0.06)] -translate-y-2;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.4)] border-white/[0.08];
+    @apply shadow-[0_60px_140px_-30px_rgba(0,0,0,0.4)];
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
@@ -317,7 +315,7 @@
   }
 
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 h-14 font-medium uppercase tracking-[0.3em] text-[9px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 border border-transparent transition-all duration-700;
+    @apply relative overflow-hidden px-10 py-5 h-16 font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-5 active:scale-[0.98] disabled:opacity-20 border-none transition-all duration-1000;
     border-radius: 9999px;
   }
 
