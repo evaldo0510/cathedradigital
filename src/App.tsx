@@ -187,12 +187,12 @@ const AppLayout: React.FC = () => {
       document.documentElement.classList.remove('dark');
     }
     
-190:     if (settings.reduceAnimations) {
-191:       document.documentElement.classList.add('reduce-motion');
-192:     } else {
-193:       document.documentElement.classList.remove('reduce-motion');
-194:     }
-195:   }, [settings.theme, settings.reduceAnimations]);
+    if (settings.reduceAnimations) {
+      document.documentElement.classList.add('reduce-motion');
+    } else {
+      document.documentElement.classList.remove('reduce-motion');
+    }
+  }, [settings.theme, settings.reduceAnimations]);
 
   // Enable automatic accessibility check
   useA11yGuard(true);
