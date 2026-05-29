@@ -116,7 +116,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                       className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                        <SacredImage src={user.avatar} alt={user.name} className="w-full h-full" priority />
                       ) : (
                         <Icons.User className="w-5 h-5 opacity-70" />
                       )}
