@@ -282,8 +282,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-3.5 h-3.5" />} />
               </div>
 
-              <div className="flex items-center justify-between mb-16 opacity-40">
-                <div className="flex items-center gap-6">
+              <div className="flex items-center justify-between mb-10 md:mb-16 opacity-40">
+                <div className="flex items-center gap-4 md:gap-6">
                   <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
                     <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
                   </div>
