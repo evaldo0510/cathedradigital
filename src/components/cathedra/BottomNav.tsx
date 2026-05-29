@@ -69,7 +69,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/10 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
     )}
   >
     {isActive && (
