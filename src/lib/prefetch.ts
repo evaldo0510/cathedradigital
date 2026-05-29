@@ -27,10 +27,6 @@ const routeImports: Record<string, () => Promise<any>> = {
 
 export function prefetchRoute(route: string) {
   if (prefetched.has(route)) return;
-  if ('connection' in navigator) {
-    const connection = (navigator as any).connection;
-    if (connection?.saveData || /2g/.test(connection?.effectiveType || '')) return;
-  }
   const loader = routeImports[route];
   if (loader) {
     prefetched.add(route);
@@ -47,11 +43,8 @@ export function prefetchRoute(route: string) {
 export function prefetchCoreModules() {
   // Skip on save-data mode
   if ('connection' in navigator && (navigator as any).connection?.saveData) return;
-  const isNarrowViewport = window.matchMedia('(max-width: 767px)').matches;
-  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-  if (isNarrowViewport || !hasFinePointer) return;
 
-  const coreRoutes = ['/hoje', '/bible', '/catechism'];
+  const coreRoutes = ['/dashboard', '/hoje', '/bible', '/catechism', '/jornadas', '/biblioteca', '/community', '/profile'];
   let i = 0;
   const prefetchNext = () => {
     if (i < coreRoutes.length) {

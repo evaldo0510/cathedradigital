@@ -4,11 +4,9 @@ import App from "./App.tsx";
 import "./index.css";
 import { prefetchCoreModules } from "./lib/prefetch";
 import { registerSW } from 'virtual:pwa-register';
-const initTelemetry = () => {
-  if (import.meta.env.VITE_SENTRY_DSN) {
-    import("./lib/sentry").then(({ initSentry }) => initSentry());
-  }
-};
+import { initSentry } from "./lib/sentry";
+
+initSentry();
 
 
 // Guard: unregister service workers in preview/iframe contexts
@@ -47,14 +45,5 @@ createRoot(document.getElementById("root")!).render(
   </React.StrictMode>
 );
 
-// Defer non-critical work until after first paint
-const scheduleIdle = (task: () => void) => {
-  if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(task, { timeout: 5000 });
-  } else {
-    globalThis.setTimeout(task, 2500);
-  }
-};
-
-scheduleIdle(initTelemetry);
-scheduleIdle(prefetchCoreModules);
+// Prefetch core modules after initial render
+prefetchCoreModules();

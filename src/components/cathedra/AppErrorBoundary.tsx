@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Icons } from '../../constants';
+import * as Sentry from "@sentry/react";
 
 
 interface Props {
@@ -22,11 +23,12 @@ class AppErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
-    if (import.meta.env.VITE_SENTRY_DSN) {
-      import('@/lib/sentry').then(({ captureException }) => {
-        captureException(error, { componentStack: errorInfo.componentStack, ...errorInfo });
-      });
-    }
+    Sentry.captureException(error, { 
+      extra: { 
+        componentStack: errorInfo.componentStack,
+        ...errorInfo 
+      } 
+    });
   }
 
   public render() {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const LogosAI = React.lazy(() => import('./LogosAI'));
+import LogosAI from './LogosAI';
 
 export const GlobalLogosAI: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,18 +21,14 @@ export const GlobalLogosAI: React.FC = () => {
     return () => window.removeEventListener('open-logos-ai' as any, handleOpen);
   }, []);
 
-  if (!isOpen) return null;
-
   return (
-    <React.Suspense fallback={null}>
-      <LogosAI 
-        variant="drawer"
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        initialQuery={prompt}
-        context={context}
-        type={type}
-      />
-    </React.Suspense>
+    <LogosAI 
+      variant="drawer"
+      isOpen={isOpen}
+      onClose={() => setIsOpen(false)}
+      initialQuery={prompt}
+      context={context}
+      type={type}
+    />
   );
 };

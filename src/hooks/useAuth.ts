@@ -1,8 +1,10 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
+import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { setSentryUser } from '@/lib/sentry';
 
 
 export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -161,10 +163,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .update({ badges: updatedBadges })
           .eq('id', currentUser.id);
 
-        // Celebrate only when needed; keep confetti out of initial load.
-        import('canvas-confetti').then(({ default: confetti }) => {
-          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
-        });
+        // Celebrate!
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
         for (const id of newBadgeIds) {
           const badge = getBadgeById(id);
           if (badge) {
@@ -186,11 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setUser(currentUser);
-    if (currentUser && import.meta.env.VITE_SENTRY_DSN) {
-      import('@/lib/sentry').then(({ setSentryUser }) => {
-        setSentryUser({ id: currentUser.id, email: currentUser.email });
-      });
-    }
+    setSentryUser(currentUser ? { id: currentUser.id, email: currentUser.email } : null);
     setLoading(true);
 
     if (!currentUser) {
