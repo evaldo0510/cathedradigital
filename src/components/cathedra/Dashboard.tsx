@@ -119,10 +119,10 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   }
 
   return (
-    <div className="app-container desktop-layout py-20 md:py-32">
+    <div className="app-container desktop-layout py-10 md:py-32">
       <div className="desktop-main stack-spacing">
       <FadeUp>
-        <div className="text-center space-y-10">
+        <div className="text-center space-y-6 md:space-y-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -133,11 +133,11 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <Icons.Logo className="w-20 h-20 text-primary" variant="blue" />
             </div>
           </motion.div>
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/60">
               Cathedra {t('digital')}
             </p>
-            <h1 className="text-6xl md:text-8xl font-display font-medium text-primary leading-[1] tracking-tighter">
+            <h1 className="text-4xl md:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter">
               {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
             </h1>
             {spProfile && (
@@ -145,16 +145,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-10 flex-wrap pt-8">
+          <div className="flex items-center justify-center gap-6 md:gap-10 flex-wrap pt-4 md:pt-8">
             {streak > 0 && (
-              <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-secondary/[0.03] border border-secondary/10 transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
-                <Icons.Zap className="w-5 h-5 text-secondary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
+              <div className="flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-secondary/[0.03] border border-secondary/10 transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
+                <Icons.Zap className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
+                <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
               </div>
             )}
-            <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-primary/[0.01] border border-primary/10 transition-all hover:bg-primary/[0.03] hover:-translate-y-1">
-              <Icons.Star className="w-5 h-5 text-primary" />
-              <span className="text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
+            <div className="flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-primary/[0.01] border border-primary/10 transition-all hover:bg-primary/[0.03] hover:-translate-y-1">
+              <Icons.Star className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+              <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
             </div>
           </div>
         </div>
@@ -183,7 +183,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.1}>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
           {MAIN_DOORS.map((door, idx) => (
             <HomeCard
               key={idx}

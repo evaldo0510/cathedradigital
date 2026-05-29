@@ -224,9 +224,9 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-6 md:p-14 lg:p-20 space-y-12 md:space-y-24 max-w-7xl mx-auto">
+      <div className="relative z-10 p-4 md:p-14 lg:p-20 space-y-10 md:space-y-24 max-w-7xl mx-auto">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-12 border-b border-primary/[0.03] pb-8 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.5em] text-primary/60 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -320,10 +320,10 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Content Sections */}
-        <div className="grid grid-cols-1 gap-16 md:gap-32">
+        <div className="grid grid-cols-1 gap-12 md:gap-32">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-6 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+          <section className="space-y-5 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
             <h4 id="lectio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
@@ -333,17 +333,17 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-2xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary selection:bg-primary/5 tracking-tight px-2">
+              <blockquote className="text-xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary selection:bg-primary/5 tracking-tight px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-8 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </button>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-6 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+          <section className="space-y-5 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
             <h4 id="meditatio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
@@ -353,15 +353,15 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-lg md:text-2xl lg:text-3xl leading-relaxed text-foreground/90 font-serif italic selection:bg-primary/5 px-4">
+              <p className="text-base md:text-2xl lg:text-3xl leading-relaxed text-foreground/90 font-serif italic selection:bg-primary/5 px-4">
                 {ritual.reflection}
               </p>
             </button>
           </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-20 items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-6 md:space-y-12 text-center p-8 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[2.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="traditio-heading">
+            <section className="space-y-5 md:space-y-12 text-center p-6 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[1.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="traditio-heading">
               <h4 id="traditio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
@@ -371,7 +371,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(75)}
                 aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-base md:text-xl lg:text-2xl leading-relaxed text-foreground/80 font-serif tracking-tight selection:bg-primary/5 px-2">
+                <p className="text-sm md:text-xl lg:text-2xl leading-relaxed text-foreground/80 font-serif tracking-tight selection:bg-primary/5 px-2">
                   {ritual?.catechism?.text || ''}
                 </p>
                 <p className="mt-8 md:mt-10 text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
@@ -381,7 +381,7 @@ const RitualDoDia: React.FC = () => {
             </section>
 
             {/* 4. Prayer */}
-            <section className="space-y-6 md:space-y-12 text-center p-8 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[2.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="oratio-heading">
+            <section className="space-y-5 md:space-y-12 text-center p-6 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[1.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="oratio-heading">
               <h4 id="oratio-heading" className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.6em] text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(
@@ -391,7 +391,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(100)}
                 aria-label={`Oração do dia. Clique para marcar como concluída.`}
               >
-                <p className="text-xl md:text-3xl lg:text-4xl leading-tight text-primary font-serif italic selection:bg-primary/5">
+                <p className="text-lg md:text-3xl lg:text-4xl leading-tight text-primary font-serif italic selection:bg-primary/5">
                   {ritual?.prayer || ''}
                 </p>
               </button>
@@ -400,7 +400,7 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-10 flex flex-col sm:flex-row items-center justify-between gap-8 border-t border-primary/10">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-primary/10">
           <AudioContentPlayer
             text={audioText}
             title="Ouvir Ritual Completo"
