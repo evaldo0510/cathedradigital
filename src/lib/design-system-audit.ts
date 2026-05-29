@@ -172,8 +172,20 @@ export const saveAuditResult = async (runId: string, result: AuditResult) => {
  * Generates and downloads a JSON report
  */
 export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 'json') => {
+  const currentTheme = document.documentElement.classList.contains('dark') ? 'Escuro' : 'Claro';
+  const isHighContrast = document.documentElement.classList.contains('high-contrast') ? 'Sim' : 'Não';
+  
   if (format === 'json') {
-    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const reportData = {
+      ...result,
+      meta: {
+        theme: currentTheme,
+        highContrast: isHighContrast,
+        browser: navigator.userAgent,
+        screenSize: `${window.innerWidth}x${window.innerHeight}`
+      }
+    };
+    const blob = new Blob([JSON.stringify(reportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const downloadAnchorNode = document.createElement('a');
     downloadAnchorNode.setAttribute("href", url);
@@ -186,56 +198,87 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
     const doc = new jsPDF() as jsPDFWithAutoTable;
     
     // Add Header
-    doc.setFontSize(22);
-    doc.text('Cathedra Digital - Design System Audit', 20, 20);
+    doc.setFontSize(24);
+    doc.setTextColor(181, 139, 58); // Sovereign Gold
+    doc.text('Relatório de Conformidade - Cathedra Digital', 20, 25);
     
-    doc.setFontSize(12);
-    doc.text(`Pagina: ${result.page}`, 20, 30);
-    doc.text(`Data: ${new Date(result.timestamp).toLocaleString()}`, 20, 37);
-    doc.text(`Conformidade WCAG: ${result.wcagScore}%`, 20, 44);
-    doc.text(`Status: ${result.status.toUpperCase()}`, 20, 51);
+    doc.setDrawColor(181, 139, 58);
+    doc.line(20, 30, 190, 30);
     
-    // Contrast Issues Table
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Gerado em: ${new Date(result.timestamp).toLocaleString()}`, 20, 38);
+    
+    // Metadata Section
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Informações do Ambiente', 20, 50);
+    
+    const metaData = [
+      ['Página Auditada', result.page],
+      ['Tema Ativo', currentTheme],
+      ['Alto Contraste', isHighContrast],
+      ['Score WCAG', `${result.wcagScore}%`],
+      ['Status Geral', result.status.toUpperCase()]
+    ];
+    
+    doc.autoTable({
+      startY: 55,
+      body: metaData,
+      theme: 'plain',
+      styles: { fontSize: 10, cellPadding: 2 }
+    });
+    
+    let currentY = (doc as any).lastAutoTable.finalY + 15;
+
+    // Contrast Issues Detailed
     if (result.contrastIssues.length > 0) {
       doc.setFontSize(16);
-      doc.text('Problemas de Contraste', 20, 65);
+      doc.setTextColor(181, 139, 58);
+      doc.text('Análise Detalhada de Contraste', 20, currentY);
       
       const tableData = result.contrastIssues.map(issue => [
         issue.element,
         issue.ratio.toFixed(2),
         issue.expected.toFixed(2),
         issue.level,
-        issue.suggestion || '-'
+        issue.suggestion || 'Revisar tokens de cores.'
       ]);
       
       doc.autoTable({
-        startY: 70,
-        head: [['Elemento', 'Ratio Atual', 'Esperado', 'Nivel', 'Sugestao']],
+        startY: currentY + 5,
+        head: [['Componente', 'Ratio', 'Min', 'Nível', 'Recomendação']],
         body: tableData,
         theme: 'striped',
-        headStyles: { fillColor: [181, 139, 58] } // Sovereign Gold
+        headStyles: { fillColor: [181, 139, 58], textColor: [255, 255, 255] },
+        styles: { fontSize: 8 }
       });
-    } else {
-      doc.setFontSize(14);
-      doc.setTextColor(0, 150, 0);
-      doc.text('Nenhum problema de contraste detectado.', 20, 70);
-    }
-    
-    // Typography Errors
-    if (result.typographyErrors.length > 0) {
-      const finalY = (doc as any).lastAutoTable?.finalY || 80;
-      doc.setFontSize(16);
-      doc.setTextColor(0, 0, 0);
-      doc.text('Erros de Tipografia', 20, finalY + 20);
       
-      doc.autoTable({
-        startY: finalY + 25,
-        head: [['Descricao do Erro']],
-        body: result.typographyErrors.map(err => [err]),
-        theme: 'grid'
-      });
+      currentY = (doc as any).lastAutoTable.finalY + 15;
     }
     
-    doc.save(`cathedra_a11y_report_${result.page.replace(/\//g, '_')}.pdf`);
+    // Recommendations Section
+    doc.setFontSize(16);
+    doc.setTextColor(181, 139, 58);
+    doc.text('Recomendações Técnicas', 20, currentY);
+    
+    const recommendations = [];
+    if (result.wcagScore < 100) {
+      recommendations.push(['Contraste', 'Substituir cores de texto por variantes mais escuras (no modo claro) ou mais claras (no modo escuro) do Design System.']);
+      recommendations.push(['Tipografia', 'Garantir que todos os componentes utilizam a fonte Cinzel para títulos e Inter para corpo de texto.']);
+      recommendations.push(['Tokens', 'Evitar o uso de estilos inline e cores hexadecimais manuais fora do sacredPalette.ts.']);
+    } else {
+      recommendations.push(['Excelente', 'O sistema mantém conformidade total com os padrões estabelecidos. Continue utilizando os tokens globais.']);
+    }
+    
+    doc.autoTable({
+      startY: currentY + 5,
+      head: [['Categoria', 'Ação Corretiva']],
+      body: recommendations,
+      theme: 'grid',
+      headStyles: { fillColor: [80, 80, 80] }
+    });
+    
+    doc.save(`cathedra_a11y_detailed_report_${result.page.replace(/\//g, '_')}.pdf`);
   }
 };
