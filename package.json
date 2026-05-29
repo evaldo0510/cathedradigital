@@ -23,7 +23,7 @@
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
     "test:spacing-audit": "bun run scripts/audit-spacing.ts",
-    "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN",
+    "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --playwright",
     "generate:seo": "bun run scripts/generate-sitemap.ts"
   },
   "dependencies": {
