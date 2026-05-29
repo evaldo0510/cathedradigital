@@ -173,7 +173,12 @@
   }
 
   .reading-scroll-down .bottom-nav-reading-auto-hide {
-    transform: translateY(100%);
+    transform: translateY(140%);
+  }
+
+  .reveal-chrome .header-reading-auto-hide,
+  .reveal-chrome .bottom-nav-reading-auto-hide {
+    transform: translateY(0) !important;
   }
 
   [data-line-spacing="tight"] .reader-text { line-height: 1.6 !important; }
@@ -184,19 +189,19 @@
   [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
   [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
 
-  [data-side-margins="standard"] .reader-container { max-width: var(--reader-column-width, 80ch) !important; padding-left: 1.25rem; padding-right: 1.25rem; }
-  [data-side-margins="comfortable"] .reader-container { max-width: var(--reader-column-width, 70ch) !important; padding-left: 1.75rem; padding-right: 1.75rem; }
-  [data-side-margins="wide"] .reader-container { max-width: var(--reader-column-width, 60ch) !important; padding-left: 2.25rem; padding-right: 2.25rem; }
+  [data-side-margins="standard"] .reader-container { max-width: var(--reader-column-width, 80ch) !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  [data-side-margins="comfortable"] .reader-container { max-width: var(--reader-column-width, 70ch) !important; padding-left: 2.5rem !important; padding-right: 2.5rem !important; }
+  [data-side-margins="wide"] .reader-container { max-width: var(--reader-column-width, 60ch) !important; padding-left: 3.5rem !important; padding-right: 3.5rem !important; }
 
 
   @screen md {
-    [data-side-margins="standard"] .reader-container { padding-left: 2rem; padding-right: 2rem; }
-    [data-side-margins="comfortable"] .reader-container { padding-left: 6rem; padding-right: 6rem; }
-    [data-side-margins="wide"] .reader-container { padding-left: 12rem; padding-right: 12rem; }
+    [data-side-margins="standard"] .reader-container { padding-left: 2rem !important; padding-right: 2rem !important; }
+    [data-side-margins="comfortable"] .reader-container { padding-left: 6rem !important; padding-right: 6rem !important; }
+    [data-side-margins="wide"] .reader-container { padding-left: 12rem !important; padding-right: 12rem !important; }
   }
 
-  .contrast-soft .reader-text { filter: contrast(0.9) brightness(1.05); }
-  .contrast-high .reader-text { filter: contrast(1.2) saturate(1.1); }
+  .contrast-soft .reader-text { opacity: 0.85; filter: contrast(0.95) brightness(1.02); }
+  .contrast-high .reader-text { opacity: 1; filter: contrast(1.1) brightness(0.98); font-weight: 400; }
 
 }
 

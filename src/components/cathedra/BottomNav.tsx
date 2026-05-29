@@ -120,7 +120,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const items = [
     { label: t('bible') || 'Bíblia', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: t('catechism') || 'Catecismo', icon: Icons.Catechism, route: AppRoute.CATECHISM },
-    { label: 'Magistério', icon: Icons.ScrollText, route: AppRoute.MAGISTERIUM },
+    { label: 'Leitura', icon: Icons.Settings, onClick: () => window.dispatchEvent(new CustomEvent('open-reading-preferences')) },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
     { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
   ];

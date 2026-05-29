@@ -33,6 +33,7 @@ import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/ca
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
+const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
@@ -182,6 +183,7 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('change-lang', handleGlobalLang);
   }, [setLang]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
+  const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     const saved = localStorage.getItem('cathedra_sidebar_open');
     return saved === 'true';
@@ -224,6 +226,13 @@ const AppLayout: React.FC = () => {
   }, []);
   const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
+  const handleOpenReadingPreferences = useCallback(() => setShowReadingPreferences(true), []);
+  const handleCloseReadingPreferences = useCallback(() => setShowReadingPreferences(false), []);
+
+  useEffect(() => {
+    window.addEventListener('open-reading-preferences', handleOpenReadingPreferences);
+    return () => window.removeEventListener('open-reading-preferences', handleOpenReadingPreferences);
+  }, [handleOpenReadingPreferences]);
 
   useEffect(() => {
     window.addEventListener('open-a11y-settings', handleOpenA11y);
@@ -441,6 +450,10 @@ const AppLayout: React.FC = () => {
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 
             onClose={handleCloseA11y}
+          />
+          <ReadingPreferencesPanel 
+            isOpen={showReadingPreferences} 
+            onClose={handleCloseReadingPreferences} 
           />
           <CommandCenter />
           <PWAInstallPrompt />
