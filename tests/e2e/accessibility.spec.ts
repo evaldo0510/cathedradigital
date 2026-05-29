@@ -14,6 +14,13 @@ const ROUTES = [
   '/santos',
 ];
 
+const A11Y_REPORTS_DIR = path.join(process.cwd(), 'tests/e2e/a11y-reports');
+
+// Ensure reports directory exists
+if (!fs.existsSync(A11Y_REPORTS_DIR)) {
+  fs.mkdirSync(A11Y_REPORTS_DIR, { recursive: true });
+}
+
 test.describe('Global Accessibility & Keyboard Navigation Audit', () => {
   for (const route of ROUTES) {
     test(`Comprehensive audit of ${route}`, async ({ page }, testInfo) => {
@@ -25,11 +32,14 @@ test.describe('Global Accessibility & Keyboard Navigation Audit', () => {
         .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice'])
         .analyze();
       
-      // Attach report to test artifacts
-      const reportPath = path.join(testInfo.outputDir, `a11y-report-${route.replace(/\//g, 'home')}.json`);
-      fs.writeFileSync(reportPath, JSON.stringify(accessibilityScanResults, null, 2));
+      // Save report for GitHub Actions artifacts
+      const routeName = route === '/' ? 'home' : route.replace(/\//g, '');
+      const reportJsonPath = path.join(A11Y_REPORTS_DIR, `a11y-report-${routeName}.json`);
+      fs.writeFileSync(reportJsonPath, JSON.stringify(accessibilityScanResults, null, 2));
+
+      // Also attach to testInfo for Playwright HTML report
       await testInfo.attach('accessibility-scan-results', {
-        path: reportPath,
+        body: JSON.stringify(accessibilityScanResults, null, 2),
         contentType: 'application/json'
       });
 
