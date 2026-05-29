@@ -451,6 +451,10 @@ const AppLayout: React.FC = () => {
             isOpen={showA11ySettings} 
             onClose={handleCloseA11y}
           />
+          <ReadingPreferencesPanel 
+            isOpen={showReadingPreferences} 
+            onClose={handleCloseReadingPreferences} 
+          />
           <CommandCenter />
           <PWAInstallPrompt />
         </Suspense>
