@@ -51,4 +51,55 @@ test.describe('BottomNav & SwipeNavigation - Reduced Motion', () => {
     const bibleItem = page.locator('button[aria-label="Bíblia"]');
     await expect(bibleItem).toHaveAttribute('aria-current', 'page');
   });
+
+  test('should navigate via keyboard without animations when reduced motion is active', async ({ page }) => {
+    await page.goto('/?lang=pt');
+    
+    // Ensure we are on the page
+    const hojeItem = page.locator('button[aria-label="Hoje"]');
+    await expect(hojeItem).toHaveAttribute('aria-current', 'page');
+
+    // Focus "Hoje" first to start keyboard navigation from a known point
+    await hojeItem.focus();
+    await expect(hojeItem).toBeFocused();
+
+    // Tab to "Bíblia"
+    await page.keyboard.press('Tab');
+    
+    const bibleItem = page.locator('button[aria-label="Bíblia"]');
+    await expect(bibleItem).toBeFocused();
+
+    // Press Enter to navigate
+    await page.keyboard.press('Enter');
+
+    // Verify navigation and aria-current
+    await expect(page).toHaveURL(/\/bible/);
+    await expect(bibleItem).toHaveAttribute('aria-current', 'page');
+    await expect(hojeItem).not.toHaveAttribute('aria-current', 'page');
+
+    // Verify that the active background and dot are present immediately without transition
+    const activeBg = page.getByTestId('bottom-nav-active-bg');
+    const activeDot = page.getByTestId('bottom-nav-dot');
+    
+    await expect(activeBg).toBeVisible();
+    await expect(activeDot).toBeVisible();
+
+    // Check computed styles to ensure duration is 0
+    const navStyles = await page.locator('nav.bottom-nav').evaluate((el) => {
+      return window.getComputedStyle(el).transitionDuration;
+    });
+    // It should be "0s" because of our duration-0 class
+    expect(navStyles).toBe('0s');
+
+    // Tab to "Catecismo"
+    await page.keyboard.press('Tab');
+    const catechismItem = page.locator('button[aria-label="Catecismo"]');
+    await expect(catechismItem).toBeFocused();
+    
+    await page.keyboard.press(' '); // Space
+    
+    await expect(page).toHaveURL(/\/catechism/);
+    await expect(catechismItem).toHaveAttribute('aria-current', 'page');
+    await expect(bibleItem).not.toHaveAttribute('aria-current', 'page');
+  });
 });

@@ -75,6 +75,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     {isActive && (
       <motion.div
         layoutId="bottom-nav-active-bg"
+        data-testid="bottom-nav-active-bg"
         className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
       />
@@ -120,6 +121,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     {isActive && (
       <motion.div 
         layoutId="bottom-nav-dot"
+        data-testid="bottom-nav-dot"
         className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
@@ -151,7 +153,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   return (
     <nav 
-      className="fixed bottom-8 left-8 right-8 z-[160] lg:hidden h-14 bg-background/20 backdrop-blur-3xl border border-primary/5 rounded-full shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2 overflow-hidden transition-all duration-1000" 
+      className={cn(
+        "fixed bottom-8 left-8 right-8 z-[160] lg:hidden h-14 bg-background/20 backdrop-blur-3xl border border-primary/5 rounded-full shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2 overflow-hidden transition-all",
+        shouldReduceMotion ? "duration-0" : "duration-1000"
+      )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
