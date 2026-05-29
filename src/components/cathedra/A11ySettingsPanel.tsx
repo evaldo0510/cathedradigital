@@ -297,15 +297,21 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                         <span>Ajustes de Contraste Necessários</span>
                       </div>
                       <ul className="space-y-2">
-                        {auditResult.contrastIssues.slice(0, 3).map((issue, idx) => (
-                          <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic">
-                            Elemento: <span className="font-bold">{issue.element}</span> - Ratio: {issue.ratio} (Min: {issue.expected})
-                            <a href={`/design-system?search=contrast`} className="ml-2 underline text-amber-700/50 hover:text-amber-700">Ver Token</a>
+                        {auditResult.contrastIssues.slice(0, 5).map((issue, idx) => (
+                          <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic border-b border-amber-500/5 pb-2 last:border-0">
+                            <div className="flex justify-between items-start gap-2">
+                              <span>Elemento: <span className="font-bold">{issue.element}</span></span>
+                              <span className="font-black text-[8px] bg-amber-500/10 px-1 rounded">Ratio: {issue.ratio}</span>
+                            </div>
+                            <div className="text-[8px] text-amber-700/60 mt-0.5">
+                              {issue.suggestion}
+                            </div>
+                            <a href={`/design-system?search=contrast`} className="text-[7px] uppercase tracking-tighter underline text-amber-700/40 hover:text-amber-700 block mt-1">Ver Token</a>
                           </li>
                         ))}
-                        {auditResult.contrastIssues.length > 3 && (
-                          <li className="text-[8px] text-amber-600/40 uppercase font-bold tracking-widest pt-2">
-                            + {auditResult.contrastIssues.length - 3} outros problemas
+                        {auditResult.contrastIssues.length > 5 && (
+                          <li className="text-[8px] text-amber-600/40 uppercase font-bold tracking-widest pt-2 text-center">
+                            + {auditResult.contrastIssues.length - 5} problemas adicionais (veja relatório completo)
                           </li>
                         )}
                       </ul>
