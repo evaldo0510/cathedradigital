@@ -316,6 +316,8 @@ const Catechism: React.FC = () => {
   const [shouldAutoResume, setShouldAutoResume] = useState(() => !searchParams.get('p'));
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
+
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
