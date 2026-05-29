@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { chromaticConfig } from "@chromatic-com/playwright";
+// import { chromaticConfig } from "@chromatic-com/playwright";
 
 /**
  * Playwright configuration for E2E tests.
@@ -21,7 +21,7 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/report.json' }],
     ['list'],
     ['github'],
-    ["@chromatic-com/playwright", chromaticConfig],
+    // ["@chromatic-com/playwright", chromaticConfig],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
