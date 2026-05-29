@@ -502,7 +502,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {(isLoading || isTyping) && (
                 <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/10 p-6 rounded-premium-lg flex gap-3">
+                  <div className="bg-muted/10 p-4 md:p-6 rounded-premium-lg flex gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
