@@ -15,9 +15,9 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
     const { settings } = useReadingSettings();
     const sizeMap = {
       sm: 'px-8 h-12 text-[10px] md:text-[11px]',
-      md: 'px-10 h-16 text-[11px] md:text-[12px]',
-      lg: 'px-14 h-20 text-[12px] md:text-[14px]',
-      xl: 'px-20 h-28 text-[14px] md:text-[18px]',
+      md: 'px-10 h-14 text-[11px] md:text-[12px]',
+      lg: 'px-14 h-16 text-[12px] md:text-[14px]',
+      xl: 'px-20 h-20 text-[14px] md:text-[18px]',
     };
 
     const variantStyles = {
@@ -30,7 +30,8 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
     return (
       <motion.button
         ref={ref as any}
-        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.97 }}
+        whileHover={settings.reduceAnimations ? {} : { y: -2, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
         className={cn(
           variantStyles[variant],
           sizeMap[size],

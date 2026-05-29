@@ -29,27 +29,54 @@
 
 @layer base {
   :root {
-    --background: 45 40% 98.5%;   /* #FEFDFB Even cleaner off-white */
-    --foreground: 220 25% 8%;     /* #0F1115 Deeper, sharper Graphite */
+    /* Base Colors - Premium Off-White */
+    --background: 45 40% 98.8%;   /* #FEFDFB Cleaner off-white */
+    --foreground: 220 30% 6%;     /* #0D0F12 Deeper, sharper Graphite */
+    
     --card: 0 0% 100%;
-    --card-foreground: 220 25% 8%;
+    --card-foreground: 220 30% 6%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 8%;
-    --primary: 220 30% 5%;       /* #08090A Near black for maximum authority */
+    --popover-foreground: 220 30% 6%;
+    
+    /* Brand Colors - Sovereign Authority */
+    --primary: 220 30% 4%;       /* #070809 Near black */
     --primary-foreground: 45 40% 99%;
-    --secondary: 40 45% 45%;     /* #B58B3A Deeper, more saturated gold */
+    
+    --secondary: 40 45% 45%;     /* #B58B3A Deeper Sovereign Gold */
     --secondary-foreground: 220 30% 5%;
+    
+    /* Interface Colors - Subdued Contrast */
     --muted: 220 10% 94%;
-    --muted-foreground: 220 20% 15%; /* Much higher contrast than standard */
-
-    --accent: 40 35% 55% / 0.08;
+    --muted-foreground: 220 20% 18%; /* Sharp enough for reading */
+    
+    --accent: 40 35% 55% / 0.1;
     --accent-foreground: 220 20% 10%;
-    --destructive: 0 60% 50%;
+    
+    --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 100%;
+    
     --border: 220 20% 10% / 0.12;
-    --input: 220 20% 10% / 0.06;
-    --ring: 40 35% 55% / 0.4;
+    --input: 220 20% 10% / 0.08;
+    --ring: 40 45% 45% / 0.4;
+    
+    /* Design Tokens */
     --radius: 2rem;
+    --radius-lg: 2.5rem;
+    --radius-sm: 1.25rem;
+    
+    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.04);
+    --shadow-premium-hover: 0 40px 100px -30px rgba(0, 0, 0, 0.06);
+    
+    /* Spacing Scale - Premium Generous */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 1rem;     /* 16px */
+    --spacing-md: 2rem;     /* 32px */
+    --spacing-lg: 4rem;     /* 64px */
+    --spacing-xl: 8rem;     /* 128px */
+    --spacing-2xl: 12rem;   /* 192px */
+    
+    /* Sidebar Specifics */
     --sidebar-background: 45 40% 99%;
     --sidebar-foreground: 220 15% 12%;
     --sidebar-primary: 220 20% 10%;
@@ -60,192 +87,82 @@
     --sidebar-ring: 40 35% 55% / 0.4;
   }
 
-  /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 220 20% 6%;    /* #0D0F12 Deeper Desaturated Blue Graphite */
+    --background: 220 25% 4%;    /* #060709 Deep Blue Graphite */
     --foreground: 45 15% 95%;    /* #F5F4F2 Near-white */
-    --card: 220 20% 8%;
+    
+    --card: 220 25% 6%;
     --card-foreground: 45 15% 95%;
-    --popover: 220 20% 7%;
+    
+    --popover: 220 25% 5%;
     --popover-foreground: 45 15% 95%;
-    --primary: 40 40% 70%;       /* Brighter Gold for dark mode */
-    --primary-foreground: 220 20% 6%;
-    --secondary: 220 15% 12%;
+    
+    --primary: 40 40% 70%;       /* Luminous Sovereign Gold */
+    --primary-foreground: 220 25% 4%;
+    
+    --secondary: 220 15% 10%;
     --secondary-foreground: 40 40% 70%;
-    --muted: 220 20% 12%;
-    --muted-foreground: 220 15% 90%; 
-
+    
+    --muted: 220 20% 10%;
+    --muted-foreground: 220 15% 88%; 
+    
     --accent: 40 40% 70% / 0.15;
     --accent-foreground: 40 40% 70%;
+    
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 15%;
-    --input: 220 20% 15%;
+    
+    --border: 220 20% 14%;
+    --input: 220 20% 14%;
     --ring: 40 40% 70% / 0.5;
-    --sidebar-background: 220 20% 5%;
+    
+    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.4);
+    
+    --sidebar-background: 220 25% 3%;
     --sidebar-foreground: 45 15% 95%;
     --sidebar-primary: 40 40% 70%;
-    --sidebar-primary-foreground: 220 20% 6%;
-    --sidebar-accent: 220 20% 10%;
+    --sidebar-primary-foreground: 220 25% 4%;
+    --sidebar-accent: 220 20% 8%;
     --sidebar-accent-foreground: 45 15% 95%;
-    --sidebar-border: 220 20% 12%;
+    --sidebar-border: 220 20% 10%;
     --sidebar-ring: 40 40% 70% / 0.5;
   }
 
-  /* High Contrast Mode - Force maximum accessibility */
+  /* High Contrast Overlay (Always Active by Preference) */
   .high-contrast {
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
     --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 0%;
-    --secondary-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 0 0% 0%;
-    --muted: 0 0% 90%;
     --muted-foreground: 0 0% 0% !important;
+    --border: 0 0% 0% / 0.3;
     --shadow-premium: none;
     --shadow-premium-hover: none;
-    --primary-rgb: 0, 0, 0;
   }
 
   .high-contrast.dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    --primary: 60 100% 50%; /* Pure Yellow */
+    --primary: 60 100% 50%; /* Pure Gold/Yellow */
     --primary-foreground: 0 0% 0%;
-    --secondary: 60 100% 50%;
-    --secondary-foreground: 0 0% 0%;
-    --border: 0 0% 100%;
-    --input: 0 0% 100%;
-    --ring: 60 100% 50%;
-    --muted: 0 0% 20%;
     --muted-foreground: 0 0% 100% !important;
-    --primary-rgb: 255, 255, 255;
+    --border: 0 0% 100% / 0.3;
   }
 
-  .high-contrast * {
-    border-color: currentColor !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
+  /* Microinteractions - Cubic Bezier Signature */
+  .transition-premium {
+    transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .high-contrast .text-primary\/60,
-  .high-contrast .text-primary\/40,
-  .high-contrast .text-muted-foreground\/60,
-  .high-contrast .text-muted-foreground\/40 {
-    opacity: 1 !important;
-    color: currentColor !important;
+  .transition-premium-slow {
+    transition-all duration-1400 cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .visible-focus-mode *:focus-visible {
-    outline: 4px solid hsl(var(--primary)) !important;
-    outline-offset: 4px !important;
-    box-shadow: 0 0 0 8px rgba(var(--primary-rgb), 0.2) !important;
-    z-index: 50;
-  }
-
-  .reduce-animations *,
-  .reduce-animations *::before,
-  .reduce-animations *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  /* Spacing and Contrast Settings */
-  .header-reading-auto-hide {
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .bottom-nav-reading-auto-hide {
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .reading-scroll-down .header-reading-auto-hide {
-    transform: translateY(-100%);
-  }
-
-  .reading-scroll-down .bottom-nav-reading-auto-hide {
-    transform: translateY(140%);
-  }
-
-  .reveal-chrome .header-reading-auto-hide,
-  .reveal-chrome .bottom-nav-reading-auto-hide {
-    transform: translateY(0) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-
-  /* Subtle reading progress bar */
-  .subtle-reading-progress {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: transparent;
-    z-index: 200;
-    pointer-events: none;
-  }
-
-  .subtle-reading-progress-inner {
-    height: 100%;
-    background: hsl(var(--primary));
-    opacity: 0.6;
-    transition: width 0.3s ease-out;
-    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
-  }
-
-  /* Premium tactile feedback */
-  .tap-premium {
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
-  }
-
-  .tap-premium:active {
-    transform: scale(0.96);
-    background-color: hsl(var(--primary) / 0.08);
-  }
-
-  .tap-premium:focus-visible {
-    outline: 2px solid hsl(var(--primary) / 0.3);
-    outline-offset: 2px;
-  }
-
-
-  [data-line-spacing="tight"] .reader-text { line-height: 1.6 !important; }
-  [data-line-spacing="normal"] .reader-text { line-height: 2.1 !important; }
-  [data-line-spacing="wide"] .reader-text { line-height: 2.4 !important; }
-
-  [data-letter-spacing="tight"] .reader-text { letter-spacing: -0.02em !important; }
-  [data-letter-spacing="normal"] .reader-text { letter-spacing: normal !important; }
-  [data-letter-spacing="wide"] .reader-text { letter-spacing: 0.05em !important; }
-
-  [data-side-margins="standard"] .reader-container { max-width: var(--reader-column-width, 80ch) !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
-  [data-side-margins="comfortable"] .reader-container { max-width: var(--reader-column-width, 70ch) !important; padding-left: 2.5rem !important; padding-right: 2.5rem !important; }
-  [data-side-margins="wide"] .reader-container { max-width: var(--reader-column-width, 60ch) !important; padding-left: 3.5rem !important; padding-right: 3.5rem !important; }
-
-
-  @screen md {
-    [data-side-margins="standard"] .reader-container { padding-left: 2rem !important; padding-right: 2rem !important; }
-    [data-side-margins="comfortable"] .reader-container { padding-left: 6rem !important; padding-right: 6rem !important; }
-    [data-side-margins="wide"] .reader-container { padding-left: 12rem !important; padding-right: 12rem !important; }
-  }
-
-  .contrast-soft .reader-text { opacity: 0.9; filter: contrast(1.0) brightness(1.0); }
-  .contrast-high .reader-text { opacity: 1; filter: contrast(1.15) brightness(0.96); font-weight: 400; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.05); }
-  
-  /* Standard/Normal contrast is now sharper by default */
-  .reader-text {
-    opacity: 1 !important;
-    filter: contrast(1.05) brightness(0.98);
-  }
+  /* Typography System */
+  .font-display { font-family: 'Cinzel', serif; }
+  .font-serif { font-family: 'Playfair Display', serif; }
+  .font-reader { font-family: 'Merriweather', serif; }
+  .font-ui { font-family: 'Inter', sans-serif; }
 
 }
 
@@ -255,249 +172,111 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-  }
-
-  *:focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background transition-all duration-300;
-  }
-
-
-  /* Refine all Lucide icons for a more professional, premium appearance */
-  svg.lucide {
-    stroke-width: 1.8; /* Slightly thicker for better visibility (was 1.5) */
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  /* Professional hover state for icons within interactive elements */
-  button:hover svg.lucide, 
-  a:hover svg.lucide,
-  .hover-icon-effect:hover svg.lucide {
-    stroke-width: 1.75;
   }
 
   html, body {
-    @apply h-full overflow-x-hidden;
-    font-size: 14px;
-    -webkit-text-size-adjust: 100%;
-    @screen sm {
-      font-size: 15px;
-    }
-    @screen md {
-      font-size: 15.5px;
-    }
-    @screen lg {
-      font-size: 16px;
-    }
-    @screen xl {
-      font-size: 16.5px;
-    }
-  }
-
-  /* Enhanced Visual Silence */
-  .visual-silence {
-    --card-shadow: none;
-    --card-shadow-hover: none;
-  }
-
-  .visual-silence .non-essential,
-  .visual-silence .floating-action-button,
-  .visual-silence .secondary-nav,
-  .visual-silence .promo-banner {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    transition: opacity 1s ease !important;
-  }
-
-  .contemplative-mode {
-    filter: sepia(0.1) contrast(0.95) brightness(1.02);
-    background-color: #FDFBF7 !important; /* Even softer cream */
-  }
-
-  .contemplative-mode .reader-text {
-    @apply text-foreground; /* Remove opacity for maximum readability */
-    letter-spacing: 0.01em;
-  }
-
-  .total-silence * {
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  .total-silence .animate-pulse,
-  .total-silence .animate-spin,
-  .total-silence .animate-bounce,
-  .total-silence .animate-ping,
-  .total-silence [class*="animate-"],
-  .total-silence .skeleton,
-  .total-silence .loading-spinner,
-  .total-silence .loading-overlay {
-    display: none !important;
-  }
-  
-  .total-silence .sacred-skeleton,
-  .total-silence .home-skeleton,
-  .total-silence [data-sidebar="menu-skeleton"],
-  .total-silence [data-testid*="skeleton"],
-  .total-silence [class*="Skeleton"] {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-  }
-
-  /* Audio exclusion in total silence */
-  .total-silence .audio-control,
-  .total-silence .audio-player,
-  .total-silence button:has(.lucide-headphones),
-  .total-silence button:has(.lucide-volume-2),
-  .total-silence button:has(.lucide-volume-x),
-  .total-silence .audio-button-container,
-  .total-silence [data-audio-player],
-  .total-silence [class*="AudioContentPlayer"] {
-    display: none !important;
-  }
-
-  /* Ensure essential controls are still visible and layout is stable */
-  .total-silence .essential-control {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-
-  /* Prevent layout collapse when loaders are hidden */
-  .total-silence .min-h-screen {
-    min-height: 100vh !important;
-  }
-
-
-  input, select, textarea {
-    font-size: 16px !important;
-  }
-
-  img {
-    content-visibility: auto;
-    image-rendering: -webkit-optimize-contrast;
-  }
-
-  body {
-    @apply bg-background text-foreground selection:bg-secondary/20;
-    width: 100% !important;
-    min-height: 100vh !important;
-    display: block !important;
+    @apply h-full overflow-x-hidden bg-background text-foreground selection:bg-secondary/20;
     font-family: 'Inter', sans-serif;
     text-rendering: optimizeLegibility;
     line-height: 1.6;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    scroll-behavior: smooth;
   }
 
-  #root {
-    width: 100% !important;
-    min-height: 100vh !important;
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display text-primary tracking-wide;
-    text-wrap: balance;
-  }
-
-  h1 { 
-    @apply font-light;
-    font-size: clamp(2.8rem, 8vw, 6.5rem);
+  /* Headings Hierarchy */
+  h1, .h1 {
+    @apply font-display font-light uppercase tracking-[0.2em] text-primary;
+    font-size: clamp(2.5rem, 8vw, 6rem);
     line-height: 1.05;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
   }
-  
-  h2 { 
-    @apply font-light;
-    font-size: clamp(2rem, 5.5vw, 4.25rem);
+
+  h2, .h2 {
+    @apply font-display font-light uppercase tracking-[0.15em] text-primary/95;
+    font-size: clamp(1.8rem, 5vw, 3.8rem);
     line-height: 1.15;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
-  
-  h3 { 
-    @apply font-light text-primary/90;
-    font-size: clamp(1.6rem, 3.5vw, 2.75rem);
+
+  h3, .h3 {
+    @apply font-display font-light tracking-[0.08em] text-primary/90;
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
     line-height: 1.25;
-    letter-spacing: 0.04em;
   }
 
-  h4 {
-    @apply font-normal text-primary/80;
-    font-size: clamp(1.3rem, 2.5vw, 2.15rem);
-    line-height: 1.35;
-    letter-spacing: 0.03em;
-  }
-
-  h5 {
-    @apply font-medium uppercase tracking-[0.3em] text-primary/60;
+  h4, .h4 {
+    @apply font-ui font-medium uppercase tracking-[0.2em] text-primary/80;
     font-size: clamp(1.1rem, 2vw, 1.4rem);
+    line-height: 1.35;
+  }
+
+  h5, .h5 {
+    @apply font-ui font-bold uppercase tracking-[0.3em] text-primary/60;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
     line-height: 1.45;
   }
 
-  h6 {
-    @apply font-bold uppercase tracking-[0.5em] text-primary/40;
-    font-size: clamp(0.85rem, 1.3vw, 1.1rem);
-    line-height: 1.55;
+  p, .body-text {
+    @apply font-ui font-normal leading-relaxed text-foreground/90;
+    font-size: clamp(1rem, 1.1vw, 1.2rem);
+    max-width: 80ch;
   }
 
-  p { 
-    @apply max-w-[80ch] text-foreground font-normal;
-    font-size: clamp(1.05rem, 1.3vw, 1.35rem);
-    line-height: 1.8;
-    letter-spacing: 0.02em;
-  }
-  
-  @screen md {
-    p {
-      line-height: 1.8;
-      letter-spacing: 0.015em;
-    }
-  }
-
-  /* Premium small text scale */
-  .text-premium-tiny {
-    @apply font-medium uppercase tracking-[0.3em] text-muted-foreground/50;
-    font-size: clamp(0.65rem, 0.75vw, 0.8rem);
-  }
-
-  .text-premium-small {
-    @apply font-normal text-muted-foreground/60 tracking-wide;
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
-  }
-
-  .text-premium-base {
-    @apply text-muted-foreground/70 tracking-normal;
-    font-size: clamp(0.95rem, 1.1vw, 1.05rem);
-  }
-
-  .font-serif {
-    font-family: 'Playfair Display', serif;
-  }
-
-  .font-display {
-    font-family: 'Cinzel', serif;
-  }
-
+  /* Reading Core */
   .reader-text {
-    font-family: 'Merriweather', serif;
-    @apply selection:bg-primary/20 max-w-[65ch] mx-auto text-foreground;
-    font-variant-numeric: oldstyle-nums;
-    font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
-    text-rendering: optimizeLegibility;
-    line-height: 2.2; /* Slightly more air */
+    @apply font-reader text-foreground selection:bg-primary/20 max-w-[65ch] mx-auto;
+    font-size: clamp(1.2rem, 1.4vw, 1.5rem);
+    line-height: 2.1;
     letter-spacing: 0.015em;
-    font-size: 1.35rem; /* Larger base font for premium mobile reading */
-    font-weight: 300; /* Lighter weight for premium serif look */
+    font-weight: 300;
+    font-variant-numeric: oldstyle-nums;
   }
+
+  /* Utility Components */
+  .app-container {
+    @apply w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-32;
+  }
+
+  .section-spacing {
+    @apply py-20 md:py-32 lg:py-48;
+  }
+
+  .stack-spacing {
+    @apply space-y-8 md:space-y-16;
+  }
+
+  /* Premium Components */
+  .premium-card {
+    @apply bg-card border border-primary/5 rounded-premium shadow-premium transition-premium overflow-hidden;
+  }
+
+  .premium-card-interactive {
+    @apply premium-card hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 cursor-pointer;
+  }
+
+  .btn-premium-primary {
+    @apply bg-primary text-primary-foreground font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95;
+  }
+
+  .btn-premium-secondary {
+    @apply bg-secondary text-secondary-foreground font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95 shadow-lg shadow-secondary/20;
+  }
+
+  .btn-premium-outline {
+    @apply bg-transparent border border-primary/10 text-primary font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95 hover:bg-primary/[0.02] hover:border-primary/20;
+  }
+
+  .btn-premium-ghost {
+    @apply bg-transparent text-primary/60 font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium hover:text-primary hover:bg-primary/[0.02] active:scale-95;
+  }
+
+  /* Input and Form */
+  .input-premium {
+    @apply w-full h-16 bg-primary/[0.02] border border-primary/10 rounded-premium px-8 font-ui text-primary placeholder:text-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-premium;
+  }
+
+  /* Overlay and Blur */
+  .premium-overlay {
+    @apply fixed inset-0 z-[100] bg-background/60 backdrop-blur-xl animate-in fade-in duration-700;
+  }
+
 
   @screen sm {
     .reader-text {

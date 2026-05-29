@@ -14,18 +14,18 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
-      sm: 'p-5 sm:p-6 md:p-8',
-      md: 'p-6 sm:p-10 md:p-12',
-      lg: 'p-8 sm:p-12 md:p-16',
-      xl: 'p-10 sm:p-16 md:p-24',
-      '2xl': 'p-12 sm:p-24 md:p-32 lg:p-40',
+      sm: 'p-4 md:p-6',
+      md: 'p-6 md:p-10',
+      lg: 'p-10 md:p-16',
+      xl: 'p-16 md:p-24',
+      '2xl': 'p-20 md:p-32 lg:p-40',
     };
 
     const variantStyles = {
       default: 'premium-card',
       interactive: 'premium-card-interactive',
-      outline: 'bg-transparent border border-border/30 rounded-premium',
-      glass: 'bg-background/40 backdrop-blur-xl border border-white/10 rounded-premium shadow-premium',
+      outline: 'bg-transparent border border-primary/10 rounded-premium',
+      glass: 'bg-background/40 backdrop-blur-xl border border-primary/10 rounded-premium shadow-premium',
     };
 
     return (
@@ -34,13 +34,13 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         className={cn(
           variantStyles[variant],
           paddingMap[padding],
-          hover && !variant.includes('interactive') && 'hover:shadow-[0_40px_100px_-30px_rgba(0,0,0,0.03)] hover:border-primary/10 hover:-translate-y-1 transition-all duration-1000',
+          hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 transition-premium',
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, y: 0 } : (props.initial || { opacity: 0, y: 20, filter: 'blur(10px)' })}
+        initial={settings.reduceAnimations ? { opacity: 1, y: 0 } : (props.initial || { opacity: 0, y: 30, filter: 'blur(10px)' })}
         animate={props.animate || { opacity: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 1.4, ease: [0.16, 1, 0.3, 1] as const })}
-        whileHover={settings.reduceAnimations ? {} : { y: -4, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 1.2, ease: [0.16, 1, 0.3, 1] })}
+        whileHover={settings.reduceAnimations ? {} : { y: -4, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }}
         {...props}
       >
         {children}
