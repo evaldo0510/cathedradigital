@@ -19,42 +19,70 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
   const [internalLoading, setInternalLoading] = React.useState(false);
   const { user } = useAuth();
 
+  const fetchContinuity = React.useCallback(async () => {
+    if (!user) return;
+    setInternalLoading(true);
+    try {
+      const { data: continuityData, error } = await supabase.functions.invoke('spiritual-continuity');
+      
+      if (!error && continuityData) {
+        setInternalData(continuityData);
+      } else {
+        // Fallback to basic history if AI fails
+        const { data: historyData } = await supabase
+          .from('user_history')
+          .select('title, route, visited_at')
+          .eq('user_id', user.id)
+          .order('visited_at', { ascending: false })
+          .limit(1);
+        
+        if (historyData?.[0]) {
+          setInternalData({ recommendations: [{
+            title: historyData[0].title,
+            route: historyData[0].route,
+            description: 'Onde você parou'
+          }] });
+        }
+      }
+    } catch (err) {
+      console.error('Continuity Internal Error:', err);
+    } finally {
+      setInternalLoading(false);
+    }
+  }, [user]);
+
   React.useEffect(() => {
     if (propData || !user) return;
-    
-    const fetchContinuity = async () => {
-      setInternalLoading(true);
-      try {
-        const { data: continuityData, error } = await supabase.functions.invoke('spiritual-continuity');
-        
-        if (!error && continuityData) {
-          setInternalData(continuityData);
-        } else {
-          // Fallback to basic history if AI fails
-          const { data: historyData } = await supabase
-            .from('user_history')
-            .select('title, route, visited_at')
-            .eq('user_id', user.id)
-            .order('visited_at', { ascending: false })
-            .limit(1);
-          
-          if (historyData?.[0]) {
-            setInternalData({ recommendations: [{
-              title: historyData[0].title,
-              route: historyData[0].route,
-              description: 'Onde você parou'
-            }] });
-          }
-        }
-      } catch (err) {
-        console.error('Continuity Internal Error:', err);
-      } finally {
-        setInternalLoading(false);
-      }
-    };
-
     fetchContinuity();
-  }, [propData, user]);
+  }, [propData, user, fetchContinuity]);
+
+  // Realtime sync for continuity
+  React.useEffect(() => {
+    if (!user || propData) return;
+
+    const channel = supabase
+      .channel('spiritual_continuity_sync')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'user_history', filter: `user_id=eq.${user.id}` },
+        () => fetchContinuity()
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'itineraria_progress', filter: `user_id=eq.${user.id}` },
+        () => fetchContinuity()
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'reading_marks', filter: `user_id=eq.${user.id}` },
+        () => fetchContinuity()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, propData, fetchContinuity]);
 
   const isLoading = propLoading || internalLoading;
   const data = propData || internalData;

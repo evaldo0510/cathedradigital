@@ -201,10 +201,10 @@ const ItinerariumStepPage: React.FC = () => {
 
   // Real-time sync subscription
   useEffect(() => {
-    if (!user || !itinerariumId) return;
+    if (!user || !stepId) return;
 
     const channel = supabase
-      .channel('itineraria_sync')
+      .channel(`itinerarium_step_sync_${stepId}`)
       .on(
         'postgres_changes',
         {
@@ -215,9 +215,11 @@ const ItinerariumStepPage: React.FC = () => {
         },
         (payload) => {
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-            if (payload.new.step_id === stepId) {
+            const newData = payload.new as any;
+            if (newData && newData.step_id === stepId) {
               setCompleted(true);
-              setReflection(payload.new.reflection || '');
+              setReflection(newData.reflection || '');
+              lastSavedReflection.current = newData.reflection || '';
             }
           }
         }

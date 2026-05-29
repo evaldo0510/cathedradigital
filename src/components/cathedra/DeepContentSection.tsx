@@ -33,23 +33,41 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
   const [hasReflected, setHasReflected] = useState(false);
 
   // Load existing reflection if any
+  const fetchReflection = React.useCallback(async () => {
+    if (!user || !contentType) return;
+    const { data } = await supabase
+      .from('reading_reflections' as any)
+      .select('content')
+      .eq('user_id', user.id)
+      .eq('reading_type', contentType)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (data) {
+      setHasReflected(true);
+    } else {
+      setHasReflected(false);
+    }
+  }, [user, contentType]);
+
   useEffect(() => {
     if (!user || !contentType) return;
-    const fetchReflection = async () => {
-      const { data } = await supabase
-        .from('reading_reflections' as any)
-        .select('content')
-        .eq('user_id', user.id)
-        .eq('reading_type', contentType)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (data) {
-        setHasReflected(true);
-      }
-    };
     fetchReflection();
-  }, [user, contentType]);
+
+    // Realtime sync for reflections
+    const channel = supabase
+      .channel(`reading_reflections_${contentType}`)
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'reading_reflections', filter: `user_id=eq.${user.id}` },
+        () => fetchReflection()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, contentType, fetchReflection]);
 
   const saveReflection = async () => {
     if (!user || !reflectionText.trim()) return;

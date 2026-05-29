@@ -69,14 +69,17 @@ const ItinerariumDetailPage: React.FC = () => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
+          const newData = payload.new as any;
           if (payload.eventType === 'INSERT') {
-            setCompletedSteps(prev => new Set([...Array.from(prev), payload.new.step_id]));
-            if (payload.new.reflection) {
-              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            if (newData?.step_id) {
+              setCompletedSteps(prev => new Set([...Array.from(prev), newData.step_id]));
+              if (newData.reflection) {
+                setReflections(prev => ({ ...prev, [newData.step_id]: newData.reflection }));
+              }
             }
           } else if (payload.eventType === 'UPDATE') {
-            if (payload.new.reflection) {
-              setReflections(prev => ({ ...prev, [payload.new.step_id]: payload.new.reflection }));
+            if (newData?.step_id && newData.reflection) {
+              setReflections(prev => ({ ...prev, [newData.step_id]: newData.reflection }));
             }
           }
         }

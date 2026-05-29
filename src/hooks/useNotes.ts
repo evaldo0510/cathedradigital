@@ -41,6 +41,35 @@ export function useNotes(contentType: string, contentId?: string) {
 
   useEffect(() => { fetchNotes(); }, [fetchNotes]);
 
+  // Realtime synchronization
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel(`user_notes_realtime_${contentType}_${contentId || 'all'}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_notes',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          // Only refresh if it matches the content type filter (if not 'all')
+          const newNote = payload.new as any;
+          if (contentType === 'all' || (newNote && newNote.content_type === contentType)) {
+            fetchNotes();
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, fetchNotes, contentType, contentId]);
+
   const addNote = useCallback(async (cId: string, text: string, color = 'yellow', context?: { book_abbr?: string; chapter?: number; paragraph?: number; verse?: number }) => {
     if (!user || !text.trim()) return null;
     
