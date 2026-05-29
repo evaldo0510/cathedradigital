@@ -512,7 +512,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               <div ref={chatEndRef} />
             </div>
 
-            <div className="p-8 md:p-10 border-t border-border/5 bg-background/30">
+            <div className="p-6 md:p-10 border-t border-border/5 bg-background/30">
               <form onSubmit={handleQuery} className="relative group">
                 <input
                   type="text"
