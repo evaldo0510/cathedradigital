@@ -1,10 +1,11 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 
 export const Atmosphere: React.FC = () => {
   const { settings } = useReadingSettings();
+  const shouldReduceMotion = useReducedMotion() || settings.reduceAnimations;
   
   // Skip rendering if total silence is on and we want to be extra strict, 
   // but usually atmosphere is part of the "Visual Silence" so we keep it subtle.
@@ -18,9 +19,9 @@ export const Atmosphere: React.FC = () => {
     )}>
       {/* Primary Light - Divine Presence */}
       <motion.div 
-        animate={{ 
-          scale: [1, 1.05, 1],
-          opacity: [0.3, 0.45, 0.3]
+        animate={shouldReduceMotion ? { opacity: 0.28 } : { 
+          scale: [1, 1.03, 1],
+          opacity: [0.22, 0.34, 0.22]
         }}
         transition={{ 
           duration: 12, 
@@ -35,9 +36,9 @@ export const Atmosphere: React.FC = () => {
 
       {/* Secondary Light - Sovereign Grace */}
       <motion.div 
-        animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.2, 0.35, 0.2]
+        animate={shouldReduceMotion ? { opacity: 0.18 } : { 
+          scale: [1, 1.04, 1],
+          opacity: [0.16, 0.28, 0.16]
         }}
         transition={{ 
           duration: 18, 
@@ -51,7 +52,7 @@ export const Atmosphere: React.FC = () => {
       />
 
       {/* Floating Particles/Layers - Architectural Depth (Simplified) */}
-      <div className="absolute inset-0 opacity-[calc(var(--atmosphere-intensity)*0.3)]">
+      {!shouldReduceMotion && <div className="absolute inset-0 opacity-[calc(var(--atmosphere-intensity)*0.3)]">
         {[...Array(2)].map((_, i) => (
           <motion.div
             key={i}
@@ -75,7 +76,7 @@ export const Atmosphere: React.FC = () => {
             }}
           />
         ))}
-      </div>
+      </div>}
 
       {/* Subtle Vignette for Visual Silence Precision */}
       {settings.visualSilence && (
