@@ -154,11 +154,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-14 bg-background/20 backdrop-blur-3xl rounded-full shadow-[0_32px_80px_-20px_rgba(0,0,0,0.3)] border border-primary/[0.03] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
+        "fixed bottom-6 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[90vw] max-w-sm h-14 bg-background/5 backdrop-blur-3xl rounded-full border border-primary/[0.02] dark:border-white/[0.03] bottom-nav bottom-nav-reading-auto-hide px-2 overflow-hidden transition-all",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
+
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => {
           const isActive = item.route 

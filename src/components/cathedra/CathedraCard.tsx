@@ -24,9 +24,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const variantStyles = {
       default: 'premium-card',
       interactive: 'premium-card-interactive',
-      outline: 'bg-transparent border border-primary/10 rounded-premium',
-      glass: 'bg-background/40 backdrop-blur-xl border border-primary/10 rounded-premium shadow-premium',
+      outline: 'bg-transparent border border-primary/5 rounded-premium',
+      glass: 'bg-background/20 backdrop-blur-xl border border-primary/5 rounded-premium shadow-premium',
     };
+
 
     return (
       <motion.div

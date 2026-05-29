@@ -296,26 +296,39 @@
   }
 
   .premium-card {
-    @apply bg-card/[0.1] backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden shadow-premium;
+    @apply bg-card/[0.1] backdrop-blur-2xl border border-primary/[0.02] transition-all relative overflow-hidden;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
+    box-shadow: none; /* Mobile first: remove heavy shadows for a cleaner, flatter-premium feel */
+  }
+
+  @screen md {
+    .premium-card {
+      @apply shadow-premium;
+    }
   }
 
   .dark .premium-card {
-    @apply bg-card/[0.05];
+    @apply bg-card/[0.04] border-white/[0.01];
   }
 
 
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.06] focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-0 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply bg-primary/[0.005] shadow-[0_60px_140px_-30px_rgba(0,0,0,0.06)] -translate-y-2;
+    @apply bg-primary/[0.002] -translate-y-1 opacity-90;
+  }
+
+  @screen md {
+    .premium-card-interactive:hover {
+      @apply bg-primary/[0.005] shadow-premium-hover -translate-y-2 opacity-100;
+    }
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_60px_140px_-30px_rgba(0,0,0,0.4)];
+    @apply bg-white/[0.002];
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
