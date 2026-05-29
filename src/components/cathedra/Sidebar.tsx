@@ -219,9 +219,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-neutral-950/30 backdrop-blur-xl z-[145]"
+            className="fixed inset-0 bg-neutral-950/20 backdrop-blur-md z-[145]"
             aria-hidden="true"
           />
 
@@ -230,21 +230,20 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             ref={sidebarRef}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={{ left: 0.1, right: 0 }}
+            dragElastic={{ left: 0.05, right: 0 }}
             onDragEnd={(_, info) => {
-              if (info.offset.x < -100 || info.velocity.x < -500) {
+              if (info.offset.x < -80 || info.velocity.x < -400) {
                 onClose();
               }
             }}
-            initial={{ x: '-100%', opacity: 0 }}
+            initial={{ x: '-102%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '-100%', opacity: 0 }}
+            exit={{ x: '-102%', opacity: 0 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.4 : 1.8, 
-              ease: [0.22, 1, 0.36, 1] 
-
+              duration: settings.reduceAnimations ? 0.4 : 1.4, 
+              ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[88vw] sm:w-[320px] md:w-[400px] bg-white/95 dark:bg-black/95 backdrop-blur-[60px] border-r border-black/[0.01] dark:border-white/[0.01] flex flex-col p-8 md:p-14 z-[150] shadow-[40px_0_120px_-20px_rgba(0,0,0,0.15)] dark:shadow-none overflow-hidden admin-hide touch-none pt-[calc(2.5rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-2 left-2 bottom-2 w-[85vw] sm:w-[320px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.03] rounded-[2.5rem] flex flex-col p-8 md:p-12 z-[150] shadow-premium overflow-hidden admin-hide touch-none pt-[calc(2rem+env(safe-area-inset-top,0px))] pb-[calc(2rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
@@ -308,10 +307,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-5 px-6 py-4 rounded-3xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[64px]
+                            className={`w-full flex items-center justify-start gap-4 px-5 py-3.5 rounded-2xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.015] dark:bg-white/[0.01] text-primary'
-                                : 'text-muted-foreground/15 dark:text-muted-foreground/20 hover:bg-primary/[0.005] dark:hover:bg-white/[0.005] hover:text-primary'}`}
+                                ? 'bg-primary/[0.03] dark:bg-white/[0.02] text-primary'
+                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
 
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
