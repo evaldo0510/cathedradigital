@@ -284,11 +284,6 @@
   .reading-theme-dark { background-color: #0F172A; }
   .reading-theme-night { background-color: #000000; }
 }
-    transition: all var(--transition-cinematic);
-  }
-  .reading-theme-dark { background-color: #0F172A; }
-  .reading-theme-night { background-color: #000000; }
-}
 
 @layer components {
   .app-container {
