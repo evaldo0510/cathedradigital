@@ -101,35 +101,35 @@
 
   .dark, [data-theme='dark'] {
     /* Sophisticated Dark Mode - Avoid absolute black, use deep architectural grays */
-    --background: 220 40% 1.8% / var(--atmosphere-dark-opacity, 0.94);
-    --foreground: 45 15% 88%;
+    --background: 220 35% 2.8% / var(--atmosphere-dark-opacity, 0.96); /* Slightly warmer, architectural gray-black */
+    --foreground: 45 12% 82%; /* Softer ivory for reading comfort */
     
-    --card: 220 35% 3.5% / calc(var(--atmosphere-dark-opacity, 0.94) * 0.7);
-    --card-foreground: 45 15% 88%;
+    --card: 220 30% 5% / calc(var(--atmosphere-dark-opacity, 0.96) * 0.5); /* Semi-transparent layering */
+    --card-foreground: 45 12% 82%;
     
-    --popover: 220 40% 3%;
-    --popover-foreground: 45 15% 88%;
+    --popover: 220 35% 4%;
+    --popover-foreground: 45 12% 82%;
     
-    --primary: 42 30% 62%;
-    --primary-foreground: 220 50% 1.5%;
+    --primary: 42 25% 65%; /* Muted sovereign gold */
+    --primary-foreground: 220 50% 2%;
     
-    --secondary: 220 30% 5%;      
-    --secondary-foreground: 42 30% 62%;
+    --secondary: 220 25% 8%;      
+    --secondary-foreground: 42 25% 65%;
     
-    --muted: 220 30% 6%;
-    --muted-foreground: 220 12% 52%; 
+    --muted: 220 20% 7%; /* Deep gray for subtle sections */
+    --muted-foreground: 220 10% 45%; /* Subdued secondary text */
     
-    --accent: 42 30% 62% / 0.05;
-    --accent-foreground: 42 30% 62%;
+    --accent: 42 25% 65% / 0.04;
+    --accent-foreground: 42 25% 65%;
     
-    --destructive: 0 60% 55%;
+    --destructive: 0 50% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 50% / calc(var(--atmosphere-border-intensity, 0.4) * 0.1);
-    --input: 220 20% 50% / calc(var(--atmosphere-border-intensity, 0.4) * 0.1);
-    --ring: 42 30% 62% / 0.2;
+    --border: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
+    --input: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
+    --ring: 42 25% 65% / 0.15;
     
-    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 1.5));
+    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 1.8));
   }
 
   .high-contrast {
