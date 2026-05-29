@@ -240,7 +240,7 @@ const AppLayout: React.FC = () => {
 
   // Focus Mode - Click to reveal UI
   useEffect(() => {
-    if (!settings.focusMode) return;
+    if (!settings.focusMode && !settings.immersiveMode) return;
 
     const revealUI = () => {
       document.documentElement.classList.add('reveal-chrome');
