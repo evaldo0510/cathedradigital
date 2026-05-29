@@ -90,8 +90,35 @@ test.describe('Contemplative Mode Keyboard & Visual Regression', () => {
     await expect(backButton).toBeVisible();
   });
 
+  test('should validate Accessibility Panel and ARIA controls', async ({ page }) => {
+    await page.goto('/');
+    
+    // Open A11y Panel (Assuming it's triggered by a button in the header)
+    const a11yButton = page.locator('button[aria-label*="acessibilidade"]').first();
+    await a11yButton.click();
+
+    const panel = page.locator('role=dialog[name="Acessibilidade"]');
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAttribute('aria-labelledby', 'a11y-title');
+
+    // Check switches and labels
+    const contrastSwitch = page.locator('label:has-text("Alto Contraste")');
+    await expect(contrastSwitch).toBeVisible();
+
+    const fontSizeButtons = page.locator('button[aria-label*="tamanho da fonte"]');
+    await expect(fontSizeButtons).toHaveCount(4);
+
+    // Validate focus visible toggle
+    const focusSwitch = page.locator('label:has-text("Foco Visível")');
+    await expect(focusSwitch).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(panel).not.toBeVisible();
+  });
+
   test('should navigate using Arrow Keys', async ({ page }) => {
     await page.goto('/itineraria/itin-1/step?step=step-1');
+
     await expect(page.locator('h1')).toContainText('Passo 1');
 
     // Press ArrowRight to go to Next Step
