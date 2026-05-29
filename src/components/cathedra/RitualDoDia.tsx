@@ -224,7 +224,7 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 padding-rhythm stack-rhythm max-w-7xl mx-auto">
+      <div className="relative z-10 p-4 md:padding-rhythm stack-rhythm max-w-7xl mx-auto">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-[var(--space-mobile-stack)] md:gap-12 border-b border-primary/[0.03] pb-4 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
@@ -333,7 +333,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary selection:bg-primary/5 tracking-tight px-2">
+              <blockquote className="text-xl md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary selection:bg-primary/5 tracking-tight px-4 md:px-2">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-6 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">

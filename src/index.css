@@ -461,10 +461,12 @@
 
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 1rem;       /* 16px */
-    --space-mobile-section: 2.5rem;  /* 40px */
+    --space-mobile-section: 4rem;    /* 64px - Increased for better breathing */
+    --space-mobile-section-sm: 2.5rem; /* 40px - For secondary sections */
     --space-mobile-stack: 1.5rem;    /* 24px */
-    --space-mobile-padding: 1rem;    /* 16px */
-    --space-mobile-header-mb: 2rem;  /* 32px */
+    --space-mobile-stack-lg: 3rem;   /* 48px - For larger visual pauses */
+    --space-mobile-padding: 1.25rem; /* 20px - Slightly more generous */
+    --space-mobile-header-mb: 1.5rem; /* 24px - Tighter for mobile hierarchy */
     
     --space-desktop-base: 2rem;      /* 32px */
     --space-desktop-section: 12rem;  /* 192px */
@@ -478,8 +480,16 @@
     @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
   }
 
+  .section-rhythm-sm {
+    @apply py-[var(--space-mobile-section-sm)] md:py-[var(--space-desktop-section)];
+  }
+
   .stack-rhythm {
     @apply space-y-[var(--space-mobile-stack)] md:space-y-[var(--space-desktop-stack)];
+  }
+
+  .stack-rhythm-lg {
+    @apply space-y-[var(--space-mobile-stack-lg)] md:space-y-[var(--space-desktop-stack)];
   }
 
   .padding-rhythm {
