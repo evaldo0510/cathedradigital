@@ -1,7 +1,6 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
-import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
@@ -162,8 +161,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .update({ badges: updatedBadges })
           .eq('id', currentUser.id);
 
-        // Celebrate!
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
+        // Celebrate only when needed; keep confetti out of initial load.
+        import('canvas-confetti').then(({ default: confetti }) => {
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
+        });
         for (const id of newBadgeIds) {
           const badge = getBadgeById(id);
           if (badge) {
