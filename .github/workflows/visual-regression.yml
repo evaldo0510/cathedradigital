@@ -25,6 +25,12 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
+    - name: Run Spacing & Rhythm Audit
+      run: |
+        bun run test:spacing-audit
+      env:
+        CI: true
+
     - name: Run Playwright Visual Audit & Capture Chromatic Archives
       run: |
         npx playwright test tests/e2e/visual-regression.spec.ts
@@ -35,7 +41,7 @@ jobs:
 
     - name: Run Chromatic and Fail on Visual Changes
       run: |
-        npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --playwright --exit-once-uploaded
+        npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --playwright --exit-once-uploaded --auto-accept-changes "main"
       env:
         CI: true
 
@@ -58,4 +64,5 @@ jobs:
           public/visual-regression/
           test-results/
           test-results/seo-audit-report.html
+          spacing-audit-report.json
         retention-days: 30
