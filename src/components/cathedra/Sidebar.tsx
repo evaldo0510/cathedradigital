@@ -240,10 +240,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '-100%', opacity: 0 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.4 : 0.9, 
-              ease: [0.23, 1, 0.32, 1] 
+              duration: settings.reduceAnimations ? 0.4 : 1.2, 
+              ease: [0.19, 1, 0.22, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[85vw] sm:w-[320px] md:w-[400px] bg-white/98 dark:bg-neutral-950/98 backdrop-blur-[100px] border-r border-black/[0.01] dark:border-white/[0.01] flex flex-col p-8 md:p-14 z-[150] shadow-[40px_0_100px_-20px_rgba(0,0,0,0.15)] overflow-hidden admin-hide touch-none pt-[calc(2rem+env(safe-area-inset-top,0px))] pb-[calc(2rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-0 left-0 bottom-0 w-[88vw] sm:w-[320px] md:w-[400px] bg-white/95 dark:bg-black/95 backdrop-blur-[60px] border-r border-black/[0.01] dark:border-white/[0.01] flex flex-col p-8 md:p-14 z-[150] shadow-[40px_0_120px_-20px_rgba(0,0,0,0.15)] dark:shadow-none overflow-hidden admin-hide touch-none pt-[calc(2.5rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
@@ -307,10 +307,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-5 px-6 py-4 rounded-2xl text-[9.5px] font-bold transition-all duration-700 outline-none h-auto min-h-[60px]
+                            className={`w-full flex items-center justify-start gap-5 px-6 py-4 rounded-3xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[64px]
                               ${isActive
-                                ? 'bg-primary/[0.02] dark:bg-white/[0.02] text-primary'
-                                : 'text-muted-foreground/25 dark:text-muted-foreground/30 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
+                                ? 'bg-primary/[0.015] dark:bg-white/[0.01] text-primary'
+                                : 'text-muted-foreground/15 dark:text-muted-foreground/20 hover:bg-primary/[0.005] dark:hover:bg-white/[0.005] hover:text-primary'}`}
 
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>

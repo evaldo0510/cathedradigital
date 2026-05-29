@@ -30,18 +30,18 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     // Only handle swipes on mobile (simple check)
     if (window.innerWidth >= 1024) return;
 
-    const threshold = 100; // px
-    const velocity = 0.5;
+    const threshold = 120; // px - slightly higher for more intentional swipe
+    const velocity = 0.4; // lower velocity needed for cinematic feel
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
       if (currentIndex !== -1 && currentIndex < routes.length - 1) {
-        navigate(routes[currentIndex + 1]);
+        setTimeout(() => navigate(routes[currentIndex + 1]), 50); // Small micro-delay for fluidity
       }
     } else if (info.offset.x > threshold || info.velocity.x > velocity) {
       // Swipe Right -> Previous
       if (currentIndex !== -1 && currentIndex > 0) {
-        navigate(routes[currentIndex - 1]);
+        setTimeout(() => navigate(routes[currentIndex - 1]), 50);
       }
     }
   };

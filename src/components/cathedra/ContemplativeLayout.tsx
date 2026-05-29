@@ -43,8 +43,8 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 1.2, 
-          ease: settings.reduceAnimations ? "linear" : [0.16, 1, 0.3, 1] 
+          duration: settings.reduceAnimations ? 0.1 : 1.8, 
+          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1] 
         }}
 
         className={cn("app-container", className)}
