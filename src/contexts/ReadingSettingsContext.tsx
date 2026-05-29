@@ -22,6 +22,11 @@ interface ReadingSettings {
   sideMargins: 'standard' | 'comfortable' | 'wide';
   columnWidth: number; // ch — coluna ideal (45-90)
   contrast: 'normal' | 'soft' | 'high';
+  atmosphere: {
+    borderIntensity: number; // 0-1
+    shadowDepth: number; // 0-1
+    darkOpacity: number; // 0-1
+  };
   resumeBehavior: 'always' | 'never' | 'once' | 'confirm';
   reminders: {
     enabled: boolean;
@@ -80,6 +85,11 @@ const defaultSettings: ReadingSettings = {
   sideMargins: 'standard',
   columnWidth: 68,
   contrast: 'high',
+  atmosphere: {
+    borderIntensity: 0.4,
+    shadowDepth: 0.5,
+    darkOpacity: 0.9,
+  },
   resumeBehavior: 'confirm',
   reminders: {
     enabled: false,
@@ -238,6 +248,11 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('immersive-mode');
     } else {
       root.classList.remove('immersive-mode');
+    }
+    if (settings.atmosphere) {
+      root.style.setProperty('--atmosphere-border-intensity', settings.atmosphere.borderIntensity.toString());
+      root.style.setProperty('--atmosphere-shadow-depth', settings.atmosphere.shadowDepth.toString());
+      root.style.setProperty('--atmosphere-dark-opacity', settings.atmosphere.darkOpacity.toString());
     }
   }, [settings]);
 

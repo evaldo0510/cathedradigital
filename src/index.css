@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 50% 1.2%;    /* Deepest Night Navy - richer than pure black */
-    --foreground: 45 15% 90%;      /* Softer, warmer off-white to reduce eye strain */
+    --background: 220 50% 1.2% / var(--atmosphere-dark-opacity, 0.9);
+    --foreground: 45 15% 90%;
     
-    --card: 220 40% 3%;            /* Subtle elevation */
+    --card: 220 40% 3% / calc(var(--atmosphere-dark-opacity, 0.9) * 0.8);
     --card-foreground: 45 15% 90%;
     
     --popover: 220 45% 2.5%;
     --popover-foreground: 45 15% 90%;
     
-    --primary: 42 35% 58%;         /* Antiquated Gold - more atmospheric */
+    --primary: 42 35% 58%;
     --primary-foreground: 220 50% 1%;
     
     --secondary: 220 30% 4%;      
     --secondary-foreground: 42 35% 58%;
     
     --muted: 220 30% 5%;
-    --muted-foreground: 220 15% 55%; /* Reduced contrast for non-essentials */
+    --muted-foreground: 220 15% 58%; /* Improved contrast for accessibility */
     
-    --accent: 42 35% 58% / 0.05;
+    --accent: 42 35% 58% / 0.08;
     --accent-foreground: 42 35% 58%;
     
-    --destructive: 0 60% 45%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 25% 8% / 0.06;   /* Extremely subtle borders */
-    --input: 220 25% 8% / 0.06;
-    --ring: 42 35% 58% / 0.15;
+    --border: 220 25% 40% / calc(var(--atmosphere-border-intensity, 0.4) * 0.15);
+    --input: 220 25% 40% / calc(var(--atmosphere-border-intensity, 0.4) * 0.15);
+    --ring: 42 35% 58% / 0.25;
     
-    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, 0.9);
+    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 1.8));
   }
 
   .high-contrast {
@@ -154,11 +154,20 @@
 
   /* Premium Accessible Focus System */
   :focus-visible {
-    @apply outline-none ring-2 ring-primary/20 ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-primary/40 ring-offset-2 ring-offset-background transition-all duration-300;
   }
 
   .dark :focus-visible {
-    @apply ring-primary/40 ring-offset-background;
+    @apply ring-primary/60 ring-offset-background;
+  }
+
+  /* Interactive States Refinement */
+  .hover-subtle {
+    @apply transition-all duration-500 hover:opacity-80;
+  }
+
+  .disabled-subtle {
+    @apply opacity-30 grayscale pointer-events-none;
   }
 
   /* High Contrast Focus */
@@ -176,33 +185,37 @@
 
   h1, .h1 {
     @apply font-display font-light uppercase tracking-[0.2em] text-primary;
-    font-size: clamp(2.2rem, 9vw, 6.5rem);
+    font-size: clamp(2.2rem, 8vw, 6rem);
     line-height: 1.05;
-    filter: blur(0.1px); /* Subtlest softening */
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+    filter: blur(0.1px);
   }
 
   h2, .h2 {
     @apply font-display font-light uppercase tracking-[0.15em] text-primary/80;
-    font-size: clamp(1.6rem, 7vw, 4rem);
+    font-size: clamp(1.6rem, 6vw, 3.5rem);
     line-height: 1.15;
+    margin-bottom: clamp(1rem, 3vw, 2rem);
   }
 
   h3, .h3 {
     @apply font-display font-light tracking-[0.1em] text-primary/70;
-    font-size: clamp(1.3rem, 5vw, 2.6rem);
+    font-size: clamp(1.3rem, 4vw, 2.2rem);
     line-height: 1.25;
+    margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/70;
-    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+    @apply font-ui font-normal text-foreground/75 transition-colors duration-500;
+    font-size: clamp(0.95rem, 1vw, 1.05rem);
     line-height: 1.8;
-    max-width: 65ch; /* More comfortable line width */
+    max-width: 70ch;
     letter-spacing: 0.01em;
+    margin-bottom: 1.5rem;
   }
 
   .dark p, .dark .body-text {
-    @apply text-foreground/60;
+    @apply text-foreground/70;
   }
 
   /* Reading Core - Optimized Rhythm */
