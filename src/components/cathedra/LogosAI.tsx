@@ -365,7 +365,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-6 transition-all text-primary"
+                    className="w-full bg-transparent border-none text-base md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-4 md:py-6 transition-all text-primary"
                   />
                   <button 
                     type="submit" 
