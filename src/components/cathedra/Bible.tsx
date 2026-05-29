@@ -1038,8 +1038,9 @@ const Bible: React.FC = () => {
                         </div>
                       );
                     })}
-                    </div>
-                  )}
+                  </div>
+                )}
+
 
                   <Relatio 
                     context={{
@@ -1400,6 +1401,7 @@ const Bible: React.FC = () => {
       </ContemplativeLayout>
     );
   }
+
 
   if (viewMode === 'chapters' && selectedBook) {
     return (
