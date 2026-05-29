@@ -134,14 +134,14 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
           </motion.div>
           <div className="space-y-4 md:space-y-6">
-            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary/60">
+            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary">
               Cathedra {t('digital')}
             </p>
             <h1 className="text-4xl md:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter">
               {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
             </h1>
             {spProfile && (
-              <p className="text-xl text-primary/40 italic font-serif mt-6 opacity-70 max-w-2xl mx-auto leading-relaxed">{spProfile.greeting}</p>
+              <p className="text-xl text-primary/60 italic font-serif mt-6 max-w-2xl mx-auto leading-relaxed">{spProfile.greeting}</p>
             )}
           </div>
 
@@ -175,7 +175,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
             <div>
               <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
-              <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
+              <p className="text-premium-tiny text-muted-foreground mt-1 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
             </div>
           </div>
           <Icons.ChevronRight className="w-5 h-5 text-primary/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
