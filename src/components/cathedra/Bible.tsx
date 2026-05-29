@@ -1042,6 +1042,7 @@ const Bible: React.FC = () => {
                   </div>
                 )}
 
+
                   <Relatio 
                     context={{
                       type: 'bible',
@@ -1073,10 +1074,9 @@ const Bible: React.FC = () => {
                     />
                   )}
                 </div>
-              </div>
-            </div>
 
                 <aside className="reader-navigation-aside space-y-12 shrink-0">
+
                   <div className="space-y-4">
                     <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
                     <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
@@ -1103,6 +1103,7 @@ const Bible: React.FC = () => {
             </div>
 
             <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
                 <Button 
                   variant="ghost" 
@@ -1398,11 +1399,10 @@ const Bible: React.FC = () => {
             </React.Suspense>
           </div>
         )}
-
-        </div>
       </ContemplativeLayout>
     );
   }
+
 
 
   if (viewMode === 'chapters' && selectedBook) {
