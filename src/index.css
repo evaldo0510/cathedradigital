@@ -485,15 +485,17 @@
 
   /* Premium Editorial Styling for Bible/Catechism */
   .prose-premium {
-    @apply font-serif text-foreground/90 selection:bg-primary/10;
+    @apply font-serif text-foreground selection:bg-primary/15;
   }
 
   .prose-premium p {
-    @apply mb-8 leading-[1.85] text-lg md:text-xl font-light;
+    @apply mb-10 leading-[1.95] text-xl md:text-2xl font-light;
+    text-align: justify;
+    hyphens: auto;
   }
 
   .prose-premium blockquote {
-    @apply border-l-2 border-primary/20 pl-8 italic my-12 text-primary/70 font-light bg-primary/[0.02] py-6 pr-6 rounded-r-3xl;
+    @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
   }
 
 
