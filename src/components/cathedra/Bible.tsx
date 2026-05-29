@@ -1021,7 +1021,8 @@ const Bible: React.FC = () => {
                       const relatedP = verseToCic[v.number];
                       const isHighlighted = highlightedVerse === v.number;
                       const hasNotes = currentChapterNotes.some(n => n.verse === v.number);
-                      const activeFont = FONT_SIZES.find(f => f.size.includes(settings.fontSize)) || FONT_SIZES[1];
+                      const sizeMap = { 'small': 0, 'medium': 1, 'large': 2, 'extra-large': 3 };
+                      const activeFont = FONT_SIZES[sizeMap[settings.fontSize] || 1] || FONT_SIZES[1];
                       
                       return (
                         <motion.div 
