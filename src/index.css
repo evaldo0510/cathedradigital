@@ -101,35 +101,35 @@
 
   .dark, [data-theme='dark'] {
     /* Sophisticated Dark Mode - Architectural Deep Obsidian with Luminous Depth */
-    --background: 220 45% 1.8%; /* Even deeper obsidian for pure contrast */
-    --foreground: 45 15% 88%; /* Slightly brighter ivory for better reading */
+    --background: 220 25% 4%; /* Deep charcoal navy, more depth than pure black */
+    --foreground: 45 15% 92%; /* Slightly brighter ivory */
     
-    --card: 220 40% 2.8% / 0.4; /* More translucent cards for layering depth */
-    --card-foreground: 45 15% 85%;
+    --card: 220 25% 6% / 0.6; /* More structural cards */
+    --card-foreground: 45 15% 90%;
     
-    --popover: 220 45% 2.5%;
-    --popover-foreground: 45 15% 85%;
+    --popover: 220 25% 5%;
+    --popover-foreground: 45 15% 90%;
     
-    --primary: 42 40% 72%; /* Slightly more luminous gold */
-    --primary-foreground: 220 50% 1.2%;
+    --primary: 42 45% 75%; /* More luminous gold */
+    --primary-foreground: 220 30% 2%;
     
-    --secondary: 220 30% 5%;      
-    --secondary-foreground: 42 40% 72%;
+    --secondary: 220 20% 8%;      
+    --secondary-foreground: 42 45% 75%;
     
-    --muted: 220 25% 4%; 
-    --muted-foreground: 220 15% 45%; 
+    --muted: 220 20% 6%; 
+    --muted-foreground: 220 10% 55%; 
     
-    --accent: 42 40% 72% / 0.04;
-    --accent-foreground: 42 40% 72%;
+    --accent: 42 45% 75% / 0.06;
+    --accent-foreground: 42 45% 75%;
     
-    --destructive: 0 60% 50%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 25% 70% / 0.04;
-    --input: 220 25% 70% / 0.04;
-    --ring: 42 40% 72% / 0.15;
+    --border: 220 20% 80% / 0.06;
+    --input: 220 20% 80% / 0.06;
+    --ring: 42 45% 75% / 0.2;
     
-    --shadow-premium: 0 60px 250px -60px rgba(0, 0, 0, 0.9);
+    --shadow-premium: 0 40px 180px -40px rgba(0, 0, 0, 0.8);
     
     /* Atmosphere Tokens for Glassmorphism */
     --atmosphere-opacity: 0.1;
