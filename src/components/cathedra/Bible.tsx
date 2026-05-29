@@ -1475,7 +1475,7 @@ const Bible: React.FC = () => {
         title="Capítulos"
         maxW="max-w-6xl"
       >
-        <div className="space-y-12">
+        <div className="stack-rhythm">
 
 
 
@@ -1488,7 +1488,7 @@ const Bible: React.FC = () => {
             Todos os Livros
           </Button>
 
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-4">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-2 md:gap-4">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
