@@ -64,13 +64,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-64 md:space-y-80 lg:space-y-96 pb-80 md:pb-[32rem] px-6 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-24 md:space-y-80 lg:space-y-96 pb-20 md:pb-[32rem] px-4 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
         />
-        <div className="flex justify-center -mt-10 mb-20">
+        <div className="flex justify-center -mt-8 md:-mt-10 mb-10 md:mb-20">
           <CathedraButton 
             variant="ghost" 
             size="sm"
@@ -89,14 +89,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
-          className="mb-24 md:mb-40"
+          className="mb-12 md:mb-40"
         />
-        <CathedraCard padding="none" className="p-10 sm:p-24 md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="p-6 sm:p-24 md:p-32 lg:p-40">
           <RitualDoDia />
         </CathedraCard>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 sm:gap-32 md:gap-48 lg:gap-64">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-32 md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <h2 className="sr-only">Sua Jornada de Leitura</h2>
@@ -106,7 +106,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="mb-12 md:mb-20"
           />
-          <CathedraCard variant="interactive" padding="none" className="flex-1 p-10 sm:p-20 md:p-24 lg:p-32">
+          <CathedraCard variant="interactive" padding="none" className="flex-1 p-6 sm:p-20 md:p-24 lg:p-32">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -123,7 +123,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-10 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-14 md:gap-16 group"
+            className="flex-1 p-6 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-10 md:gap-16 group"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -165,9 +165,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-24 md:mb-40"
+          className="mb-12 md:mb-40"
         />
-        <CathedraCard padding="none" className="p-10 sm:p-24 md:p-40 lg:p-64">
+        <CathedraCard padding="none" className="p-6 sm:p-24 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
