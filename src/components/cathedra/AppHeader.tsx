@@ -100,7 +100,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                     variant="outline"
                     size="icon"
                     onClick={() => navigate(AppRoute.PROFILE)}
-                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03]"
+                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03] tap-premium"
                     aria-label={t('profile') || 'Meu Perfil'}
                   >
                     {user.avatar ? (
