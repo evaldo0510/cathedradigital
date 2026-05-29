@@ -160,6 +160,60 @@ const ReadingControlPanel: React.FC = () => {
         </div>
       </div>
 
+      {/* Atmosfera Section */}
+      <div className="space-y-6 pt-4 border-t border-primary/5">
+        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Calibração de Atmosfera</p>
+        <div className="space-y-6 px-2">
+          <div className="space-y-2">
+            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
+              <span>Intensidade de Bordas</span>
+              <span className="text-primary">{Math.round((settings.atmosphere?.borderIntensity || 0) * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={settings.atmosphere?.borderIntensity || 0}
+              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, borderIntensity: Number(e.target.value) } })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
+              <span>Profundidade de Sombras</span>
+              <span className="text-primary">{Math.round((settings.atmosphere?.shadowDepth || 0) * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={settings.atmosphere?.shadowDepth || 0}
+              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, shadowDepth: Number(e.target.value) } })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
+              <span>Opacidade Dark Mode</span>
+              <span className="text-primary">{Math.round((settings.atmosphere?.darkOpacity || 0) * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0.5}
+              max={1}
+              step={0.01}
+              value={settings.atmosphere?.darkOpacity || 0.9}
+              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, darkOpacity: Number(e.target.value) } })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Largura da Coluna */}
       <div className="space-y-3 pt-4 border-t border-primary/5">
         <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Largura da Coluna</p>
