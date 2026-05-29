@@ -50,6 +50,7 @@ interface ReadingSettings {
     relevanceByProgress: boolean;
   };
   logosSuggestions: 'always' | 'first_selection' | 'never';
+  lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
 interface ReadingSettingsContextType {
