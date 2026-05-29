@@ -649,3 +649,12 @@
 .font-size-medium .reader-text { font-size: 1.4rem; }
 .font-size-large .reader-text { font-size: 1.75rem; }
 .font-size-extra-large .reader-text { font-size: 2.2rem; }
+
+/* Premium Utility Classes */
+.transition-premium-slow {
+  transition: all var(--transition-premium);
+}
+
+.transition-cinematic {
+  transition: all var(--transition-cinematic);
+}
