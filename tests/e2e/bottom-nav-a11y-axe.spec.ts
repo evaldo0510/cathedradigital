@@ -43,4 +43,13 @@ test.describe('BottomNav Accessibility (Axe)', () => {
 
     expect(accessibilityScanResults.violations).toEqual([]);
   });
+
+  test('should have no violations in SwipeNavigation container', async ({ page }) => {
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .include('.swipe-navigation')
+      .withTags(['wcag2a', 'wcag2aa', 'best-practice'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
 });
