@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { LangContext } from '@/contexts/LangContext';
+import { Language } from '@/types';
 
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
@@ -14,10 +15,10 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('BottomNav Unit Tests', () => {
-  const renderBottomNav = (path = '/', lang = 'pt') => {
+  const renderBottomNav = (path = '/', lang: Language = 'pt') => {
     return render(
       <MemoryRouter initialEntries={[path]}>
-        <LangContext.Provider value={{ lang, t: (s: string) => s, setLang: () => {}, availableLanguages: [] }}>
+        <LangContext.Provider value={{ lang, t: (s: string) => s, setLang: () => {} }}>
           <BottomNav onOpenSidebar={() => {}} />
         </LangContext.Provider>
       </MemoryRouter>
