@@ -117,7 +117,7 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen pt-12 md:pt-40 pb-48 md:pb-64 monastic-sanctuary">
+    <div className="flex flex-col items-center w-full min-h-screen pt-8 md:pt-40 pb-48 md:pb-64">
       <SEOHead 
         title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
@@ -130,7 +130,8 @@ const HojePage: React.FC = () => {
       />
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday: allSaintsToday || [], activeJourney: activeJourney || null, profile: profile?._sensitive || null }} />}
       
-      <div className="app-container stack-spacing">
+      <div className="app-container space-y-12 md:space-y-32">
+
         {/* HERO SECTION - MONASTIC WELCOME */}
         <motion.div 
           initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
@@ -171,18 +172,19 @@ const HojePage: React.FC = () => {
           <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-24">
-          <div className="lg:col-span-8 stack-spacing">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
+          <div className="lg:col-span-8 space-y-20 md:space-y-32">
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
-            <section className="space-y-8 md:space-y-12">
-              <div className="flex items-center gap-4 md:gap-8">
-                <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
+            <section className="space-y-10 md:space-y-16">
+              <div className="flex items-center gap-6">
+                <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
-                <div className="h-px flex-1 bg-primary/[0.03]" />
+                <div className="h-px flex-1 bg-primary/[0.02]" />
               </div>
-              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2" />
+              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2 gap-4 md:gap-8" />
             </section>
+
 
             {/* RITUAL DO DIA */}
             <section className="space-y-8 md:space-y-12">
