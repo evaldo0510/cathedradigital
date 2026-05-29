@@ -4,6 +4,7 @@ import { CathedraCard } from '@/components/cathedra/CathedraCard';
 import { CathedraButton } from '@/components/cathedra/CathedraButton';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
+import { ThemeControlPanel } from './DesignSystemControlPanel';
 
 const DesignSystemGuide: React.FC = () => {
   const tokens = {
@@ -232,6 +233,8 @@ const DesignSystemGuide: React.FC = () => {
             </CathedraCard>
           </div>
         </section>
+
+        <ThemeControlPanel />
       </div>
     </div>
   );
