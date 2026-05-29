@@ -218,14 +218,14 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       </ToggleGroupItem>
                       <ToggleGroupItem value="normal" className="flex-1 py-4 rounded-xl">
                         <div className="flex flex-col items-center gap-1">
-                          <span className="text-xs font-medium">Normal</span>
-                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Padrão</span>
+                          <span className="text-xs font-medium">Equilibrado</span>
+                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Confortável</span>
                         </div>
                       </ToggleGroupItem>
                       <ToggleGroupItem value="high" className="flex-1 py-4 rounded-xl">
                         <div className="flex flex-col items-center gap-1">
-                          <span className="text-xs font-medium">Alto</span>
-                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Nítido</span>
+                          <span className="text-xs font-medium">Contraste Máximo</span>
+                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Recomendado</span>
                         </div>
                       </ToggleGroupItem>
                     </ToggleGroup>
