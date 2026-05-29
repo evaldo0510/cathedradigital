@@ -1027,7 +1027,9 @@ const Bible: React.FC = () => {
                         transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
                         className="space-y-16 md:space-y-24"
                       >
-                        {verses.map((v, index) => {
+                        {isLoading && verses.length === 0 ? (
+                          <BibleChapterSkeleton />
+                        ) : verses.map((v, index) => {
                           const relatedP = verseToCic[v.number];
                           const isHighlighted = highlightedVerse === v.number;
                           const sizeMap = { 'small': 0, 'medium': 1, 'large': 2, 'extra-large': 3 };
