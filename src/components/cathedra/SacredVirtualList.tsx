@@ -1,6 +1,5 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { motion } from 'framer-motion';
 
 interface SacredVirtualListProps<T> {
   items: T[];
@@ -12,15 +11,23 @@ interface SacredVirtualListProps<T> {
   scrollRef?: React.RefObject<HTMLDivElement>;
 }
 
-export function SacredVirtualList<T>({
-  items,
-  renderItem,
-  estimateSize = 100,
-  overscan = 5,
-  className = '',
-  onScroll,
-  scrollRef
-}: SacredVirtualListProps<T>) {
+export interface SacredVirtualListHandle {
+  scrollToIndex: (index: number, options?: { align: 'start' | 'center' | 'end' | 'auto' }) => void;
+  scrollToOffset: (offset: number, options?: { align: 'start' | 'center' | 'end' | 'auto' }) => void;
+}
+
+export const SacredVirtualList = forwardRef<SacredVirtualListHandle, any>(<T extends any>(
+  {
+    items,
+    renderItem,
+    estimateSize = 100,
+    overscan = 5,
+    className = '',
+    onScroll,
+    scrollRef
+  }: SacredVirtualListProps<T>,
+  ref: React.ForwardedRef<SacredVirtualListHandle>
+) => {
   const localRef = useRef<HTMLDivElement>(null);
   const parentRef = scrollRef || localRef;
 
@@ -30,6 +37,15 @@ export function SacredVirtualList<T>({
     estimateSize: () => estimateSize,
     overscan,
   });
+
+  useImperativeHandle(ref, () => ({
+    scrollToIndex: (index, options) => {
+      rowVirtualizer.scrollToIndex(index, options);
+    },
+    scrollToOffset: (offset, options) => {
+      rowVirtualizer.scrollToOffset(offset, options);
+    }
+  }));
 
   // Handle scroll reporting
   useEffect(() => {
@@ -81,4 +97,7 @@ export function SacredVirtualList<T>({
       </div>
     </div>
   );
-}
+});
+
+SacredVirtualList.displayName = 'SacredVirtualList';
+
