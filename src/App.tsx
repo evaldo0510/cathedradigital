@@ -161,10 +161,10 @@ const LoadingFallback = () => (
         />
       </div>
       <motion.p 
-        initial={{ opacity: 0, letterSpacing: "0.5em" }}
-        animate={{ opacity: 0.3, letterSpacing: "1.2em" }}
-        transition={{ duration: 6, ease: "easeInOut" }}
-        className="text-[9px] font-black uppercase text-primary/40 text-center tracking-[1.2em]"
+        initial={{ opacity: 0, letterSpacing: "0.4em" }}
+        animate={{ opacity: 1, letterSpacing: "1em" }}
+        transition={{ duration: 3, ease: "easeOut" }}
+        className="text-[8px] font-bold uppercase text-primary/20 text-center tracking-[1em]"
       >
         AD MAIOREM DEI GLORIAM
       </motion.p>
@@ -240,7 +240,7 @@ const AppLayout: React.FC = () => {
 
   // Focus Mode - Click to reveal UI
   useEffect(() => {
-    if (!settings.focusMode && !settings.immersiveMode) return;
+    if (!settings.focusMode) return;
 
     const revealUI = () => {
       document.documentElement.classList.add('reveal-chrome');
@@ -393,16 +393,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <div className={cn(
-        "min-h-screen bg-background text-foreground transition-colors duration-[2000ms] selection:bg-primary/10",
-        settings.visualSilence && "visual-silence"
-      )}>
-        {/* Cinematic Atmosphere Layer */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 dark:opacity-20">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse duration-[10s]" />
-          <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary/3 blur-[120px] rounded-full animate-pulse duration-[15s]" />
-        </div>
-
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[250] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
@@ -440,22 +431,10 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         <SpacingDebugger />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-48 md:pb-80 pt-24 md:pt-80 px-8 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 md:pb-80 pt-20 md:pt-80 px-6 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
             <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, scale: 0.995, filter: "blur(20px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.005, filter: "blur(20px)" }}
-
-                transition={{ 
-                  duration: settings.reduceAnimations ? 0.4 : 2.2,
-                  ease: [0.19, 1, 0.22, 1] // Even slower, more architectural transition
-                }}
-                className="w-full flex-1 flex flex-col"
-              >
-                <Routes location={location}>
+            <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
@@ -565,7 +544,6 @@ const AppLayout: React.FC = () => {
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
-              </motion.div>
             </AnimatePresence>
           </SwipeNavigation>
         </main>

@@ -239,30 +239,34 @@ const LazyParagraph: React.FC<{
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-36 transition-all duration-[2000ms] pb-24 md:pb-40 border-none last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-60 hover:opacity-100'}`}>
-      <div className="flex flex-col items-center gap-8 mb-16 md:mb-24">
-        <div className="flex flex-col items-center gap-4">
-          <span className="text-3xl md:text-5xl font-display font-light tracking-[0.4em] text-primary/10 select-none">§{p}</span>
-          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-1000">
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-12 border-b border-primary/[0.03] last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+      {currentParagraph === p && <div className="absolute -left-6 top-0 bottom-0 w-0.5 bg-primary/20 rounded-full hidden md:block" />}
+      <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-2">
+          <span className="text-xl md:text-2xl font-display font-light tracking-[0.2em] text-primary/40">§{p}</span>
+          <div className="flex items-center gap-1">
             <Button onClick={() => {
               toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` });
-            }} className="p-3 rounded-full hover:bg-primary/[0.02] transition-all active:scale-95">
-              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-primary/10 group-hover:text-primary/30'}`} />
+              // Contextual AI trigger removed from heart button to avoid confusion, but keeping the structure
+            }} className="p-2 rounded-full hover:bg-primary/10 transition-all active:scale-95">
+              <Icons.Heart className={`w-4 h-4 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
             </Button>
             <Button 
               onClick={() => {
+                // We need a way to trigger LogosAI from here. 
+                // Since LogosAI state is in the parent Catechism component, we should pass a callback.
                 (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }));
               }} 
-              className="p-3 rounded-full hover:bg-primary/[0.02] transition-all text-primary/10 hover:text-primary/30"
+              className="p-2 rounded-full hover:bg-primary/10 transition-all text-muted-foreground hover:text-primary"
               title="Perguntar ao Logos IA"
             >
               <Icons.Sparkles className="w-4 h-4" />
             </Button>
-            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-3 h-auto w-auto border-0 hover:bg-primary/[0.02] text-primary/10 hover:text-primary/30 transition-all" />
+            <ShareButton title={`Catecismo §${p}`} text={`Leia o Catecismo da Igreja Católica, §${p} — Cathedra Digital`} url={`${window.location.origin}/catechism?p=${p}`} className="p-2 h-auto w-auto border-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" />
             <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
-        <div className="w-px h-16 md:h-24 bg-gradient-to-b from-primary/10 to-transparent opacity-20" />
+        <div className="h-px flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
       <CatechismContent 
         paragraph={p} 
@@ -272,7 +276,7 @@ const LazyParagraph: React.FC<{
         highlights={highlights}
       />
 
-      <div className="mt-8 opacity-0 group-hover:opacity-100 transition-all duration-1000 flex justify-center">
+      <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
         <NotesPanel contentType="catechism" contentId={`${p}`} contentLabel={`§${p}`} />
       </div>
     </div>

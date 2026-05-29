@@ -27,10 +27,10 @@ const ReadingControlPanel: React.FC = () => {
   const navigate = useNavigate();
 
   const themes = [
-    { id: 'paper', label: 'Papel', color: 'bg-[#FDFBF7] border-[#E8E2D2]' },
-    { id: 'sepia', label: 'Sépia', color: 'bg-[#F2E8D5] border-[#D8CBB5]' },
-    { id: 'dark', label: 'Escuro', color: 'bg-[#141414] border-white/5' },
-    { id: 'night', label: 'Noite', color: 'bg-[#080808] border-white/5' },
+    { id: 'paper', label: 'Papel', color: 'bg-[#F8F5EE] border-[#E8E2D2]' },
+    { id: 'sepia', label: 'Sépia', color: 'bg-[#E1D7C1] border-[#C5B89C]' },
+    { id: 'dark', label: 'Escuro', color: 'bg-[#0F172A] border-[#1E293B]' },
+    { id: 'night', label: 'Noite', color: 'bg-black border-zinc-800' },
   ];
 
   const SettingsContent = () => (
@@ -155,60 +155,6 @@ const ReadingControlPanel: React.FC = () => {
               checked={settings.autoHideUI}
               onChange={(e) => updateSettings({ autoHideUI: e.target.checked })}
               className="w-4 h-4 rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Atmosfera Section */}
-      <div className="space-y-6 pt-4 border-t border-primary/5">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground/60 px-1 text-center">Calibração de Atmosfera</p>
-        <div className="space-y-6 px-2">
-          <div className="space-y-2">
-            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Intensidade de Bordas</span>
-              <span className="text-primary">{Math.round((settings.atmosphere?.borderIntensity || 0) * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={settings.atmosphere?.borderIntensity || 0}
-              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, borderIntensity: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Profundidade de Sombras</span>
-              <span className="text-primary">{Math.round((settings.atmosphere?.shadowDepth || 0) * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={settings.atmosphere?.shadowDepth || 0}
-              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, shadowDepth: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/40">
-              <span>Opacidade Dark Mode</span>
-              <span className="text-primary">{Math.round((settings.atmosphere?.darkOpacity || 0) * 100)}%</span>
-            </div>
-            <input
-              type="range"
-              min={0.5}
-              max={1}
-              step={0.01}
-              value={settings.atmosphere?.darkOpacity || 0.9}
-              onChange={(e) => updateSettings({ atmosphere: { ...settings.atmosphere, darkOpacity: Number(e.target.value) } })}
-              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary"
             />
           </div>
         </div>

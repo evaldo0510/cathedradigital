@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { supabase } from '@/integrations/supabase/client';
@@ -119,10 +118,9 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-[1.05rem] md:text-[1.15rem]', leading: 'leading-[1.8]', letterSpacing: 'tracking-[0.01em]' },
-  { label: 'M', size: 'text-[1.25rem] md:text-[1.45rem]', leading: 'leading-[2.0]', letterSpacing: 'tracking-[0.015em]' },
-  { label: 'G', size: 'text-[1.55rem] md:text-[1.85rem]', leading: 'leading-[2.2]', letterSpacing: 'tracking-[0.02em]' },
-  { label: 'EX', size: 'text-[1.85rem] md:text-[2.3rem]', leading: 'leading-[2.3]', letterSpacing: 'tracking-[0.025em]' },
+  { label: 'P', size: 'text-base', leading: 'leading-relaxed' },
+  { label: 'M', size: 'text-lg md:text-xl', leading: 'leading-[1.8]' },
+  { label: 'G', size: 'text-xl md:text-2xl', leading: 'leading-[1.9]' },
 ];
 
 const Bible: React.FC = () => {
@@ -869,24 +867,15 @@ const Bible: React.FC = () => {
         )}
 
         {/* Atmospheric Floating Header - Only visible on interaction or scroll up */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl px-6 py-3 rounded-full border border-primary/10 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.1)] header-reading-auto-hide md:hidden fixed top-20 left-4 right-4 z-40 transition-all duration-[1200ms] cubic-bezier(0.19, 1, 0.22, 1)">
-          <div className="flex items-center gap-1.5">
-            <AudioButton variant="ghost" className="rounded-full w-9 h-9 p-0 text-primary/40 hover:text-primary transition-colors" />
-            <div className="w-px h-4 bg-primary/10 mx-1" />
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+          <div className="flex items-center gap-1">
+            <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
             <ReadingControlPanel />
           </div>
-          
-          <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="rounded-full w-9 h-9 p-0 hover:bg-primary/[0.03] transition-all" 
-              onClick={() => setShowLogosAI(!showLogosAI)}
-              aria-label="Reflexão Logos"
-            >
-              <Icons.Sparkles className={cn("w-3.5 h-3.5 transition-all duration-700", showLogosAI ? 'text-primary scale-110' : 'text-primary/20')} />
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
+              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/60'}`} />
             </Button>
-            <div className="w-px h-4 bg-primary/10" />
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
           </div>
         </div>
@@ -1017,121 +1006,87 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
-                    <div className="flex flex-col gap-16 md:gap-24 pb-64">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={`${selectedBook.abbr}-${selectedChapter}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-                        className="space-y-16 md:space-y-24"
-                      >
-                        {verses.map((v, index) => {
-                          const relatedP = verseToCic[v.number];
-                          const isHighlighted = highlightedVerse === v.number;
-                          const sizeMap = { 'small': 0, 'medium': 1, 'large': 2, 'extra-large': 3 };
-                          const activeFont = FONT_SIZES[sizeMap[settings.fontSize] || 1] || FONT_SIZES[1];
-                          
-                          return (
-                            <motion.div 
-                              key={v.number} 
-                              id={`v${v.number}`}
-                              initial={{ opacity: 0, y: 40 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              viewport={{ once: true, margin: "-10%" }}
-                              transition={{ duration: 2.2, delay: Math.min(index * 0.08, 0.6), ease: [0.19, 1, 0.22, 1] }}
-                              className={`group relative transition-all duration-[2000ms]
-                                ${isHighlighted ? 'bg-primary/[0.01] -mx-8 px-8 py-10 rounded-[3rem]' : 'py-4'}`}>
-                              <div className="flex items-start gap-10 md:gap-16">
-                                <span className="text-[0.5em] font-display font-light text-primary/3 mt-6 select-none group-hover:text-primary/15 transition-all duration-[1500ms] min-w-[2.5rem] text-right italic tracking-widest">
-                                  {v.number}
-                                </span>
-                                
-                                <div className="flex-1 cursor-text" onClick={() => {
-                                  const vNum = v.number;
-                                  setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
-                                  setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
-                                  localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
-                                  
-                                  saveLastRead({
-                                    content_type: 'bible',
-                                    content_id: selectedBook.abbr,
-                                    chapter: selectedChapter,
-                                    position: vNum,
-                                    label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
-                                    url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
-                                    is_last_read: true
-                                  });
-                                }}>
-                                  <p className={cn(
-                                    "font-reader text-foreground/80 group-hover:text-foreground/95 transition-all duration-[1200ms] ease-out-quint",
-                                    settings.fontSize || activeFont.size,
-                                    activeFont.leading,
-                                    activeFont.letterSpacing
-                                  )}>
-                                    {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                      <span 
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
-                                          if (note) setActiveHighlight(note);
-                                        }}
-                                        className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1.5 py-0.5 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all decoration-secondary/20 decoration-1 underline-offset-[6px]`}
-                                      >
-                                        {v.text}
-                                      </span>
-                                    )}
-                                    {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                      <span className="opacity-90 leading-relaxed">{v.text}</span>
-                                    )}
+                    <div className="flex flex-col gap-8 md:gap-14 pb-48">
+                    {verses.map(v => {
+                      const relatedP = verseToCic[v.number];
+                      return (
+                        <div key={v.number} 
+                          id={`v${v.number}`}
+                          className={`group relative py-6 px-8 rounded-[2rem] transition-all duration-1000 mb-2
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.01]' : 'hover:bg-primary/[0.005]'}`}>
+                          <div className="flex items-start gap-4">
 
-                                    {relatedP && (
-                                      <span className="inline-flex gap-1.5 ml-4 align-middle opacity-20 group-hover:opacity-100 transition-all duration-1000">
-                                        {relatedP.map(p => (
-                                          <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
-                                        ))}
-                                      </span>
-                                    )}
-                                  </p>
-                                  
-                                  {/* Inline Notes display */}
-                                  <AnimatePresence>
-                                    {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
-                                      <motion.div 
-                                        key={note.id}
-                                        initial={{ opacity: 0, height: 0, y: 10 }}
-                                        animate={{ opacity: 1, height: 'auto', y: 0 }}
-                                        exit={{ opacity: 0, height: 0, y: 10 }}
-                                        transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
-                                        className="mt-8 p-8 bg-primary/[0.01] border-l border-primary/10 rounded-r-[2.5rem] text-sm italic text-muted-foreground/60 group/note relative"
-                                      >
-                                        <div className="flex items-center gap-3 mb-4 opacity-30">
-                                          <Icons.Feather className="w-3.5 h-3.5" />
-                                          <span className="text-[8px] font-black uppercase tracking-[0.4em]">Meditação Pessoal</span>
-                                        </div>
-                                        <span className="leading-relaxed font-serif">{note.note_text}</span>
-                                        <button 
-                                          onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
-                                          className="absolute top-6 right-6 opacity-0 group-hover/note:opacity-100 transition-opacity p-2 hover:text-destructive/60"
-                                        >
-                                          <Icons.X className="w-3.5 h-3.5" strokeWidth={1.5} />
-                                        </button>
-                                      </motion.div>
-                                    ))}
-                                  </AnimatePresence>
-                                </div>
+                            <sup className="text-[0.6em] font-bold text-primary/10 mt-2 select-none group-hover:text-primary/30 transition-colors duration-1000">{v.number}</sup>
+                            <div className="flex-1 cursor-pointer" onClick={() => {
+                              const vNum = v.number;
+                              setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
+                              setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
+                              localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
+                              localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
+                              
+                              // Seamless auto-save on verse click/selection
+                              saveLastRead({
+                                content_type: 'bible',
+                                content_id: selectedBook.abbr,
+                                chapter: selectedChapter,
+                                position: vNum,
+                                label: `${selectedBook.name} ${selectedChapter}:${vNum}`,
+                                url: `/bible?book=${selectedBook.abbr}&ch=${selectedChapter}&v=${vNum}`,
+                                is_last_read: true
+                              });
+                            }}>
+                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/85 group-hover:text-foreground transition-colors duration-1000">
+                                {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
+                                  <span 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
+                                      if (note) setActiveHighlight(note);
+                                    }}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all`}
+                                  >
+                                    {v.text}
+                                  </span>
+                                )}
+                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
+                                  <span className="opacity-90 leading-[1.85]">{v.text}</span>
+                                )}
+
                                 
-                                <div className="flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-all duration-1000 translate-x-4 group-hover:translate-x-0 pt-3">
-                                  <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
-                                  <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
+                                {relatedP && (
+                                  <span className="inline-flex gap-0.5 ml-2">
+                                    {relatedP.map(p => (
+                                      <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
+                                    ))}
+                                  </span>
+                                )}
+                              </p>
+                              
+                              {/* Inline Notes display */}
+                              {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
+                                <div key={note.id} className="mt-3 p-4 bg-secondary/5 border-l-2 border-secondary rounded-r-xl text-[13px] italic text-muted-foreground group/note relative">
+                                  <div className="flex items-center gap-2 mb-1.5 opacity-40">
+                                    <Icons.FileText className="w-3 h-3" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Minha Reflexão</span>
+                                  </div>
+                                  {note.note_text}
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
+                                    className="absolute top-2 right-2 opacity-0 group-hover/note:opacity-100 transition-opacity p-1 hover:text-destructive"
+                                  >
+                                    <Icons.X className="w-3 h-3" />
+                                  </button>
                                 </div>
-                              </div>
-                            </motion.div>
-                          );
-                        })}
-                      </motion.div>
-                    </AnimatePresence>
+                              ))}
+                            </div>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
+                              <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                     </div>
                   </div>
                 )}
@@ -1201,82 +1156,75 @@ const Bible: React.FC = () => {
         </div>
 
 
-          <div className="mt-48 pt-32 border-t border-primary/5 space-y-32">
-            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-12">
-              <Button 
-                variant="ghost" 
-                disabled={selectedChapter <= 1}
-                onClick={() => {
-                  if (selectedChapter > 1) {
-                    const prevCh = selectedChapter - 1;
-                    setSelectedChapter(prevCh);
-                    setVerses([]);
-                    navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
-                }}
-                className="rounded-[3rem] group px-8 py-14 flex flex-col items-start gap-4 hover:bg-primary/[0.02] transition-all w-full md:w-auto border border-transparent hover:border-primary/5 hover:shadow-premium"
-              >
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 group-hover:text-primary/40 transition-colors">Capítulo Anterior</span>
-                <div className="flex items-center gap-4 text-primary font-display font-light text-2xl md:text-4xl">
-                  <Icons.ChevronLeft className="w-6 h-6 group-hover:-translate-x-2 transition-transform opacity-30" strokeWidth={1.5} />
-                  <span>{selectedBook.name}</span>
-                  <span className="opacity-30">{selectedChapter - 1}</span>
-                </div>
-              </Button>
-
-              <Button 
-                variant="ghost" 
-                disabled={selectedChapter >= selectedBook.chapters}
-                onClick={() => {
-                  if (selectedChapter < selectedBook.chapters) {
-                    const nextCh = selectedChapter + 1;
-                    setSelectedChapter(nextCh);
-                    setVerses([]);
-                    navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
-                  }
-                }}
-                className="rounded-[3rem] group px-8 py-14 flex flex-col items-end gap-4 hover:bg-primary/[0.02] transition-all text-right w-full md:w-auto border border-transparent hover:border-primary/5 hover:shadow-premium"
-              >
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-muted-foreground/40 group-hover:text-primary/40 transition-colors">Próximo Capítulo</span>
-                <div className="flex items-center gap-4 text-primary font-display font-light text-2xl md:text-4xl">
-                  <span className="opacity-30">{selectedChapter + 1}</span>
-                  <span>{selectedBook.name}</span>
-                  <Icons.ChevronRight className="w-6 h-6 group-hover:translate-x-2 transition-transform opacity-30" strokeWidth={1.5} />
-                </div>
-              </Button>
-            </div>
-
-            <div className="text-center space-y-20 py-48 bg-transparent border-none relative overflow-hidden">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[0.5px] h-32 bg-gradient-to-b from-primary/20 to-transparent" />
-              
-              <Icons.CheckCircle2 className="w-24 h-24 text-primary/10 mx-auto" strokeWidth={0.5} />
-              
-              <div className="space-y-10 px-8">
-                <h3 className="text-4xl md:text-7xl font-display text-primary/40 uppercase tracking-[0.6em] font-light filter blur-[0.2px]">Contemplação Concluída</h3>
-                <p className="text-base md:text-xl text-muted-foreground/30 italic font-serif max-w-2xl mx-auto leading-relaxed px-10 tracking-widest">
-                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." <br/><span className="text-[11px] font-black uppercase tracking-[0.6em] mt-6 block opacity-40">(Salmo 119, 105)</span>
-                </p>
+          <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+            <Button 
+              variant="ghost" 
+              disabled={selectedChapter <= 1}
+              onClick={() => {
+                if (selectedChapter > 1) {
+                  const prevCh = selectedChapter - 1;
+                  setSelectedChapter(prevCh);
+                  setVerses([]);
+                  navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+            >
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+              <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                {selectedBook.name} {selectedChapter - 1}
               </div>
+            </Button>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-10 pt-16">
+
+
                 <Button 
+                  variant="ghost" 
+                  disabled={selectedChapter >= selectedBook.chapters}
                   onClick={() => {
-                    markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
-                    toast.success("Capítulo contemplado!", { icon: '📖' });
-                    setViewMode('chapters');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    if (selectedChapter < selectedBook.chapters) {
+                      const nextCh = selectedChapter + 1;
+                      setSelectedChapter(nextCh);
+                      setVerses([]);
+                      navigate(`/bible?book=${selectedBook.abbr}&ch=${nextCh}`);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                    }
                   }}
-                  variant="ghost"
-                  className="rounded-full px-20 py-10 h-auto bg-primary/[0.03] border border-primary/5 text-primary/60 hover:text-primary hover:bg-primary/[0.05] transition-all duration-1000 text-[11px] font-black uppercase tracking-[0.5em]"
+                  className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
                 >
-                  Finalizar Contemplação
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
+                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                    {selectedBook.name} {selectedChapter + 1}
+                    <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
+                  </div>
                 </Button>
               </div>
+
+              <div className="text-center space-y-8 py-16">
+                <Icons.CheckCircle2 className="w-16 h-16 text-primary/60 mx-auto" strokeWidth={1} />
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                  <p className="text-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
+                </div>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Button 
+                    onClick={() => {
+                      markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters);
+                      toast.success("Capítulo contemplado!", { icon: '📖' });
+                      setViewMode('chapters');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="rounded-full px-12 py-7 bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                  >
+                    Finalizar e Voltar
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
 
             
             <TextSelectionToolbar 
@@ -1540,7 +1488,7 @@ const Bible: React.FC = () => {
             Todos os Livros
           </Button>
 
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-4 md:gap-6">
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-2 md:gap-4">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
@@ -1548,29 +1496,21 @@ const Bible: React.FC = () => {
               return (
                 <motion.button 
                   key={ch} 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: (ch % 20) * 0.02, ease: [0.19, 1, 0.22, 1] }}
-                  whileHover={{ y: -6, scale: 1.05 }}
+                  whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
-                  className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-[2.8rem] border text-sm font-bold transition-all duration-[1500ms] relative group overflow-hidden",
-                    isRead 
-                      ? "bg-primary text-primary-foreground border-primary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)]" 
+                  className={`aspect-square flex flex-col items-center justify-center rounded-2xl border text-sm font-bold transition-all relative group
+                    ${isRead 
+                      ? 'bg-primary text-primary-foreground border-primary' 
                       : isLastReadChapter
-                        ? "bg-secondary/[0.03] border-secondary/30 text-primary ring-1 ring-secondary/10 shadow-premium"
-                        : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.02] dark:border-white/[0.015] text-primary/60 hover:border-primary/10 hover:bg-card/40 hover:shadow-premium-hover hover:text-primary"
-                  )}
+                        ? 'bg-secondary/10 border-secondary text-primary'
+                        : 'bg-card border-primary/5 text-primary hover:border-primary/20'}`}
                 >
-                  <span className="text-2xl md:text-3xl font-display font-light transition-transform duration-1000 group-hover:scale-110">{ch}</span>
+                  <span>{ch}</span>
                   {isLastReadChapter && (
-                    <span className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-[0.2em] text-secondary animate-pulse whitespace-nowrap opacity-60">
+                    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[8px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
                       Retomar
                     </span>
-                  )}
-                  {isRead && !isLastReadChapter && (
-                    <Icons.CheckCircle2 className="absolute top-3 right-3 w-3.5 h-3.5 text-primary-foreground/20" strokeWidth={3} />
                   )}
                 </motion.button>
               );
@@ -1610,31 +1550,29 @@ const Bible: React.FC = () => {
       </script>
       
       <div className="space-y-20">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-primary/[0.04] pb-16">
-          <div className="flex gap-2 p-1.5 bg-primary/[0.015] backdrop-blur-3xl rounded-full border border-primary/[0.03]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-primary/[0.04] pb-12">
+          <div className="flex gap-4">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
-                className={cn(
-                  "px-10 py-3.5 rounded-full text-[9px] font-black uppercase tracking-[0.4em] transition-all duration-[1200ms] cubic-bezier(0.19, 1, 0.22, 1)",
-                  testament === t 
-                    ? "bg-primary text-primary-foreground shadow-premium scale-105" 
-                    : "text-muted-foreground/20 hover:text-primary/60 hover:bg-primary/[0.02]"
-                )}
+                className={`px-8 py-3 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] transition-all
+                  ${testament === t 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'text-muted-foreground/40 hover:text-primary'}`}
               >
                 {t}
               </Button>
             ))}
           </div>
           
-          <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/30 group-focus-within:text-primary transition-colors" strokeWidth={1.5} />
+          <div className="relative group w-full md:w-80">
+            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60 group-focus-within:text-primary/40 transition-colors" />
             <input
               type="text"
-              placeholder="Buscar nas Escrituras..."
-              className="w-full pl-14 pr-8 py-5 bg-primary/[0.01] border border-border/10 rounded-[2.5rem] focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-display italic text-lg placeholder:text-primary/20 placeholder:font-light"
+              placeholder="Buscar livro..."
+              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/60"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1645,46 +1583,31 @@ const Bible: React.FC = () => {
           {filteredCategories.map((cat) => (
             <section key={cat.label} className="space-y-12">
               <div className="flex items-center gap-6">
-                <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center shadow-premium">
+                <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
                   <cat.icon className="w-4 h-4 text-primary/60" />
                 </div>
-                <h2 className="text-[10px] font-black text-primary/30 uppercase tracking-[0.8em]">{cat.label}</h2>
-                <div className="h-[0.5px] flex-1 bg-gradient-to-r from-border/5 via-border/20 to-transparent" />
+                <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
+                <div className="h-px flex-1 bg-border/5" />
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 md:gap-10">
-                {cat.books.map((book, idx) => {
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+                {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
                     <motion.button
                       key={book.abbr}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, delay: idx * 0.03, ease: [0.19, 1, 0.22, 1] }}
-                      whileHover={{ y: -8, scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
+                      whileHover={{ y: -4 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => selectBook(book)}
-                      className={cn(
-                        "flex flex-col items-center justify-center aspect-[4/5] p-6 md:p-12 rounded-[3rem] border transition-all duration-[1500ms] relative group overflow-hidden",
-                        isRead 
-                          ? "bg-primary text-primary-foreground border-primary shadow-[0_30px_70px_-20px_rgba(0,0,0,0.18)]" 
-                          : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.015] dark:border-white/[0.01] text-primary/50 hover:bg-card/40 hover:border-primary/10 hover:shadow-premium-hover hover:text-primary"
-                      )}
+                      className={`flex flex-col items-center justify-center p-8 rounded-premium border transition-all relative group
+                        ${isRead 
+                          ? 'bg-primary text-primary-foreground border-primary' 
+                          : 'bg-card border-primary/[0.04] text-primary hover:border-primary/10'}`}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      
-                      <span className="text-3xl md:text-4xl font-display font-light leading-none mb-4 tracking-tighter transition-transform duration-1000 group-hover:scale-110">{book.abbr}</span>
-                      <span className="text-[8px] font-black uppercase tracking-[0.3em] text-center leading-tight truncate w-full opacity-30 group-hover:opacity-60 transition-all duration-1000">
+                      <span className="text-2xl font-display font-medium leading-none mb-2">{book.abbr}</span>
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
                         {book.name}
                       </span>
-
-                      {isRead && (
-                        <div className="absolute top-4 right-4">
-                          <Icons.CheckCircle2 className="w-4 h-4 text-primary-foreground/30" strokeWidth={2.5} />
-                        </div>
-                      )}
                     </motion.button>
                   );
                 })}

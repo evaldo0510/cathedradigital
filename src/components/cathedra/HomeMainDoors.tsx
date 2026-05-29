@@ -75,7 +75,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-32 lg:gap-48 w-full max-w-7xl mx-auto px-6", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
         <CathedraCard
           key={idx}
@@ -92,16 +92,16 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-12 md:p-24 lg:p-32 flex flex-col items-center text-center gap-10 md:gap-16 focus-visible:ring-primary/20 focus-visible:ring-offset-8 group border-none bg-transparent hover:bg-transparent shadow-none hover:shadow-none transition-all duration-1000 rounded-[4rem]"
+          className="p-10 md:p-32 lg:p-48 flex flex-col items-center text-center gap-8 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-transparent hover:bg-primary/[0.005] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[3rem] md:rounded-[6rem]"
         >
-          <div className="w-20 h-20 md:w-32 md:h-32 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/60 group-hover:bg-primary/[0.01] transition-all duration-[2000ms] ease-in-out glow-soft">
-            <door.icon className="w-8 h-8 md:w-12 md:h-12" strokeWidth={0.5} />
+          <div className="w-16 h-16 md:w-40 md:h-40 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/20 group-hover:scale-110 group-hover:text-primary/60 group-hover:bg-primary/[0.015] transition-all duration-1500 ease-in-out">
+            <door.icon className="w-6 h-6 md:w-12 md:h-12" strokeWidth={0.8} />
           </div>
-          <div className="space-y-6 md:space-y-8">
-            <h4 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.8em] md:tracking-[1em] text-primary/15 group-hover:text-primary/60 transition-colors duration-[1500ms]">
+          <div className="space-y-6 md:space-y-10">
+            <h4 className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/30 group-hover:text-primary/80 transition-colors duration-1000">
               {door.label}
             </h4>
-            <p className="text-[13px] md:text-[15px] text-muted-foreground/30 font-serif italic tracking-[0.1em] group-hover:text-muted-foreground/60 transition-colors duration-[1500ms] leading-relaxed max-w-[240px] mx-auto opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-[2000ms]">
+            <p className="text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
               {door.description}
             </p>
           </div>

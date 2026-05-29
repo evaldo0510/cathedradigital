@@ -224,29 +224,28 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-4 md:padding-rhythm space-y-24 md:space-y-48 max-w-7xl mx-auto pt-4 md:pt-0">
+      <div className="relative z-10 p-4 md:padding-rhythm stack-rhythm max-w-7xl mx-auto pt-4 md:pt-0">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12">
-          <div className="flex flex-col gap-6 md:gap-8">
-            <span className="text-[9px] font-bold uppercase tracking-[0.6em] text-primary/20 leading-none">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-12 pb-6 md:pb-24">
+          <div className="flex flex-col gap-4 md:gap-6">
+            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.5em] text-primary/60 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
-            <div className="flex items-center gap-6 md:gap-10">
+            <div className="flex items-center gap-6 md:gap-8">
               {progress > 0 && (
-                <div className="flex items-center gap-6">
-                  <div className="h-[1px] w-24 md:w-48 bg-primary/[0.03] rounded-full overflow-hidden">
+                <div className="flex items-center gap-4 md:gap-5">
+                  <div className="h-1 w-24 md:w-32 bg-primary/[0.03] rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
-                      className="h-full bg-primary/30"
+                      className="h-full bg-primary/20"
                     />
                   </div>
-                  <span className="text-[8px] font-black text-primary/20 uppercase tracking-[0.5em]">{progress}%</span>
+                  <span className="text-[7px] md:text-[8px] font-black text-primary/80 uppercase tracking-[0.5em]">{progress}%</span>
                 </div>
               )}
             </div>
           </div>
-
           
           <div className="flex items-center gap-4">
             <CathedraButton 
@@ -324,25 +323,24 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-12 md:gap-32">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-20 md:space-y-40 max-w-5xl mx-auto text-center" aria-labelledby="lectio-heading">
-            <h4 id="lectio-heading" className="text-[11px] font-black uppercase tracking-[1.2em] text-primary/5">I. Lectio</h4>
+          <section className="space-y-6 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+            <h4 id="lectio-heading" className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary/30 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
-                "w-full text-center group transition-all duration-[2000ms] focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-[32px] rounded-3xl outline-none",
-                progress >= 25 ? 'opacity-15 grayscale scale-[0.99] filter blur-[1px]' : 'opacity-100'
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                progress >= 25 ? 'opacity-30 grayscale scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-4xl md:text-6xl lg:text-8xl font-serif italic leading-[1.1] text-primary/90 selection:bg-primary/10 tracking-tighter px-6 md:px-0 transition-all duration-[1500ms] group-hover:text-primary">
+              <blockquote className="text-2xl md:text-5xl lg:text-7xl font-serif italic leading-[1.3] text-primary/90 selection:bg-primary/5 tracking-tighter px-4 md:px-2 transition-all duration-1000 group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-12 md:mt-24 text-[10px] md:text-[11px] font-black text-primary/10 uppercase tracking-[1em] md:tracking-[1.5em] group-hover:text-primary/30 transition-colors duration-[1500ms]">
+              <p className="mt-6 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </button>
           </section>
-
 
           {/* 2. Reflection */}
           <section className="space-y-5 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
@@ -363,9 +361,8 @@ const RitualDoDia: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 lg:gap-20 items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-8 md:space-y-16 text-center p-10 md:p-14 lg:p-24 bg-primary/[0.002] rounded-[3rem] lg:rounded-[6rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
-              <h4 id="traditio-heading" className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/10">III. Traditio</h4>
-
+            <section className="space-y-5 md:space-y-12 text-center p-6 md:p-14 lg:p-24 bg-primary/[0.005] rounded-[2.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.01]" aria-labelledby="traditio-heading">
+              <h4 id="traditio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
                   "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",

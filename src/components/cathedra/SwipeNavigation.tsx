@@ -30,18 +30,18 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     // Only handle swipes on mobile (simple check)
     if (window.innerWidth >= 1024) return;
 
-    const threshold = 180; // higher for even more intentionality
-    const velocity = 0.15; // lower velocity for a very calm feel
+    const threshold = 100; // px
+    const velocity = 0.5;
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
       if (currentIndex !== -1 && currentIndex < routes.length - 1) {
-        setTimeout(() => navigate(routes[currentIndex + 1]), 50); // Small micro-delay for fluidity
+        navigate(routes[currentIndex + 1]);
       }
     } else if (info.offset.x > threshold || info.velocity.x > velocity) {
       // Swipe Right -> Previous
       if (currentIndex !== -1 && currentIndex > 0) {
-        setTimeout(() => navigate(routes[currentIndex - 1]), 50);
+        navigate(routes[currentIndex - 1]);
       }
     }
   };
@@ -54,7 +54,7 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
       className="w-full min-h-screen will-change-transform swipe-navigation"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.4}
+      dragElastic={0.2}
       onDragEnd={handleDragEnd}
       style={{ touchAction: 'pan-y' }} // Allow vertical scroll, block horizontal for drag
     >

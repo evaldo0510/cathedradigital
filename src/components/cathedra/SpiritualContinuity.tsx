@@ -100,39 +100,40 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 2, ease: [0.19, 1, 0.22, 1] }}
-      className="w-full mb-20 md:mb-40"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full mb-16"
     >
-      <div className="p-8 md:p-16 bg-transparent border-none transition-all duration-1000 relative overflow-hidden group text-center md:text-left">
-        <div className="absolute inset-0 bg-primary/[0.002] rounded-[4rem] group-hover:bg-primary/[0.005] transition-all duration-[2000ms]" />
+      <HomeCard className="p-6 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.01] rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/10 border border-primary/[0.03] group-hover:scale-105 group-hover:text-primary/30 transition-all duration-[1500ms]">
-              <Icons.Compass className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.5} />
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
+              <Icons.Compass className="w-6 h-6" strokeWidth={1} />
             </div>
-            <div className="space-y-4 text-center md:text-left">
-              <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.8em] md:tracking-[1em] text-primary/15 group-hover:text-primary/40 transition-colors duration-[1500ms]">
-                {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Retomada'}
+            <div className="space-y-1 text-center md:text-left">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60">
+                {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
-              <h3 className="text-2xl md:text-4xl font-serif font-light text-primary/70 group-hover:text-primary/90 transition-colors duration-[1500ms]">
+              <h3 className="text-lg md:text-2xl font-serif font-bold text-primary/80">
                 {title}
               </h3>
-              <p className="text-[13px] md:text-[15px] text-primary/30 italic font-serif tracking-widest group-hover:text-primary/50 transition-colors duration-[1500ms]">{subtitle}</p>
+              <p className="text-xs text-primary/60 italic font-serif">{subtitle}</p>
             </div>
           </div>
           
-          <Button 
-            variant="ghost" 
-            className="rounded-full px-10 md:px-16 h-14 md:h-16 bg-primary/[0.02] border border-primary/5 hover:bg-primary/5 text-primary/40 hover:text-primary/80 font-black uppercase tracking-[0.4em] text-[10px] md:text-[11px] transition-all duration-[1500ms] w-full md:w-auto"
-            onClick={() => navigate(route)}
-          >
-            Continuar
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+            <Button 
+              variant="ghost" 
+              className="rounded-full px-8 md:px-12 h-12 md:h-14 border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-700 w-full md:w-auto"
+              onClick={() => navigate(route)}
+            >
+              Retomar Contemplação
+            </Button>
+          </div>
         </div>
-      </div>
+      </HomeCard>
     </motion.div>
   );
 };
