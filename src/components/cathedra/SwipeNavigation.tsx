@@ -30,8 +30,8 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     // Only handle swipes on mobile (simple check)
     if (window.innerWidth >= 1024) return;
 
-    const threshold = 120; // px - slightly higher for more intentional swipe
-    const velocity = 0.4; // lower velocity needed for cinematic feel
+    const threshold = 150; // px - higher for even more intentionality
+    const velocity = 0.3; // even lower velocity for a very calm feel
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
