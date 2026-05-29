@@ -434,7 +434,18 @@ const AppLayout: React.FC = () => {
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 md:pb-80 pt-20 md:pt-80 px-6 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
             <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, x: 20, scale: 0.98 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: -20, scale: 1.02 }}
+                transition={{ 
+                  duration: settings.reduceAnimations ? 0.1 : 0.6,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                className="w-full flex-1 flex flex-col"
+              >
+                <Routes location={location}>
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><Bible /></Suspense>} />
@@ -544,6 +555,7 @@ const AppLayout: React.FC = () => {
 
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+              </motion.div>
             </AnimatePresence>
           </SwipeNavigation>
         </main>

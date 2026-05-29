@@ -279,7 +279,8 @@
   }
 
   .section-rhythm {
-    @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
+    @apply py-[var(--space-mobile-section-sm)] md:py-[var(--space-desktop-section)];
+    margin-bottom: clamp(1rem, 2vw, 2rem);
   }
 
   .stack-rhythm {
