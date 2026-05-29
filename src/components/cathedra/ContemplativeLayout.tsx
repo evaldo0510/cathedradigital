@@ -22,32 +22,32 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-28 md:pt-32 pb-56 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-28 md:pt-48 pb-64 will-change-transform", className)}>
 
       {(title || subtitle) && (
-        <header className={cn("mb-20 md:mb-24 px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-2 duration-1000")}>
-          <div className="w-[1.5px] h-20 bg-primary/10 mx-auto mb-12" />
+        <header className={cn("mb-20 md:mb-32 px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-1000")}>
+          <div className="w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-16" />
           {subtitle && (
-            <p className="text-[11px] font-bold uppercase tracking-[0.7em] text-primary/70 mb-8">
+            <p className="h5 !text-primary/40 mb-10">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-4xl md:text-6xl font-display font-light text-primary tracking-[0.15em] uppercase leading-tight">
+            <h1 className="text-5xl md:text-8xl tracking-tight text-primary">
               {title}
             </h1>
           )}
         </header>
       )}
       <motion.main 
-        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 10 }}
+        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 0.7, 
+          duration: settings.reduceAnimations ? 0.1 : 1.2, 
           ease: settings.reduceAnimations ? "linear" : [0.16, 1, 0.3, 1] 
         }}
 
-        className={cn("mx-auto px-6", maxW)}
+        className={cn("app-container", className)}
       >
         {children}
       </motion.main>
