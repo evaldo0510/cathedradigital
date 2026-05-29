@@ -352,6 +352,46 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         {settings.autoHideUI ? <Check className="w-3.5 h-3.5" /> : null}
                       </div>
                     </Button>
+
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-between h-16 rounded-2xl px-6 transition-all",
+                        settings.focusMode ? "border-primary bg-primary/5" : "border-muted/20 bg-muted/5"
+                      )}
+                      onClick={() => updateSettings({ focusMode: !settings.focusMode })}
+                    >
+                      <div className="flex flex-col items-start text-left">
+                        <span className="font-bold text-sm">Modo Foco</span>
+                        <span className="text-[10px] text-muted-foreground">Header e Sidebar invisíveis até o hover</span>
+                      </div>
+                      <div className={cn(
+                        "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                        settings.focusMode ? "bg-primary text-primary-foreground" : "bg-muted/40"
+                      )}>
+                        {settings.focusMode ? <Check className="w-3.5 h-3.5" /> : null}
+                      </div>
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-between h-16 rounded-2xl px-6 transition-all",
+                        settings.visualSilence ? "border-primary bg-primary/5" : "border-muted/20 bg-muted/5"
+                      )}
+                      onClick={() => updateSettings({ visualSilence: !settings.visualSilence })}
+                    >
+                      <div className="flex flex-col items-start text-left">
+                        <span className="font-bold text-sm">Silêncio Visual</span>
+                        <span className="text-[10px] text-muted-foreground">Reduz bordas, sombras e animações</span>
+                      </div>
+                      <div className={cn(
+                        "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                        settings.visualSilence ? "bg-primary text-primary-foreground" : "bg-muted/40"
+                      )}>
+                        {settings.visualSilence ? <Check className="w-3.5 h-3.5" /> : null}
+                      </div>
+                    </Button>
                   </div>
                 </section>
 

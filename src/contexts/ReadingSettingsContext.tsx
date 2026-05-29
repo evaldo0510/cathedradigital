@@ -13,6 +13,7 @@ interface ReadingSettings {
   highContrast: boolean;
   visibleFocus: boolean;
   contemplativeMode: boolean;
+  focusMode: boolean; // Oculta header e sidebar; reaparece com hover/toque
   autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
   lineSpacing: 'tight' | 'normal' | 'wide';
@@ -71,6 +72,7 @@ const defaultSettings: ReadingSettings = {
   visibleFocus: false,
   contemplativeMode: false,
   autoHideUI: false,
+  focusMode: false,
   lineSpacing: 'normal',
   letterSpacing: 'normal',
   sideMargins: 'standard',
@@ -225,6 +227,12 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('full-screen-mode');
     } else {
       root.classList.remove('full-screen-mode');
+    }
+
+    if (settings.focusMode) {
+      root.classList.add('focus-mode');
+    } else {
+      root.classList.remove('focus-mode');
     }
   }, [settings]);
 

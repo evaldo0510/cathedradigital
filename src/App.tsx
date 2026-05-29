@@ -222,6 +222,40 @@ const AppLayout: React.FC = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Focus Mode - Click to reveal UI
+  useEffect(() => {
+    if (!settings.focusMode) return;
+
+    const revealUI = () => {
+      document.documentElement.classList.add('reveal-chrome');
+      
+      // Auto-hide again after 3 seconds of inactivity
+      const timeout = setTimeout(() => {
+        document.documentElement.classList.remove('reveal-chrome');
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    };
+
+    const handleInteraction = () => {
+      revealUI();
+    };
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+    window.addEventListener('mousemove', (e) => {
+      if (e.clientY < 50 || e.clientY > window.innerHeight - 50) {
+        handleInteraction();
+      }
+    });
+
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('mousemove', handleInteraction);
+    };
+  }, [settings.focusMode]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
