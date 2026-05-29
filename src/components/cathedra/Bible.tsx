@@ -1007,25 +1007,34 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
-                    <div className="flex flex-col gap-8 md:gap-14 pb-48">
+                    <div className="flex flex-col gap-12 md:gap-20 pb-64">
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
+                      const isHighlighted = highlightedVerse === v.number;
+                      const hasNotes = currentChapterNotes.some(n => n.verse === v.number);
+                      const activeFont = FONT_SIZES.find(f => f.size.includes(settings.fontSize)) || FONT_SIZES[1];
+                      
                       return (
-                        <div key={v.number} 
+                        <motion.div 
+                          key={v.number} 
                           id={`v${v.number}`}
-                          className={`group relative py-6 px-8 rounded-[2rem] transition-all duration-1000 mb-2
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.01]' : 'hover:bg-primary/[0.005]'}`}>
-                          <div className="flex items-start gap-4">
-
-                            <sup className="text-[0.6em] font-bold text-primary/10 mt-2 select-none group-hover:text-primary/30 transition-colors duration-1000">{v.number}</sup>
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-10%" }}
+                          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                          className={`group relative transition-all duration-1000
+                            ${isHighlighted ? 'bg-primary/[0.02] -mx-4 px-4 rounded-3xl' : ''}`}>
+                          <div className="flex items-start gap-6 md:gap-10">
+                            <span className="text-[0.6em] font-display font-medium text-primary/10 mt-3 select-none group-hover:text-primary/30 transition-colors duration-1000 min-w-[1.5rem] text-right">
+                              {v.number}
+                            </span>
+                            
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
                               setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${vNum} - ${v.text}`);
                               localStorage.setItem(`cathedra_last_bible_verse_${selectedBook.abbr}_${selectedChapter}`, vNum.toString());
-                              localStorage.setItem(`cathedra_last_bible_scroll_${selectedBook.abbr}_${selectedChapter}`, window.scrollY.toString());
                               
-                              // Seamless auto-save on verse click/selection
                               saveLastRead({
                                 content_type: 'bible',
                                 content_id: selectedBook.abbr,
@@ -1036,7 +1045,11 @@ const Bible: React.FC = () => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/85 group-hover:text-foreground transition-colors duration-1000">
+                              <p className={cn(
+                                "font-reader text-foreground/85 group-hover:text-foreground transition-colors duration-1000",
+                                settings.fontSize || activeFont.size,
+                                activeFont.leading
+                              )}>
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1044,18 +1057,17 @@ const Bible: React.FC = () => {
                                       const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
                                       if (note) setActiveHighlight(note);
                                     }}
-                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all`}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-1 rounded-sm mr-1 cursor-pointer hover:brightness-95 transition-all decoration-secondary/30 decoration-2 underline-offset-4`}
                                   >
                                     {v.text}
                                   </span>
                                 )}
                                 {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                  <span className="opacity-90 leading-[1.85]">{v.text}</span>
+                                  <span className="opacity-95">{v.text}</span>
                                 )}
 
-                                
                                 {relatedP && (
-                                  <span className="inline-flex gap-0.5 ml-2">
+                                  <span className="inline-flex gap-1 ml-3 align-middle opacity-40 group-hover:opacity-100 transition-opacity">
                                     {relatedP.map(p => (
                                       <CatechismPopover key={p} paragraph={p} onNavigate={handleNavigateToCIC} variant="mini" />
                                     ))}
@@ -1064,28 +1076,37 @@ const Bible: React.FC = () => {
                               </p>
                               
                               {/* Inline Notes display */}
-                              {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
-                                <div key={note.id} className="mt-3 p-4 bg-secondary/5 border-l-2 border-secondary rounded-r-xl text-[13px] italic text-muted-foreground group/note relative">
-                                  <div className="flex items-center gap-2 mb-1.5 opacity-40">
-                                    <Icons.FileText className="w-3 h-3" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest">Minha Reflexão</span>
-                                  </div>
-                                  {note.note_text}
-                                  <button 
-                                    onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
-                                    className="absolute top-2 right-2 opacity-0 group-hover/note:opacity-100 transition-opacity p-1 hover:text-destructive"
+                              <AnimatePresence>
+                                {currentChapterNotes.filter(n => n.verse === v.number).map(note => (
+                                  <motion.div 
+                                    key={note.id}
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="mt-6 p-6 bg-primary/[0.01] border-l-2 border-secondary/40 rounded-r-3xl text-sm italic text-muted-foreground group/note relative"
                                   >
-                                    <Icons.X className="w-3 h-3" />
-                                  </button>
-                                </div>
-                              ))}
+                                    <div className="flex items-center gap-2 mb-3 opacity-40">
+                                      <Icons.Feather className="w-3.5 h-3.5" />
+                                      <span className="text-[9px] font-black uppercase tracking-[0.3em]">Meditação Pessoal</span>
+                                    </div>
+                                    <span className="leading-relaxed">{note.note_text}</span>
+                                    <button 
+                                      onClick={(e) => { e.stopPropagation(); deleteChapterNote(note.id); }}
+                                      className="absolute top-4 right-4 opacity-0 group-hover/note:opacity-100 transition-opacity p-2 hover:text-destructive"
+                                    >
+                                      <Icons.X className="w-3.5 h-3.5" />
+                                    </button>
+                                  </motion.div>
+                                ))}
+                              </AnimatePresence>
                             </div>
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            
+                            <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-x-2 group-hover:translate-x-0 pt-2">
                               <NotesPanel contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} contentLabel={`${selectedBook.abbr} ${selectedChapter}:${v.number}`} />
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       );
                     })}
                     </div>
