@@ -1,13 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getContrastRatio, getWCAGLevel } from './a11y-utils';
 
-type JsPDFCtor = typeof import('jspdf').jsPDF;
-
-// Type extension for jsPDF to include autoTable
-interface jsPDFWithAutoTable extends jsPDF {
-  autoTable: (options: any) => jsPDF;
-}
-
 export interface ContrastIssue {
   element: string;
   ratio: number;
