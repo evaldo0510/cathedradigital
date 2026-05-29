@@ -36,13 +36,13 @@ const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallProm
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
-import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import SplashScreen from './components/cathedra/SplashScreen';
-import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
-import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
-import SwipeNavigation from './components/cathedra/SwipeNavigation';
-import ContemplativeLayout from './components/cathedra/ContemplativeLayout';
-import { Atmosphere } from './components/cathedra/Atmosphere';
+const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
+const SplashScreen = lazy(() => import('./components/cathedra/SplashScreen'));
+const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI'));
+const SpacingDebugger = lazy(() => import('./components/cathedra/SpacingDebugger'));
+const SwipeNavigation = lazy(() => import('./components/cathedra/SwipeNavigation'));
+const Atmosphere = lazy(() => import('./components/cathedra/Atmosphere').then(m => ({ default: m.Atmosphere })));
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
