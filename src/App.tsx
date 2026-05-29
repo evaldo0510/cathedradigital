@@ -436,10 +436,6 @@ const AppLayout: React.FC = () => {
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 
             onClose={handleCloseA11y}
-            isDark={isDark}
-            onToggleDark={toggleDark}
-            isHighContrast={isHighContrast}
-            onToggleHighContrast={toggleHighContrast}
           />
           <CommandCenter />
           <PWAInstallPrompt />
