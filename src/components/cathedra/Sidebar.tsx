@@ -255,7 +255,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + (sectionIdx * 0.1), duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 mb-6 px-4">{section.label}</h3>
+                  <h3 className="text-[9px] font-bold uppercase tracking-[0.8em] text-primary/30 mb-8 px-6">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -268,10 +268,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-5 px-5 py-4 rounded-2xl text-[11px] font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none h-auto min-h-[56px] border border-transparent
+                            className={`w-full flex items-center justify-start gap-6 px-6 py-5 rounded-[2rem] text-[10px] font-bold transition-all duration-700 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[64px]
                               ${isActive
-                                ? 'bg-primary/5 text-primary border-primary/10 shadow-sm'
-                                : 'text-muted-foreground/60 hover:bg-primary/[0.02] hover:text-primary'}`}
+                                ? 'bg-primary/[0.02] text-primary'
+                                : 'text-muted-foreground/30 hover:bg-primary/[0.01] hover:text-primary'}`}
                           >
                             <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.icon}</span>
                             <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
@@ -291,7 +291,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               )))}
             </nav>
 
-            <div className="pt-8 mt-auto border-t border-primary/5 space-y-6">
+            <div className="pt-8 mt-auto space-y-8">
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
@@ -345,7 +345,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-4 py-2 border-t border-primary/5 mt-2">
+                <div className="flex justify-center gap-6 py-4 mt-4">
                   <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Instagram size={16} /></a>
                   <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Youtube size={16} /></a>
                   <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Whatsapp size={16} /></a>
@@ -353,7 +353,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </div>
 
               {user ? (
-                <div className="p-4 bg-primary/[0.02] rounded-3xl border border-primary/5 space-y-4">
+                <div className="p-8 bg-primary/[0.005] rounded-[2.5rem] space-y-6">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
                     className="flex items-center gap-4 cursor-pointer group"
