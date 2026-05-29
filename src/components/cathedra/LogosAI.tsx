@@ -382,7 +382,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </p>
                 </div>
               </div>
-            </div>
+              </CathedraCard>
           </motion.div>
         )}
       </AnimatePresence>
