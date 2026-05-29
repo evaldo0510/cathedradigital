@@ -64,7 +64,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icons.ChevronLeft className="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
@@ -75,7 +75,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label={t('search') || 'Buscar'}
               >
-                <Icons.Search className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
+                <Icons.Search className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
               </Button>
 
               <Button
@@ -86,8 +86,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
               >
                 {isDark ? 
-                  <Icons.Sun className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" /> : 
-                  <Icons.Moon className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Sun className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" /> : 
+                  <Icons.Moon className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
                 }
               </Button>
 
@@ -102,7 +102,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   {user.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
                   ) : (
-                    <Icons.User className="w-[18px] h-[18px] opacity-50" />
+                    <Icons.User className="w-[18px] h-[18px] opacity-80" />
                   )}
                 </Button>
               ) : (
@@ -121,7 +121,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
                 aria-label="Abrir menu lateral"
               >
-                <Icons.Menu className="w-[18px] h-[18px] opacity-50 group-hover:opacity-100 transition-opacity" />
+                <Icons.Menu className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
               </Button>
             </div>
 

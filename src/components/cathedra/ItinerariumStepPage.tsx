@@ -330,12 +330,12 @@ const ItinerariumStepPage: React.FC = () => {
             onClick={() => navigate(`/itineraria/${itinerariumId}`)}
             aria-label="Voltar para o itinerário"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-primary" />
           </Button>
           <div className="space-y-0.5" aria-live="polite">
-            <h1 className="text-sm font-bold truncate max-w-[200px]">{step.title}</h1>
-            <p className="text-[10px] text-foreground/70 uppercase tracking-widest flex items-center gap-2">
-              <Clock className="w-3 h-3" /> {step.duration_minutes} min • Passo {step.step_order}
+            <h1 className="text-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
+            <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-2">
+              <Clock className="w-3 h-3 text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
             </p>
           </div>
         </div>
@@ -355,7 +355,7 @@ const ItinerariumStepPage: React.FC = () => {
             className="gap-2 text-[10px] font-black uppercase tracking-widest border-primary/20"
             onClick={() => setIsLogosOpen(true)}
           >
-            <Sparkles className="w-3.5 h-3.5" /> Logos IA
+            <Sparkles className="w-3.5 h-3.5 text-primary" /> Logos IA
           </Button>
         </div>
       </div>
@@ -381,7 +381,7 @@ const ItinerariumStepPage: React.FC = () => {
           <div className="space-y-4 pt-12 border-t border-border/10">
             <div className="flex items-center gap-2 text-primary">
               <PenLine className="w-4 h-4" />
-              <h3 className="text-sm font-bold uppercase tracking-widest">Sua Reflexão</h3>
+              <h3 className="text-sm font-black uppercase tracking-widest">Sua Reflexão</h3>
             </div>
             <textarea
               className="w-full bg-muted/30 border border-border/50 rounded-2xl p-6 font-serif italic focus:ring-2 focus:ring-primary/20 outline-none min-h-[150px] transition-all"
