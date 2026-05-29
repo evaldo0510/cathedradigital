@@ -116,7 +116,7 @@ const DesignSystemPlayground: React.FC = () => {
             <div className="space-y-8 flex flex-col justify-end">
               <span className="h5 opacity-40">Overlays & Modals</span>
               <CathedraCard variant="interactive" className="p-12 flex flex-col items-center justify-center gap-6" onClick={() => setIsOverlayOpen(true)}>
-                <Icons.Maximize2 className="w-8 h-8 text-secondary" />
+                <Icons.Maximize className="w-8 h-8 text-secondary" />
                 <h4 className="text-center">Abrir Overlay Premium</h4>
               </CathedraCard>
             </div>
