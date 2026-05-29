@@ -170,8 +170,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
       items: [
         { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
         { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info /> },
+        { label: 'Termos', path: AppRoute.TERMS, icon: <Icons.ShieldCheck /> },
+        { label: 'Privacidade', path: AppRoute.PRIVACY, icon: <Icons.Lock /> },
       ]
     }
+
 
   ];
 
