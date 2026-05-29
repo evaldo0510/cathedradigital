@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Required by Chromatic
+
     - uses: oven-sh/setup-bun@v1
       with:
         bun-version: latest
@@ -22,7 +25,21 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Run Visual, SEO & Sitemap Audit
+    - name: Run Playwright Visual Audit & Capture Chromatic Archives
+      run: |
+        npx playwright test tests/e2e/visual-regression.spec.ts
+      env:
+        CI: true
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+    - name: Run Chromatic and Fail on Visual Changes
+      run: |
+        npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --playwright --exit-once-uploaded
+      env:
+        CI: true
+
+    - name: Run SEO & Sitemap Audit
       run: |
         bun run scripts/run-visual-regression.ts
         npx playwright test tests/e2e/home-seo.spec.ts tests/e2e/sitemap-delivery.spec.ts
