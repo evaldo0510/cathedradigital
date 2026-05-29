@@ -127,47 +127,46 @@ const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; c
 SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-6 animate-in fade-in duration-1000">
-    <div className="relative mb-16">
+  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-8 animate-in fade-in duration-[2000ms] ease-out">
+    <div className="relative mb-24">
       <motion.div 
         animate={{ 
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.1, 0.3],
-          filter: ["blur(20px)", "blur(40px)", "blur(20px)"]
+          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.05, 0.2],
+          filter: ["blur(30px)", "blur(60px)", "blur(30px)"]
         }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0 w-24 h-24 -left-4 -top-4 rounded-full bg-primary/10" 
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute inset-0 w-32 h-32 -left-4 -top-4 rounded-full bg-primary/5" 
       />
-      <div className="w-16 h-16 rounded-full bg-primary/[0.03] border border-primary/5 relative z-10" />
-      <motion.div 
-        animate={{ rotate: 360 }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 w-16 h-16 rounded-full border-t border-primary/10 z-20" 
-      />
-      <div className="absolute inset-0 flex items-center justify-center z-30">
-        <motion.div 
-          animate={{ opacity: [0.2, 0.5, 0.2] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="w-1.5 h-1.5 rounded-full bg-primary/40" 
+      <div className="w-20 h-20 rounded-full bg-primary/[0.01] border border-primary/[0.03] relative z-10 flex items-center justify-center">
+         <motion.div 
+          animate={{ opacity: [0.1, 0.3, 0.1], scale: [0.95, 1, 0.95] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-8 h-8 rounded-full border border-primary/10"
         />
       </div>
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 w-20 h-20 rounded-full border-t border-primary/[0.05] z-20" 
+      />
     </div>
-    <div className="space-y-8 w-full max-w-sm flex flex-col items-center">
-      <div className="h-[1px] w-32 bg-primary/5 rounded-full overflow-hidden">
+    <div className="space-y-12 w-full max-w-sm flex flex-col items-center">
+      <div className="h-[0.5px] w-48 bg-primary/[0.03] rounded-full overflow-hidden">
         <motion.div 
-          className="h-full bg-primary/20"
+          className="h-full bg-primary/[0.08]"
           initial={{ width: "0%", x: "-100%" }}
           animate={{ width: "100%", x: "100%" }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
       <motion.p 
-        initial={{ opacity: 0, letterSpacing: "0.2em" }}
-        animate={{ opacity: 1, letterSpacing: "0.6em" }}
-        transition={{ duration: 2, ease: "easeOut" }}
-        className="text-[9px] font-bold uppercase text-primary/30 text-center tracking-[0.6em]"
+        initial={{ opacity: 0, letterSpacing: "0.4em" }}
+        animate={{ opacity: 1, letterSpacing: "1em" }}
+        transition={{ duration: 3, ease: "easeOut" }}
+        className="text-[8px] font-bold uppercase text-primary/20 text-center tracking-[1em]"
       >
-        Contemplatio
+        AD MAIOREM DEI GLORIAM
       </motion.p>
     </div>
   </div>
