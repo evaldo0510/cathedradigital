@@ -196,6 +196,44 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 
                 <Separator className="opacity-50" />
 
+                {/* Contrast Settings */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Sun className="w-4 h-4 text-primary/60" />
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Contraste e Nitidez</h3>
+                  </div>
+
+                  <div className="bg-muted/5 rounded-2xl p-2 border border-muted/20">
+                    <ToggleGroup 
+                      type="single" 
+                      value={settings.contrast} 
+                      onValueChange={(v) => v && updateSettings({ contrast: v as any })}
+                      className="w-full"
+                    >
+                      <ToggleGroupItem value="soft" className="flex-1 py-4 rounded-xl">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-xs font-medium">Suave</span>
+                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Relaxado</span>
+                        </div>
+                      </ToggleGroupItem>
+                      <ToggleGroupItem value="normal" className="flex-1 py-4 rounded-xl">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-xs font-medium">Normal</span>
+                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Padrão</span>
+                        </div>
+                      </ToggleGroupItem>
+                      <ToggleGroupItem value="high" className="flex-1 py-4 rounded-xl">
+                        <div className="flex flex-col items-center gap-1">
+                          <span className="text-xs font-medium">Alto</span>
+                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Nítido</span>
+                        </div>
+                      </ToggleGroupItem>
+                    </ToggleGroup>
+                  </div>
+                </section>
+
+                <Separator className="opacity-50" />
+
                 {/* Layout & Margins */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 mb-2">
