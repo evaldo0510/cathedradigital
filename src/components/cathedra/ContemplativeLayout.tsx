@@ -22,13 +22,13 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-28 md:pt-48 pb-64 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-20 md:pt-48 pb-32 md:pb-64 will-change-transform", className)}>
 
       {(title || subtitle) && (
-        <header className={cn("mb-20 md:mb-32 px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-1000")}>
-          <div className="w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-16" />
+        <header className={cn("header-margin-rhythm px-8 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-1000")}>
+          <div className="w-[1px] h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-10 md:mb-16" />
           {subtitle && (
-            <p className="h5 !text-primary/40 mb-10">
+            <p className="h5 !text-primary/40 mb-6 md:mb-10">
               {subtitle}
             </p>
           )}

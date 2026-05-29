@@ -64,7 +64,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-12 md:space-y-80 lg:space-y-96 pb-20 md:pb-[32rem] px-4 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm pb-20 md:pb-[32rem] px-4 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
@@ -89,14 +89,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Ritual do Dia" 
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
-          className="mb-8 md:mb-40"
+          className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 sm:p-24 md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="padding-rhythm md:p-32 lg:p-40">
           <RitualDoDia />
         </CathedraCard>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-32 md:gap-48 lg:gap-64">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <h2 className="sr-only">Sua Jornada de Leitura</h2>
@@ -104,9 +104,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Sua Jornada" 
             subtitle="Onde a alma parou para contemplar."
-            className="mb-8 md:mb-20"
+            className="header-margin-rhythm"
           />
-          <CathedraCard variant="interactive" padding="none" className="flex-1 p-4 sm:p-20 md:p-24 lg:p-32">
+          <CathedraCard variant="interactive" padding="none" className="flex-1 padding-rhythm md:p-24 lg:p-32">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -118,12 +118,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             align="left"
             title="Logos IA" 
             subtitle="Inteligência artificial a serviço da sua fé."
-            className="mb-8 md:mb-20"
+            className="header-margin-rhythm"
           />
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-4 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group"
+            className="flex-1 padding-rhythm md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -165,9 +165,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="mb-8 md:mb-40"
+          className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 sm:p-24 md:p-40 lg:p-64">
+        <CathedraCard padding="none" className="padding-rhythm md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
@@ -178,7 +178,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <SectionHeader 
           title="O Futuro" 
           subtitle="Novas salas sendo preparadas para o seu santuário."
-          className="mb-8 md:mb-20"
+          className="header-margin-rhythm"
         />
         <div className="px-2 md:px-4">
           <ComingSoonSection />

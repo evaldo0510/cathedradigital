@@ -1040,7 +1040,7 @@ const Catechism: React.FC = () => {
         title={`${selectedPart.title}`}
         maxW="max-w-6xl"
       >
-        <div className="space-y-16">
+        <div className="stack-rhythm">
           <Button 
             variant="ghost" 
             onClick={goBack}
@@ -1050,7 +1050,7 @@ const Catechism: React.FC = () => {
             Partes
           </Button>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
             {selectedPart.sections.map(sec => {
               const isLastReadSection = lastReadMark?.content_id === 'CIC' && lastReadMark?.paragraph >= sec.paragraphs[0] && lastReadMark?.paragraph <= sec.paragraphs[1];
               

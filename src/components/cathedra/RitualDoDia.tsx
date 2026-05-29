@@ -224,9 +224,9 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-2 md:p-14 lg:p-20 space-y-6 md:space-y-24 max-w-7xl mx-auto">
+      <div className="relative z-10 padding-rhythm stack-rhythm max-w-7xl mx-auto">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-12 border-b border-primary/[0.03] pb-8 md:pb-20">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 md:gap-12 border-b border-primary/[0.03] pb-4 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
             <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.5em] text-primary/60 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -320,7 +320,7 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Content Sections */}
-        <div className="grid grid-cols-1 gap-8 md:gap-32">
+        <div className="grid grid-cols-1 gap-6 md:gap-32">
           
           {/* 1. Bible Reading */}
           <section className="space-y-5 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
