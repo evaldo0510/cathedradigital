@@ -440,7 +440,7 @@ const AppLayout: React.FC = () => {
         />
         
         <GlobalLogosAI />
-        <SpacingDebugger />
+        {import.meta.env.DEV && <SpacingDebugger />}
 
         <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 md:pb-40 pt-16 md:pt-48 px-4 md:px-12 lg:px-20 xl:px-32 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
