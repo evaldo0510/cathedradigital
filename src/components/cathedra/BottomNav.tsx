@@ -68,51 +68,51 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
+      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
+      isActive ? 'text-primary' : 'text-muted-foreground/20 hover:text-primary'
     )}
   >
     {isActive && (
       <motion.div
         layoutId="bottom-nav-active-bg"
         data-testid="bottom-nav-active-bg"
-        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
-        transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
+        className="absolute inset-x-2 inset-y-2 bg-primary/[0.02] dark:bg-white/[0.01] rounded-2xl z-0"
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
       />
     )}
 
     <motion.div 
       initial={false}
       animate={{ 
-        scale: isActive ? (shouldReduceMotion ? 1 : 1.12) : 1,
-        y: isActive ? (shouldReduceMotion ? 0 : -1) : 0 
+        scale: isActive ? (shouldReduceMotion ? 1 : 1.05) : 1,
+        y: isActive ? (shouldReduceMotion ? 0 : -0.5) : 0,
+        opacity: isActive ? 1 : 0.4
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 28 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
       className="relative z-10"
     >
       <Icon 
         className={cn(
           "transition-all",
-          shouldReduceMotion ? "duration-0" : "duration-700",
+          shouldReduceMotion ? "duration-0" : "duration-1000",
           isActive ? "text-primary opacity-100" : "text-muted-foreground/30 group-hover:text-primary/60"
         )}
-        size={20}
-        strokeWidth={isActive ? 2 : 1.2}
+        size={18}
+        strokeWidth={isActive ? 1.5 : 0.8}
       />
     </motion.div>
     
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 1 : 0.4,
-        scale: isActive ? 1 : 0.92,
-        y: isActive ? 0 : (shouldReduceMotion ? 0 : 1)
+        opacity: isActive ? 1 : 0.3,
+        scale: isActive ? 1 : 0.95,
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : undefined}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
       className={cn(
-        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
-        shouldReduceMotion ? "duration-0" : "duration-700",
-        isActive ? 'text-primary' : 'text-muted-foreground/50'
+        "text-[7px] md:text-[8px] font-bold uppercase tracking-[0.4em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
+        shouldReduceMotion ? "duration-0" : "duration-1000",
+        isActive ? 'text-primary' : 'text-muted-foreground/40'
       )}
     >
       {label}
@@ -122,8 +122,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       <motion.div 
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
-        className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
-        transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
+        className="absolute bottom-2 w-1 h-0.5 bg-primary/40 rounded-full z-10" 
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
       />
     )}
   </Button>
@@ -154,7 +154,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-6 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[90vw] max-w-sm h-14 bg-background/5 backdrop-blur-3xl rounded-full border border-primary/[0.02] dark:border-white/[0.03] bottom-nav bottom-nav-reading-auto-hide px-2 overflow-hidden transition-all",
+        "fixed bottom-8 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[92vw] max-w-md h-16 bg-white/5 dark:bg-black/5 backdrop-blur-[40px] rounded-[32px] border border-black/[0.03] dark:border-white/[0.02] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-none",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

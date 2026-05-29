@@ -340,7 +340,7 @@
   @media (max-width: 768px) {
     .header-reading-auto-hide,
     .bottom-nav-reading-auto-hide {
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s ease;
     }
 
     body.is-scrolling-down .header-reading-auto-hide {
