@@ -1,8 +1,12 @@
-# Welcome to your Lovable project
+# Cathedra Digital
+
+[![Playwright Tests](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml/badge.svg)](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Test Report**: [Última Execução no CI](https://github.com/lovable/cathedra-digital/actions/workflows/playwright.yml)
+
 
 ## How can I edit this code?
 
@@ -71,3 +75,45 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## 🧪 Guia de Testes
+
+Este projeto possui uma suíte robusta de testes para garantir a estabilidade e acessibilidade premium.
+
+### 1. Testes Unitários
+Executados via Bun (rápido e leve).
+```bash
+bun test
+```
+
+### 2. Testes E2E (Playwright)
+Validam fluxos completos, navegação por swipe e regressão visual.
+```bash
+# Instalar dependências do Playwright (executar uma vez)
+npx playwright install
+
+# Rodar todos os testes E2E (Chrome, Safari, Mobile)
+npx playwright test
+
+# Rodar em modo visual (UI Mode) para depuração
+npx playwright test --ui
+
+# Rodar apenas um arquivo específico
+npx playwright test tests/e2e/bottom-nav-navigation.spec.ts
+```
+
+### 3. Testes de Acessibilidade (Axe-core)
+Verificam conformidade com WCAG 2.1 AA automaticamente.
+```bash
+# Rodar o audit global de acessibilidade
+npx playwright test tests/e2e/accessibility.spec.ts
+```
+
+### 4. Filtros e Comandos Úteis
+- **Filtrar por nome**: `npx playwright test -g "swipe"`
+- **Debugar falhas**: `npx playwright show-report` (abre o relatório da última execução)
+- **Atualizar Snapshots Visuais**: `npx playwright test --update-snapshots`
+
+### Variáveis de Ambiente
+- `CI=true`: Ativa retries (2x) e reduz workers para estabilidade.
+- `PLAYWRIGHT_TEST_BASE_URL`: Define a URL alvo (padrão: localhost:8080).

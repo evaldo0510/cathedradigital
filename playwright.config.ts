@@ -10,9 +10,9 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
+  /* Retry on CI only to reduce flakiness without masking local errors */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  /* Opt out of parallel tests on CI to increase stability. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
@@ -26,10 +26,15 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:8080',
 
+    /* Stability filters: Add timeouts to prevent hangs */
+    actionTimeout: 15000,
+    navigationTimeout: 30000,
+
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    screenshot: 'on', // Always take screenshots
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
     video: 'on-first-retry',
+    ignoreHTTPSErrors: true,
   },
   /* Configure threshold for visual regression */
   expect: {
