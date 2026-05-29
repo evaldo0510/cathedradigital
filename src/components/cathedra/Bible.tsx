@@ -1547,26 +1547,29 @@ const Bible: React.FC = () => {
               return (
                 <motion.button 
                   key={ch} 
-                  whileHover={{ y: -4, scale: 1.05 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: (ch % 20) * 0.02, ease: [0.19, 1, 0.22, 1] }}
+                  whileHover={{ y: -6, scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-[2rem] border text-sm font-bold transition-all relative group overflow-hidden",
+                    "aspect-square flex flex-col items-center justify-center rounded-[2.5rem] border text-sm font-bold transition-all duration-[1200ms] relative group overflow-hidden",
                     isRead 
-                      ? "bg-primary text-primary-foreground border-primary shadow-premium" 
+                      ? "bg-primary text-primary-foreground border-primary shadow-[0_15px_40px_-10px_rgba(0,0,0,0.2)]" 
                       : isLastReadChapter
-                        ? "bg-secondary/5 border-secondary text-primary ring-1 ring-secondary/20"
-                        : "bg-card/40 backdrop-blur-sm border-primary/[0.05] text-primary hover:border-primary/20 hover:bg-card hover:shadow-premium-hover"
+                        ? "bg-secondary/5 border-secondary text-primary ring-1 ring-secondary/20 shadow-premium"
+                        : "bg-card/20 backdrop-blur-md border-primary/[0.04] text-primary hover:border-primary/10 hover:bg-card hover:shadow-premium-hover hover:text-primary"
                   )}
                 >
-                  <span className="text-xl md:text-2xl font-display font-light">{ch}</span>
+                  <span className="text-2xl md:text-3xl font-display font-light transition-transform duration-1000 group-hover:scale-110">{ch}</span>
                   {isLastReadChapter && (
-                    <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-widest text-secondary animate-pulse whitespace-nowrap">
+                    <span className="absolute bottom-3 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-[0.2em] text-secondary animate-pulse whitespace-nowrap opacity-60">
                       Retomar
                     </span>
                   )}
                   {isRead && !isLastReadChapter && (
-                    <Icons.CheckCircle2 className="absolute top-2 right-2 w-3 h-3 text-primary-foreground/30" strokeWidth={3} />
+                    <Icons.CheckCircle2 className="absolute top-3 right-3 w-3.5 h-3.5 text-primary-foreground/20" strokeWidth={3} />
                   )}
                 </motion.button>
               );
@@ -1607,17 +1610,17 @@ const Bible: React.FC = () => {
       
       <div className="space-y-20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 border-b border-primary/[0.04] pb-16">
-          <div className="flex gap-2 p-1 bg-primary/[0.02] rounded-full border border-primary/[0.03]">
+          <div className="flex gap-2 p-1.5 bg-primary/[0.015] backdrop-blur-3xl rounded-full border border-primary/[0.03]">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
                 className={cn(
-                  "px-8 py-3 rounded-full text-[9px] font-black uppercase tracking-[0.3em] transition-all duration-700",
+                  "px-10 py-3.5 rounded-full text-[9px] font-black uppercase tracking-[0.4em] transition-all duration-[1200ms] cubic-bezier(0.19, 1, 0.22, 1)",
                   testament === t 
-                    ? "bg-primary text-primary-foreground shadow-premium" 
-                    : "text-muted-foreground/30 hover:text-primary hover:bg-primary/[0.02]"
+                    ? "bg-primary text-primary-foreground shadow-premium scale-105" 
+                    : "text-muted-foreground/20 hover:text-primary/60 hover:bg-primary/[0.02]"
                 )}
               >
                 {t}
