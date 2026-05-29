@@ -66,7 +66,7 @@ const defaultSettings: ReadingSettings = {
   visualSilence: false,
   reduceAnimations: false,
   totalSilence: false,
-  highContrast: false,
+  highContrast: true,
   visibleFocus: false,
   contemplativeMode: false,
   autoHideUI: false,
@@ -74,7 +74,7 @@ const defaultSettings: ReadingSettings = {
   letterSpacing: 'normal',
   sideMargins: 'standard',
   columnWidth: 68,
-  contrast: 'normal',
+  contrast: 'high',
   resumeBehavior: 'confirm',
   reminders: {
     enabled: false,

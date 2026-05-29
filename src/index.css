@@ -29,18 +29,18 @@
 
 @layer base {
   :root {
-    --background: 45 40% 98%;    /* #FDFBF7 Very soft off-white */
-    --foreground: 220 15% 12%;   /* #1A1D23 Stronger Graphite */
-    --card: 45 40% 99%;
-    --card-foreground: 220 15% 12%;
-    --popover: 45 40% 99%;
-    --popover-foreground: 220 15% 12%;
-    --primary: 220 20% 10%;      /* #15181C Deeper Graphite */
-    --primary-foreground: 45 40% 98%;
-    --secondary: 40 35% 55%;     /* #B59049 Stronger Gold */
-    --secondary-foreground: 220 20% 10%;
-    --muted: 220 10% 90%;
-    --muted-foreground: 220 15% 30%; /* Higher contrast */
+    --background: 45 40% 98.5%;   /* #FEFDFB Even cleaner off-white */
+    --foreground: 220 25% 8%;     /* #0F1115 Deeper, sharper Graphite */
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 8%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 8%;
+    --primary: 220 30% 5%;       /* #08090A Near black for maximum authority */
+    --primary-foreground: 45 40% 99%;
+    --secondary: 40 45% 45%;     /* #B58B3A Deeper, more saturated gold */
+    --secondary-foreground: 220 30% 5%;
+    --muted: 220 10% 94%;
+    --muted-foreground: 220 20% 15%; /* Much higher contrast than standard */
 
     --accent: 40 35% 55% / 0.08;
     --accent-foreground: 220 20% 10%;
@@ -238,8 +238,14 @@
     [data-side-margins="wide"] .reader-container { padding-left: 12rem !important; padding-right: 12rem !important; }
   }
 
-  .contrast-soft .reader-text { opacity: 0.85; filter: contrast(0.95) brightness(1.02); }
-  .contrast-high .reader-text { opacity: 1; filter: contrast(1.1) brightness(0.98); font-weight: 400; }
+  .contrast-soft .reader-text { opacity: 0.9; filter: contrast(1.0) brightness(1.0); }
+  .contrast-high .reader-text { opacity: 1; filter: contrast(1.15) brightness(0.96); font-weight: 400; text-shadow: 0 0.5px 0.5px rgba(0,0,0,0.05); }
+  
+  /* Standard/Normal contrast is now sharper by default */
+  .reader-text {
+    opacity: 1 !important;
+    filter: contrast(1.05) brightness(0.98);
+  }
 
 }
 
