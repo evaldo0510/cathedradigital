@@ -29,7 +29,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
-import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+import { BibleSkeleton, CatechismSkeleton, LogosSkeleton, LibrarySkeleton, StudySkeleton } from './components/cathedra/RouteSkeletons';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
@@ -469,7 +469,7 @@ const AppLayout: React.FC = () => {
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><ContemplativeLayout title="Logos" subtitle="Inteligência Teológica"><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></ContemplativeLayout></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
-              <Route path="/study" element={<Suspense fallback={<LoadingFallback />}><StudyMode /></Suspense>} />
+              <Route path="/study" element={<Suspense fallback={<StudySkeleton />}><StudyMode /></Suspense>} />
               <Route path="/estudo" element={<Navigate to="/study" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
@@ -484,7 +484,7 @@ const AppLayout: React.FC = () => {
               <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
 
               {/* Biblioteca */}
-              <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/biblioteca" element={<Suspense fallback={<LibrarySkeleton />}><BibliotecaPage /></Suspense>} />
               
               {/* Itineraria */}
               <Route path="/itineraria" element={<Suspense fallback={<LoadingFallback />}><ItinerariaPage /></Suspense>} />
