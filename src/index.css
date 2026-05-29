@@ -532,7 +532,8 @@
 .visual-silence header, 
 .visual-silence footer, 
 .visual-silence nav {
-  @apply opacity-[0.15] hover:opacity-100 transition-opacity duration-1000;
+  opacity: var(--visual-silence-ui-opacity, 0.15);
+  @apply hover:opacity-100 transition-opacity duration-1000;
 }
 
 /* Ensure focus is STILL visible even in visual silence mode for accessibility */
