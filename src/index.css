@@ -500,16 +500,19 @@
   --shadow-premium: none;
   --shadow-premium-hover: none;
   --radius: 0;
+  --radius-lg: 0;
+  --radius-sm: 0;
   --atmosphere-blur: 80px; /* Stronger blur for visual silence */
 }
 
 .visual-silence * {
+  @apply transition-all duration-1000 border-transparent !shadow-none;
   border-color: transparent !important;
 }
 
 /* Cinematic Transitions Utilities */
 .transition-cinematic {
-  transition: all 2000ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: all 2200ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .glow-soft {
@@ -518,18 +521,11 @@
 
 .glow-soft::before {
   content: '';
-  @apply absolute -inset-20 bg-primary/5 blur-[100px] rounded-full opacity-0 transition-opacity duration-[2000ms] pointer-events-none;
+  @apply absolute -inset-24 bg-primary/5 blur-[120px] rounded-full opacity-0 transition-opacity duration-[2500ms] pointer-events-none;
 }
 
 .glow-soft:hover::before {
   @apply opacity-100;
-}
-  --radius-lg: 0;
-  --radius-sm: 0;
-}
-
-.visual-silence * {
-  @apply transition-all duration-1000 border-transparent !shadow-none;
 }
 
 .visual-silence header, 
