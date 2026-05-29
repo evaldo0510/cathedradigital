@@ -444,41 +444,42 @@
     font-variant-numeric: oldstyle-nums;
     font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
     text-rendering: optimizeLegibility;
-    line-height: 2.1;
+    line-height: 2.2; /* Slightly more air */
     letter-spacing: 0.015em;
-    font-size: 1.25rem; /* Larger base font for mobile */
+    font-size: 1.35rem; /* Larger base font for premium mobile reading */
+    font-weight: 300; /* Lighter weight for premium serif look */
   }
 
   @screen sm {
     .reader-text {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
     }
   }
 
   @screen md {
     .reader-text {
-      font-size: 1.45rem;
-      line-height: 2.2;
+      font-size: 1.55rem;
+      line-height: 2.3;
       letter-spacing: 0.02em;
     }
   }
 
-  .font-size-small .reader-text { font-size: 1.15rem !important; }
-  .font-size-medium .reader-text { font-size: 1.35rem !important; }
-  .font-size-large .reader-text { font-size: 1.65rem !important; }
-  .font-size-extra-large .reader-text { font-size: 2rem !important; }
+  .font-size-small .reader-text { font-size: 1.25rem !important; }
+  .font-size-medium .reader-text { font-size: 1.45rem !important; }
+  .font-size-large .reader-text { font-size: 1.75rem !important; }
+  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
 
   @screen md {
-    .font-size-small .reader-text { font-size: 1.25rem !important; }
-    .font-size-medium .reader-text { font-size: 1.45rem !important; }
-    .font-size-large .reader-text { font-size: 1.85rem !important; }
-    .font-size-extra-large .reader-text { font-size: 2.3rem !important; }
+    .font-size-small .reader-text { font-size: 1.35rem !important; }
+    .font-size-medium .reader-text { font-size: 1.55rem !important; }
+    .font-size-large .reader-text { font-size: 1.95rem !important; }
+    .font-size-extra-large .reader-text { font-size: 2.5rem !important; }
   }
 
 
   /* Specific Reader Container */
   .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-6 sm:px-12 md:px-20 py-12 md:py-32 transition-all duration-700;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-8 sm:px-14 md:px-24 py-16 md:py-36 transition-all duration-1000;
     scroll-behavior: smooth;
   }
 
