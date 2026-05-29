@@ -133,4 +133,26 @@ test.describe('Visual Regression & WCAG AAA Audit', () => {
       maxDiffPixelRatio: 0.05,
     });
   });
-});
+  });
+
+  test('Home Map Cells Visual Consistency', async ({ page }) => {
+    const viewports = [
+      { name: 'desktop', width: 1440, height: 900 },
+      { name: 'mobile', width: 375, height: 667 },
+    ];
+
+    for (const vp of viewports) {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
+      
+      // Ensure the "Doors" (map cells) are visible
+      const doors = page.locator('.premium-card-interactive');
+      await expect(doors.first()).toBeVisible();
+
+      // Snapshot of the doors section specifically to ensure icon/text visibility
+      await expect(page.locator('.grid-cols-1.sm\\:grid-cols-2.md\\:grid-cols-3')).toHaveScreenshot(`home-doors-${vp.name}.png`, {
+        maxDiffPixelRatio: 0.01,
+      });
+    }
+  });
