@@ -208,11 +208,19 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           {/* Premium Retractable Sidebar - Refined for a more elegant, floating feel */}
           <motion.aside
             ref={sidebarRef}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={{ left: 0.1, right: 0 }}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -100 || info.velocity.x < -500) {
+                onClose();
+              }
+            }}
             initial={{ x: '-110%', opacity: 0, scale: 0.98 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/80 dark:bg-neutral-900/80 backdrop-blur-2xl border border-black/[0.03] dark:border-white/[0.03] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden admin-hide"
+            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/80 dark:bg-neutral-900/80 backdrop-blur-2xl border border-black/[0.03] dark:border-white/[0.03] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden admin-hide touch-none"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
