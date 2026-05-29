@@ -129,7 +129,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     {
       label: 'Santos & Devoções',
       items: [
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users /> },
+        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Saints /> },
         { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator /> },
         { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles /> },
         { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck /> },
@@ -145,7 +145,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
         { label: 'Rosário', path: AppRoute.ROSARY, icon: <Icons.Heart /> },
         { label: 'Via Crucis', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross /> },
         { label: 'Ladainhas', path: AppRoute.LITANIES, icon: <Icons.Music /> },
-        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Sparkles /> },
+        { label: 'Oração', path: AppRoute.ORACAO, icon: <Icons.Oracao /> },
         { label: 'Lectio Divina', path: AppRoute.LECTIO_DIVINA, icon: <Icons.BookOpen /> },
         { label: 'Confissão', path: AppRoute.POENITENTIA, icon: <Icons.Feather /> },
       ]

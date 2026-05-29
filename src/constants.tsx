@@ -142,7 +142,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   return (
     <div ref={ref} className={cn(
       "relative flex items-center justify-center group overflow-hidden", 
-      variant === 'blue' && "bg-primary rounded-full p-2 border border-primary/10",
+      variant === 'blue' && "bg-primary rounded-full p-2 border border-primary/10 dark:bg-primary/20",
       className
     )}>
       <img 
@@ -175,7 +175,7 @@ const createIcon = (IconComponent: any) =>
       ref={ref} 
       strokeWidth={strokeWidth} 
       size={size}
-      className={cn("transition-all duration-500 shrink-0 opacity-60 group-hover:opacity-100", className)}
+      className={cn("transition-all duration-700 shrink-0 opacity-80 group-hover:opacity-100", className)}
       {...props} 
     />
   ));
@@ -301,6 +301,7 @@ const IconsInternal = {
   Twitter: createIcon(Twitter),
   Youtube: createIcon(Youtube),
   Printer: createIcon(Printer),
+  Layers: createIcon(Layers),
 };
 
 
@@ -345,8 +346,8 @@ export const Icons = {
   PartyPopper: IconsInternal.PartyPopper,
   
   // Library & Study
-  Bible: IconsInternal.BookText,
-  HolyBible: IconsInternal.BookText,
+  Bible: IconsInternal.BookOpen,
+  HolyBible: IconsInternal.BookOpen,
   Book: IconsInternal.Book,
   BookOpen: IconsInternal.BookOpen,
   Library: IconsInternal.Library,
@@ -355,9 +356,9 @@ export const Icons = {
   FileText: IconsInternal.FileText,
   Magisterium: IconsInternal.ScrollText,
   MagisteriumGlobe: IconsInternal.Globe,
-  Saints: IconsInternal.Sparkles,
-  SaintHalo: IconsInternal.Sparkles,
-  Aquinas: IconsInternal.Columns,
+  Saints: IconsInternal.Flame,
+  SaintHalo: IconsInternal.Flame,
+  Aquinas: IconsInternal.Feather,
   Columns: IconsInternal.Columns,
   Brain: IconsInternal.Brain,
   Feather: IconsInternal.Feather,
@@ -372,11 +373,11 @@ export const Icons = {
   History: IconsInternal.History,
   Bookmark: IconsInternal.Bookmark,
   Tag: IconsInternal.Tag,
-  Themes: IconsInternal.Library,
+  Themes: IconsInternal.Layers,
   Swords: IconsInternal.Swords,
   
   // Spiritual Life
-  Liturgy: IconsInternal.Cross,
+  Liturgy: IconsInternal.Wine,
   DailyLiturgy: IconsInternal.Sun,
   Sun: IconsInternal.Sun,
   Moon: IconsInternal.Moon,
@@ -391,11 +392,12 @@ export const Icons = {
   Rosary: IconsInternal.Orbit,
   ViaCrucis: IconsInternal.Cross,
   Church: IconsInternal.Home,
-  LiturgicalCalendar: IconsInternal.Map,
+  LiturgicalCalendar: IconsInternal.Calendar,
   Map: IconsInternal.Map,
+  Oracao: IconsInternal.Hand,
   
   // Pathways & Journeys
-  Journeys: IconsInternal.Compass,
+  Journeys: IconsInternal.Route,
   JourneysMap: IconsInternal.Map,
   Route: IconsInternal.Route,
   Compass: IconsInternal.Compass,
