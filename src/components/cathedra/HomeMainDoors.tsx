@@ -6,6 +6,7 @@ import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
+import { CathedraCard } from './CathedraCard';
 
 interface HomeMainDoorsProps {
   t: (key: string) => string;
@@ -76,11 +77,11 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   return (
     <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
-        <motion.div
+        <CathedraCard
           key={idx}
           ref={el => doorRefs.current[idx] = el}
-          whileHover={{ y: -8 }}
-          whileTap={{ scale: 0.98 }}
+          variant="interactive"
+          padding="none"
           onClick={() => handleNavigate(door.route)}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -91,7 +92,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="premium-card-interactive p-14 sm:p-20 md:p-24 lg:p-32 flex flex-col items-center text-center gap-12 md:gap-16 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/5"
+          className="p-14 sm:p-20 md:p-24 lg:p-32 flex flex-col items-center text-center gap-12 md:gap-16 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/5"
         >
           <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/80 group-hover:scale-105 group-hover:text-primary group-hover:bg-primary/[0.03] transition-all duration-1000 border border-primary/[0.05]">
             <door.icon className="w-8 h-8 md:w-10 md:h-10" strokeWidth={1.2} />
@@ -104,7 +105,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
               {door.description}
             </p>
           </div>
-        </motion.div>
+        </CathedraCard>
       ))}
     </div>
   );
