@@ -292,6 +292,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                         {auditResult.contrastIssues.slice(0, 3).map((issue, idx) => (
                           <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic">
                             Elemento: <span className="font-bold">{issue.element}</span> - Ratio: {issue.ratio} (Min: {issue.expected})
+                            <a href={`/design-system?search=contrast`} className="ml-2 underline text-amber-700/50 hover:text-amber-700">Ver Token</a>
                           </li>
                         ))}
                         {auditResult.contrastIssues.length > 3 && (
