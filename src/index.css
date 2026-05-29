@@ -345,7 +345,7 @@
   }
 
   .dark .premium-card {
-    @apply bg-card/[0.04] border-white/[0.01];
+    @apply bg-card/[0.05] border-white/[0.02] shadow-[0_20px_100px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl;
   }
 
 
