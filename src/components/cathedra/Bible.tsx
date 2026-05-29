@@ -159,6 +159,8 @@ const Bible: React.FC = () => {
   const { user, profile } = useAuth();
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('bible');
   const [readingProgress, setReadingProgress] = useState(0);
+  const [activeVerseId, setActiveVerseId] = useState<string | null>(null);
+
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [sessionResumeUsed, setSessionResumeUsed] = useState(false);
