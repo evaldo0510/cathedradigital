@@ -1,7 +1,7 @@
 import { test, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { ReadingSettingsProvider } from '../contexts/ReadingSettingsContext';
-import ContemplativeLayout from './ContemplativeLayout';
+import { ReadingSettingsProvider } from '../../../contexts/ReadingSettingsContext';
+import ContemplativeLayout from '../ContemplativeLayout';
 import React from 'react';
 
 // Mock matchMedia for framer-motion
