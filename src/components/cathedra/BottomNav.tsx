@@ -86,7 +86,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       animate={{ 
         scale: isActive ? (shouldReduceMotion ? 1 : 1.05) : 1,
         y: isActive ? (shouldReduceMotion ? 0 : -1) : 0,
-        opacity: isActive ? 1 : 0.4
+        opacity: isActive ? 1 : 0.5
       }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-10"
