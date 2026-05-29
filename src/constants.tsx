@@ -301,6 +301,7 @@ const IconsInternal = {
   Twitter: createIcon(Twitter),
   Youtube: createIcon(Youtube),
   Printer: createIcon(Printer),
+  Layers: createIcon(Layers),
 };
 
 
