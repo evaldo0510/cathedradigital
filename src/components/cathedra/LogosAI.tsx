@@ -326,8 +326,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   >
                     <div className={`max-w-full text-lg md:text-xl leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/40 font-serif italic border-r-2 border-primary/5 pr-8 text-right' 
-                        : 'text-foreground/60 font-serif font-light'
+                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-8 text-right' 
+                        : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
                         <div className="flex items-center gap-3 mb-6 opacity-20">
