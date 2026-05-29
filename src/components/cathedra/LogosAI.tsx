@@ -9,6 +9,8 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { LogosChatSkeleton } from './SacredSkeleton';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
+import { SacredVirtualList } from './SacredVirtualList';
+
 
 interface LogosAIProps {
   context?: string;
