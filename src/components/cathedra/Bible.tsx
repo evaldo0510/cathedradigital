@@ -767,7 +767,7 @@ const Bible: React.FC = () => {
         />
         
         <div className="space-y-12">
-          <div className="flex items-center justify-between gap-4 border-b border-border/5 pb-8">
+          <div className="space-y-12">
             <Button 
               variant="ghost" 
               onClick={goBack}
@@ -1410,7 +1410,8 @@ const Bible: React.FC = () => {
             </React.Suspense>
           </div>
         )}
-      </ContemplativeLayout>
+      </div>
+    </ContemplativeLayout>
     );
   }
   }
