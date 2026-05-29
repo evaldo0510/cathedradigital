@@ -886,30 +886,11 @@ const Bible: React.FC = () => {
 
 
         {/* Content with Side Nav */}
-        <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
-          {/* Elegant Side Navigation for Chapters (Desktop) */}
-          <aside className="reader-navigation-aside space-y-12">
-            <div className="space-y-4">
-              <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
-              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-                  <button
-                    key={ch}
-                    onClick={() => selectChapter(ch)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
-                      ${selectedChapter === ch 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
-                  >
-                    <span className="opacity-50 text-[10px] w-4">{ch}</span>
-                    <span>Capítulo {ch}</span>
-                    {chaptersRead[selectedBook.abbr]?.has(ch) && (
-                      <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
-                    )}
-                  </button>
-                ))}
-              </nav>
-            </div>
+        <div className="mt-12 md:mt-24">
+          <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
+            <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
+
+
 
             {currentChapterNotes.length > 0 && (
               <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
@@ -942,11 +923,13 @@ const Bible: React.FC = () => {
                 </div>
               </div>
             )}
-          </aside>
+            </div>
+          </div>
 
           <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
             <div className="w-full relative">
               <div className="py-8 md:py-20 lg:py-24">
+
 
 
 
@@ -975,14 +958,16 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
+                    <div className="space-y-4">
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
                         <div key={v.number} 
                           id={`v${v.number}`}
-                          className={`group relative py-2 px-3 rounded-premium transition-all duration-300 mb-1
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5' : 'hover:bg-primary/[0.01]'}`}>
-                          <div className="flex items-start gap-3">
+                          className={`group relative py-4 px-6 rounded-premium transition-all duration-700 mb-2
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5 shadow-premium-sm' : 'hover:bg-primary/[0.01]'}`}>
+                          <div className="flex items-start gap-4">
+
                             <sup className="text-[0.55em] font-medium text-primary mt-2 select-none opacity-20 group-hover:opacity-40 transition-opacity">{v.number}</sup>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
@@ -1002,7 +987,7 @@ const Bible: React.FC = () => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-relaxed">
+                              <p className="leading-[1.85] font-light text-lg md:text-xl">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1015,7 +1000,10 @@ const Bible: React.FC = () => {
                                     {v.text}
                                   </span>
                                 )}
-                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && v.text}
+                                {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
+                                  <span className="opacity-90 leading-[1.85]">{v.text}</span>
+                                )}
+
                                 
                                 {relatedP && (
                                   <span className="inline-flex gap-0.5 ml-2">
@@ -1053,31 +1041,102 @@ const Bible: React.FC = () => {
                     })}
                   </div>
                 )}
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+            <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+              <div className="w-full relative">
+                <div className="py-8 md:py-20 lg:py-24">
+                  <Relatio 
+                    context={{
+                      type: 'bible',
+                      abbr: selectedBook.abbr,
+                      chapter: selectedChapter,
+                      tags: [selectedBook.name, `Capitulo ${selectedChapter}`, 'Biblia', 'Palavra de Deus']
+                    }}
+                    onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&ch=${ch}`)}
+                    onNavigateToCIC={handleNavigateToCIC}
+                    onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
+                    onSelectLogosQuery={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setShowLogosAI(true);
+                      setLogosSelectionsCount(prev => prev + 1);
+                    }}
+                  />
+
+                  {!settings.totalSilence && (
+                    <LogosContextualSuggestions
+                      type="bible"
+                      context={`${selectedBook.name} ${selectedChapter}`}
+                      isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
+                      onSelectSuggestion={(prompt) => {
+                        setLogosAIInitialQuery(prompt);
+                        setShowLogosAI(true);
+                        setLogosSelectionsCount(prev => prev + 1);
+                      }}
+                    />
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
-                <Button 
-                  variant="ghost" 
-                  disabled={selectedChapter <= 1}
-                  onClick={() => {
-                    if (selectedChapter > 1) {
-                      const prevCh = selectedChapter - 1;
-                      setSelectedChapter(prevCh);
-                      setVerses([]);
-                      navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                  }}
-                  className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
-                >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
-                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
-                    <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
-                    {selectedBook.name} {selectedChapter - 1}
-                  </div>
-                </Button>
+
+
+            <aside className="reader-navigation-aside space-y-12 shrink-0">
+              <div className="space-y-4">
+                <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
+                <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                  {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                    <button
+                      key={ch}
+                      onClick={() => selectChapter(ch)}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
+                        ${selectedChapter === ch 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                    >
+                      <span className="opacity-50 text-[10px] w-4">{ch}</span>
+                      <span>Capítulo {ch}</span>
+                      {chaptersRead[selectedBook.abbr]?.has(ch) && (
+                        <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
+                      )}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+            <Button 
+              variant="ghost" 
+              disabled={selectedChapter <= 1}
+              onClick={() => {
+                if (selectedChapter > 1) {
+                  const prevCh = selectedChapter - 1;
+                  setSelectedChapter(prevCh);
+                  setVerses([]);
+                  navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+            >
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+              <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                {selectedBook.name} {selectedChapter - 1}
+              </div>
+            </Button>
+
+
 
                 <Button 
                   variant="ghost" 
@@ -1350,12 +1409,14 @@ const Bible: React.FC = () => {
               />
             </React.Suspense>
           </div>
-        )}
-
-        </div>
       </ContemplativeLayout>
     );
   }
+
+
+
+
+
 
   if (viewMode === 'chapters' && selectedBook) {
     return (
@@ -1365,6 +1426,9 @@ const Bible: React.FC = () => {
         maxW="max-w-6xl"
       >
         <div className="space-y-12">
+
+
+
           <Button 
             variant="ghost" 
             onClick={goBack}
@@ -1401,11 +1465,11 @@ const Bible: React.FC = () => {
                 </motion.button>
               );
             })}
-          </div>
         </div>
       </ContemplativeLayout>
     );
   }
+
 
   return (
     <ContemplativeLayout 
