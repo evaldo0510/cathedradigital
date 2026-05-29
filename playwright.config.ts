@@ -37,6 +37,7 @@ export default defineConfig({
       maxDiffPixelRatio: 0.02,
       animations: 'disabled',
     },
+  },
 
   /* Configure projects for major browsers */
   projects: [
