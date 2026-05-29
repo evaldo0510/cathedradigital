@@ -1,4 +1,13 @@
 import { supabase } from '@/integrations/supabase/client';
+import { getContrastRatio, getWCAGLevel } from './a11y-utils';
+
+export interface ContrastIssue {
+  element: string;
+  ratio: number;
+  expected: number;
+  level: string;
+  suggestion?: string;
+}
 
 export interface AuditResult {
   page: string;
@@ -6,6 +15,7 @@ export interface AuditResult {
   wcagScore: number;
   typographyErrors: string[];
   gridIssues: string[];
+  contrastIssues: ContrastIssue[];
   status: 'premium' | 'degraded';
 }
 
