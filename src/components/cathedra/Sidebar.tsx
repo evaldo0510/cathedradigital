@@ -8,6 +8,9 @@ import { AppRoute, User } from '../../types';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/useIsMobile';
+
 
 interface SidebarProps {
   isOpen: boolean;
