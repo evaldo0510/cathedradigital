@@ -75,6 +75,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     {isActive && (
       <motion.div
         layoutId="bottom-nav-active-bg"
+        data-testid="bottom-nav-active-bg"
         className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
       />
