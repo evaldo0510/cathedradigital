@@ -57,38 +57,46 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-500 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium",
-      isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
+      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group",
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
     )}
   >
+    {isActive && (
+      <motion.div
+        layoutId="bottom-nav-active-bg"
+        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
+        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+      />
+    )}
+
     <motion.div 
       initial={false}
       animate={{ 
-        scale: isActive ? 1.15 : 1,
-        y: isActive ? -2 : 0 
+        scale: isActive ? 1.12 : 1,
+        y: isActive ? -1 : 0 
       }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className="relative z-10"
     >
       <Icon 
         className={cn(
-          "transition-colors duration-500",
-          isActive ? "text-primary opacity-100" : "text-muted-foreground/40"
+          "transition-all duration-700",
+          isActive ? "text-primary opacity-100" : "text-muted-foreground/30 group-hover:text-primary/60"
         )}
-        size={22}
-        strokeWidth={isActive ? 1.8 : 1}
+        size={20}
+        strokeWidth={isActive ? 2 : 1.2}
       />
     </motion.div>
     
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 1 : 0.6,
-        y: isActive ? 0 : 2,
-        scale: isActive ? 1 : 0.9
+        opacity: isActive ? 1 : 0.4,
+        scale: isActive ? 1 : 0.92,
+        y: isActive ? 0 : 1
       }}
       className={cn(
-        "text-[7px] md:text-[9px] font-bold uppercase tracking-[0.1em] leading-none transition-all duration-500 truncate w-full px-1 text-center",
+        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all duration-700 truncate w-full px-1 text-center relative z-10",
         isActive ? 'text-primary' : 'text-muted-foreground/50'
       )}
     >
@@ -97,9 +105,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     
     {isActive && (
       <motion.div 
-        layoutId="bottom-nav-indicator"
-        className="absolute bottom-2 w-1 h-1 bg-primary rounded-full" 
-        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        layoutId="bottom-nav-dot"
+        className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
+        transition={{ type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
   </Button>
@@ -127,10 +135,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   return (
     <nav 
-      className="fixed bottom-6 left-6 right-6 z-[160] lg:hidden h-16 bg-background/40 backdrop-blur-2xl border border-primary/5 rounded-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2 overflow-hidden" 
+      className="fixed bottom-8 left-8 right-8 z-[160] lg:hidden h-14 bg-background/20 backdrop-blur-3xl border border-primary/5 rounded-full shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2 overflow-hidden transition-all duration-1000" 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
-      <div className="flex items-center justify-between h-full w-full max-w-md mx-auto">
+      <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => (
           <BottomNavItem 
             key={item.label + i}
@@ -138,6 +146,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
             icon={item.icon}
             route={item.route || ''}
             isActive={item.route ? currentPath === item.route || (item.route !== '/' && (currentPath.startsWith(item.route) || (item.route === AppRoute.HOJE && currentPath === '/'))) : false}
+
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
