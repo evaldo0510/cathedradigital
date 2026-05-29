@@ -39,38 +39,65 @@ function useRipple() {
 
 interface BottomNavItemProps {
   label: string;
-  icon: React.ReactNode;
+  icon: React.ElementType;
   route: string;
   isActive: boolean;
   onClick: () => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon, route, isActive, onClick, onRipple }) => (
+const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route, isActive, onClick, onRipple }) => (
   <Button 
     variant="ghost"
     onClick={(e) => { onRipple(e); onClick(); }}
-    onTouchStart={(e) => { onRipple(e); prefetchRoute(route); }}
+    onTouchStart={(e) => { prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
-    className={`flex flex-col items-center justify-center gap-2 flex-1 py-1 relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent ${
-      isActive ? 'text-primary' : 'text-muted-foreground/90 hover:text-primary'
-    }`}
+    className={cn(
+      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-500 shadow-none border-none hover:bg-transparent px-0 rounded-none",
+      isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
+    )}
   >
-    <div className={`transition-all duration-700 ${isActive ? 'scale-110 -translate-y-1' : 'active:scale-95'}`}>
-      {React.cloneElement(icon as React.ReactElement, { 
-        className: `w-5 h-5`,
-        strokeWidth: 1.8,
-      })}
-    </div>
-    <span className={`text-[8px] font-black uppercase tracking-[0.2em] leading-none transition-all duration-700 ${
-      isActive ? 'opacity-100 tracking-[0.3em]' : 'opacity-0 translate-y-2'
-    }`}>
+    <motion.div 
+      initial={false}
+      animate={{ 
+        scale: isActive ? 1.15 : 1,
+        y: isActive ? -2 : 0 
+      }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="relative z-10"
+    >
+      <Icon 
+        className={cn(
+          "w-6 h-6 transition-colors duration-500",
+          isActive ? "text-primary" : "text-muted-foreground/50"
+        )}
+        strokeWidth={isActive ? 2 : 1.5}
+      />
+    </motion.div>
+    
+    <motion.span 
+      initial={false}
+      animate={{ 
+        opacity: isActive ? 1 : 0.6,
+        y: isActive ? 0 : 2,
+        scale: isActive ? 1 : 0.9
+      }}
+      className={cn(
+        "text-[9px] font-bold uppercase tracking-[0.2em] leading-none transition-all duration-500",
+        isActive ? 'text-primary' : 'text-muted-foreground/50'
+      )}
+    >
       {label}
-    </span>
+    </motion.span>
+    
     {isActive && (
-      <div className="absolute top-1 right-1/2 translate-x-4 w-1 h-1 bg-secondary rounded-full animate-pulse shadow-[0_0_8px_hsla(var(--secondary)/0.5)]" />
+      <motion.div 
+        layoutId="bottom-nav-indicator"
+        className="absolute bottom-2 w-1 h-1 bg-primary rounded-full" 
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      />
     )}
   </Button>
 );
@@ -88,16 +115,19 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: t('bible'), icon: <Icons.Bible />, route: AppRoute.BIBLE },
-    { label: t('catechism'), icon: <Icons.Catechism />, route: AppRoute.CATECHISM },
-    { label: 'Magistério', icon: <Icons.ScrollText />, route: AppRoute.MAGISTERIUM },
-    { label: 'Logos', icon: <Icons.Sparkles />, route: '/logos' },
-    { label: t('menu') || 'Menu', icon: <Icons.Menu />, onClick: onOpenSidebar },
+    { label: t('bible') || 'Bíblia', icon: Icons.Bible, route: AppRoute.BIBLE },
+    { label: t('catechism') || 'Catecismo', icon: Icons.Catechism, route: AppRoute.CATECHISM },
+    { label: 'Magistério', icon: Icons.ScrollText, route: AppRoute.MAGISTERIUM },
+    { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[160] lg:hidden bg-background/60 backdrop-blur-3xl border-t border-primary/5 safe-area-bottom bottom-nav bottom-nav-reading-auto-hide" aria-label={t('mobile_navigation') || 'Navegação móvel'}>
-      <div className="flex items-stretch h-24 px-6 gap-2">
+    <nav 
+      className="fixed bottom-6 left-6 right-6 z-[160] lg:hidden h-20 bg-background/80 backdrop-blur-3xl border border-primary/5 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2" 
+      aria-label={t('mobile_navigation') || 'Navegação móvel'}
+    >
+      <div className="flex items-center justify-between h-full w-full">
         {items.map((item: any, i: number) => (
           <BottomNavItem 
             key={item.label + i}
