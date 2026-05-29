@@ -27,6 +27,37 @@ export interface AuditResult {
 }
 
 /**
+ * Find the actual background color of an element by traversing up the DOM tree
+ * and blending transparent/semi-transparent layers.
+ */
+const getActualBackgroundColor = (element: HTMLElement): string => {
+  let current: HTMLElement | null = element;
+  let colors: string[] = [];
+
+  while (current) {
+    const style = window.getComputedStyle(current);
+    const bg = style.backgroundColor;
+    
+    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+      colors.unshift(bg);
+      // If the color is fully opaque, we can stop
+      if (!bg.includes('rgba') || bg.match(/rgba\(.*,\s*1\)$/)) {
+        break;
+      }
+    }
+    current = current.parentElement;
+  }
+
+  // If no background found, default to white
+  if (colors.length === 0) return '#FFFFFF';
+  
+  // Actually we should return the most specific one for now, 
+  // but a better approach would be blending all of them.
+  // For simplicity, let's use the first opaque or semi-transparent background we found.
+  return colors[colors.length - 1];
+};
+
+/**
  * Validates WCAG AAA and Typography consistency.
  */
 export const runDesignSystemAudit = async (pageName: string): Promise<AuditResult> => {
@@ -34,6 +65,10 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
   const gridIssues: string[] = [];
   const contrastIssues: ContrastIssue[] = [];
   
+  // Get current theme from body or root
+  const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  const isHighContrast = document.documentElement.classList.contains('high-contrast');
+
   // 1. Check Typography Tokens
   const elements = document.querySelectorAll('h1, h2, h3, h4, p, span, button');
   const allowedFonts = ['Inter', 'Playfair Display', 'Cinzel', 'Merriweather', 'system-ui', 'serif', 'sans-serif', 'monospace', 'Courier'];
@@ -71,31 +106,33 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
   });
 
   // 3. Check Contrast for key elements
-  const interactiveElements = document.querySelectorAll('button, a, input, [role="button"], p, h1, h2, h3');
+  const interactiveElements = document.querySelectorAll('button, a, input, [role="button"], p, h1, h2, h3, span');
   interactiveElements.forEach(el => {
+    if (!(el instanceof HTMLElement)) return;
+    
     const style = window.getComputedStyle(el);
-    const bg = style.backgroundColor;
+    const bg = getActualBackgroundColor(el);
     const fg = style.color;
     
-    // Simple heuristic for contrast - might need more robust background detection for transparent elements
-    // We only check if background is not fully transparent
-    if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
-      try {
-        const ratio = getContrastRatio(bg, fg);
-        const level = getWCAGLevel(ratio);
-        
-        if (ratio < 4.5) {
-          contrastIssues.push({
-            element: `${el.tagName}${el.className ? '.' + el.className.split(' ').slice(0, 2).join('.') : ''}`,
-            ratio,
-            expected: 4.5,
-            level,
-            suggestion: 'Aumentar contraste entre fundo e texto.'
-          });
-        }
-      } catch (e) {
-        // Skip elements with complex background colors or parsing errors
+    // Skip invisible elements
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return;
+
+    try {
+      const ratio = getContrastRatio(fg, bg);
+      const level = getWCAGLevel(ratio);
+      const minRatio = isHighContrast ? 7 : 4.5;
+      
+      if (ratio < minRatio) {
+        contrastIssues.push({
+          element: `${el.tagName}${el.className ? '.' + el.className.split(' ').slice(0, 2).join('.') : ''}`,
+          ratio,
+          expected: minRatio,
+          level,
+          suggestion: ratio < 3 ? 'Contraste Crítico: Aumentar saturação ou mudar cor.' : 'Ajuste fino necessário para atingir conformidade.'
+        });
       }
+    } catch (e) {
+      // Skip elements with complex background colors or parsing errors
     }
   });
 
