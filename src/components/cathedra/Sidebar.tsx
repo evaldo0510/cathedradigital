@@ -239,14 +239,18 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ x: '-110%', opacity: 0, scale: 0.98 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/80 dark:bg-neutral-900/80 backdrop-blur-2xl border border-black/[0.03] dark:border-white/[0.03] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden admin-hide touch-none"
+            transition={{ 
+              duration: settings.reduceAnimations ? 0.4 : 0.8, 
+              ease: [0.19, 1, 0.22, 1] 
+            }}
+            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.05] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] rounded-[2.5rem] overflow-hidden admin-hide touch-none"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            <div className="flex items-center justify-between mb-10">
+            {/* Mobile Header - More dedicated and sophisticated */}
+            <header className="flex items-center justify-between mb-10 pb-4 border-b border-primary/[0.03] dark:border-white/[0.03]">
               <div 
                 className="flex items-center gap-3 cursor-pointer group outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
@@ -254,11 +258,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/5 dark:bg-white/5 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
-                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
+                <div className="w-9 h-9 rounded-xl bg-primary/5 dark:bg-white/5 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
+                  <Icons.Logo className="w-full h-full opacity-70 dark:opacity-50" variant={isDark ? "light" : "dark"} />
                 </div>
                 <div className="space-y-0.5">
-                  <h1 className="text-base font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <h1 className="text-sm font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
                   <p className="text-[7px] font-bold uppercase text-primary/40 tracking-[0.4em]">
                     Sanctuarium
                   </p>
@@ -270,12 +274,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-9 h-9 text-muted-foreground/40 hover:text-primary hover:bg-primary/5 transition-all"
+                className="rounded-full w-8 h-8 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-4 h-4" />
+                <Icons.X className="w-3.5 h-3.5" />
               </Button>
-            </div>
+            </header>
 
             <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
@@ -283,10 +287,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   key={section.label}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + (sectionIdx * 0.05), duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                  transition={{ 
+                    delay: settings.reduceAnimations ? 0 : 0.1 + (sectionIdx * 0.05), 
+                    duration: settings.reduceAnimations ? 0.4 : 0.8, 
+                    ease: [0.19, 1, 0.22, 1] 
+                  }}
                   className="mb-6"
                 >
-                  <h3 className="text-[8px] font-bold uppercase tracking-[0.4em] text-primary/20 mb-4 px-4">{section.label}</h3>
+                  <h3 className="text-[8px] font-bold uppercase tracking-[0.4em] text-primary/30 dark:text-primary/50 mb-4 px-4">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -301,8 +309,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
                             className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
-                                : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
+                                ? 'bg-primary/[0.04] dark:bg-white/[0.04] text-primary shadow-sm shadow-primary/5'
+                                : 'text-muted-foreground/40 dark:text-muted-foreground/50 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary dark:hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
                               {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
