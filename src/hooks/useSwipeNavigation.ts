@@ -62,14 +62,29 @@ export function useSwipeNavigation({
       }
     };
 
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Navegação por setas (acessibilidade e conveniência desktop)
+      if (e.key === 'ArrowLeft') onSwipeRight?.();
+      if (e.key === 'ArrowRight') onSwipeLeft?.();
+      // Espaço ou Enter para revelar a UI no modo contemplativo
+      if (e.key === ' ' || e.key === 'Enter') {
+        if (document.activeElement?.tagName === 'BODY' || document.activeElement?.tagName === 'DIV') {
+          onTap?.();
+        }
+      }
+    };
+
     window.addEventListener('touchstart', onStart, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: true });
     window.addEventListener('touchend', onEnd, { passive: true });
+    window.addEventListener('keydown', onKeyDown);
 
     return () => {
       window.removeEventListener('touchstart', onStart);
       window.removeEventListener('touchmove', onMove);
       window.removeEventListener('touchend', onEnd);
+      window.removeEventListener('keydown', onKeyDown);
     };
   }, [enabled, threshold, onSwipeLeft, onSwipeRight, onTap]);
+
 }

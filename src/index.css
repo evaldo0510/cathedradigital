@@ -40,7 +40,7 @@
     --secondary: 40 35% 60%;     /* #C5A059 Muted Gold */
     --secondary-foreground: 220 20% 12%;
     --muted: 220 10% 92%;
-    --muted-foreground: 220 12% 45%; 
+    --muted-foreground: 220 12% 40%; /* Increased contrast from 45% to 40% */
 
     --accent: 40 35% 60% / 0.05;
     --accent-foreground: 220 20% 12%;
@@ -182,7 +182,7 @@
 
   /* Refine all Lucide icons for a more professional, premium appearance */
   svg.lucide {
-    stroke-width: 1.5; /* Thinner for premium minimalist feel */
+    stroke-width: 1.8; /* Slightly thicker for better visibility (was 1.5) */
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -233,7 +233,7 @@
   }
 
   .contemplative-mode .reader-text {
-    @apply text-foreground/90;
+    @apply text-foreground; /* Remove opacity for maximum readability */
     letter-spacing: 0.01em;
   }
 
