@@ -48,9 +48,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
     const transitionProps = React.useMemo(() => {
       if (settings.reduceAnimations) return { duration: 0.1 };
-      if (isMobile) return { duration: 0.8, ease: [0.22, 1, 0.36, 1] };
-      return props.transition || { duration: 1.8, ease: [0.22, 1, 0.36, 1] };
+      if (isMobile) return { duration: 0.8, ease: [0.22, 1, 0.36, 1] as any };
+      return props.transition || { duration: 1.8, ease: [0.22, 1, 0.36, 1] as any };
     }, [settings.reduceAnimations, isMobile, props.transition]);
+
 
     return (
       <motion.div
