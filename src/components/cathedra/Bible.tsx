@@ -891,6 +891,7 @@ const Bible: React.FC = () => {
             <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
 
 
+
             {currentChapterNotes.length > 0 && (
               <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
                 <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
@@ -1041,8 +1042,6 @@ const Bible: React.FC = () => {
                   </div>
                 )}
 
-
-                  <Relatio 
                     context={{
                       type: 'bible',
                       abbr: selectedBook.abbr,
