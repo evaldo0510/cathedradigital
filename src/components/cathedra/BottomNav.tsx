@@ -149,7 +149,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: AppRoute.LOGOS },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: () => window.dispatchEvent(new CustomEvent('open-sidebar')) },
   ];
 
   return (
