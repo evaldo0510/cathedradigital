@@ -1,5 +1,12 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getContrastRatio, getWCAGLevel } from './a11y-utils';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+
+// Type extension for jsPDF to include autoTable
+interface jsPDFWithAutoTable extends jsPDF {
+  autoTable: (options: any) => jsPDF;
+}
 
 export interface ContrastIssue {
   element: string;
@@ -127,14 +134,71 @@ export const saveAuditResult = async (runId: string, result: AuditResult) => {
 /**
  * Generates and downloads a JSON report
  */
-export const exportAuditReport = (result: AuditResult) => {
-  const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href", url);
-  downloadAnchorNode.setAttribute("download", `cathedra_design_audit_${result.page}_${new Date().getTime()}.json`);
-  document.body.appendChild(downloadAnchorNode);
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-  URL.revokeObjectURL(url);
+export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 'json') => {
+  if (format === 'json') {
+    const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", url);
+    downloadAnchorNode.setAttribute("download", `cathedra_design_audit_${result.page.replace(/\//g, '_')}_${new Date().getTime()}.json`);
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    URL.revokeObjectURL(url);
+  } else {
+    const doc = new jsPDF() as jsPDFWithAutoTable;
+    
+    // Add Header
+    doc.setFontSize(22);
+    doc.text('Cathedra Digital - Design System Audit', 20, 20);
+    
+    doc.setFontSize(12);
+    doc.text(`Pagina: ${result.page}`, 20, 30);
+    doc.text(`Data: ${new Date(result.timestamp).toLocaleString()}`, 20, 37);
+    doc.text(`Conformidade WCAG: ${result.wcagScore}%`, 20, 44);
+    doc.text(`Status: ${result.status.toUpperCase()}`, 20, 51);
+    
+    // Contrast Issues Table
+    if (result.contrastIssues.length > 0) {
+      doc.setFontSize(16);
+      doc.text('Problemas de Contraste', 20, 65);
+      
+      const tableData = result.contrastIssues.map(issue => [
+        issue.element,
+        issue.ratio.toFixed(2),
+        issue.expected.toFixed(2),
+        issue.level,
+        issue.suggestion || '-'
+      ]);
+      
+      doc.autoTable({
+        startY: 70,
+        head: [['Elemento', 'Ratio Atual', 'Esperado', 'Nivel', 'Sugestao']],
+        body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [181, 139, 58] } // Sovereign Gold
+      });
+    } else {
+      doc.setFontSize(14);
+      doc.setTextColor(0, 150, 0);
+      doc.text('Nenhum problema de contraste detectado.', 20, 70);
+    }
+    
+    // Typography Errors
+    if (result.typographyErrors.length > 0) {
+      const finalY = (doc as any).lastAutoTable?.finalY || 80;
+      doc.setFontSize(16);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Erros de Tipografia', 20, finalY + 20);
+      
+      doc.autoTable({
+        startY: finalY + 25,
+        head: [['Descricao do Erro']],
+        body: result.typographyErrors.map(err => [err]),
+        theme: 'grid'
+      });
+    }
+    
+    doc.save(`cathedra_a11y_report_${result.page.replace(/\//g, '_')}.pdf`);
+  }
 };
