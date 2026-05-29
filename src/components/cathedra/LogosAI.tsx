@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { LogosChatSkeleton } from './SacredSkeleton';
+import { CathedraCard } from './CathedraCard';
+import { CathedraButton } from './CathedraButton';
 
 interface LogosAIProps {
   context?: string;
@@ -253,35 +255,31 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <div className="premium-card bg-primary/[0.005] border-primary/[0.02] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden">
+            <CathedraCard padding="none" className="bg-primary/[0.005] border-primary/[0.02] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
               <div className="absolute top-8 right-8 flex items-center gap-2">
                 {history.length > 0 && (
                   <>
-                    <Button 
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm"
                       onClick={exportHistory} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Exportar histórico"
-                    >
-                      <Icons.Download className="w-3.5 h-3.5" />
-                    </Button>
-                    <Button 
+                      icon={<Icons.Download className="w-3.5 h-3.5" />}
+                    />
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm"
                       onClick={() => clearHistory()} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Limpar histórico"
-                    >
-                      <Icons.RotateCcw className="w-3.5 h-3.5" />
-                    </Button>
+                      icon={<Icons.RotateCcw className="w-3.5 h-3.5" />}
+                    />
                   </>
                 )}
-                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8">
-                  <Icons.X className="w-3.5 h-3.5" />
-                </Button>
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-3.5 h-3.5" />} />
               </div>
 
               <div className="flex items-center justify-between mb-16 opacity-40">
@@ -384,7 +382,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </p>
                 </div>
               </div>
-            </div>
+              </CathedraCard>
           </motion.div>
         )}
       </AnimatePresence>
@@ -423,29 +421,25 @@ const LogosAI: React.FC<LogosAIProps> = ({
               <div className="flex items-center gap-2">
                 {history.length > 0 && (
                   <>
-                    <Button 
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm" 
                       onClick={exportHistory} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Exportar histórico"
-                    >
-                      <Icons.Download className="w-4 h-4" />
-                    </Button>
-                    <Button 
+                      icon={<Icons.Download className="w-4 h-4" />}
+                    />
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm" 
                       onClick={() => clearHistory()} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Limpar histórico"
-                    >
-                      <Icons.RotateCcw className="w-4 h-4" />
-                    </Button>
+                      icon={<Icons.RotateCcw className="w-4 h-4" />}
+                    />
                   </>
                 )}
-                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors">
-                  <Icons.X className="w-4 h-4" />
-                </Button>
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-4 h-4" />} />
               </div>
             </div>
 
@@ -481,14 +475,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {history.length > visibleMessages && (
                 <div className="flex justify-center pb-8">
-                  <Button 
+                  <CathedraButton 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setVisibleMessages(prev => prev + 10)}
-                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
+                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-2"
                   >
                     Ver histórico anterior
-                  </Button>
+                  </CathedraButton>
                 </div>
               )}
               {history.slice(-visibleMessages).map((msg, i) => (

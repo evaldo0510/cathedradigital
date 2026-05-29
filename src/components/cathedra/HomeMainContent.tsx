@@ -10,7 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Sparkles, ArrowRight, MessageSquare, User } from 'lucide-react';
 import { SectionHeader } from './SectionHeader';
 import { SpiritualContinuity } from './SpiritualContinuity';
-import { Button } from '@/components/ui/button';
+import { CathedraButton } from './CathedraButton';
+import { CathedraCard } from './CathedraCard';
 
 interface HomeMainContentProps {
   user: any;
@@ -70,15 +71,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           profile={profile} 
         />
         <div className="flex justify-center -mt-10 mb-20">
-          <Button 
+          <CathedraButton 
             variant="ghost" 
             size="sm"
             onClick={() => navigate('/spiritual-profile')}
             className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60 hover:text-primary transition-all duration-700"
+            icon={<User className="w-3 h-3 mr-2" />}
           >
-            <User className="w-3 h-3 mr-2" />
             Ver Perfil Espiritual
-          </Button>
+          </CathedraButton>
         </div>
       </section>
 
@@ -90,9 +91,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="mb-24 md:mb-40"
         />
-        <div className="premium-card p-10 sm:p-24 md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="p-10 sm:p-24 md:p-32 lg:p-40">
           <RitualDoDia />
-        </div>
+        </CathedraCard>
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 sm:gap-32 md:gap-48 lg:gap-64">
@@ -105,9 +106,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="mb-12 md:mb-20"
           />
-          <div className="flex-1 premium-card-interactive p-10 sm:p-20 md:p-24 lg:p-32">
+          <CathedraCard variant="interactive" padding="none" className="flex-1 p-10 sm:p-20 md:p-24 lg:p-32">
             <ReadingProgressSection />
-          </div>
+          </CathedraCard>
         </section>
 
         {/* 3. LOGOS IA - INTELLIGENT COMPANION */}
@@ -166,9 +167,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="mb-24 md:mb-40"
         />
-        <div className="premium-card p-10 sm:p-24 md:p-40 lg:p-64">
+        <CathedraCard padding="none" className="p-10 sm:p-24 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
-        </div>
+        </CathedraCard>
       </section>
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}

@@ -27,6 +27,7 @@ import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useRenderPerf } from './hooks/useRenderPerf';
+import { useA11yGuard } from './lib/a11y-guard';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
 
@@ -174,6 +175,9 @@ const AppLayout: React.FC = () => {
   useRenderPerf('AppLayout', 10);
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
+  
+  // Enable automatic accessibility check
+  useA11yGuard(true);
   
   useEffect(() => {
     const handleGlobalLang = (e: any) => {
