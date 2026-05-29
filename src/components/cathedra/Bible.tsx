@@ -1606,31 +1606,41 @@ const Bible: React.FC = () => {
           {filteredCategories.map((cat) => (
             <section key={cat.label} className="space-y-12">
               <div className="flex items-center gap-6">
-                <div className="w-8 h-8 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center shadow-premium">
                   <cat.icon className="w-4 h-4 text-primary/60" />
                 </div>
-                <h2 className="text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">{cat.label}</h2>
-                <div className="h-px flex-1 bg-border/5" />
+                <h2 className="text-[10px] font-black text-primary/30 uppercase tracking-[0.8em]">{cat.label}</h2>
+                <div className="h-[0.5px] flex-1 bg-gradient-to-r from-border/5 via-border/20 to-transparent" />
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 md:gap-8">
                 {cat.books.map(book => {
                   const isRead = completedBooks.has(book.abbr);
                   return (
                     <motion.button
                       key={book.abbr}
-                      whileHover={{ y: -4 }}
+                      whileHover={{ y: -6, scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center p-8 rounded-premium border transition-all relative group
-                        ${isRead 
-                          ? 'bg-primary text-primary-foreground border-primary' 
-                          : 'bg-card border-primary/[0.04] text-primary hover:border-primary/10'}`}
+                      className={cn(
+                        "flex flex-col items-center justify-center aspect-square md:aspect-[4/5] p-6 md:p-8 rounded-[2rem] border transition-all relative group overflow-hidden",
+                        isRead 
+                          ? "bg-primary text-primary-foreground border-primary shadow-premium" 
+                          : "bg-card/30 backdrop-blur-sm border-primary/[0.04] text-primary hover:bg-card hover:border-primary/10 hover:shadow-premium-hover"
+                      )}
                     >
-                      <span className="text-2xl font-display font-medium leading-none mb-2">{book.abbr}</span>
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      
+                      <span className="text-2xl md:text-3xl font-display font-medium leading-none mb-3 tracking-tighter">{book.abbr}</span>
+                      <span className="text-[9px] font-black uppercase tracking-[0.2em] text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
                         {book.name}
                       </span>
+
+                      {isRead && (
+                        <div className="absolute top-3 right-3">
+                          <Icons.CheckCircle2 className="w-3.5 h-3.5 text-primary-foreground/40" strokeWidth={3} />
+                        </div>
+                      )}
                     </motion.button>
                   );
                 })}
