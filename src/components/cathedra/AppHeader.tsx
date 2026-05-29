@@ -8,6 +8,8 @@ import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import SacredImage from './SacredImage';
+
 
 interface AppHeaderProps {
   user: any;
