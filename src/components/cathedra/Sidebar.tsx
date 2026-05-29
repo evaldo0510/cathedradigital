@@ -175,12 +175,15 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
   ];
 
-  const handleNav = useCallback((item: { path: string; onClick?: () => void }) => {
-    if (item.onClick) {
-      item.onClick();
-    } else if (item.path !== '#') {
-      navigate(item.path);
-      onClose();
+  const handleNav = useCallback((target: string | { path: string; onClick?: () => void }) => {
+    if (typeof target === 'object' && target.onClick) {
+      target.onClick();
+    } else {
+      const path = typeof target === 'string' ? target : target.path;
+      if (path !== '#') {
+        navigate(path);
+        onClose();
+      }
     }
   }, [navigate, onClose]);
 
