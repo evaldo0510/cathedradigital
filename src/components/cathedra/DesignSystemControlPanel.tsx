@@ -26,7 +26,7 @@ export const ThemeControlPanel: React.FC = () => {
   const themes = [
     { id: 'paper', label: 'Modo Claro', icon: Icons.Sun },
     { id: 'dark', label: 'Modo Escuro', icon: Icons.Moon },
-    { id: 'night', label: 'Modo Noite', icon: Icons.CloudMoon },
+    { id: 'night', label: 'Modo Noite', icon: Icons.Sparkles },
   ];
 
   return (
@@ -117,7 +117,7 @@ export const ThemeControlPanel: React.FC = () => {
           isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20"
         )}
       >
-        <Icons.Palette className="w-4 h-4" />
+        <Icons.Layout className="w-4 h-4" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">
           {isOpen ? 'Fechar Painel' : 'Temas & Contraste'}
         </span>
