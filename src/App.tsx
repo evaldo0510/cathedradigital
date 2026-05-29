@@ -110,7 +110,7 @@ const ResetPasswordPage = lazy(() => import('./components/cathedra/ResetPassword
 const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
-const DesignSystemPlayground = lazy(() => import('./components/cathedra/DesignSystemPlayground'));
+const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
@@ -436,7 +436,7 @@ const AppLayout: React.FC = () => {
                 </Suspense>
               } />
 
-              <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemPlayground /></Suspense>} />
+              <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemGuide /></Suspense>} />
 
 
               <Route path="*" element={<Navigate to="/" replace />} />
