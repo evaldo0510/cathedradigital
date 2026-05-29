@@ -145,7 +145,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({
             <source srcSet={webpSrc} type="image/webp" />
           )}
           <img
-            src={mainSrc}
+            srcSet={srcSet}
             alt={alt}
             loading={loading || (priority ? "eager" : "lazy")}
             decoding={priority ? "sync" : "async"}
