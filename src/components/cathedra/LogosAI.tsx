@@ -357,7 +357,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-xl mx-auto pt-16 border-t border-primary/5">
+              <div className="max-w-xl mx-auto pt-10 md:pt-16 border-t border-primary/5">
                 <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"
