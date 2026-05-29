@@ -484,7 +484,7 @@ const AppLayout: React.FC = () => {
           </AnimatePresence>
         </main>
 
-        {location.pathname !== '/' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
+        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
           <A11ySettingsPanel 
