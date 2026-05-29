@@ -572,7 +572,12 @@ const MagisteriumViewer: React.FC = () => {
                 }
               }}
               label={content.title}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeParagraphId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
         </motion.div>
       </div>
 
