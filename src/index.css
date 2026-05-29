@@ -141,8 +141,26 @@
     --foreground: 0 0% 0%;
     --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
+    --muted: 0 0% 90%;
     --muted-foreground: 0 0% 0% !important;
-    --border: 0 0% 0% / 0.3;
+    --border: 0 0% 0% / 0.6;
+  }
+
+  .high-contrast * {
+    text-decoration-skip-ink: auto;
+  }
+
+  .high-contrast [class*="text-primary/"],
+  .high-contrast [class*="text-foreground/"],
+  .high-contrast [class*="text-muted-foreground/"] {
+    opacity: 1 !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  .high-contrast .animate-pulse,
+  .high-contrast .animate-cinematic-breath {
+    animation: none !important;
+    opacity: 1 !important;
   }
 
   /* Typography System */
