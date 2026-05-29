@@ -173,11 +173,11 @@ const BibliotecaPage: React.FC = () => {
   }, [query]);
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto pb-24">
-      <div className="text-center space-y-2">
+    <div className="section-rhythm stack-rhythm max-w-2xl mx-auto pb-24">
+      <div className="text-center space-y-4 header-margin-rhythm">
         <Icons.Compass className="w-8 h-8 mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Explorar</h1>
-        <p className="text-sm text-muted-foreground">Mergulhe na profundidade da tradição católica.</p>
+        <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">Explorar</h1>
+        <p className="text-muted-foreground font-serif italic text-lg md:text-xl">Mergulhe na profundidade da tradição católica.</p>
       </div>
 
       <div className="relative">
