@@ -44,6 +44,9 @@ import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
+import { SacredVirtualList } from './SacredVirtualList';
+import { BibleVerseItem } from './BibleVerseItem';
+
 
 
 
