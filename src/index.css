@@ -100,36 +100,36 @@
   }
 
   .dark, [data-theme='dark'] {
-    /* Sophisticated Dark Mode - Avoid absolute black, use deep architectural grays */
-    --background: 220 35% 2.8% / var(--atmosphere-dark-opacity, 0.96); /* Slightly warmer, architectural gray-black */
-    --foreground: 45 12% 82%; /* Softer ivory for reading comfort */
+    /* Sophisticated Dark Mode - Architectural Deep Obsidian */
+    --background: 220 35% 2.2% / var(--atmosphere-dark-opacity, 0.98); 
+    --foreground: 45 15% 85%; /* Divine Ivory for reading comfort */
     
-    --card: 220 30% 5% / calc(var(--atmosphere-dark-opacity, 0.96) * 0.5); /* Semi-transparent layering */
-    --card-foreground: 45 12% 82%;
+    --card: 220 35% 3.5% / calc(var(--atmosphere-dark-opacity, 0.98) * 0.6); 
+    --card-foreground: 45 15% 85%;
     
-    --popover: 220 35% 4%;
-    --popover-foreground: 45 12% 82%;
+    --popover: 220 35% 3.2%;
+    --popover-foreground: 45 15% 85%;
     
-    --primary: 42 25% 65%; /* Muted sovereign gold */
-    --primary-foreground: 220 50% 2%;
+    --primary: 42 30% 68%; /* Muted sovereign gold */
+    --primary-foreground: 220 50% 1.5%;
     
-    --secondary: 220 25% 8%;      
-    --secondary-foreground: 42 25% 65%;
+    --secondary: 220 25% 6%;      
+    --secondary-foreground: 42 30% 68%;
     
-    --muted: 220 20% 7%; /* Deep gray for subtle sections */
-    --muted-foreground: 220 10% 45%; /* Subdued secondary text */
+    --muted: 220 20% 5%; 
+    --muted-foreground: 220 12% 48%; 
     
-    --accent: 42 25% 65% / 0.04;
-    --accent-foreground: 42 25% 65%;
+    --accent: 42 30% 68% / 0.03;
+    --accent-foreground: 42 30% 68%;
     
-    --destructive: 0 50% 50%;
+    --destructive: 0 55% 52%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
-    --input: 220 20% 60% / calc(var(--atmosphere-border-intensity, 0.3) * 0.08);
-    --ring: 42 25% 65% / 0.15;
+    --border: 220 20% 70% / calc(var(--atmosphere-border-intensity, 0.3) * 0.06);
+    --input: 220 20% 70% / calc(var(--atmosphere-border-intensity, 0.3) * 0.06);
+    --ring: 42 30% 68% / 0.12;
     
-    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 1.8));
+    --shadow-premium: 0 50px 200px -50px rgba(0, 0, 0, calc(var(--atmosphere-shadow-depth, 0.5) * 2.2));
   }
 
   .high-contrast {
@@ -211,19 +211,19 @@
   }
 
   h3, .h3 {
-    @apply font-display font-light tracking-[0.1em] text-primary/70;
-    font-size: clamp(1.3rem, 4vw, 2.2rem);
-    line-height: 1.25;
+    @apply font-display font-light tracking-[0.12em] text-primary/60;
+    font-size: clamp(1.2rem, 3.5vw, 2.1rem);
+    line-height: 1.3;
     margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/75 transition-colors duration-500;
+    @apply font-ui font-normal text-foreground/70 transition-colors duration-[1200ms];
     font-size: clamp(0.95rem, 1vw, 1.05rem);
-    line-height: 1.8;
-    max-width: 70ch;
-    letter-spacing: 0.01em;
-    margin-bottom: 1.5rem;
+    line-height: 1.85;
+    max-width: 68ch;
+    letter-spacing: 0.012em;
+    margin-bottom: 1.6rem;
   }
 
   .dark p, .dark .body-text {
@@ -232,10 +232,10 @@
 
   /* Reading Core - Optimized Rhythm */
   .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/10 max-w-[60ch] mx-auto;
-    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
-    line-height: 1.9;
-    letter-spacing: 0.015em;
+    @apply font-reader text-foreground/90 selection:bg-primary/10 max-w-[62ch] mx-auto transition-all duration-[1500ms];
+    font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+    line-height: 2.1;
+    letter-spacing: 0.018em;
     font-weight: 300;
     font-variant-numeric: oldstyle-nums;
   }
@@ -452,12 +452,12 @@
 }
 
 @keyframes cinematicFadeIn {
-  from { opacity: 0; transform: scale(1.01) translateY(3px); filter: blur(12px); }
+  from { opacity: 0; transform: scale(1.02) translateY(8px); filter: blur(20px); }
   to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 
 .cinematic-fade-in {
-  animation: cinematicFadeIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: cinematicFadeIn 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Modo Foco & Silêncio Visual */

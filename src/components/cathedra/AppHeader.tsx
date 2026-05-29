@@ -31,7 +31,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="bg-background/5 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01] dark:border-white/[0.01]"
+        className="bg-transparent backdrop-blur-[2px] sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide"
         role="banner"
       >
 
@@ -46,7 +46,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-60 dark:opacity-40" variant="dark" />
+            <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-40 dark:opacity-30" variant="dark" />
             <div className="flex flex-col items-start min-w-0">
               <span className="text-[10px] md:text-2xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.8em] text-primary/40 leading-none transition-premium-slow group-hover:text-primary">
 

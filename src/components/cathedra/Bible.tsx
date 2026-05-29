@@ -119,10 +119,10 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-[1.1rem] md:text-[1.2rem]', leading: 'leading-[1.9]', letterSpacing: 'tracking-[0.01em]' },
-  { label: 'M', size: 'text-[1.3rem] md:text-[1.5rem]', leading: 'leading-[2.1]', letterSpacing: 'tracking-[0.02em]' },
-  { label: 'G', size: 'text-[1.6rem] md:text-[1.9rem]', leading: 'leading-[2.3]', letterSpacing: 'tracking-[0.025em]' },
-  { label: 'Extra', size: 'text-[1.9rem] md:text-[2.4rem]', leading: 'leading-[2.4]', letterSpacing: 'tracking-[0.03em]' },
+  { label: 'P', size: 'text-[1.05rem] md:text-[1.15rem]', leading: 'leading-[1.8]', letterSpacing: 'tracking-[0.01em]' },
+  { label: 'M', size: 'text-[1.25rem] md:text-[1.45rem]', leading: 'leading-[2.0]', letterSpacing: 'tracking-[0.015em]' },
+  { label: 'G', size: 'text-[1.55rem] md:text-[1.85rem]', leading: 'leading-[2.2]', letterSpacing: 'tracking-[0.02em]' },
+  { label: 'EX', size: 'text-[1.85rem] md:text-[2.3rem]', leading: 'leading-[2.3]', letterSpacing: 'tracking-[0.025em]' },
 ];
 
 const Bible: React.FC = () => {
@@ -1255,9 +1255,9 @@ const Bible: React.FC = () => {
               <Icons.CheckCircle2 className="w-20 h-20 text-primary/40 mx-auto" strokeWidth={0.5} />
               
               <div className="space-y-6 px-8">
-                <h3 className="text-3xl md:text-5xl font-display text-primary/80 uppercase tracking-[0.3em] font-light">Contemplação Concluída</h3>
-                <p className="text-sm md:text-base text-muted-foreground/50 italic font-serif max-w-xl mx-auto leading-relaxed">
-                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)
+                <h3 className="text-3xl md:text-5xl font-display text-primary/70 uppercase tracking-[0.4em] font-light">Contemplação Concluída</h3>
+                <p className="text-sm md:text-base text-muted-foreground/40 italic font-serif max-w-xl mx-auto leading-relaxed px-6">
+                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." <br/><span className="text-[10px] uppercase tracking-widest mt-2 block">(Salmo 119, 105)</span>
                 </p>
               </div>
 
@@ -1554,12 +1554,12 @@ const Bible: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-[2.5rem] border text-sm font-bold transition-all duration-[1200ms] relative group overflow-hidden",
+                    "aspect-square flex flex-col items-center justify-center rounded-[2.8rem] border text-sm font-bold transition-all duration-[1500ms] relative group overflow-hidden",
                     isRead 
-                      ? "bg-primary text-primary-foreground border-primary shadow-[0_15px_40px_-10px_rgba(0,0,0,0.2)]" 
+                      ? "bg-primary text-primary-foreground border-primary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.15)]" 
                       : isLastReadChapter
-                        ? "bg-secondary/5 border-secondary text-primary ring-1 ring-secondary/20 shadow-premium"
-                        : "bg-card/20 backdrop-blur-md border-primary/[0.04] text-primary hover:border-primary/10 hover:bg-card hover:shadow-premium-hover hover:text-primary"
+                        ? "bg-secondary/[0.03] border-secondary/30 text-primary ring-1 ring-secondary/10 shadow-premium"
+                        : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.02] dark:border-white/[0.015] text-primary/60 hover:border-primary/10 hover:bg-card/40 hover:shadow-premium-hover hover:text-primary"
                   )}
                 >
                   <span className="text-2xl md:text-3xl font-display font-light transition-transform duration-1000 group-hover:scale-110">{ch}</span>
@@ -1665,10 +1665,10 @@ const Bible: React.FC = () => {
                       whileTap={{ scale: 0.97 }}
                       onClick={() => selectBook(book)}
                       className={cn(
-                        "flex flex-col items-center justify-center aspect-square md:aspect-[3/4] p-6 md:p-10 rounded-[2.5rem] border transition-all duration-[1200ms] relative group overflow-hidden",
+                        "flex flex-col items-center justify-center aspect-[4/5] p-6 md:p-12 rounded-[3rem] border transition-all duration-[1500ms] relative group overflow-hidden",
                         isRead 
-                          ? "bg-primary text-primary-foreground border-primary shadow-[0_20px_60px_-15px_rgba(0,0,0,0.2)]" 
-                          : "bg-card/20 backdrop-blur-md border-primary/[0.03] text-primary/70 hover:bg-card hover:border-primary/10 hover:shadow-premium-hover hover:text-primary"
+                          ? "bg-primary text-primary-foreground border-primary shadow-[0_30px_70px_-20px_rgba(0,0,0,0.18)]" 
+                          : "bg-primary/[0.005] dark:bg-white/[0.005] backdrop-blur-3xl border-primary/[0.015] dark:border-white/[0.01] text-primary/50 hover:bg-card/40 hover:border-primary/10 hover:shadow-premium-hover hover:text-primary"
                       )}
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />

@@ -26,14 +26,14 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
 
       {(title || subtitle) && (
         <header className={cn("header-margin-rhythm px-8 md:px-12 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-6 duration-[2000ms] ease-out")}>
-          <div className="w-[0.5px] h-16 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-12 md:mb-32 opacity-40" />
+          <div className="w-[0.5px] h-24 md:h-80 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-16 md:mb-40 opacity-30" />
           {subtitle && (
-            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.6em] md:tracking-[1em] text-primary/30 mb-8 md:mb-16">
+            <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.8em] md:tracking-[1.4em] text-primary/20 mb-10 md:mb-20">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-5xl md:text-9xl lg:text-[8.5rem] tracking-tight text-primary/90 font-display leading-[0.85] filter blur-[0.3px]">
+            <h1 className="text-6xl md:text-[10rem] lg:text-[12rem] tracking-tight text-primary/80 font-display leading-[0.8] filter blur-[0.4px]">
               {title}
             </h1>
           )}
