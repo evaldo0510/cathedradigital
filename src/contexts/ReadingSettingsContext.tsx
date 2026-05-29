@@ -227,6 +227,8 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('full-screen-mode');
     } else {
       root.classList.remove('full-screen-mode');
+    }
+
     if (settings.focusMode) {
       root.classList.add('focus-mode');
     } else {
