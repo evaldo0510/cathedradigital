@@ -306,11 +306,74 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 </section>
 
                 <Separator className="opacity-50" />
+                
+                {/* Atmosphere & Visual Silence */}
+                <section className="space-y-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Layout className="w-4 h-4 text-primary/60" />
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Atmosfera e Calibração</h3>
+                  </div>
+
+                  <div className="space-y-8 px-2">
+                    {/* Border Intensity */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        <span>Intensidade de Bordas</span>
+                        <span className="text-primary">{Math.round(settings.atmosphere.borderIntensity * 100)}%</span>
+                      </div>
+                      <Slider
+                        value={[settings.atmosphere.borderIntensity * 100]}
+                        max={100}
+                        step={1}
+                        onValueChange={([val]) => updateSettings({ 
+                          atmosphere: { ...settings.atmosphere, borderIntensity: val / 100 } 
+                        })}
+                      />
+                    </div>
+
+                    {/* Shadow Depth */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                        <span>Profundidade de Sombras</span>
+                        <span className="text-primary">{Math.round(settings.atmosphere.shadowDepth * 100)}%</span>
+                      </div>
+                      <Slider
+                        value={[settings.atmosphere.shadowDepth * 100]}
+                        max={100}
+                        step={1}
+                        onValueChange={([val]) => updateSettings({ 
+                          atmosphere: { ...settings.atmosphere, shadowDepth: val / 100 } 
+                        })}
+                      />
+                    </div>
+
+                    {/* Dark Mode Opacity (only visible/relevant in dark modes) */}
+                    {(settings.theme === 'dark' || settings.theme === 'night') && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                          <span>Opacidade do Fundo</span>
+                          <span className="text-primary">{Math.round(settings.atmosphere.darkOpacity * 100)}%</span>
+                        </div>
+                        <Slider
+                          value={[settings.atmosphere.darkOpacity * 100]}
+                          max={100}
+                          min={60}
+                          step={1}
+                          onValueChange={([val]) => updateSettings({ 
+                            atmosphere: { ...settings.atmosphere, darkOpacity: val / 100 } 
+                          })}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </section>
+
+                <Separator className="opacity-50" />
 
                 {/* Layout & Margins */}
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <Layout className="w-4 h-4 text-primary/60" />
+                    <AlignLeft className="w-4 h-4 text-primary/60" />
                     <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Densidade</h3>
                   </div>
 
