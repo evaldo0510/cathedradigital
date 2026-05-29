@@ -218,18 +218,20 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center justify-between mb-10">
               <div 
-                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
+                className="flex items-center gap-3 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-1000" variant="dark" />
-                <div className="space-y-1">
-                  <h1 className="text-lg font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[8px] font-bold uppercase text-primary/60 tracking-[0.5em]">
+                <div className="w-10 h-10 rounded-xl bg-primary/5 dark:bg-primary/10 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
+                  <Icons.Logo className="w-full h-full opacity-80" variant="dark" />
+                </div>
+                <div className="space-y-0.5">
+                  <h1 className="text-base font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[7px] font-bold uppercase text-primary/40 tracking-[0.4em]">
                     Sanctuarium
                   </p>
                 </div>
@@ -239,22 +241,23 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-10 h-10 text-muted-foreground/60 hover:text-primary hover:bg-primary/5 transition-all"
+                className="rounded-full w-9 h-9 text-muted-foreground/40 hover:text-primary hover:bg-primary/5 transition-all"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-5 h-5" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </div>
 
-            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + (sectionIdx * 0.1), duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.1 + (sectionIdx * 0.05), duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                  className="mb-6"
                 >
-                  <h3 className="text-[9px] font-bold uppercase tracking-[0.8em] text-primary/30 mb-8 px-6">{section.label}</h3>
+                  <h3 className="text-[8px] font-bold uppercase tracking-[0.4em] text-primary/20 mb-4 px-4">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
