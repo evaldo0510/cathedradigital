@@ -219,9 +219,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-neutral-950/20 backdrop-blur-md z-[145]"
+            className="fixed inset-0 bg-neutral-950/30 backdrop-blur-sm z-[145]"
             aria-hidden="true"
           />
 
@@ -232,38 +232,38 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={{ left: 0.05, right: 0 }}
             onDragEnd={(_, info) => {
-              if (info.offset.x < -80 || info.velocity.x < -400) {
+              if (info.offset.x < -60 || info.velocity.x < -300) {
                 onClose();
               }
             }}
-            initial={{ x: '-102%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '-102%', opacity: 0 }}
+            initial={{ x: '-100%', opacity: 0, scale: 0.98 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={{ x: '-100%', opacity: 0, scale: 0.98 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.4 : 1.4, 
-              ease: [0.16, 1, 0.3, 1] 
+              duration: settings.reduceAnimations ? 0.3 : 0.8, 
+              ease: [0.22, 1, 0.36, 1] 
             }}
-            className="fixed top-3 left-3 bottom-3 w-[88vw] sm:w-[340px] bg-white/80 dark:bg-neutral-950/80 backdrop-blur-[60px] border border-black/[0.02] dark:border-white/[0.02] rounded-[3rem] flex flex-col p-10 md:p-14 z-[150] shadow-premium overflow-hidden admin-hide touch-none pt-[calc(2.5rem+env(safe-area-inset-top,0px))] pb-[calc(2rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-4 left-4 bottom-4 w-[75vw] sm:w-[320px] bg-white/70 dark:bg-neutral-950/70 backdrop-blur-[40px] border border-black/[0.03] dark:border-white/[0.03] rounded-[2.5rem] flex flex-col p-8 md:p-10 z-[150] shadow-premium overflow-hidden admin-hide touch-none pt-[calc(2.5rem+env(safe-area-inset-top,0px))] pb-[calc(2rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - More dedicated and sophisticated */}
-            <header className="flex items-center justify-between mb-16">
+            <header className="flex items-center justify-between mb-10">
               <div 
-                className="flex items-center gap-5 cursor-pointer group outline-none" 
+                className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-14 h-14 rounded-[1.5rem] bg-primary/[0.015] dark:bg-white/[0.01] flex items-center justify-center p-3.5 group-hover:scale-105 transition-all duration-[1200ms] border border-primary/[0.03] dark:border-white/[0.03]">
+                <div className="w-10 h-10 rounded-[1.2rem] bg-primary/[0.02] dark:bg-white/[0.01] flex items-center justify-center p-2.5 group-hover:scale-105 transition-all duration-1000 border border-primary/[0.03] dark:border-white/[0.03]">
                   <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
                 </div>
-                <div className="space-y-1.5">
-                  <h1 className="text-[14px] font-display font-light tracking-[0.6em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[7.5px] font-bold uppercase text-primary/30 tracking-[0.6em]">
+                <div className="space-y-1">
+                  <h1 className="text-[12px] font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[6.5px] font-bold uppercase text-primary/30 tracking-[0.3em]">
                     Sacrum Archivum
                   </p>
                 </div>
@@ -274,28 +274,28 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-10 h-10 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
+                className="rounded-full w-8 h-8 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-5 h-5" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-5 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
-                  initial={{ opacity: 0, x: -10 }}
+                  initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ 
-                    delay: settings.reduceAnimations ? 0 : 0.1 + (sectionIdx * 0.05), 
-                    duration: settings.reduceAnimations ? 0.4 : 0.8, 
-                    ease: [0.19, 1, 0.22, 1] 
+                    delay: settings.reduceAnimations ? 0 : 0.05 + (sectionIdx * 0.03), 
+                    duration: settings.reduceAnimations ? 0.3 : 0.6, 
+                    ease: [0.22, 1, 0.36, 1] 
                   }}
-                  className="mb-6"
+                  className="mb-5"
                 >
-                  <h3 className="text-[7.5px] font-black uppercase tracking-[0.6em] text-primary/15 dark:text-primary/30 mb-6 px-5">{section.label}</h3>
-                  <ul className="space-y-1.5">
+                  <h3 className="text-[6.5px] font-black uppercase tracking-[0.4em] text-primary/15 dark:text-primary/20 mb-4 px-4">{section.label}</h3>
+                  <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                       return (
@@ -307,22 +307,22 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-5 py-3.5 rounded-2xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[52px]
+                            className={`w-full flex items-center justify-start gap-3.5 px-4 py-3 rounded-xl text-[8.5px] font-bold transition-all duration-700 outline-none h-auto min-h-[46px]
                               ${isActive
                                 ? 'bg-primary/[0.03] dark:bg-white/[0.02] text-primary'
-                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
+                                : 'text-muted-foreground/25 dark:text-muted-foreground/30 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
 
                           >
-                            <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
+                            <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-30'}`}>
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 16, strokeWidth: isActive ? 1.2 : 0.8 })}
                             </span>
-                            <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
+                            <span className="tracking-[0.02em] uppercase truncate opacity-80">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                              <span className="ml-auto bg-primary/20 text-primary text-[8px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                              <span className="ml-auto bg-primary/20 text-primary text-[7px] font-black px-1 py-0.5 rounded-full flex-shrink-0">
                                 {cacheCount}
                               </span>
                             )}
-                            {(item as any).pro && <span className="ml-auto text-[7px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-md flex-shrink-0">PRO</span>}
+                            {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.2 py-0.4 rounded-md flex-shrink-0">PRO</span>}
                             {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 rounded-full bg-primary flex-shrink-0" />}
                           </Button>
                         </li>
