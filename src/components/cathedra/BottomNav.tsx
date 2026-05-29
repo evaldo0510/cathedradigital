@@ -88,7 +88,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
         scale: isActive ? 1 : 0.9
       }}
       className={cn(
-        "text-[9px] font-bold uppercase tracking-[0.2em] leading-none transition-all duration-500",
+        "text-[7px] md:text-[9px] font-bold uppercase tracking-[0.1em] leading-none transition-all duration-500 truncate w-full px-1 text-center",
         isActive ? 'text-primary' : 'text-muted-foreground/50'
       )}
     >
