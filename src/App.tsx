@@ -393,7 +393,16 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+      <div className={cn(
+        "min-h-screen bg-background text-foreground transition-colors duration-[2000ms] selection:bg-primary/10",
+        settings.visualSilence && "visual-silence"
+      )}>
+        {/* Cinematic Atmosphere Layer */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 dark:opacity-20">
+          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse duration-[10s]" />
+          <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary/3 blur-[120px] rounded-full animate-pulse duration-[15s]" />
+        </div>
+
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[250] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
