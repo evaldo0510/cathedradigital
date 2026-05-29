@@ -485,7 +485,7 @@ const AppLayout: React.FC = () => {
         </main>
 
         {location.pathname !== '/' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
-        {location.pathname !== '/' && <CathedralFooter />}
+        {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 
