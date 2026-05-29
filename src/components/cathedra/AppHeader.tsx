@@ -33,7 +33,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="border-b border-primary/5 bg-background/80 backdrop-blur-3xl sticky top-0 z-[140] transition-premium pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
         role="banner"
       >
-        <div className="app-container flex flex-col md:flex-row md:items-center justify-between min-h-[120px] md:h-36 py-6 md:py-0 gap-6 md:gap-0">
+        <div className="app-container flex flex-col md:flex-row md:items-center justify-between min-h-[100px] md:h-36 py-4 md:py-0 gap-5 md:gap-0">
 
           {/* Logo Section */}
           <div 

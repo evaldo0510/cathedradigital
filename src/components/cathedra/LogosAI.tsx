@@ -255,10 +255,10 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden shadow-premium">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-6 md:p-14 lg:p-16 space-y-8 md:space-y-12 relative overflow-hidden shadow-premium">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
-              <div className="absolute top-8 right-8 flex items-center gap-2">
+              <div className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center gap-2">
                 {history.length > 0 && (
                   <>
                     <CathedraButton 
@@ -282,8 +282,8 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-3.5 h-3.5" />} />
               </div>
 
-              <div className="flex items-center justify-between mb-16 opacity-40">
-                <div className="flex items-center gap-6">
+              <div className="flex items-center justify-between mb-10 md:mb-16 opacity-40">
+                <div className="flex items-center gap-4 md:gap-6">
                   <div className="w-10 h-10 rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
                     <Icons.Sparkles className="w-4 h-4" strokeWidth={0.5} />
                   </div>
@@ -303,7 +303,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-14 max-w-3xl mx-auto">
+              <div className="space-y-10 md:space-y-14 max-w-3xl mx-auto">
                 {history.length > visibleMessages && (
                   <div className="flex justify-center pb-4">
                     <Button 
@@ -324,13 +324,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     transition={{ duration: 1.2, delay: i * 0.1 }}
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}
                   >
-                    <div className={`max-w-full text-lg md:text-xl leading-[1.8] tracking-wide ${
+                    <div className={`max-w-full text-base md:text-xl leading-[1.7] md:leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-8 text-right' 
+                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-6 md:pr-8 text-right' 
                         : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-6 opacity-20">
+                        <div className="flex items-center gap-3 mb-4 md:mb-6 opacity-20">
                           <div className="w-6 h-px bg-primary" />
                           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
@@ -357,7 +357,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-xl mx-auto pt-16 border-t border-primary/5">
+              <div className="max-w-xl mx-auto pt-10 md:pt-16 border-t border-primary/5">
                 <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"
@@ -365,7 +365,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-6 transition-all text-primary"
+                    className="w-full bg-transparent border-none text-base md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-4 md:py-6 transition-all text-primary"
                   />
                   <button 
                     type="submit" 
@@ -408,7 +408,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             transition={springConfig}
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-2xl flex flex-col"
           >
-            <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
+            <div className="p-6 md:p-10 border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/60">
                   <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
@@ -443,7 +443,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </div>
             </div>
 
-            <div className="px-8 md:px-10 py-3 bg-primary/[0.02] border-b border-border/5 flex items-center justify-between">
+            <div className="px-6 md:px-10 py-3 bg-primary/[0.02] border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className={`w-1 h-1 rounded-full ${
                   settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
@@ -457,7 +457,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-10 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 md:space-y-10 scrollbar-hide">
               {history.length === 0 && !selectedText && (
                 <div className="text-center py-20 space-y-8">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/10 mx-auto animate-pulse" />
@@ -487,7 +487,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
               {history.slice(-visibleMessages).map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                  <div className={`max-w-[90%] p-8 md:p-10 rounded-premium-lg text-base leading-relaxed ${
+                  <div className={`max-w-[90%] p-6 md:p-10 rounded-premium-lg text-sm md:text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 
                       : 'bg-card border border-border/5 font-serif italic text-foreground/80'
@@ -502,7 +502,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {(isLoading || isTyping) && (
                 <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/10 p-6 rounded-premium-lg flex gap-3">
+                  <div className="bg-muted/10 p-4 md:p-6 rounded-premium-lg flex gap-3">
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
                     <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
@@ -512,7 +512,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               <div ref={chatEndRef} />
             </div>
 
-            <div className="p-8 md:p-10 border-t border-border/5 bg-background/30">
+            <div className="p-6 md:p-10 border-t border-border/5 bg-background/30">
               <form onSubmit={handleQuery} className="relative group">
                 <input
                   type="text"
@@ -520,7 +520,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Busque por luz e entendimento..."}
                   disabled={settings.totalSilence}
-                  className="w-full bg-transparent border-b border-border/10 py-5 px-0 text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/60 font-serif italic"
+                  className="w-full bg-transparent border-b border-border/10 py-4 px-0 text-base md:text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/60 font-serif italic"
                 />
                 <button 
                   type="submit"
