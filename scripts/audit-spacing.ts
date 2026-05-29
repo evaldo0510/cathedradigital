@@ -82,25 +82,58 @@ TARGET_DIRS.forEach(dir => {
 
 // Generate Report
 const reportPath = 'spacing-audit-report.json';
-fs.writeFileSync(reportPath, JSON.stringify({
+const report = {
   timestamp: new Date().toISOString(),
   totalViolations: violations.length,
   violations
-}, null, 2));
+};
+
+fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
+
+// Generate Readable Summary for CI
+const summaryPath = 'spacing-audit-summary.txt';
+let summary = `📊 SPACING RHYTHM AUDIT SUMMARY\n`;
+summary += `================================\n`;
+summary += `Generated: ${report.timestamp}\n`;
+summary += `Total Violations: ${report.totalViolations}\n\n`;
+
+if (violations.length > 0) {
+  summary += `🔥 TOP VIOLATED FILES:\n`;
+  const fileCounts: Record<string, number> = {};
+  violations.forEach(v => {
+    fileCounts[v.file] = (fileCounts[v.file] || 0) + 1;
+  });
+
+  const sortedFiles = Object.entries(fileCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+
+  sortedFiles.forEach(([file, count]) => {
+    summary += `- ${file}: ${count} violations\n`;
+  });
+
+  summary += `\n📝 RECENT VIOLATIONS DETAILS:\n`;
+  violations.slice(0, 15).forEach(v => {
+    summary += `[${v.foundClass}] at ${v.file}:${v.line} -> "${v.content.substring(0, 100)}"\n`;
+  });
+} else {
+  summary += `✅ Perfect! No spacing rhythm violations found.\n`;
+}
+
+fs.writeFileSync(summaryPath, summary);
 
 console.log(`\n📊 Audit Complete!`);
 console.log(`Total non-token spacing violations found: ${violations.length}`);
-console.log(`Detailed report saved to: ${reportPath}`);
+console.log(`Detailed report: ${reportPath}`);
+console.log(`Readable summary: ${summaryPath}`);
 
 if (violations.length > 0) {
-  console.log('\nTop 5 violations:');
-  violations.slice(0, 5).forEach(v => {
-    console.log(`- ${v.file}:${v.line} -> Found "${v.foundClass}" in: ${v.content.substring(0, 60)}...`);
-  });
+  console.log('\n--- SUMMARY PREVIEW ---');
+  console.log(summary.substring(0, 500) + '...');
 }
 
 // Exit with error if in CI and violations found
-if (process.env.CI && violations.length > 50) { // Threshold for migration
-  console.error('\n❌ Too many spacing violations. Please use rhythm tokens.');
+if (process.env.CI && violations.length > 0) {
+  console.error('\n❌ Spacing rhythm violations found. Please use the standardized tokens.');
   process.exit(1);
 }
