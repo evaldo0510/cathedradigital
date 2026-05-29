@@ -296,9 +296,13 @@
   }
 
   .premium-card {
-    @apply bg-card/[0.15] backdrop-blur-2xl border-none transition-all relative overflow-hidden shadow-premium;
+    @apply bg-card/[0.1] backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden shadow-premium;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
+  }
+
+  .dark .premium-card {
+    @apply bg-card/[0.05];
   }
 
 
@@ -344,24 +348,24 @@
   }
 
   .btn-premium {
-    @apply relative overflow-hidden px-10 py-5 h-16 font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-5 active:scale-[0.98] disabled:opacity-20 border-none transition-all duration-1000;
+    @apply relative overflow-hidden px-10 py-5 h-16 font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-5 active:scale-[0.98] disabled:opacity-30 disabled:grayscale disabled:pointer-events-none border-none transition-all duration-1000;
     border-radius: 9999px;
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/80;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground;
+    @apply btn-premium bg-secondary text-secondary-foreground hover:brightness-110;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border-primary/5 text-primary/40 hover:border-primary/20 hover:text-primary;
+    @apply btn-premium bg-transparent border border-primary/10 text-primary/60 hover:border-primary/30 hover:text-primary;
   }
 
   .btn-premium-ghost {
-    @apply btn-premium bg-transparent text-primary/20 hover:text-primary hover:bg-primary/[0.02];
+    @apply btn-premium bg-transparent text-primary/30 hover:text-primary hover:bg-primary/[0.04];
   }
 
   /* Desktop two-column layout: main content + optional side panel */
