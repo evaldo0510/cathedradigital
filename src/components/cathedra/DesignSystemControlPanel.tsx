@@ -173,14 +173,21 @@ export const ThemeControlPanel: React.FC = () => {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-3 px-5 py-3 rounded-full shadow-premium transition-premium border",
-          isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20"
+          "relative flex items-center gap-3 px-5 py-3 rounded-full shadow-premium transition-premium border",
+          isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20",
+          !isOpen && auditIssues.length > 0 && "border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
         )}
       >
         <Icons.Layout className="w-4 h-4" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">
           {isOpen ? 'Fechar Painel' : 'Temas & Contraste'}
         </span>
+        
+        {auditIssues.length > 0 && !isOpen && (
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full animate-pulse shadow-lg">
+            {auditIssues.length}
+          </span>
+        )}
       </motion.button>
     </div>
   );
