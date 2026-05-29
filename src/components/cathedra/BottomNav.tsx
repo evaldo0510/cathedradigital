@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { AppRoute } from '../../types';
 import { Icons } from '@/constants';
@@ -46,9 +46,18 @@ interface BottomNavItemProps {
   isActive: boolean;
   onClick: () => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
+  shouldReduceMotion?: boolean;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route, isActive, onClick, onRipple }) => (
+const BottomNavItem: React.FC<BottomNavItemProps> = ({ 
+  label, 
+  icon: Icon, 
+  route, 
+  isActive, 
+  onClick, 
+  onRipple,
+  shouldReduceMotion = false
+}) => (
   <Button 
     variant="ghost"
     onClick={(e) => { onRipple(e); onClick(); }}
@@ -65,22 +74,23 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
       <motion.div
         layoutId="bottom-nav-active-bg"
         className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
-        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+        transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
       />
     )}
 
     <motion.div 
       initial={false}
       animate={{ 
-        scale: isActive ? 1.12 : 1,
-        y: isActive ? -1 : 0 
+        scale: isActive ? (shouldReduceMotion ? 1 : 1.12) : 1,
+        y: isActive ? (shouldReduceMotion ? 0 : -1) : 0 
       }}
-      transition={{ type: "spring", stiffness: 400, damping: 28 }}
+      transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 28 }}
       className="relative z-10"
     >
       <Icon 
         className={cn(
-          "transition-all duration-700",
+          "transition-all",
+          shouldReduceMotion ? "duration-0" : "duration-700",
           isActive ? "text-primary opacity-100" : "text-muted-foreground/30 group-hover:text-primary/60"
         )}
         size={20}
@@ -93,10 +103,12 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
       animate={{ 
         opacity: isActive ? 1 : 0.4,
         scale: isActive ? 1 : 0.92,
-        y: isActive ? 0 : 1
+        y: isActive ? 0 : (shouldReduceMotion ? 0 : 1)
       }}
+      transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all duration-700 truncate w-full px-1 text-center relative z-10",
+        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
+        shouldReduceMotion ? "duration-0" : "duration-700",
         isActive ? 'text-primary' : 'text-muted-foreground/50'
       )}
     >
@@ -107,7 +119,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
       <motion.div 
         layoutId="bottom-nav-dot"
         className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
-        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+        transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
   </Button>
@@ -124,6 +136,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const currentPath = location.pathname;
   const triggerRipple = useRipple();
   const { t, lang } = useContext(LangContext);
+  const shouldReduceMotion = useReducedMotion();
+
+  const isHojeActive = useCallback((path: string) => {
+    return path === '/' || path === '/hoje' || path.startsWith('/hoje/');
+  }, []);
 
   const items = [
     { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
@@ -139,21 +156,29 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
-        {items.map((item: any, i: number) => (
-          <BottomNavItem 
-            key={item.label + i}
-            label={item.label}
-            icon={item.icon}
-            route={item.route || ''}
-            isActive={item.route ? currentPath === item.route || (item.route !== '/' && (currentPath.startsWith(item.route) || (item.route === AppRoute.HOJE && currentPath === '/'))) : false}
+        {items.map((item: any, i: number) => {
+          const isActive = item.route 
+            ? (item.route === AppRoute.HOJE 
+                ? isHojeActive(currentPath) 
+                : (currentPath === item.route || (item.route !== '/' && currentPath.startsWith(item.route))))
+            : false;
 
-            onClick={() => {
+          return (
+            <BottomNavItem 
+              key={item.label + i}
+              label={item.label}
+              icon={item.icon}
+              route={item.route || ''}
+              isActive={isActive}
+              shouldReduceMotion={shouldReduceMotion ?? false}
+              onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
             }}
             onRipple={triggerRipple}
           />
-        ))}
+        );
+      })}
       </div>
     </nav>
   );
