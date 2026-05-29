@@ -30,8 +30,8 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     // Only handle swipes on mobile (simple check)
     if (window.innerWidth >= 1024) return;
 
-    const threshold = 150; // px - higher for even more intentionality
-    const velocity = 0.3; // even lower velocity for a very calm feel
+    const threshold = 180; // higher for even more intentionality
+    const velocity = 0.15; // lower velocity for a very calm feel
 
     if (info.offset.x < -threshold || info.velocity.x < -velocity) {
       // Swipe Left -> Next
@@ -54,7 +54,7 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
       className="w-full min-h-screen will-change-transform swipe-navigation"
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.2}
+      dragElastic={0.4}
       onDragEnd={handleDragEnd}
       style={{ touchAction: 'pan-y' }} // Allow vertical scroll, block horizontal for drag
     >

@@ -79,8 +79,9 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1600px; /* More focused layout */
-    --transition-premium: 1200ms cubic-bezier(0.19, 1, 0.22, 1);
-    --transition-subtle: 600ms cubic-bezier(0.19, 1, 0.22, 1);
+    --transition-premium: 1800ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-subtle: 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-cinematic: 2200ms cubic-bezier(0.22, 1, 0.36, 1);
     
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 1rem;
@@ -151,6 +152,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-duration: 700ms;
   }
 
   /* Premium Accessible Focus System - Extremely Light & Consistent */
@@ -164,11 +167,11 @@
 
   /* Interactive States Refinement - Silent & Elegant */
   .hover-subtle {
-    @apply transition-all duration-700 hover:opacity-70;
+    @apply transition-all duration-1000 hover:opacity-60;
   }
 
   .active-subtle {
-    @apply active:scale-[0.99] transition-transform duration-500;
+    @apply active:scale-[0.995] transition-transform duration-700;
   }
 
   .disabled-subtle {
@@ -275,9 +278,13 @@
     @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
   }
 
-  /* Kindle-like atmospheric transitions */
-  .reading-theme-paper { background-color: #F8F5EE; }
-  .reading-theme-sepia { background-color: #E1D7C1; }
+  .transition-premium-slow {
+    transition: all var(--transition-premium);
+  }
+
+  .transition-cinematic {
+    transition: all var(--transition-cinematic);
+  }
   .reading-theme-dark { background-color: #0F172A; }
   .reading-theme-night { background-color: #000000; }
 }
