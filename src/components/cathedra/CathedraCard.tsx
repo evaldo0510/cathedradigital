@@ -14,11 +14,11 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
-      sm: 'p-3 md:p-6',
-      md: 'padding-rhythm',
-      lg: 'p-8 md:p-16',
-      xl: 'p-10 md:p-24',
-      '2xl': 'p-12 md:p-32 lg:p-40',
+      sm: 'p-3 md:p-5',
+      md: 'p-5 md:p-8',
+      lg: 'p-6 md:p-12',
+      xl: 'p-8 md:p-16',
+      '2xl': 'p-10 md:p-20 lg:p-32',
     };
 
     const variantStyles = {
