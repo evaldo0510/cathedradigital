@@ -57,7 +57,8 @@ export function useNotes(contentType: string, contentId?: string) {
         },
         (payload) => {
           // Only refresh if it matches the content type filter (if not 'all')
-          if (contentType === 'all' || payload.new.content_type === contentType) {
+          const newNote = payload.new as any;
+          if (contentType === 'all' || (newNote && newNote.content_type === contentType)) {
             fetchNotes();
           }
         }
