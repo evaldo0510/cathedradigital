@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 45% 1.8%;    /* Even deeper, softer Navy */
-    --foreground: 45 20% 92%;     /* Softer off-white for reduced contrast */
+    --background: 220 50% 1.2%;    /* Deepest Night Navy - richer than pure black */
+    --foreground: 45 15% 90%;      /* Softer, warmer off-white to reduce eye strain */
     
-    --card: 220 40% 3.5%;           /* Subtle card separation */
-    --card-foreground: 45 20% 92%;
+    --card: 220 40% 3%;            /* Subtle elevation */
+    --card-foreground: 45 15% 90%;
     
-    --popover: 220 40% 4%;
-    --popover-foreground: 45 20% 92%;
+    --popover: 220 45% 2.5%;
+    --popover-foreground: 45 15% 90%;
     
-    --primary: 40 30% 60%;        /* More atmospheric Gold */
-    --primary-foreground: 220 45% 1.8%;
+    --primary: 42 35% 58%;         /* Antiquated Gold - more atmospheric */
+    --primary-foreground: 220 50% 1%;
     
-    --secondary: 220 30% 5%;      
-    --secondary-foreground: 40 30% 60%;
+    --secondary: 220 30% 4%;      
+    --secondary-foreground: 42 35% 58%;
     
-    --muted: 220 30% 6%;
-    --muted-foreground: 220 10% 65%; /* Subtler secondary text in dark mode */
+    --muted: 220 30% 5%;
+    --muted-foreground: 220 15% 55%; /* Reduced contrast for non-essentials */
     
-    --accent: 40 30% 60% / 0.08;
-    --accent-foreground: 40 30% 60%;
+    --accent: 42 35% 58% / 0.05;
+    --accent-foreground: 42 35% 58%;
     
-    --destructive: 0 70% 50%;
+    --destructive: 0 60% 45%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 25% 10% / 0.08;  /* Subtler dark borders */
-    --input: 220 25% 10% / 0.08;
-    --ring: 40 30% 60% / 0.2;
+    --border: 220 25% 8% / 0.06;   /* Extremely subtle borders */
+    --input: 220 25% 8% / 0.06;
+    --ring: 42 35% 58% / 0.15;
     
-    --shadow-premium: 0 30px 120px -30px rgba(0, 0, 0, 0.8);
+    --shadow-premium: 0 40px 160px -40px rgba(0, 0, 0, 0.9);
   }
 
   .high-contrast {
@@ -194,14 +194,15 @@
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/75;
-    font-size: clamp(0.95rem, 1.1vw, 1.15rem);
-    line-height: 1.75;
-    max-width: 75ch;
+    @apply font-ui font-normal text-foreground/70;
+    font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+    line-height: 1.8;
+    max-width: 65ch; /* More comfortable line width */
+    letter-spacing: 0.01em;
   }
 
   .dark p, .dark .body-text {
-    @apply text-foreground/70;
+    @apply text-foreground/60;
   }
 
   /* Reading Core - Optimized Rhythm */
@@ -443,7 +444,7 @@
   @apply h-0;
 }
 
-/* Deep Visual Silence - Refined but Accessible */
+/* Deep Visual Silence - Refined, Atmospheric, and Contemplative */
 .visual-silence {
   --border: 0 0% 0% / 0;
   --shadow-premium: none;
@@ -454,7 +455,13 @@
 }
 
 .visual-silence * {
-  @apply transition-none border-transparent !shadow-none;
+  @apply transition-all duration-1000 border-transparent !shadow-none;
+}
+
+.visual-silence header, 
+.visual-silence footer, 
+.visual-silence nav {
+  @apply opacity-[0.15] hover:opacity-100 transition-opacity duration-1000;
 }
 
 /* Ensure focus is STILL visible even in visual silence mode for accessibility */
@@ -464,7 +471,7 @@
 
 .visual-silence .premium-card-interactive:hover,
 .visual-silence .premium-card-interactive:active {
-  @apply -translate-y-0 bg-transparent opacity-100;
+  @apply -translate-y-0 bg-transparent opacity-100 scale-100;
 }
 
 .visual-silence .btn-premium:hover,
@@ -473,8 +480,12 @@
 }
 
 .visual-silence .cinematic-fade-in {
-  animation: none;
-  opacity: 1;
+  animation: cinematicFadeInQuiet 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cinematicFadeInQuiet {
+  from { opacity: 0; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
 }
 
 /* Redução de Brilho e Ruído Visual */

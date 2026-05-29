@@ -243,28 +243,28 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
               ease: [0.19, 1, 0.22, 1] 
             }}
-            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.05] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] rounded-[2.5rem] overflow-hidden admin-hide touch-none"
+            className="fixed top-2 left-2 bottom-2 w-[calc(100vw-16px)] sm:w-[320px] md:w-[380px] bg-white/95 dark:bg-black/95 backdrop-blur-[60px] border border-black/[0.02] dark:border-white/[0.04] flex flex-col p-6 md:p-12 z-[150] shadow-[0_64px_128px_-32px_rgba(0,0,0,0.4)] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.5rem+env(safe-area-inset-top,0px))] pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - More dedicated and sophisticated */}
-            <header className="flex items-center justify-between mb-10 pb-4 border-b border-primary/[0.03] dark:border-white/[0.03]">
+            <header className="flex items-center justify-between mb-12 pb-6">
               <div 
-                className="flex items-center gap-3 cursor-pointer group outline-none rounded-xl" 
+                className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-9 h-9 rounded-xl bg-primary/5 dark:bg-white/5 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
-                  <Icons.Logo className="w-full h-full opacity-70 dark:opacity-50" variant={isDark ? "light" : "dark"} />
+                <div className="w-10 h-10 rounded-2xl bg-primary/[0.03] dark:bg-white/[0.03] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-1000">
+                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
                 </div>
-                <div className="space-y-0.5">
-                  <h1 className="text-sm font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[7px] font-bold uppercase text-primary/40 tracking-[0.4em]">
-                    Sanctuarium
+                <div className="space-y-1">
+                  <h1 className="text-[11px] font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[7px] font-bold uppercase text-primary/30 tracking-[0.5em]">
+                    Sacrum Archivum
                   </p>
                 </div>
               </div>
@@ -274,10 +274,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-8 h-8 text-muted-foreground/30 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
+                className="rounded-full w-9 h-9 text-muted-foreground/20 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-3.5 h-3.5" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </header>
 
@@ -294,8 +294,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[8px] font-bold uppercase tracking-[0.4em] text-primary/30 dark:text-primary/50 mb-4 px-4">{section.label}</h3>
-                  <ul className="space-y-1">
+                  <h3 className="text-[7px] font-bold uppercase tracking-[0.5em] text-primary/20 dark:text-primary/40 mb-5 px-4">{section.label}</h3>
+                  <ul className="space-y-1.5">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                       return (
@@ -307,10 +307,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 outline-none h-auto min-h-[52px]
+                            className={`w-full flex items-center justify-start gap-5 px-5 py-3.5 rounded-2xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[56px]
                               ${isActive
-                                ? 'bg-primary/[0.04] dark:bg-white/[0.04] text-primary shadow-sm shadow-primary/5'
-                                : 'text-muted-foreground/40 dark:text-muted-foreground/50 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary dark:hover:text-primary'}`}
+                                ? 'bg-primary/[0.03] dark:bg-white/[0.03] text-primary'
+                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.01] dark:hover:bg-white/[0.01] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
                               {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
