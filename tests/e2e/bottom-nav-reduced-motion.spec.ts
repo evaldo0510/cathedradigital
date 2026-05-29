@@ -55,19 +55,25 @@ test.describe('BottomNav & SwipeNavigation - Reduced Motion', () => {
   test('should navigate via keyboard without animations when reduced motion is active', async ({ page }) => {
     await page.goto('/?lang=pt');
     
-    // Start at "Hoje"
+    // Ensure we are on the page
     const hojeItem = page.locator('button[aria-label="Hoje"]');
     await expect(hojeItem).toHaveAttribute('aria-current', 'page');
+
+    // Focus "Hoje" first to start keyboard navigation from a known point
+    await hojeItem.focus();
+    await expect(hojeItem).toBeFocused();
 
     // Tab to "Bíblia"
     await page.keyboard.press('Tab');
     
+    const bibleItem = page.locator('button[aria-label="Bíblia"]');
+    await expect(bibleItem).toBeFocused();
+
     // Press Enter to navigate
     await page.keyboard.press('Enter');
 
     // Verify navigation and aria-current
     await expect(page).toHaveURL(/\/bible/);
-    const bibleItem = page.locator('button[aria-label="Bíblia"]');
     await expect(bibleItem).toHaveAttribute('aria-current', 'page');
     await expect(hojeItem).not.toHaveAttribute('aria-current', 'page');
 
@@ -87,10 +93,12 @@ test.describe('BottomNav & SwipeNavigation - Reduced Motion', () => {
 
     // Tab to "Catecismo"
     await page.keyboard.press('Tab');
+    const catechismItem = page.locator('button[aria-label="Catecismo"]');
+    await expect(catechismItem).toBeFocused();
+    
     await page.keyboard.press(' '); // Space
     
     await expect(page).toHaveURL(/\/catechism/);
-    const catechismItem = page.locator('button[aria-label="Catecismo"]');
     await expect(catechismItem).toHaveAttribute('aria-current', 'page');
     await expect(bibleItem).not.toHaveAttribute('aria-current', 'page');
   });
