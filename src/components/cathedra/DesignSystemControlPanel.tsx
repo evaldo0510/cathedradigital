@@ -10,17 +10,47 @@ export const ThemeControlPanel: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
   const [isOpen, setIsOpen] = useState(false);
   const [contrastStats, setContrastStats] = useState({ ratio: 0, level: 'Fail' });
+  const [auditIssues, setAuditIssues] = useState<{ component: string; tokens: string[]; ratio: number; level: string }[]>([]);
 
   useEffect(() => {
     // Get current computed colors from CSS variables
     const style = getComputedStyle(document.documentElement);
-    const bg = style.getPropertyValue('--background').trim();
-    const fg = style.getPropertyValue('--foreground').trim();
     
-    if (bg && fg) {
+    const checkPair = (bgVar: string, fgVar: string) => {
+      const bg = style.getPropertyValue(bgVar).trim();
+      const fg = style.getPropertyValue(fgVar).trim();
+      if (!bg || !fg) return { ratio: 1, level: 'Fail' };
       const ratio = getContrastRatio(bg, fg);
-      setContrastStats({ ratio, level: getWCAGLevel(ratio) });
-    }
+      return { ratio, level: getWCAGLevel(ratio) };
+    };
+
+    // Main check for stats
+    const main = checkPair('--background', '--foreground');
+    setContrastStats(main);
+
+    // Detailed audit
+    const pairs = [
+      { name: 'Texto Principal', tokens: ['--background', '--foreground'], min: 4.5 },
+      { name: 'Cores de Destaque', tokens: ['--background', '--primary'], min: 4.5 },
+      { name: 'Botões Primários', tokens: ['--primary', '--primary-foreground'], min: 4.5 },
+      { name: 'Botões Secundários', tokens: ['--secondary', '--secondary-foreground'], min: 4.5 },
+      { name: 'Textos Mudos', tokens: ['--background', '--muted-foreground'], min: 4.5 },
+    ];
+
+    const issues = pairs
+      .map(p => {
+        const result = checkPair(p.tokens[0], p.tokens[1]);
+        return { ...p, ...result };
+      })
+      .filter(p => p.ratio < p.min)
+      .map(p => ({
+        component: p.name,
+        tokens: p.tokens,
+        ratio: p.ratio,
+        level: p.level
+      }));
+
+    setAuditIssues(issues);
   }, [settings.theme, settings.highContrast]);
 
   const themes = [
@@ -86,7 +116,7 @@ export const ThemeControlPanel: React.FC = () => {
 
               {/* A11y Feedback */}
               <div className={cn(
-                "p-4 rounded-premium-sm border space-y-2 transition-colors duration-500",
+                "p-4 rounded-premium-sm border space-y-3 transition-all duration-500",
                 contrastStats.ratio >= 4.5 ? "bg-green-500/5 border-green-500/20" : "bg-red-500/5 border-red-500/20"
               )}>
                 <div className="flex items-center justify-between">
@@ -102,6 +132,36 @@ export const ThemeControlPanel: React.FC = () => {
                   <span className="text-xl font-display font-light text-primary">{contrastStats.ratio}:1</span>
                   <span className="text-[10px] text-muted-foreground italic">ratio</span>
                 </div>
+
+                {auditIssues.length > 0 && (
+                  <div className="pt-2 border-t border-red-500/10 space-y-2">
+                    <div className="flex items-center gap-1 text-[9px] font-bold text-red-600/60 uppercase">
+                      <Icons.AlertTriangle className="w-3 h-3" />
+                      <span>{auditIssues.length} Conflitos de Contraste</span>
+                    </div>
+                    <div className="space-y-1.5">
+                      {auditIssues.map((issue, idx) => (
+                        <div key={idx} className="flex flex-col gap-0.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-medium text-primary/80">{issue.component}</span>
+                            <span className="text-[9px] font-bold text-red-600">{issue.ratio}:1</span>
+                          </div>
+                          <div className="flex gap-1">
+                            {issue.tokens.map(token => (
+                              <a
+                                key={token}
+                                href={`/design-system#${token.replace('--', '')}`}
+                                className="text-[8px] px-1.5 py-0.5 rounded-sm bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors border border-red-500/5"
+                              >
+                                {token}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -113,14 +173,21 @@ export const ThemeControlPanel: React.FC = () => {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-3 px-5 py-3 rounded-full shadow-premium transition-premium border",
-          isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20"
+          "relative flex items-center gap-3 px-5 py-3 rounded-full shadow-premium transition-premium border",
+          isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20",
+          !isOpen && auditIssues.length > 0 && "border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
         )}
       >
         <Icons.Layout className="w-4 h-4" />
         <span className="text-[10px] font-black uppercase tracking-[0.2em] hidden md:block">
           {isOpen ? 'Fechar Painel' : 'Temas & Contraste'}
         </span>
+        
+        {auditIssues.length > 0 && !isOpen && (
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full animate-pulse shadow-lg">
+            {auditIssues.length}
+          </span>
+        )}
       </motion.button>
     </div>
   );
