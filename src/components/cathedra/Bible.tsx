@@ -1044,6 +1044,10 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
+            <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+              <div className="w-full relative">
+                <div className="py-8 md:py-20 lg:py-24">
+                  <Relatio 
                     context={{
                       type: 'bible',
                       abbr: selectedBook.abbr,
@@ -1060,7 +1064,6 @@ const Bible: React.FC = () => {
                     }}
                   />
 
-
                   {!settings.totalSilence && (
                     <LogosContextualSuggestions
                       type="bible"
@@ -1074,60 +1077,58 @@ const Bible: React.FC = () => {
                     />
                   )}
                 </div>
-
-                <aside className="reader-navigation-aside space-y-12 shrink-0">
-
-                  <div className="space-y-4">
-                    <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
-                    <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                      {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-                        <button
-                          key={ch}
-                          onClick={() => selectChapter(ch)}
-                          className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
-                            ${selectedChapter === ch 
-                              ? 'bg-primary text-primary-foreground' 
-                              : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
-                        >
-                          <span className="opacity-50 text-[10px] w-4">{ch}</span>
-                          <span>Capítulo {ch}</span>
-                          {chaptersRead[selectedBook.abbr]?.has(ch) && (
-                            <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
-                          )}
-                        </button>
-                      ))}
-                    </nav>
-                </aside>
               </div>
             </div>
+
+            <aside className="reader-navigation-aside space-y-12 shrink-0">
+              <div className="space-y-4">
+                <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
+                <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                  {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                    <button
+                      key={ch}
+                      onClick={() => selectChapter(ch)}
+                      className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
+                        ${selectedChapter === ch 
+                          ? 'bg-primary text-primary-foreground' 
+                          : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                    >
+                      <span className="opacity-50 text-[10px] w-4">{ch}</span>
+                      <span>Capítulo {ch}</span>
+                      {chaptersRead[selectedBook.abbr]?.has(ch) && (
+                        <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
+                      )}
+                    </button>
+                  ))}
+                </nav>
+              </div>
+            </aside>
           </div>
         </div>
 
+        <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
+            <Button 
+              variant="ghost" 
+              disabled={selectedChapter <= 1}
+              onClick={() => {
+                if (selectedChapter > 1) {
+                  const prevCh = selectedChapter - 1;
+                  setSelectedChapter(prevCh);
+                  setVerses([]);
+                  navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
+            >
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
+              <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
+                <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
+                {selectedBook.name} {selectedChapter - 1}
+              </div>
+            </Button>
 
-
-            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
-
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
-                <Button 
-                  variant="ghost" 
-                  disabled={selectedChapter <= 1}
-                  onClick={() => {
-                    if (selectedChapter > 1) {
-                      const prevCh = selectedChapter - 1;
-                      setSelectedChapter(prevCh);
-                      setVerses([]);
-                      navigate(`/bible?book=${selectedBook.abbr}&ch=${prevCh}`);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                  }}
-                  className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
-                >
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
-                  <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
-                    <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
-                    {selectedBook.name} {selectedChapter - 1}
-                  </div>
-                </Button>
 
 
                 <Button 
