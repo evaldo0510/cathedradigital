@@ -1002,7 +1002,12 @@ const Catechism: React.FC = () => {
                 }
               }}
               label={`Catecismo §${currentParagraph}`}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeParagraphId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
           </main>
         </div>
 
