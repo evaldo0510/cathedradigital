@@ -500,6 +500,37 @@
     @apply mb-[var(--space-mobile-header-mb)] md:mb-[var(--space-desktop-header-mb)];
   }
 
+  /* Mobile Presence - Auto-hide non-essential UI on scroll */
+  @media (max-width: 768px) {
+    .header-reading-auto-hide,
+    .bottom-nav-reading-auto-hide {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+    }
+
+    body.is-scrolling-down .header-reading-auto-hide {
+      transform: translateY(-110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    body.is-scrolling-down .bottom-nav-reading-auto-hide {
+      transform: translateY(120%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    /* Subtle monastic vignette */
+    .monastic-sanctuary::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 40%, hsl(var(--background) / 0.15) 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+  }
+  }
+
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
   .premium-card {
     @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
