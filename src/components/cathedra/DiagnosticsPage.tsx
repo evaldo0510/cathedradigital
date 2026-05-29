@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { usePerformanceMetrics } from '@/hooks/usePerformanceMetrics';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+
 
 const DiagnosticsPage: React.FC = () => {
   const [supabaseStatus, setSupabaseStatus] = useState<'checking' | 'ok' | 'error'>('checking');
