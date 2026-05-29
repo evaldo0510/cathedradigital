@@ -295,41 +295,45 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               )))}
             </nav>
 
-            <div className="pt-8 mt-auto space-y-8">
-              <div className="flex flex-col gap-4">
+            <div className="pt-6 mt-auto space-y-6">
+              <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
-                    variant="outline"
+                    variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-12 rounded-xl border-primary/5 bg-muted/30 flex items-center justify-center gap-2 transition-all hover:bg-primary/5 hover:border-primary/10"
+                    className="h-10 rounded-xl border border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary/60" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
+                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
-                    variant={isHighContrast ? "default" : "outline"}
+                    variant="ghost"
                     onClick={onToggleHighContrast} 
-                    className={`h-12 rounded-xl border-primary/5 flex items-center justify-center gap-2 transition-all ${
-                      isHighContrast ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    className={`h-10 rounded-xl border flex items-center justify-center gap-2 transition-all ${
+                      isHighContrast 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck />
-                    <span className="text-[9px] font-bold uppercase tracking-widest">Contraste</span>
+                    <Icons.ShieldCheck className="w-4 h-4" />
+                    <span className="text-[8px] font-bold uppercase tracking-widest">A11y</span>
                   </Button>
                 </div>
 
                 {!settings.totalSilence && (
                   <Button 
-                    variant={isSpeaking ? "default" : "outline"}
+                    variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full h-12 rounded-xl border-primary/5 flex items-center justify-center gap-3 transition-all ${
-                      isSpeaking ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
+                      isSpeaking 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="animate-pulse" /> : <Icons.Volume2 />}
-                    <span className="text-[9px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar Áudio' : 'Ouvir Página'}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
+                    <span className="text-[8px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
