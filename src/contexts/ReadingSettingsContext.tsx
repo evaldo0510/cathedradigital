@@ -231,7 +231,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
 
 
   const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
-    const updated = { ...settings, ...newSettings };
+    const updated = { ...settings, ...newSettings, lastUpdated: Date.now() };
     setSettings(updated);
 
     if (user) {
