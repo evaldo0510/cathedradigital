@@ -41,6 +41,7 @@ import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
+import ContemplativeLayout from './components/cathedra/ContemplativeLayout';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -114,6 +115,7 @@ const OfflinePage = lazy(() => import('./components/cathedra/OfflinePage'));
 const CacheManager = lazy(() => import('./components/cathedra/CacheManager'));
 const AdminDashboard = lazy(() => import('./components/cathedra/AdminDashboard'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
+const StudyMode = lazy(() => import('./components/cathedra/StudyMode'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
@@ -445,13 +447,13 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, scale: 0.995, filter: "blur(20px)" }}
-                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 1.005, filter: "blur(20px)" }}
+                initial={{ opacity: 0, y: 20, scale: 0.99, filter: "blur(20px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -20, scale: 1.01, filter: "blur(20px)" }}
 
                 transition={{ 
-                  duration: settings.reduceAnimations ? 0.4 : 2.2,
-                  ease: [0.19, 1, 0.22, 1] // Even slower, more architectural transition
+                  duration: settings.reduceAnimations ? 0.35 : 2.4, // Slower, more architectural
+                  ease: [0.19, 1, 0.22, 1] 
                 }}
                 className="w-full flex-1 flex flex-col"
               >
@@ -467,9 +469,11 @@ const AppLayout: React.FC = () => {
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><ContemplativeLayout title="Logos" subtitle="Inteligência Teológica"><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></ContemplativeLayout></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
+              <Route path="/study" element={<Suspense fallback={<LoadingFallback />}><StudyMode /></Suspense>} />
+              <Route path="/estudo" element={<Navigate to="/study" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
