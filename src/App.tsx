@@ -161,10 +161,10 @@ const LoadingFallback = () => (
         />
       </div>
       <motion.p 
-        initial={{ opacity: 0, letterSpacing: "0.4em" }}
-        animate={{ opacity: 1, letterSpacing: "1em" }}
-        transition={{ duration: 3, ease: "easeOut" }}
-        className="text-[8px] font-bold uppercase text-primary/20 text-center tracking-[1em]"
+        initial={{ opacity: 0, letterSpacing: "0.5em" }}
+        animate={{ opacity: 0.3, letterSpacing: "1.2em" }}
+        transition={{ duration: 6, ease: "easeInOut" }}
+        className="text-[9px] font-black uppercase text-primary/40 text-center tracking-[1.2em]"
       >
         AD MAIOREM DEI GLORIAM
       </motion.p>

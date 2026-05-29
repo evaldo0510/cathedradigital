@@ -452,12 +452,12 @@
 }
 
 @keyframes cinematicFadeIn {
-  from { opacity: 0; transform: scale(1.01) translateY(3px); filter: blur(12px); }
+  from { opacity: 0; transform: scale(1.02) translateY(8px); filter: blur(20px); }
   to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 
 .cinematic-fade-in {
-  animation: cinematicFadeIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: cinematicFadeIn 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* Modo Foco & Silêncio Visual */
