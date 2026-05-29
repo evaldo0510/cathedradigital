@@ -251,6 +251,7 @@ const BibliotecaPage: React.FC = () => {
           </div>
         ))}
       </div>
+      </div>
     </ContemplativeLayout>
   );
 };
