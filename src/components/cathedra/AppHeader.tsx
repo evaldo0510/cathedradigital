@@ -33,27 +33,27 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="border-b border-primary/5 bg-background/80 backdrop-blur-3xl sticky top-0 z-[140] transition-premium pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
         role="banner"
       >
-        <div className="app-container flex flex-col md:flex-row md:items-center justify-between min-h-[100px] md:h-36 py-4 md:py-0 gap-5 md:gap-0">
+        <div className="app-container flex items-center justify-between h-20 md:h-36 py-2 md:py-0">
 
           {/* Logo Section */}
           <div 
-            className="flex flex-col items-center justify-center md:flex-row md:justify-start gap-5 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-premium w-full md:w-auto p-2" 
+            className="flex items-center gap-3 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-premium p-1 md:p-2" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-12 h-12 md:w-14 md:h-14 transition-premium-slow group-hover:scale-105" variant="dark" />
-            <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-2xl md:text-2xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.7em] transition-premium-slow group-hover:text-primary/90">Cathedra</span>
-              <span className="h5 !text-[8px] md:!text-[9px] !text-muted-foreground mt-2 group-hover:text-primary/40 transition-premium-slow">Biblioteca Digital</span>
+            <Icons.Logo className="w-8 h-8 md:w-14 md:h-14 transition-premium-slow group-hover:scale-105" variant="dark" />
+            <div className="flex flex-col items-start min-w-0">
+              <span className="text-sm md:text-2xl font-display font-light uppercase tracking-[0.5em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.6em] transition-premium-slow group-hover:text-primary/90">Cathedra</span>
+              <span className="hidden md:block h5 !text-[9px] !text-muted-foreground mt-2 group-hover:text-primary/40 transition-premium-slow">Biblioteca Digital</span>
             </div>
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-center md:justify-end gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0">
-            <div className="flex items-center gap-5 md:gap-4 lg:gap-6 w-full md:w-auto justify-between md:justify-end px-2 md:px-0">
+          <div className="flex items-center justify-end gap-2 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
 
 
               {!isDashboard && (
