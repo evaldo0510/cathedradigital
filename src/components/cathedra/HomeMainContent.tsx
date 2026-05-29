@@ -96,6 +96,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         </CathedraCard>
       </section>
 
+      {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
+      <div className="py-8 md:py-24 flex flex-col items-center gap-6 opacity-30 select-none pointer-events-none">
+        <div className="w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
+        <Sparkles className="w-4 h-4 text-primary/40" strokeWidth={0.5} />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
@@ -123,7 +129,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 padding-rhythm md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group"
+            className="flex-1 p-8 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-8 md:gap-16 group"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -159,6 +165,11 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         </section>
       </div>
 
+      {/* VISUAL PAUSE - SECONDARY CADENCE */}
+      <div className="py-12 md:py-32 flex justify-center">
+        <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+      </div>
+
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both">
         <h2 className="sr-only">Fontes de Sabedoria</h2>
@@ -180,7 +191,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Novas salas sendo preparadas para o seu santuário."
           className="header-margin-rhythm"
         />
-        <div className="px-2 md:px-4">
+        <div className="px-0 md:px-4">
           <ComingSoonSection />
         </div>
       </section>
