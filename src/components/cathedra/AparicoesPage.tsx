@@ -8,6 +8,7 @@ import DeepContentSection from './DeepContentSection';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import SacredImage from './SacredImage';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
@@ -44,8 +45,9 @@ const AparicoesPage: React.FC = () => {
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
           </Button>
-          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-premium" loading="lazy" />
+          <SacredImage src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full" priority />
         </div>
+
 
         {/* Quick facts */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
