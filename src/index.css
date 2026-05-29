@@ -457,6 +457,36 @@
     --opacity-border: 0.12;
     --opacity-text-secondary: 0.6;
     --opacity-text-tertiary: 0.35;
+
+    /* Global Spacing Rhythm Tokens */
+    --space-mobile-base: 1rem;       /* 16px */
+    --space-mobile-section: 2.5rem;  /* 40px */
+    --space-mobile-stack: 1.5rem;    /* 24px */
+    --space-mobile-padding: 1rem;    /* 16px */
+    --space-mobile-header-mb: 2rem;  /* 32px */
+    
+    --space-desktop-base: 2rem;      /* 32px */
+    --space-desktop-section: 12rem;  /* 192px */
+    --space-desktop-stack: 4rem;     /* 64px */
+    --space-desktop-padding: 2.5rem; /* 40px */
+    --space-desktop-header-mb: 10rem; /* 160px */
+  }
+
+  /* Global Rhythm Classes */
+  .section-rhythm {
+    @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
+  }
+
+  .stack-rhythm {
+    @apply space-y-[var(--space-mobile-stack)] md:space-y-[var(--space-desktop-stack)];
+  }
+
+  .padding-rhythm {
+    @apply p-[var(--space-mobile-padding)] md:p-[var(--space-desktop-padding)];
+  }
+
+  .header-margin-rhythm {
+    @apply mb-[var(--space-mobile-header-mb)] md:mb-[var(--space-desktop-header-mb)];
   }
 
   /* Premium card style - Spiritual Minimalist - Unified Tokens */
@@ -495,7 +525,7 @@
 
   /* Specific Card Sizes for Desktop */
   .desktop-card {
-    @apply premium-card p-10 sm:p-14 lg:p-20;
+    @apply premium-card p-[var(--space-mobile-padding)] md:p-[var(--space-desktop-padding)];
   }
 
   /* Standardized Vertical Rhythm - More spacious for monastic feel */

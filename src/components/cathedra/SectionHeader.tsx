@@ -16,7 +16,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex flex-col gap-4 md:gap-8 mb-8 md:mb-32 lg:mb-40 items-center",
+      "flex flex-col gap-3 md:gap-8 header-margin-rhythm items-center",
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
