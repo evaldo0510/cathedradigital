@@ -396,3 +396,57 @@
   from { opacity: 0; transform: scale(1.02) translateY(5px); filter: blur(8px); }
   to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
+
+/* Modo Foco & Silêncio Visual */
+.focus-mode .header-reading-auto-hide {
+  @apply opacity-0 -translate-y-full pointer-events-none transition-all duration-700;
+}
+
+.focus-mode .header-reading-auto-hide:hover,
+.focus-mode .header-reading-auto-hide:focus-within {
+  @apply opacity-100 translate-y-0 pointer-events-auto;
+}
+
+/* Área de detecção no topo para o Header */
+.focus-mode::before {
+  content: '';
+  @apply fixed top-0 left-0 w-full h-8 z-[141] pointer-events-auto opacity-0;
+}
+
+.focus-mode:has(header:hover)::before {
+  @apply h-0;
+}
+
+/* Silêncio Visual Profundo */
+.visual-silence {
+  --border: 0 0% 0% / 0.01;
+  --shadow-premium: none;
+  --shadow-premium-hover: none;
+}
+
+.visual-silence * {
+  @apply transition-none border-transparent !shadow-none;
+}
+
+.visual-silence .premium-card-interactive:hover {
+  @apply -translate-y-0 bg-transparent;
+}
+
+.visual-silence .btn-premium:hover {
+  @apply scale-100;
+}
+
+.visual-silence .cinematic-fade-in {
+  animation: none;
+  opacity: 1;
+}
+
+/* Redução de Brilho e Ruído Visual */
+.visual-silence .premium-glow::after {
+  display: none;
+}
+
+/* Suavização de leitura */
+.visual-silence .reader-text {
+  @apply tracking-wide opacity-90;
+}
