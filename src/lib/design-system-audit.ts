@@ -1,12 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
 import { getContrastRatio, getWCAGLevel } from './a11y-utils';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
-
-// Type extension for jsPDF to include autoTable
-interface jsPDFWithAutoTable extends jsPDF {
-  autoTable: (options: any) => jsPDF;
-}
 
 export interface ContrastIssue {
   element: string;
@@ -171,7 +164,7 @@ export const saveAuditResult = async (runId: string, result: AuditResult) => {
 /**
  * Generates and downloads a JSON report
  */
-export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 'json') => {
+export const exportAuditReport = async (result: AuditResult, format: 'json' | 'pdf' = 'json') => {
   const currentTheme = document.documentElement.classList.contains('dark') ? 'Escuro' : 'Claro';
   const isHighContrast = document.documentElement.classList.contains('high-contrast') ? 'Sim' : 'Não';
   
@@ -195,7 +188,12 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
     downloadAnchorNode.remove();
     URL.revokeObjectURL(url);
   } else {
-    const doc = new jsPDF() as jsPDFWithAutoTable;
+    const [{ jsPDF }, autoTableModule] = await Promise.all([
+      import('jspdf'),
+      import('jspdf-autotable'),
+    ]);
+    const autoTable = (autoTableModule as any).default;
+    const doc = new jsPDF();
     
     // Add Header
     doc.setFontSize(24);
@@ -222,7 +220,7 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
       ['Status Geral', result.status.toUpperCase()]
     ];
     
-    doc.autoTable({
+    autoTable(doc, {
       startY: 55,
       body: metaData,
       theme: 'plain',
@@ -245,7 +243,7 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
         issue.suggestion || 'Revisar tokens de cores.'
       ]);
       
-      doc.autoTable({
+      autoTable(doc, {
         startY: currentY + 5,
         head: [['Componente', 'Ratio', 'Min', 'Nível', 'Recomendação']],
         body: tableData,
@@ -271,7 +269,7 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
       recommendations.push(['Excelente', 'O sistema mantém conformidade total com os padrões estabelecidos. Continue utilizando os tokens globais.']);
     }
     
-    doc.autoTable({
+    autoTable(doc, {
       startY: currentY + 5,
       head: [['Categoria', 'Ação Corretiva']],
       body: recommendations,

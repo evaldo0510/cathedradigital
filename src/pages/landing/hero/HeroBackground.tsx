@@ -15,13 +15,16 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => {
       {/* Cinematic base layer - Deep Monastic Shadow */}
       <div className="absolute inset-0 bg-background" />
       
-      {/* Spiritual Library Ambiance - Living background with parallax effect */}
+      {/* Spiritual Library Ambiance - local CSS light only, no remote image on first paint */}
       <motion.div 
-        initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 1.1 }}
-        animate={{ opacity: 0.12, scale: 1 }}
-        transition={{ duration: shouldReduceMotion ? 2 : 8, ease: "easeOut" }}
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&auto=compress&cs=tinysrgb')] bg-cover bg-center grayscale mix-blend-luminosity" 
-        style={{ contentVisibility: 'auto' }}
+        initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 1.04 }}
+        animate={{ opacity: 0.18, scale: 1 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 2.4, ease: "easeOut" }}
+        className="absolute inset-0 mix-blend-luminosity"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0 10%, hsl(var(--primary) / 0.04) 10.5% 11%, transparent 11.5% 22%, hsl(var(--primary) / 0.035) 22.5% 23%, transparent 23.5% 36%, hsl(var(--primary) / 0.04) 36.5% 37%, transparent 37.5% 52%, hsl(var(--primary) / 0.035) 52.5% 53%, transparent 53.5% 68%, hsl(var(--primary) / 0.04) 68.5% 69%, transparent 69.5% 100%), radial-gradient(ellipse at 50% 30%, hsl(var(--primary) / 0.06), transparent 62%)',
+        }}
       />
 
       {/* Sacred Geometry Texture - Extremely subtle parchment pattern */}

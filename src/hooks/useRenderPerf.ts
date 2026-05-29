@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import * as Sentry from "@sentry/react";
 
 /**
  * A hook to monitor component render performance and re-render counts.
@@ -21,17 +20,7 @@ export function useRenderPerf(componentName: string, threshold = 5) {
 
     if (renderCount.current > threshold) {
       const message = `High re-render count detected for ${componentName}: ${renderCount.current}`;
-      
-      Sentry.addBreadcrumb({
-        category: 'performance',
-        message,
-        level: 'warning',
-        data: {
-          componentName,
-          renderCount: renderCount.current,
-          duration
-        }
-      });
+      if (import.meta.env.DEV) console.warn(message);
     }
 
     // Reset start time for next potential render
