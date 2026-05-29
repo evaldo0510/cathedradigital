@@ -254,12 +254,13 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   }, [settings, user, refreshProfile]);
 
   const resetSettings = useCallback(async () => {
-    setSettings(defaultSettings);
+    const reset = { ...defaultSettings, lastUpdated: Date.now() };
+    setSettings(reset);
     if (user) {
       await supabase
         .from('profiles')
         .update({
-          reading_settings: defaultSettings as any
+          reading_settings: reset as any
         })
         .eq('id', user.id);
       refreshProfile();
