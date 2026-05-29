@@ -90,16 +90,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   <Icons.Moon className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
                 }
               </Button>
-1: 
-2:               <Button
-3:                 variant="outline"
-4:                 size="icon"
-5:                 onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
-6:                 className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
-7:                 aria-label="Abrir configurações de acessibilidade"
-8:               >
-9:                 <Icons.ShieldCheck className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
-10:               </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                aria-label="Abrir configurações de acessibilidade"
+              >
+                <Icons.ShieldCheck className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
+              </Button>
 
               {user ? (
                 <Button
