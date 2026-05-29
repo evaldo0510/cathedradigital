@@ -62,34 +62,34 @@
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 220 20% 8%;    /* #121418 Deep Desaturated Blue Graphite */
-    --foreground: 45 15% 90%;    /* #EAE8E4 Soft Off-white */
-    --card: 220 20% 10%;
-    --card-foreground: 45 15% 90%;
-    --popover: 220 20% 9%;
-    --popover-foreground: 45 15% 90%;
-    --primary: 40 35% 65%;       /* Soft Gold for readability in dark mode */
-    --primary-foreground: 220 20% 8%;
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 40 35% 65%;
-    --muted: 220 20% 15%;
-    --muted-foreground: 220 10% 85%; /* Lighter for better contrast in dark mode */
+    --background: 220 20% 6%;    /* #0D0F12 Deeper Desaturated Blue Graphite */
+    --foreground: 45 15% 95%;    /* #F5F4F2 Near-white */
+    --card: 220 20% 8%;
+    --card-foreground: 45 15% 95%;
+    --popover: 220 20% 7%;
+    --popover-foreground: 45 15% 95%;
+    --primary: 40 40% 70%;       /* Brighter Gold for dark mode */
+    --primary-foreground: 220 20% 6%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 40 40% 70%;
+    --muted: 220 20% 12%;
+    --muted-foreground: 220 15% 90%; 
 
-    --accent: 40 35% 65% / 0.1;
-    --accent-foreground: 40 35% 65%;
-    --destructive: 0 60% 50%;
+    --accent: 40 40% 70% / 0.15;
+    --accent-foreground: 40 40% 70%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 40 35% 65% / 0.4;
-    --sidebar-background: 220 20% 7%;
-    --sidebar-foreground: 45 15% 90%;
-    --sidebar-primary: 40 35% 65%;
-    --sidebar-primary-foreground: 220 20% 8%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 45 15% 90%;
-    --sidebar-border: 220 20% 15%;
-    --sidebar-ring: 40 35% 65% / 0.4;
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 40 40% 70% / 0.5;
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 45 15% 95%;
+    --sidebar-primary: 40 40% 70%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 20% 10%;
+    --sidebar-accent-foreground: 45 15% 95%;
+    --sidebar-border: 220 20% 12%;
+    --sidebar-ring: 40 40% 70% / 0.5;
   }
 
   /* High Contrast Mode - Force maximum accessibility */
