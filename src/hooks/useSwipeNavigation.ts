@@ -64,8 +64,14 @@ export function useSwipeNavigation({
 
     const onKeyDown = (e: KeyboardEvent) => {
       // Navegação por setas (acessibilidade e conveniência desktop)
-      if (e.key === 'ArrowLeft') onSwipeRight?.();
-      if (e.key === 'ArrowRight') onSwipeLeft?.();
+      if (e.key === 'ArrowLeft') {
+        onSwipeRight?.();
+        onTap?.(); // Revela a UI brevemente como feedback visual
+      }
+      if (e.key === 'ArrowRight') {
+        onSwipeLeft?.();
+        onTap?.(); // Revela a UI brevemente como feedback visual
+      }
       // Espaço ou Enter para revelar a UI no modo contemplativo
       if (e.key === ' ' || e.key === 'Enter') {
         if (document.activeElement?.tagName === 'BODY' || document.activeElement?.tagName === 'DIV') {
