@@ -468,7 +468,7 @@ const AppLayout: React.FC = () => {
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><ContemplativeLayout title="Logos" subtitle="Inteligência Teológica"><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></ContemplativeLayout></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/study" element={<Suspense fallback={<LoadingFallback />}><StudyMode /></Suspense>} />
