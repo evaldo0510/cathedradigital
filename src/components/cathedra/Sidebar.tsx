@@ -175,9 +175,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
   ];
 
-  const handleNav = useCallback((path: string) => {
-    if (path !== '#') {
-      navigate(path);
+  const handleNav = useCallback((item: { path: string; onClick?: () => void }) => {
+    if (item.onClick) {
+      item.onClick();
+    } else if (item.path !== '#') {
+      navigate(item.path);
       onClose();
     }
   }, [navigate, onClose]);
