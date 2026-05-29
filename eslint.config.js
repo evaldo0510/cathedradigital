@@ -23,6 +23,13 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "warn",
       "react-hooks/exhaustive-deps": "warn",
+      "no-restricted-syntax": [
+        "error",
+        {
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p[xy]?|m[xy]?)-[1-9]\\b/]",
+          "message": "Use Spacing Rhythm tokens (section-rhythm, stack-rhythm, padding-rhythm) instead of raw Tailwind spacing classes."
+        }
+      ]
     },
   },
 );
