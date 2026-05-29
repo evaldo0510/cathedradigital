@@ -1053,13 +1053,12 @@ const Bible: React.FC = () => {
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
-                    </div>
-                  </div>
-
+                        </div>
                       );
                     })}
                   </div>
                 )}
+
               </div>
             </div>
 
