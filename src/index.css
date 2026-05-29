@@ -278,11 +278,12 @@
     @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
   }
 
-  .transition-premium-slow {
-    transition: all var(--transition-premium);
-  }
-
-  .transition-cinematic {
+  /* Kindle-like atmospheric transitions */
+  .reading-theme-paper { background-color: #F8F5EE; }
+  .reading-theme-sepia { background-color: #E1D7C1; }
+  .reading-theme-dark { background-color: #0F172A; }
+  .reading-theme-night { background-color: #000000; }
+}
     transition: all var(--transition-cinematic);
   }
   .reading-theme-dark { background-color: #0F172A; }
