@@ -99,26 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 25% 4%;
-    --foreground: 45 15% 95%;
-    --card: 220 25% 6%;
-    --card-foreground: 45 15% 95%;
-    --popover: 220 25% 5%;
-    --popover-foreground: 45 15% 95%;
-    --primary: 40 40% 70%;
-    --primary-foreground: 220 25% 4%;
-    --secondary: 220 15% 10%;
-    --secondary-foreground: 40 40% 70%;
-    --muted: 220 20% 10%;
-    --muted-foreground: 220 15% 88%; 
-    --accent: 40 40% 70% / 0.15;
-    --accent-foreground: 40 40% 70%;
-    --destructive: 0 70% 50%;
+    --background: 220 45% 2%;    /* Deepest Midnight Navy */
+    --foreground: 45 20% 96%;     /* Cleaner off-white */
+    
+    --card: 220 40% 4%;           /* Slightly lighter Navy for cards */
+    --card-foreground: 45 20% 96%;
+    
+    --popover: 220 40% 4%;
+    --popover-foreground: 45 20% 96%;
+    
+    --primary: 40 35% 65%;        /* More elegant, less saturated Gold */
+    --primary-foreground: 220 45% 2%;
+    
+    --secondary: 220 30% 6%;      /* Deep Navy secondary */
+    --secondary-foreground: 40 35% 65%;
+    
+    --muted: 220 30% 8%;
+    --muted-foreground: 220 15% 75%; /* Improved legibility for muted text */
+    
+    --accent: 40 35% 65% / 0.12;
+    --accent-foreground: 40 35% 65%;
+    
+    --destructive: 0 80% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 14%;
-    --input: 220 20% 14%;
-    --ring: 40 40% 70% / 0.5;
-    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.4);
+    
+    --border: 220 25% 12%;        /* Subtle but visible borders */
+    --input: 220 25% 12%;
+    --ring: 40 35% 65% / 0.4;
+    
+    --shadow-premium: 0 30px 100px -20px rgba(0, 0, 0, 0.6);
   }
 
   .high-contrast {
@@ -170,10 +179,14 @@
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/85;
+    @apply font-ui font-normal text-foreground/90;
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
     line-height: 1.7;
     max-width: 80ch;
+  }
+
+  .dark p, .dark .body-text {
+    @apply text-foreground/85;
   }
 
   /* Reading Core - Optimized Rhythm */
@@ -253,9 +266,13 @@
   }
 
   .premium-card {
-    @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
+    @apply bg-card/25 backdrop-blur-3xl border border-primary/[0.03] transition-all relative overflow-hidden shadow-premium;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-premium);
+  }
+
+  .dark .premium-card {
+    @apply border-white/[0.03] bg-white/[0.01] shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.03)];
   }
 
   .premium-card-interactive {
