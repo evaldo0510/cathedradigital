@@ -275,14 +275,16 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                                 ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
                                 : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
                           >
-                            <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.icon}</span>
-                            <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
+                            <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 2 : 1.5 })}
+                            </span>
+                            <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                              <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                              <span className="ml-auto bg-primary/20 text-primary text-[8px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                                 {cacheCount}
                               </span>
                             )}
-                            {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
+                            {(item as any).pro && <span className="ml-auto text-[7px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-md flex-shrink-0">PRO</span>}
                             {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 rounded-full bg-primary flex-shrink-0" />}
                           </Button>
                         </li>
