@@ -869,15 +869,23 @@ const Bible: React.FC = () => {
         )}
 
         {/* Atmospheric Floating Header - Only visible on interaction or scroll up */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/60 backdrop-blur-2xl px-4 py-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-4 right-4 z-40 transition-all duration-700">
           <div className="flex items-center gap-1">
-            <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
+            <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0 text-primary/60 hover:text-primary" />
             <ReadingControlPanel />
           </div>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
-              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/60'}`} />
+          
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="rounded-full w-10 h-10 p-0 hover:bg-primary/[0.03]" 
+              onClick={() => setShowLogosAI(!showLogosAI)}
+              aria-label="Reflexão Logos"
+            >
+              <Icons.Sparkles className={cn("w-4 h-4 transition-colors", showLogosAI ? 'text-primary' : 'text-primary/40')} />
             </Button>
+            <div className="w-px h-6 bg-primary/5 mx-1" />
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
           </div>
         </div>
