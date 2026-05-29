@@ -129,7 +129,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     {
       label: 'Santos & Devoções',
       items: [
-        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Users /> },
+        { label: 'Santos', path: AppRoute.SAINTS, icon: <Icons.Saints /> },
         { label: 'Papas', path: AppRoute.POPES, icon: <Icons.Creator /> },
         { label: 'Aparições', path: AppRoute.APARICOES, icon: <Icons.Sparkles /> },
         { label: 'Dogmas', path: AppRoute.DOGMAS, icon: <Icons.ShieldCheck /> },

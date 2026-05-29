@@ -136,7 +136,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`p-6 rounded-full border transition-all relative overflow-hidden ${
+              className={`p-6 rounded-premium border transition-all relative overflow-hidden ${
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
