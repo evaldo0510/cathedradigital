@@ -30,8 +30,8 @@ function useRipple() {
     ripple.style.cssText = `
       position:absolute;left:${x - size / 2}px;top:${y - size / 2}px;
       width:${size}px;height:${size}px;border-radius:50%;
-      background:hsl(var(--primary)/.15);
-      transform:scale(0);animation:ripple-expand .45s ease-out forwards;
+      background:hsl(var(--primary)/.08);
+      transform:scale(0);animation:ripple-expand 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       pointer-events:none;
     `;
     btn.appendChild(ripple);
