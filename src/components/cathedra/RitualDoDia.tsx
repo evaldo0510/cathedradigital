@@ -28,34 +28,68 @@ const RitualDoDia: React.FC = () => {
   const [reminderTime, setReminderTime] = useState("");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  useEffect(() => {
-    const loadProgress = async () => {
-      if (user) {
-        const { data, error } = await supabase
-          .from('ritual_progress')
-          .select('progress_percent')
-          .eq('user_id', user.id)
-          .eq('date', today)
-          .maybeSingle();
-        
-        if (data) {
-          setProgress(data.progress_percent);
-        }
+  const loadProgress = React.useCallback(async () => {
+    if (user) {
+      const { data, error } = await supabase
+        .from('ritual_progress')
+        .select('progress_percent')
+        .eq('user_id', user.id)
+        .eq('date', today)
+        .maybeSingle();
+      
+      if (data) {
+        setProgress(data.progress_percent);
       } else {
-        const savedProgress = localStorage.getItem(`cathedra_daily_progress_${today}`);
-        if (savedProgress) {
-          setProgress(parseInt(savedProgress));
-        }
+        setProgress(0);
       }
-    };
+    } else {
+      const savedProgress = localStorage.getItem(`cathedra_daily_progress_${today}`);
+      if (savedProgress) {
+        setProgress(parseInt(savedProgress));
+      } else {
+        setProgress(0);
+      }
+    }
+  }, [user, today]);
+
+  useEffect(() => {
+    loadProgress();
 
     if (profile) {
       setIsSilent(!!(profile as any).ritual_silent_mode);
       setReminderTime((profile as any).ritual_reminder_time || "");
     }
+  }, [profile, loadProgress]);
 
-    loadProgress();
-  }, [today, user, profile]);
+  // Real-time sync for ritual progress
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('ritual_progress_sync')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'ritual_progress',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          const newData = payload.new as any;
+          if (newData && newData.date === today) {
+            setProgress(newData.progress_percent);
+          } else if (payload.eventType === 'DELETE') {
+            setProgress(0);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, today]);
 
   const handleProgress = async (val: number) => {
     const newVal = Math.max(progress, val);
