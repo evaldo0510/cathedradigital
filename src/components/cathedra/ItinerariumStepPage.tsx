@@ -215,10 +215,11 @@ const ItinerariumStepPage: React.FC = () => {
         },
         (payload) => {
           if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-            if (payload.new.step_id === stepId) {
+            const newData = payload.new as any;
+            if (newData && newData.step_id === stepId) {
               setCompleted(true);
-              setReflection(payload.new.reflection || '');
-              lastSavedReflection.current = payload.new.reflection || '';
+              setReflection(newData.reflection || '');
+              lastSavedReflection.current = newData.reflection || '';
             }
           }
         }
