@@ -280,7 +280,11 @@
   }
 
   .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.04)] -translate-y-1.5;
+    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.08)] -translate-y-1.5;
+  }
+
+  .dark .premium-card-interactive:hover {
+    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.4)] border-white/[0.08];
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
