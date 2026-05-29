@@ -1097,10 +1097,10 @@ const Bible: React.FC = () => {
                         </button>
                       ))}
                     </nav>
-                  </div>
                 </aside>
               </div>
             </div>
+
 
             <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
 
@@ -1413,6 +1413,7 @@ const Bible: React.FC = () => {
         maxW="max-w-6xl"
       >
         <div className="space-y-12">
+
 
           <Button 
             variant="ghost" 
