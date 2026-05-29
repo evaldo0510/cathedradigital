@@ -151,11 +151,11 @@
 
   /* Microinteractions - Cubic Bezier Signature */
   .transition-premium {
-    transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 700ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .transition-premium-slow {
-    transition-all duration-1400 cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 1400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Typography System */
