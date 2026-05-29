@@ -399,19 +399,23 @@
 
 /* Modo Foco & Silêncio Visual */
 .focus-mode .header-reading-auto-hide,
-.focus-mode .bottom-nav-reading-auto-hide {
+.focus-mode .bottom-nav-reading-auto-hide,
+.focus-mode .footer-reading-auto-hide {
   @apply opacity-0 -translate-y-full pointer-events-none transition-all duration-700;
 }
 
-.focus-mode .bottom-nav-reading-auto-hide {
+.focus-mode .bottom-nav-reading-auto-hide,
+.focus-mode .footer-reading-auto-hide {
   @apply translate-y-full;
 }
 
 .focus-mode .header-reading-auto-hide:hover,
 .focus-mode .header-reading-auto-hide:focus-within,
 .focus-mode .bottom-nav-reading-auto-hide:hover,
+.focus-mode .footer-reading-auto-hide:hover,
 .focus-mode .reveal-chrome .header-reading-auto-hide,
-.focus-mode .reveal-chrome .bottom-nav-reading-auto-hide {
+.focus-mode .reveal-chrome .bottom-nav-reading-auto-hide,
+.focus-mode .reveal-chrome .footer-reading-auto-hide {
   @apply opacity-100 translate-y-0 pointer-events-auto;
 }
 
