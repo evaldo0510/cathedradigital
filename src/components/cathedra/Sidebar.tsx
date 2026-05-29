@@ -333,30 +333,30 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               )))}
             </nav>
 
-            <div className="pt-6 mt-auto space-y-6">
-              <div className="flex flex-col gap-3">
+            <div className="pt-4 mt-auto space-y-4">
+              <div className="flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-10 rounded-xl border border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
+                    className="h-9 rounded-xl border border-primary/[0.02] dark:border-white/[0.02] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary/60" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                    {isDark ? <Icons.Sun className="w-3.5 h-3.5 text-primary/60" /> : <Icons.Moon className="w-3.5 h-3.5 opacity-30" />}
+                    <span className="text-[7.5px] font-bold uppercase tracking-widest text-muted-foreground/50">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
                     variant="ghost"
                     onClick={onToggleHighContrast} 
-                    className={`h-10 rounded-xl border flex items-center justify-center gap-2 transition-all ${
+                    className={`h-9 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                       isHighContrast 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
+                        : 'border-primary/[0.02] dark:border-white/[0.02] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-4 h-4" />
-                    <span className="text-[8px] font-bold uppercase tracking-widest">A11y</span>
+                    <Icons.ShieldCheck className="w-3.5 h-3.5" />
+                    <span className="text-[7.5px] font-bold uppercase tracking-widest">A11y</span>
                   </Button>
                 </div>
 
@@ -364,64 +364,58 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   <Button 
                     variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
+                    className={`w-full h-9 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                       isSpeaking 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
+                        : 'border-primary/[0.02] dark:border-white/[0.02] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="w-3.5 h-3.5 animate-pulse" /> : <Icons.Volume2 className="w-3.5 h-3.5" />}
+                    <span className="text-[7.5px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
-                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                <div className="flex flex-wrap gap-1 justify-center mt-1">
                   {(['pt', 'en', 'es', 'la'] as const).map((l) => (
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
+                      className={`px-2 py-1 text-[6.5px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' 
-                          : 'bg-transparent text-muted-foreground/30 border-transparent hover:border-primary/10'
+                          ? 'bg-primary/10 border-primary/20 text-primary' 
+                          : 'border-transparent text-muted-foreground/20 hover:text-primary/40'
                       }`}
                     >
                       {l}
                     </button>
                   ))}
                 </div>
-
-                <div className="flex justify-center gap-6 py-2 mt-2">
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Instagram size={14} /></a>
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Youtube size={14} /></a>
-                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Whatsapp size={14} /></a>
-                </div>
               </div>
 
               {user ? (
-                <div className="p-6 bg-primary/[0.02] dark:bg-white/[0.01] rounded-[2rem] border border-primary/[0.03] dark:border-white/[0.03]">
+                <div className="p-4 bg-primary/[0.015] dark:bg-white/[0.01] rounded-[1.5rem] border border-primary/[0.02] dark:border-white/[0.02]">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
-                    className="flex items-center gap-3 cursor-pointer group"
+                    className="flex items-center gap-2.5 cursor-pointer group"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary font-bold transition-transform group-hover:scale-105 overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-xs">{user.name.charAt(0).toUpperCase()}</span>
+                        <span className="text-[10px] opacity-40">{user.name.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-bold truncate text-primary/80">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/40 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[9px] font-bold truncate text-primary/70">{user.name}</p>
+                      <p className="text-[6px] uppercase text-primary/30 font-black tracking-widest mt-0.5">{user.isPremium ? 'Premium' : 'Gratuito'}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between gap-2 mt-4">
+                  <div className="flex items-center justify-between gap-2 mt-3">
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-9 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-8 bg-primary/[0.04] text-primary/60 hover:bg-primary hover:text-primary-foreground rounded-lg text-[7px] font-black uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -430,14 +424,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-9 w-9 rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
+                      className="h-8 w-8 rounded-lg text-muted-foreground/15 hover:text-destructive/40 hover:bg-destructive/5 transition-colors"
                     >
-                      <Icons.LogOut className="w-3.5 h-3.5" />
+                      <Icons.LogOut className="w-3 h-3" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-12 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-10 bg-primary/80 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[8px] tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}
