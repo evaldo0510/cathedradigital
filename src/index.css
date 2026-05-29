@@ -79,9 +79,9 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1600px; /* More focused layout */
-    --transition-premium: 1800ms cubic-bezier(0.22, 1, 0.36, 1);
-    --transition-subtle: 1000ms cubic-bezier(0.22, 1, 0.36, 1);
-    --transition-cinematic: 2200ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-premium: 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-subtle: 500ms cubic-bezier(0.22, 1, 0.36, 1);
+    --transition-cinematic: 1200ms cubic-bezier(0.22, 1, 0.36, 1);
     
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 1rem;
@@ -93,43 +93,43 @@
     --space-mobile-header-mb: 1.5rem;
     
     --space-desktop-base: 2.5rem;
-    --space-desktop-section: 14rem;
-    --space-desktop-stack: 5rem;
-    --space-desktop-padding: 3rem;
-    --space-desktop-header-mb: 8rem;
+    --space-desktop-section: 6rem;
+    --space-desktop-stack: 3rem;
+    --space-desktop-padding: 2.5rem;
+    --space-desktop-header-mb: 4rem;
   }
 
   .dark, [data-theme='dark'] {
     /* Sophisticated Dark Mode - Architectural Deep Obsidian with Luminous Depth */
-    --background: 220 45% 1.8%; /* Even deeper obsidian for pure contrast */
-    --foreground: 45 15% 88%; /* Slightly brighter ivory for better reading */
+    --background: 220 25% 4%; /* Deep charcoal navy, more depth than pure black */
+    --foreground: 45 15% 92%; /* Slightly brighter ivory */
     
-    --card: 220 40% 2.8% / 0.4; /* More translucent cards for layering depth */
-    --card-foreground: 45 15% 85%;
+    --card: 220 25% 6% / 0.6; /* More structural cards */
+    --card-foreground: 45 15% 90%;
     
-    --popover: 220 45% 2.5%;
-    --popover-foreground: 45 15% 85%;
+    --popover: 220 25% 5%;
+    --popover-foreground: 45 15% 90%;
     
-    --primary: 42 40% 72%; /* Slightly more luminous gold */
-    --primary-foreground: 220 50% 1.2%;
+    --primary: 42 45% 75%; /* More luminous gold */
+    --primary-foreground: 220 30% 2%;
     
-    --secondary: 220 30% 5%;      
-    --secondary-foreground: 42 40% 72%;
+    --secondary: 220 20% 8%;      
+    --secondary-foreground: 42 45% 75%;
     
-    --muted: 220 25% 4%; 
-    --muted-foreground: 220 15% 45%; 
+    --muted: 220 20% 6%; 
+    --muted-foreground: 220 10% 55%; 
     
-    --accent: 42 40% 72% / 0.04;
-    --accent-foreground: 42 40% 72%;
+    --accent: 42 45% 75% / 0.06;
+    --accent-foreground: 42 45% 75%;
     
-    --destructive: 0 60% 50%;
+    --destructive: 0 70% 55%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 25% 70% / 0.04;
-    --input: 220 25% 70% / 0.04;
-    --ring: 42 40% 72% / 0.15;
+    --border: 220 20% 80% / 0.06;
+    --input: 220 20% 80% / 0.06;
+    --ring: 42 45% 75% / 0.2;
     
-    --shadow-premium: 0 60px 250px -60px rgba(0, 0, 0, 0.9);
+    --shadow-premium: 0 40px 180px -40px rgba(0, 0, 0, 0.8);
     
     /* Atmosphere Tokens for Glassmorphism */
     --atmosphere-opacity: 0.1;
@@ -174,8 +174,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Specific transitions for essential elements only */
+  button, a, .transition-premium-slow {
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    transition-duration: 700ms;
+    transition-duration: 400ms;
   }
 
   /* Premium Accessible Focus System - Extremely Light & Consistent */
@@ -341,7 +345,7 @@
   }
 
   .dark .premium-card {
-    @apply bg-card/[0.04] border-white/[0.01];
+    @apply bg-card/[0.05] border-white/[0.02] shadow-[0_20px_100px_-20px_rgba(0,0,0,0.8)] backdrop-blur-2xl;
   }
 
 

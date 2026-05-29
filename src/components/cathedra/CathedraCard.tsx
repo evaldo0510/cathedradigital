@@ -14,11 +14,11 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
-      sm: 'p-3 md:p-6',
-      md: 'padding-rhythm',
-      lg: 'p-8 md:p-16',
-      xl: 'p-10 md:p-24',
-      '2xl': 'p-12 md:p-32 lg:p-40',
+      sm: 'p-3 md:p-5',
+      md: 'p-5 md:p-8',
+      lg: 'p-6 md:p-12',
+      xl: 'p-8 md:p-16',
+      '2xl': 'p-10 md:p-20 lg:p-32',
     };
 
     const variantStyles = {
@@ -38,10 +38,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
           hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-0.5 transition-premium-slow',
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 1, y: 5, filter: 'blur(15px)' })}
+        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.99, y: 10, filter: 'blur(8px)' })}
         animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 2.2, ease: [0.22, 1, 0.36, 1] })}
-        whileHover={settings.reduceAnimations ? {} : { y: -1, scale: 1, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 1.2, ease: [0.22, 1, 0.36, 1] })}
+        whileHover={settings.reduceAnimations ? {} : { y: -2, scale: 1.005, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } }}
         {...props}
       >
         {children}

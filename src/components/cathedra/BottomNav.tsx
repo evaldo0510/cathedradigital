@@ -149,13 +149,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: AppRoute.LOGOS },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: () => window.dispatchEvent(new CustomEvent('open-sidebar')) },
   ];
 
   return (
     <nav 
       className={cn(
-        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[85vw] max-w-[360px] h-14 bg-white/40 dark:bg-black/40 backdrop-blur-[60px] rounded-[50px] border border-black/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-none",
+        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] md:hidden w-[85vw] max-w-[360px] h-14 bg-white/60 dark:bg-black/60 backdrop-blur-[32px] rounded-[50px] border border-black/[0.05] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-xl shadow-black/5",
         shouldReduceMotion ? "duration-0" : "duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1)"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

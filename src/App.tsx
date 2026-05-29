@@ -332,6 +332,12 @@ const AppLayout: React.FC = () => {
   }, [handleOpenA11y]);
 
   useEffect(() => {
+    const handleOpenSidebarGlobal = () => setIsSidebarOpen(true);
+    window.addEventListener('open-sidebar', handleOpenSidebarGlobal);
+    return () => window.removeEventListener('open-sidebar', handleOpenSidebarGlobal);
+  }, []);
+
+  useEffect(() => {
     const handleOpenA11yGlobal = () => setShowA11ySettings(true);
     window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
     return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
@@ -419,7 +425,7 @@ const AppLayout: React.FC = () => {
             lang={lang}
             onChangeLang={setLang}
             onSignOut={signOut}
-            onOpenSidebar={handleOpenSidebar}
+            onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))}
           />
         )}
         
@@ -439,17 +445,17 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         <SpacingDebugger />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-48 md:pb-80 pt-24 md:pt-80 px-8 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-32 md:pb-40 pt-16 md:pt-48 px-4 md:px-12 lg:px-20 xl:px-32 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 20, scale: 0.99, filter: "blur(20px)" }}
+                initial={{ opacity: 0, y: 15, scale: 0.995, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -20, scale: 1.01, filter: "blur(20px)" }}
+                exit={{ opacity: 0, y: -15, scale: 1.005, filter: "blur(10px)" }}
 
                 transition={{ 
-                  duration: settings.reduceAnimations ? 0.35 : 2.4, // Slower, more architectural
+                  duration: settings.reduceAnimations ? 0.35 : 1.2, // Cinematic but fluid
                   ease: [0.19, 1, 0.22, 1] 
                 }}
                 className="w-full flex-1 flex flex-col"
@@ -571,7 +577,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        <BottomNav user={authUserAdapter} onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))} />
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
           <A11ySettingsPanel 
