@@ -277,7 +277,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                       className="h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
                       onClick={() => handleExport('json')}
                     >
-                      <Icons.FileJson className="w-3.5 h-3.5 mr-2" />
+                      <Icons.Database className="w-3.5 h-3.5 mr-2" />
                       JSON
                     </Button>
                     <Button 
