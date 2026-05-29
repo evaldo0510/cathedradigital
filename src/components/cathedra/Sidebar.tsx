@@ -199,9 +199,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/30 backdrop-blur-xl z-[145]"
+            className="fixed inset-0 bg-neutral-950/20 backdrop-blur-md z-[145]"
             aria-hidden="true"
           />
 
