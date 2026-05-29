@@ -40,6 +40,31 @@ export function useReadingMarks() {
     fetchMarks();
   }, [fetchMarks]);
 
+  // Realtime synchronization
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('reading_marks_realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reading_marks',
+          filter: `user_id=eq.${user.id}`
+        },
+        () => {
+          fetchMarks();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, fetchMarks]);
+
   const addMark = useCallback(async (mark: Partial<ReadingMark>) => {
     if (!user) return null;
 

@@ -201,10 +201,10 @@ const ItinerariumStepPage: React.FC = () => {
 
   // Real-time sync subscription
   useEffect(() => {
-    if (!user || !itinerariumId) return;
+    if (!user || !stepId) return;
 
     const channel = supabase
-      .channel('itineraria_sync')
+      .channel(`itinerarium_step_sync_${stepId}`)
       .on(
         'postgres_changes',
         {
@@ -218,6 +218,7 @@ const ItinerariumStepPage: React.FC = () => {
             if (payload.new.step_id === stepId) {
               setCompleted(true);
               setReflection(payload.new.reflection || '');
+              lastSavedReflection.current = payload.new.reflection || '';
             }
           }
         }
