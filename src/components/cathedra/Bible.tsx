@@ -1038,11 +1038,12 @@ const Bible: React.FC = () => {
                           </div>
                         </div>
                       );
-                    })}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
+
 
             <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
               <div className="w-full relative">
@@ -1077,8 +1078,10 @@ const Bible: React.FC = () => {
                     />
                   )}
                 </div>
+                </div>
               </div>
             </div>
+
 
             <aside className="reader-navigation-aside space-y-12 shrink-0">
               <div className="space-y-4">
@@ -1402,10 +1405,11 @@ const Bible: React.FC = () => {
               />
             </React.Suspense>
           </div>
-        )}
+        </div>
       </ContemplativeLayout>
     );
   }
+
 
 
 
