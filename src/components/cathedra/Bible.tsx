@@ -1099,6 +1099,8 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
+            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
                 <Button 
                   variant="ghost" 
                   disabled={selectedChapter <= 1}
@@ -1119,6 +1121,7 @@ const Bible: React.FC = () => {
                     {selectedBook.name} {selectedChapter - 1}
                   </div>
                 </Button>
+
 
                 <Button 
                   variant="ghost" 
