@@ -175,7 +175,7 @@ const createIcon = (IconComponent: any) =>
       ref={ref} 
       strokeWidth={strokeWidth} 
       size={size}
-      className={cn("transition-all duration-500 shrink-0 opacity-60 group-hover:opacity-100", className)}
+      className={cn("transition-all duration-700 shrink-0 opacity-80 group-hover:opacity-100", className)}
       {...props} 
     />
   ));
@@ -345,8 +345,8 @@ export const Icons = {
   PartyPopper: IconsInternal.PartyPopper,
   
   // Library & Study
-  Bible: IconsInternal.BookText,
-  HolyBible: IconsInternal.BookText,
+  Bible: IconsInternal.BookOpen,
+  HolyBible: IconsInternal.BookOpen,
   Book: IconsInternal.Book,
   BookOpen: IconsInternal.BookOpen,
   Library: IconsInternal.Library,
@@ -357,7 +357,7 @@ export const Icons = {
   MagisteriumGlobe: IconsInternal.Globe,
   Saints: IconsInternal.Sparkles,
   SaintHalo: IconsInternal.Sparkles,
-  Aquinas: IconsInternal.Columns,
+  Aquinas: IconsInternal.Feather,
   Columns: IconsInternal.Columns,
   Brain: IconsInternal.Brain,
   Feather: IconsInternal.Feather,
@@ -372,11 +372,11 @@ export const Icons = {
   History: IconsInternal.History,
   Bookmark: IconsInternal.Bookmark,
   Tag: IconsInternal.Tag,
-  Themes: IconsInternal.Library,
+  Themes: IconsInternal.Layers,
   Swords: IconsInternal.Swords,
   
   // Spiritual Life
-  Liturgy: IconsInternal.Cross,
+  Liturgy: IconsInternal.Wine,
   DailyLiturgy: IconsInternal.Sun,
   Sun: IconsInternal.Sun,
   Moon: IconsInternal.Moon,
@@ -391,11 +391,11 @@ export const Icons = {
   Rosary: IconsInternal.Orbit,
   ViaCrucis: IconsInternal.Cross,
   Church: IconsInternal.Home,
-  LiturgicalCalendar: IconsInternal.Map,
+  LiturgicalCalendar: IconsInternal.Calendar,
   Map: IconsInternal.Map,
   
   // Pathways & Journeys
-  Journeys: IconsInternal.Compass,
+  Journeys: IconsInternal.Route,
   JourneysMap: IconsInternal.Map,
   Route: IconsInternal.Route,
   Compass: IconsInternal.Compass,
