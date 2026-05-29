@@ -31,7 +31,7 @@ describe('BottomNav Unit Tests', () => {
     expect(screen.getByLabelText(/Bíblia|Bible/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Catecismo|Catechism/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Logos/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Menu/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/menu/i)).toBeInTheDocument();
   });
 
   it('marks "Hoje" as active for root path', () => {
@@ -66,6 +66,6 @@ describe('BottomNav Unit Tests', () => {
     expect(buttons[1]).toHaveAttribute('aria-label', 'Bíblia');
     expect(buttons[2]).toHaveAttribute('aria-label', 'Catecismo');
     expect(buttons[3]).toHaveAttribute('aria-label', 'Logos');
-    expect(buttons[4]).toHaveAttribute('aria-label', 'Menu');
+    expect(buttons[4]).toHaveAttribute('aria-label', 'menu');
   });
 });
