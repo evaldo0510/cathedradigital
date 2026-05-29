@@ -318,29 +318,36 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </Button>
                   </div>
                 )}
-                {history.slice(-visibleMessages).map((msg, i) => (
-                  <motion.div 
-                    key={i} 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.2, delay: i * 0.1 }}
-                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}
-                  >
-                    <div className={`max-w-full text-base md:text-xl leading-[1.7] md:leading-[1.8] tracking-wide ${
-                      msg.role === 'user' 
-                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-6 md:pr-8 text-right' 
-                        : 'text-foreground/80 font-serif font-light'
-                    }`}>
-                      {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-4 md:mb-6 opacity-20">
-                          <div className="w-6 h-px bg-primary" />
-                          <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
+                <div className="h-[40vh]">
+                  <SacredVirtualList
+                    items={history.slice(-visibleMessages)}
+                    estimateSize={80}
+                    renderItem={(msg, i) => (
+                      <motion.div 
+                        key={i} 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1.2, delay: i * 0.1 }}
+                        className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4 mb-8`}
+                      >
+                        <div className={`max-w-full text-base md:text-xl leading-[1.7] md:leading-[1.8] tracking-wide ${
+                          msg.role === 'user' 
+                            ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-6 md:pr-8 text-right' 
+                            : 'text-foreground/80 font-serif font-light'
+                        }`}>
+                          {msg.role === 'assistant' && (
+                            <div className="flex items-center gap-3 mb-4 md:mb-6 opacity-20">
+                              <div className="w-6 h-px bg-primary" />
+                              <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
+                            </div>
+                          )}
+                          {msg.content}
                         </div>
-                      )}
-                      {msg.content}
-                    </div>
-                  </motion.div>
-                ))}
+                      </motion.div>
+                    )}
+                  />
+                </div>
+
 
                 {isLoading && history.length === 0 ? (
                   <LogosChatSkeleton />
