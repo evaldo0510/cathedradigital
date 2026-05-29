@@ -40,8 +40,8 @@ export const CatechismSkeleton = () => (
 );
 
 export const LogosSkeleton = () => (
-  <div className="w-full max-w-4xl mx-auto h-[70vh] flex flex-col space-y-8 py-8 animate-in fade-in duration-700">
-    <div className="flex items-center gap-4 border-b border-border/5 pb-8">
+  <div className="w-full max-w-4xl mx-auto h-[70vh] flex flex-col space-y-6 md:space-y-8 py-6 md:py-8 animate-in fade-in duration-700">
+    <div className="flex items-center gap-4 border-b border-border/5 pb-6 md:pb-8">
       <div className="w-12 h-12 rounded-premium bg-primary/5 border border-primary/10 animate-pulse" />
       <div className="space-y-2">
         <div className="h-4 w-32 bg-muted/40 rounded-full animate-pulse" />
