@@ -40,6 +40,7 @@ import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
+import SwipeNavigation from './components/cathedra/SwipeNavigation';
 
 const queryClient = new QueryClient({
   defaultOptions: {
