@@ -30,8 +30,8 @@ function useRipple() {
     ripple.style.cssText = `
       position:absolute;left:${x - size / 2}px;top:${y - size / 2}px;
       width:${size}px;height:${size}px;border-radius:50%;
-      background:hsl(var(--primary)/.15);
-      transform:scale(0);animation:ripple-expand .45s ease-out forwards;
+      background:hsl(var(--primary)/.08);
+      transform:scale(0);animation:ripple-expand 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       pointer-events:none;
     `;
     btn.appendChild(ripple);
@@ -77,7 +77,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         layoutId="bottom-nav-active-bg"
         data-testid="bottom-nav-active-bg"
         className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.04] dark:bg-white/[0.02] rounded-[20px] z-0"
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       />
     )}
 
@@ -88,7 +88,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         y: isActive ? (shouldReduceMotion ? 0 : -1) : 0,
         opacity: isActive ? 1 : 0.4
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-10"
     >
       <Icon 
@@ -109,7 +109,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         scale: isActive ? 1 : 0.98,
         y: isActive ? 0 : 1
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "text-[8px] font-medium uppercase tracking-[0.3em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-1000",
@@ -124,7 +124,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
         className="absolute bottom-2.5 w-1 h-0.5 bg-primary/30 rounded-full z-10" 
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       />
     )}
   </Button>

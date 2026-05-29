@@ -436,14 +436,13 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+                initial={{ opacity: 0, y: 4, filter: "blur(12px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
+                exit={{ opacity: 0, y: -4, filter: "blur(12px)" }}
 
                 transition={{ 
-                  duration: settings.reduceAnimations ? 0.4 : 1.2,
-                  ease: [0.16, 1, 0.3, 1]
-
+                  duration: settings.reduceAnimations ? 0.4 : 1.8,
+                  ease: [0.22, 1, 0.36, 1] // Quintic ease for a more "breath-like" feel
                 }}
                 className="w-full flex-1 flex flex-col"
               >

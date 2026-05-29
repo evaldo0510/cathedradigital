@@ -35,13 +35,13 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         className={cn(
           variantStyles[variant],
           paddingMap[padding],
-          hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 transition-premium',
+          hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-0.5 transition-premium-slow',
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.98, y: 15, filter: 'blur(10px)' })}
+        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 1, y: 5, filter: 'blur(15px)' })}
         animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 1.5, ease: [0.16, 1, 0.3, 1] })}
-        whileHover={settings.reduceAnimations ? {} : { y: -3, scale: 1.005, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 2.2, ease: [0.22, 1, 0.36, 1] })}
+        whileHover={settings.reduceAnimations ? {} : { y: -1, scale: 1, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
         {...props}
       >
         {children}
