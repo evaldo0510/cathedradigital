@@ -205,7 +205,7 @@ const AparicoesPage: React.FC = () => {
               className={`text-left rounded-full bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
             >
               <div className="relative">
-                <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
+                <SacredImage src={apparition.imageSrc} alt={apparition.title} className="w-full h-40" />
                 <Button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
                   className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
