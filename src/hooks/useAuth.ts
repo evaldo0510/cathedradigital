@@ -4,7 +4,6 @@ import { checkNewBadges, getBadgeById, type BadgeContext } from '@/lib/badges';
 import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
-import { setSentryUser } from '@/lib/sentry';
 
 
 export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -186,7 +185,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setUser(currentUser);
-    setSentryUser(currentUser ? { id: currentUser.id, email: currentUser.email } : null);
+    if (currentUser && import.meta.env.VITE_SENTRY_DSN) {
+      import('@/lib/sentry').then(({ setSentryUser }) => {
+        setSentryUser({ id: currentUser.id, email: currentUser.email });
+      });
+    }
     setLoading(true);
 
     if (!currentUser) {
