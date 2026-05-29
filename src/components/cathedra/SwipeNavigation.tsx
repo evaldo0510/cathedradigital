@@ -20,8 +20,11 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
   ];
 
   const currentIndex = routes.findIndex(route => 
-    route === '/' ? currentPath === '/' || currentPath === '/home' : currentPath.startsWith(route)
+    route === '/' 
+      ? (currentPath === '/' || currentPath === '/home' || currentPath === '/hoje' || currentPath.startsWith('/hoje/'))
+      : currentPath.startsWith(route)
   );
+
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     // Only handle swipes on mobile (simple check)

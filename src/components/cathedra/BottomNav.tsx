@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { AppRoute } from '../../types';
+import { isRouteActive } from '@/lib/navigation-utils';
+
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
@@ -138,9 +140,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t, lang } = useContext(LangContext);
   const shouldReduceMotion = useReducedMotion();
 
-  const isHojeActive = useCallback((path: string) => {
-    return path === '/' || path === '/hoje' || path.startsWith('/hoje/');
-  }, []);
 
   const items = [
     { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
@@ -158,10 +157,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => {
           const isActive = item.route 
-            ? (item.route === AppRoute.HOJE 
-                ? isHojeActive(currentPath) 
-                : (currentPath === item.route || (item.route !== '/' && currentPath.startsWith(item.route))))
+            ? isRouteActive(item.route, currentPath)
             : false;
+
 
           return (
             <BottomNavItem 
