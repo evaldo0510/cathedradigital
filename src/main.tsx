@@ -52,7 +52,7 @@ const scheduleIdle = (task: () => void) => {
   if ('requestIdleCallback' in window) {
     (window as any).requestIdleCallback(task, { timeout: 5000 });
   } else {
-    window.setTimeout(task, 2500);
+    globalThis.setTimeout(task, 2500);
   }
 };
 
