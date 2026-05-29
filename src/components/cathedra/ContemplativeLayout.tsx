@@ -43,8 +43,8 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.35 : 2.2, 
-          ease: settings.reduceAnimations ? [0.19, 1, 0.22, 1] : [0.19, 1, 0.22, 1],
+          duration: settings.reduceAnimations ? 0.1 : 2.2, 
+          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1],
           delay: 0.2 // Small delay so it starts after the main page transition begins
         }}
 
