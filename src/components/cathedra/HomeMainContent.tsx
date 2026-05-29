@@ -112,7 +112,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="interactive" padding="none" className="flex-1 padding-rhythm md:p-24 lg:p-32">
+          <CathedraCard variant="interactive" padding="none" className="flex-1 p-6 md:p-24 lg:p-32">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
