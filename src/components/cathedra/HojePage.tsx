@@ -134,29 +134,29 @@ const HojePage: React.FC = () => {
 
         {/* HERO SECTION - MONASTIC WELCOME */}
         <motion.div 
-          initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
+          initial={{ opacity: 0, scale: 1.02, filter: 'blur(20px)' }} 
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
-          transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center space-y-16 md:space-y-32 max-w-6xl mx-auto"
+          transition={{ duration: 4, ease: [0.16, 1, 0.3, 1] }}
+          className="text-center space-y-24 md:space-y-52 max-w-7xl mx-auto pt-10 md:pt-32"
         >
-          <div className="flex flex-col items-center gap-4 md:gap-6">
+          <div className="flex flex-col items-center gap-6 md:gap-10">
             <motion.div 
               initial={{ height: 0 }}
-              animate={{ height: 48 }}
-              transition={{ duration: 2, delay: 1 }}
-              className="w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
+              animate={{ height: 80 }}
+              transition={{ duration: 3, delay: 1.5 }}
+              className="w-[0.5px] bg-gradient-to-b from-transparent via-primary/10 to-transparent" 
             />
-            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.5em] md:tracking-[1em] text-primary/40 md:text-primary/60">
+            <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[1em] md:tracking-[1.5em] text-primary/15 md:text-primary/20">
               {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
             </p>
           </div>
-          <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[1] md:leading-[0.9] tracking-tighter filter blur-[0.2px]">
+          <h1 className="text-6xl md:text-9xl lg:text-[12rem] xl:text-[14rem] font-display text-primary leading-[0.8] tracking-tighter filter blur-[0.1px] selection:bg-primary/5">
             Mosteiro <br />
             <motion.span 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 0.6, x: 0 }}
-              transition={{ duration: 3, delay: 0.5 }}
-              className="text-secondary italic font-serif"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 0.4, x: 0 }}
+              transition={{ duration: 5, delay: 0.8 }}
+              className="text-primary italic font-serif font-light tracking-normal"
             >Digital.</motion.span>
           </h1>
         </motion.div>
@@ -172,27 +172,27 @@ const HojePage: React.FC = () => {
           <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24">
-          <div className="lg:col-span-8 space-y-20 md:space-y-32">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 md:gap-48 pt-20 md:pt-48">
+          <div className="lg:col-span-8 space-y-32 md:space-y-64">
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
-            <section className="space-y-10 md:space-y-16">
-              <div className="flex items-center gap-6">
-                <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/30 whitespace-nowrap">
+            <section className="space-y-16 md:space-y-24">
+              <div className="flex items-center gap-10">
+                <h2 className="text-[11px] font-black uppercase tracking-[1em] text-primary/5 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
-                <div className="h-px flex-1 bg-primary/[0.02]" />
+                <div className="h-[0.5px] flex-1 bg-primary/5" />
               </div>
-              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2 gap-4 md:gap-8" />
+              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-3 gap-12 md:gap-24" />
             </section>
 
 
             {/* RITUAL DO DIA */}
-            <section className="space-y-8 md:space-y-12">
-              <div className="flex items-center gap-4 md:gap-8">
-                <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
+            <section className="space-y-16 md:space-y-32">
+              <div className="flex items-center gap-10">
+                <h2 className="text-[11px] font-black uppercase tracking-[1em] text-primary/5 whitespace-nowrap">
                   Ritual de Hoje
                 </h2>
-                <div className="h-px flex-1 bg-primary/[0.03]" />
+                <div className="h-[0.5px] flex-1 bg-primary/5" />
               </div>
               <RitualDoDia />
             </section>
