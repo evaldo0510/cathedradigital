@@ -344,6 +344,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     </button>
                   ))}
                 </div>
+
+                <div className="flex justify-center gap-4 py-2 border-t border-primary/5 mt-2">
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Instagram size={16} /></a>
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Youtube size={16} /></a>
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Whatsapp size={16} /></a>
+                </div>
               </div>
 
               {user ? (
