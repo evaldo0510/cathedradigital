@@ -1040,10 +1040,6 @@ const Bible: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
-                </div>
-              </div>
-            </div>
 
             <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
               <div className="w-full relative">
@@ -1081,8 +1077,6 @@ const Bible: React.FC = () => {
               </div>
             </div>
 
-
-
             <aside className="reader-navigation-aside space-y-12 shrink-0">
               <div className="space-y-4">
                 <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
@@ -1108,6 +1102,7 @@ const Bible: React.FC = () => {
             </aside>
           </div>
         </div>
+
 
           <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
