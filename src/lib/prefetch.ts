@@ -3,8 +3,6 @@
  * Simple prefetch utility for routes and assets
  */
 export const prefetchRoute = (route: string) => {
-  // In Vite/React, lazy components are often prefetched via dynamic imports
-  // We can trigger them manually
   const routes: Record<string, () => Promise<any>> = {
     '/bible': () => import('../components/cathedra/Bible'),
     '/catechism': () => import('../components/cathedra/Catechism'),
@@ -16,6 +14,11 @@ export const prefetchRoute = (route: string) => {
   if (routes[route]) {
     routes[route]().catch(() => {});
   }
+};
+
+export const prefetchCoreModules = () => {
+  // Common routes to prefetch after initial load
+  ['/bible', '/catechism', '/logos', '/library', '/study'].forEach(prefetchRoute);
 };
 
 export const prefetchAsset = (url: string) => {
@@ -35,3 +38,4 @@ export const prefetchOnInteraction = (route: string) => {
   window.addEventListener('touchstart', handler, { once: true });
   window.addEventListener('mousemove', handler, { once: true });
 };
+
