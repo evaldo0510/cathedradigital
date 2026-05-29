@@ -196,11 +196,11 @@ const HojePage: React.FC = () => {
             </section>
           </div>
 
-          <aside className="lg:col-span-4 space-y-16">
+          <aside className="lg:col-span-4 space-y-12">
             {/* FRASES DO DIA - CONTEMPLAÇÃO */}
-            <div className="pt-12 px-8 text-center bg-primary/[0.01] rounded-[4rem] p-16 border border-primary/5 transition-all hover:bg-primary/[0.02] duration-1000">
-               <Icons.Quote className="w-10 h-10 text-secondary/10 mx-auto mb-10" />
-               <p className="text-2xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
+            <div className="pt-8 px-6 text-center bg-primary/[0.005] rounded-[2.5rem] p-10 border border-primary/5 transition-all hover:bg-primary/[0.01] duration-1000">
+               <Icons.Quote className="w-6 h-6 text-secondary/20 mx-auto mb-6" />
+               <p className="text-lg text-primary/30 font-serif italic leading-relaxed selection:bg-primary/5">
                 {todayQuote}
               </p>
             </div>
