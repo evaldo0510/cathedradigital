@@ -1059,8 +1059,6 @@ const Bible: React.FC = () => {
                   </div>
                 )}
 
-              </div>
-            </div>
 
             <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
