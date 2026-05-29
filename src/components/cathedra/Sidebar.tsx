@@ -199,38 +199,39 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/30 backdrop-blur-xl z-[145]"
+            className="fixed inset-0 bg-neutral-950/20 backdrop-blur-md z-[145]"
             aria-hidden="true"
           />
 
-          {/* Premium Retractable Sidebar */}
+          {/* Premium Retractable Sidebar - Refined for a more elegant, floating feel */}
           <motion.aside
             ref={sidebarRef}
-            initial={{ x: '-100%', opacity: 0, filter: 'blur(10px)' }}
-            animate={{ x: 0, opacity: 1, filter: 'blur(0px)' }}
-            exit={{ x: '-100%', opacity: 0, filter: 'blur(10px)' }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 left-0 h-full w-[320px] md:w-[420px] bg-card/70 backdrop-blur-3xl border-none flex flex-col p-10 md:p-16 z-[150] shadow-2xl overflow-hidden admin-hide"
-
+            initial={{ x: '-110%', opacity: 0, scale: 0.98 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+            className="fixed top-4 left-4 bottom-4 w-[280px] md:w-[340px] bg-white/80 dark:bg-neutral-900/80 backdrop-blur-2xl border border-black/[0.03] dark:border-white/[0.03] flex flex-col p-8 md:p-10 z-[150] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden admin-hide"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center justify-between mb-10">
               <div 
-                className="flex items-center gap-4 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
+                className="flex items-center gap-3 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-1000" variant="dark" />
-                <div className="space-y-1">
-                  <h1 className="text-lg font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[8px] font-bold uppercase text-primary/60 tracking-[0.5em]">
+                <div className="w-10 h-10 rounded-xl bg-primary/5 dark:bg-white/5 flex items-center justify-center p-2 group-hover:scale-105 transition-transform duration-700">
+                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
+                </div>
+                <div className="space-y-0.5">
+                  <h1 className="text-base font-display font-light tracking-[0.3em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[7px] font-bold uppercase text-primary/40 tracking-[0.4em]">
                     Sanctuarium
                   </p>
                 </div>
@@ -240,22 +241,23 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-10 h-10 text-muted-foreground/60 hover:text-primary hover:bg-primary/5 transition-all"
+                className="rounded-full w-9 h-9 text-muted-foreground/40 hover:text-primary hover:bg-primary/5 transition-all"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-5 h-5" />
+                <Icons.X className="w-4 h-4" />
               </Button>
             </div>
 
-            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-6 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + (sectionIdx * 0.1), duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.1 + (sectionIdx * 0.05), duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+                  className="mb-6"
                 >
-                  <h3 className="text-[9px] font-bold uppercase tracking-[0.8em] text-primary/30 mb-8 px-6">{section.label}</h3>
+                  <h3 className="text-[8px] font-bold uppercase tracking-[0.4em] text-primary/20 mb-4 px-4">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -268,19 +270,21 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-6 px-6 py-5 rounded-[2rem] text-[10px] font-bold transition-all duration-700 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[64px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.02] text-primary'
-                                : 'text-muted-foreground/30 hover:bg-primary/[0.01] hover:text-primary'}`}
+                                ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
+                                : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
                           >
-                            <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.icon}</span>
-                            <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
+                            <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
+                            </span>
+                            <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                              <span className="ml-auto bg-primary/20 text-primary text-[9px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                              <span className="ml-auto bg-primary/20 text-primary text-[8px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                                 {cacheCount}
                               </span>
                             )}
-                            {(item as any).pro && <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded flex-shrink-0">PRO</span>}
+                            {(item as any).pro && <span className="ml-auto text-[7px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-md flex-shrink-0">PRO</span>}
                             {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 rounded-full bg-primary flex-shrink-0" />}
                           </Button>
                         </li>
@@ -291,53 +295,57 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               )))}
             </nav>
 
-            <div className="pt-8 mt-auto space-y-8">
-              <div className="flex flex-col gap-4">
+            <div className="pt-6 mt-auto space-y-6">
+              <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
-                    variant="outline"
+                    variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-12 rounded-xl border-primary/5 bg-muted/30 flex items-center justify-center gap-2 transition-all hover:bg-primary/5 hover:border-primary/10"
+                    className="h-10 rounded-xl border border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="text-primary" /> : <Icons.Moon />}
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary/60" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
+                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
-                    variant={isHighContrast ? "default" : "outline"}
+                    variant="ghost"
                     onClick={onToggleHighContrast} 
-                    className={`h-12 rounded-xl border-primary/5 flex items-center justify-center gap-2 transition-all ${
-                      isHighContrast ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    className={`h-10 rounded-xl border flex items-center justify-center gap-2 transition-all ${
+                      isHighContrast 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck />
-                    <span className="text-[9px] font-bold uppercase tracking-widest">Contraste</span>
+                    <Icons.ShieldCheck className="w-4 h-4" />
+                    <span className="text-[8px] font-bold uppercase tracking-widest">A11y</span>
                   </Button>
                 </div>
 
                 {!settings.totalSilence && (
                   <Button 
-                    variant={isSpeaking ? "default" : "outline"}
+                    variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full h-12 rounded-xl border-primary/5 flex items-center justify-center gap-3 transition-all ${
-                      isSpeaking ? 'bg-primary text-primary-foreground' : 'bg-muted/30 text-muted-foreground/60 hover:bg-primary/5'
+                    className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
+                      isSpeaking 
+                        ? 'bg-primary/10 border-primary/20 text-primary' 
+                        : 'border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] text-muted-foreground/40 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="animate-pulse" /> : <Icons.Volume2 />}
-                    <span className="text-[9px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar Áudio' : 'Ouvir Página'}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="w-4 h-4 animate-pulse" /> : <Icons.Volume2 className="w-4 h-4" />}
+                    <span className="text-[8px] font-bold uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
-                <div className="flex flex-wrap gap-1.5 justify-center">
+                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
                   {(['pt', 'en', 'es', 'la'] as const).map((l) => (
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-3 py-1 text-[8px] font-black uppercase rounded-full border transition-all ${
+                      className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary text-primary-foreground border-primary shadow-sm' 
-                          : 'bg-muted/30 text-muted-foreground/40 border-primary/5 hover:border-primary/20'
+                          ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' 
+                          : 'bg-transparent text-muted-foreground/30 border-transparent hover:border-primary/10'
                       }`}
                     >
                       {l}
@@ -345,37 +353,37 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-6 py-4 mt-4">
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Instagram size={16} /></a>
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Youtube size={16} /></a>
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Whatsapp size={16} /></a>
+                <div className="flex justify-center gap-6 py-2 mt-2">
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Instagram size={14} /></a>
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Youtube size={14} /></a>
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Whatsapp size={14} /></a>
                 </div>
               </div>
 
               {user ? (
-                <div className="p-8 bg-primary/[0.005] rounded-[2.5rem] space-y-6">
+                <div className="p-6 bg-primary/[0.02] dark:bg-white/[0.01] rounded-[2rem] border border-primary/[0.03] dark:border-white/[0.03]">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
-                    className="flex items-center gap-4 cursor-pointer group"
+                    className="flex items-center gap-3 cursor-pointer group"
                   >
-                    <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-premium group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        user.name.charAt(0).toUpperCase()
+                        <span className="text-xs">{user.name.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold truncate text-primary/80">{user.name}</p>
-                      <p className="text-[8px] uppercase text-primary/60 font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[10px] font-bold truncate text-primary/80">{user.name}</p>
+                      <p className="text-[7px] uppercase text-primary/40 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 mt-4">
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-10 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-9 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -384,14 +392,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-10 w-10 rounded-xl text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5"
+                      className="h-9 w-9 rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
                     >
-                      <Icons.LogOut className="w-4 h-4" />
+                      <Icons.LogOut className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-14 bg-primary text-primary-foreground rounded-2xl font-bold uppercase text-[10px] tracking-[0.3em] shadow-premium hover:shadow-premium-hover transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-12 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}
