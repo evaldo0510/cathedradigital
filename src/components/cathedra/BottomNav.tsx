@@ -121,6 +121,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     {isActive && (
       <motion.div 
         layoutId="bottom-nav-dot"
+        data-testid="bottom-nav-dot"
         className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
