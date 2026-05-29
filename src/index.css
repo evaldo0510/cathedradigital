@@ -153,22 +153,26 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Premium Accessible Focus System */
+  /* Premium Accessible Focus System - Extremely Light & Consistent */
   :focus-visible {
-    @apply outline-none ring-2 ring-primary/40 ring-offset-2 ring-offset-background transition-all duration-300;
+    @apply outline-none ring-[0.5px] ring-primary/20 ring-offset-1 ring-offset-background transition-all duration-700;
   }
 
   .dark :focus-visible {
-    @apply ring-primary/60 ring-offset-background;
+    @apply ring-primary/30 ring-offset-background;
   }
 
-  /* Interactive States Refinement */
+  /* Interactive States Refinement - Silent & Elegant */
   .hover-subtle {
-    @apply transition-all duration-500 hover:opacity-80;
+    @apply transition-all duration-700 hover:opacity-70;
+  }
+
+  .active-subtle {
+    @apply active:scale-[0.99] transition-transform duration-500;
   }
 
   .disabled-subtle {
-    @apply opacity-30 grayscale pointer-events-none;
+    @apply opacity-20 grayscale pointer-events-none;
   }
 
   /* High Contrast Focus */
