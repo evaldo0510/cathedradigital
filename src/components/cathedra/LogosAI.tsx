@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { LogosChatSkeleton } from './SacredSkeleton';
+import { CathedraCard } from './CathedraCard';
+import { CathedraButton } from './CathedraButton';
 
 interface LogosAIProps {
   context?: string;
@@ -259,29 +261,25 @@ const LogosAI: React.FC<LogosAIProps> = ({
               <div className="absolute top-8 right-8 flex items-center gap-2">
                 {history.length > 0 && (
                   <>
-                    <Button 
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm"
                       onClick={exportHistory} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Exportar histórico"
-                    >
-                      <Icons.Download className="w-3.5 h-3.5" />
-                    </Button>
-                    <Button 
+                      icon={<Icons.Download className="w-3.5 h-3.5" />}
+                    />
+                    <CathedraButton 
                       variant="ghost" 
-                      size="icon" 
+                      size="sm"
                       onClick={() => clearHistory()} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0"
                       title="Limpar histórico"
-                    >
-                      <Icons.RotateCcw className="w-3.5 h-3.5" />
-                    </Button>
+                      icon={<Icons.RotateCcw className="w-3.5 h-3.5" />}
+                    />
                   </>
                 )}
-                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8">
-                  <Icons.X className="w-3.5 h-3.5" />
-                </Button>
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-10 w-10 px-0" icon={<Icons.X className="w-3.5 h-3.5" />} />
               </div>
 
               <div className="flex items-center justify-between mb-16 opacity-40">
