@@ -408,7 +408,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             transition={springConfig}
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-2xl flex flex-col"
           >
-            <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
+            <div className="p-6 md:p-10 border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/60">
                   <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
