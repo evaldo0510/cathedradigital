@@ -31,19 +31,19 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         scale: shouldReduceMotion ? 1 : heroScale, 
         y: shouldReduceMotion ? 0 : heroY 
       }}
-      className="relative z-10 max-w-[var(--layout-max-width)] text-center px-6 md:px-14 flex flex-col items-center justify-center min-h-[85vh] w-full"
+      className="relative z-10 max-w-[var(--layout-max-width)] text-center px-4 md:px-14 flex flex-col items-center justify-center min-h-[75vh] md:min-h-[85vh] w-full"
     >
       {/* Upper Spiritual Anchor - Refined Monastic Line */}
       <motion.div
         initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: shouldReduceMotion ? 1.5 : 3, ease: EASE }}
-        className="mb-20 md:mb-28 lg:mb-32"
+        className="mb-8 md:mb-28 lg:mb-32"
       >
-        <div className="flex flex-col items-center gap-10 md:gap-12">
+        <div className="flex flex-col items-center gap-6 md:gap-12">
           <motion.div 
             initial={{ height: 0 }}
-            animate={{ height: shouldReduceMotion ? 80 : 160 }}
+            animate={{ height: shouldReduceMotion ? 40 : 80, opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: shouldReduceMotion ? 1 : 2.5, delay: 0.8, ease: EASE }}
             className="w-[1.5px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
           />
@@ -58,9 +58,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         variants={fadeInUpVariants}
         initial="hidden"
         animate="visible"
-        className="mb-12 md:mb-16 lg:mb-20"
+        className="mb-6 md:mb-16 lg:mb-20"
       >
-        <h2 className="text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-[2000ms] group">
+        <h2 className="text-[3.5rem] sm:text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-[2000ms] group">
           Cathedra
           <span className="block h-[1px] w-0 group-hover:w-full bg-primary/10 transition-all duration-[3000ms] mx-auto mt-4" />
         </h2>
@@ -72,9 +72,9 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.6 }}
-        className="space-y-10 md:space-y-12 mb-28 md:mb-40 lg:mb-48"
+        className="space-y-6 md:space-y-12 mb-12 md:mb-40 lg:mb-48"
       >
-        <p className="max-w-[90vw] md:max-w-5xl mx-auto font-serif text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-4 md:px-8">
+        <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-2 md:px-8">
           Habite a profundidade do silêncio, <br /> 
           <span className="text-secondary/70">contemple a clareza da Verdade.</span>
         </p>
@@ -89,14 +89,14 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial="hidden"
         animate="visible"
         transition={{ delay: 0.8 }}
-        className="flex flex-col items-center gap-20 w-full"
+        className="flex flex-col items-center gap-10 md:gap-20 w-full"
       >
-        <div className="flex flex-col md:flex-row items-center justify-center gap-14 md:gap-20 w-full px-6">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-20 w-full px-4 md:px-6">
           <HomeButton
             size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
-            className="w-full md:w-auto min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-14 md:h-20 uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
@@ -106,7 +106,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="primary"
             onClick={onStart}
-            className="w-full md:w-auto min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-24 shadow-2xl shadow-primary/10 uppercase tracking-[0.6em] text-[11px] font-black group overflow-hidden relative border-none"
+            className="w-full md:w-auto min-w-[260px] md:min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-16 md:h-24 shadow-2xl shadow-primary/10 uppercase tracking-[0.6em] text-[10px] md:text-[11px] font-black group overflow-hidden relative border-none"
             aria-label="Continuar jornada"
           >
             <span className="relative z-10">Continuar jornada</span>
@@ -117,7 +117,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
-            className="w-full md:w-auto min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-20 uppercase tracking-[0.4em] text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-14 md:h-20 uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Iniciar leitura"
           >
             Iniciar leitura

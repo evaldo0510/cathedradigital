@@ -15,10 +15,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     const paddingMap = {
       none: '',
       sm: 'p-3 md:p-6',
-      md: 'p-5 md:p-10',
-      lg: 'p-8 md:p-16',
-      xl: 'p-10 md:p-24',
-      '2xl': 'p-12 md:p-32 lg:p-40',
+      md: 'p-4 md:p-10',
+      lg: 'p-6 md:p-16',
+      xl: 'p-8 md:p-24',
+      '2xl': 'p-10 md:p-32 lg:p-40',
     };
 
     const variantStyles = {
