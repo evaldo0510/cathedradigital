@@ -258,7 +258,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-6 md:p-14 lg:p-16 space-y-8 md:space-y-12 relative overflow-hidden shadow-premium">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
-              <div className="absolute top-8 right-8 flex items-center gap-2">
+              <div className="absolute top-6 right-6 md:top-8 md:right-8 flex items-center gap-2">
                 {history.length > 0 && (
                   <>
                     <CathedraButton 
