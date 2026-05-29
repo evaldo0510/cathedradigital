@@ -25,7 +25,9 @@ import RelevanceBadge from './RelevanceBadge';
 import { SearchResultCard } from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { BubbleTag, getTagIcon } from './BubbleTag';
+import SacredImage from './SacredImage';
 import type { Tables } from '@/integrations/supabase/types';
+
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   iniciante: 'Iniciante',
