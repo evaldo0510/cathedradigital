@@ -16,20 +16,41 @@ import {
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+interface AdminSEOFormData extends Partial<SEOSettings> {
+  ga4_measurement_id?: string;
+  gsc_verification_code?: string;
+}
+
 const AdminSeoTab: React.FC = () => {
   const navigate = useNavigate();
   const { data: seoSettings, refetch: refetchSEO } = useSEO();
   const { data: keywords, refetch: refetchKeywords } = useKeywords();
   
-  const [formData, setFormData] = useState<Partial<SEOSettings>>({});
+  const [formData, setFormData] = useState<AdminSEOFormData>({});
   const [newKeyword, setNewKeyword] = useState('');
   const [loading, setLoading] = useState(false);
   const [jsonMode, setJsonMode] = useState<'pretty' | 'minified'>('pretty');
   const [domVerified, setDomVerified] = useState<'pending' | 'ok' | 'fail'>('pending');
 
+  // Admins fetch the full row (including sensitive tracking IDs) directly from the
+  // base table; public visitors only read the masked `public_seo_settings` view.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from('seo_settings')
+        .select('*')
+        .maybeSingle();
+      if (!cancelled && data) {
+        setFormData(prev => ({ ...prev, ...data }));
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     if (seoSettings) {
-      setFormData(seoSettings);
+      setFormData(prev => ({ ...seoSettings, ...prev }));
     }
   }, [seoSettings]);
 
