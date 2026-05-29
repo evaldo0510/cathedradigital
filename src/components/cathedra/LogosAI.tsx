@@ -487,7 +487,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
               {history.slice(-visibleMessages).map((msg, i) => (
                 <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                  <div className={`max-w-[90%] p-8 md:p-10 rounded-premium-lg text-base leading-relaxed ${
+                  <div className={`max-w-[90%] p-6 md:p-10 rounded-premium-lg text-sm md:text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 
                       : 'bg-card border border-border/5 font-serif italic text-foreground/80'
