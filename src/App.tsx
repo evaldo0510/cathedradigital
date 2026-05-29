@@ -187,6 +187,40 @@ const AppLayout: React.FC = () => {
     window.addEventListener('change-lang', handleGlobalLang);
     return () => window.removeEventListener('change-lang', handleGlobalLang);
   }, [setLang]);
+
+  // Mobile Presence - Scroll detection
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY;
+
+      if (Math.abs(scrollY - lastScrollY) < 10) {
+        ticking = false;
+        return;
+      }
+
+      if (scrollY > lastScrollY && scrollY > 100) {
+        document.body.classList.add('is-scrolling-down');
+      } else {
+        document.body.classList.remove('is-scrolling-down');
+      }
+
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDir);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
