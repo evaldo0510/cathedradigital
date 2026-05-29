@@ -356,8 +356,8 @@ export const Icons = {
   FileText: IconsInternal.FileText,
   Magisterium: IconsInternal.ScrollText,
   MagisteriumGlobe: IconsInternal.Globe,
-  Saints: IconsInternal.Sparkles,
-  SaintHalo: IconsInternal.Sparkles,
+  Saints: IconsInternal.Flame,
+  SaintHalo: IconsInternal.Flame,
   Aquinas: IconsInternal.Feather,
   Columns: IconsInternal.Columns,
   Brain: IconsInternal.Brain,
@@ -394,6 +394,7 @@ export const Icons = {
   Church: IconsInternal.Home,
   LiturgicalCalendar: IconsInternal.Calendar,
   Map: IconsInternal.Map,
+  Oracao: IconsInternal.Hand,
   
   // Pathways & Journeys
   Journeys: IconsInternal.Route,
