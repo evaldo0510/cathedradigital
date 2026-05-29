@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-// Define mobile devices to test
+// Define mobile devices to test for visual consistency
 const devices = [
-  { name: 'iPhone 13', width: 390, height: 844 },
-  { name: 'Pixel 5', width: 393, height: 851 },
+  { name: 'iPhone-12-390px', width: 390, height: 844 },
+  { name: 'Pixel-5-393px', width: 393, height: 851 },
+  { name: 'Small-Mobile-360px', width: 360, height: 740 },
+  { name: 'Large-Mobile-430px', width: 430, height: 932 },
 ];
 
 const routes = {
@@ -41,9 +43,11 @@ test.describe('Mobile Visual Regression - Layout Stability', () => {
         await page.waitForTimeout(3000);
         
         // Take screenshot of the top fold to check Hero & first card
+        // We compare against baseline to ensure rhythm stability
         await expect(page).toHaveScreenshot(`mobile-home-top-${device.name}.png`, {
-          maxDiffPixelRatio: 0.05,
+          maxDiffPixelRatio: 0.02, // Stricter for rhythm consistency
           mask: MASK_SELECTORS.map(s => page.locator(s)),
+          fullPage: false,
         });
 
         // Check full page scroll length (roughly)

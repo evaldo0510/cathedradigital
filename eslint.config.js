@@ -26,8 +26,8 @@ export default tseslint.config(
       "no-restricted-syntax": [
         "error",
         {
-          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p[xy]?|m[xy]?)-[1-9]\\b/]",
-          "message": "Use Spacing Rhythm tokens (section-rhythm, stack-rhythm, padding-rhythm) instead of raw Tailwind spacing classes."
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p[xy]?|m[xy]?)-([1-9]|\\[.+\\])\\b/]",
+          "message": "Use Spacing Rhythm tokens (section-rhythm, stack-rhythm, padding-rhythm, header-margin-rhythm) instead of raw or arbitrary Tailwind spacing classes."
         }
       ]
     },
