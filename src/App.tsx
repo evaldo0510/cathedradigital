@@ -13,7 +13,6 @@ import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
-import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
 // Core UI components
@@ -26,7 +25,6 @@ import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
@@ -176,7 +174,6 @@ const LoadingFallback = () => (
 );
 
 const AppLayout: React.FC = () => {
-  useRenderPerf('AppLayout', 10);
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
   
@@ -600,7 +597,7 @@ const AppLayout: React.FC = () => {
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HelmetProvider>
-      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
+      <AppErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <AuthProvider>
@@ -614,7 +611,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
-      </Sentry.ErrorBoundary>
+      </AppErrorBoundary>
     </HelmetProvider>
   );
 };
