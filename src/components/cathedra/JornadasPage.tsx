@@ -564,10 +564,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     
                     {journey.cover_url && (
                       <div className="relative w-full h-24 sm:h-32 overflow-hidden">
-                        <img
+                        <SacredImage
                           src={journey.cover_url}
                           alt={journey.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                          className="w-full h-full"
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
