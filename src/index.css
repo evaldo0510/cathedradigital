@@ -231,39 +231,39 @@
 
   /* Headings Hierarchy - Aligned with Rhythm */
   h1, .h1 {
-    @apply font-display font-light uppercase tracking-[0.2em] text-primary;
-    font-size: clamp(2.25rem, 8vw, 6rem);
-    line-height: 1.1; /* Tighter for large headings */
+    @apply font-display font-light uppercase tracking-[0.15em] text-primary;
+    font-size: clamp(2rem, 8vw, 6rem);
+    line-height: 1.1;
   }
 
   h2, .h2 {
-    @apply font-display font-light uppercase tracking-[0.15em] text-primary/95;
-    font-size: clamp(1.75rem, 6vw, 3.8rem);
+    @apply font-display font-light uppercase tracking-[0.12em] text-primary/95;
+    font-size: clamp(1.5rem, 6vw, 3.8rem);
     line-height: 1.2;
   }
 
   h3, .h3 {
-    @apply font-display font-light tracking-[0.08em] text-primary/90;
-    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    @apply font-display font-light tracking-[0.06em] text-primary/90;
+    font-size: clamp(1.25rem, 4vw, 2.4rem);
     line-height: 1.3;
   }
 
   h4, .h4 {
-    @apply font-ui font-medium uppercase tracking-[0.2em] text-primary/80;
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    @apply font-ui font-medium uppercase tracking-[0.15em] text-primary/80;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
     line-height: 1.4;
   }
 
   h5, .h5 {
-    @apply font-ui font-bold uppercase tracking-[0.3em] text-primary/60;
-    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    @apply font-ui font-bold uppercase tracking-[0.2em] text-primary/60;
+    font-size: clamp(0.85rem, 1.5vw, 1rem);
     line-height: 1.5;
   }
 
   p, .body-text {
-    @apply font-ui font-normal text-foreground/90;
-    font-size: clamp(1rem, 1.2vw, 1.2rem);
-    line-height: 1.6; /* Balanced for readability */
+    @apply font-ui font-normal text-foreground/85;
+    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+    line-height: 1.7;
     max-width: 80ch;
   }
 
@@ -461,12 +461,12 @@
 
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 1rem;       /* 16px */
-    --space-mobile-section: 4rem;    /* 64px - Increased for better breathing */
-    --space-mobile-section-sm: 2.5rem; /* 40px - For secondary sections */
-    --space-mobile-stack: 1.5rem;    /* 24px */
-    --space-mobile-stack-lg: 3rem;   /* 48px - For larger visual pauses */
-    --space-mobile-padding: 1.25rem; /* 20px - Slightly more generous */
-    --space-mobile-header-mb: 1.5rem; /* 24px - Tighter for mobile hierarchy */
+    --space-mobile-section: 3rem;    /* 48px - Refined for mobile flow */
+    --space-mobile-section-sm: 2rem; /* 32px */
+    --space-mobile-stack: 1rem;    /* 16px */
+    --space-mobile-stack-lg: 2rem;   /* 32px */
+    --space-mobile-padding: 1rem; /* 16px */
+    --space-mobile-header-mb: 1.25rem; /* 20px */
     
     --space-desktop-base: 2rem;      /* 32px */
     --space-desktop-section: 12rem;  /* 192px */
