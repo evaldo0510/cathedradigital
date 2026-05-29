@@ -67,9 +67,13 @@ describe('navigation-utils', () => {
       expect(isRouteActive('/', '/bible')).toBe(false);
     });
     
-    it('should ignore query strings in currentPath', () => {
+    it('should ignore query strings and hashes in currentPath', () => {
       expect(isRouteActive(AppRoute.BIBLE, '/bible?verse=1')).toBe(true);
+      expect(isRouteActive(AppRoute.BIBLE, '/bible#capitulo1')).toBe(true);
+      expect(isRouteActive(AppRoute.BIBLE, '/bible?v=1#sec2')).toBe(true);
       expect(isRouteActive(AppRoute.CATECHISM, '/catechism#para100')).toBe(true);
+      expect(isRouteActive(AppRoute.HOJE, '/hoje#versiculo')).toBe(true);
+      expect(isRouteActive(AppRoute.HOJE, '/#intro')).toBe(true);
     });
   });
 });
