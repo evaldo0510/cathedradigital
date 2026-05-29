@@ -337,15 +337,15 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   </Button>
                 )}
 
-                <div className="flex flex-wrap gap-1.5 justify-center">
+                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
                   {(['pt', 'en', 'es', 'la'] as const).map((l) => (
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-3 py-1 text-[8px] font-black uppercase rounded-full border transition-all ${
+                      className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary text-primary-foreground border-primary shadow-sm' 
-                          : 'bg-muted/30 text-muted-foreground/40 border-primary/5 hover:border-primary/20'
+                          ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' 
+                          : 'bg-transparent text-muted-foreground/30 border-transparent hover:border-primary/10'
                       }`}
                     >
                       {l}
@@ -353,10 +353,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-6 py-4 mt-4">
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Instagram size={16} /></a>
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Youtube size={16} /></a>
-                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Whatsapp size={16} /></a>
+                <div className="flex justify-center gap-6 py-2 mt-2">
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Instagram size={14} /></a>
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Youtube size={14} /></a>
+                  <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Whatsapp size={14} /></a>
                 </div>
               </div>
 
