@@ -330,7 +330,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                         : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-6 opacity-20">
+                        <div className="flex items-center gap-3 mb-4 md:mb-6 opacity-20">
                           <div className="w-6 h-px bg-primary" />
                           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
