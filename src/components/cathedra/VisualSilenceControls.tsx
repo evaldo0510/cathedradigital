@@ -162,6 +162,36 @@ export const VisualSilenceControls: React.FC = () => {
             <p className="text-[9px] text-muted-foreground italic leading-relaxed">Controla a opacidade e o contraste das camadas arquitetônicas.</p>
           </div>
         </div>
+
+        {settings.visualSilence && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="pt-8 mt-8 border-t border-primary/5 space-y-6"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Sliders className="w-4 h-4 text-primary/40" />
+              <div className="flex-1">
+                <div className="flex justify-between items-end">
+                  <p className="text-[10px] font-bold uppercase tracking-widest">Opacidade da Interface (Silêncio Visual)</p>
+                  <span className="text-[10px] font-mono text-primary/60">{Math.round((settings.atmosphere?.uiOpacity || 0) * 100)}%</span>
+                </div>
+              </div>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={0.5}
+              step={0.01}
+              value={settings.atmosphere?.uiOpacity || 0}
+              onChange={(e) => updateSettings({ 
+                atmosphere: { ...settings.atmosphere, uiOpacity: Number(e.target.value) } 
+              })}
+              className="w-full h-1 bg-primary/10 rounded-full appearance-none accent-primary cursor-pointer hover:accent-primary/80 transition-all"
+            />
+            <p className="text-[9px] text-muted-foreground italic leading-relaxed">Ajusta quão visível a interface permanece durante o Silêncio Visual.</p>
+          </motion.div>
+        )}
       </div>
     </div>
   );
