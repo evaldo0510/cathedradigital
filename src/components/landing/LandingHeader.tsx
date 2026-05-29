@@ -5,7 +5,7 @@ import { Icons } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { AppRoute, Language } from "@/types";
 import { useNavigate } from "react-router-dom";
-import { Menu, X, ChevronRight, Globe } from "lucide-react";
+import { Menu, X, ChevronRight, Globe, ShieldCheck } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { HomeButton } from "../cathedra/HomeButton";
 
@@ -130,6 +130,16 @@ const LandingHeader = () => {
         </nav>
 
         <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.dispatchEvent(new CustomEvent('open-a11y-settings'))}
+            className="w-10 h-10 rounded-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="Configurações de acessibilidade"
+          >
+            <ShieldCheck className="w-5 h-5" />
+          </Button>
+
           <Button
             variant="ghost"
             size="sm"
