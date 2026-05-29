@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, Type, Layout, AlignLeft, Sun, Moon, 
@@ -28,6 +28,54 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 }) => {
   const { settings, updateSettings, resetSettings } = useReadingSettings();
   const { profile } = useAuth();
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      const focusableElements = panelRef.current?.querySelectorAll(
+        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), [role="button"]'
+      );
+      
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      // Focus the close button or first element when opening
+      setTimeout(() => {
+        const first = panelRef.current?.querySelector('button, [role="button"]') as HTMLElement;
+        first?.focus();
+      }, 100);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   const themes = [
     { id: 'paper', name: 'Papel', icon: Sun, color: 'bg-[#FDFBF7]' },
@@ -59,7 +107,9 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 bg-background border-t rounded-t-[2.5rem] z-[301] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+            ref={panelRef}
+            className="fixed bottom-0 left-0 right-0 bg-background border-t rounded-t-[2.5rem] z-[301] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col outline-none"
+            tabIndex={-1}
           >
             {/* Handle for drag indicator */}
             <div className="flex justify-center py-4">
