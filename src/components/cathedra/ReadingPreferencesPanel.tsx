@@ -238,14 +238,14 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-6">
                   <div className="flex items-center gap-2 mb-2">
                     <Layout className="w-4 h-4 text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Layout</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Densidade</h3>
                   </div>
 
                   <div className="space-y-8">
                     {/* Line Spacing */}
                     <div className="space-y-3">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
-                        Espaçamento entre Linhas
+                        Ritmo entre Linhas
                       </label>
                       <div className="bg-muted/5 rounded-2xl p-2 border border-muted/20">
                         <ToggleGroup 
@@ -267,10 +267,10 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       </div>
                     </div>
 
-                    {/* Side Margins */}
+                    {/* Side Margins / Breathing Room */}
                     <div className="space-y-3">
                       <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
-                        Margens Laterais
+                        Respiro Lateral (Margens)
                       </label>
                       <div className="bg-muted/5 rounded-2xl p-2 border border-muted/20">
                         <ToggleGroup 
@@ -282,7 +282,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           <ToggleGroupItem value="standard" className="flex-1 py-4 rounded-xl">
                             <div className="flex flex-col items-center gap-1">
                               <div className="w-6 h-1 bg-primary/40 rounded-full" />
-                              <span className="text-[8px] uppercase font-bold tracking-tighter">Fino</span>
+                              <span className="text-[8px] uppercase font-bold tracking-tighter">Focado</span>
                             </div>
                           </ToggleGroupItem>
                           <ToggleGroupItem value="comfortable" className="flex-1 py-4 rounded-xl">
@@ -300,59 +300,44 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         </ToggleGroup>
                       </div>
                     </div>
+
+                    {/* Word Density (Letter Spacing) */}
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
+                        Densidade das Palavras
+                      </label>
+                      <div className="bg-muted/5 rounded-2xl p-2 border border-muted/20">
+                        <ToggleGroup 
+                          type="single" 
+                          value={settings.letterSpacing} 
+                          onValueChange={(v) => v && updateSettings({ letterSpacing: v as any })}
+                          className="w-full"
+                        >
+                          <ToggleGroupItem value="tight" className="flex-1 py-4 rounded-xl">
+                            <span className="text-[10px] font-bold uppercase">Compacto</span>
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="normal" className="flex-1 py-4 rounded-xl">
+                            <span className="text-[10px] font-bold uppercase">Normal</span>
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="wide" className="flex-1 py-4 rounded-xl">
+                            <span className="text-[10px] font-bold uppercase">Aberto</span>
+                          </ToggleGroupItem>
+                        </ToggleGroup>
+                      </div>
+                    </div>
                   </div>
                 </section>
 
                 <Separator className="opacity-50" />
 
-                {/* Advanced Options */}
+                {/* Advanced Experience */}
                 <section className="space-y-4">
                   <div className="flex items-center gap-2 mb-2">
                     <Settings2 className="w-4 h-4 text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Avançada</h3>
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Imersiva</h3>
                   </div>
                   
-                  <div className="space-y-3">
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-between h-16 rounded-2xl px-6 transition-all",
-                        settings.contemplativeMode ? "border-primary bg-primary/5" : "border-muted/20 bg-muted/5"
-                      )}
-                      onClick={() => updateSettings({ contemplativeMode: !settings.contemplativeMode })}
-                    >
-                      <div className="flex flex-col items-start text-left">
-                        <span className="font-bold text-sm">Modo Contemplativo</span>
-                        <span className="text-[10px] text-muted-foreground">Foco absoluto na leitura espiritual</span>
-                      </div>
-                      <div className={cn(
-                        "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                        settings.contemplativeMode ? "bg-primary text-primary-foreground" : "bg-muted/40"
-                      )}>
-                        {settings.contemplativeMode ? <Check className="w-3.5 h-3.5" /> : null}
-                      </div>
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-between h-16 rounded-2xl px-6 transition-all",
-                        settings.autoHideUI ? "border-primary bg-primary/5" : "border-muted/20 bg-muted/5"
-                      )}
-                      onClick={() => updateSettings({ autoHideUI: !settings.autoHideUI })}
-                    >
-                      <div className="flex flex-col items-start text-left">
-                        <span className="font-bold text-sm">Auto-Ocultar Interface</span>
-                        <span className="text-[10px] text-muted-foreground">Oculta menus ao iniciar a leitura</span>
-                      </div>
-                      <div className={cn(
-                        "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
-                        settings.autoHideUI ? "bg-primary text-primary-foreground" : "bg-muted/40"
-                      )}>
-                        {settings.autoHideUI ? <Check className="w-3.5 h-3.5" /> : null}
-                      </div>
-                    </Button>
-
+                  <div className="grid grid-cols-1 gap-3">
                     <Button
                       variant="outline"
                       className={cn(
@@ -363,7 +348,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                     >
                       <div className="flex flex-col items-start text-left">
                         <span className="font-bold text-sm">Modo Foco</span>
-                        <span className="text-[10px] text-muted-foreground">Header e Sidebar invisíveis até o hover</span>
+                        <span className="text-[10px] text-muted-foreground">Oculta header e sidebar na leitura</span>
                       </div>
                       <div className={cn(
                         "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
@@ -383,13 +368,33 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                     >
                       <div className="flex flex-col items-start text-left">
                         <span className="font-bold text-sm">Silêncio Visual</span>
-                        <span className="text-[10px] text-muted-foreground">Reduz bordas, sombras e animações</span>
+                        <span className="text-[10px] text-muted-foreground">Interface minimalista e sem ruído</span>
                       </div>
                       <div className={cn(
                         "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
                         settings.visualSilence ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
                         {settings.visualSilence ? <Check className="w-3.5 h-3.5" /> : null}
+                      </div>
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-between h-16 rounded-2xl px-6 transition-all",
+                        settings.reduceAnimations ? "border-primary bg-primary/5" : "border-muted/20 bg-muted/5"
+                      )}
+                      onClick={() => updateSettings({ reduceAnimations: !settings.reduceAnimations })}
+                    >
+                      <div className="flex flex-col items-start text-left">
+                        <span className="font-bold text-sm">Reduzir Movimento</span>
+                        <span className="text-[10px] text-muted-foreground">Transições suaves e menos flutuação</span>
+                      </div>
+                      <div className={cn(
+                        "w-6 h-6 rounded-full flex items-center justify-center transition-colors",
+                        settings.reduceAnimations ? "bg-primary text-primary-foreground" : "bg-muted/40"
+                      )}>
+                        {settings.reduceAnimations ? <Check className="w-3.5 h-3.5" /> : null}
                       </div>
                     </Button>
                   </div>
