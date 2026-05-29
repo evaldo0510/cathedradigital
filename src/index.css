@@ -30,66 +30,66 @@
 @layer base {
   :root {
     --background: 45 40% 98%;    /* #FDFBF7 Very soft off-white */
-    --foreground: 220 15% 15%;   /* #24272E Muted Graphite */
+    --foreground: 220 15% 12%;   /* #1A1D23 Stronger Graphite */
     --card: 45 40% 99%;
-    --card-foreground: 220 15% 15%;
+    --card-foreground: 220 15% 12%;
     --popover: 45 40% 99%;
-    --popover-foreground: 220 15% 15%;
-    --primary: 220 20% 12%;      /* #1A1D23 Deep Graphite */
+    --popover-foreground: 220 15% 12%;
+    --primary: 220 20% 10%;      /* #15181C Deeper Graphite */
     --primary-foreground: 45 40% 98%;
-    --secondary: 40 35% 60%;     /* #C5A059 Muted Gold */
-    --secondary-foreground: 220 20% 12%;
-    --muted: 220 10% 92%;
-    --muted-foreground: 220 12% 35%; /* Increased contrast further */
+    --secondary: 40 35% 55%;     /* #B59049 Stronger Gold */
+    --secondary-foreground: 220 20% 10%;
+    --muted: 220 10% 90%;
+    --muted-foreground: 220 15% 30%; /* Higher contrast */
 
-    --accent: 40 35% 60% / 0.05;
-    --accent-foreground: 220 20% 12%;
-    --destructive: 0 50% 50%;
+    --accent: 40 35% 55% / 0.08;
+    --accent-foreground: 220 20% 10%;
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 12% / 0.08;
-    --input: 220 20% 12% / 0.04;
-    --ring: 40 35% 60% / 0.3;
-    --radius: 1.5rem;
+    --border: 220 20% 10% / 0.12;
+    --input: 220 20% 10% / 0.06;
+    --ring: 40 35% 55% / 0.4;
+    --radius: 2rem;
     --sidebar-background: 45 40% 99%;
-    --sidebar-foreground: 220 15% 15%;
-    --sidebar-primary: 220 20% 12%;
+    --sidebar-foreground: 220 15% 12%;
+    --sidebar-primary: 220 20% 10%;
     --sidebar-primary-foreground: 45 40% 98%;
-    --sidebar-accent: 220 10% 96%;
-    --sidebar-accent-foreground: 220 15% 15%;
-    --sidebar-border: 220 20% 12% / 0.05;
-    --sidebar-ring: 40 35% 60% / 0.3;
+    --sidebar-accent: 220 10% 94%;
+    --sidebar-accent-foreground: 220 15% 12%;
+    --sidebar-border: 220 20% 10% / 0.08;
+    --sidebar-ring: 40 35% 55% / 0.4;
   }
 
   /* Universal colors for all modes */
   .dark, [data-theme='dark'] {
-    --background: 220 20% 8%;    /* #121418 Deep Desaturated Blue Graphite */
-    --foreground: 45 15% 90%;    /* #EAE8E4 Soft Off-white */
-    --card: 220 20% 10%;
-    --card-foreground: 45 15% 90%;
-    --popover: 220 20% 9%;
-    --popover-foreground: 45 15% 90%;
-    --primary: 40 35% 65%;       /* Soft Gold for readability in dark mode */
-    --primary-foreground: 220 20% 8%;
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 40 35% 65%;
-    --muted: 220 20% 15%;
-    --muted-foreground: 220 10% 85%; /* Lighter for better contrast in dark mode */
+    --background: 220 20% 6%;    /* #0D0F12 Deeper Desaturated Blue Graphite */
+    --foreground: 45 15% 95%;    /* #F5F4F2 Near-white */
+    --card: 220 20% 8%;
+    --card-foreground: 45 15% 95%;
+    --popover: 220 20% 7%;
+    --popover-foreground: 45 15% 95%;
+    --primary: 40 40% 70%;       /* Brighter Gold for dark mode */
+    --primary-foreground: 220 20% 6%;
+    --secondary: 220 15% 12%;
+    --secondary-foreground: 40 40% 70%;
+    --muted: 220 20% 12%;
+    --muted-foreground: 220 15% 90%; 
 
-    --accent: 40 35% 65% / 0.1;
-    --accent-foreground: 40 35% 65%;
-    --destructive: 0 60% 50%;
+    --accent: 40 40% 70% / 0.15;
+    --accent-foreground: 40 40% 70%;
+    --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 40 35% 65% / 0.4;
-    --sidebar-background: 220 20% 7%;
-    --sidebar-foreground: 45 15% 90%;
-    --sidebar-primary: 40 35% 65%;
-    --sidebar-primary-foreground: 220 20% 8%;
-    --sidebar-accent: 220 20% 12%;
-    --sidebar-accent-foreground: 45 15% 90%;
-    --sidebar-border: 220 20% 15%;
-    --sidebar-ring: 40 35% 65% / 0.4;
+    --border: 220 20% 15%;
+    --input: 220 20% 15%;
+    --ring: 40 40% 70% / 0.5;
+    --sidebar-background: 220 20% 5%;
+    --sidebar-foreground: 45 15% 95%;
+    --sidebar-primary: 40 40% 70%;
+    --sidebar-primary-foreground: 220 20% 6%;
+    --sidebar-accent: 220 20% 10%;
+    --sidebar-accent-foreground: 45 15% 95%;
+    --sidebar-border: 220 20% 12%;
+    --sidebar-ring: 40 40% 70% / 0.5;
   }
 
   /* High Contrast Mode - Force maximum accessibility */
@@ -444,55 +444,58 @@
     font-variant-numeric: oldstyle-nums;
     font-feature-settings: "onum" 1, "pnum" 1, "kern" 1, "ss01" 1;
     text-rendering: optimizeLegibility;
-    line-height: 2.1;
+    line-height: 2.2; /* Slightly more air */
     letter-spacing: 0.015em;
-    font-size: 1.25rem; /* Larger base font for mobile */
+    font-size: 1.35rem; /* Larger base font for premium mobile reading */
+    font-weight: 300; /* Lighter weight for premium serif look */
   }
 
   @screen sm {
     .reader-text {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
     }
   }
 
   @screen md {
     .reader-text {
-      font-size: 1.45rem;
-      line-height: 2.2;
+      font-size: 1.55rem;
+      line-height: 2.3;
       letter-spacing: 0.02em;
     }
   }
 
-  .font-size-small .reader-text { font-size: 1.15rem !important; }
-  .font-size-medium .reader-text { font-size: 1.35rem !important; }
-  .font-size-large .reader-text { font-size: 1.65rem !important; }
-  .font-size-extra-large .reader-text { font-size: 2rem !important; }
+  .font-size-small .reader-text { font-size: 1.25rem !important; }
+  .font-size-medium .reader-text { font-size: 1.45rem !important; }
+  .font-size-large .reader-text { font-size: 1.75rem !important; }
+  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
 
   @screen md {
-    .font-size-small .reader-text { font-size: 1.25rem !important; }
-    .font-size-medium .reader-text { font-size: 1.45rem !important; }
-    .font-size-large .reader-text { font-size: 1.85rem !important; }
-    .font-size-extra-large .reader-text { font-size: 2.3rem !important; }
+    .font-size-small .reader-text { font-size: 1.35rem !important; }
+    .font-size-medium .reader-text { font-size: 1.55rem !important; }
+    .font-size-large .reader-text { font-size: 1.95rem !important; }
+    .font-size-extra-large .reader-text { font-size: 2.5rem !important; }
   }
 
 
   /* Specific Reader Container */
   .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-6 sm:px-12 md:px-20 py-12 md:py-32 transition-all duration-700;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-8 sm:px-14 md:px-24 py-16 md:py-36 transition-all duration-1000;
     scroll-behavior: smooth;
   }
 
   /* Premium Editorial Styling for Bible/Catechism */
   .prose-premium {
-    @apply font-serif text-foreground/90 selection:bg-primary/10;
+    @apply font-serif text-foreground selection:bg-primary/15;
   }
 
   .prose-premium p {
-    @apply mb-8 leading-[1.85] text-lg md:text-xl font-light;
+    @apply mb-10 leading-[1.95] text-xl md:text-2xl font-light;
+    text-align: justify;
+    hyphens: auto;
   }
 
   .prose-premium blockquote {
-    @apply border-l-2 border-primary/20 pl-8 italic my-12 text-primary/70 font-light bg-primary/[0.02] py-6 pr-6 rounded-r-3xl;
+    @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
   }
 
 
