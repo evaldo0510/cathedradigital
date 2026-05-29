@@ -136,7 +136,7 @@ const HojePage: React.FC = () => {
           initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
           transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center space-y-12 md:space-y-24 max-w-6xl mx-auto"
+          className="text-center space-y-16 md:space-y-32 max-w-6xl mx-auto"
         >
           <div className="flex flex-col items-center gap-4 md:gap-6">
             <motion.div 

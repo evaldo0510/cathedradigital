@@ -212,7 +212,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             animate={{ x: 0, opacity: 1, filter: 'blur(0px)' }}
             exit={{ x: '-100%', opacity: 0, filter: 'blur(10px)' }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-0 left-0 h-full w-[320px] md:w-[420px] bg-card/80 backdrop-blur-3xl border-r border-primary/5 flex flex-col p-10 md:p-16 z-[150] shadow-2xl overflow-hidden admin-hide"
+            className="fixed top-0 left-0 h-full w-[320px] md:w-[420px] bg-card/70 backdrop-blur-3xl border-none flex flex-col p-10 md:p-16 z-[150] shadow-2xl overflow-hidden admin-hide"
 
             role="dialog"
             aria-modal="true"
