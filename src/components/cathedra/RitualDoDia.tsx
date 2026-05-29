@@ -228,7 +228,7 @@ const RitualDoDia: React.FC = () => {
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 md:gap-12 border-b border-primary/[0.03] pb-10 md:pb-20">
           <div className="flex flex-col gap-4 md:gap-6">
-            <span className="text-[8px] md:text-[9px] font-medium uppercase tracking-[0.5em] text-primary/40 leading-none">
+            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.5em] text-primary/60 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
             <div className="flex items-center gap-6 md:gap-8">
@@ -241,7 +241,7 @@ const RitualDoDia: React.FC = () => {
                       className="h-full bg-primary/20"
                     />
                   </div>
-                  <span className="text-[7px] md:text-[8px] font-bold text-primary/60 uppercase tracking-[0.5em]">{progress}%</span>
+                  <span className="text-[7px] md:text-[8px] font-black text-primary/80 uppercase tracking-[0.5em]">{progress}%</span>
                 </div>
               )}
             </div>
@@ -324,7 +324,7 @@ const RitualDoDia: React.FC = () => {
           
           {/* 1. Bible Reading */}
           <section className="space-y-6 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
-            <h4 id="lectio-heading" className="text-[8px] md:text-[10px] font-medium uppercase tracking-[0.6em] text-primary/40">I. Lectio</h4>
+            <h4 id="lectio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
                 "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -344,7 +344,7 @@ const RitualDoDia: React.FC = () => {
 
           {/* 2. Reflection */}
           <section className="space-y-6 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
-            <h4 id="meditatio-heading" className="text-[8px] md:text-[10px] font-medium uppercase tracking-[0.6em] text-primary/40">II. Meditatio</h4>
+            <h4 id="meditatio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
                 "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -362,7 +362,7 @@ const RitualDoDia: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-stretch">
             {/* 3. Catechism */}
             <section className="space-y-6 md:space-y-12 text-center p-8 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[2.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="traditio-heading">
-              <h4 id="traditio-heading" className="text-[8px] md:text-[10px] font-medium uppercase tracking-[0.6em] text-primary/40">III. Traditio</h4>
+              <h4 id="traditio-heading" className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
                   "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -382,7 +382,7 @@ const RitualDoDia: React.FC = () => {
 
             {/* 4. Prayer */}
             <section className="space-y-6 md:space-y-12 text-center p-8 md:p-14 lg:p-20 bg-primary/[0.01] rounded-[2.5rem] lg:rounded-[3.5rem] border border-primary/[0.03]" aria-labelledby="oratio-heading">
-              <h4 id="oratio-heading" className="text-[8px] md:text-[9px] font-medium uppercase tracking-[0.6em] text-primary/40">IV. Oratio</h4>
+              <h4 id="oratio-heading" className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.6em] text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(
                   "w-full text-center group transition-all duration-1000 px-2 md:px-4 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",

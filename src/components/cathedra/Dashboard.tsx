@@ -204,7 +204,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               </div>
               <div className="space-y-3">
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
-                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-60 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
+                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
               </div>
             </HomeCard>
           ))}
