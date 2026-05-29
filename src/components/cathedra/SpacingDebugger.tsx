@@ -37,11 +37,11 @@ export const SpacingDebugger: React.FC = () => {
         font-family: sans-serif;
       }
 
-      .stack-rhythm {
+      .stack-rhythm, .stack-rhythm-lg {
         outline: 1px dashed rgba(0, 0, 255, 0.5) !important;
         position: relative;
       }
-      .stack-rhythm::before {
+      .stack-rhythm::before, .stack-rhythm-lg::before {
         content: 'stack-rhythm';
         position: absolute;
         top: 2px;
@@ -54,7 +54,7 @@ export const SpacingDebugger: React.FC = () => {
         text-transform: uppercase;
         font-family: sans-serif;
       }
-      .stack-rhythm > * + * {
+      .stack-rhythm > * + *, .stack-rhythm-lg > * + * {
         border-top: 2px solid rgba(0, 0, 255, 0.2);
       }
 
