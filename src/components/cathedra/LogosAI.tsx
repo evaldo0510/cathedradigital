@@ -457,7 +457,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-8 md:p-10 space-y-10 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 md:space-y-10 scrollbar-hide">
               {history.length === 0 && !selectedText && (
                 <div className="text-center py-20 space-y-8">
                   <div className="w-1.5 h-1.5 rounded-full bg-primary/10 mx-auto animate-pulse" />
