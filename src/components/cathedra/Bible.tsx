@@ -1309,7 +1309,12 @@ const Bible: React.FC = () => {
                 }
               }}
               label={`${selectedBook.name} ${selectedChapter}`}
+              isSubtle={settings.visualSilence}
+              lastParagraphId={activeVerseId || undefined}
+              onBookmarkCurrent={handleBookmarkCurrent}
+              onReturnToParagraph={handleReturnToParagraph}
             />
+
 
             {/* Cross References Panel - Below the text for focused reading */}
             {/* Relatio: Intelligent Contextual Connections */}
