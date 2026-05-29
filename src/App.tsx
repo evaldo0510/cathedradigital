@@ -20,7 +20,6 @@ import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
-import CathedralSidebar from './components/cathedra/Sidebar';
 import CathedralFooter from './components/cathedra/Footer';
 import BottomNav from './components/cathedra/BottomNav';
 import AppHeader from './components/cathedra/AppHeader';
@@ -30,6 +29,7 @@ import { useA11yGuard } from './lib/a11y-guard';
 import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
+const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
@@ -273,6 +273,7 @@ const AppLayout: React.FC = () => {
   }, [settings.focusMode]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
+  const [mountNonCritical, setMountNonCritical] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     const saved = localStorage.getItem('cathedra_sidebar_open');
     return saved === 'true';
@@ -288,6 +289,16 @@ const AppLayout: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('cathedra_sidebar_open', isSidebarOpen.toString());
   }, [isSidebarOpen]);
+
+  useEffect(() => {
+    const mount = () => setMountNonCritical(true);
+    if ('requestIdleCallback' in window) {
+      const id = (window as any).requestIdleCallback(mount, { timeout: 4000 });
+      return () => (window as any).cancelIdleCallback?.(id);
+    }
+    const id = globalThis.setTimeout(mount, 2500);
+    return () => globalThis.clearTimeout(id);
+  }, []);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -426,18 +437,22 @@ const AppLayout: React.FC = () => {
           />
         )}
         
-        <CathedralSidebar 
-          isOpen={isSidebarOpen}
-          user={authUserAdapter}
-          onClose={handleCloseSidebar}
-          isDark={isDark}
-          onToggleDark={toggleDark}
-          isHighContrast={isHighContrast}
-          onToggleHighContrast={toggleHighContrast}
-          isSpeaking={isSpeaking}
-          onToggleSpeak={toggleSpeak}
-          onSignOut={signOut}
-        />
+        {isSidebarOpen && (
+          <Suspense fallback={null}>
+            <CathedralSidebar 
+              isOpen={isSidebarOpen}
+              user={authUserAdapter}
+              onClose={handleCloseSidebar}
+              isDark={isDark}
+              onToggleDark={toggleDark}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={toggleHighContrast}
+              isSpeaking={isSpeaking}
+              onToggleSpeak={toggleSpeak}
+              onSignOut={signOut}
+            />
+          </Suspense>
+        )}
         
         <GlobalLogosAI />
         {import.meta.env.DEV && <SpacingDebugger />}
@@ -577,16 +592,10 @@ const AppLayout: React.FC = () => {
         <BottomNav user={authUserAdapter} onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))} />
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
-          <A11ySettingsPanel 
-            isOpen={showA11ySettings} 
-            onClose={handleCloseA11y}
-          />
-          <ReadingPreferencesPanel 
-            isOpen={showReadingPreferences} 
-            onClose={handleCloseReadingPreferences} 
-          />
-          <CommandCenter />
-          <PWAInstallPrompt />
+          {showA11ySettings && <A11ySettingsPanel isOpen={showA11ySettings} onClose={handleCloseA11y} />}
+          {showReadingPreferences && <ReadingPreferencesPanel isOpen={showReadingPreferences} onClose={handleCloseReadingPreferences} />}
+          {mountNonCritical && <CommandCenter />}
+          {mountNonCritical && <PWAInstallPrompt />}
         </Suspense>
         <OfflineIndicator />
       </div>
