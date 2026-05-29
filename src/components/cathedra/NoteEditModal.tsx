@@ -75,7 +75,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h3 className="text-xl font-display font-light text-primary uppercase tracking-widest">{title}</h3>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/20 italic">Scriptum Sanctuarium</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 italic">Scriptum Sanctuarium</p>
               </div>
               <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full opacity-40 hover:opacity-100">
                 <Icons.X className="w-5 h-5" />
@@ -108,7 +108,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                 onKeyDown={handleKeyDown}
                 placeholder="O que esta passagem diz ao seu coração?"
                 rows={4}
-                className="w-full bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 text-foreground font-serif italic text-lg focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-primary/10 resize-none"
+                className="w-full bg-primary/[0.02] border border-primary/5 rounded-3xl p-6 text-foreground font-serif italic text-lg focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-primary/60 resize-none"
                />
                <p className="text-center text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest">Atalho: Ctrl + Enter para salvar</p>
             </div>

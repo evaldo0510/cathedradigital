@@ -178,7 +178,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
               <p className="text-premium-tiny text-muted-foreground mt-1 opacity-70 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
             </div>
           </div>
-          <Icons.ChevronRight className="w-5 h-5 text-primary/30 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+          <Icons.ChevronRight className="w-5 h-5 text-primary/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
         </HomeCard>
       </FadeUp>
 

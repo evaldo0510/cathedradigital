@@ -294,7 +294,7 @@ const Magisterium: React.FC = () => {
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
           <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
             <input
               placeholder="Buscar documento ou autor..." 
               className="w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background transition-all font-serif italic text-lg"
@@ -334,7 +334,7 @@ const Magisterium: React.FC = () => {
               className="text-left flex flex-col gap-8 p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group h-full"
             >
               <div className="flex justify-between items-start">
-                <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20 group-hover:text-primary/40 transition-colors">
+                <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/40 transition-colors">
                   {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : <Icons.FileText className="w-5 h-5" />}
                 </div>
                 <span className="text-[10px] font-bold text-secondary/40 border border-secondary/10 px-3 py-1 rounded-full">{doc.year}</span>
@@ -342,13 +342,13 @@ const Magisterium: React.FC = () => {
 
               <div className="space-y-4 flex-1">
                 <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{doc.title}</h3>
-                <p className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
+                <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.2em]">{doc.author}</p>
                 <p className="text-sm text-muted-foreground/40 font-serif italic line-clamp-3 leading-relaxed">{doc.summary}</p>
               </div>
 
               <div className="flex flex-wrap gap-2 pt-4">
                 {doc.theme.map(t => (
-                  <span key={t} className="text-[8px] font-bold text-primary/20 bg-primary/[0.01] px-3 py-1 rounded-full uppercase tracking-widest">
+                  <span key={t} className="text-[8px] font-bold text-primary/60 bg-primary/[0.01] px-3 py-1 rounded-full uppercase tracking-widest">
                     {t}
                   </span>
                 ))}

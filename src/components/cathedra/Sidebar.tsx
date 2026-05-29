@@ -221,7 +221,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 <Icons.Logo className="w-10 h-10 flex-shrink-0 transition-transform duration-1000" variant="dark" />
                 <div className="space-y-1">
                   <h1 className="text-lg font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[8px] font-bold uppercase text-primary/20 tracking-[0.5em]">
+                  <p className="text-[8px] font-bold uppercase text-primary/60 tracking-[0.5em]">
                     Sanctuarium
                   </p>
                 </div>
@@ -246,7 +246,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 + (sectionIdx * 0.1), duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/15 mb-6 px-4">{section.label}</h3>
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 mb-6 px-4">{section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -352,7 +352,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold truncate text-primary/80">{user.name}</p>
-                      <p className="text-[8px] uppercase text-primary/30 font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[8px] uppercase text-primary/60 font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
@@ -369,7 +369,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-10 w-10 rounded-xl text-muted-foreground/20 hover:text-destructive hover:bg-destructive/5"
+                      className="h-10 w-10 rounded-xl text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5"
                     >
                       <Icons.LogOut className="w-4 h-4" />
                     </Button>

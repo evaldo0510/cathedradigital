@@ -348,7 +348,7 @@ const UserTransactionsPage: React.FC = () => {
       ) : transactions.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-            <Icons.Heart className="w-12 h-12 text-muted-foreground/30" />
+            <Icons.Heart className="w-12 h-12 text-muted-foreground/60" />
             <div className="text-center">
               <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
               <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>

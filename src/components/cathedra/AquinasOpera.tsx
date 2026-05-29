@@ -241,7 +241,7 @@ const AquinasOpera: React.FC = () => {
               {AQUINO_CONCEPTS.map((concept, idx) => (
                 <div key={concept.id} className="group bg-card border border-border rounded-premium p-6 hover:border-primary/50 transition-all hover:shadow-premium-hover hover:shadow-primary/5">
                   <div className="flex items-start justify-between mb-4">
-                    <span className="text-4xl font-serif text-primary/10 group-hover:text-primary/20 transition-colors">0{idx + 1}</span>
+                    <span className="text-4xl font-serif text-primary/60 group-hover:text-primary/60 transition-colors">0{idx + 1}</span>
                     <div className="p-2 bg-primary/5 rounded-premium text-primary">
                       <Icons.Scroll className="w-4 h-4" />
                     </div>
@@ -410,7 +410,7 @@ const AquinasOpera: React.FC = () => {
       </AnimatePresence>
 
       <div className="bg-muted rounded-premium p-8 text-center space-y-4">
-        <Icons.History className="w-8 h-8 text-primary/30 mx-auto" />
+        <Icons.History className="w-8 h-8 text-primary/60 mx-auto" />
         <p className="text-sm text-muted-foreground font-serif italic max-w-sm mx-auto">A Suma Teológica contém 512 questões e 2.669 artigos. O conteúdo completo está sendo adicionado progressivamente.</p>
       </div>
     </div>

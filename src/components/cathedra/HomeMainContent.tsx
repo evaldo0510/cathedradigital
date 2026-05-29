@@ -74,7 +74,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             variant="ghost" 
             size="sm"
             onClick={() => navigate('/spiritual-profile')}
-            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 hover:text-primary transition-all duration-700"
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60 hover:text-primary transition-all duration-700"
           >
             <User className="w-3 h-3 mr-2" />
             Ver Perfil Espiritual
@@ -124,13 +124,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             className="flex-1 p-10 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-14 md:gap-16 group"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/30 transition-all duration-1000">
+            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
             <div className="relative z-10 space-y-5 text-center">
               <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
-              <p className="text-xs md:text-sm text-muted-foreground/20 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
+              <p className="text-xs md:text-sm text-muted-foreground/60 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
             </div>
@@ -142,10 +142,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/20"
+                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/60 font-serif italic focus:ring-1 focus:ring-primary/20"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
-                <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-primary/10 group-hover/input:text-primary/20 transition-colors" />
+                <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-primary/60 group-hover/input:text-primary/60 transition-colors" />
                 <button 
                   type="submit"
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"

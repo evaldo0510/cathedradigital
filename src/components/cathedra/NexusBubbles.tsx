@@ -199,14 +199,14 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
             
             {navHistory.map((hTag, idx) => (
               <React.Fragment key={`${hTag.id}-${idx}`}>
-                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/10 flex-shrink-0" />
+                <Icons.ChevronRight className="w-2 h-2 text-muted-foreground/60 flex-shrink-0" />
                 <button 
                   onClick={() => handlePopTag(idx)}
                   disabled={idx === navHistory.length - 1}
                   className={`text-[9px] font-black uppercase tracking-[0.3em] px-3 py-1.5 rounded-full border transition-all ${
                     idx === navHistory.length - 1 
                       ? 'text-primary bg-primary/[0.03] border-primary/10 shadow-soft' 
-                      : 'text-muted-foreground/30 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
+                      : 'text-muted-foreground/60 border-transparent hover:text-primary hover:bg-primary/5 hover:border-primary/5'
                   }`}
                 >
                   {hTag.label}
@@ -226,7 +226,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
 
           {/* Elegant Map Header */}
           <header className="flex flex-col gap-2 items-center justify-center text-center py-4">
-            <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/20">SENTIERO DI SAPIENZA</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.8em] text-primary/60">SENTIERO DI SAPIENZA</span>
             <p className="text-sm text-muted-foreground/60 font-serif italic max-w-[280px]">
               {navHistory.length > 1 ? `Explorando conexões de ${currentTag.label}` : 'Mapeando as conexões vivas da Fé e da Tradição'}
             </p>
@@ -273,7 +273,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                     <div className="w-5 h-5 rounded-full bg-primary/5 flex items-center justify-center">
                       <Sparkles className="w-2.5 h-2.5 text-primary/40" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">Contemplação Logos</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60">Contemplação Logos</span>
                   </div>
                   <p className="text-base text-foreground/70 leading-relaxed italic font-serif text-center px-4">
                     "{logosInsight}"
@@ -373,7 +373,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
               {/* Related Themes (The "Map" feeling) */}
               <div className="pt-10 space-y-6 border-t border-border/5">
                 <div className="flex flex-col items-center gap-2">
-                  <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/20">RADIUS COGNITIONIS</span>
+                  <span className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/60">RADIUS COGNITIONIS</span>
                   <p className="text-[10px] text-muted-foreground/40 font-serif italic text-center">Temas convergentes neste raio de conhecimento</p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-3">
@@ -398,7 +398,7 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
                 <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
                   <div className="w-16 h-16 rounded-premium bg-muted/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 rounded-premium border border-primary/10 animate-ping opacity-20" />
-                    <Search className="w-8 h-8 text-muted-foreground/30" />
+                    <Search className="w-8 h-8 text-muted-foreground/60" />
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-black uppercase tracking-widest text-foreground">Nexus Silencioso</p>
@@ -508,7 +508,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
       <div className="space-y-16">
         {searchQuery.trim() ? (
           <div className="space-y-6">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 text-center">Resultados da Busca</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 text-center">Resultados da Busca</h3>
             <div 
               ref={filteredRef}
               className="flex flex-wrap justify-center gap-3"
@@ -530,7 +530,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
               return (
                 <section key={cat} className="space-y-6">
                   <div className="flex items-center gap-6">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 whitespace-nowrap">{cat}</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 whitespace-nowrap">{cat}</h3>
                     <div className="h-px flex-1 bg-border/20" />
                   </div>
                   <div className="flex flex-wrap gap-3">
@@ -552,7 +552,7 @@ const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId })
 
       {!loading && filteredTags.length === 0 && (
         <div className="text-center py-20 space-y-4">
-          <Search className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+          <Search className="w-12 h-12 text-muted-foreground/60 mx-auto" />
           <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
         </div>
       )}

@@ -104,12 +104,12 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             key={idx}
             className="flex flex-col items-center text-center gap-8 group cursor-default"
           >
-            <div className="w-14 h-14 rounded-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/30 group-hover:text-primary/50 transition-all duration-1000">
+            <div className="w-14 h-14 rounded-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/50 transition-all duration-1000">
               <item.icon className="w-6 h-6" strokeWidth={0.5} />
             </div>
             <div className="space-y-3">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
-              <p className="text-[11px] text-muted-foreground/30 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
+              <p className="text-[11px] text-muted-foreground/60 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
             </div>
           </div>
         ))}
@@ -125,9 +125,9 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-14 pl-14 pr-36 rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/30 focus:ring-1 focus:ring-primary/10"
+                className="h-14 pl-14 pr-36 rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
               />
-              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
               <button 
                 type="submit" 
                 disabled={loading}
@@ -138,7 +138,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             </div>
           </form>
         ) : (
-          <div className="flex items-center justify-center gap-3 text-primary/30 py-4 px-8 rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
+          <div className="flex items-center justify-center gap-3 text-primary/60 py-4 px-8 rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
             <CheckCircle2 className="w-4 h-4" />
             <span className="text-[9px] font-black uppercase tracking-widest">Inscrito no Santuário</span>
           </div>

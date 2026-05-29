@@ -183,7 +183,7 @@ const TemasPage = () => {
               {loadingTags ? (
                 <div className="flex flex-col items-center gap-4 py-12 w-full justify-center">
                   <div className="relative">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary/30" />
+                    <Loader2 className="h-10 w-10 animate-spin text-primary/60" />
                     <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-premium" />
                   </div>
                   <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
@@ -191,7 +191,7 @@ const TemasPage = () => {
               ) : filteredTags.length === 0 ? (
                 <div className="py-20 px-8 text-center w-full space-y-4">
                   <div className="w-16 h-16 bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
-                    <Search className="w-6 h-6 text-muted-foreground/30" />
+                    <Search className="w-6 h-6 text-muted-foreground/60" />
                   </div>
                   <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
                 </div>
@@ -251,7 +251,7 @@ const TemasPage = () => {
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
             <div className="w-24 h-24 rounded-premium bg-primary/5 flex items-center justify-center mb-8 border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
-              <TagIcon className="h-12 w-12 text-primary/30" />
+              <TagIcon className="h-12 w-12 text-primary/60" />
             </div>
             <h3 className="text-3xl font-black mb-4 text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
             <p className="text-muted-foreground text-lg max-w-md font-serif italic">

@@ -143,7 +143,7 @@ const AboutPage: React.FC = () => (
         <div className="shrink-0">
           <div className="w-48 h-48 md:w-64 md:h-64 rounded-full border-4 border-background p-2 relative bg-background shadow-premium overflow-hidden group">
             <div className="w-full h-full rounded-full bg-primary/[0.02] flex items-center justify-center overflow-hidden border border-primary/10 group-hover:scale-105 transition-transform duration-700">
-              <Icons.User className="w-24 h-24 text-muted-foreground/30" />
+              <Icons.User className="w-24 h-24 text-muted-foreground/60" />
             </div>
             <div className="absolute bottom-2 right-2 bg-primary text-white p-3 rounded-premium shadow-premium border-4 border-background">
               <Icons.Feather className="w-5 h-5" />

@@ -263,7 +263,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="icon" 
                       onClick={exportHistory} 
-                      className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
                       title="Exportar histórico"
                     >
                       <Icons.Download className="w-3.5 h-3.5" />
@@ -272,14 +272,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="icon" 
                       onClick={() => clearHistory()} 
-                      className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8"
                       title="Limpar histórico"
                     >
                       <Icons.RotateCcw className="w-3.5 h-3.5" />
                     </Button>
                   </>
                 )}
-                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/10 hover:text-primary transition-colors h-8 w-8">
+                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-8 w-8">
                   <Icons.X className="w-3.5 h-3.5" />
                 </Button>
               </div>
@@ -291,7 +291,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   </div>
                   <div>
                     <h4 className="text-[9px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
-                    <p className="text-[10px] font-serif italic text-primary/30 mt-0.5">Companhia Contemplativa</p>
+                    <p className="text-[10px] font-serif italic text-primary/60 mt-0.5">Companhia Contemplativa</p>
                   </div>
                 </div>
                 
@@ -299,7 +299,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   <div className={`w-1 h-1 rounded-full ${
                     settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                   }`} />
-                  <span className="text-[7px] font-black uppercase tracking-widest text-primary/20">
+                  <span className="text-[7px] font-black uppercase tracking-widest text-primary/60">
                     {settings.totalSilence ? 'Modo Silêncio Ativo' : (history.length > 0 ? 'Histórico Ativo' : 'Estado de Silêncio')}
                   </span>
                 </div>
@@ -312,7 +312,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="sm" 
                       onClick={() => setVisibleMessages(prev => prev + 10)}
-                      className="text-[9px] font-black uppercase tracking-widest text-primary/20 hover:text-primary"
+                      className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
                     >
                       Ver registros anteriores
                     </Button>
@@ -367,19 +367,19 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/10 py-6 transition-all"
+                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/60 py-6 transition-all"
                   />
                   <button 
                     type="submit" 
                     disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
-                    className="absolute right-0 text-primary/10 hover:text-primary transition-all disabled:opacity-0 p-2"
+                    className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-2"
                   >
                     <Icons.ArrowRight className="w-5 h-5 stroke-[1]" />
                   </button>
                 </form>
                 <div className="flex flex-col items-center gap-3 mt-10">
                   <div className="w-1 h-1 bg-primary/10 rounded-full" />
-                  <p className="text-[8px] text-center text-primary/10 uppercase tracking-[0.5em] font-black">
+                  <p className="text-[8px] text-center text-primary/60 uppercase tracking-[0.5em] font-black">
                     {settings.totalSilence ? "O silêncio é a oração perfeita" : "O silêncio é a alma do entendimento"}
                   </p>
                 </div>
@@ -412,12 +412,12 @@ const LogosAI: React.FC<LogosAIProps> = ({
           >
             <div className="p-8 md:p-10 border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/30">
+                <div className="w-10 h-10 rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/60">
                   <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
-                  <p className="text-[9px] text-muted-foreground/30 uppercase font-black tracking-widest mt-1">Mentor Espiritual</p>
+                  <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-1">Mentor Espiritual</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -427,7 +427,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="icon" 
                       onClick={exportHistory} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors"
                       title="Exportar histórico"
                     >
                       <Icons.Download className="w-4 h-4" />
@@ -436,14 +436,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="icon" 
                       onClick={() => clearHistory()} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors"
                       title="Limpar histórico"
                     >
                       <Icons.RotateCcw className="w-4 h-4" />
                     </Button>
                   </>
                 )}
-                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/10 hover:text-primary transition-colors">
+                <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors">
                   <Icons.X className="w-4 h-4" />
                 </Button>
               </div>
@@ -454,11 +454,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div className={`w-1 h-1 rounded-full ${
                   settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                 }`} />
-                <span className="text-[7px] font-black uppercase tracking-widest text-primary/20">
+                <span className="text-[7px] font-black uppercase tracking-widest text-primary/60">
                   {settings.totalSilence ? 'Modo Silêncio Total' : (history.length > 0 ? 'Registro de Alma Ativo' : 'Estado de Escuta')}
                 </span>
               </div>
-              <p className="text-[7px] text-muted-foreground/20 uppercase font-black tracking-widest italic">
+              <p className="text-[7px] text-muted-foreground/60 uppercase font-black tracking-widest italic">
                 {context || 'Santuário Universal'}
               </p>
             </div>
@@ -485,7 +485,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setVisibleMessages(prev => prev + 10)}
-                    className="text-[9px] font-black uppercase tracking-widest text-primary/30 hover:text-primary"
+                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
                   >
                     Ver histórico anterior
                   </Button>
@@ -500,7 +500,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   }`}>
                     {msg.content}
                   </div>
-                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/10 px-4">
+                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-4">
                     {msg.role === 'user' ? 'Peregrino' : 'Logos'}
                   </span>
                 </div>
@@ -526,7 +526,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Busque por luz e entendimento..."}
                   disabled={settings.totalSilence}
-                  className="w-full bg-transparent border-b border-border/10 py-5 px-0 text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/20 font-serif italic"
+                  className="w-full bg-transparent border-b border-border/10 py-5 px-0 text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/60 font-serif italic"
                 />
                 <button 
                   type="submit"
@@ -537,7 +537,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </button>
               </form>
               <div className="mt-8">
-                <p className="text-[8px] text-muted-foreground/20 uppercase tracking-[0.4em] text-center font-bold">
+                <p className="text-[8px] text-muted-foreground/60 uppercase tracking-[0.4em] text-center font-bold">
                   {settings.totalSilence ? "Silêncio em Adoração" : "Sempre em comunhão com o Magistério"}
                 </p>
               </div>

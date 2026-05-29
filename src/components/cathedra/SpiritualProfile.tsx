@@ -133,24 +133,24 @@ const SpiritualProfile: React.FC = () => {
               {profile.avatar_url ? (
                 <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover opacity-80" />
               ) : (
-                <Icons.User className="w-12 h-12 text-primary/20" strokeWidth={0.5} />
+                <Icons.User className="w-12 h-12 text-primary/60" strokeWidth={0.5} />
               )}
             </div>
           </div>
           
           <div className="space-y-2">
             <h2 className="text-3xl font-display font-bold text-primary">{profile.name || 'Peregrino'}</h2>
-            <p className="text-xs font-black uppercase tracking-[0.4em] text-primary/30">{levelName}</p>
+            <p className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">{levelName}</p>
           </div>
 
           <div className="flex justify-center gap-12 pt-8">
             <div className="text-center">
               <p className="text-2xl font-display text-primary">{profile.streak || 0}</p>
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Dias em Oração</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Dias em Oração</p>
             </div>
             <div className="text-center">
               <p className="text-2xl font-display text-primary">{profile.xp || 0}</p>
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Graças (XP)</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Graças (XP)</p>
             </div>
           </div>
         </section>
@@ -222,7 +222,7 @@ const SpiritualProfile: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-primary/20 font-serif italic">Logos IA está analisando sua caminhada...</p>
+                <p className="text-xs text-primary/60 font-serif italic">Logos IA está analisando sua caminhada...</p>
               )}
             </div>
           </section>
@@ -236,21 +236,21 @@ const SpiritualProfile: React.FC = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="p-8 rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
-                <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Ritmo</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Ritmo</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{preferences.rhythm === 'soft' ? 'Suave' : preferences.rhythm === 'moderate' ? 'Moderado' : 'Intenso'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('rhythm', preferences.rhythm === 'soft' ? 'moderate' : preferences.rhythm === 'moderate' ? 'intense' : 'soft')}>Alterar</Button>
                 </div>
               </div>
               <div className="p-8 rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
-                <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Sugestões Logos</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Sugestões Logos</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{preferences.suggestion_mode === 'balanced' ? 'Equilibrado' : 'Aprofundado'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('suggestion_mode', preferences.suggestion_mode === 'balanced' ? 'deep' : 'balanced')}>Alterar</Button>
                 </div>
               </div>
               <div className="p-8 rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-4">
-                <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Lembretes</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Lembretes</p>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-serif text-primary/70">{profile.notification_settings?.email_reminders ? 'Email e Push' : 'Apenas Push'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => toggleEmailReminders()}>Alternar</Button>
@@ -270,7 +270,7 @@ const SpiritualProfile: React.FC = () => {
               {recentReadings.length > 0 ? (
                 recentReadings.map((reading) => (
                   <div key={reading.id} className="space-y-4 p-8 rounded-premium bg-primary/[0.01] border border-primary/[0.03] group hover:bg-primary/[0.02] transition-all duration-700">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">
                       {format(new Date(reading.visited_at), "d 'de' MMM", { locale: ptBR })}
                     </p>
                     <h4 className="text-base font-serif font-bold text-primary/80 line-clamp-1">{reading.title || 'Leitura'}</h4>
@@ -278,7 +278,7 @@ const SpiritualProfile: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <p className="col-span-3 text-center py-12 font-serif italic text-primary/20">O silêncio das páginas aguarda sua visita.</p>
+                <p className="col-span-3 text-center py-12 font-serif italic text-primary/60">O silêncio das páginas aguarda sua visita.</p>
               )}
             </div>
           </section>
@@ -294,17 +294,17 @@ const SpiritualProfile: React.FC = () => {
               {favoriteReflections.length > 0 ? (
                 favoriteReflections.map((ref) => (
                   <div key={ref.id} className="relative p-10 rounded-premium border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] transition-all duration-1000 group">
-                    <Icons.Quote className="absolute top-6 left-6 w-8 h-8 text-primary/5 group-hover:text-primary/10 transition-colors" />
+                    <Icons.Quote className="absolute top-6 left-6 w-8 h-8 text-primary/5 group-hover:text-primary/60 transition-colors" />
                     <p className="text-lg font-serif italic text-primary/70 leading-relaxed mb-6 pt-4">
                       "{ref.content.length > 150 ? `${ref.content.substring(0, 150)}...` : ref.content}"
                     </p>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-primary/20">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">
                       {format(new Date(ref.created_at), "d 'de' MMMM", { locale: ptBR })}
                     </p>
                   </div>
                 ))
               ) : (
-                <p className="col-span-2 text-center py-12 font-serif italic text-primary/20">Suas reflexões serão guardadas aqui.</p>
+                <p className="col-span-2 text-center py-12 font-serif italic text-primary/60">Suas reflexões serão guardadas aqui.</p>
               )}
             </div>
           </section>
@@ -316,7 +316,7 @@ const SpiritualProfile: React.FC = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
             
             <div className="space-y-6">
-              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center mx-auto text-primary/30">
+              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center mx-auto text-primary/60">
                 <Icons.Sparkles className="w-5 h-5" strokeWidth={0.5} />
               </div>
               <h3 className="text-xl md:text-2xl font-serif font-bold text-primary/80">O que sua alma busca hoje?</h3>

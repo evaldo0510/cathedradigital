@@ -145,7 +145,7 @@ const HojePage: React.FC = () => {
               transition={{ duration: 2, delay: 1 }}
               className="w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
             />
-            <p className="text-[10px] font-black uppercase tracking-[1em] text-primary/15">
+            <p className="text-[10px] font-black uppercase tracking-[1em] text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
             </p>
           </div>
@@ -176,7 +176,7 @@ const HojePage: React.FC = () => {
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -187,7 +187,7 @@ const HojePage: React.FC = () => {
             {/* RITUAL DO DIA */}
             <section className="space-y-12">
               <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
                   Ritual de Hoje
                 </h2>
                 <div className="h-px flex-1 bg-border/30" />
@@ -208,7 +208,7 @@ const HojePage: React.FC = () => {
             {/* EM BREVE - DISCRETO */}
             <section className="pt-24 opacity-20 hover:opacity-100 transition-opacity duration-1000">
               <div className="flex items-center gap-6 mb-10">
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20">Futuro</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60">Futuro</span>
                 <div className="h-px flex-1 bg-primary/5" />
               </div>
               <div className="grid grid-cols-1 gap-4">
@@ -218,10 +218,10 @@ const HojePage: React.FC = () => {
                   { title: 'Dashboard do Peregrino', icon: <Icons.Activity /> },
                 ].map((item) => (
                   <div key={item.title} className="flex items-center gap-4 group cursor-default">
-                    <div className="text-primary/10 group-hover:text-primary/30 transition-colors">
+                    <div className="text-primary/60 group-hover:text-primary/60 transition-colors">
                       {React.cloneElement(item.icon as React.ReactElement, { className: 'w-4 h-4', strokeWidth: 1 })}
                     </div>
-                    <h4 className="text-[10px] font-bold text-primary/10 uppercase tracking-widest group-hover:text-primary/30 transition-colors">{item.title}</h4>
+                    <h4 className="text-[10px] font-bold text-primary/60 uppercase tracking-widest group-hover:text-primary/60 transition-colors">{item.title}</h4>
                   </div>
                 ))}
               </div>

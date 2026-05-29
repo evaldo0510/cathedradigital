@@ -81,7 +81,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
             </p>
             <button 
               onClick={() => setPosition(null)}
-              className="text-primary/20 hover:text-primary transition-colors"
+              className="text-primary/60 hover:text-primary transition-colors"
             >
               <X className="w-3 h-3" />
             </button>

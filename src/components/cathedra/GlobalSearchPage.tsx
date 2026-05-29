@@ -105,7 +105,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="space-y-6">
           <div className="flex items-center gap-8">
-            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/30 whitespace-nowrap">
+            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
             </h2>
             <div className="h-px flex-1 bg-border/30" />

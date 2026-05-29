@@ -124,7 +124,7 @@ const ReadingJournal: React.FC = () => {
               <p className="text-xs font-bold text-primary/60 mt-1 uppercase tracking-widest">{streak === 1 ? 'Dia' : 'Dias'} Consecutivos</p>
             </div>
             <div className="pt-4 border-t border-primary/5 w-full">
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary/30">Recorde: {profile?.max_streak || streak} dias</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Recorde: {profile?.max_streak || streak} dias</p>
             </div>
           </CardContent>
         </Card>
@@ -229,7 +229,7 @@ const ReadingJournal: React.FC = () => {
         <TabsContent value="history" className="space-y-4">
           {filteredMarks.length === 0 ? (
             <div className="text-center py-20 bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
-              <History className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+              <History className="w-12 h-12 text-muted-foreground/60 mx-auto mb-4" />
               <p className="text-muted-foreground font-serif italic">Nenhuma marca de leitura encontrada.</p>
             </div>
           ) : (
@@ -281,7 +281,7 @@ const ReadingJournal: React.FC = () => {
         <TabsContent value="notes" className="space-y-4">
           {filteredNotes.length === 0 ? (
             <div className="text-center py-20 bg-muted/20 rounded-[2rem] border-2 border-dashed border-border/40">
-              <Edit3 className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
+              <Edit3 className="w-12 h-12 text-muted-foreground/60 mx-auto mb-4" />
               <p className="text-muted-foreground font-serif italic">Nenhuma anotação encontrada.</p>
             </div>
           ) : (

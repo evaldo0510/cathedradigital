@@ -363,7 +363,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   variant="ghost"
                                   size="icon"
                                   disabled={isOpeningLogos}
-                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/30 hover:text-primary disabled:opacity-30"
+                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -399,7 +399,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   });
                                 }}
                               >
-                                <Icons.Star className={cn("w-3.5 h-3.5", isFav ? "fill-secondary text-secondary" : "text-primary/20")} strokeWidth={1.5} />
+                                <Icons.Star className={cn("w-3.5 h-3.5", isFav ? "fill-secondary text-secondary" : "text-primary/60")} strokeWidth={1.5} />
                               </Button>
                             </div>
                           </div>
@@ -413,8 +413,8 @@ const Relatio: React.FC<RelatioProps> = ({
 
                           
                           <div className="mt-4 pt-4 border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
-                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/30">Explorar Conexão</span>
-                            <Icons.ArrowRight className="w-3 h-3 text-primary/30" strokeWidth={1.5} />
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">Explorar Conexão</span>
+                            <Icons.ArrowRight className="w-3 h-3 text-primary/60" strokeWidth={1.5} />
                           </div>
                         </div>
                       </Card>
@@ -455,7 +455,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 </Button>
                 
                 {showAll && (
-                  <p className="text-[8px] text-muted-foreground/30 uppercase tracking-[0.3em] italic">
+                  <p className="text-[8px] text-muted-foreground/60 uppercase tracking-[0.3em] italic">
                     Fim das conexões contextuais para esta seção
                   </p>
                 )}

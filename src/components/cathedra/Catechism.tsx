@@ -674,7 +674,7 @@ const Catechism: React.FC = () => {
           </div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="rounded-full w-10 h-10 p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
-              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/30'}`} />
+              <Icons.Sparkles className={`w-4 h-4 ${showLogosAI ? 'text-primary' : 'text-primary/60'}`} />
             </Button>
             <ReadingMark contentType="catechism" contentId={`${currentParagraph}`} label={`Catecismo §${currentParagraph}`} paragraph={currentParagraph} />
           </div>
@@ -822,7 +822,7 @@ const Catechism: React.FC = () => {
                       }}
                       className="rounded-3xl group px-6 py-10 flex flex-col items-start gap-2 hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
                     >
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Seção Anterior</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Seção Anterior</span>
                       <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
                         <Icons.ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform opacity-40" />
                         {selectedPart.sections.find(s => s.id === selectedSection.id - 1)?.title || 'Anterior'}
@@ -842,7 +842,7 @@ const Catechism: React.FC = () => {
                       }}
                       className="rounded-3xl group px-6 py-10 flex flex-col items-end gap-2 hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
                     >
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 group-hover:text-primary/60 transition-colors">Próxima Seção</span>
+                      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Próxima Seção</span>
                       <div className="flex items-center gap-2 text-primary font-display font-light text-2xl">
                         {selectedPart.sections.find(s => s.id === selectedSection.id + 1)?.title || 'Próxima'}
                         <Icons.ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform opacity-40" />
@@ -851,7 +851,7 @@ const Catechism: React.FC = () => {
                   </div>
 
                   <div className="text-center space-y-8 py-16">
-                    <Icons.CheckCircle2 className="w-16 h-16 text-primary/10 mx-auto" strokeWidth={1} />
+                    <Icons.CheckCircle2 className="w-16 h-16 text-primary/60 mx-auto" strokeWidth={1} />
                     <div className="space-y-2">
                       <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
                       <p className="text-xs text-muted-foreground/50 italic font-serif">"A luz de Cristo ilumina todos os homens." (Catecismo, 1)</p>
@@ -1005,7 +1005,7 @@ const Catechism: React.FC = () => {
                   className={`text-left p-10 md:p-12 rounded-premium bg-card border transition-all group flex flex-col gap-6 relative
                     ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : 'border-primary/[0.03] hover:border-primary/10'}`}
                 >
-                  <span className="text-[9px] font-bold text-primary/20 uppercase tracking-widest">
+                  <span className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
                     Seção {sec.id} {isLastReadSection && '• Ponto Salvo'}
                   </span>
                   <div className="space-y-2">
@@ -1052,7 +1052,7 @@ const Catechism: React.FC = () => {
         {/* Search & Suggested */}
         <div className="flex flex-col md:flex-row gap-8 items-center justify-between border-b border-primary/[0.04] pb-12">
           <div className="relative group w-full md:w-96">
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20" />
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
             <input
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
@@ -1071,7 +1071,7 @@ const Catechism: React.FC = () => {
             >
               <Icons.Sparkles className="w-4 h-4 text-secondary/40 group-hover:text-secondary transition-colors" />
               <div>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-primary/30">Continuar Formação</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-primary/60">Continuar Formação</p>
                 <p className="text-sm font-bold text-primary">Sugerido: §{nextUnreadParagraph}</p>
               </div>
             </button>
@@ -1087,11 +1087,11 @@ const Catechism: React.FC = () => {
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
               className="text-left p-12 md:p-16 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-8"
             >
-              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/20">
+              <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60">
                 <Icons.Logo className="w-6 h-6" />
               </div>
               <div className="space-y-4">
-                <span className="text-[10px] font-bold text-primary/30 uppercase tracking-[0.5em]">{part.part}</span>
+                <span className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.5em]">{part.part}</span>
                 <h2 className="text-3xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{part.title}</h2>
                 <p className="text-sm text-muted-foreground/40 font-serif italic">{part.sections.length} seções doutrinárias</p>
               </div>

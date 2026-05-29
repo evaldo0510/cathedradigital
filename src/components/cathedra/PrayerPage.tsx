@@ -494,7 +494,7 @@ const PrayerPage: React.FC = () => {
                     </div>
                     <p className="text-premium-tiny text-muted-foreground mt-1 uppercase tracking-widest font-black opacity-60">{val.days}</p>
                   </div>
-                  <ChevronRight className="w-5 h-5 text-muted-foreground/30 group-hover:text-primary/50 group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="w-5 h-5 text-muted-foreground/60 group-hover:text-primary/50 group-hover:translate-x-1 transition-all" />
                 </Button>
               ))}
             </div>
