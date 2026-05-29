@@ -110,10 +110,41 @@ npx playwright test tests/e2e/accessibility.spec.ts
 ```
 
 ### 4. Filtros e Comandos Úteis
-- **Filtrar por nome**: `npx playwright test -g "swipe"`
+
+Para reproduzir falhas de forma consistente ou focar em partes específicas da aplicação:
+
+- **Filtrar por projeto (browser)**:
+  ```bash
+  # Rodar apenas no Mobile Safari
+  npx playwright test --project="mobile-safari"
+  ```
+- **Filtrar por nome de teste (grep)**:
+  ```bash
+  # Rodar todos os testes que contém "swipe" no título
+  npx playwright test -g "swipe"
+  ```
+- **Executar arquivo específico**:
+  ```bash
+  npx playwright test tests/e2e/bottom-nav-navigation.spec.ts
+  ```
 - **Debugar falhas**: `npx playwright show-report` (abre o relatório da última execução)
 - **Atualizar Snapshots Visuais**: `npx playwright test --update-snapshots`
 
+### 5. Scripts de Atalho (package.json)
+
+Estes scripts emulam o ambiente de CI (`CI=true`) localmente para garantir consistência:
+
+```bash
+# Rodar unitários com CI env
+npm run test:local:unit
+
+# Rodar todos os E2E com CI env (retries ativos, 1 worker)
+npm run test:local:e2e
+
+# Rodar apenas Axe (acessibilidade) com CI env
+npm run test:local:axe
+```
+
 ### Variáveis de Ambiente
-- `CI=true`: Ativa retries (2x) e reduz workers para estabilidade.
-- `PLAYWRIGHT_TEST_BASE_URL`: Define a URL alvo (padrão: localhost:8080).
+- `CI=true`: Ativa retries (2x), remove `test.only` e reduz workers para 1 para máxima estabilidade.
+- `PLAYWRIGHT_TEST_BASE_URL`: Define a URL alvo (padrão: http://localhost:8080).
