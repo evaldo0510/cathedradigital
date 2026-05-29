@@ -72,9 +72,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     >
       <Icon 
         className={cn(
-          "w-6 h-6 transition-colors duration-500",
-          isActive ? "text-primary" : "text-muted-foreground/50"
+          "transition-colors duration-500",
+          isActive ? "text-primary opacity-100" : "text-muted-foreground/50"
         )}
+        size={24}
         strokeWidth={isActive ? 2 : 1.5}
       />
     </motion.div>
