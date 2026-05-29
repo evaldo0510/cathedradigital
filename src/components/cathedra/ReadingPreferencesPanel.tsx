@@ -133,6 +133,29 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
 
             <ScrollArea className="flex-1 px-8 pb-10">
               <div className="space-y-10">
+                {/* Immersive Mode Highlight */}
+                <section className="bg-primary/[0.03] border border-primary/10 rounded-[2rem] p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Maximize2 className={cn("w-5 h-5", settings.immersiveMode ? "text-primary" : "text-primary/40")} />
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-primary">Leitura Imersiva</h3>
+                        <p className="text-[10px] text-muted-foreground">Foco absoluto, interface mínima e texto amplo</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant={settings.immersiveMode ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
+                      className="rounded-full px-5 text-[10px] font-bold uppercase tracking-widest h-9"
+                    >
+                      {settings.immersiveMode ? "Ativado" : "Ativar"}
+                    </Button>
+                  </div>
+                </section>
+
                 {/* Theme Selection */}
                 <section className="space-y-4">
                   <div className="flex items-center gap-2 mb-2">

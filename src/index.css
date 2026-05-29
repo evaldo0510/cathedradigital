@@ -500,6 +500,73 @@
   filter: grayscale(0.2);
 }
 
+/* Modo Leitura Imersivo - Deep Focus */
+.immersive-mode {
+  --reader-column-width: 80ch !important;
+}
+
+.immersive-mode .header-reading-auto-hide,
+.immersive-mode .bottom-nav-reading-auto-hide,
+.immersive-mode .footer-reading-auto-hide,
+.immersive-mode .sidebar-trigger {
+  @apply opacity-0 pointer-events-none -translate-y-full transition-all duration-1000 !important;
+}
+
+.immersive-mode .bottom-nav-reading-auto-hide,
+.immersive-mode .footer-reading-auto-hide {
+  @apply translate-y-full !important;
+}
+
+/* Text Amplification in Immersive Mode */
+.immersive-mode .reader-text {
+  font-size: clamp(1.5rem, 3vw, 2.5rem) !important;
+  line-height: 2 !important;
+  @apply tracking-normal opacity-100 contrast-100 mx-auto font-light;
+  max-width: 75ch !important;
+}
+
+.immersive-mode .reader-container {
+  @apply px-4 sm:px-10 md:px-20 lg:px-40 py-20 md:py-40 !important;
+}
+
+/* Mobile specific comfort for Immersive Mode */
+@media (max-width: 768px) {
+  .immersive-mode .reader-text {
+    font-size: 1.65rem !important;
+    line-height: 1.8 !important;
+  }
+  
+  .immersive-mode .reader-container {
+    @apply px-6 py-12 !important;
+  }
+  
+  /* Subtle vignette to help focus */
+  .immersive-mode::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 60%, hsl(var(--background) / 0.1) 100%);
+    pointer-events: none;
+    z-index: 1000;
+  }
+}
+
+/* Reveal Immersive controls on tap/shake/hover near edges */
+.immersive-mode.reveal-chrome .header-reading-auto-hide,
+.immersive-mode.reveal-chrome .bottom-nav-reading-auto-hide {
+  @apply opacity-100 translate-y-0 pointer-events-auto !important;
+}
+
+.immersive-mode .app-header-title {
+  @apply opacity-0 transition-opacity duration-1000;
+}
+
+.immersive-mode.reveal-chrome .app-header-title {
+  @apply opacity-100;
+}
+
+}
+
 .visual-silence .sidebar-reading-auto-hide,
 .visual-silence .header-reading-auto-hide {
   @apply grayscale opacity-50;
