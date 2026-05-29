@@ -78,7 +78,13 @@ const DesignSystemGuide: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {tokens.colors.map((color) => (
-              <CathedraCard key={color.name} padding="md" variant="interactive" className="group">
+              <CathedraCard 
+                key={color.name} 
+                id={color.variable.replace('--', '')}
+                padding="md" 
+                variant="interactive" 
+                className="group scroll-mt-32"
+              >
                 <div className="space-y-6">
                   <div 
                     className="w-full h-32 rounded-premium border border-primary/5 shadow-inner transition-premium group-hover:scale-[1.02]" 
