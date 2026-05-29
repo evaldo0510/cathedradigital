@@ -975,14 +975,16 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
+                    <div className="space-y-4">
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
                         <div key={v.number} 
                           id={`v${v.number}`}
-                          className={`group relative py-2 px-3 rounded-premium transition-all duration-300 mb-1
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5' : 'hover:bg-primary/[0.01]'}`}>
-                          <div className="flex items-start gap-3">
+                          className={`group relative py-4 px-6 rounded-premium transition-all duration-700 mb-2
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5 shadow-premium-sm' : 'hover:bg-primary/[0.01]'}`}>
+                          <div className="flex items-start gap-4">
+
                             <sup className="text-[0.55em] font-medium text-primary mt-2 select-none opacity-20 group-hover:opacity-40 transition-opacity">{v.number}</sup>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
@@ -1002,7 +1004,7 @@ const Bible: React.FC = () => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-relaxed">
+                              <p className="leading-[1.85] font-light text-lg md:text-xl">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1051,7 +1053,9 @@ const Bible: React.FC = () => {
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
-                        </div>
+                    </div>
+                  </div>
+
                       );
                     })}
                   </div>
