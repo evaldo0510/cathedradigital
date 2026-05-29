@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, Language } from '@/types';
@@ -6,6 +6,7 @@ import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { cn } from '@/lib/utils';
 
 interface AppHeaderProps {
   user: any;
@@ -33,27 +34,27 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="border-b border-primary/5 bg-background/80 backdrop-blur-3xl sticky top-0 z-[140] transition-premium pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
         role="banner"
       >
-        <div className="app-container flex flex-col md:flex-row md:items-center justify-between min-h-[100px] md:h-36 py-4 md:py-0 gap-5 md:gap-0">
+        <div className="app-container flex items-center justify-between h-20 md:h-36 py-2 md:py-0">
 
-          {/* Logo Section */}
+          {/* Logo Section - Compact on Mobile */}
           <div 
-            className="flex flex-col items-center justify-center md:flex-row md:justify-start gap-5 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-premium w-full md:w-auto p-2" 
+            className="flex items-center gap-3 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-premium p-1 md:p-2" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-12 h-12 md:w-14 md:h-14 transition-premium-slow group-hover:scale-105" variant="dark" />
-            <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-2xl md:text-2xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[0.7em] transition-premium-slow group-hover:text-primary/90">Cathedra</span>
-              <span className="h5 !text-[8px] md:!text-[9px] !text-muted-foreground mt-2 group-hover:text-primary/40 transition-premium-slow">Biblioteca Digital</span>
+            <Icons.Logo className="w-8 h-8 md:w-14 md:h-14 transition-premium-slow group-hover:scale-105" variant="dark" />
+            <div className="flex flex-col items-start min-w-0">
+              <span className="text-sm md:text-2xl font-display font-light uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary leading-none transition-premium-slow group-hover:text-primary/90">Cathedra</span>
+              <span className="hidden md:block h5 !text-[9px] !text-muted-foreground mt-2 group-hover:text-primary/40 transition-premium-slow">Biblioteca Digital</span>
             </div>
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-center md:justify-end gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-6 md:pt-0">
-            <div className="flex items-center gap-5 md:gap-4 lg:gap-6 w-full md:w-auto justify-between md:justify-end px-2 md:px-0">
+          <div className="flex items-center justify-end gap-2 md:gap-6">
+            <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
 
 
               {!isDashboard && (
@@ -61,58 +62,58 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <Icons.ChevronLeft className="w-4 h-4 md:w-5 md:h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
-                  <Icons.Search className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Search className="w-4 h-4 md:w-5 md:h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                 </Button>
 
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={onToggleDark}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium hidden md:flex"
 
                   aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
                 >
                   {isDark ? 
-                    <Icons.Sun className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" /> : 
-                    <Icons.Moon className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                    <Icons.Sun className="w-4 h-4 md:w-5 md:h-5 opacity-90 group-hover:opacity-100 transition-opacity" /> : 
+                    <Icons.Moon className="w-4 h-4 md:w-5 md:h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                   }
                 </Button>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4">
                 {user ? (
                   <Button
                     variant="outline"
                     size="icon"
                     onClick={() => navigate(AppRoute.PROFILE)}
-                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03] tap-premium"
+                    className="w-10 h-10 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03] tap-premium"
                     aria-label={t('profile') || 'Meu Perfil'}
                   >
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity" />
                     ) : (
-                      <Icons.User className="w-5 h-5 opacity-90" />
+                      <Icons.User className="w-4 h-4 md:w-5 md:h-5 opacity-90" />
                     )}
                   </Button>
                 ) : (
                   <Button 
                     onClick={() => navigate(AppRoute.LOGIN)} 
-                    className="h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-xl shadow-primary/10"
+                    className="h-10 md:h-12 px-4 md:px-8 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-xl shadow-primary/10"
                   >
                     {t('enter')}
                   </Button>
@@ -122,10 +123,10 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={onOpenSidebar}
-                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20 tap-premium"
                   aria-label="Abrir menu lateral"
                 >
-                  <Icons.Menu className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Menu className="w-4 h-4 md:w-5 md:h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                 </Button>
               </div>
             </div>

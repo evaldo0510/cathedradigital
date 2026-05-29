@@ -73,10 +73,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
       <Icon 
         className={cn(
           "transition-colors duration-500",
-          isActive ? "text-primary opacity-100" : "text-muted-foreground/50"
+          isActive ? "text-primary opacity-100" : "text-muted-foreground/40"
         )}
-        size={24}
-        strokeWidth={isActive ? 2 : 1.5}
+        size={22}
+        strokeWidth={isActive ? 1.8 : 1}
       />
     </motion.div>
     
@@ -127,7 +127,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
   return (
     <nav 
-      className="fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-20 bg-background/80 backdrop-blur-3xl border border-primary/5 rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.12)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-4" 
+      className="fixed bottom-6 left-6 right-6 z-[160] lg:hidden h-16 bg-background/60 backdrop-blur-3xl border border-primary/5 rounded-full shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2" 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
       <div className="flex items-center justify-between h-full w-full">

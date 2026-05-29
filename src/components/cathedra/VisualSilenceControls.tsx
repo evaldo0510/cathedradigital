@@ -13,7 +13,7 @@ export const VisualSilenceControls: React.FC = () => {
       label: 'Silêncio Visual',
       icon: EyeOff,
       active: settings.visualSilence,
-      description: 'Oculta elementos de navegação e distrações'
+      description: 'Oculta interface e foca no essencial'
     },
     {
       id: 'totalSilence',

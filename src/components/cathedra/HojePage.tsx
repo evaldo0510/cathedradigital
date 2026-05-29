@@ -117,7 +117,7 @@ const HojePage: React.FC = () => {
   if (loadingStats || loadingJourney || loadingRec) return <DashboardSkeleton />;
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen pt-24 md:pt-40 pb-64 monastic-sanctuary">
+    <div className="flex flex-col items-center w-full min-h-screen pt-12 md:pt-40 pb-48 md:pb-64 monastic-sanctuary">
       <SEOHead 
         title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
@@ -136,20 +136,20 @@ const HojePage: React.FC = () => {
           initial={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} 
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
           transition={{ duration: 3, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center space-y-24 max-w-6xl mx-auto"
+          className="text-center space-y-12 md:space-y-24 max-w-6xl mx-auto"
         >
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-4 md:gap-6">
             <motion.div 
               initial={{ height: 0 }}
-              animate={{ height: 64 }}
+              animate={{ height: 48 }}
               transition={{ duration: 2, delay: 1 }}
               className="w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
             />
-            <p className="text-[10px] font-black uppercase tracking-[1em] text-primary/60">
+            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.5em] md:tracking-[1em] text-primary/40 md:text-primary/60">
               {greeting}, {profile?.name?.split(' ')[0] || 'Anima Fidelis'}
             </p>
           </div>
-          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[0.9] tracking-tighter filter blur-[0.2px]">
+          <h1 className="text-5xl md:text-8xl lg:text-[10rem] font-display text-primary leading-[1] md:leading-[0.9] tracking-tighter filter blur-[0.2px]">
             Mosteiro <br />
             <motion.span 
               initial={{ opacity: 0, x: -20 }}
@@ -171,36 +171,36 @@ const HojePage: React.FC = () => {
           <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-24">
           <div className="lg:col-span-8 stack-spacing">
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
-            <section className="space-y-12">
-              <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+            <section className="space-y-8 md:space-y-12">
+              <div className="flex items-center gap-4 md:gap-8">
+                <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
-                <div className="h-px flex-1 bg-border/30" />
+                <div className="h-px flex-1 bg-border/20 md:bg-border/30" />
               </div>
               <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2" />
             </section>
 
             {/* RITUAL DO DIA */}
-            <section className="space-y-12">
-              <div className="flex items-center gap-8">
-                <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+            <section className="space-y-8 md:space-y-12">
+              <div className="flex items-center gap-4 md:gap-8">
+                <h2 className="text-[9px] md:text-premium-tiny font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/40 md:text-primary/60 whitespace-nowrap">
                   Ritual de Hoje
                 </h2>
-                <div className="h-px flex-1 bg-border/30" />
+                <div className="h-px flex-1 bg-border/20 md:bg-border/30" />
               </div>
               <RitualDoDia />
             </section>
           </div>
 
-          <aside className="lg:col-span-4 space-y-16">
+          <aside className="lg:col-span-4 space-y-12">
             {/* FRASES DO DIA - CONTEMPLAÇÃO */}
-            <div className="pt-12 px-8 text-center bg-primary/[0.01] rounded-[4rem] p-16 border border-primary/5 transition-all hover:bg-primary/[0.02] duration-1000">
-               <Icons.Quote className="w-10 h-10 text-secondary/10 mx-auto mb-10" />
-               <p className="text-2xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
+            <div className="pt-8 px-6 text-center bg-primary/[0.005] rounded-[2.5rem] p-10 border border-primary/5 transition-all hover:bg-primary/[0.01] duration-1000">
+               <Icons.Quote className="w-6 h-6 text-secondary/20 mx-auto mb-6" />
+               <p className="text-lg text-primary/30 font-serif italic leading-relaxed selection:bg-primary/5">
                 {todayQuote}
               </p>
             </div>
