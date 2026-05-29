@@ -1042,6 +1042,7 @@ const Bible: React.FC = () => {
                   </div>
                 )}
 
+                  <Relatio 
                     context={{
                       type: 'bible',
                       abbr: selectedBook.abbr,
@@ -1058,6 +1059,7 @@ const Bible: React.FC = () => {
                     }}
                   />
 
+
                   {!settings.totalSilence && (
                     <LogosContextualSuggestions
                       type="bible"
@@ -1071,8 +1073,9 @@ const Bible: React.FC = () => {
                     />
                   )}
                 </div>
+              </div>
+            </div>
 
-                {/* Elegant Side Navigation for Chapters (Desktop) */}
                 <aside className="reader-navigation-aside space-y-12 shrink-0">
                   <div className="space-y-4">
                     <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
@@ -1410,6 +1413,7 @@ const Bible: React.FC = () => {
         maxW="max-w-6xl"
       >
         <div className="space-y-12">
+
           <Button 
             variant="ghost" 
             onClick={goBack}
