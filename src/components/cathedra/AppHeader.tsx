@@ -52,8 +52,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-center md:justify-end gap-6 sm:gap-8 w-full md:w-auto border-t border-primary/5 md:border-none pt-8 md:pt-0 landscape:pt-0 landscape:border-none">
-            <div className="flex items-center gap-4 md:gap-4 lg:gap-6 w-full md:w-auto justify-center md:justify-end landscape:gap-4">
+          <div className="flex items-center justify-center md:justify-end gap-6 w-full md:w-auto border-t border-primary/5 md:border-none pt-10 md:pt-0">
+            <div className="flex items-center gap-5 md:gap-4 lg:gap-6 w-full md:w-auto justify-between md:justify-end px-2 md:px-0">
 
 
               {!isDashboard && (
@@ -61,77 +61,72 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   variant="outline"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-4 h-4 opacity-80 group-hover:opacity-100 transition-opacity" />
+                  <Icons.ChevronLeft className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
-                aria-label={t('search') || 'Buscar'}
-              >
-                <Icons.Search className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Button>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onToggleDark}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
-                aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-              >
-                {isDark ? 
-                  <Icons.Sun className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" /> : 
-                  <Icons.Moon className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
-                }
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
-                aria-label="Abrir configurações de acessibilidade"
-              >
-                <Icons.ShieldCheck className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Button>
-
-              {user ? (
+              <div className="flex items-center gap-4">
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => navigate(AppRoute.PROFILE)}
-                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.02]"
-                  aria-label={t('profile') || 'Meu Perfil'}
+                  onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  aria-label={t('search') || 'Buscar'}
                 >
-                  {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity" />
-                  ) : (
-                    <Icons.User className="w-[18px] h-[18px] opacity-80" />
-                  )}
+                  <Icons.Search className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
                 </Button>
-              ) : (
-                <Button 
-                  onClick={() => navigate(AppRoute.LOGIN)} 
-                  className="h-11 px-6 rounded-full text-[9px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-lg shadow-primary/5"
-                >
-                  {t('enter')}
-                </Button>
-              )}
 
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onOpenSidebar}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
-                aria-label="Abrir menu lateral"
-              >
-                <Icons.Menu className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
-              </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={onToggleDark}
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+                >
+                  {isDark ? 
+                    <Icons.Sun className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" /> : 
+                    <Icons.Moon className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                  }
+                </Button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                {user ? (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => navigate(AppRoute.PROFILE)}
+                    className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden focus-visible:ring-1 focus-visible:ring-primary/20 bg-primary/[0.03]"
+                    aria-label={t('profile') || 'Meu Perfil'}
+                  >
+                    {user.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity" />
+                    ) : (
+                      <Icons.User className="w-5 h-5 opacity-90" />
+                    )}
+                  </Button>
+                ) : (
+                  <Button 
+                    onClick={() => navigate(AppRoute.LOGIN)} 
+                    className="h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/20 shadow-xl shadow-primary/10"
+                  >
+                    {t('enter')}
+                  </Button>
+                )}
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={onOpenSidebar}
+                  className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 bg-primary/[0.03] hover:bg-primary/[0.05] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                  aria-label="Abrir menu lateral"
+                >
+                  <Icons.Menu className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity" />
+                </Button>
+              </div>
             </div>
 
 
