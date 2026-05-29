@@ -429,23 +429,28 @@
   @apply h-0;
 }
 
-/* Silêncio Visual Profundo */
+/* Silêncio Visual Profundo - Refinado */
 .visual-silence {
-  --border: 0 0% 0% / 0.01;
+  --border: 0 0% 0% / 0;
   --shadow-premium: none;
   --shadow-premium-hover: none;
+  --radius: 0;
+  --radius-lg: 0;
+  --radius-sm: 0;
 }
 
 .visual-silence * {
-  @apply transition-none border-transparent !shadow-none;
+  @apply transition-none border-transparent !shadow-none !ring-0;
 }
 
-.visual-silence .premium-card-interactive:hover {
-  @apply -translate-y-0 bg-transparent;
+.visual-silence .premium-card-interactive:hover,
+.visual-silence .premium-card-interactive:active {
+  @apply -translate-y-0 bg-transparent opacity-100;
 }
 
-.visual-silence .btn-premium:hover {
-  @apply scale-100;
+.visual-silence .btn-premium:hover,
+.visual-silence .btn-premium:active {
+  @apply scale-100 opacity-100;
 }
 
 .visual-silence .cinematic-fade-in {
@@ -454,11 +459,37 @@
 }
 
 /* Redução de Brilho e Ruído Visual */
-.visual-silence .premium-glow::after {
-  display: none;
+.visual-silence .premium-glow::after,
+.visual-silence .premium-glow:hover::after {
+  display: none !important;
 }
 
-/* Suavização de leitura */
+/* Suavização de leitura e Ritmo */
 .visual-silence .reader-text {
-  @apply tracking-wide opacity-90;
+  @apply tracking-wide opacity-[0.85] contrast-[0.95];
+  filter: grayscale(0.2);
 }
+
+.visual-silence .sidebar-reading-auto-hide,
+.visual-silence .header-reading-auto-hide {
+  @apply grayscale opacity-50;
+}
+
+/* Layout Density & Reading Rhythm */
+[data-line-spacing='tight'] .reader-text { line-height: 1.5; }
+[data-line-spacing='normal'] .reader-text { line-height: 1.9; }
+[data-line-spacing='wide'] .reader-text { line-height: 2.4; }
+
+[data-letter-spacing='tight'] .reader-text { letter-spacing: -0.01em; }
+[data-letter-spacing='normal'] .reader-text { letter-spacing: 0.015em; }
+[data-letter-spacing='wide'] .reader-text { letter-spacing: 0.04em; }
+
+[data-side-margins='standard'] .reader-container { @apply max-w-[70ch] px-6 sm:px-10; }
+[data-side-margins='comfortable'] .reader-container { @apply max-w-[65ch] px-8 sm:px-16 md:px-24; }
+[data-side-margins='wide'] .reader-container { @apply max-w-[60ch] px-10 sm:px-24 md:px-32; }
+
+/* Font size mapping for more granular control */
+.font-size-small .reader-text { font-size: 1.15rem; }
+.font-size-medium .reader-text { font-size: 1.4rem; }
+.font-size-large .reader-text { font-size: 1.75rem; }
+.font-size-extra-large .reader-text { font-size: 2.2rem; }

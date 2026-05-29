@@ -178,6 +178,16 @@ const AppLayout: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
   
+  // Apply theme-based body class early to prevent flash
+  useEffect(() => {
+    const isDark = settings.theme === 'dark' || settings.theme === 'night';
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [settings.theme]);
+
   // Enable automatic accessibility check
   useA11yGuard(true);
   
