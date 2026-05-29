@@ -248,7 +248,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           >
             <div className="flex items-center justify-between mb-10">
               <div 
-                className="flex items-center gap-3 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
+                className="flex items-center gap-3 cursor-pointer group outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
@@ -266,6 +266,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </div>
 
               <Button
+                ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
@@ -298,7 +299,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[52px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 outline-none h-auto min-h-[52px]
                               ${isActive
                                 ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
                                 : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
