@@ -40,11 +40,12 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         </header>
       )}
       <motion.main 
-        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 40 }}
+        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 2.5, 
-          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1] 
+          duration: settings.reduceAnimations ? 0.1 : 2.2, 
+          ease: settings.reduceAnimations ? "linear" : [0.19, 1, 0.22, 1],
+          delay: 0.2 // Small delay so it starts after the main page transition begins
         }}
 
         className={cn("app-container", className)}
