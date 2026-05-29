@@ -425,7 +425,7 @@ const AppLayout: React.FC = () => {
             lang={lang}
             onChangeLang={setLang}
             onSignOut={signOut}
-            onOpenSidebar={handleOpenSidebar}
+            onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))}
           />
         )}
         
