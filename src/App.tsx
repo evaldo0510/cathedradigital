@@ -577,7 +577,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+        <BottomNav user={authUserAdapter} onOpenSidebar={() => window.dispatchEvent(new CustomEvent('open-sidebar'))} />
         {location.pathname !== '/' && <div className="hidden md:block"><CathedralFooter /></div>}
         <Suspense fallback={null}>
           <A11ySettingsPanel 
