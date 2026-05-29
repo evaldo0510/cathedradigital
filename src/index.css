@@ -19,15 +19,11 @@
   }
   
   .admin-mode main#main-content {
-
     max-width: 100% !important;
     padding: 2rem !important;
     background: hsl(var(--background));
   }
-}
 
-
-@layer base {
   :root {
     /* Base Colors - Premium Off-White */
     --background: 45 40% 98.8%;   /* #FEFDFB Cleaner off-white */
@@ -76,59 +72,55 @@
     --spacing-xl: 8rem;     /* 128px */
     --spacing-2xl: 12rem;   /* 192px */
     
-    /* Sidebar Specifics */
-    --sidebar-background: 45 40% 99%;
-    --sidebar-foreground: 220 15% 12%;
-    --sidebar-primary: 220 20% 10%;
-    --sidebar-primary-foreground: 45 40% 98%;
-    --sidebar-accent: 220 10% 94%;
-    --sidebar-accent-foreground: 220 15% 12%;
-    --sidebar-border: 220 20% 10% / 0.08;
-    --sidebar-ring: 40 35% 55% / 0.4;
+    /* Design System Tokens */
+    --card-radius: 5rem;
+    --card-radius-mobile: 1.5rem;
+    --card-shadow: none;
+    --card-shadow-hover: none;
+    --btn-radius: 9999px;
+    --layout-max-width: 1800px;
+    --transition-premium: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    
+    /* Global Spacing Rhythm Tokens */
+    --space-mobile-base: 1rem;
+    --space-mobile-section: 3rem;
+    --space-mobile-section-sm: 2rem;
+    --space-mobile-stack: 1rem;
+    --space-mobile-stack-lg: 2rem;
+    --space-mobile-padding: 1rem;
+    --space-mobile-header-mb: 1.25rem;
+    
+    --space-desktop-base: 2rem;
+    --space-desktop-section: 12rem;
+    --space-desktop-stack: 4rem;
+    --space-desktop-padding: 2.5rem;
+    --space-desktop-header-mb: 10rem;
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 25% 4%;    /* #060709 Deep Blue Graphite */
-    --foreground: 45 15% 95%;    /* #F5F4F2 Near-white */
-    
+    --background: 220 25% 4%;
+    --foreground: 45 15% 95%;
     --card: 220 25% 6%;
     --card-foreground: 45 15% 95%;
-    
     --popover: 220 25% 5%;
     --popover-foreground: 45 15% 95%;
-    
-    --primary: 40 40% 70%;       /* Luminous Sovereign Gold */
+    --primary: 40 40% 70%;
     --primary-foreground: 220 25% 4%;
-    
     --secondary: 220 15% 10%;
     --secondary-foreground: 40 40% 70%;
-    
     --muted: 220 20% 10%;
     --muted-foreground: 220 15% 88%; 
-    
     --accent: 40 40% 70% / 0.15;
     --accent-foreground: 40 40% 70%;
-    
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
-    
     --border: 220 20% 14%;
     --input: 220 20% 14%;
     --ring: 40 40% 70% / 0.5;
-    
     --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.4);
-    
-    --sidebar-background: 220 25% 3%;
-    --sidebar-foreground: 45 15% 95%;
-    --sidebar-primary: 40 40% 70%;
-    --sidebar-primary-foreground: 220 25% 4%;
-    --sidebar-accent: 220 20% 8%;
-    --sidebar-accent-foreground: 45 15% 95%;
-    --sidebar-border: 220 20% 10%;
-    --sidebar-ring: 40 40% 70% / 0.5;
   }
 
-  /* High Contrast Overlay (Always Active by Preference) */
   .high-contrast {
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
@@ -136,73 +128,6 @@
     --primary-foreground: 0 0% 100%;
     --muted-foreground: 0 0% 0% !important;
     --border: 0 0% 0% / 0.3;
-    --shadow-premium: none;
-    --shadow-premium-hover: none;
-  }
-
-  /* Force opacity and contrast for accessibility in high contrast */
-  .high-contrast .bg-card\/25,
-  .high-contrast .bg-card\/40,
-  .high-contrast .bg-primary\/\[0\.005\],
-  .high-contrast .bg-primary\/\[0\.02\],
-  .high-contrast .bg-primary\/\[0\.03\],
-  .high-contrast .bg-primary\/\[0\.05\],
-  .high-contrast .bg-primary\/5,
-  .high-contrast .bg-primary\/10,
-  .high-contrast .bg-background\/40,
-  .high-contrast .backdrop-blur-2xl,
-  .high-contrast .backdrop-blur-xl,
-  .high-contrast .backdrop-blur-3xl {
-    background-color: hsl(var(--background)) !important;
-    backdrop-filter: none !important;
-    opacity: 1 !important;
-  }
-  
-  .high-contrast .text-primary\/30,
-  .high-contrast .text-primary\/40,
-  .high-contrast .text-primary\/60,
-  .high-contrast .text-foreground\/60,
-  .high-contrast .text-foreground\/80,
-  .high-contrast .text-muted-foreground\/30,
-  .high-contrast .text-muted-foreground\/60 {
-    color: hsl(var(--foreground)) !important;
-    opacity: 1 !important;
-  }
-
-  .high-contrast .placeholder\:text-muted-foreground\/30::placeholder,
-  .high-contrast .placeholder\:text-primary\/20::placeholder {
-    color: hsl(var(--foreground) / 0.6) !important;
-    opacity: 1 !important;
-  }
-
-  .high-contrast .border-primary\/\[0\.02\],
-  .high-contrast .border-primary\/\[0\.03\],
-  .high-contrast .border-primary\/\[0\.05\],
-  .high-contrast .border-primary\/5,
-  .high-contrast .border-primary\/10,
-  .high-contrast .border-border\/5,
-  .high-contrast .border-border\/10,
-  .high-contrast .border-r-2 {
-    border-color: hsl(var(--foreground)) !important;
-    opacity: 1 !important;
-  }
-
-  .high-contrast.dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --primary: 60 100% 50%; /* Pure Gold/Yellow */
-    --primary-foreground: 0 0% 0%;
-    --muted-foreground: 0 0% 100% !important;
-    --border: 0 0% 100% / 0.3;
-  }
-
-  /* Microinteractions - Cubic Bezier Signature */
-  .transition-premium {
-    transition: all 700ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .transition-premium-slow {
-    transition: all 1400ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   /* Typography System */
@@ -211,9 +136,6 @@
   .font-reader { font-family: 'Merriweather', serif; }
   .font-ui { font-family: 'Inter', sans-serif; }
 
-}
-
-@layer base {
   * {
     @apply border-border;
     -webkit-font-smoothing: antialiased;
@@ -225,11 +147,10 @@
     @apply h-full overflow-x-hidden bg-background text-foreground selection:bg-secondary/20;
     font-family: 'Inter', sans-serif;
     text-rendering: optimizeLegibility;
-    line-height: 1.6;
+    line-height: 1.7;
     scroll-behavior: smooth;
   }
 
-  /* Headings Hierarchy - Aligned with Rhythm */
   h1, .h1 {
     @apply font-display font-light uppercase tracking-[0.15em] text-primary;
     font-size: clamp(2rem, 8vw, 6rem);
@@ -248,248 +169,24 @@
     line-height: 1.3;
   }
 
-  h4, .h4 {
-    @apply font-ui font-medium uppercase tracking-[0.15em] text-primary/80;
-    font-size: clamp(1rem, 2.5vw, 1.4rem);
-    line-height: 1.4;
-  }
-
-  h5, .h5 {
-    @apply font-ui font-bold uppercase tracking-[0.2em] text-primary/60;
-    font-size: clamp(0.85rem, 1.5vw, 1rem);
-    line-height: 1.5;
-  }
-
   p, .body-text {
     @apply font-ui font-normal text-foreground/85;
     font-size: clamp(0.95rem, 1.2vw, 1.2rem);
     line-height: 1.7;
-    max-width: 80ch;
   }
-
-  /* Reading Core - Optimized Rhythm */
-  .reader-text {
-    @apply font-reader text-foreground selection:bg-primary/20 max-w-[65ch] mx-auto;
-    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
-    line-height: 1.8; /* Adjusted for better vertical flow */
-    letter-spacing: 0.01em;
-    font-weight: 350;
-    font-variant-numeric: oldstyle-nums;
-  }
-
-  /* Utility Components */
-  .app-container {
-    @apply w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-32;
-  }
-
-  .section-spacing {
-    @apply py-20 md:py-32 lg:py-48;
-  }
-
-  .stack-spacing {
-    @apply space-y-8 md:space-y-16;
-  }
-
-  /* Premium Components */
-  .premium-card {
-    @apply bg-card border border-primary/5 rounded-premium shadow-premium transition-premium overflow-hidden;
-  }
-
-  .premium-card-interactive {
-    @apply premium-card hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 cursor-pointer;
-  }
-
-  .btn-premium-primary {
-    @apply bg-primary text-primary-foreground font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95;
-  }
-
-  .btn-premium-secondary {
-    @apply bg-secondary text-secondary-foreground font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95 shadow-lg shadow-secondary/20;
-  }
-
-  .btn-premium-outline {
-    @apply bg-transparent border border-primary/10 text-primary font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium active:scale-95 hover:bg-primary/[0.02] hover:border-primary/20;
-  }
-
-  .btn-premium-ghost {
-    @apply bg-transparent text-primary/60 font-ui font-bold uppercase tracking-[0.3em] rounded-full flex items-center justify-center gap-4 transition-premium hover:text-primary hover:bg-primary/[0.02] active:scale-95;
-  }
-
-  /* Input and Form */
-  .input-premium {
-    @apply w-full h-16 bg-primary/[0.02] border border-primary/10 rounded-premium px-8 font-ui text-primary placeholder:text-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-premium;
-  }
-
-  /* Overlay and Blur */
-  .premium-overlay {
-    @apply fixed inset-0 z-[100] bg-background/60 backdrop-blur-xl animate-in fade-in duration-700;
-  }
-
-
-  @screen sm {
-    .reader-text {
-      font-size: 1.4rem;
-    }
-  }
-
-  @screen md {
-    .reader-text {
-      font-size: 1.55rem;
-      line-height: 2.3;
-      letter-spacing: 0.02em;
-    }
-  }
-
-  .font-size-small .reader-text { font-size: 1.25rem !important; }
-  .font-size-medium .reader-text { font-size: 1.45rem !important; }
-  .font-size-large .reader-text { font-size: 1.75rem !important; }
-  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
-
-  @screen md {
-    .font-size-small .reader-text { font-size: 1.35rem !important; }
-    .font-size-medium .reader-text { font-size: 1.55rem !important; }
-    .font-size-large .reader-text { font-size: 1.95rem !important; }
-    .font-size-extra-large .reader-text { font-size: 2.5rem !important; }
-  }
-
-
-  /* Specific Reader Container */
-  .reader-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-8 sm:px-14 md:px-24 py-16 md:py-36 transition-all duration-1000;
-    scroll-behavior: smooth;
-  }
-
-  /* Premium Editorial Styling for Bible/Catechism */
-  .prose-premium {
-    @apply font-serif text-foreground selection:bg-primary/15;
-  }
-
-  .prose-premium p {
-    @apply mb-10 leading-[1.95] text-xl md:text-2xl font-light;
-    text-align: justify;
-    hyphens: auto;
-  }
-
-  .prose-premium blockquote {
-    @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
-  }
-
-
-  /* Kindle-like atmospheric transitions */
-  .reading-theme-paper { background-color: #F8F5EE; }
-  .reading-theme-sepia { background-color: #E1D7C1; }
-  .reading-theme-dark { background-color: #0F172A; }
-  .reading-theme-night { background-color: #000000; }
-
 }
 
 @layer components {
   .app-container {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-6 sm:px-10 md:px-14 lg:px-20;
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-6 sm:px-12 md:px-20 lg:px-32;
   }
 
-  .content-section {
-    @apply w-full max-w-[var(--layout-max-width)] mx-auto py-24 md:py-36 lg:py-48 space-y-24 md:space-y-36;
-  }
-
-  .responsive-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16 lg:gap-20;
-  }
-
-  /* Desktop two-column layout: main content + optional side panel */
-  .desktop-layout {
-    @apply w-full;
-  }
-  @screen lg {
-    .desktop-layout {
-      @apply grid gap-10;
-      grid-template-columns: 1fr 320px;
-    }
-  }
-  @screen xl {
-    .desktop-layout {
-      grid-template-columns: 1fr 360px;
-      @apply gap-12;
-    }
-  }
-
-  .desktop-main {
-    @apply min-w-0;
-  }
-
-  .desktop-aside {
-    @apply hidden lg:flex flex-col gap-6 sticky top-24 self-start;
-  }
-
-  .btn-full-mobile {
-    @apply w-full md:w-auto min-h-[44px] flex items-center justify-center;
-  }
-
-  .no-stretch {
-    @apply self-start items-start;
-  }
-
-  .safe-area-top {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .pb-safe {
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-  }
-
-  /* Design System Tokens - Unified Source of Truth for Cathedra Digital */
-  :root {
-    --card-radius: 5rem;
-    --card-radius-mobile: 1.5rem;
-    --card-shadow: none;
-    --card-shadow-hover: none;
-    --btn-radius: 9999px;
-    --layout-max-width: 1800px;
-    --transition-premium: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 800ms cubic-bezier(0.16, 1, 0.3, 1);
-    
-    /* Standardized Opacities for "Visual Silence" */
-    --opacity-icon-idle: 0.3;
-    --opacity-icon-hover: 0.6;
-    --opacity-border: 0.12;
-    --opacity-text-secondary: 0.6;
-    --opacity-text-tertiary: 0.35;
-
-    /* Global Spacing Rhythm Tokens */
-    --space-mobile-base: 1rem;       /* 16px */
-    --space-mobile-section: 3rem;    /* 48px - Refined for mobile flow */
-    --space-mobile-section-sm: 2rem; /* 32px */
-    --space-mobile-stack: 1rem;    /* 16px */
-    --space-mobile-stack-lg: 2rem;   /* 32px */
-    --space-mobile-padding: 1rem; /* 16px */
-    --space-mobile-header-mb: 1.25rem; /* 20px */
-    
-    --space-desktop-base: 2rem;      /* 32px */
-    --space-desktop-section: 12rem;  /* 192px */
-    --space-desktop-stack: 4rem;     /* 64px */
-    --space-desktop-padding: 2.5rem; /* 40px */
-    --space-desktop-header-mb: 10rem; /* 160px */
-  }
-
-  /* Global Rhythm Classes */
   .section-rhythm {
     @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
   }
 
-  .section-rhythm-sm {
-    @apply py-[var(--space-mobile-section-sm)] md:py-[var(--space-desktop-section)];
-  }
-
   .stack-rhythm {
     @apply space-y-[var(--space-mobile-stack)] md:space-y-[var(--space-desktop-stack)];
-  }
-
-  .stack-rhythm-lg {
-    @apply space-y-[var(--space-mobile-stack-lg)] md:space-y-[var(--space-desktop-stack)];
   }
 
   .padding-rhythm {
@@ -498,6 +195,20 @@
 
   .header-margin-rhythm {
     @apply mb-[var(--space-mobile-header-mb)] md:mb-[var(--space-desktop-header-mb)];
+  }
+
+  .premium-card {
+    @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
+    border-radius: var(--card-radius-mobile);
+    transition: all var(--transition-premium);
+  }
+
+  .premium-card-interactive {
+    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+  }
+
+  .premium-card-interactive:hover {
+    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.04)] -translate-y-1.5;
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
@@ -519,7 +230,6 @@
       pointer-events: none;
     }
     
-    /* Subtle monastic vignette */
     .monastic-sanctuary::after {
       content: '';
       position: fixed;
@@ -529,522 +239,39 @@
       z-index: 10;
     }
   }
-  }
 
-  /* Premium card style - Spiritual Minimalist - Unified Tokens */
-  .premium-card {
-    @apply bg-card/25 backdrop-blur-2xl border border-primary/[0.03] transition-all relative overflow-hidden;
-    border-radius: var(--card-radius-mobile);
-    transition: all var(--transition-premium);
-  }
-
-  @screen md {
-    .premium-card {
-      border-radius: var(--card-radius);
-    }
-  }
-  
-  .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
-    transition: all var(--transition-premium);
-  }
-
-  .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.04)] -translate-y-1.5;
-    border-color: hsla(var(--primary) / 0.12);
-    background-color: hsla(var(--card) / 0.5);
-  }
-
-  .premium-card-interactive::after {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-1000 pointer-events-none;
-    background: radial-gradient(circle at center, hsla(var(--primary) / 0.03) 0%, transparent 70%);
-  }
-
-  .premium-card-interactive:hover::after {
-    @apply opacity-100;
-  }
-
-  /* Specific Card Sizes for Desktop */
-  .desktop-card {
-    @apply premium-card p-[var(--space-mobile-padding)] md:p-[var(--space-desktop-padding)];
-  }
-
-  /* Standardized Vertical Rhythm - More spacious for monastic feel */
-  .section-spacing {
-    @apply py-12 sm:py-24 md:py-48 lg:py-64; 
-  }
-
-  /* Responsive padding for sections */
-  .responsive-padding {
-    @apply p-5 sm:p-10 md:p-20 lg:p-32;
-  }
-
-  .stack-spacing {
-    @apply space-y-6 md:space-y-12 lg:space-y-16;
-  }
-  
-  .premium-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10 lg:gap-16;
-  }
-
-  .premium-header {
-    @apply text-center space-y-6 mb-16 md:mb-24 max-w-4xl mx-auto;
-  }
-  
-  .premium-tag {
-    @apply inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-bold uppercase tracking-[0.4em] text-foreground/40 transition-all hover:bg-primary/[0.03] hover:text-foreground/60 focus-visible:ring-2 focus-visible:ring-primary/20;
-  }
-
-  /* Global Button Standard - Premium Spiritual */
   .btn-premium {
-    @apply relative overflow-hidden px-10 sm:px-12 py-5 h-16 sm:h-20 font-medium uppercase tracking-[0.5em] text-[10px] sm:text-[11px] flex items-center justify-center gap-5 active:scale-[0.99] disabled:opacity-30 disabled:cursor-not-allowed border border-transparent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-8 focus-visible:ring-offset-background;
+    @apply relative overflow-hidden px-8 py-4 h-14 font-medium uppercase tracking-[0.3em] text-[9px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 border border-transparent transition-all duration-700;
     border-radius: 9999px;
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .btn-premium-primary {
     @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/90;
   }
 
-  .btn-premium-primary:hover {
-    @apply -translate-y-1;
-    box-shadow: 0 20px 60px -20px hsl(var(--primary) / 0.12);
-  }
-
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground hover:bg-secondary/95;
+    @apply btn-premium bg-secondary text-secondary-foreground;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border-primary/5 text-primary/40 hover:border-primary/20 hover:text-primary hover:bg-primary/[0.01];
-  }
-  
-  .btn-premium-outline:hover {
-    @apply -translate-y-1;
+    @apply btn-premium bg-transparent border-primary/5 text-primary/40 hover:border-primary/20 hover:text-primary;
   }
 
   .btn-premium-ghost {
     @apply btn-premium bg-transparent text-primary/20 hover:text-primary hover:bg-primary/[0.02];
   }
-
-  .btn-premium-ghost:hover {
-    @apply -translate-y-1;
-  }
 }
-
-/* Custom scrollbar (hidden for cleaner UI as requested) */
-.custom-scrollbar::-webkit-scrollbar { display: none; }
-.custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 @layer utilities {
-  .responsive-padding {
-    @apply p-6 sm:p-10 md:p-14 lg:p-20;
-  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   
-  .responsive-gap {
-    @apply gap-6 sm:gap-12 lg:gap-16;
+  .cinematic-fade-in {
+    animation: cinematicFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Page transitions */
-.page-enter {
-  animation: cinematicFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-delay: -1ms !important;
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    background-attachment: initial !important;
-    scroll-behavior: auto !important;
-    transition-duration: 1ms !important;
-    transition-delay: -1ms !important;
-  }
-}
-
-.reduce-animations .page-enter {
-  animation: fadeIn 0.1s linear forwards;
 }
 
 @keyframes cinematicFadeIn {
-  from { 
-    opacity: 0; 
-    transform: scale(1.02) translateY(5px); 
-    filter: blur(8px); 
-  }
-  to { 
-    opacity: 1; 
-    transform: scale(1) translateY(0); 
-    filter: blur(0); 
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.6; transform: scale(1); filter: blur(20px); }
-  50% { opacity: 0.3; transform: scale(1.1); filter: blur(40px); }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes drift-slow {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate(3%, 3%) rotate(2deg) scale(1.1); }
-  100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-}
-
-/* --- Reading Themes --- */
-.reading-theme-paper {
-  --background: 45 42% 96%;
-  --foreground: 222 47% 11%;
-  --card: 45 42% 98%;
-  --primary: 222 47% 11%;
-}
-
-.reading-theme-sepia {
-  --background: 35 30% 88%;
-  --foreground: 25 20% 15%;
-  --card: 35 30% 90%;
-  --primary: 25 20% 20%;
-  --muted-foreground: 25 15% 40%;
-  --border: 25 15% 15% / 0.1;
-}
-
-.reading-theme-dark {
-  --background: 222 47% 4%;
-  --foreground: 45 42% 96%;
-  --card: 222 47% 6%;
-  --primary: 45 80% 65%;
-}
-
-.reading-theme-night {
-  --background: 240 10% 3.9%;
-  --foreground: 45 15% 75%;
-  --card: 240 10% 5%;
-  --primary: 40 35% 60%;
-  --muted-foreground: 240 5% 45%;
-  --border: 240 5% 15%;
-  --accent: 40 35% 60% / 0.05;
-}
-
-.reading-night body {
-  transition: background-color 1.5s cubic-bezier(0.16, 1, 0.3, 1), color 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* --- Visual Silence & Contemplation --- */
-.visual-silence .sidebar-trigger,
-.visual-silence .bottom-nav,
-.visual-silence .app-header-actions,
-.visual-silence .back-to-theme-banner,
-.visual-silence .floating-action-button {
-  opacity: 0.1;
-  transition: opacity 0.8s ease;
-}
-
-.visual-silence .sidebar-trigger:hover,
-.visual-silence .bottom-nav:hover,
-.visual-silence .app-header-actions:hover,
-.visual-silence .back-to-theme-banner:hover,
-.visual-silence .floating-action-button:hover {
-  opacity: 1;
-}
-
-/* Focused Reading Mode - Hides everything except content */
-.full-screen-mode .app-header,
-.full-screen-mode .bottom-nav,
-.full-screen-mode .sidebar,
-.full-screen-mode .cathedral-footer,
-.full-screen-mode .sidebar-trigger {
-  display: none !important;
-}
-
-.full-screen-mode main {
-  padding-top: 2rem !important;
-  padding-bottom: 4rem !important;
-}
-
-.full-screen-mode .reading-controls-floating {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-.full-screen-mode:hover .reading-controls-floating {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.visual-silence .hero-decorative-elements,
-.visual-silence .coming-soon-badge,
-.visual-silence .footer-quote {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Reduce Animations */
-.reduce-animations *,
-.reduce-animations *::before,
-.reduce-animations *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
-}
-
-/* Micro-rhythms for contemplation */
-.monastic-entry {
-  animation: monasticFadeIn 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes monasticFadeIn {
-  0% { opacity: 0; filter: blur(10px); }
-  30% { opacity: 0.1; filter: blur(5px); }
-  100% { opacity: 1; filter: blur(0); }
-}
-
-/* Contemplative Mode */
-.contemplative-mode {
-  filter: sepia(0.08) contrast(0.96) brightness(1.02);
-}
-
-.contemplative-mode .shadow-premium,
-.contemplative-mode .shadow-premium-hover {
-  box-shadow: 0 8px 30px rgba(0,0,0,0.01) !important;
-}
-
-
-/* Monastic Sanctuary Layer */
-.monastic-sanctuary {
-  @apply min-h-screen bg-background text-foreground selection:bg-primary/10;
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(var(--primary) / 0.02) 0, transparent 50%),
-    radial-gradient(at 100% 0%, hsla(var(--secondary) / 0.02) 0, transparent 50%);
-}
-
-.monastic-glass {
-  @apply bg-background/40 backdrop-blur-3xl border border-white/5 dark:border-white/5;
-}
-
-.monastic-text {
-  @apply font-serif tracking-tight leading-relaxed;
-}
-
-.monastic-label {
-  @apply text-[9px] font-black uppercase tracking-[0.8em] text-primary/20;
-}
-
-.contemplative-mode .btn-premium {
-  box-shadow: none !important;
-}
-
-
-/* Typography Overrides */
-.font-size-small .reader-text { font-size: 0.875rem; }
-.font-size-medium .reader-text { font-size: 1.125rem; }
-.font-size-large .reader-text { font-size: 1.375rem; }
-.font-size-extra-large .reader-text { font-size: 1.625rem; }
-
-.font-family-serif .reader-text { font-family: 'Merriweather', serif; }
-.font-family-sans .reader-text { font-family: 'Inter', sans-serif; }
-
-.line-height-snug .reader-text { line-height: 1.5; }
-.line-height-normal .reader-text { line-height: 1.7; }
-.line-height-relaxed .reader-text { line-height: 2.0; }
-
-.reader-container {
-  @apply max-w-[72ch] mx-auto px-4 sm:px-8 py-10 md:py-20;
-}
-
-.reader-section-header {
-  @apply mb-12 border-b border-border/20 pb-8;
-}
-
-.reader-navigation-aside {
-  @apply hidden xl:flex flex-col gap-4 sticky top-32 w-64 -ml-72 self-start;
-}
-
-
-.line-height-snug .reader-text { line-height: 1.4; }
-.line-height-normal .reader-text { line-height: 1.7; }
-.line-height-relaxed .reader-text { line-height: 2.1; }
-
-@keyframes ripple-expand {
-  to {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
-
-/* --- Auto Focus Highlight --- */
-.auto-focused-title {
-  @apply ring-4 ring-primary/20 rounded-lg transition-all duration-1000;
-  background: linear-gradient(to right, hsl(var(--primary) / 0.05), transparent);
-}
-
-/* --- Full Screen Mode --- */
-.full-screen-mode header,
-.full-screen-mode footer,
-.full-screen-mode .back-to-theme-banner,
-.full-screen-mode .sidebar-navigation,
-.full-screen-mode .bottom-nav,
-.full-screen-mode .reader-navigation-aside,
-.full-screen-mode aside:not(.logos-ai-aside) {
-  display: none !important;
-}
-
-.full-screen-mode .reader-container {
-  max-width: 80ch;
-  margin: 0 auto;
-  border: none;
-  box-shadow: none;
-  background: transparent;
-}
-
-.full-screen-mode .reader-text {
-  padding-top: 5vh;
-  padding-bottom: 20vh;
-}
-
-/* --- Premium Print --- */
-@media print {
-  header, footer, nav, .bottom-nav, .no-print, .reader-navigation-aside, .logos-ai-chat, .floating-action-button, .app-header-actions, .premium-tag, .reader-navigation-aside, .reading-controls, button:not(.print-include) {
-    display: none !important;
-  }
-  
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  .reader-container {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
-  
-  .reader-text {
-    font-size: 12pt !important;
-    line-height: 1.6 !important;
-    color: black !important;
-    padding: 0 !important;
-  }
-
-  h1, h2, h3 {
-    color: #0F172A !important;
-    page-break-after: avoid;
-  }
-
-  /* Show notes only when requested */
-  .notes-panel-print {
-    display: none;
-  }
-  
-  .print-with-notes .notes-panel-print {
-    display: block !important;
-    margin: 10pt 0 20pt 20pt !important;
-    padding: 10pt !important;
-    border-left: 2pt solid #D4AF37 !important;
-    font-style: italic !important;
-    background: #F9F9F9 !important;
-    page-break-inside: avoid;
-  }
-
-  p {
-    orphans: 3;
-    widows: 3;
-  }
-}
-
-/* Text Highlights */
-.highlight-yellow { @apply bg-yellow-200/60 dark:bg-yellow-500/30 rounded-sm; }
-.highlight-green { @apply bg-green-200/60 dark:bg-green-500/30 rounded-sm; }
-.highlight-blue { @apply bg-blue-200/60 dark:bg-blue-500/30 rounded-sm; }
-.highlight-red { @apply bg-red-200/60 dark:bg-red-500/30 rounded-sm; }
-
-/* Silence Mode transition */
-.visual-silence main {
-  transition: padding 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reading-scroll-down.visual-silence .reading-controls-floating {
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* ============================================
-   Modo Contemplativo Mobile — Auto-hide UI
-   Oculta interface ao rolar; tap para revelar
-   ============================================ */
-@media (max-width: 768px) {
-  html.auto-hide-ui.reading-scroll-down [data-reading-chrome],
-  html.auto-hide-ui.reading-scroll-down .reading-chrome,
-  html.contemplative-mode.reading-scroll-down [data-reading-chrome] {
-    opacity: 0;
-    transform: translateY(-12px);
-    pointer-events: none;
-    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
-                transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  html.auto-hide-ui [data-reading-chrome],
-  html.auto-hide-ui .reading-chrome {
-    transition: opacity 500ms ease, transform 500ms ease;
-    will-change: opacity, transform;
-  }
-  html.auto-hide-ui.reveal-chrome [data-reading-chrome],
-  html.auto-hide-ui.reveal-chrome .reading-chrome {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    pointer-events: auto !important;
-  }
-}
-
-/* Transição noturna gradual */
-html, body {
-  transition: background-color 1200ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 1200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-.reading-night,
-.reading-night body {
-  transition: background-color 1500ms cubic-bezier(0.4, 0, 0.2, 1),
-              color 1500ms cubic-bezier(0.4, 0, 0.2, 1),
-              filter 1500ms ease;
-}
-.reading-night {
-  filter: brightness(0.92) contrast(0.95);
-}
-
-/* Gesto: feedback discreto de swipe */
-.swipe-feedback-left,
-.swipe-feedback-right {
-  animation: swipeFlash 400ms ease-out;
-}
-@keyframes swipeFlash {
-  0% { opacity: 0; }
-  40% { opacity: 0.5; }
-  100% { opacity: 0; }
+  from { opacity: 0; transform: scale(1.02) translateY(5px); filter: blur(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
