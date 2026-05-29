@@ -1390,8 +1390,6 @@ const Bible: React.FC = () => {
                 </Card>
               </motion.div>
             )}
-          </div>
-        </div>
         {!settings.totalSilence && showLogosAI && (
           <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <React.Suspense fallback={<BibleChapterSkeleton />}>
