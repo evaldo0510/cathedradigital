@@ -270,10 +270,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-6 px-6 py-5 rounded-[2rem] text-[10px] font-bold transition-all duration-700 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[64px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[52px]
                               ${isActive
-                                ? 'bg-primary/[0.02] text-primary'
-                                : 'text-muted-foreground/30 hover:bg-primary/[0.01] hover:text-primary'}`}
+                                ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
+                                : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}
                           >
                             <span className={`transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.icon}</span>
                             <span className="tracking-[0.1em] uppercase truncate">{item.label}</span>
