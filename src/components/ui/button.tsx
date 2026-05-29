@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full text-premium-tiny font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full font-ui font-bold uppercase tracking-[0.25em] transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -15,22 +15,23 @@ const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground hover:bg-primary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-premium",
         outline:
-          "border border-border/40 bg-transparent text-foreground hover:bg-primary/[0.01] hover:border-primary/20 hover:shadow-soft hover:-translate-y-0.5",
+          "border border-primary/10 bg-transparent text-primary hover:bg-primary/[0.02] hover:border-primary/20 hover:-translate-y-0.5",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5",
-        ghost: "hover:bg-accent/5 hover:text-accent-foreground",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-lg shadow-secondary/10 hover:-translate-y-0.5",
+        ghost: "hover:bg-primary/[0.02] hover:text-primary text-primary/60",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-14 px-8 text-[10.5px] [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5",
-        sm: "h-10 px-6 text-[9.5px] [&_svg]:size-4 md:[&_svg]:size-4 sm:[&_svg]:size-4",
-        xs: "h-8 px-4 text-[9px] [&_svg]:size-3.5 md:[&_svg]:size-3.5 sm:[&_svg]:size-3.5",
-        lg: "h-16 px-10 text-[12px] [&_svg]:size-6 md:[&_svg]:size-6 sm:[&_svg]:size-6",
-        icon: "h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5",
-        "icon-sm": "h-10 w-10 p-0 flex items-center justify-center [&_svg]:size-4 md:[&_svg]:size-4 sm:[&_svg]:size-4",
-        "icon-xs": "h-8 w-8 p-0 flex items-center justify-center [&_svg]:size-3.5 md:[&_svg]:size-3.5 sm:[&_svg]:size-3.5",
+        default: "h-14 px-10 text-[10px] [&_svg]:size-5",
+        sm: "h-11 px-8 text-[9px] [&_svg]:size-4",
+        xs: "h-9 px-5 text-[8.5px] [&_svg]:size-3.5",
+        lg: "h-16 px-12 text-[11px] [&_svg]:size-6",
+        xl: "h-20 px-16 text-[13px] [&_svg]:size-7",
+        icon: "h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5",
+        "icon-sm": "h-10 w-10 p-0 flex items-center justify-center [&_svg]:size-4",
+        "icon-xs": "h-8 w-8 p-0 flex items-center justify-center [&_svg]:size-3.5",
       },
     },
     defaultVariants: {
