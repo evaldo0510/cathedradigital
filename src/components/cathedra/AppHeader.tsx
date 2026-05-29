@@ -30,24 +30,24 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   return (
     <>
       <header 
-        className="border-b border-primary/5 bg-background/60 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
+        className="border-b border-primary/5 bg-background/80 backdrop-blur-3xl sticky top-0 z-[140] transition-all pt-[env(safe-area-inset-top,0px)] will-change-[transform,background-color] admin-hide header-reading-auto-hide"
         role="banner"
       >
-        <div className="max-w-[var(--layout-max-width)] mx-auto px-6 md:px-14 lg:px-20 flex flex-col md:flex-row landscape:flex-row md:items-center justify-between min-h-[180px] md:h-36 py-12 md:py-0 gap-12 md:gap-0 landscape:min-h-[110px] landscape:py-5">
+        <div className="max-w-[var(--layout-max-width)] mx-auto px-6 md:px-14 lg:px-20 flex flex-col md:flex-row md:items-center justify-between min-h-[160px] md:h-36 py-10 md:py-0 gap-8 md:gap-0">
 
-          {/* Logo Section - Centralized on Mobile */}
+          {/* Logo Section */}
           <div 
-            className="flex flex-col items-center justify-center md:flex-row md:justify-start landscape:flex-row landscape:justify-start gap-4 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto landscape:w-auto p-2" 
+            className="flex flex-col items-center justify-center md:flex-row md:justify-start gap-5 md:gap-6 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none rounded-lg w-full md:w-auto p-2" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-14 h-14 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100 group-hover:scale-110 md:group-hover:scale-105" variant="dark" />
+            <Icons.Logo className="w-16 h-16 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100 group-hover:scale-135 md:group-hover:scale-105" variant="dark" />
             <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1.2em] transition-all duration-1000 group-hover:text-primary/90">Cathedra</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/80 mt-2 group-hover:text-muted-foreground transition-colors duration-1000">Biblioteca Digital</span>
+              <span className="text-3xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1.2em] transition-all duration-1000 group-hover:text-primary/90">Cathedra</span>
+              <span className="text-[9px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground mt-2.5 group-hover:text-muted-foreground transition-colors duration-1000">Biblioteca Digital</span>
             </div>
           </div>
 
