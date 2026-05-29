@@ -11,7 +11,6 @@ import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
 import { SacredVirtualList, SacredVirtualListHandle } from './SacredVirtualList';
 
-
 interface LogosAIProps {
   context?: string;
   selectedText?: string;
@@ -49,13 +48,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
   const scrollToBottom = () => {
     if (history.length > 0) {
-      virtualListRef.current?.scrollToIndex(history.length - 1, { align: 'end' });
+      setTimeout(() => {
+        virtualListRef.current?.scrollToIndex(history.length - 1, { align: 'end' });
+      }, 100);
     }
   };
 
-  // Sync history when context changes for persistence per reading section
   useEffect(() => {
-    // Cancel any pending requests when moving to a new section or when silence is enabled
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -81,7 +80,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
   }, [context, variant, settings.totalSilence]);
 
   useEffect(() => {
-    // Only save if history belongs to the context we think we have loaded and silence is NOT active
     if (!settings.totalSilence && variant === 'integrated' && context && context === lastLoadedContextRef.current) {
       if (history.length > 0) {
         localStorage.setItem(`logos_history_${context}`, JSON.stringify(history));
@@ -124,7 +122,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
     setQuery('');
     setIsLoading(true);
     
-    // Abort previous request if any
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
@@ -138,7 +135,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
           selectedText,
           type,
           journeyId,
-          history: history.slice(-5) // Send last 5 messages for context
+          history: history.slice(-5)
         },
         headers: {
           'x-abort-signal': 'true'
@@ -351,7 +348,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   />
                 </div>
 
-
                 {isLoading && history.length === 0 ? (
                   <LogosChatSkeleton />
                 ) : (isLoading || isTyping) && (
@@ -368,7 +364,6 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </div>
                   </div>
                 )}
-                <div ref={chatEndRef} />
               </div>
 
               <div className="max-w-xl mx-auto pt-10 md:pt-16 border-t border-primary/5">
