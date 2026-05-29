@@ -42,6 +42,7 @@ import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import { SpacingDebugger } from './components/cathedra/SpacingDebugger';
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 import ContemplativeLayout from './components/cathedra/ContemplativeLayout';
+import { Atmosphere } from './components/cathedra/Atmosphere';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -399,11 +400,7 @@ const AppLayout: React.FC = () => {
         "min-h-screen bg-background text-foreground transition-colors duration-[2000ms] selection:bg-primary/10",
         settings.visualSilence && "visual-silence"
       )}>
-        {/* Cinematic Atmosphere Layer */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 dark:opacity-20">
-          <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/5 blur-[150px] rounded-full animate-pulse duration-[10s]" />
-          <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-secondary/3 blur-[120px] rounded-full animate-pulse duration-[15s]" />
-        </div>
+        <Atmosphere />
 
         <a 
           href="#main-content" 

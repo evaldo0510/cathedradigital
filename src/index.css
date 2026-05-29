@@ -502,7 +502,8 @@
   --radius: 0;
   --radius-lg: 0;
   --radius-sm: 0;
-  --atmosphere-blur: 80px; /* Stronger blur for visual silence */
+  /* Visual silence by default intensifies the blur if not overridden by the slider */
+  --atmosphere-blur: calc(80px * var(--atmosphere-blur-intensity, 1));
 }
 
 .visual-silence * {
@@ -531,7 +532,8 @@
 .visual-silence header, 
 .visual-silence footer, 
 .visual-silence nav {
-  @apply opacity-[0.15] hover:opacity-100 transition-opacity duration-1000;
+  opacity: var(--visual-silence-ui-opacity, 0.15);
+  @apply hover:opacity-100 transition-opacity duration-1000;
 }
 
 /* Ensure focus is STILL visible even in visual silence mode for accessibility */

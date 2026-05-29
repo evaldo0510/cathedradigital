@@ -26,6 +26,9 @@ interface ReadingSettings {
     borderIntensity: number; // 0-1
     shadowDepth: number; // 0-1
     darkOpacity: number; // 0-1
+    blurIntensity: number; // 0-1
+    atmosphereIntensity: number; // 0-1
+    uiOpacity: number; // 0-1 (for visual silence)
   };
   resumeBehavior: 'always' | 'never' | 'once' | 'confirm';
   reminders: {
@@ -89,6 +92,9 @@ const defaultSettings: ReadingSettings = {
     borderIntensity: 0.4,
     shadowDepth: 0.5,
     darkOpacity: 0.9,
+    blurIntensity: 0.5,
+    atmosphereIntensity: 0.6,
+    uiOpacity: 0.15,
   },
   resumeBehavior: 'confirm',
   reminders: {
@@ -253,6 +259,16 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.style.setProperty('--atmosphere-border-intensity', settings.atmosphere.borderIntensity.toString());
       root.style.setProperty('--atmosphere-shadow-depth', settings.atmosphere.shadowDepth.toString());
       root.style.setProperty('--atmosphere-dark-opacity', settings.atmosphere.darkOpacity.toString());
+      root.style.setProperty('--atmosphere-blur-intensity', settings.atmosphere.blurIntensity.toString());
+      root.style.setProperty('--atmosphere-intensity', settings.atmosphere.atmosphereIntensity.toString());
+      root.style.setProperty('--visual-silence-ui-opacity', settings.atmosphere.uiOpacity.toString());
+      
+      // Map blur intensity to actual px values (0 to 120px)
+      const blurValue = Math.round(settings.atmosphere.blurIntensity * 120);
+      root.style.setProperty('--atmosphere-blur', `${blurValue}px`);
+      
+      // Atmosphere opacity multiplier
+      root.style.setProperty('--atmosphere-opacity', (settings.atmosphere.atmosphereIntensity * 0.2).toString());
     }
   }, [settings]);
 
