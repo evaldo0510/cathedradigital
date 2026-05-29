@@ -1255,9 +1255,9 @@ const Bible: React.FC = () => {
               <Icons.CheckCircle2 className="w-20 h-20 text-primary/40 mx-auto" strokeWidth={0.5} />
               
               <div className="space-y-6 px-8">
-                <h3 className="text-3xl md:text-5xl font-display text-primary/80 uppercase tracking-[0.3em] font-light">Contemplação Concluída</h3>
-                <p className="text-sm md:text-base text-muted-foreground/50 italic font-serif max-w-xl mx-auto leading-relaxed">
-                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)
+                <h3 className="text-3xl md:text-5xl font-display text-primary/70 uppercase tracking-[0.4em] font-light">Contemplação Concluída</h3>
+                <p className="text-sm md:text-base text-muted-foreground/40 italic font-serif max-w-xl mx-auto leading-relaxed px-6">
+                  "Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." <br/><span className="text-[10px] uppercase tracking-widest mt-2 block">(Salmo 119, 105)</span>
                 </p>
               </div>
 

@@ -111,9 +111,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "text-[8px] font-medium uppercase tracking-[0.3em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
+        "text-[7px] font-black uppercase tracking-[0.4em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-1000",
-        isActive ? 'text-primary' : 'text-muted-foreground/40'
+        isActive ? 'text-primary' : 'text-muted-foreground/30'
       )}
     >
       {label}

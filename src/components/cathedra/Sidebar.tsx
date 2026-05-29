@@ -258,11 +258,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center p-3 group-hover:scale-105 transition-transform duration-1000">
-                  <Icons.Logo className="w-full h-full opacity-70 dark:opacity-50" variant={isDark ? "light" : "dark"} />
+                <div className="w-14 h-14 rounded-[1.5rem] bg-primary/[0.015] dark:bg-white/[0.01] flex items-center justify-center p-3.5 group-hover:scale-105 transition-all duration-[1200ms] border border-primary/[0.03] dark:border-white/[0.03]">
+                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
                 </div>
                 <div className="space-y-1.5">
-                  <h1 className="text-[12px] font-display font-light tracking-[0.5em] text-primary leading-none uppercase">CATHEDRA</h1>
+                  <h1 className="text-[14px] font-display font-light tracking-[0.6em] text-primary leading-none uppercase">CATHEDRA</h1>
                   <p className="text-[7.5px] font-bold uppercase text-primary/30 tracking-[0.6em]">
                     Sacrum Archivum
                   </p>
