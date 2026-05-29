@@ -62,11 +62,18 @@ export const SaintGridSkeleton: React.FC<{ count?: number }> = ({ count = 8 }) =
 
 
 export const BibleChapterSkeleton: React.FC = () => (
-  <div className="space-y-6 animate-pulse">
-    <div className="h-8 w-48 bg-muted rounded mx-auto" />
-    <div className="space-y-4">
-      {Array.from({ length: 15 }).map((_, i) => (
-        <div key={i} className="h-4 w-full bg-muted rounded" />
+  <div className="space-y-12 animate-pulse max-w-[65ch] mx-auto py-20">
+    <div className="h-10 w-48 bg-muted rounded-full mx-auto mb-16 opacity-40" />
+    <div className="space-y-12">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="flex gap-8">
+          <div className="h-4 w-6 bg-muted/20 rounded-full shrink-0 mt-1" />
+          <div className="space-y-3 flex-1">
+            <div className="h-4 w-full bg-muted/40 rounded-full" />
+            <div className="h-4 w-[90%] bg-muted/30 rounded-full" />
+            {i % 2 === 0 && <div className="h-4 w-[80%] bg-muted/20 rounded-full" />}
+          </div>
+        </div>
       ))}
     </div>
   </div>
