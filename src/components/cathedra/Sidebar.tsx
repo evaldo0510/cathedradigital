@@ -260,7 +260,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                         <li key={idx}>
                           <Button
                             variant="ghost"
-                            onClick={() => handleNav(item.path)}
+                            onClick={() => handleNav(item)}
                             onMouseEnter={() => prefetchRoute(item.path)}
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
