@@ -889,46 +889,42 @@ const Bible: React.FC = () => {
         <div className="mt-12 md:mt-24">
           <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
             <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
-
-
-
-            {currentChapterNotes.length > 0 && (
-              <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
-                <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
-                <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                  {currentChapterNotes.map(note => (
-                    <button
-                      key={note.id}
-                      onClick={() => {
-                        if (note.verse) {
-                          setHighlightedVerse(note.verse);
-                          const el = document.getElementById(`v${note.verse}`);
-                          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                      }}
-                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
-                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
-                        {note.highlight_color && (
-                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
-                        )}
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
-                        {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
-                      </p>
-                    </button>
-                  ))}
+              {currentChapterNotes.length > 0 && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
+                  <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
+                  <div className="flex flex-col gap-2 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                    {currentChapterNotes.map(note => (
+                      <button
+                        key={note.id}
+                        onClick={() => {
+                          if (note.verse) {
+                            setHighlightedVerse(note.verse);
+                            const el = document.getElementById(`v${note.verse}`);
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          }
+                        }}
+                        className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
+                          ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
+                          {note.highlight_color && (
+                            <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
+                          )}
+                        </div>
+                        <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                          {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
-          </div>
 
-          <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
-            <div className="w-full relative">
-              <div className="py-8 md:py-20 lg:py-24">
+            <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+              <div className="w-full relative">
+                <div className="py-8 md:py-20 lg:py-24">
 
 
 
@@ -1045,9 +1041,9 @@ const Bible: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
-
-
+                </div>
+              </div>
+            </div>
 
             <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
               <div className="w-full relative">
@@ -1107,9 +1103,9 @@ const Bible: React.FC = () => {
                       )}
                     </button>
                   ))}
-                </nav>
-              </div>
-            </aside>
+                </div>
+              </aside>
+            </div>
           </div>
 
           <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
