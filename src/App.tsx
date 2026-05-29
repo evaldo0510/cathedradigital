@@ -436,7 +436,7 @@ const AppLayout: React.FC = () => {
                 </Suspense>
               } />
 
-              <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemPlayground /></Suspense>} />
+              <Route path="/design-system" element={<Suspense fallback={<LoadingFallback />}><DesignSystemGuide /></Suspense>} />
 
 
               <Route path="*" element={<Navigate to="/" replace />} />
