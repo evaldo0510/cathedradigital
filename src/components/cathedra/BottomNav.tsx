@@ -57,31 +57,31 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-colors duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium",
-      isActive ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'
+      "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group",
+      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
     )}
   >
     {isActive && (
       <motion.div
-        layoutId="bottom-nav-pill"
-        className="absolute inset-x-2 inset-y-2 bg-primary/5 rounded-full z-0"
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        layoutId="bottom-nav-active-bg"
+        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
+        transition={{ type: "spring", stiffness: 380, damping: 30 }}
       />
     )}
 
     <motion.div 
       initial={false}
       animate={{ 
-        scale: isActive ? 1.1 : 1,
+        scale: isActive ? 1.12 : 1,
         y: isActive ? -1 : 0 
       }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      transition={{ type: "spring", stiffness: 400, damping: 28 }}
       className="relative z-10"
     >
       <Icon 
         className={cn(
           "transition-all duration-700",
-          isActive ? "text-primary opacity-100" : "text-muted-foreground/30"
+          isActive ? "text-primary opacity-100" : "text-muted-foreground/30 group-hover:text-primary/60"
         )}
         size={20}
         strokeWidth={isActive ? 2 : 1.2}
@@ -91,11 +91,12 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 1 : 0.5,
-        scale: isActive ? 1 : 0.95
+        opacity: isActive ? 1 : 0.4,
+        scale: isActive ? 1 : 0.92,
+        y: isActive ? 0 : 1
       }}
       className={cn(
-        "text-[7px] md:text-[9px] font-bold uppercase tracking-[0.2em] leading-none transition-all duration-700 truncate w-full px-1 text-center relative z-10",
+        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all duration-700 truncate w-full px-1 text-center relative z-10",
         isActive ? 'text-primary' : 'text-muted-foreground/50'
       )}
     >
@@ -104,7 +105,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({ label, icon: Icon, route,
     
     {isActive && (
       <motion.div 
-        layoutId="bottom-nav-indicator"
+        layoutId="bottom-nav-dot"
         className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
         transition={{ type: "spring", stiffness: 500, damping: 35 }}
       />
