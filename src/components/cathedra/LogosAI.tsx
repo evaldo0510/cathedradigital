@@ -255,7 +255,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0, y: 10 }}
             className="my-16 overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-primary/[0.005] border-primary/[0.02] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden">
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-8 md:p-14 lg:p-16 space-y-12 relative overflow-hidden shadow-premium">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
               <div className="absolute top-8 right-8 flex items-center gap-2">
@@ -326,11 +326,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   >
                     <div className={`max-w-full text-lg md:text-xl leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/40 font-serif italic border-r-2 border-primary/5 pr-8 text-right' 
-                        : 'text-foreground/60 font-serif font-light'
+                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-8 text-right' 
+                        : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-3 mb-6 opacity-10">
+                        <div className="flex items-center gap-3 mb-6 opacity-20">
                           <div className="w-6 h-px bg-primary" />
                           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
@@ -365,7 +365,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Sua reflexão silenciosa..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/60 py-6 transition-all"
+                    className="w-full bg-transparent border-none text-lg md:text-xl focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-6 transition-all text-primary"
                   />
                   <button 
                     type="submit" 
@@ -399,7 +399,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
             exit={{ opacity: 0 }}
             transition={{ duration: settings.reduceAnimations ? 0.1 : 0.4 }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/60 backdrop-blur-sm z-[190]"
+            className="fixed inset-0 bg-background/60 backdrop-blur-xl z-[190]"
           />
           <motion.div
             initial={{ opacity: 0, x: settings.reduceAnimations ? 0 : 400 }}
