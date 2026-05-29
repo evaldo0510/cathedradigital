@@ -112,6 +112,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
         { label: t('catechism'), path: AppRoute.CATECHISM, icon: <Icons.Catechism /> },
         { label: 'Magistério', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText /> },
         { label: 'Logos IA', path: '/logos', icon: <Icons.Sparkles /> },
+        { label: 'Busca Global', path: '#', onClick: () => { onClose(); (window as any).dispatchEvent(new CustomEvent('open-command-center')); }, icon: <Icons.Search /> },
       ]
     },
     {
@@ -169,15 +170,23 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
       items: [
         { label: 'Pricing', path: AppRoute.PRICING, icon: <Icons.Award /> },
         { label: 'Sobre', path: AppRoute.ABOUT, icon: <Icons.Info /> },
+        { label: 'Termos', path: AppRoute.TERMS, icon: <Icons.ShieldCheck /> },
+        { label: 'Privacidade', path: AppRoute.PRIVACY, icon: <Icons.Lock /> },
       ]
     }
 
+
   ];
 
-  const handleNav = useCallback((path: string) => {
-    if (path !== '#') {
-      navigate(path);
-      onClose();
+  const handleNav = useCallback((target: string | { path: string; onClick?: () => void }) => {
+    if (typeof target === 'object' && target.onClick) {
+      target.onClick();
+    } else {
+      const path = typeof target === 'string' ? target : target.path;
+      if (path !== '#') {
+        navigate(path);
+        onClose();
+      }
     }
   }, [navigate, onClose]);
 
@@ -254,7 +263,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                         <li key={idx}>
                           <Button
                             variant="ghost"
-                            onClick={() => handleNav(item.path)}
+                            onClick={() => handleNav(item)}
                             onMouseEnter={() => prefetchRoute(item.path)}
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
@@ -334,6 +343,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       {l}
                     </button>
                   ))}
+                </div>
+
+                <div className="flex justify-center gap-4 py-2 border-t border-primary/5 mt-2">
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Instagram size={16} /></a>
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Youtube size={16} /></a>
+                  <a href="#" className="text-muted-foreground/40 hover:text-primary transition-colors"><Icons.Whatsapp size={16} /></a>
                 </div>
               </div>
 
