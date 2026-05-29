@@ -278,11 +278,11 @@
   }
 
   .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.08)] -translate-y-1.5;
+    @apply bg-primary/[0.005] shadow-[0_60px_140px_-30px_rgba(0,0,0,0.06)] -translate-y-2;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_40px_120px_-20px_rgba(0,0,0,0.4)] border-white/[0.08];
+    @apply shadow-[0_60px_140px_-30px_rgba(0,0,0,0.4)];
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
@@ -315,7 +315,7 @@
   }
 
   .btn-premium {
-    @apply relative overflow-hidden px-8 py-4 h-14 font-medium uppercase tracking-[0.3em] text-[9px] flex items-center justify-center gap-4 active:scale-[0.98] disabled:opacity-30 border border-transparent transition-all duration-700;
+    @apply relative overflow-hidden px-10 py-5 h-16 font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-5 active:scale-[0.98] disabled:opacity-20 border-none transition-all duration-1000;
     border-radius: 9999px;
   }
 
