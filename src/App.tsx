@@ -446,9 +446,9 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 15, scale: 0.992, filter: "blur(15px)" }}
+                initial={{ opacity: 0, y: 20, scale: 0.99, filter: "blur(20px)" }}
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -15, scale: 1.008, filter: "blur(15px)" }}
+                exit={{ opacity: 0, y: -20, scale: 1.01, filter: "blur(20px)" }}
 
                 transition={{ 
                   duration: settings.reduceAnimations ? 0.35 : 2.4, // Slower, more architectural
