@@ -64,7 +64,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm pb-20 md:pb-[32rem] px-4 md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm pb-20 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 

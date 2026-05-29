@@ -75,7 +75,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-[var(--space-mobile-stack)] md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
         <CathedraCard
           key={idx}
