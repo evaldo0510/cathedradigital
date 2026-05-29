@@ -71,36 +71,27 @@ test.describe('BottomNav & SwipeNavigation - Reduced Motion', () => {
     await expect(bibleItem).toHaveAttribute('aria-current', 'page');
     await expect(hojeItem).not.toHaveAttribute('aria-current', 'page');
 
-    // Verify no animation styles or transitions are visible during the process
-    // We can check if the motion elements have transition-duration: 0s or if they jump immediately
-    const iconContainer = bibleItem.locator('.relative.z-10');
-    const styles = await iconContainer.evaluate((el) => {
-      const computed = window.getComputedStyle(el);
-      return {
-        transitionDuration: computed.transitionDuration,
-        animationDuration: computed.animationDuration
-      };
-    });
-
-    // In Framer Motion, it might use inline styles for the transform.
-    // If reducedMotion is active, we expect no lingering animation classes or long durations.
-    // The component explicitly sets duration: 0 in the transition prop.
+    // Verify that the active background and dot are present immediately without transition
+    const activeBg = page.getByTestId('bottom-nav-active-bg');
+    const activeDot = page.getByTestId('bottom-nav-dot');
     
-    // We check another item: Catecismo
+    await expect(activeBg).toBeVisible();
+    await expect(activeDot).toBeVisible();
+
+    // Check computed styles to ensure duration is 0
+    const navStyles = await page.locator('nav.bottom-nav').evaluate((el) => {
+      return window.getComputedStyle(el).transitionDuration;
+    });
+    // It should be "0s" because of our duration-0 class
+    expect(navStyles).toBe('0s');
+
+    // Tab to "Catecismo"
     await page.keyboard.press('Tab');
-    await page.keyboard.press(' '); // Space also works for buttons
+    await page.keyboard.press(' '); // Space
     
     await expect(page).toHaveURL(/\/catechism/);
     const catechismItem = page.locator('button[aria-label="Catecismo"]');
     await expect(catechismItem).toHaveAttribute('aria-current', 'page');
     await expect(bibleItem).not.toHaveAttribute('aria-current', 'page');
-
-    // Verify that the motion div for active background has no transition delay or duration
-    const activeBg = page.locator('[data-testid="bottom-nav-active-bg"]'); // I should add this test id or use a selector
-    // Since I don't have the test-id, I'll use the class
-    const activeBgLocator = page.locator('.absolute.inset-x-1\\.5.inset-y-1\\.5.bg-primary\\/\\[0\\.03\\]');
-    
-    // If it exists, check its computed style if possible, or just rely on the fact that it's present and aria-current updated.
-    // The key is that the navigation happened and the UI updated.
   });
 });
