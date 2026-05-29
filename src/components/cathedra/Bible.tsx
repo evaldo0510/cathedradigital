@@ -1006,17 +1006,17 @@ const Bible: React.FC = () => {
                       </motion.div>
                     )}
 
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-8 md:gap-14 pb-48">
                     {verses.map(v => {
                       const relatedP = verseToCic[v.number];
                       return (
                         <div key={v.number} 
                           id={`v${v.number}`}
-                          className={`group relative py-4 px-6 rounded-premium transition-all duration-700 mb-2
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] ring-1 ring-primary/5 shadow-premium-sm' : 'hover:bg-primary/[0.01]'}`}>
+                          className={`group relative py-6 px-8 rounded-[2rem] transition-all duration-1000 mb-2
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.01]' : 'hover:bg-primary/[0.005]'}`}>
                           <div className="flex items-start gap-4">
 
-                            <sup className="text-[0.55em] font-medium text-primary mt-2 select-none opacity-20 group-hover:opacity-40 transition-opacity">{v.number}</sup>
+                            <sup className="text-[0.6em] font-bold text-primary/10 mt-2 select-none group-hover:text-primary/30 transition-colors duration-1000">{v.number}</sup>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -1035,7 +1035,7 @@ const Bible: React.FC = () => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.85] font-light text-lg md:text-xl">
+                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/85 group-hover:text-foreground transition-colors duration-1000">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
