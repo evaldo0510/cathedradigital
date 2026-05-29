@@ -361,29 +361,29 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </div>
 
               {user ? (
-                <div className="p-8 bg-primary/[0.005] rounded-[2.5rem] space-y-6">
+                <div className="p-6 bg-primary/[0.02] dark:bg-white/[0.01] rounded-[2rem] border border-primary/[0.03] dark:border-white/[0.03]">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
-                    className="flex items-center gap-4 cursor-pointer group"
+                    className="flex items-center gap-3 cursor-pointer group"
                   >
-                    <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-premium group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        user.name.charAt(0).toUpperCase()
+                        <span className="text-xs">{user.name.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold truncate text-primary/80">{user.name}</p>
-                      <p className="text-[8px] uppercase text-primary/60 font-bold tracking-[0.2em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[10px] font-bold truncate text-primary/80">{user.name}</p>
+                      <p className="text-[7px] uppercase text-primary/40 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center justify-between gap-2 mt-4">
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-10 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-[9px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-9 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -392,14 +392,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-10 w-10 rounded-xl text-muted-foreground/60 hover:text-destructive hover:bg-destructive/5"
+                      className="h-9 w-9 rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
                     >
-                      <Icons.LogOut className="w-4 h-4" />
+                      <Icons.LogOut className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-14 bg-primary text-primary-foreground rounded-2xl font-bold uppercase text-[10px] tracking-[0.3em] shadow-premium hover:shadow-premium-hover transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-12 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}
