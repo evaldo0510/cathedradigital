@@ -118,9 +118,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
-    { label: t('today') || 'Hoje', icon: Icons.Sun, route: AppRoute.HOJE },
-    { label: t('bible') || 'Bíblia', icon: Icons.Bible, route: AppRoute.BIBLE },
-    { label: t('catechism') || 'Catecismo', icon: Icons.Catechism, route: AppRoute.CATECHISM },
+    { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
+    { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
+    { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
     { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
   ];
