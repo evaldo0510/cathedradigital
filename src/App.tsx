@@ -207,23 +207,28 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('change-lang', handleGlobalLang);
   }, [setLang]);
 
-  // Mobile Presence - Scroll detection
+  // Mobile Presence - Scroll detection - Optimized
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let ticking = false;
 
     const updateScrollDir = () => {
       const scrollY = window.scrollY;
-
-      if (Math.abs(scrollY - lastScrollY) < 10) {
+      
+      // Minimum scroll threshold to trigger direction change
+      if (Math.abs(scrollY - lastScrollY) < 15) {
         ticking = false;
         return;
       }
 
       if (scrollY > lastScrollY && scrollY > 100) {
-        document.body.classList.add('is-scrolling-down');
+        if (!document.body.classList.contains('is-scrolling-down')) {
+          document.body.classList.add('is-scrolling-down');
+        }
       } else {
-        document.body.classList.remove('is-scrolling-down');
+        if (document.body.classList.contains('is-scrolling-down')) {
+          document.body.classList.remove('is-scrolling-down');
+        }
       }
 
       lastScrollY = scrollY > 0 ? scrollY : 0;
@@ -240,6 +245,7 @@ const AppLayout: React.FC = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
 
   // Focus Mode - Click to reveal UI
   useEffect(() => {
