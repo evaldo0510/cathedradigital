@@ -31,6 +31,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
   const { settings } = useReadingSettings();
 
   const sidebarRef = React.useRef<HTMLElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     getCacheStats().then(stats => setCacheCount(stats.total));
@@ -40,17 +41,25 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
         onClose();
+        return;
       }
 
-      if (e.key === 'Tab' && isOpen && sidebarRef.current) {
-        const focusableElements = sidebarRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const firstElement = focusableElements[0] as HTMLElement;
-        const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const focusableElements = sidebarRef.current?.querySelectorAll(
+        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      
+      if (!focusableElements || focusableElements.length === 0) return;
 
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+      const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+
+      // Focus Trap
+      if (e.key === 'Tab') {
         if (e.shiftKey) {
           if (document.activeElement === firstElement) {
             lastElement.focus();
@@ -63,6 +72,17 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           }
         }
       }
+
+      // Arrow Key Navigation
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        let nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
+        
+        if (nextIndex >= focusableElements.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = focusableElements.length - 1;
+        
+        (focusableElements[nextIndex] as HTMLElement).focus();
+      }
     };
 
     window.addEventListener('cathedra_cache_updated', handleCacheUpdate);
@@ -70,9 +90,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      // Initial focus on open for a11y - focus the dialog itself first
+      // Focus close button on open for immediate exit capability
       setTimeout(() => {
-        sidebarRef.current?.focus();
+        closeButtonRef.current?.focus();
       }, 100);
     } else {
       document.body.style.overflow = '';
@@ -228,7 +248,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
           >
             <div className="flex items-center justify-between mb-10">
               <div 
-                className="flex items-center gap-3 cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:ring-offset-4 outline-none rounded-xl" 
+                className="flex items-center gap-3 cursor-pointer group outline-none rounded-xl" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
@@ -246,6 +266,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </div>
 
               <Button
+                ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
@@ -278,7 +299,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 focus-visible:ring-1 focus-visible:ring-primary/10 outline-none h-auto min-h-[52px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-2xl text-[10px] font-bold transition-all duration-500 outline-none h-auto min-h-[52px]
                               ${isActive
                                 ? 'bg-primary/[0.04] text-primary shadow-sm shadow-primary/5'
                                 : 'text-muted-foreground/40 hover:bg-primary/[0.02] hover:text-primary'}`}

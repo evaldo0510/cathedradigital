@@ -329,6 +329,18 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
   }, []);
 
+  useEffect(() => {
+    const handleGlobalShortcuts = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isSidebarOpen) handleCloseSidebar();
+        if (showA11ySettings) setShowA11ySettings(false);
+        if (showReadingPreferences) setShowReadingPreferences(false);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalShortcuts);
+    return () => window.removeEventListener('keydown', handleGlobalShortcuts);
+  }, [isSidebarOpen, showA11ySettings, showReadingPreferences, handleCloseSidebar]);
+
   const toggleSpeak = useCallback(() => {
     if (settings.totalSilence) return;
     
