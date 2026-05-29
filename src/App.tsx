@@ -226,6 +226,11 @@ const AppLayout: React.FC = () => {
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
 
   useEffect(() => {
+    window.addEventListener('open-a11y-settings', handleOpenA11y);
+    return () => window.removeEventListener('open-a11y-settings', handleOpenA11y);
+  }, [handleOpenA11y]);
+
+  useEffect(() => {
     const handleOpenA11yGlobal = () => setShowA11ySettings(true);
     window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
     return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
@@ -436,10 +441,6 @@ const AppLayout: React.FC = () => {
           <A11ySettingsPanel 
             isOpen={showA11ySettings} 
             onClose={handleCloseA11y}
-            isDark={isDark}
-            onToggleDark={toggleDark}
-            isHighContrast={isHighContrast}
-            onToggleHighContrast={toggleHighContrast}
           />
           <CommandCenter />
           <PWAInstallPrompt />

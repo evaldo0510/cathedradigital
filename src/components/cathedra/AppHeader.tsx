@@ -46,8 +46,8 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           >
             <Icons.Logo className="w-14 h-14 md:w-12 md:h-12 transition-all duration-1000 scale-125 md:scale-100 group-hover:scale-110 md:group-hover:scale-105" variant="dark" />
             <div className="flex flex-col items-center md:items-start min-w-0">
-              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1.2em] transition-all duration-1000 group-hover:text-primary/70">Cathedra</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/60 mt-2 group-hover:text-muted-foreground/50 transition-colors duration-1000">Biblioteca Digital</span>
+              <span className="text-2xl md:text-xl font-display font-light uppercase tracking-[0.8em] md:tracking-[0.6em] text-primary leading-none group-hover:tracking-[1.2em] transition-all duration-1000 group-hover:text-primary/90">Cathedra</span>
+              <span className="text-[8px] md:text-[9px] uppercase tracking-[0.5em] text-muted-foreground/80 mt-2 group-hover:text-muted-foreground transition-colors duration-1000">Biblioteca Digital</span>
             </div>
           </div>
 
@@ -89,6 +89,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                   <Icons.Sun className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" /> : 
                   <Icons.Moon className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
                 }
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => (window as any).dispatchEvent(new CustomEvent('open-a11y-settings'))}
+                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-primary/5 hover:border-primary/20 bg-primary/[0.02] hover:bg-primary/[0.04] transition-all duration-500 group focus-visible:ring-1 focus-visible:ring-primary/20"
+                aria-label="Abrir configurações de acessibilidade"
+              >
+                <Icons.ShieldCheck className="w-[18px] h-[18px] opacity-80 group-hover:opacity-100 transition-opacity" />
               </Button>
 
               {user ? (
