@@ -145,9 +145,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <link rel="canonical" href={url} />
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
       
-      {seoSettings?.gsc_verification_code && (
-        <meta name="google-site-verification" content={seoSettings.gsc_verification_code} />
-      )}
+      {/* Google Search Console verification is no longer injected from the public SEO query. */}
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
