@@ -37,14 +37,12 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
     }
   };
 
-  const handleExport = () => {
+  const handleExport = (format: 'json' | 'pdf') => {
     if (auditResult) {
-      exportAuditReport(auditResult);
+      exportAuditReport(auditResult, format);
     } else {
       runAudit().then(() => {
-        // If it was null, we run it and then we'd need to wait for result to be set
-        // But runDesignSystemAudit returns the result directly too
-        runDesignSystemAudit(location.pathname).then(res => exportAuditReport(res));
+        runDesignSystemAudit(location.pathname).then(res => exportAuditReport(res, format));
       });
     }
   };
@@ -273,14 +271,24 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     {isAuditing ? 'Auditoria em curso...' : 'Verificar Conformidade WCAG'}
                   </Button>
                   
-                  <Button 
-                    variant="ghost" 
-                    className="w-full h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60"
-                    onClick={handleExport}
-                  >
-                    <Icons.Download className="w-3.5 h-3.5 mr-2" />
-                    Exportar Relatório (JSON)
-                  </Button>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      variant="ghost" 
+                      className="h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      onClick={() => handleExport('json')}
+                    >
+                      <Icons.FileJson className="w-3.5 h-3.5 mr-2" />
+                      JSON
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="h-12 rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      onClick={() => handleExport('pdf')}
+                    >
+                      <Icons.FileText className="w-3.5 h-3.5 mr-2" />
+                      PDF
+                    </Button>
+                  </div>
 
                   {auditResult && auditResult.contrastIssues.length > 0 && (
                     <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-3">
