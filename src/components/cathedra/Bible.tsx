@@ -886,28 +886,10 @@ const Bible: React.FC = () => {
 
 
         {/* Content with Side Nav */}
-        <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start mt-12 md:mt-24">
-          {/* Elegant Side Navigation for Chapters (Desktop) */}
-          <aside className="reader-navigation-aside space-y-12">
-            <div className="space-y-4">
-              <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
-              <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
-                {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
-                  <button
-                    key={ch}
-                    onClick={() => selectChapter(ch)}
-                    className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
-                      ${selectedChapter === ch 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
-                  >
-                    <span className="opacity-50 text-[10px] w-4">{ch}</span>
-                    <span>Capítulo {ch}</span>
-                    {chaptersRead[selectedBook.abbr]?.has(ch) && (
-                      <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
-                    )}
-                  </button>
-                ))}
+        <div className="mt-12 md:mt-24">
+          <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
+            <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
+
               </nav>
             </div>
 
@@ -1056,12 +1038,67 @@ const Bible: React.FC = () => {
                         </div>
                       );
                     })}
+                    </div>
+                  )}
+
+                  <Relatio 
+                    context={{
+                      type: 'bible',
+                      abbr: selectedBook.abbr,
+                      chapter: selectedChapter,
+                      tags: [selectedBook.name, `Capitulo ${selectedChapter}`, 'Biblia', 'Palavra de Deus']
+                    }}
+                    onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&ch=${ch}`)}
+                    onNavigateToCIC={handleNavigateToCIC}
+                    onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
+                    onSelectLogosQuery={(prompt) => {
+                      setLogosAIInitialQuery(prompt);
+                      setShowLogosAI(true);
+                      setLogosSelectionsCount(prev => prev + 1);
+                    }}
+                  />
+
+                  {!settings.totalSilence && (
+                    <LogosContextualSuggestions
+                      type="bible"
+                      context={`${selectedBook.name} ${selectedChapter}`}
+                      isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
+                      onSelectSuggestion={(prompt) => {
+                        setLogosAIInitialQuery(prompt);
+                        setShowLogosAI(true);
+                        setLogosSelectionsCount(prev => prev + 1);
+                      }}
+                    />
+                  )}
+                </div>
+
+                {/* Elegant Side Navigation for Chapters (Desktop) */}
+                <aside className="reader-navigation-aside space-y-12 shrink-0">
+                  <div className="space-y-4">
+                    <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Capítulos: {selectedBook.name}</p>
+                    <nav className="flex flex-col gap-1 max-h-[40vh] overflow-y-auto no-scrollbar pr-2">
+                      {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
+                        <button
+                          key={ch}
+                          onClick={() => selectChapter(ch)}
+                          className={`flex items-center gap-3 px-4 py-2.5 rounded-full text-sm font-medium transition-all
+                            ${selectedChapter === ch 
+                              ? 'bg-primary text-primary-foreground' 
+                              : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
+                        >
+                          <span className="opacity-50 text-[10px] w-4">{ch}</span>
+                          <span>Capítulo {ch}</span>
+                          {chaptersRead[selectedBook.abbr]?.has(ch) && (
+                            <Icons.CheckCircle2 className="w-3 h-3 ml-auto opacity-60" />
+                          )}
+                        </button>
+                      ))}
+                    </nav>
                   </div>
-                )}
+                </aside>
+              </div>
+            </div>
 
-
-            <div className="mt-24 pt-16 border-t border-primary/5 space-y-16">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6">
                 <Button 
                   variant="ghost" 
                   disabled={selectedChapter <= 1}
