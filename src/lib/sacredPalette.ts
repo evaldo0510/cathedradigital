@@ -26,16 +26,15 @@ export function resolveColors(liturgicalColor?: string, dominantColor?: string) 
   };
 }
 
-export function buildImageSrc(src: string, priority: boolean, width?: number): string {
+export function buildImageSrc(src: string, priority: boolean): string {
   if (!src) return '';
   if (src.includes('unsplash.com')) {
     const base = src.split('?')[0];
-    const w = width || (priority ? 1400 : 800);
-    return `${base}?auto=format&fit=crop&q=${priority ? '85' : '75'}&w=${w}`;
+    return `${base}?auto=format&fit=crop&q=${priority ? '85' : '75'}&w=${priority ? '1400' : '800'}`;
   }
   if (src.includes('wikimedia.org') && src.includes('/thumb/')) {
-    const w = width || (priority ? 1024 : 800);
-    return src.replace(/\/\d+px-/g, `/${w}px-`);
+    // Upscale thumbnails for better quality
+    return src.replace(/\/\d+px-/g, `/${priority ? '1024' : '800'}px-`);
   }
   return src;
 }

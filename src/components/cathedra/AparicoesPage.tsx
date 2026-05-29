@@ -8,7 +8,6 @@ import DeepContentSection from './DeepContentSection';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
-import SacredImage from './SacredImage';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
@@ -45,9 +44,8 @@ const AparicoesPage: React.FC = () => {
           >
             <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
           </Button>
-          <SacredImage src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full" priority />
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-premium" loading="lazy" />
         </div>
-
 
         {/* Quick facts */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -205,7 +203,7 @@ const AparicoesPage: React.FC = () => {
               className={`text-left rounded-full bg-gradient-to-br ${apparition.color} border hover:scale-[1.02] transition-all group overflow-hidden relative`}
             >
               <div className="relative">
-                <SacredImage src={apparition.imageSrc} alt={apparition.title} className="w-full h-40" />
+                <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
                 <Button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
                   className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}

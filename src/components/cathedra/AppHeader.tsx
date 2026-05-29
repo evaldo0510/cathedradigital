@@ -7,9 +7,6 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/useIsMobile';
-import SacredImage from './SacredImage';
-
 
 interface AppHeaderProps {
   user: any;
@@ -28,20 +25,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
   const { pathname } = useLocation();
   const { t } = useLang();
   const { settings } = useReadingSettings();
-  const isMobile = useIsMobile();
   
   const isDashboard = pathname === '/';
 
   return (
     <>
       <header 
-        className={cn(
-          "bg-transparent sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide",
-          isMobile ? "backdrop-blur-sm" : "backdrop-blur-[2px]"
-        )}
+        className="bg-transparent backdrop-blur-[2px] sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide"
         role="banner"
       >
-
 
         <div className="app-container flex items-center justify-between h-14 md:h-36 py-1 md:py-0">
 
@@ -116,7 +108,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                       className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
-                        <SacredImage src={user.avatar} alt={user.name} className="w-full h-full" priority />
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
                         <Icons.User className="w-5 h-5 opacity-70" />
                       )}

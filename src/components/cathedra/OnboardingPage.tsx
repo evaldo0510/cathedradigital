@@ -7,12 +7,10 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import SacredImage from './SacredImage';
 import onboardingBible from '@/assets/onboarding-bible.jpg';
 import onboardingPrayer from '@/assets/onboarding-prayer.jpg';
 import onboardingStudy from '@/assets/onboarding-study.jpg';
 import onboardingCommunity from '@/assets/onboarding-community.jpg';
-
 
 /* ── Intro slides ── */
 const SLIDES = [
@@ -359,7 +357,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.25 }}
             className="bg-card border border-border rounded-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
-            <SacredImage src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-1/2" priority={currentSlide === 0} />
+            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-1/2 object-cover" />
             <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
               <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>

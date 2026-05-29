@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React, { useCallback, useRef, useContext, useMemo } from 'react';
+import React, { useCallback, useRef, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,6 @@ import { isRouteActive } from '@/lib/navigation-utils';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -52,7 +51,7 @@ interface BottomNavItemProps {
   shouldReduceMotion?: boolean;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({ 
+const BottomNavItem: React.FC<BottomNavItemProps> = ({ 
   label, 
   icon: Icon, 
   route, 
@@ -69,7 +68,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
+      "flex flex-col items-center justify-center gap-1 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-1000 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
       isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
     )}
   >
@@ -78,7 +77,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         layoutId="bottom-nav-active-bg"
         data-testid="bottom-nav-active-bg"
         className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.04] dark:bg-white/[0.02] rounded-[20px] z-0"
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       />
     )}
 
@@ -89,13 +88,13 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         y: isActive ? (shouldReduceMotion ? 0 : -1) : 0,
         opacity: isActive ? 1 : 0.5
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative z-10"
     >
       <Icon 
         className={cn(
           "transition-all",
-          shouldReduceMotion ? "duration-0" : "duration-700",
+          shouldReduceMotion ? "duration-0" : "duration-1000",
           isActive ? "text-primary opacity-100" : "text-muted-foreground/20 group-hover:text-primary/60"
         )}
         size={18}
@@ -110,10 +109,10 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         scale: isActive ? 1 : 0.98,
         y: isActive ? 0 : 1
       }}
-      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "text-[7px] font-black uppercase tracking-[0.4em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
-        shouldReduceMotion ? "duration-0" : "duration-700",
+        shouldReduceMotion ? "duration-0" : "duration-1000",
         isActive ? 'text-primary' : 'text-muted-foreground/30'
       )}
     >
@@ -125,13 +124,11 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
         className="absolute bottom-2.5 w-1 h-0.5 bg-primary/30 rounded-full z-10" 
-        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
       />
     )}
   </Button>
-));
-
-BottomNavItem.displayName = 'BottomNavItem';
+);
 
 interface BottomNavProps {
   onOpenSidebar: () => void;
@@ -145,30 +142,31 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
   const { t, lang } = useContext(LangContext);
   const shouldReduceMotion = useReducedMotion();
-  const isMobile = useIsMobile();
 
-  const items = useMemo(() => [
+
+  const items = [
     { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: AppRoute.LOGOS },
     { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
-  ], [lang, t, onOpenSidebar]);
+  ];
 
   return (
     <nav 
       className={cn(
-        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[85vw] max-w-[360px] h-14 bg-white/60 dark:bg-black/60 rounded-[50px] border border-black/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-none",
-        isMobile ? "backdrop-blur-xl" : "backdrop-blur-[60px]", // Optimize blur for mobile
-        shouldReduceMotion ? "duration-0" : "duration-[1000ms] cubic-bezier(0.22, 1, 0.36, 1)"
+        "fixed bottom-10 left-1/2 -translate-x-1/2 z-[160] lg:hidden w-[85vw] max-w-[360px] h-14 bg-white/40 dark:bg-black/40 backdrop-blur-[60px] rounded-[50px] border border-black/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-6 overflow-hidden transition-all shadow-none",
+        shouldReduceMotion ? "duration-0" : "duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1)"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
+
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => {
           const isActive = item.route 
             ? isRouteActive(item.route, currentPath)
             : false;
+
 
           return (
             <BottomNavItem 
@@ -179,17 +177,16 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
               onClick={() => {
-                if (item.onClick) item.onClick();
-                else if (item.route) navigate(item.route);
-              }}
-              onRipple={triggerRipple}
-            />
-          );
-        })}
+              if (item.onClick) item.onClick();
+              else if (item.route) navigate(item.route);
+            }}
+            onRipple={triggerRipple}
+          />
+        );
+      })}
       </div>
     </nav>
   );
 };
 
-export default React.memo(BottomNav);
-
+export default BottomNav;

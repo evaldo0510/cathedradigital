@@ -41,8 +41,6 @@ import { TextSelectionToolbar } from './TextSelectionToolbar';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { NoteEditModal } from './NoteEditModal';
-import { SacredVirtualList } from './SacredVirtualList';
-
 
 
 
@@ -837,31 +835,24 @@ const Catechism: React.FC = () => {
           <main className="flex-1 w-full">
             <div className="w-full relative">
               <div className="py-8 md:py-24">
-                <div className="h-[75vh]">
-                  <SacredVirtualList
-                    items={Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i)}
-                    estimateSize={300}
-                    renderItem={(p) => (
-                      <div className="pb-16">
-                        <LazyParagraph 
-                          key={p} 
-                          paragraph={p} 
-                          currentParagraph={currentParagraph}
-                          paragraphsRead={paragraphsRead}
-                          isFavorite={isFavorite}
-                          toggleFavorite={toggleFavorite}
-                          handleNavigateToBible={handleNavigateToBible}
-                          onHighlightClick={(note) => {
-                            setActiveHighlight(note);
-                            setIsNoteModalOpen(true);
-                          }}
-                          highlights={currentChapterNotes}
-                        />
-                      </div>
-                    )}
-                  />
+                <div className="space-y-16">
+                  {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
+                    <LazyParagraph 
+                      key={p} 
+                      paragraph={p} 
+                      currentParagraph={currentParagraph}
+                      paragraphsRead={paragraphsRead}
+                      isFavorite={isFavorite}
+                      toggleFavorite={toggleFavorite}
+                      handleNavigateToBible={handleNavigateToBible}
+                      onHighlightClick={(note) => {
+                        setActiveHighlight(note);
+                        setIsNoteModalOpen(true);
+                      }}
+                      highlights={currentChapterNotes}
+                    />
+                  ))}
                 </div>
-
 
                 {/* Kindle-style Navigation Footer */}
                 <div className="mt-32 pt-24 border-t border-primary/5 space-y-20">
