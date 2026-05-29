@@ -47,25 +47,9 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
   const twitterHandle = seoSettings?.twitter_handle || '@cathedradigital';
   const url = `${SEO_CONFIG.BASE_URL}${path.split('?')[0]}`;
 
-  useEffect(() => {
-    const rawId = seoSettings?.ga4_measurement_id;
-    const safeId = rawId && /^G-[A-Z0-9]{4,20}$/.test(rawId) ? rawId : null;
-    if (safeId && typeof window !== 'undefined') {
-      const script1 = document.createElement('script');
-      script1.async = true;
-      script1.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(safeId)}`;
-      document.head.appendChild(script1);
-
-      const script2 = document.createElement('script');
-      script2.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',${JSON.stringify(safeId)});`;
-      document.head.appendChild(script2);
-
-      return () => {
-        if (document.head.contains(script1)) document.head.removeChild(script1);
-        if (document.head.contains(script2)) document.head.removeChild(script2);
-      };
-    }
-  }, [seoSettings?.ga4_measurement_id]);
+  // GA4 and Search Console tags are no longer injected from the public SEO query
+  // to avoid exposing tracking IDs via the public API. Configure them through
+  // index.html or a server-rendered template if required.
 
   const breadcrumbLD = {
     "@context": "https://schema.org",
