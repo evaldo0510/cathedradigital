@@ -324,9 +324,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     transition={{ duration: 1.2, delay: i * 0.1 }}
                     className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4`}
                   >
-                    <div className={`max-w-full text-lg md:text-xl leading-[1.8] tracking-wide ${
+                    <div className={`max-w-full text-base md:text-xl leading-[1.7] md:leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-8 text-right' 
+                        ? 'text-primary/60 font-serif italic border-r-2 border-primary/10 pr-6 md:pr-8 text-right' 
                         : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
