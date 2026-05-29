@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -9,7 +9,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { LogosChatSkeleton } from './SacredSkeleton';
 import { CathedraCard } from './CathedraCard';
 import { CathedraButton } from './CathedraButton';
-import { SacredVirtualList } from './SacredVirtualList';
+import { SacredVirtualList, SacredVirtualListHandle } from './SacredVirtualList';
 
 
 interface LogosAIProps {
@@ -44,11 +44,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const lastLoadedContextRef = React.useRef<string | undefined>(undefined);
-  const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
-  const chatEndRef = React.useRef<HTMLDivElement>(null);
+  const [visibleMessages, setVisibleMessages] = useState(10); 
+  const virtualListRef = useRef<SacredVirtualListHandle>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (history.length > 0) {
+      virtualListRef.current?.scrollToIndex(history.length - 1, { align: 'end' });
+    }
   };
 
   // Sync history when context changes for persistence per reading section
@@ -320,8 +322,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 )}
                 <div className="h-[40vh]">
                   <SacredVirtualList
+                    ref={virtualListRef}
                     items={history.slice(-visibleMessages)}
-                    estimateSize={80}
+                    estimateSize={120}
                     renderItem={(msg, i) => (
                       <motion.div 
                         key={i} 
@@ -468,59 +471,28 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 md:space-y-10 scrollbar-hide">
-              {history.length === 0 && !selectedText && (
-                <div className="text-center py-20 space-y-8">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/10 mx-auto animate-pulse" />
-                  <p className="text-lg text-muted-foreground/40 font-serif italic leading-relaxed max-w-[280px] mx-auto">
-                    {settings.totalSilence 
-                      ? '"No silêncio, Deus fala ao coração."' 
-                      : '"O silêncio é a primeira língua de Deus."'}
-                    <br/>
-                    <span className="text-sm uppercase tracking-widest font-black mt-4 block">
-                      {settings.totalSilence ? 'Modo Silêncio Ativo' : 'Como posso iluminar sua jornada?'}
-                    </span>
-                  </p>
-                </div>
-              )}
-
-              {history.length > visibleMessages && (
-                <div className="flex justify-center pb-8">
-                  <CathedraButton 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setVisibleMessages(prev => prev + 10)}
-                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-2"
-                  >
-                    Ver histórico anterior
-                  </CathedraButton>
-                </div>
-              )}
-              {history.slice(-visibleMessages).map((msg, i) => (
-                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-3 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-                  <div className={`max-w-[90%] p-6 md:p-10 rounded-premium-lg text-sm md:text-base leading-relaxed ${
-                    msg.role === 'user' 
-                      ? 'bg-primary text-primary-foreground shadow-premium' 
-                      : 'bg-card border border-border/5 font-serif italic text-foreground/80'
-                  }`}>
-                    {msg.content}
-                  </div>
-                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-4">
-                    {msg.role === 'user' ? 'Peregrino' : 'Logos'}
-                  </span>
-                </div>
-              ))}
-
-              {(isLoading || isTyping) && (
-                <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/10 p-4 md:p-6 rounded-premium-lg flex gap-3">
-                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce" />
-                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <div className="w-1.5 h-1.5 bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
-                  </div>
-                </div>
-              )}
-              <div ref={chatEndRef} />
+            <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-12">
+               <div className="h-[60vh]">
+                  <SacredVirtualList
+                    ref={virtualListRef}
+                    items={history}
+                    estimateSize={120}
+                    renderItem={(msg, i) => (
+                      <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-4 mb-8`}>
+                        <div className={`max-w-[90%] p-6 md:p-10 rounded-premium-lg text-sm md:text-base leading-relaxed ${
+                          msg.role === 'user' 
+                            ? 'bg-primary text-primary-foreground shadow-premium' 
+                            : 'bg-card border border-border/5 font-serif italic text-foreground/80'
+                        }`}>
+                          {msg.content}
+                        </div>
+                        <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-4">
+                          {msg.role === 'user' ? 'Peregrino' : 'Logos'}
+                        </span>
+                      </div>
+                    )}
+                  />
+               </div>
             </div>
 
             <div className="p-6 md:p-10 border-t border-border/5 bg-background/30">
