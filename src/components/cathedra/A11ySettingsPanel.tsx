@@ -19,6 +19,54 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
   isOpen,
   onClose,
 }) => {
+  const panelRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      const focusableElements = panelRef.current?.querySelectorAll(
+        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"]), [role="button"]'
+      );
+      
+      if (!focusableElements || focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0] as HTMLElement;
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      // Focus the close button or first element when opening
+      setTimeout(() => {
+        const first = panelRef.current?.querySelector('button, [role="button"]') as HTMLElement;
+        first?.focus();
+      }, 100);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
   const { t } = useLang();
   const { settings, updateSettings } = useReadingSettings();
   const location = useLocation();
@@ -73,7 +121,9 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-8 flex flex-col"
+            ref={panelRef}
+            className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-8 flex flex-col outline-none"
+            tabIndex={-1}
             role="dialog"
             aria-labelledby="a11y-title"
           >
