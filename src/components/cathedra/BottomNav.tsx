@@ -105,7 +105,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     <motion.span 
       initial={false}
       animate={{ 
-        opacity: isActive ? 0.9 : 0.2,
+        opacity: isActive ? 0.9 : 0.3,
         scale: isActive ? 1 : 0.98,
         y: isActive ? 0 : 1
       }}
