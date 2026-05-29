@@ -118,26 +118,26 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const { t } = useContext(LangContext);
 
   const items = [
+    { label: t('today') || 'Hoje', icon: Icons.Sun, route: AppRoute.HOJE },
     { label: t('bible') || 'Bíblia', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: t('catechism') || 'Catecismo', icon: Icons.Catechism, route: AppRoute.CATECHISM },
-    { label: 'Leitura', icon: Icons.Settings, onClick: () => window.dispatchEvent(new CustomEvent('open-reading-preferences')) },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
     { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
   ];
 
   return (
     <nav 
-      className="fixed bottom-6 left-6 right-6 z-[160] lg:hidden h-16 bg-background/60 backdrop-blur-3xl border border-primary/5 rounded-full shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2" 
+      className="fixed bottom-6 left-6 right-6 z-[160] lg:hidden h-16 bg-background/40 backdrop-blur-2xl border border-primary/5 rounded-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] bottom-nav bottom-nav-reading-auto-hide ring-1 ring-primary/5 px-2 overflow-hidden" 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
-      <div className="flex items-center justify-between h-full w-full">
+      <div className="flex items-center justify-between h-full w-full max-w-md mx-auto">
         {items.map((item: any, i: number) => (
           <BottomNavItem 
             key={item.label + i}
             label={item.label}
             icon={item.icon}
             route={item.route || ''}
-            isActive={item.route ? currentPath === item.route || (item.route !== '/' && currentPath.startsWith(item.route)) : false}
+            isActive={item.route ? currentPath === item.route || (item.route !== '/' && (currentPath.startsWith(item.route) || (item.route === AppRoute.HOJE && currentPath === '/'))) : false}
             onClick={() => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
