@@ -211,6 +211,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
     }
   }, [navigate, onClose]);
 
+  const isMobile = useIsMobile();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -220,9 +222,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-neutral-950/30 backdrop-blur-sm z-[145]"
+            className="fixed inset-0 bg-neutral-950/20 backdrop-blur-sm z-[145]"
             aria-hidden="true"
           />
 
@@ -241,15 +243,19 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: '-100%', opacity: 0, scale: 0.98 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.3 : 0.8, 
+              duration: settings.reduceAnimations ? 0.3 : 0.6, 
               ease: [0.22, 1, 0.36, 1] 
             }}
-            className="fixed top-6 left-6 bottom-6 w-[70vw] sm:w-[300px] bg-white/60 dark:bg-neutral-950/60 backdrop-blur-[60px] border border-black/[0.01] dark:border-white/[0.01] rounded-[3rem] flex flex-col p-10 z-[150] shadow-none overflow-hidden admin-hide touch-none pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]"
+            className={cn(
+              "fixed top-6 left-6 bottom-6 w-[75vw] sm:w-[300px] bg-white/70 dark:bg-neutral-950/70 border border-black/[0.01] dark:border-white/[0.01] rounded-[3rem] flex flex-col p-10 z-[150] shadow-none overflow-hidden admin-hide touch-none pt-[calc(3rem+env(safe-area-inset-top,0px))] pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]",
+              isMobile ? "backdrop-blur-xl" : "backdrop-blur-[60px]"
+            )}
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
+
             {/* Mobile Header - More dedicated and sophisticated */}
             <header className="flex items-center justify-between mb-10">
               <div 
