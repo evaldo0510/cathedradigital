@@ -374,6 +374,24 @@
   .cinematic-fade-in {
     animation: cinematicFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  .premium-glow {
+    @apply relative overflow-hidden;
+  }
+
+  .premium-glow::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-1000 pointer-events-none;
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.08) 0%, transparent 70%);
+  }
+
+  .premium-glow:hover::after {
+    @apply opacity-100;
+  }
+
+  .dark .premium-glow::after {
+    background: radial-gradient(circle at center, hsl(var(--primary) / 0.15) 0%, transparent 80%);
+  }
 }
 
 @keyframes cinematicFadeIn {
