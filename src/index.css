@@ -140,6 +140,37 @@
     --shadow-premium-hover: none;
   }
 
+  /* Force opacity for accessibility in high contrast */
+  .high-contrast .bg-card\/25,
+  .high-contrast .bg-primary\/\[0\.005\],
+  .high-contrast .bg-primary\/\[0\.02\],
+  .high-contrast .bg-background\/40,
+  .high-contrast .backdrop-blur-2xl,
+  .high-contrast .backdrop-blur-xl,
+  .high-contrast .backdrop-blur-3xl {
+    background-color: hsl(var(--background)) !important;
+    backdrop-filter: none !important;
+    opacity: 1 !important;
+  }
+  
+  .high-contrast .text-primary\/40,
+  .high-contrast .text-primary\/60,
+  .high-contrast .text-foreground\/60,
+  .high-contrast .text-muted-foreground\/60 {
+    color: hsl(var(--foreground)) !important;
+    opacity: 1 !important;
+  }
+
+  .high-contrast .border-primary\/\[0\.02\],
+  .high-contrast .border-primary\/\[0\.03\],
+  .high-contrast .border-primary\/\[0\.05\],
+  .high-contrast .border-primary\/5,
+  .high-contrast .border-primary\/10,
+  .high-contrast .border-border\/5,
+  .high-contrast .border-border\/10 {
+    border-color: hsl(var(--foreground) / 0.5) !important;
+  }
+
   .high-contrast.dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;

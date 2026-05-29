@@ -50,6 +50,7 @@ interface ReadingSettings {
     relevanceByProgress: boolean;
   };
   logosSuggestions: 'always' | 'first_selection' | 'never';
+  lastUpdated?: number; // Timestamp for local vs remote sync
 }
 
 interface ReadingSettingsContextType {
@@ -124,11 +125,21 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       const remoteSettings = profile.reading_settings as ReadingSettings;
       
       setSettings(prev => {
-        // Simple check to prevent loops - only update if different from current
+        // Only update if remote settings are actually different AND not older than local
+        // If remote has no timestamp but local has, we might want to keep local
+        const remoteTimestamp = remoteSettings.lastUpdated || 0;
+        const localTimestamp = prev.lastUpdated || 0;
+
+        if (remoteTimestamp < localTimestamp) {
+          console.log('Keeping local settings as they are newer than remote profile');
+          return prev;
+        }
+
         const remoteStr = JSON.stringify(remoteSettings);
         const prevStr = JSON.stringify(prev);
         if (remoteStr === prevStr) return prev;
         
+        console.log('Updating settings from remote profile');
         return { ...prev, ...remoteSettings };
       });
     }
@@ -220,7 +231,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
 
 
   const updateSettings = useCallback(async (newSettings: Partial<ReadingSettings>) => {
-    const updated = { ...settings, ...newSettings };
+    const updated = { ...settings, ...newSettings, lastUpdated: Date.now() };
     setSettings(updated);
 
     if (user) {
@@ -243,12 +254,13 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
   }, [settings, user, refreshProfile]);
 
   const resetSettings = useCallback(async () => {
-    setSettings(defaultSettings);
+    const reset = { ...defaultSettings, lastUpdated: Date.now() };
+    setSettings(reset);
     if (user) {
       await supabase
         .from('profiles')
         .update({
-          reading_settings: defaultSettings as any
+          reading_settings: reset as any
         })
         .eq('id', user.id);
       refreshProfile();

@@ -57,6 +57,33 @@
       "inLanguage": "pt-BR"
     }
     </script>
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('cathedra_reading_settings');
+          if (stored) {
+            const settings = JSON.parse(stored);
+            const root = document.documentElement;
+            
+            // Apply theme
+            if (settings.theme === 'night') {
+              root.classList.add('reading-theme-night', 'reading-night', 'dark');
+            } else if (settings.theme === 'dark') {
+              root.classList.add('reading-theme-dark', 'dark');
+            } else {
+              root.classList.add(`reading-theme-${settings.theme || 'paper'}`);
+            }
+            
+            // Apply High Contrast
+            if (settings.highContrast) {
+              root.classList.add('high-contrast');
+            }
+          }
+        } catch (e) {
+          console.error('Theme initialization failed', e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
