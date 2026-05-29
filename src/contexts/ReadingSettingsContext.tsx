@@ -11,6 +11,7 @@ interface ReadingSettings {
   reduceAnimations: boolean;
   totalSilence: boolean;
   highContrast: boolean;
+  visibleFocus: boolean;
   contemplativeMode: boolean;
   autoHideUI: boolean; // Mobile: oculta interface ao ler; reaparece com toque
   fullScreen: boolean;
@@ -66,6 +67,7 @@ const defaultSettings: ReadingSettings = {
   reduceAnimations: false,
   totalSilence: false,
   highContrast: false,
+  visibleFocus: false,
   contemplativeMode: false,
   autoHideUI: false,
   lineSpacing: 'normal',
@@ -188,6 +190,12 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
       root.classList.add('contemplative-mode');
     } else {
       root.classList.remove('contemplative-mode');
+    }
+
+    if (settings.visibleFocus) {
+      root.classList.add('visible-focus-mode');
+    } else {
+      root.classList.remove('visible-focus-mode');
     }
 
     if (settings.reduceAnimations) {
