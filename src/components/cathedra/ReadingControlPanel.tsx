@@ -27,10 +27,10 @@ const ReadingControlPanel: React.FC = () => {
   const navigate = useNavigate();
 
   const themes = [
-    { id: 'paper', label: 'Papel', color: 'bg-[#F8F5EE] border-[#E8E2D2]' },
-    { id: 'sepia', label: 'Sépia', color: 'bg-[#E1D7C1] border-[#C5B89C]' },
-    { id: 'dark', label: 'Escuro', color: 'bg-[#0F172A] border-[#1E293B]' },
-    { id: 'night', label: 'Noite', color: 'bg-black border-zinc-800' },
+    { id: 'paper', label: 'Papel', color: 'bg-[#FDFBF7] border-[#E8E2D2]' },
+    { id: 'sepia', label: 'Sépia', color: 'bg-[#F2E8D5] border-[#D8CBB5]' },
+    { id: 'dark', label: 'Escuro', color: 'bg-[#141414] border-white/5' },
+    { id: 'night', label: 'Noite', color: 'bg-[#080808] border-white/5' },
   ];
 
   const SettingsContent = () => (
