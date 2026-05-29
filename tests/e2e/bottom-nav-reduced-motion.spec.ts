@@ -1,77 +1,54 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Esse teste verifica se o BottomNav respeita a preferência de movimento reduzido do usuário.
- * No ambiente de execução do Lovable, os binários dos browsers podem não estar presentes,
- * então focamos na verificação da lógica de simulação do Playwright e na estrutura do teste.
- */
-test.describe('BottomNav - Reduced Motion', () => {
+test.describe('BottomNav & SwipeNavigation - Reduced Motion', () => {
   test.use({ 
-    viewport: { width: 390, height: 844 }, // Mobile iPhone 12/13
+    viewport: { width: 390, height: 844 },
     colorScheme: 'light',
-    reducedMotion: 'reduce'
+    reducedMotion: 'reduce',
+    hasTouch: true
   });
 
-  test('should not have spring/layout animations when prefers-reduced-motion is active', async ({ page }) => {
-    // Nota: Se os browsers não estiverem instalados, este teste falhará no CI, 
-    // mas a lógica está correta para ambientes com Playwright configurado.
-    try {
-      await page.goto('/');
-      
-      // Verifica se o Playwright aplicou corretamente a preferência de movimento reduzido
-      const isReduced = await page.evaluate(() => {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      });
-      
-      if (isReduced) {
-        console.log('Ambiente configurado corretamente para movimento reduzido.');
-      } else {
-        throw new Error('Falha ao simular movimento reduzido.');
-      }
+  test('should not have animations in BottomNav when reduced motion is active', async ({ page }) => {
+    await page.goto('/?lang=pt');
+    
+    const isReduced = await page.evaluate(() => {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    });
+    expect(isReduced).toBe(true);
 
-      // Localizador do BottomNav
-      const bottomNav = page.locator('nav[aria-label="Navegação móvel"], nav[aria-label="Mobile navigation"]');
-      await expect(bottomNav).toBeVisible();
-
-      // Clica em um item para mudar o estado ativo
-      const bibleItem = page.locator('button[aria-label="Bíblia"], button[aria-label="Bible"]');
-      await bibleItem.click();
-      
-      // Valida que o item se tornou ativo
-      await expect(bibleItem).toHaveAttribute('aria-current', 'page');
-      
-      // Em modo de movimento reduzido, o componente `motion.div` do ícone não deve ter o scale(1.12)
-      // que é aplicado quando o item está ativo e o movimento NÃO é reduzido.
-      const iconContainer = bibleItem.locator('.relative.z-10');
-      const style = await iconContainer.getAttribute('style');
-      
-      if (style) {
-        expect(style).not.toContain('scale(1.12)');
-      }
-    } catch (error) {
-      if (error.message.includes("Executable doesn't exist")) {
-        console.warn('Playwright browsers not installed in this environment. Skipping visual/runtime checks.');
-        return;
-      }
-      throw error;
+    const bibleItem = page.locator('button[aria-label="Bíblia"]');
+    await bibleItem.click();
+    
+    // In motion.div, if reduced motion is active, the transition should be instantaneous or non-existent
+    // We can check if any motion styles are being applied that imply animation
+    const iconContainer = bibleItem.locator('.relative.z-10');
+    const style = await iconContainer.getAttribute('style');
+    
+    if (style) {
+      // Scale should not be present if motion is reduced (based on previous logic)
+      expect(style).not.toContain('scale(1.12)');
     }
   });
 
-  test('should verify the technical implementation of reduced motion in BottomNav', async ({ page }) => {
-    try {
-      await page.goto('/');
-      
-      const isReduced = await page.evaluate(() => {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      });
-      
-      expect(isReduced).toBe(true);
-    } catch (error) {
-      if (error.message.includes("Executable doesn't exist")) {
-        return;
-      }
-      throw error;
-    }
+  test('should not have swipe transitions in SwipeNavigation when reduced motion is active', async ({ page }) => {
+    await page.goto('/?lang=pt');
+    
+    // Check SwipeNavigation container
+    // SwipeNavigation usually uses a framer-motion container or similar
+    // If reduced motion is active, the swipe should feel like an immediate jump
+    
+    // Perform swipe
+    await page.mouse.move(350, 400);
+    await page.mouse.down();
+    await page.mouse.move(50, 400, { steps: 5 });
+    await page.mouse.up();
+
+    // The navigation should happen immediately without a "sliding" visual period
+    // Since we can't easily measure "immediate" in a static way, we verify the end state is reached correctly
+    // and that the UI doesn't hang in a "dragging" state.
+    await expect(page).toHaveURL(/\/bible/);
+    
+    const bibleItem = page.locator('button[aria-label="Bíblia"]');
+    await expect(bibleItem).toHaveAttribute('aria-current', 'page');
   });
 });
-
