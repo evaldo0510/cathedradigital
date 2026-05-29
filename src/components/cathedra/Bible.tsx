@@ -1037,12 +1037,16 @@ const Bible: React.FC = () => {
                             </div>
                           </div>
                         </div>
+                        </div>
                       );
-                    </div>
-                  )}
-                </div>
+                    })}
+                  </div>
+                )}
               </div>
             </div>
+          </div>
+        </div>
+
 
 
             <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
@@ -1078,9 +1082,9 @@ const Bible: React.FC = () => {
                     />
                   )}
                 </div>
-                </div>
               </div>
             </div>
+
 
 
             <aside className="reader-navigation-aside space-y-12 shrink-0">
