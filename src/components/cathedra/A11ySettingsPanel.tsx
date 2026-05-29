@@ -11,19 +11,11 @@ import { Slider } from '@/components/ui/slider';
 interface A11ySettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
-  isDark: boolean;
-  onToggleDark: () => void;
-  isHighContrast: boolean;
-  onToggleHighContrast: () => void;
 }
 
 const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
   isOpen,
   onClose,
-  isDark,
-  onToggleDark,
-  isHighContrast,
-  onToggleHighContrast
 }) => {
   const { t } = useLang();
   const { settings, updateSettings } = useReadingSettings();
@@ -82,8 +74,8 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     </div>
                     <Switch 
                       id="dark-mode-toggle" 
-                      checked={isDark} 
-                      onCheckedChange={onToggleDark} 
+                      checked={settings.theme === 'dark' || settings.theme === 'night'} 
+                      onCheckedChange={(val) => updateSettings({ theme: val ? 'dark' : 'paper' })} 
                     />
                   </div>
 
@@ -94,8 +86,8 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     </div>
                     <Switch 
                       id="high-contrast-toggle" 
-                      checked={isHighContrast} 
-                      onCheckedChange={onToggleHighContrast} 
+                      checked={settings.highContrast} 
+                      onCheckedChange={(val) => updateSettings({ highContrast: val })} 
                     />
                   </div>
                   <div className="flex items-center justify-between group pt-4">
@@ -109,7 +101,40 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                       onCheckedChange={(val) => updateSettings({ reduceAnimations: val })} 
                     />
                   </div>
-                </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between group pt-4">
+                    <div className="space-y-1">
+                      <label htmlFor="visible-focus-toggle" className="text-sm font-bold text-primary cursor-pointer">Foco Visível</label>
+                      <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Adiciona uma borda de alto destaque em elementos selecionados.</p>
+                    </div>
+                    <Switch 
+                      id="visible-focus-toggle" 
+                      checked={settings.visibleFocus} 
+                      onCheckedChange={(val) => updateSettings({ visibleFocus: val })} 
+                    />
+                  </div>
+
+                  <div className="space-y-4 pt-6">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm font-bold text-primary">Tamanho da Fonte</label>
+                      <span className="text-[10px] font-bold text-primary uppercase">{settings.fontSize}</span>
+                    </div>
+                    <div className="flex bg-muted/30 rounded-xl p-1 gap-1 border border-primary/5">
+                      {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
+                        <button
+                          key={s}
+                          onClick={() => updateSettings({ fontSize: s })}
+                          className={`flex-1 py-2 text-[10px] font-bold rounded-lg transition-all ${
+                            settings.fontSize === s ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground/40 hover:text-primary'
+                          }`}
+                          aria-label={`Mudar tamanho da fonte para ${s}`}
+                        >
+                          {s === 'small' ? 'A' : s === 'medium' ? 'A+' : s === 'large' ? 'A++' : 'A+++'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
               </section>
 
