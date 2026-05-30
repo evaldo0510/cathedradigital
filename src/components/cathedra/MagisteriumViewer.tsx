@@ -412,34 +412,12 @@ const MagisteriumViewer: React.FC = () => {
 
 
       <div className="flex flex-col gap-12 lg:gap-24 items-start">
-                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
-                          }
-                        }
-                      }}
-                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
-                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Parágrafo {pIdx !== null ? pIdx + 1 : ''}</span>
-                        {note.highlight_color && (
-                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
-                        )}
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
-                        {note.note_text === 'Destacado para meditação' ? 'Destaque visual' : note.note_text}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </aside>
+
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 w-full max-w-[75ch] mx-auto relative"
+          className="flex-1 w-full max-w-[70ch] mx-auto relative"
         >
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (

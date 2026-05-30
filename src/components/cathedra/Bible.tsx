@@ -1021,7 +1021,7 @@ const Bible: React.FC = memo(() => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-3xl text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
+                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-[2.5rem] text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
