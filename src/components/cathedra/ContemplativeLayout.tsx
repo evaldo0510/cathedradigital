@@ -19,50 +19,50 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   title, 
   subtitle, 
   className,
-  maxW = 'max-w-[1200px]',
+  maxW = 'max-w-[var(--layout-max-width)]',
   headerActions,
   icon: Icon
 }) => {
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-2 md:pt-8 pb-12 md:pb-64 will-change-[transform,opacity]", className)}>
-
-
+    <div className={cn("min-h-screen pt-2 md:pt-12 pb-12 md:pb-64 will-change-[transform,opacity]", className)}>
       {(title || subtitle || Icon) && (
-        <header className={cn("header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out")}>
+        <header className={cn(
+          "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", 
+          !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
+        )}>
           {Icon && (
-            <div className="mb-4 md:mb-6">
-              <Icon className="w-5 h-5 md:w-8 md:h-8 text-primary opacity-20 mx-auto" strokeWidth={1} />
+            <div className="mb-4 md:mb-8">
+              <Icon className="w-5 h-5 md:w-10 md:h-10 text-primary opacity-20 mx-auto" strokeWidth={0.5} />
             </div>
           )}
-          <div className="w-[0.5px] h-3 md:h-12 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-2 md:mb-6 opacity-20" />
+          <div className="w-[0.5px] h-4 md:h-16 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-2 md:mb-8 opacity-20" />
           {subtitle && (
-            <p className="text-[6px] md:text-[8px] font-bold uppercase text-primary/20 mb-2 md:mb-6 tracking-[0.4em] md:tracking-[0.8em]">
+            <p className="text-[7px] md:text-[10px] font-black uppercase text-primary/30 mb-2 md:mb-8 tracking-[0.5em] md:tracking-[1em]">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-2xl md:text-6xl lg:text-7xl tracking-tighter text-primary/80 font-display leading-[0.95] mb-4">
+            <h1 className="text-3xl md:text-7xl lg:text-8xl tracking-tighter text-primary/90 font-display leading-[0.9] mb-4">
               {title}
             </h1>
           )}
           {headerActions && (
-            <div className="mt-4 md:mt-8 w-full flex justify-center">
+            <div className="mt-6 md:mt-12 w-full flex justify-center">
               {headerActions}
             </div>
           )}
         </header>
       )}
       <motion.main 
-        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 30 }}
+        initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ 
-          duration: settings.reduceAnimations ? 0.1 : 1.2, 
+          duration: settings.reduceAnimations ? 0.1 : 1, 
           ease: settings.reduceAnimations ? "linear" : [0.16, 1, 0.3, 1] 
         }}
-
-        className={cn("app-container", className)}
+        className={cn("w-full mx-auto", maxW, className)}
       >
         {children}
       </motion.main>

@@ -31,10 +31,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
+        className="bg-background/40 backdrop-blur-2xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.02]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-12 md:h-14 py-1">
+        <div className="app-container flex items-center justify-between h-14 md:h-16 py-1">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
@@ -62,10 +62,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-8 h-8 md:w-12 md:h-12 rounded-full border border-transparent md:border-primary/10 hover:bg-primary/[0.03] transition-all duration-500 tap-premium"
+                  className="w-9 h-9 md:w-11 md:h-11 rounded-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-500 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
-                  <Icons.ChevronLeft className="w-4 h-4 md:w-5 md:h-5 opacity-70" />
+                  <Icons.ChevronLeft className="w-4 h-4 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </Button>
               )}
 
