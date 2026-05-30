@@ -12,6 +12,7 @@ import { useGlossary } from '@/hooks/useGlossary';
 import AlphabetBar from './encyclopedia/AlphabetBar';
 import EncyclopediaTermList from './encyclopedia/EncyclopediaTermList';
 import EncyclopediaTermDetail from './encyclopedia/EncyclopediaTermDetail';
+import ContemplativeLayout from './ContemplativeLayout';
 
 export interface FaithTerm {
   term: string;
