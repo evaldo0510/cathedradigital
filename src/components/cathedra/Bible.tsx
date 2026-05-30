@@ -9,9 +9,10 @@ import StaggeredList from './StaggeredList';
 import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
 import { getBibleCrossRefs, CIC_TO_BIBLE, BIBLE_TO_CIC, getBibleDocs } from '@/data/cross-references';
+import { cn } from '@/lib/utils';
+import { CathedraCard } from './CathedraCard';
 
 import CatechismPopover from './CatechismPopover';
-import MagisteriumPopover from './MagisteriumPopover';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useFavorites } from '@/hooks/useFavorites';
 import BibleSearch from './BibleSearch';
