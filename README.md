@@ -148,3 +148,32 @@ npm run test:local:axe
 ### Variáveis de Ambiente
 - `CI=true`: Ativa retries (2x), remove `test.only` e reduz workers para 1 para máxima estabilidade.
 - `PLAYWRIGHT_TEST_BASE_URL`: Define a URL alvo (padrão: http://localhost:8080).
+
+### 6. Token Audit & Governance
+
+O sistema Cathedra utiliza um sistema de governança de tokens para garantir que classes Tailwind não-tokenizadas não sejam introduzidas no projeto.
+
+#### Comandos Disponíveis
+
+| Comando | Descrição |
+|---------|-----------|
+| `npm run token-audit` | Executa o audit básico. Falha se exceder o limite (padrão 5). |
+| `npm run token-audit:dry-run` | Lista todas as substituições sugeridas sem modificar os arquivos. |
+| `npm run token-audit:fix` | Aplica automaticamente as correções sugeridas (codemod). |
+| `npm run test:token-audit` | Executa os testes unitários do sistema de audit. |
+
+#### O que esperar do Modo Dry-Run
+
+Ao executar `npm run token-audit:dry-run`, você verá logs no seguinte formato:
+- Confirmação do modo: `--- DRY RUN MODE: No files will be modified ---`
+- Detalhes das mudanças: `[DRY RUN] Would replace "p-4" with "p-spacing-md" in src/components/MyComponent.tsx:12`
+- Resumo final com o total de problemas identificados.
+
+#### Relatórios e Logs
+
+O audit gera relatórios detalhados na pasta `/reports`:
+- `token-audit.html`: Dashboard visual para revisão de conformidade.
+- `token-audit.json`: Dados estruturados da última execução.
+- `compliance-history.json`: Histórico das últimas 30 execuções para acompanhamento de tendências.
+
+**Importante:** No CI, o comando `token-audit:ci` é executado automaticamente e bloqueará o merge se houverem violações acima do limite configurado.
