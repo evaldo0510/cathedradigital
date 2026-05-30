@@ -32,18 +32,18 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
       {(title || subtitle || Icon) && (
         <header className={cn("header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1500ms] ease-out")}>
           {Icon && (
-            <div className="mb-8 md:mb-12">
-              <Icon className="w-8 h-8 md:w-12 md:h-12 text-primary opacity-30 mx-auto" strokeWidth={1} />
+            <div className="mb-6 md:mb-10">
+              <Icon className="w-6 h-6 md:w-10 md:h-10 text-primary opacity-20 mx-auto" strokeWidth={1} />
             </div>
           )}
-          <div className="w-[0.5px] h-6 md:h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-6 md:mb-16 opacity-30" />
+          <div className="w-[0.5px] h-4 md:h-24 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-4 md:mb-12 opacity-20" />
           {subtitle && (
-            <p className="text-[7px] md:text-[10px] font-bold uppercase text-primary/30 mb-6 md:mb-16 tracking-[0.6em] md:tracking-[1.2em]">
+            <p className="text-[6px] md:text-[9px] font-bold uppercase text-primary/20 mb-4 md:mb-12 tracking-[0.6em] md:tracking-[1em]">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-4xl md:text-9xl lg:text-[8.5rem] tracking-tight text-primary/90 font-display leading-[0.85] filter blur-[0.2px] mb-8">
+            <h1 className="text-3xl md:text-8xl lg:text-[7.5rem] tracking-tight text-primary/80 font-display leading-[0.85] filter blur-[0.1px] mb-6">
               {title}
             </h1>
           )}

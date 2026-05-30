@@ -40,14 +40,14 @@
     --primary: 220 20% 12%;       /* #1B1E23 Elegant Charcoal Blue instead of Near-Black */
     --primary-foreground: 45 40% 99%;
     
-    --secondary: 40 25% 45%;     /* More sophisticated Gold */
+    --secondary: 42 30% 45%;     /* More sophisticated Gold */
     --secondary-foreground: 220 20% 8%;
     
     /* Interface Colors - Subdued Contrast */
     --muted: 45 20% 97%;         /* Even softer surface */
     --muted-foreground: 220 10% 50%; 
     
-    --accent: 40 30% 40% / 0.03;
+    --accent: 42 30% 40% / 0.03;
     --accent-foreground: 220 20% 10%;
     
     --destructive: 0 65% 48%;
@@ -55,7 +55,7 @@
     
     --border: 220 30% 4% / 0.02; /* Nearly invisible borders */
     --input: 220 30% 4% / 0.03;
-    --ring: 40 30% 40% / 0.1;
+    --ring: 42 30% 40% / 0.1;
     
     /* Design Tokens */
     --radius: 2rem;
@@ -100,36 +100,36 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 20% 7%;      /* Softer Graphite instead of black */
-    --foreground: 45 15% 94%;      /* Luminous for reading */
+    --background: 220 15% 8%;      /* Very soft dark graphite, not black */
+    --foreground: 45 10% 90%;      /* Slightly dimmed for less eye strain */
     
-    --card: 220 20% 7%;            /* Perfect seamless surface */
-    --card-foreground: 45 15% 94%;
+    --card: 220 15% 9%;            /* Slightly lighter than background for subtle depth */
+    --card-foreground: 45 10% 90%;
     
-    --popover: 220 25% 8%;
-    --popover-foreground: 45 15% 94%;
+    --popover: 220 15% 10%;
+    --popover-foreground: 45 10% 90%;
     --popover-blur: 24px;
     
-    --primary: 42 20% 75%;         /* Softer, more elegant Gold */
-    --primary-foreground: 220 20% 5%;
+    --primary: 42 15% 70%;         /* Dimmed Gold for dark mode */
+    --primary-foreground: 220 15% 5%;
     
-    --secondary: 220 20% 10%;      
-    --secondary-foreground: 42 20% 75%;
+    --secondary: 220 15% 12%;      
+    --secondary-foreground: 42 15% 70%;
     
-    --muted: 220 20% 9%;           
-    --muted-foreground: 220 10% 55%; 
+    --muted: 220 15% 10%;           
+    --muted-foreground: 220 10% 50%; 
     
-    --accent: 42 20% 75% / 0.04;
-    --accent-foreground: 42 20% 75%;
+    --accent: 42 15% 70% / 0.05;
+    --accent-foreground: 42 15% 70%;
     
     --destructive: 0 45% 40%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 45 15% 90% / 0.04;   
-    --input: 45 15% 90% / 0.05;
-    --ring: 42 20% 75% / 0.12;
+    --border: 45 15% 90% / 0.05;   
+    --input: 45 15% 90% / 0.06;
+    --ring: 42 15% 70% / 0.15;
     
-    --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.45);
+    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.5);
   }
 
   .high-contrast {
@@ -289,26 +289,26 @@
   }
 
   .premium-card {
-    @apply transition-all relative overflow-hidden bg-card/20 backdrop-blur-sm border border-primary/[0.03] dark:border-white/[0.01];
+    @apply transition-all relative overflow-hidden bg-card/10 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.01];
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-subtle);
   }
 
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-muted/10 focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-muted/5 focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply -translate-y-1 border-primary/10 shadow-premium;
+    @apply -translate-y-0.5 border-primary/5 shadow-premium;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border-white/10;
+    @apply shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border-white/5;
   }
 
   /* Unified Search Input Utility */
   .search-input-premium {
-    @apply w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/30;
+    @apply w-full pl-14 pr-6 py-4 rounded-full border border-border/5 bg-primary/[0.01] focus:bg-background focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/20;
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
