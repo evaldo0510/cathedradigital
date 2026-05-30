@@ -69,7 +69,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/20 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/15 hover:text-primary'
     )}
   >
     {isActive && (
@@ -94,7 +94,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-700",
-          isActive ? "text-primary opacity-80" : "text-muted-foreground/20 group-hover:text-primary/60"
+          isActive ? "text-primary opacity-60" : "text-muted-foreground/15 group-hover:text-primary/60"
         )}
         size={20}
         strokeWidth={isActive ? 2 : 1.2}
@@ -110,9 +110,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[7.5px] md:text-[9.5px] font-bold uppercase tracking-[0.25em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
+        "text-[7px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-700",
-        isActive ? 'text-primary' : 'text-muted-foreground/50'
+        isActive ? 'text-primary' : 'text-muted-foreground/30'
       )}
     >
       {label}
@@ -154,7 +154,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-12 bg-background/5 backdrop-blur-2xl rounded-full shadow-none border border-primary/[0.01] dark:border-white/[0.02] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
+        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-11 bg-background/2 backdrop-blur-xl rounded-full shadow-none border border-primary/[0.005] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

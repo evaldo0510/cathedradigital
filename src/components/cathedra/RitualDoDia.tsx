@@ -324,7 +324,7 @@ const RitualDoDia: React.FC = () => {
           
           {/* 1. Bible Reading */}
           <section className="space-y-3 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
-            <h4 id="lectio-heading" className="text-[7px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/20 md:text-primary/60">I. Lectio</h4>
+            <h4 id="lectio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/15 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
                 "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -344,7 +344,7 @@ const RitualDoDia: React.FC = () => {
 
           {/* 2. Reflection */}
           <section className="space-y-3 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
-            <h4 id="meditatio-heading" className="text-[7px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
+            <h4 id="meditatio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
                 "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -362,7 +362,7 @@ const RitualDoDia: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 lg:gap-20 items-stretch">
             {/* 3. Catechism */}
             <section className="space-y-4 md:space-y-12 text-center p-4 md:p-14 lg:p-24 bg-primary/[0.003] border border-primary/[0.01] rounded-[2rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.01]" aria-labelledby="traditio-heading">
-              <h4 id="traditio-heading" className="text-[7px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">III. Traditio</h4>
+              <h4 id="traditio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
                   "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
@@ -382,7 +382,7 @@ const RitualDoDia: React.FC = () => {
 
             {/* 4. Prayer */}
             <section className="space-y-4 md:space-y-12 text-center p-4 md:p-14 lg:p-24 bg-primary/[0.003] border border-primary/[0.01] rounded-[2rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.01]" aria-labelledby="oratio-heading">
-              <h4 id="oratio-heading" className="text-[7px] md:text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">IV. Oratio</h4>
+              <h4 id="oratio-heading" className="text-[6.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(
                   "w-full text-center group transition-all duration-1000 px-2 md:px-4 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",

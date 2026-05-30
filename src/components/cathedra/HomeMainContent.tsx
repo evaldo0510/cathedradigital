@@ -64,14 +64,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-16 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-12 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
           variant="glass"
         />
-        <div className="flex justify-center -mt-6 md:-mt-10 mb-8 md:mb-20">
+        <div className="flex justify-center -mt-4 md:-mt-10 mb-6 md:mb-20">
           <CathedraButton 
             variant="ghost" 
             size="sm"
@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-12 md:py-32 flex flex-col items-center gap-4 opacity-10 select-none pointer-events-none">
+      <div className="py-16 md:py-32 flex flex-col items-center gap-4 opacity-5 select-none pointer-events-none">
         <div className="w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
         <Sparkles className="w-3 h-3 text-primary/30" strokeWidth={0.5} />
       </div>
@@ -113,7 +113,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="outline" padding="none" className="flex-1 p-4 md:p-24 lg:p-32 border-primary/[0.01] bg-primary/[0.001]">
+          <CathedraCard variant="outline" padding="none" className="flex-1 p-4 md:p-24 lg:p-32 border-primary/[0.005] bg-transparent">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -131,7 +131,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <HomeCard
             ref={logosCardRef}
             variant="glass"
-            className="flex-1 p-5 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/[0.01] shadow-none bg-primary/[0.001]"
+            className="flex-1 p-5 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/[0.005] shadow-none bg-transparent"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -168,7 +168,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-16 md:py-48 flex justify-center opacity-5">
+      <div className="py-20 md:py-48 flex justify-center opacity-3">
         <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
@@ -180,7 +180,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <CathedraCard variant="outline" padding="none" className="p-2 md:p-40 lg:p-64 border-primary/[0.005] bg-transparent shadow-none">
+        <CathedraCard variant="outline" padding="none" className="p-2 md:p-40 lg:p-64 border-primary/[0.003] bg-transparent shadow-none">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
