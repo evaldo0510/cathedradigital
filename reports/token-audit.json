@@ -1,6 +1,24 @@
 {
-  "timestamp": "2026-05-30T15:41:08.595Z",
+  "timestamp": "2026-05-30T15:46:56.437Z",
   "totalIssues": 5,
+  "categories": [
+    {
+      "id": "spacing",
+      "count": 5
+    },
+    {
+      "id": "typography",
+      "count": 0
+    },
+    {
+      "id": "rounding",
+      "count": 0
+    },
+    {
+      "id": "shadows",
+      "count": 0
+    }
+  ],
   "results": [
     {
       "name": "Direct Spacing",
@@ -27,34 +45,34 @@
       ],
       "details": [
         {
-          "file": "unknown",
+          "file": "src/components/cathedra/AudioButton.tsx",
+          "line": "39",
+          "match": "w-4.5",
+          "content": "<Icons.Stop className=\"w-4.5 h-4.5 animate-pulse\" />"
+        },
+        {
+          "file": "src/components/cathedra/AudioButton.tsx",
+          "line": "39",
+          "match": "h-4.5",
+          "content": "<Icons.Stop className=\"w-4.5 h-4.5 animate-pulse\" />"
+        },
+        {
+          "file": "src/components/cathedra/AudioButton.tsx",
+          "line": "41",
+          "match": "w-4.5",
+          "content": "<Icons.Volume2 className=\"w-4.5 h-4.5 group-hover:scale-110 transition-transform\" />"
+        },
+        {
+          "file": "src/components/cathedra/AudioButton.tsx",
+          "line": "41",
+          "match": "h-4.5",
+          "content": "<Icons.Volume2 className=\"w-4.5 h-4.5 group-hover:scale-110 transition-transform\" />"
+        },
+        {
+          "file": "src/components/cathedra/CathedraButton.tsx",
           "line": "20",
           "match": "h-18",
           "content": "xl: 'px-spacing-3xl h-18 text-[12px] md:text-[16px]',"
-        },
-        {
-          "file": "unknown",
-          "line": "39",
-          "match": "w-4.5",
-          "content": "<Icons.Stop className=\"w-4.5 h-4.5 animate-pulse\" />"
-        },
-        {
-          "file": "unknown",
-          "line": "39",
-          "match": "h-4.5",
-          "content": "<Icons.Stop className=\"w-4.5 h-4.5 animate-pulse\" />"
-        },
-        {
-          "file": "unknown",
-          "line": "41",
-          "match": "w-4.5",
-          "content": "<Icons.Volume2 className=\"w-4.5 h-4.5 group-hover:scale-110 transition-transform\" />"
-        },
-        {
-          "file": "unknown",
-          "line": "41",
-          "match": "h-4.5",
-          "content": "<Icons.Volume2 className=\"w-4.5 h-4.5 group-hover:scale-110 transition-transform\" />"
         }
       ]
     },
@@ -87,6 +105,74 @@
       "issuesCount": 0,
       "summary": [],
       "details": []
+    }
+  ],
+  "history": [
+    {
+      "timestamp": "2026-05-30T15:46:56.091Z",
+      "totalIssues": 5,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 5
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:46:56.269Z",
+      "totalIssues": 5,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 5
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:46:56.437Z",
+      "totalIssues": 5,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 5
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
     }
   ]
 }

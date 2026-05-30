@@ -1,0 +1,68 @@
+[
+  {
+    "timestamp": "2026-05-30T15:46:56.091Z",
+    "totalIssues": 5,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5
+      },
+      {
+        "id": "typography",
+        "count": 0
+      },
+      {
+        "id": "rounding",
+        "count": 0
+      },
+      {
+        "id": "shadows",
+        "count": 0
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-05-30T15:46:56.269Z",
+    "totalIssues": 5,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5
+      },
+      {
+        "id": "typography",
+        "count": 0
+      },
+      {
+        "id": "rounding",
+        "count": 0
+      },
+      {
+        "id": "shadows",
+        "count": 0
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-05-30T15:46:56.437Z",
+    "totalIssues": 5,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5
+      },
+      {
+        "id": "typography",
+        "count": 0
+      },
+      {
+        "id": "rounding",
+        "count": 0
+      },
+      {
+        "id": "shadows",
+        "count": 0
+      }
+    ]
+  }
+]
