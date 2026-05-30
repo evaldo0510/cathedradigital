@@ -723,7 +723,7 @@ const Catechism: React.FC = memo(() => {
         />
 
         {/* Atmospheric Header - Mobile Only */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+        <div className="flex items-center justify-between gap-2 flex-wrap bg-background/40 backdrop-blur-3xl p-1.5 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-16 left-4 right-4 z-40 transition-all duration-700">
           <div className="flex items-center gap-1">
             <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
             <ReadingControlPanel />
