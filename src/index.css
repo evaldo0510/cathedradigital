@@ -29,41 +29,41 @@
     --background: 45 40% 98.8%;   /* #FEFDFB Cleaner off-white */
     --foreground: 220 30% 6%;     /* #0D0F12 Deeper, sharper Graphite */
     
-    --card: 0 0% 100%;
+    --card: 45 40% 98.8%;         /* Surface matches background for lower perception of boxes */
     --card-foreground: 220 30% 6%;
     
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 6%;
-    --popover-blur: 12px;
+    --popover-blur: 16px;
     
     /* Brand Colors - Sovereign Authority */
     --primary: 220 30% 4%;       /* #070809 Near black */
     --primary-foreground: 45 40% 99%;
     
-    --secondary: 40 45% 45%;     /* #B58B3A Deeper Sovereign Gold */
+    --secondary: 40 30% 40%;     /* More elegant, less saturated Gold */
     --secondary-foreground: 220 30% 5%;
     
     /* Interface Colors - Subdued Contrast */
-    --muted: 220 10% 96%;        /* Softer muted background */
-    --muted-foreground: 220 20% 25%; /* Subtler secondary text */
+    --muted: 45 20% 95%;         /* Warm muted for secondary surface */
+    --muted-foreground: 220 15% 45%; /* Legible but soft */
     
-    --accent: 40 35% 55% / 0.08;
+    --accent: 40 30% 40% / 0.04;
     --accent-foreground: 220 20% 10%;
     
     --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.01; /* Near absolute silence */
-    --input: 220 20% 10% / 0.02;
-    --ring: 40 45% 45% / 0.05;
+    --border: 220 30% 4% / 0.03; /* Extremely subtle borders */
+    --input: 220 30% 4% / 0.04;
+    --ring: 40 30% 40% / 0.1;
     
     /* Design Tokens */
     --radius: 2rem;
     --radius-lg: 2.5rem;
     --radius-sm: 1.25rem;
     
-    --shadow-premium: 0 10px 60px -15px rgba(0, 0, 0, 0.02);
-    --shadow-premium-hover: 0 20px 80px -20px rgba(0, 0, 0, 0.04);
+    --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.01);
+    --shadow-premium-hover: 0 20px 60px -20px rgba(0, 0, 0, 0.02);
     
     /* Spacing Scale - Premium Generous */
     --spacing-xs: 0.5rem;   /* 8px */
@@ -93,43 +93,43 @@
     --space-mobile-header-mb: 0.4rem;
     
     --space-desktop-base: 2rem;
-    --space-desktop-section: 10rem;
-    --space-desktop-stack: 3.5rem;
-    --space-desktop-padding: 2.5rem;
-    --space-desktop-header-mb: 8rem;
+    --space-desktop-section: 12rem; /* Increased for breathing room */
+    --space-desktop-stack: 4.5rem;   /* Increased for breathing room */
+    --space-desktop-padding: 3.5rem;
+    --space-desktop-header-mb: 10rem;
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 50% 1%;      /* Deeper Abyssal tone, avoid pure black */
-    --foreground: 45 8% 70%;       /* Soft antique white, less glare */
+    --background: 220 20% 4%;      /* Sophisticated Deep Blue-Grey, NOT black */
+    --foreground: 45 15% 85%;      /* Brighter but warm, high legibility */
     
-    --card: 220 40% 0.7%;          /* Near-invisible elevation */
-    --card-foreground: 45 8% 70%;
+    --card: 220 20% 4%;            /* Blend with background */
+    --card-foreground: 45 15% 85%;
     
-    --popover: 220 45% 0.7%;
-    --popover-foreground: 45 8% 70%;
+    --popover: 220 25% 6%;
+    --popover-foreground: 45 15% 85%;
     --popover-blur: 24px;
     
-    --primary: 42 15% 45%;         /* Muted, sophisticated Sovereign Gold */
-    --primary-foreground: 220 50% 0.1%;
+    --primary: 42 20% 60%;         /* Luminous Gold in dark mode */
+    --primary-foreground: 220 20% 2%;
     
-    --secondary: 220 30% 0.5%;      
-    --secondary-foreground: 42 15% 45%;
+    --secondary: 220 20% 6%;      
+    --secondary-foreground: 42 20% 60%;
     
-    --muted: 220 20% 1%;
-    --muted-foreground: 220 5% 30%; /* Minimum interference */
+    --muted: 220 20% 6%;           /* Surface secundária sutil */
+    --muted-foreground: 220 10% 50%; /* Less aggressive grey */
     
-    --accent: 42 15% 45% / 0.02;
-    --accent-foreground: 42 15% 45%;
+    --accent: 42 20% 60% / 0.05;
+    --accent-foreground: 42 20% 60%;
     
-    --destructive: 0 40% 20%;
+    --destructive: 0 40% 30%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.0005; /* Theoretical boundary */
-    --input: 220 20% 10% / 0.0005;
-    --ring: 42 15% 45% / 0.02;
+    --border: 45 15% 85% / 0.05;   /* Light, airy borders in dark */
+    --input: 45 15% 85% / 0.08;
+    --ring: 42 20% 60% / 0.1;
     
-    --shadow-premium: 0 40px 120px -20px rgba(0, 0, 0, 0.85);
+    --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.4);
   }
 
   .high-contrast {
@@ -284,24 +284,21 @@
   }
 
   .premium-card {
-    @apply bg-card/[0.05] border-none transition-all relative overflow-hidden;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    @apply transition-all relative overflow-hidden;
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-subtle);
   }
 
-
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/40 hover:border-primary/[0.08] focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-muted/20 focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply bg-primary/[0.005] shadow-[0_60px_140px_-30px_rgba(0,0,0,0.06)] -translate-y-2;
+    @apply -translate-y-1;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_60px_140px_-30px_rgba(0,0,0,0.4)];
+    @apply shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)];
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */

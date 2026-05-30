@@ -23,10 +23,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     };
 
     const variantStyles = {
-      default: 'premium-card dark:bg-primary/[0.01] dark:border-transparent hover:dark:border-primary/[0.05] will-change-[transform,opacity]',
-      interactive: 'premium-card-interactive dark:bg-primary/[0.005] dark:hover:bg-primary/[0.02] dark:border-transparent dark:hover:border-primary/[0.05] will-change-[transform,opacity]',
-      outline: 'bg-transparent border border-primary/[0.01] dark:border-primary/[0.02] rounded-premium will-change-[transform,opacity] transition-all duration-700',
-      glass: 'bg-background/2 backdrop-blur-sm border border-primary/[0.005] dark:border-primary/[0.01] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-700',
+      default: 'premium-card bg-transparent border-transparent will-change-[transform,opacity]',
+      interactive: 'premium-card-interactive bg-transparent hover:bg-muted/50 border-transparent will-change-[transform,opacity]',
+      outline: 'bg-transparent border border-primary/[0.03] dark:border-white/[0.03] rounded-premium will-change-[transform,opacity] transition-all duration-1000',
+      glass: 'bg-background/5 backdrop-blur-md border border-white/5 dark:border-white/[0.02] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-1000',
     };
 
     const isClickable = props.onClick || variant === 'interactive';
