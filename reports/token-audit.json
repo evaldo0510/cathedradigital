@@ -1,22 +1,22 @@
 {
-  "timestamp": "2026-05-30T15:54:49.607Z",
-  "totalIssues": 0,
+  "timestamp": "2026-05-30T15:55:58.182Z",
+  "totalIssues": 5,
   "categories": [
     {
       "id": "spacing",
-      "count": 0
+      "count": 2
     },
     {
       "id": "typography",
-      "count": 0
+      "count": 1
     },
     {
       "id": "rounding",
-      "count": 0
+      "count": 1
     },
     {
       "id": "shadows",
-      "count": 0
+      "count": 1
     }
   ],
   "results": [
@@ -37,8 +37,21 @@
         "min-h-0"
       ],
       "suggestion": "Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap=\"md\" />",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 2,
+      "details": [
+        {
+          "file": "src/components/TestCompliance.tsx",
+          "line": "5",
+          "match": "p-4",
+          "content": "<div className=\"p-4 m-2 rounded-md shadow-sm text-lg\">"
+        },
+        {
+          "file": "src/components/TestCompliance.tsx",
+          "line": "5",
+          "match": "m-2",
+          "content": "<div className=\"p-4 m-2 rounded-md shadow-sm text-lg\">"
+        }
+      ]
     },
     {
       "name": "Direct Typography",
@@ -46,8 +59,15 @@
       "regex": "\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b",
       "exclude": [],
       "suggestion": "Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size=\"lg\" />",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 1,
+      "details": [
+        {
+          "file": "src/components/TestCompliance.tsx",
+          "line": "5",
+          "match": "text-lg",
+          "content": "<div className=\"p-4 m-2 rounded-md shadow-sm text-lg\">"
+        }
+      ]
     },
     {
       "name": "Direct Rounding",
@@ -55,8 +75,15 @@
       "regex": "\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b",
       "exclude": [],
       "suggestion": "Use rounded-premium-sm to full (e.g., rounded-premium-md)",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 1,
+      "details": [
+        {
+          "file": "src/components/TestCompliance.tsx",
+          "line": "5",
+          "match": "rounded-md",
+          "content": "<div className=\"p-4 m-2 rounded-md shadow-sm text-lg\">"
+        }
+      ]
     },
     {
       "name": "Direct Shadows",
@@ -64,8 +91,15 @@
       "regex": "\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b",
       "exclude": [],
       "suggestion": "Use shadow-premium-sm to premium-hover (e.g., shadow-premium)",
-      "issuesCount": 0,
-      "details": []
+      "issuesCount": 1,
+      "details": [
+        {
+          "file": "src/components/TestCompliance.tsx",
+          "line": "5",
+          "match": "shadow-sm",
+          "content": "<div className=\"p-4 m-2 rounded-md shadow-sm text-lg\">"
+        }
+      ]
     }
   ],
   "history": [
@@ -330,6 +364,50 @@
         {
           "id": "shadows",
           "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:55:51.434Z",
+      "totalIssues": 0,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:55:58.182Z",
+      "totalIssues": 5,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 2
+        },
+        {
+          "id": "typography",
+          "count": 1
+        },
+        {
+          "id": "rounding",
+          "count": 1
+        },
+        {
+          "id": "shadows",
+          "count": 1
         }
       ]
     }

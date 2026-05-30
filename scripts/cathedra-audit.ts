@@ -7,6 +7,7 @@ const args = process.argv.slice(2);
 const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '5');
 const softMode = args.includes('--soft');
 const fixMode = args.includes('--fix');
+const dryRun = args.includes('--dry-run');
 
 const spacingMap: Record<string, string> = {
   '0.5': 'spacing-3xs',
@@ -112,6 +113,7 @@ let fixedCount = 0;
 
 console.log('--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---');
 if (fixMode) console.log('--- AUTO-FIX MODE ENABLED ---');
+if (dryRun) console.log('--- DRY RUN MODE: No files will be modified ---');
 
 forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
@@ -142,16 +144,19 @@ forbiddenPatterns.forEach(pattern => {
                 });
                 totalIssues++;
 
-                if (fixMode) {
+                if (fixMode || dryRun) {
                   const fixedValue = pattern.fix(match);
                   if (fixedValue !== match) {
-                    let fileContent = filesToFix.get(file) || readFileSync(file, 'utf8');
-                    // Simple replacement, careful with multiple matches on same line
-                    // Using a more robust approach would be better but this is a start
-                    const newContent = fileContent.replace(new RegExp(`\\b${match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), fixedValue);
-                    if (newContent !== fileContent) {
-                      filesToFix.set(file, newContent);
+                    if (dryRun) {
+                      console.log(`  [DRY RUN] Would replace "${match}" with "${fixedValue}" in ${file}:${lineNumber}`);
                       fixedCount++;
+                    } else if (fixMode) {
+                      let fileContent = filesToFix.get(file) || readFileSync(file, 'utf8');
+                      const newContent = fileContent.replace(new RegExp(`\\b${match.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), fixedValue);
+                      if (newContent !== fileContent) {
+                        filesToFix.set(file, newContent);
+                        fixedCount++;
+                      }
                     }
                   }
                 }
@@ -161,7 +166,7 @@ forbiddenPatterns.forEach(pattern => {
         }
       });
 
-      if (fixMode && filesToFix.size > 0) {
+      if (fixMode && !dryRun && filesToFix.size > 0) {
         filesToFix.forEach((content, path) => {
           writeFileSync(path, content);
         });
@@ -186,9 +191,10 @@ forbiddenPatterns.forEach(pattern => {
   }
 });
 
-if (fixMode) {
+if (dryRun) {
+  console.log(`\n--- DRY RUN FINISHED: ${fixedCount} potential issues identified ---`);
+} else if (fixMode) {
   console.log(`\n--- FIXED ${fixedCount} ISSUES AUTOMATICALLY ---`);
-  // Recalculate issues after fix if possible or just inform user
 }
 
 const reportDir = join(process.cwd(), 'reports');
