@@ -43,15 +43,31 @@ reports/
   });
 
   const runVerify = (args: string[] = [], env: any = {}) => {
+    // Create a temporary file for GitHub Summary if requested
+    const summaryPath = join(TEST_DIR, 'summary.md');
+    const githubEnv = { 
+      ...process.env, 
+      ...env,
+      REPORTS_DIR_OVERRIDE: TEST_DIR,
+      README_PATH_OVERRIDE: TEST_README,
+    };
+    
+    if (env.GITHUB_ACTIONS) {
+      githubEnv.GITHUB_STEP_SUMMARY = summaryPath;
+      if (!existsSync(summaryPath)) writeFileSync(summaryPath, '');
+    }
+
     try {
       const command = `bun run ${SCRIPT_PATH} ${args.join(' ')}`;
       const output = execSync(command, { 
-        env: { ...process.env, ...env },
+        env: githubEnv,
         encoding: 'utf8' 
       });
-      return { status: 0, output };
+      const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      return { status: 0, output, summary };
     } catch (error: any) {
-      return { status: error.status, output: error.stdout };
+      const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      return { status: error.status, output: error.stdout, summary };
     }
   };
 
