@@ -105,7 +105,6 @@ if (updateMode) {
   const corrupted = validateJsonFiles(actualFiles);
   if (corrupted.length > 0) {
     console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
-    // Update mode also fails on corruption to avoid documenting bad data
     process.exit(1);
   }
 
@@ -119,15 +118,25 @@ if (updateMode) {
   let readmeContent = readFileSync(README_PATH, "utf8");
   const treeRegex = /#### Estrutura de Relatórios e Logs \(Exemplo Real\)\n\nAo executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pasta `\.\/reports` é populada com a seguinte estrutura:\n\n```text\n([\s\S]*?)```/;
   
+  let hasDivergence = false; // For summary purposes in update mode
+  
   if (treeRegex.test(readmeContent)) {
     const oldTreeMatch = readmeContent.match(treeRegex);
     const oldTree = oldTreeMatch ? oldTreeMatch[1] : "";
+    hasDivergence = oldTree.trim() !== treeStr.trim();
 
     if (dryRun) {
       console.log(`${YELLOW}${BOLD}⚠ Modo DRY RUN: Nenhuma alteração será feita.${RESET}`);
       console.log(`${BOLD}Divergências detectadas que seriam aplicadas:${RESET}\n`);
       console.log(treeStr);
-      process.exit(0); // dry-run always exits 0 unless there's an internal error
+      
+      if (process.env.GITHUB_ACTIONS) {
+        let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
+        summary += `⚠️ **Status:** Simulação (Dry Run)\n`;
+        summary += `📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.\n\n`;
+        writeSummary(summary);
+      }
+      process.exit(0);
     }
 
     const newContent = readmeContent.replace(treeRegex, (match, p1) => {
@@ -144,6 +153,13 @@ if (updateMode) {
     
     writeFileSync("divergences.md", divergenceContent);
     
+    if (process.env.GITHUB_ACTIONS) {
+      let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
+      summary += `🔄 **Status:** Sincronizado\n`;
+      summary += `📝 **Motivo do Exit Code:** README atualizado automaticamente.\n\n`;
+      writeSummary(summary);
+    }
+
     console.log(`${GREEN}✓ README.md atualizado com sucesso.${RESET}`);
     console.log(`${BOLD}i Resumo gerado em divergences.md${RESET}`);
   } else {
