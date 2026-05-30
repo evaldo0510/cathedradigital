@@ -98,9 +98,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-32 md:py-64 flex flex-col items-center gap-4 opacity-5 select-none pointer-events-none">
-        <div className="w-px h-24 md:h-48 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-        <Sparkles className="w-4 h-4 text-primary/30" strokeWidth={0.3} />
+      <div className="py-40 md:py-80 flex flex-col items-center gap-6 opacity-5 select-none pointer-events-none">
+        <div className="w-px h-32 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
+        <Sparkles className="w-4 h-4 text-primary/20" strokeWidth={0.2} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
@@ -168,8 +168,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-32 md:py-80 flex justify-center opacity-3">
-        <div className="w-24 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+      <div className="py-40 md:py-96 flex justify-center opacity-2">
+        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}

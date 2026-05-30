@@ -243,7 +243,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-2 left-2 bottom-2 w-[min(280px,85vw)] sm:w-[320px] md:w-[380px] bg-white/80 dark:bg-background/80 backdrop-blur-3xl border border-black/[0.02] dark:border-white/[0.03] flex flex-col p-5 md:p-12 z-[170] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.25rem+env(safe-area-inset-top,0px))] pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-2 left-2 bottom-2 w-[min(260px,80vw)] sm:w-[320px] md:w-[380px] bg-white/60 dark:bg-background/60 backdrop-blur-[50px] border border-black/[0.005] dark:border-white/[0.01] flex flex-col p-4 md:p-12 z-[170] shadow-[0_60px_150px_-30px_rgba(0,0,0,0.5)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
@@ -281,7 +281,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-8 overflow-y-auto pb-6 no-scrollbar pr-2" role="navigation">
+            <nav className="flex-1 space-y-7 overflow-y-auto pb-6 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
@@ -294,7 +294,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[7px] font-black uppercase tracking-[0.5em] text-primary/[0.08] dark:text-primary/10 mb-4 px-4 select-none">/ {section.label}</h3>
+                  <h3 className="text-[6.5px] font-black uppercase tracking-[0.6em] text-primary/[0.05] dark:text-primary/10 mb-3 px-4 select-none italic">/ {section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
@@ -307,13 +307,13 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[48px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-2.5 rounded-xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[44px]
                               ${isActive
-                                ? 'bg-primary/[0.02] dark:bg-white/[0.02] text-primary shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)]'
-                                : 'text-muted-foreground/20 dark:text-muted-foreground/20 hover:bg-primary/[0.005] dark:hover:bg-white/[0.005] hover:text-primary'}`}
+                                ? 'bg-primary/[0.015] dark:bg-white/[0.015] text-primary shadow-[0_2px_10px_-1px_rgba(0,0,0,0.02)]'
+                                : 'text-muted-foreground/15 dark:text-muted-foreground/15 hover:bg-primary/[0.003] dark:hover:bg-white/[0.003] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 16, strokeWidth: isActive ? 1.4 : 0.8 })}
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 15, strokeWidth: isActive ? 1.2 : 0.6 })}
                             </span>
                             <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (

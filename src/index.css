@@ -79,16 +79,16 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1800px;
-    --transition-premium: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-premium: 2200ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 1200ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Global Spacing Rhythm Tokens */
-    --space-mobile-base: 0.5rem;
-    --space-mobile-section: 1.5rem;
-    --space-mobile-section-sm: 1rem;
-    --space-mobile-stack: 0.5rem;
-    --space-mobile-stack-lg: 1rem;
-    --space-mobile-padding: 0.75rem;
+    --space-mobile-base: 0.4rem;
+    --space-mobile-section: 1.25rem;
+    --space-mobile-section-sm: 0.75rem;
+    --space-mobile-stack: 0.4rem;
+    --space-mobile-stack-lg: 0.8rem;
+    --space-mobile-padding: 0.6rem;
     --space-mobile-header-mb: 1.25rem;
     
     --space-desktop-base: 2rem;
@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 50% 1%;      /* Deeper, more abyssal Night Navy */
-    --foreground: 45 10% 85%;      /* Softer, more contemplative white */
+    --background: 220 60% 0.6%;    /* Abyssal Silent Navy */
+    --foreground: 45 5% 75%;       /* Aged Parchment white */
     
-    --card: 220 40% 2%;            /* Ghost-level elevation */
-    --card-foreground: 45 10% 85%;
+    --card: 220 40% 1%;            /* Ghost elevation */
+    --card-foreground: 45 5% 75%;
     
-    --popover: 220 40% 2%;
-    --popover-foreground: 45 10% 85%;
+    --popover: 220 45% 1%;
+    --popover-foreground: 45 5% 75%;
     
-    --primary: 42 30% 60%;         /* More muted, sophisticated Gold */
+    --primary: 42 20% 50%;         /* Atmospheric, muted Gold */
     --primary-foreground: 220 50% 0.5%;
     
-    --secondary: 220 30% 1.5%;      
-    --secondary-foreground: 42 30% 60%;
+    --secondary: 220 30% 0.8%;      
+    --secondary-foreground: 42 20% 50%;
     
-    --muted: 220 20% 3%;
-    --muted-foreground: 220 5% 50%; /* Further reduced for non-essentials */
+    --muted: 220 20% 1.5%;
+    --muted-foreground: 220 5% 40%; /* Minimum interference */
     
-    --accent: 42 30% 60% / 0.04;
-    --accent-foreground: 42 30% 60%;
+    --accent: 42 20% 50% / 0.02;
+    --accent-foreground: 42 20% 50%;
     
-    --destructive: 0 50% 40%;
+    --destructive: 0 40% 30%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.005; /* Almost non-existent borders */
-    --input: 220 20% 10% / 0.005;
-    --ring: 42 30% 60% / 0.08;
+    --border: 220 20% 10% / 0.002; /* Invisible structure */
+    --input: 220 20% 10% / 0.002;
+    --ring: 42 20% 50% / 0.04;
     
-    --shadow-premium: 0 80px 250px -50px rgba(0, 0, 0, 1);
+    --shadow-premium: 0 120px 400px -80px rgba(0, 0, 0, 1);
   }
 
   .high-contrast {
