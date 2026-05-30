@@ -7,10 +7,11 @@ interface CathedraCardProps extends HTMLMotionProps<"div"> {
   variant?: 'default' | 'interactive' | 'outline' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   hover?: boolean;
+  as?: any;
 }
 
 const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
-  ({ className, variant = 'default', padding = 'md', hover = false, children, ...props }, ref) => {
+  ({ className, variant = 'default', padding = 'md', hover = false, as: Component = motion.div, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     const paddingMap = {
       none: '',
@@ -28,8 +29,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
       glass: 'bg-background/2 backdrop-blur-sm border border-primary/[0.005] dark:border-primary/[0.01] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-700',
     };
 
+    const isClickable = props.onClick || variant === 'interactive';
+
     return (
-      <motion.div
+      <Component
         ref={ref as any}
         className={cn(
           variantStyles[variant],
@@ -45,7 +48,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         {...props}
       >
         {children}
-      </motion.div>
+      </Component>
     );
   }
 );
