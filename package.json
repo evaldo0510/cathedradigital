@@ -27,7 +27,9 @@
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
     "test:spacing-audit": "bun run scripts/audit-spacing.ts",
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --playwright",
-    "generate:seo": "bun run scripts/generate-sitemap.ts"
+    "generate:seo": "bun run scripts/generate-sitemap.ts",
+    "token-audit": "bun run scripts/cathedra-audit.ts",
+    "token-audit:ci": "CI=true bun run scripts/cathedra-audit.ts"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",

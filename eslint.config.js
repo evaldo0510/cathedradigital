@@ -26,8 +26,20 @@ export default tseslint.config(
       "no-restricted-syntax": [
         "error",
         {
-          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p[xy]?|m[xy]?)-([1-9]|\\[.+\\])\\b/]",
-          "message": "Use Spacing Rhythm tokens (section-rhythm, stack-rhythm, padding-rhythm, header-margin-rhythm) instead of raw or arbitrary Tailwind spacing classes."
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\b(p|m|gap|space|w|h)-[0-9.]+\\b/]",
+          "message": "Direct Tailwind spacing detected. Use Cathedra spacing tokens (e.g., p-spacing-md) or layout components (<Stack />, <Box />)."
+        },
+        {
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b/]",
+          "message": "Direct Tailwind typography detected. Use Cathedra premium typography tokens (e.g., text-premium-lg) or <Typography />."
+        },
+        {
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b/]",
+          "message": "Direct Tailwind rounding detected. Use Cathedra rounded-premium tokens."
+        },
+        {
+          "selector": "JSXAttribute[name.name='className'] > Literal[value=/\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b/]",
+          "message": "Direct Tailwind shadows detected. Use Cathedra shadow-premium tokens."
         }
       ]
     },
