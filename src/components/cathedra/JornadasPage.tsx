@@ -716,7 +716,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </aside>
       </div>
     </div>
-    </>
+    </ContemplativeLayout>
   );
 });
 
