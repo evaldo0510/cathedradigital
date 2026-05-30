@@ -14,7 +14,7 @@ const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }
   if (loading) {
     return (
       <div ref={ref} className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+        <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
     );
   }

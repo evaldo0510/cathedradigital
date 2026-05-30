@@ -14,10 +14,10 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     const sizeMap = {
-      sm: 'px-6 h-10 text-[9px] md:text-[10px]',
-      md: 'px-8 h-12 text-[10px] md:text-[11px]',
-      lg: 'px-12 h-14 text-[11px] md:text-[12px]',
-      xl: 'px-16 h-18 text-[12px] md:text-[16px]',
+      sm: 'px-spacing-lg h-spacing-xl text-[9px] md:text-[10px]',
+      md: 'px-spacing-xl h-spacing-2xl text-[10px] md:text-[11px]',
+      lg: 'px-spacing-2xl h-spacing-2xl text-[11px] md:text-[12px]',
+      xl: 'px-spacing-3xl h-18 text-[12px] md:text-[16px]',
     };
 
     const variantStyles = {
@@ -41,7 +41,7 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
         {...(props as any)}
       >
         {isLoading ? (
-          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+          <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-full animate-spin" />
         ) : (
           <>
             {icon && <span className="flex-shrink-0">{icon}</span>}

@@ -20,27 +20,27 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
   if (notes.length === 0) return null;
 
   return (
-    <Card className="bg-primary/[0.02] border-primary/5 rounded-premium overflow-hidden mt-12 mb-12">
-      <div className="p-6 md:p-8 space-y-6">
-        <div className="flex items-center gap-3">
-          <Icons.BookOpen className="w-5 h-5 text-primary/40" />
+    <Card className="bg-primary/[0.02] border-primary/5 rounded-premium overflow-hidden mt-spacing-2xl mb-spacing-2xl">
+      <div className="p-spacing-lg md:p-spacing-xl space-y-spacing-lg">
+        <div className="flex items-center gap-spacing-sm">
+          <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary/40" />
           <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">{title}</h3>
-          <span className="ml-auto bg-primary/10 text-primary text-[10px] font-black px-2 py-0.5 rounded-full">
+          <span className="ml-auto bg-primary/10 text-primary text-[10px] font-black px-spacing-xs py-spacing-3xs rounded-full">
             {notes.length}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
           {notes.map((note) => (
             <button 
               key={note.id} 
-              className="group p-5 bg-card border border-border/40 rounded-3xl hover:border-primary/20 transition-all text-left relative focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="group p-spacing-md bg-card border border-border/40 rounded-premium hover:border-primary/20 transition-all text-left relative focus:outline-none focus:ring-2 focus:ring-primary/20"
               onClick={() => onNoteClick?.(note)}
             >
-              <div className="flex items-start gap-3">
-                <div className={`w-1.5 h-12 rounded-full flex-shrink-0 bg-primary/10`} />
-                <div className="space-y-1 pr-8">
-                  <div className="flex items-center gap-2">
+              <div className="flex items-start gap-spacing-sm">
+                <div className={`w-spacing-2xs h-spacing-2xl rounded-full flex-shrink-0 bg-primary/10`} />
+                <div className="space-y-spacing-2xs pr-spacing-xl">
+                  <div className="flex items-center gap-spacing-xs">
                     <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">
                       {note.verse ? `Versículo ${note.verse}` : note.paragraph ? `§${note.paragraph}` : 'Geral'}
                     </span>
@@ -58,13 +58,13 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-2 right-2 h-7 w-7 rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:bg-destructive/5"
+                  className="absolute top-spacing-xs right-spacing-xs h-spacing-lg w-spacing-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:bg-destructive/5"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDeleteNote(note.id);
                   }}
                 >
-                  <Icons.X className="w-3 h-3" />
+                  <Icons.X className="w-spacing-sm h-spacing-sm" />
                 </Button>
               )}
             </button>

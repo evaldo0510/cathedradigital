@@ -148,38 +148,38 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
   if (settings.totalSilence) return null;
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex items-center gap-spacing-xs ${className}`}>
       <Button
         onClick={handlePlay}
         disabled={isLoading}
         variant={variant}
         size="sm"
-        className={`rounded-full flex items-center gap-2 transition-all ${
+        className={`rounded-full flex items-center gap-spacing-xs transition-all ${
           isPlaying ? 'bg-primary/10 text-primary border-primary/30' : ''
         }`}
       >
         {isLoading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
+          <Loader2 className="w-spacing-md h-spacing-md animate-spin" />
         ) : isPlaying ? (
-          <div className="flex items-end gap-[1px] h-3 mb-0.5">
-            <div className="w-[2px] h-2 bg-primary animate-[bounce_0.6s_infinite_ease-in-out]" />
-            <div className="w-[2px] h-3 bg-primary animate-[bounce_0.8s_infinite_ease-in-out]" />
-            <div className="w-[2px] h-1.5 bg-primary animate-[bounce_0.5s_infinite_ease-in-out]" />
-            <div className="w-[2px] h-2.5 bg-primary animate-[bounce_0.7s_infinite_ease-in-out]" />
+          <div className="flex items-end gap-[1px] h-spacing-sm mb-spacing-3xs">
+            <div className="w-[2px] h-spacing-xs bg-primary animate-[bounce_0.6s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-spacing-sm bg-primary animate-[bounce_0.8s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-spacing-2xs bg-primary animate-[bounce_0.5s_infinite_ease-in-out]" />
+            <div className="w-[2px] h-spacing-xs bg-primary animate-[bounce_0.7s_infinite_ease-in-out]" />
           </div>
         ) : (
-          <Headphones className="w-4 h-4" />
+          <Headphones className="w-spacing-md h-spacing-md" />
         )}
-        {showTitle && <span className="text-premium-tiny font-black uppercase tracking-widest">{title}</span>}
+        {showTitle && <span className="text-xs font-black uppercase tracking-widest">{title}</span>}
       </Button>
       
       {isPlaying && (
         <Button 
           onClick={resetAudio}
-          className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="p-spacing-xs text-muted-foreground hover:text-foreground transition-colors"
           title="Reiniciar"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw className="w-spacing-sm h-spacing-sm" />
         </Button>
       )}
     </div>

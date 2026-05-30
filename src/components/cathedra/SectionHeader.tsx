@@ -16,7 +16,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => {
   return (
     <div className={cn(
-      "flex flex-col gap-xs md:gap-md header-margin-rhythm items-center",
+      "flex flex-col gap-spacing-xs md:gap-spacing-md header-margin-rhythm items-center",
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
@@ -24,7 +24,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
         {title}
       </h2>
       {subtitle && (
-        <p className="font-serif italic text-muted-foreground/40 text-base md:text-2xl max-w-2xl leading-relaxed tracking-premium-wide px-md md:px-xl transition-all duration-1000">
+        <p className="font-serif italic text-muted-foreground/40 text-base md:text-2xl max-w-spacing-2xl leading-relaxed tracking-premium-wide px-spacing-md md:px-spacing-xl transition-all duration-1000">
           {subtitle}
         </p>
       )}

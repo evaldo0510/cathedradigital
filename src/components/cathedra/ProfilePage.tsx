@@ -188,7 +188,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[40vh]">
-      <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+      <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
     </div>
   );
 
@@ -198,19 +198,19 @@ const ProfilePage: React.FC = () => {
   const memberSince = new Date(user.created_at).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long' });
 
   const statCards = [
-    { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-5 h-5" /> },
-    { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-5 h-5" /> },
-    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-5 h-5" /> },
-    { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-5 h-5" /> },
+    { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-spacing-md h-spacing-md" /> },
+    { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
+    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-spacing-md h-spacing-md" /> },
+    { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-spacing-md h-spacing-md" /> },
   ];
 
   return (
     <ContemplativeLayout
       subtitle="Santuário Pessoal"
       title="Meu Perfil"
-      maxW="max-w-2xl"
+      maxW="max-w-spacing-2xl"
     >
-      <div className="space-y-8 relative">
+      <div className="space-y-spacing-xl relative">
       <AnimatePresence>
         {showLevelUp && (
           <motion.div
@@ -222,42 +222,42 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ y: 40 }}
               animate={{ y: 0 }}
-              className="bg-card border-2 border-primary rounded-full p-8 shadow-premium-hover text-center pointer-events-auto max-w-sm mx-4"
+              className="bg-card border-2 border-primary rounded-full p-spacing-xl shadow-premium-hover text-center pointer-events-auto max-w-spacing-sm mx-spacing-md"
             >
               <motion.div
                 animate={{ rotate: [0, -10, 10, -10, 10, 0], scale: [1, 1.3, 1] }}
                 transition={{ duration: 0.8 }}
-                className="flex justify-center mb-3"
+                className="flex justify-center mb-spacing-sm"
               >
-                <Icons.PartyPopper className="w-16 h-16 text-primary" />
+                <Icons.PartyPopper className="w-spacing-3xl h-spacing-3xl text-primary" />
               </motion.div>
-              <h2 className="text-xl font-black text-foreground mb-1">Nível Alcançado!</h2>
-              <p className="text-2xl font-black text-primary mb-2">{levelName}</p>
+              <h2 className="text-xl font-black text-foreground mb-spacing-2xs">Nível Alcançado!</h2>
+              <p className="text-2xl font-black text-primary mb-spacing-xs">{levelName}</p>
               <p className="text-xs text-muted-foreground">Nível {currentLevelIdx + 1} · {totalXp} XP</p>
-              <div className="flex justify-center gap-2 mt-3 text-primary/40">
-                <Icons.Sparkles className="w-5 h-5" />
-                <Icons.Star className="w-5 h-5" />
-                <Icons.Zap className="w-5 h-5" />
+              <div className="flex justify-center gap-spacing-xs mt-spacing-sm text-primary/40">
+                <Icons.Sparkles className="w-spacing-md h-spacing-md" />
+                <Icons.Star className="w-spacing-md h-spacing-md" />
+                <Icons.Zap className="w-spacing-md h-spacing-md" />
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="flex justify-center mb-8">
+      <div className="flex justify-center mb-spacing-xl">
         <CathedraButton 
           variant="outline" 
           onClick={() => navigate('/spiritual-profile')}
-          className="rounded-full px-8 h-12 border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
+          className="rounded-full px-spacing-xl h-spacing-2xl border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
         >
-          <Icons.Sparkles className="w-4 h-4 mr-2" />
+          <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" />
           Ver Perfil Espiritual Contemplativo
         </CathedraButton>
       </div>
 
-      <div className="text-center space-y-4">
-        <div className="relative w-24 h-24 mx-auto group">
-          <Avatar className="w-24 h-24 border-4 border-primary/20">
+      <div className="text-center space-y-spacing-md">
+        <div className="relative w-spacing-4xl h-spacing-4xl mx-auto group">
+          <Avatar className="w-spacing-4xl h-spacing-4xl border-4 border-primary/20">
             {avatarUrl ? <AvatarImage src={avatarUrl} alt={profile.name} /> : null}
             <AvatarFallback className="text-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
           </Avatar>
@@ -268,9 +268,9 @@ const ProfilePage: React.FC = () => {
             aria-label="Alterar foto de perfil"
           >
             {uploading ? (
-              <div className="w-4 h-4 border-2 border-secondary border-t-transparent rounded-full animate-spin" />
+              <div className="w-spacing-md h-spacing-md border-2 border-secondary border-t-transparent rounded-full animate-spin" />
             ) : (
-              <Icons.Feather className="w-5 h-5 text-white" />
+              <Icons.Feather className="w-spacing-md h-spacing-md text-white" />
             )}
           </CathedraButton>
           <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
@@ -284,7 +284,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <CathedraCard className="p-8 space-y-4">
+      <CathedraCard className="p-spacing-xl space-y-spacing-md">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
@@ -295,7 +295,7 @@ const ProfilePage: React.FC = () => {
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
+        <div className="relative h-spacing-sm bg-muted rounded-full overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
@@ -307,9 +307,9 @@ const ProfilePage: React.FC = () => {
         </div>
       </CathedraCard>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm">
         {statCards.map(s => (
-          <CathedraCard key={s.label} className="p-4 text-center space-y-1">
+          <CathedraCard key={s.label} className="p-spacing-md text-center space-y-spacing-2xs">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
@@ -317,30 +317,30 @@ const ProfilePage: React.FC = () => {
         ))}
       </div>
 
-      <CathedraCard className="p-8 space-y-6">
+      <CathedraCard className="p-spacing-xl space-y-spacing-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
           <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-spacing-sm">
           {badges.map(b => (
             <div
               key={b.id}
-              className={`relative rounded-full p-3 text-center transition-all ${
+              className={`relative rounded-full p-spacing-sm text-center transition-all ${
                 b.unlocked
                   ? 'bg-primary/10 border border-primary/30'
                   : 'bg-muted/50 border border-border opacity-50 grayscale'
               }`}
               title={b.description}
             >
-              <div className="flex justify-center mb-1 text-primary">
+              <div className="flex justify-center mb-spacing-2xs text-primary">
                 {b.icon}
               </div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{b.description}</p>
+              <p className="text-[10px] text-muted-foreground mt-spacing-3xs">{b.description}</p>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
-                  <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
+                <div className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-md h-spacing-md bg-primary rounded-full flex items-center justify-center">
+                  <Icons.Star className="w-spacing-xs h-spacing-xs text-primary-foreground fill-current" />
                 </div>
               )}
             </div>
@@ -348,36 +348,36 @@ const ProfilePage: React.FC = () => {
         </div>
       </CathedraCard>
 
-      <CathedraCard className="p-8 space-y-6">
+      <CathedraCard className="p-spacing-xl space-y-spacing-lg">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-spacing-md">
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             "Sua contribuição é o que nos permite continuar levando a Luz da Verdade a milhares de corações."
           </p>
           <CathedraButton 
             variant="outline" 
-            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
+            className="w-full h-spacing-2xl rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-spacing-xs font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
             onClick={() => navigate('/transactions/my')}
           >
-            <Icons.History className="w-4 h-4" />
+            <Icons.History className="w-spacing-md h-spacing-md" />
             Ver Histórico de Doações
           </CathedraButton>
 
         </div>
       </CathedraCard>
 
-      <CathedraCard className="p-8 space-y-8">
+      <CathedraCard className="p-spacing-xl space-y-spacing-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Icons.Bell className="w-4 h-4 text-primary" />
+        <div className="space-y-spacing-md">
+          <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-spacing-2xs">
+              <div className="flex items-center gap-spacing-xs">
+                <Icons.Bell className="w-spacing-md h-spacing-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Push Notifications</p>
               </div>
               <p className="text-[10px] text-muted-foreground">Lembretes diários de oração.</p>
@@ -385,12 +385,12 @@ const ProfilePage: React.FC = () => {
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/20 shadow-soft">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Icons.Whatsapp className="w-4 h-4 text-primary" />
+          <div className="flex items-center justify-between p-spacing-sm bg-primary/5 rounded-premium border border-primary/20 shadow-md">
+            <div className="space-y-spacing-2xs">
+              <div className="flex items-center gap-spacing-xs">
+                <Icons.Whatsapp className="w-spacing-md h-spacing-md text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
+                <div className="px-spacing-2xs py-spacing-3xs rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
               </div>
               <p className="text-[10px] text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
@@ -401,26 +401,26 @@ const ProfilePage: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="space-y-2 pt-2"
+              className="space-y-spacing-xs pt-spacing-xs"
             >
-              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-spacing-2xs">Número do WhatsApp (com DDD)</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
+                <span className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
                 <input
                   type="tel"
                   value={whatsappNumber}
                   onChange={e => setWhatsappNumber(e.target.value.replace(/\D/g, ''))}
-                  className="w-full pl-12 pr-4 py-3 bg-muted border border-border rounded-full text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
+                  className="w-full pl-spacing-2xl pr-spacing-md py-spacing-sm bg-muted border border-border rounded-full text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary font-mono"
                   placeholder="11999999999"
                   maxLength={11}
                 />
               </div>
             </motion.div>
           )}
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Icons.Clock className="w-4 h-4 text-primary" />
+          <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-spacing-2xs">
+              <div className="flex items-center gap-spacing-xs">
+                <Icons.Clock className="w-spacing-md h-spacing-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Horário do Ritual</p>
               </div>
               <p className="text-[10px] text-muted-foreground">Sua jornada diária começa aqui.</p>
@@ -433,15 +433,15 @@ const ProfilePage: React.FC = () => {
             />
           </div>
           
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <Icons.Star className="w-4 h-4 text-primary" />
+          <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-spacing-2xs">
+              <div className="flex items-center gap-spacing-xs">
+                <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
                 <p className="text-sm font-bold text-foreground">Meta Semanal</p>
               </div>
               <p className="text-[10px] text-muted-foreground">Dias de leitura por semana.</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-spacing-xs">
               <span className="text-sm font-bold text-primary">{weeklyGoal} dias</span>
               <input 
                 type="range" 
@@ -449,7 +449,7 @@ const ProfilePage: React.FC = () => {
                 max="7" 
                 value={weeklyGoal}
                 onChange={e => setWeeklyGoal(parseInt(e.target.value))}
-                className="w-24 h-2 bg-muted rounded-full accent-primary"
+                className="w-spacing-4xl h-spacing-xs bg-muted rounded-full accent-primary"
               />
             </div>
           </div>
@@ -467,12 +467,12 @@ const ProfilePage: React.FC = () => {
             className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group" 
             onClick={() => navigate(AppRoute.PRICING)}
           >
-            <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
-              <Icons.Star className="w-20 h-20 text-secondary fill-current" />
+            <div className="absolute top-0 right-0 p-spacing-lg opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
+              <Icons.Star className="w-spacing-3xl h-spacing-3xl text-secondary fill-current" />
             </div>
-            <div className="p-6 space-y-4">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="px-2 py-0.5 rounded-full bg-secondary/20 text-amber-800 dark:text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/30">
+            <div className="p-spacing-lg space-y-spacing-md">
+              <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
+                <div className="px-spacing-xs py-spacing-3xs rounded-full bg-secondary/20 text-amber-800 dark:text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
                 </div>
               </div>
@@ -480,52 +480,52 @@ const ProfilePage: React.FC = () => {
               <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
                 Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
               </p>
-              <CathedraButton size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-10 px-6">
-                Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
+              <CathedraButton size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-spacing-xl px-spacing-lg">
+                Ver Planos <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
               </CathedraButton>
             </div>
           </CathedraCard>
         </motion.div>
       )}
 
-      <CathedraCard className="p-6 space-y-5">
+      <CathedraCard className="p-spacing-lg space-y-spacing-md">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
-        <div className="space-y-2">
+        <div className="space-y-spacing-xs">
           <label className="text-xs font-bold text-foreground">Nome</label>
           <input
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-spacing-xs">
           <label className="text-xs font-bold text-foreground">Bio</label>
           <textarea
             value={bio}
             onChange={e => setBio(e.target.value)}
             rows={4}
-            className="w-full bg-background border border-border rounded-2xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            className="w-full bg-background border border-border rounded-premium p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           />
         </div>
 
         {/* Localização Eclesial */}
-        <div className="border-t border-border pt-5 space-y-4">
-          <div className="flex items-center gap-2 mb-1">
-            <Icons.Church className="w-4 h-4 text-primary" />
+        <div className="border-t border-border pt-spacing-md space-y-spacing-md">
+          <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
+            <Icons.Church className="w-spacing-md h-spacing-md text-primary" />
             <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
           </div>
-          <p className="text-[10px] text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiênica.</p>
+          <p className="text-[10px] text-muted-foreground -mt-spacing-xs">Opcional — ajuda a personalizar sua experiênica.</p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+            <div className="space-y-spacing-2xs">
               <label className="text-xs font-bold text-foreground">Estado</label>
               <select
                 value={estado}
                 onChange={e => { setEstado(e.target.value); setDiocese(''); }}
-                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+                className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
               >
                 <option value="">Selecione...</option>
                 {ESTADOS_BRASIL.map(uf => (
@@ -534,13 +534,13 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-spacing-2xs">
               <label className="text-xs font-bold text-foreground">Diocese</label>
               <select
                 value={diocese}
                 onChange={e => setDiocese(e.target.value)}
                 disabled={!estado}
-                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
+                className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none disabled:opacity-40"
               >
                 <option value="">{estado ? 'Selecione a diocese...' : 'Selecione o estado primeiro'}</option>
                 {estado && DIOCESES_POR_ESTADO[estado]?.map(d => (
@@ -549,23 +549,23 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-spacing-2xs">
               <label className="text-xs font-bold text-foreground">Paróquia</label>
               <input
                 type="text"
                 value={paroquia}
                 onChange={e => setParoquia(e.target.value)}
                 placeholder="Ex: Paróquia São José"
-                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-spacing-2xs">
               <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
               <select
                 value={movimentoPastoral}
                 onChange={e => setMovimentoPastoral(e.target.value)}
-                className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
+                className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
               >
                 <option value="">Nenhum</option>
                 {MOVIMENTOS_PASTORAIS.map(m => (
@@ -579,21 +579,21 @@ const ProfilePage: React.FC = () => {
         <CathedraButton
           onClick={handleSave}
           isLoading={saving}
-          className="w-full h-14 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-[0.4em] shadow-premium-hover hover:opacity-90 transition-all"
+          className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-[0.4em] shadow-premium-hover hover:opacity-90 transition-all"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
         </CathedraButton>
       </CathedraCard>
 
-      <CathedraCard className="p-8 space-y-6">
-        <div className="flex items-center gap-2 mb-1">
-          <Icons.ShieldCheck className="w-4 h-4 text-primary" />
+      <CathedraCard className="p-spacing-xl space-y-spacing-lg">
+        <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
+          <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Segurança da Conta</h2>
         </div>
         
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
-            <div className="space-y-1">
+        <div className="space-y-spacing-md">
+          <div className="flex items-center justify-between p-spacing-md bg-muted/30 rounded-premium border border-border/50">
+            <div className="space-y-spacing-2xs">
               <p className="text-sm font-bold text-foreground">Vincular Conta Google</p>
               <p className="text-[10px] text-muted-foreground">
                 Adicione o Google como método de acesso sem perder seus dados atuais.

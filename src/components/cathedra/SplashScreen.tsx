@@ -52,7 +52,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
               x: (i % 2 === 0 ? -1 : 1) * (20 + i * 12),
             }}
             transition={{ duration: 1.5, delay: 0.2 + i * 0.1, ease: 'easeOut' }}
-            className="absolute w-1 h-1 rounded-full bg-primary"
+            className="absolute w-spacing-2xs h-spacing-2xs rounded-full bg-primary"
           />
         ))}
 
@@ -62,8 +62,8 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium overflow-hidden border-[1px] border-primary/5 shadow-premium-hover bg-background/50 backdrop-blur-md">
-            <Icons.Logo className="w-full h-full p-4 opacity-40" variant="dark" />
+          <div className="w-spacing-4xl h-spacing-4xl md:w-spacing-4xl md:h-spacing-4xl rounded-premium overflow-hidden border-[1px] border-primary/5 shadow-premium-hover bg-background/50 backdrop-blur-md">
+            <Icons.Logo className="w-full h-full p-spacing-md opacity-40" variant="dark" />
           </div>
         </motion.div>
 
@@ -71,7 +71,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: phase === 'text' || phase === 'logo' ? 1 : 0, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="relative z-10 mt-8 text-center"
+          className="relative z-10 mt-spacing-xl text-center"
         >
           <motion.h2
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
@@ -85,13 +85,13 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30 mt-3"
+            className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30 mt-spacing-sm"
           >
             Digital Sanctuarium
           </motion.p>
         </motion.div>
 
-        <motion.div className="absolute bottom-12 w-32 h-0.5 bg-card/50 rounded-premium overflow-hidden">
+        <motion.div className="absolute bottom-spacing-2xl w-spacing-4xl h-spacing-3xs bg-card/50 rounded-premium overflow-hidden">
           <motion.div
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}

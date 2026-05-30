@@ -35,13 +35,13 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
   ];
 
   return (
-    <div className="fixed bottom-24 right-6 z-[9999]">
+    <div className="fixed bottom-spacing-4xl right-spacing-lg z-[9999]">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-premium-hover hover:scale-105 transition-all border border-white/20"
+        className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-primary text-white rounded-full shadow-premium-hover hover:scale-105 transition-all border border-white/20"
       >
-        <Icons.Activity className="w-4 h-4" />
-        <span className="text-premium-tiny font-black uppercase tracking-widest">Dev Inspector</span>
+        <Icons.Activity className="w-spacing-md h-spacing-md" />
+        <span className="text-xs font-black uppercase tracking-widest">Dev Inspector</span>
       </Button>
 
       <AnimatePresence>
@@ -50,34 +50,34 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-14 right-0 w-80 bg-card border border-border rounded-2xl shadow-premium-hover overflow-hidden "
+            className="absolute bottom-spacing-2xl right-0 w-spacing-4xl bg-card border border-border rounded-premium shadow-premium-hover overflow-hidden "
           >
-            <div className="p-4 border-b border-border bg-muted/30 flex items-center justify-between">
-              <h4 className="text-premium-tiny font-black uppercase tracking-widest text-primary flex items-center gap-2">
-                <Icons.Activity className="w-3 h-3" />
+            <div className="p-spacing-md border-b border-border bg-muted/30 flex items-center justify-between">
+              <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center gap-spacing-xs">
+                <Icons.Activity className="w-spacing-sm h-spacing-sm" />
                 Dados em Tempo Real
               </h4>
               <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-                <Icons.X className="w-4 h-4" />
+                <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
             
-            <div className="p-4 space-y-4 max-h-[400px] overflow-y-auto">
-              <div className="space-y-2">
+            <div className="p-spacing-md space-y-spacing-md max-h-[400px] overflow-y-auto">
+              <div className="space-y-spacing-xs">
                 {fields.map((field) => {
                   const status = getStatus(field.name.toLowerCase(), field.value);
                   return (
-                    <div key={field.name} className="flex flex-col gap-1 p-2 rounded-lg bg-muted/20 border border-border/50">
+                    <div key={field.name} className="flex flex-col gap-spacing-2xs p-spacing-xs rounded-lg bg-muted/20 border border-border/50">
                       <div className="flex items-center justify-between">
-                        <span className="text-premium-tiny font-bold text-muted-foreground uppercase">{field.name}</span>
-                        <span className={`text-premium-tiny font-black uppercase px-1.5 py-0.5 rounded ${status.color}`}>
+                        <span className="text-xs font-bold text-muted-foreground uppercase">{field.name}</span>
+                        <span className={`text-xs font-black uppercase px-spacing-2xs py-spacing-3xs rounded ${status.color}`}>
                           {status.label}
                         </span>
                       </div>
                       <div className="text-premium-small font-mono truncate text-foreground/80">
                         {String(field.value || 'N/A')}
                       </div>
-                      <div className="text-premium-tiny italic text-muted-foreground/60">
+                      <div className="text-xs italic text-muted-foreground/60">
                         Fonte: {field.source}
                       </div>
                     </div>
@@ -85,9 +85,9 @@ const DevDataInspector: React.FC<DevDataInspectorProps> = ({ data }) => {
                 })}
               </div>
 
-              <div className="pt-2">
-                <p className="text-premium-tiny font-bold text-muted-foreground uppercase mb-2">JSON Bruto (Official Saint)</p>
-                <pre className="text-premium-tiny bg-black/5 p-3 rounded-lg overflow-x-auto font-mono text-foreground/70">
+              <div className="pt-spacing-xs">
+                <p className="text-xs font-bold text-muted-foreground uppercase mb-spacing-xs">JSON Bruto (Official Saint)</p>
+                <pre className="text-xs bg-black/5 p-spacing-sm rounded-lg overflow-x-auto font-mono text-foreground/70">
                   {JSON.stringify(officialSaint, null, 2)}
                 </pre>
               </div>

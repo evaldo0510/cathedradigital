@@ -55,36 +55,36 @@ const LandingHeader = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-1000 ${
         isScrolled
-          ? "py-6 bg-background/80 backdrop-blur-3xl border-b border-border/5"
-          : "py-10 bg-transparent"
+          ? "py-spacing-lg bg-background/80 backdrop-blur-3xl border-b border-border/5"
+          : "py-spacing-xl bg-transparent"
       }`}
     >
       <div className="app-container flex items-center justify-between">
         <Link 
           to={AppRoute.HOME}
-          className="flex items-center gap-4 cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-1 transition-shadow"
+          className="flex items-center gap-spacing-md cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-full p-spacing-2xs transition-shadow"
           aria-label="Cathedra - Página Inicial"
         >
-          <Icons.Logo className="w-12 h-12 transition-all duration-1000 group-hover:scale-105" variant="gold" />
+          <Icons.Logo className="w-spacing-2xl h-spacing-2xl transition-all duration-1000 group-hover:scale-105" variant="gold" />
           <div className="hidden sm:flex flex-col">
             <h2 className="text-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h2>
-            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-1">Digital Sanctuarium</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-spacing-2xs">Digital Sanctuarium</span>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden lg:flex items-center gap-spacing-lg">
           {navLinks.map((link) => (
             <Button
               key={link.name}
               variant="ghost"
               size="sm"
               onClick={() => handleNavClick(link.href)}
-              className="h-auto py-1 px-2 text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
+              className="h-auto py-spacing-2xs px-spacing-xs text-premium-small font-bold uppercase tracking-[0.3em] text-muted-foreground hover:text-primary transition-colors relative group shadow-none"
               type="button"
             >
               {link.name}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full" />
+              <span className="absolute -bottom-spacing-2xs left-0 w-0 h-spacing-3xs bg-primary transition-all group-hover:w-full" />
             </Button>
           ))}
           
@@ -93,13 +93,13 @@ const LandingHeader = () => {
               variant="ghost"
               size="sm"
               onClick={() => setShowLangMenu(!showLangMenu)}
-              className="flex items-center gap-2 text-premium-tiny font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
+              className="flex items-center gap-spacing-xs text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors shadow-none"
               aria-label="Mudar idioma"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
               type="button"
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="w-spacing-md h-spacing-md" />
               <span className="uppercase">{lang}</span>
             </Button>
             <AnimatePresence>
@@ -108,7 +108,7 @@ const LandingHeader = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-40 bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
+                  className="absolute right-0 mt-spacing-xs w-spacing-4xl bg-background border border-border rounded-full shadow-premium-hover overflow-hidden"
                 >
                   {languages.map((l) => (
                     <Button
@@ -116,7 +116,7 @@ const LandingHeader = () => {
                       variant="ghost"
                       size="sm"
                       onClick={() => { setLang(l.code); setShowLangMenu(false); }}
-                      className={`w-full px-4 py-2.5 justify-between font-normal tracking-normal shadow-none ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
+                      className={`w-full px-spacing-md py-spacing-xs justify-between font-normal tracking-normal shadow-none ${lang === l.code ? 'text-primary font-bold' : 'text-muted-foreground'}`}
                       type="button"
                     >
                       <span>{l.label}</span>
@@ -129,15 +129,15 @@ const LandingHeader = () => {
           </div>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-spacing-md">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => window.dispatchEvent(new CustomEvent('open-a11y-settings'))}
-            className="w-10 h-10 rounded-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+            className="w-spacing-xl h-spacing-xl rounded-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Configurações de acessibilidade"
           >
-            <ShieldCheck className="w-5 h-5" />
+            <ShieldCheck className="w-spacing-md h-spacing-md" />
           </Button>
 
           <Button
@@ -154,10 +154,10 @@ const LandingHeader = () => {
           <HomeButton
             variant="ghost"
             size="sm"
-            className={`hidden xs:flex rounded-full px-4 sm:px-6 shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            className={`hidden xs:flex rounded-full px-spacing-md sm:px-spacing-lg shadow-none transition-all ${isScrolled ? 'text-primary' : ''}`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
-            Começar <ChevronRight className="w-4 h-4 ml-1" />
+            Começar <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
           </HomeButton>
 
           {/* Mobile Menu Toggle - Hidden when BottomNav is likely present */}
@@ -183,7 +183,7 @@ const LandingHeader = () => {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-background border-b border-border overflow-hidden"
           >
-            <div className="app-container py-8 flex flex-col gap-6">
+            <div className="app-container py-spacing-xl flex flex-col gap-spacing-lg">
               {navLinks.map((link) => (
                 <Button
                   key={link.name}

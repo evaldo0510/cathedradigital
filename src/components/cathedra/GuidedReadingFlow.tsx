@@ -60,7 +60,7 @@ export const GuidedReadingFlow: React.FC = () => {
   const Icon = (Icons as any)[step.icon] || Icons.Book;
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-spacing-4xl mx-auto">
       <AnimatePresence mode="wait">
         <motion.div
           key={step.id}
@@ -68,35 +68,35 @@ export const GuidedReadingFlow: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
-          className={`premium-card p-12 md:p-20 flex flex-col items-center text-center gap-12 ${step.color} border-none shadow-none`}
+          className={`premium-card p-spacing-2xl md:p-spacing-3xl flex flex-col items-center text-center gap-spacing-2xl ${step.color} border-none shadow-none`}
         >
-          <div className="space-y-4">
+          <div className="space-y-spacing-md">
             <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/60">
               {step.tag}
             </span>
-            <div className="w-20 h-20 rounded-premium bg-background/50 border border-border/5 flex items-center justify-center text-primary/40 mx-auto shadow-premium-hover transition-transform duration-1000 hover:scale-105">
-              <Icon className="w-8 h-8" strokeWidth={0.5} />
+            <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-background/50 border border-border/5 flex items-center justify-center text-primary/40 mx-auto shadow-premium-hover transition-transform duration-1000 hover:scale-105">
+              <Icon className="w-spacing-xl h-spacing-xl" strokeWidth={0.5} />
             </div>
           </div>
 
-          <div className="space-y-6 max-w-xl">
+          <div className="space-y-spacing-lg max-w-spacing-xl">
             <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight text-primary">
               {step.title}
             </h2>
             <p className="text-xl md:text-2xl font-serif italic text-muted-foreground/60 leading-relaxed">
               "{step.subtitle}"
             </p>
-            <p className="text-base text-muted-foreground/40 leading-relaxed max-w-md mx-auto">
+            <p className="text-base text-muted-foreground/40 leading-relaxed max-w-spacing-md mx-auto">
               {step.description}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-6 mt-4">
+          <div className="flex flex-col sm:flex-row items-center gap-spacing-lg mt-spacing-md">
             {currentStep > 0 && (
               <Button 
                 variant="ghost" 
                 onClick={prevStep}
-                className="rounded-full px-8 h-12 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
+                className="rounded-full px-spacing-xl h-spacing-2xl text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
               >
                 Voltar
               </Button>
@@ -104,20 +104,20 @@ export const GuidedReadingFlow: React.FC = () => {
             
             <Button 
               onClick={nextStep}
-              className="btn-premium-primary px-12 h-16 rounded-full group shadow-premium"
+              className="btn-premium-primary px-spacing-2xl h-spacing-3xl rounded-full group shadow-premium"
             >
               {currentStep === steps.length - 1 ? 'Iniciar Leitura' : 'Próximo Passo'}
-              <Icons.ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
+              <Icons.ArrowRight className="w-spacing-md h-spacing-md ml-spacing-sm group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
 
           {/* Progress indicators */}
-          <div className="flex gap-4 mt-8">
+          <div className="flex gap-spacing-md mt-spacing-xl">
             {steps.map((_, idx) => (
               <div 
                 key={idx}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-1000 ${
-                  idx === currentStep ? 'bg-primary w-8' : 'bg-primary/10'
+                className={`w-spacing-2xs h-spacing-2xs rounded-full transition-all duration-1000 ${
+                  idx === currentStep ? 'bg-primary w-spacing-xl' : 'bg-primary/10'
                 }`}
               />
             ))}

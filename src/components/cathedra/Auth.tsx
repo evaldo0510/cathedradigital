@@ -82,20 +82,20 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto space-y-8 relative">
+    <div className="max-w-spacing-md mx-auto space-y-spacing-xl relative">
       <Button 
         variant="ghost"
         size="sm"
         onClick={() => navigate(AppRoute.HOME)}
-        className="absolute -top-12 left-0 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors group shadow-none"
+        className="absolute -top-spacing-2xl left-0 flex items-center gap-spacing-xs text-muted-foreground hover:text-primary transition-colors group shadow-none"
       >
-        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span className="text-premium-tiny font-black uppercase tracking-widest">Voltar para Início</span>
+        <ArrowLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform" />
+        <span className="text-xs font-black uppercase tracking-widest">Voltar para Início</span>
       </Button>
 
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-spacing-md">
         <div className="flex justify-center">
-          <Icons.Logo variant="blue" className="w-16 h-16" />
+          <Icons.Logo variant="blue" className="w-spacing-3xl h-spacing-3xl" />
         </div>
         <h1 className="text-3xl font-serif font-bold text-foreground">
           {mode === 'login' ? 'Acessar Cathedra' : mode === 'signup' ? 'Criar Conta' : 'Redefinir Senha'}
@@ -105,55 +105,55 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <CathedraCard padding="md" className="space-y-6">
+      <CathedraCard padding="md" className="space-y-spacing-lg">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
+          <div className="p-spacing-md bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
         {success && (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
+          <div className="p-spacing-md bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium">{success}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-spacing-md">
           {mode === 'signup' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nome</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Nome</label>
               <input
                 type="text" value={name} onChange={e => setName(e.target.value)} required
                 placeholder="Seu nome completo"
-                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-spacing-md py-spacing-sm rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
           <div>
-            <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
+            <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Email</label>
             <input
               type="email" value={email} onChange={e => setEmail(e.target.value)} required
               placeholder="seu@email.com"
-              className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full px-spacing-md py-spacing-sm rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
           </div>
           {mode !== 'forgot' && (
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Senha</label>
+              <label className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-spacing-md py-spacing-sm rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
           )}
-          <Button type="submit" isLoading={loading} className="w-full h-14 rounded-full">
+          <Button type="submit" isLoading={loading} className="w-full h-spacing-2xl rounded-full">
             {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
           </Button>
         </form>
 
-        <div className="relative flex items-center gap-4 my-2">
+        <div className="relative flex items-center gap-spacing-md my-spacing-xs">
           <div className="flex-1 h-px bg-border" />
-          <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">ou</span>
+          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">ou</span>
           <div className="flex-1 h-px bg-border" />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-sm">
           <Button
             type="button"
             variant="outline"
@@ -175,9 +175,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             isLoading={loading}
-            className="w-full h-12 flex items-center justify-center gap-3 group"
+            className="w-full h-spacing-2xl flex items-center justify-center gap-spacing-sm group"
           >
-            <Icons.Google className="w-5 h-5 transition-transform group-hover:scale-110" />
+            <Icons.Google className="w-spacing-md h-spacing-md transition-transform group-hover:scale-110" />
             Google
           </Button>
 
@@ -198,9 +198,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               setLoading(false);
             }}
             isLoading={loading}
-            className="w-full h-12 flex items-center justify-center gap-3 group"
+            className="w-full h-spacing-2xl flex items-center justify-center gap-spacing-sm group"
           >
-            <Icons.Apple className="w-5 h-5 transition-transform group-hover:scale-110" />
+            <Icons.Apple className="w-spacing-md h-spacing-md transition-transform group-hover:scale-110" />
             Apple
           </Button>
         </div>
@@ -210,13 +210,13 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             variant="ghost"
             size="sm"
             onClick={() => { setError(''); setLoading(false); }}
-            className="w-full h-10 shadow-none"
+            className="w-full h-spacing-xl shadow-none"
           >
             Tentar novamente
           </Button>
         )}
 
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-spacing-xs">
           {mode === 'login' && (
             <Button 
               variant="ghost" 

@@ -9,7 +9,7 @@ describe("Button Component", () => {
     const button = screen.getByRole("button", { name: /click me/i });
     expect(button).toBeInTheDocument();
     expect(button).toHaveClass("bg-primary");
-    expect(button).toHaveClass("h-14"); // default size
+    expect(button).toHaveClass("h-spacing-2xl"); // default size
   });
 
   it("renders all variants correctly", () => {
@@ -47,10 +47,10 @@ describe("Button Component", () => {
       </Button>
     );
     const button = screen.getByRole("button", { name: /search/i });
-    expect(button).toHaveClass("h-12", "w-12");
+    expect(button).toHaveClass("h-spacing-2xl", "w-spacing-2xl");
     
     const icon = screen.getByTestId("search-icon");
-    // The button has [&_svg]:size-5 which sets width and height to 1.25rem (20px)
+    // The button has [&_svg]:size-spacing-md which sets width and height to 1.25rem (20px)
     // We expect the icon to have these classes applied via the button's CSS
   });
 

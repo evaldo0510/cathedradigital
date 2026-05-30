@@ -71,9 +71,9 @@ const WebhookSimulator: React.FC = () => {
   return (
     <Card className="rounded-[2.5rem] border-primary/20 bg-primary/5  shadow-premium-hover overflow-hidden">
       <CardHeader className="bg-primary/10 border-b border-primary/10">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-primary rounded-premium text-primary-foreground">
-            <ShieldCheck className="w-5 h-5" />
+        <div className="flex items-center gap-spacing-sm">
+          <div className="p-spacing-xs bg-primary rounded-premium text-primary-foreground">
+            <ShieldCheck className="w-spacing-md h-spacing-md" />
           </div>
           <div>
             <CardTitle className="font-serif text-xl">Simulador de Webhook</CardTitle>
@@ -81,10 +81,10 @@ const WebhookSimulator: React.FC = () => {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-8 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
+      <CardContent className="p-spacing-xl space-y-spacing-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
+          <div className="space-y-spacing-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Usuário para Teste</label>
             <Select value={selectedUserId} onValueChange={setSelectedUserId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione um usuário" />
@@ -99,8 +99,8 @@ const WebhookSimulator: React.FC = () => {
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
+          <div className="space-y-spacing-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Status do Pagamento</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o status" />
@@ -115,9 +115,9 @@ const WebhookSimulator: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6 items-end">
-          <div className="flex-1 space-y-2">
-            <label className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
+        <div className="flex flex-col md:flex-row gap-spacing-lg items-end">
+          <div className="flex-1 space-y-spacing-xs">
+            <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Plano ID / Tipo</label>
             <Select value={planId} onValueChange={setPlanId}>
               <SelectTrigger className="rounded-full bg-background border-primary/20">
                 <SelectValue placeholder="Selecione o tipo" />
@@ -131,16 +131,16 @@ const WebhookSimulator: React.FC = () => {
           <Button 
             onClick={runSimulation} 
             disabled={loading}
-            className="rounded-full bg-primary hover:bg-primary/90 px-8 h-12 shadow-premium shadow-primary/20 gap-2 min-w-[200px]"
+            className="rounded-full bg-primary hover:bg-primary/90 px-spacing-xl h-spacing-2xl shadow-premium shadow-primary/20 gap-spacing-xs min-w-[200px]"
           >
-            {loading ? <RefreshCcw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+            {loading ? <RefreshCcw className="w-spacing-md h-spacing-md animate-spin" /> : <Play className="w-spacing-md h-spacing-md" />}
             Executar Simulação
           </Button>
         </div>
 
         {isPremiumAfter !== null && (
-          <div className={`p-4 rounded-full flex items-center gap-3 animate-in zoom-in duration-500 ${isPremiumAfter ? 'bg-green-500/10 text-green-700 border border-green-500/20' : 'bg-red-500/10 text-red-700 border border-red-500/20'}`}>
-            {isPremiumAfter ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+          <div className={`p-spacing-md rounded-full flex items-center gap-spacing-sm animate-in zoom-in duration-500 ${isPremiumAfter ? 'bg-green-500/10 text-green-700 border border-green-500/20' : 'bg-red-500/10 text-red-700 border border-red-500/20'}`}>
+            {isPremiumAfter ? <CheckCircle2 className="w-spacing-md h-spacing-md" /> : <AlertCircle className="w-spacing-md h-spacing-md" />}
             <div>
               <p className="text-sm font-bold">Resultado da Ativação</p>
               <p className="text-xs opacity-80">O usuário agora {isPremiumAfter ? 'é ASSINANTE PRO' : 'permanece com ACESSO FREE'}.</p>

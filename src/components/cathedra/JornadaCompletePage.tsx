@@ -175,7 +175,7 @@ const JornadaCompletePage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+        <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
     );
   }
@@ -227,10 +227,10 @@ const JornadaCompletePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto pb-12">
+    <div className="space-y-spacing-xl max-w-spacing-2xl mx-auto pb-spacing-2xl">
       {/* Back */}
       <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.JORNADAS)}>
-        <ArrowLeft className="w-4 h-4 mr-2" /> Jornadas
+        <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Jornadas
       </Button>
 
       {/* Certificate */}
@@ -241,41 +241,41 @@ const JornadaCompletePage: React.FC = () => {
       >
         <div ref={certificateRef}>
           <Card className="border-primary/30 bg-gradient-to-b from-primary/5 to-background overflow-hidden">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="w-20 h-20 mx-auto rounded-premium bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-                <Award className="w-10 h-10 text-primary" />
+            <CardContent className="p-spacing-xl text-center space-y-spacing-lg">
+              <div className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+                <Award className="w-spacing-xl h-spacing-xl text-primary" />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
                 <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
                 <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
               </div>
 
-              <div className="border-t border-b border-border/50 py-4 space-y-1">
+              <div className="border-t border-b border-border/50 py-spacing-md space-y-spacing-2xs">
                 <p className="text-xs text-muted-foreground">Jornada concluída em</p>
                 <p className="text-sm font-semibold text-foreground">{completionDate}</p>
               </div>
 
-              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <Sparkles className="w-3 h-3 text-primary" />
+              <div className="flex items-center justify-center gap-spacing-xs text-xs text-muted-foreground">
+                <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
                 <span>CATHEDRA — Digital Sanctuarium</span>
-                <Sparkles className="w-3 h-3 text-primary" />
+                <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Share Button */}
-        <div className="flex justify-center mt-3">
+        <div className="flex justify-center mt-spacing-sm">
           <Button
             variant="outline"
             size="sm"
             onClick={shareCertificate}
             disabled={sharing}
-            className="flex items-center gap-2"
+            className="flex items-center gap-spacing-xs"
           >
-            <Share2 className="w-4 h-4" />
+            <Share2 className="w-spacing-md h-spacing-md" />
             {sharing ? 'Gerando imagem...' : 'Compartilhar Certificado'}
           </Button>
         </div>
@@ -289,13 +289,13 @@ const JornadaCompletePage: React.FC = () => {
           transition={{ delay: 0.3 }}
         >
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
-            <CardContent className="p-6 space-y-4">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Star className="w-5 h-5 text-primary" /> Recompensas
+            <CardContent className="p-spacing-lg space-y-spacing-md">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-spacing-xs">
+                <Star className="w-spacing-md h-spacing-md text-primary" /> Recompensas
               </h2>
               {xpAwarded > 0 && (
-                <div className="flex items-center gap-3 p-3 bg-primary/10 rounded-premium">
-                  <div className="w-10 h-10 rounded-premium bg-primary/20 flex items-center justify-center text-lg">⚡</div>
+                <div className="flex items-center gap-spacing-sm p-spacing-sm bg-primary/10 rounded-premium">
+                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center text-lg">⚡</div>
                   <div>
                     <p className="text-sm font-bold text-foreground">+{xpAwarded} XP</p>
                     <p className="text-xs text-muted-foreground">Por concluir esta jornada</p>
@@ -306,8 +306,8 @@ const JornadaCompletePage: React.FC = () => {
                 const badge = getBadgeById(badgeId);
                 if (!badge) return null;
                 return (
-                  <div key={badgeId} className="flex items-center gap-3 p-3 bg-accent/10 rounded-premium">
-                    <div className="w-10 h-10 rounded-premium bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
+                  <div key={badgeId} className="flex items-center gap-spacing-sm p-spacing-sm bg-accent/10 rounded-premium">
+                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{badge.name}</p>
                       <p className="text-xs text-muted-foreground">{badge.description}</p>
@@ -326,13 +326,13 @@ const JornadaCompletePage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="space-y-4"
+          className="space-y-spacing-md"
         >
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-primary" /> Suas Reflexões
+          <h2 className="text-lg font-bold text-foreground flex items-center gap-spacing-xs">
+            <BookOpen className="w-spacing-md h-spacing-md text-primary" /> Suas Reflexões
           </h2>
 
-          <div className="space-y-3">
+          <div className="space-y-spacing-sm">
             {reflections.map((r, i) => (
               <motion.div
                 key={i}
@@ -341,10 +341,10 @@ const JornadaCompletePage: React.FC = () => {
                 transition={{ delay: 0.5 + i * 0.1 }}
               >
                 <Card className="border-border/50">
-                  <CardContent className="p-4 space-y-2">
+                  <CardContent className="p-spacing-md space-y-spacing-xs">
                     <p className="text-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
-                    <div className="flex gap-2">
-                      <Quote className="w-4 h-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="flex gap-spacing-xs">
+                      <Quote className="w-spacing-md h-spacing-md text-muted-foreground flex-shrink-0 mt-spacing-3xs" />
                       <p className="text-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
                     </div>
                   </CardContent>
@@ -361,7 +361,7 @@ const JornadaCompletePage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="space-y-3"
+          className="space-y-spacing-sm"
         >
           <h2 className="text-lg font-bold text-foreground">Continue sua caminhada</h2>
 
@@ -369,9 +369,9 @@ const JornadaCompletePage: React.FC = () => {
             className="border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
             onClick={() => navigate(`/jornadas/${nextJourney.id}`)}
           >
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <ArrowRight className="w-6 h-6 text-primary" />
+            <CardContent className="p-spacing-md flex items-center gap-spacing-md">
+              <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-sm text-foreground">{nextJourney.title}</h3>
@@ -379,7 +379,7 @@ const JornadaCompletePage: React.FC = () => {
                   <p className="text-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
                 )}
               </div>
-              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+              <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />
             </CardContent>
           </Card>
         </motion.div>
@@ -390,7 +390,7 @@ const JornadaCompletePage: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.9 }}
-        className="flex flex-col sm:flex-row gap-3"
+        className="flex flex-col sm:flex-row gap-spacing-sm"
       >
         <Button
           className="flex-1"

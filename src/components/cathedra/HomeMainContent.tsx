@@ -64,25 +64,25 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div className="w-full space-y-16 md:space-y-24 outline-none flex flex-col items-center" tabIndex={-1}>
+    <div className="w-full space-y-spacing-3xl md:space-y-spacing-4xl outline-none flex flex-col items-center" tabIndex={-1}>
       {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
-      <section className="w-full max-w-4xl">
+      <section className="w-full max-w-spacing-4xl">
         <SpiritualContinuity />
       </section>
 
       {/* 2. NÚCLEO SAGRADO - CORE FOCUS */}
       <section className="w-full">
         <h2 className="sr-only">Núcleo Sagrado</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg md:gap-spacing-xl w-full max-w-spacing-4xl mx-auto">
           <CathedraCard 
             variant="interactive"
-            className="group flex flex-col items-center gap-8 py-12"
+            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
             onClick={() => onNavigate(AppRoute.BIBLE)}
           >
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
-              <Icons.Bible className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.3} />
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+              <Icons.Bible className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
-            <div className="space-y-3 text-center">
+            <div className="space-y-spacing-sm text-center">
               <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Bíblia</span>
               <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">A Palavra de Deus</span>
             </div>
@@ -90,20 +90,20 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
           <CathedraCard 
             variant="interactive"
-            className="group flex flex-col items-center gap-8 py-12"
+            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
             onClick={() => onNavigate(AppRoute.CATECHISM)}
           >
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
-              <Icons.Catechism className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.3} />
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+              <Icons.Catechism className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
-            <div className="space-y-3 text-center">
+            <div className="space-y-spacing-sm text-center">
               <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Catecismo</span>
               <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">Doutrina e Fé</span>
             </div>
           </CathedraCard>
         </div>
 
-        <div className="flex justify-center mt-12">
+        <div className="flex justify-center mt-spacing-2xl">
           <CathedraButton 
             variant="ghost" 
             className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 hover:text-primary transition-all"
@@ -115,12 +115,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* 3. LOGOS IA - SMART SEARCH */}
-      <section className="w-full max-w-2xl mx-auto">
+      <section className="w-full max-w-spacing-2xl mx-auto">
         <CathedraCard
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="rounded-full p-2 border-primary/5"
+          className="rounded-full p-spacing-xs border-primary/5"
         >
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
             <div className="relative group/input">
@@ -129,15 +129,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Logos IA: Pergunte sobre a Fé..."
-                className="h-16 md:h-20 pl-16 pr-20 rounded-full border-none bg-transparent transition-all duration-700 text-sm md:text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-none"
+                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-full border-none bg-transparent transition-all duration-700 text-sm md:text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-none"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-700" />
+              <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-700" />
               <button 
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
+                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
               >
-                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </form>
@@ -152,9 +152,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           className="rounded-full border-primary/[0.02]"
           onClick={() => onNavigate(AppRoute.HOJE)}
         >
-          <div className="flex items-center gap-6 px-10 py-5 group">
-            <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
-              <Icons.Sun className="w-5 h-5" strokeWidth={1} />
+          <div className="flex items-center gap-spacing-lg px-spacing-xl py-spacing-md group">
+            <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
+              <Icons.Sun className="w-spacing-md h-spacing-md" strokeWidth={1} />
             </div>
             <div className="text-left">
               <span className="block text-[8px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary transition-colors">Ritual do Dia</span>

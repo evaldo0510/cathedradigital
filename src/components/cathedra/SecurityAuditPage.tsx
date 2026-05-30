@@ -47,44 +47,44 @@ const SecurityAuditPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-4 md:py-8 px-4 space-y-8 animate-in fade-in duration-500">
-      <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-premium text-red-600 border border-red-500/20">
-          <ShieldAlert className="w-4 h-4" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
+    <div className="max-w-spacing-4xl mx-auto py-spacing-md md:py-spacing-xl px-spacing-md space-y-spacing-xl animate-in fade-in duration-500">
+      <header className="text-center space-y-spacing-md">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-red-500/10 rounded-premium text-red-600 border border-red-500/20">
+          <ShieldAlert className="w-spacing-md h-spacing-md" />
+          <span className="text-xs font-black uppercase tracking-[0.2em]">Security Protocol v3.0</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground text-primary">Painel de Segurança & Integridade</h1>
         <p className="text-muted-foreground italic font-serif">Controle de deploys, migrações e proteção de segredos.</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
         {/* Main Checklist */}
-        <div className="md:col-span-2 space-y-6">
+        <div className="md:col-span-2 space-y-spacing-lg">
           <Card className="border-border/50 bg-card  rounded-[2.5rem] shadow-premium-hover overflow-hidden">
-            <CardHeader className="bg-muted/30 border-b border-border/40 p-6">
-              <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" />
+            <CardHeader className="bg-muted/30 border-b border-border/40 p-spacing-lg">
+              <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-spacing-xs">
+                <ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
                 Status de Integridade
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="divide-y divide-border/40">
                 {checklist.map(item => (
-                  <div key={item.id} className="p-6 flex items-start justify-between hover:bg-muted/10 transition-colors group">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
+                  <div key={item.id} className="p-spacing-lg flex items-start justify-between hover:bg-muted/10 transition-colors group">
+                    <div className="space-y-spacing-2xs">
+                      <div className="flex items-center gap-spacing-xs">
                         <span className="text-sm font-bold text-foreground">{item.label}</span>
                         {item.status === 'success' ? (
-                          <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                          <CheckCircle className="w-spacing-sm h-spacing-sm text-green-500" />
                         ) : (
-                          <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                          <AlertTriangle className="w-spacing-sm h-spacing-sm text-amber-500" />
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
                     <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-full">
-                      <Link to={item.link} className="flex items-center gap-1.5 text-premium-tiny font-black uppercase tracking-widest">
-                        Detalhes <ExternalLink className="w-3 h-3" />
+                      <Link to={item.link} className="flex items-center gap-spacing-2xs text-xs font-black uppercase tracking-widest">
+                        Detalhes <ExternalLink className="w-spacing-sm h-spacing-sm" />
                       </Link>
                     </Button>
                   </div>
@@ -93,11 +93,11 @@ const SecurityAuditPage = () => {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="border-red-500/20 bg-red-500/5 rounded-premium p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-500/10 rounded-premium text-red-600">
-                  <RotateCcw className="w-5 h-5" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+            <Card className="border-red-500/20 bg-red-500/5 rounded-premium p-spacing-lg space-y-spacing-md">
+              <div className="flex items-center gap-spacing-sm">
+                <div className="p-spacing-xs bg-red-500/10 rounded-premium text-red-600">
+                  <RotateCcw className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Rollback Crítico</h3>
               </div>
@@ -107,16 +107,16 @@ const SecurityAuditPage = () => {
               <Button 
                 variant="destructive" 
                 onClick={handleRollback}
-                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 shadow-premium shadow-red-500/10"
+                className="w-full rounded-full text-xs font-black uppercase tracking-widest h-spacing-xl shadow-premium shadow-red-500/10"
               >
                 Copiar SQL de Rollback
               </Button>
             </Card>
 
-            <Card className="border-primary/20 bg-primary/5 rounded-premium p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-primary/10 rounded-premium text-primary">
-                  <FileCode className="w-5 h-5" />
+            <Card className="border-primary/20 bg-primary/5 rounded-premium p-spacing-lg space-y-spacing-md">
+              <div className="flex items-center gap-spacing-sm">
+                <div className="p-spacing-xs bg-primary/10 rounded-premium text-primary">
+                  <FileCode className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-sm font-bold uppercase tracking-widest">Scan de Segredos</h3>
               </div>
@@ -125,7 +125,7 @@ const SecurityAuditPage = () => {
               </p>
               <Button 
                 variant="outline" 
-                className="w-full rounded-full text-premium-tiny font-black uppercase tracking-widest h-10 border-primary/20 hover:bg-primary/5"
+                className="w-full rounded-full text-xs font-black uppercase tracking-widest h-spacing-xl border-primary/20 hover:bg-primary/5"
               >
                 Simular Varredura
               </Button>
@@ -134,30 +134,30 @@ const SecurityAuditPage = () => {
         </div>
 
         {/* Sidebar / Quick Tips */}
-        <aside className="space-y-6">
-          <Card className="border-border/40 bg-card rounded-[2rem] p-6 space-y-6">
-            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60 flex items-center gap-2">
-              <Search className="w-4 h-4" /> Monitoramento
+        <aside className="space-y-spacing-lg">
+          <Card className="border-border/40 bg-card rounded-[2rem] p-spacing-lg space-y-spacing-lg">
+            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/60 flex items-center gap-spacing-xs">
+              <Search className="w-spacing-md h-spacing-md" /> Monitoramento
             </h3>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Última Varredura</p>
-                <p className="text-xs font-mono bg-muted p-2 rounded-full">2024-05-20 14:30</p>
+            <div className="space-y-spacing-md">
+              <div className="space-y-spacing-xs">
+                <p className="text-xs font-bold text-muted-foreground uppercase">Última Varredura</p>
+                <p className="text-xs font-mono bg-muted p-spacing-xs rounded-full">2024-05-20 14:30</p>
               </div>
-              <div className="space-y-2">
-                <p className="text-premium-tiny font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
+              <div className="space-y-spacing-xs">
+                <p className="text-xs font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
                 <p className="text-xs font-bold text-foreground">0 detectadas esta semana</p>
               </div>
             </div>
-            <div className="pt-4 border-t border-border/40 text-premium-tiny text-muted-foreground italic leading-relaxed">
+            <div className="pt-spacing-md border-t border-border/40 text-xs text-muted-foreground italic leading-relaxed">
               * O scanner E2E automatizado roda em todas as branches antes do merge para 'main'.
             </div>
           </Card>
         </aside>
       </div>
 
-      <footer className="text-center pt-8">
-        <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
+      <footer className="text-center pt-spacing-xl">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Segurança v1.2
         </p>
       </footer>

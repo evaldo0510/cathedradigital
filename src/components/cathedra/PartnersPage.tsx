@@ -98,15 +98,15 @@ const PartnersPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full space-y-12 py-4">
+    <div className="w-full space-y-spacing-2xl py-spacing-md">
       {/* Header Section */}
-      <section className="text-center space-y-4">
+      <section className="text-center space-y-spacing-md">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-2"
+          className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs rounded-full bg-primary/10 text-primary text-sm font-medium mb-spacing-xs"
         >
-          <Icons.Handshake className="w-4 h-4" />
+          <Icons.Handshake className="w-spacing-md h-spacing-md" />
           Unidos pela Missão
         </motion.div>
         
@@ -123,7 +123,7 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-lg text-muted-foreground max-w-2xl mx-auto"
+          className="text-lg text-muted-foreground max-w-spacing-2xl mx-auto"
         >
           Instituições, empresas e indivíduos que apoiam a disseminação da Fé e da Cultura Católica através do Cathedra.
         </motion.p>
@@ -132,13 +132,13 @@ const PartnersPage: React.FC = () => {
       {/* Main Grid */}
       <section className="min-h-[400px]">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-64 rounded-premium bg-muted/40 animate-pulse border border-border" />
+              <div key={i} className="h-spacing-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
             ))}
           </div>
         ) : partners.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
             {partners.map((partner, index) => (
               <motion.div
                 key={partner.id}
@@ -147,20 +147,20 @@ const PartnersPage: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card className="h-full hover:shadow-premium-hover transition-all duration-300 border-border/50 bg-card  overflow-hidden group">
-                  <CardHeader className="relative h-32 flex items-center justify-center bg-muted/20">
+                  <CardHeader className="relative h-spacing-4xl flex items-center justify-center bg-muted/20">
                     {partner.logo_url ? (
                       <img 
                         src={partner.logo_url} 
                         alt={partner.name} 
-                        className="max-h-24 max-w-[80%] object-contain transition-transform duration-300 group-hover:scale-110" 
+                        className="max-h-spacing-4xl max-w-[80%] object-contain transition-transform duration-300 group-hover:scale-110" 
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                        <Icons.Trophy className="w-8 h-8" />
+                      <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                        <Icons.Trophy className="w-spacing-xl h-spacing-xl" />
                       </div>
                     )}
                   </CardHeader>
-                  <CardContent className="p-6 space-y-3">
+                  <CardContent className="p-spacing-lg space-y-spacing-sm">
                     <CardTitle className="text-xl group-hover:text-primary transition-colors">
                       {partner.name}
                     </CardTitle>
@@ -168,16 +168,16 @@ const PartnersPage: React.FC = () => {
                       {partner.description || "Sem descrição disponível."}
                     </CardDescription>
                   </CardContent>
-                  <CardFooter className="p-6 pt-0 mt-auto">
+                  <CardFooter className="p-spacing-lg pt-0 mt-auto">
                     {partner.website_url && (
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="w-full gap-2 text-primary hover:text-primary hover:bg-primary/10 transition-colors"
+                        className="w-full gap-spacing-xs text-primary hover:text-primary hover:bg-primary/10 transition-colors"
                         asChild
                       >
                         <a href={partner.website_url} target="_blank" rel="noopener noreferrer">
-                          Visitar Site <Icons.ExternalLink className="w-4 h-4" />
+                          Visitar Site <Icons.ExternalLink className="w-spacing-md h-spacing-md" />
                         </a>
                       </Button>
                     )}
@@ -190,24 +190,24 @@ const PartnersPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-20 px-6 text-center space-y-6 bg-muted/20 rounded-full border-2 border-dashed border-border/50"
+            className="flex flex-col items-center justify-center py-spacing-3xl px-spacing-lg text-center space-y-spacing-lg bg-muted/20 rounded-full border-2 border-dashed border-border/50"
           >
-            <div className="w-20 h-20 rounded-premium bg-primary/5 flex items-center justify-center">
-              <Icons.Community className="w-10 h-10 text-muted-foreground/50" />
+            <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/5 flex items-center justify-center">
+              <Icons.Community className="w-spacing-xl h-spacing-xl text-muted-foreground/50" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-spacing-xs">
               <h3 className="text-2xl font-semibold text-foreground/80">
                 Em breve novos parceiros farão parte desta missão
               </h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
+              <p className="text-muted-foreground max-w-spacing-md mx-auto">
                 Estamos construindo alianças sólidas para expandir o acesso à Verdade. Sua instituição também pode fazer parte.
               </p>
             </div>
             
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="rounded-full px-8 gap-2 shadow-premium shadow-primary/20">
-                  <Icons.Plus className="w-4 h-4" /> Tornar-se um Parceiro
+                <Button size="lg" className="rounded-full px-spacing-xl gap-spacing-xs shadow-premium shadow-primary/20">
+                  <Icons.Plus className="w-spacing-md h-spacing-md" /> Tornar-se um Parceiro
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px] overflow-y-auto max-h-[90dvh]">
@@ -218,8 +218,8 @@ const PartnersPage: React.FC = () => {
                   </DialogDescription>
                 </DialogHeader>
                 
-                <form onSubmit={handleSubmit} className="space-y-5 pt-4">
-                  <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="space-y-spacing-md pt-spacing-md">
+                  <div className="space-y-spacing-xs">
                     <Label htmlFor="name">Nome da Instituição/Empresa *</Label>
                     <Input 
                       id="name" 
@@ -231,7 +231,7 @@ const PartnersPage: React.FC = () => {
                     />
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="space-y-spacing-xs">
                     <Label htmlFor="contact_email">E-mail de Contato *</Label>
                     <Input 
                       id="contact_email" 
@@ -244,7 +244,7 @@ const PartnersPage: React.FC = () => {
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-spacing-xs">
                     <Label htmlFor="description">Breve Descrição</Label>
                     <Textarea 
                       id="description" 
@@ -256,8 +256,8 @@ const PartnersPage: React.FC = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                    <div className="space-y-spacing-xs">
                       <Label htmlFor="website_url">Site Externo (URL)</Label>
                       <Input 
                         id="website_url" 
@@ -267,7 +267,7 @@ const PartnersPage: React.FC = () => {
                         placeholder="https://..." 
                       />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-spacing-xs">
                       <Label htmlFor="logo_url">URL da Logo</Label>
                       <Input 
                         id="logo_url" 
@@ -279,15 +279,15 @@ const PartnersPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-muted/30 p-4 rounded-premium flex gap-3 text-xs text-muted-foreground leading-relaxed">
-                    <Icons.Info className="w-4 h-4 shrink-0 text-primary" />
+                  <div className="bg-muted/30 p-spacing-md rounded-premium flex gap-spacing-sm text-xs text-muted-foreground leading-relaxed">
+                    <Icons.Info className="w-spacing-md h-spacing-md shrink-0 text-primary" />
                     <p>Ao enviar, sua solicitação passará por uma análise administrativa. Apenas parceiros aprovados serão exibidos publicamente na plataforma.</p>
                   </div>
 
-                  <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isSubmitting}>
+                  <Button type="submit" className="w-full h-spacing-2xl text-base font-semibold" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
-                        <Icons.Loader className="w-4 h-4 mr-2 animate-spin" />
+                        <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" />
                         Enviando...
                       </>
                     ) : (
@@ -307,17 +307,17 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="bg-primary/5 rounded-full p-8 md:p-12 text-center space-y-6 border border-primary/10"
+          className="bg-primary/5 rounded-full p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg border border-primary/10"
         >
-          <div className="max-w-2xl mx-auto space-y-4">
+          <div className="max-w-spacing-2xl mx-auto space-y-spacing-md">
             <h2 className="text-2xl md:text-3xl font-bold">Quer apoiar esta causa?</h2>
             <p className="text-muted-foreground">
               Junte-se a nós como um patrocinador e ajude a manter o Cathedra gratuito e acessível para milhares de fiéis em todo o mundo.
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="pt-spacing-md flex flex-col sm:flex-row gap-spacing-md justify-center">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="rounded-full px-10">Falar com a Equipe</Button>
+                  <Button size="lg" className="rounded-full px-spacing-xl">Falar com a Equipe</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[500px] overflow-y-auto max-h-[90dvh]">
                   <DialogHeader>
@@ -326,36 +326,36 @@ const PartnersPage: React.FC = () => {
                       Preencha os dados abaixo para submeter sua proposta de parceria ou patrocínio.
                     </DialogDescription>
                   </DialogHeader>
-                  <form onSubmit={handleSubmit} className="space-y-5 pt-4">
-                    <div className="space-y-2">
+                  <form onSubmit={handleSubmit} className="space-y-spacing-md pt-spacing-md">
+                    <div className="space-y-spacing-xs">
                       <Label htmlFor="name-bottom">Nome da Instituição/Empresa *</Label>
                       <Input id="name-bottom" name="name" value={formData.name} onChange={handleInputChange} placeholder="Ex: Editora São José" required />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-spacing-xs">
                       <Label htmlFor="email-bottom">E-mail de Contato *</Label>
                       <Input id="email-bottom" name="contact_email" type="email" value={formData.contact_email} onChange={handleInputChange} placeholder="seu@email.com" required />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-spacing-xs">
                       <Label htmlFor="desc-bottom">Breve Descrição</Label>
                       <Textarea id="desc-bottom" name="description" value={formData.description} onChange={handleInputChange} placeholder="Conte-nos um pouco sobre sua missão..." className="min-h-[100px] resize-none" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                      <div className="space-y-spacing-xs">
                         <Label htmlFor="site-bottom">Site Externo (URL)</Label>
                         <Input id="site-bottom" name="website_url" value={formData.website_url} onChange={handleInputChange} placeholder="https://..." />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-spacing-xs">
                         <Label htmlFor="logo-bottom">URL da Logo</Label>
                         <Input id="logo-bottom" name="logo_url" value={formData.logo_url} onChange={handleInputChange} placeholder="https://..." />
                       </div>
                     </div>
-                    <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={isSubmitting}>
-                      {isSubmitting ? <><Icons.Loader className="w-4 h-4 mr-2 animate-spin" /> Enviando...</> : 'Enviar Solicitação'}
+                    <Button type="submit" className="w-full h-spacing-2xl text-base font-semibold" disabled={isSubmitting}>
+                      {isSubmitting ? <><Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" /> Enviando...</> : 'Enviar Solicitação'}
                     </Button>
                   </form>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" size="lg" className="rounded-full px-10">Saiba Mais</Button>
+              <Button variant="outline" size="lg" className="rounded-full px-spacing-xl">Saiba Mais</Button>
             </div>
           </div>
         </motion.section>

@@ -49,14 +49,14 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0, tagsRef);
 
   const EmptyState = ({ text }: { text: string }) => (
-    <p className="text-center text-sm text-muted-foreground py-6">{text}</p>
+    <p className="text-center text-sm text-muted-foreground py-spacing-lg">{text}</p>
   );
 
   return (
     <ContemplativeLayout
       subtitle="O Verbo de Deus"
       title="Logos IA"
-      maxW="max-w-4xl"
+      maxW="max-w-spacing-4xl"
     >
       <SEOHead 
         title="Logos IA | Sabedoria Teológica e Espiritual" 
@@ -68,25 +68,25 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           { name: "Logos IA", path: "/buscar" }
         ]}
       />
-      <div ref={ref} className="space-y-12">
-        <motion.div className="text-center space-y-4 pt-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="w-16 h-16 rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-2xl transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
-            <Icons.Search className="w-8 h-8 text-white" />
+      <div ref={ref} className="space-y-spacing-2xl">
+        <motion.div className="text-center space-y-spacing-md pt-spacing-xl" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
+            <Icons.Search className="w-spacing-xl h-spacing-xl text-white" />
           </div>
           <h2 className="text-3xl md:text-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
-          <p className="text-muted-foreground font-serif italic text-lg max-w-lg mx-auto leading-relaxed">
+          <p className="text-muted-foreground font-serif italic text-lg max-w-spacing-lg mx-auto leading-relaxed">
             "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
 
         {/* LOGOS IA CHAT INTERFACE */}
-        <div className="bg-card border border-border/40 rounded-[2.5rem] p-8 md:p-12 shadow-premium space-y-8">
-           <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icons.Sparkles className="w-4 h-4 text-primary" />
+        <div className="bg-card border border-border/40 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl shadow-premium space-y-spacing-xl">
+           <div className="flex flex-col gap-spacing-md">
+              <div className="flex items-center gap-spacing-sm">
+                 <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/10 flex items-center justify-center">
+                    <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
                  </div>
-                 <h2 className="text-premium-tiny font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                 <h2 className="text-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
@@ -103,16 +103,16 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           />
         </div>
 
-        <div className="space-y-6">
-          <div className="flex items-center gap-8">
-            <h2 className="text-premium-tiny font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+        <div className="space-y-spacing-lg">
+          <div className="flex items-center gap-spacing-xl">
+            <h2 className="text-xs font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
             </h2>
             <div className="h-px flex-1 bg-border/30" />
           </div>
 
         {anyPending && (
-          <div className="mt-8">
+          <div className="mt-spacing-xl">
             <ListSkeleton count={4} />
           </div>
         )}
@@ -121,10 +121,10 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
-            className="text-center py-12 space-y-4"
+            className="text-center py-spacing-2xl space-y-spacing-md"
           >
-            <Icons.Search className="w-12 h-12 mx-auto text-muted-foreground opacity-20" />
-            <div className="space-y-2">
+            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto text-muted-foreground opacity-20" />
+            <div className="space-y-spacing-xs">
               <p className="text-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
               <p className="text-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
             </div>
@@ -133,8 +133,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
 
         {hasQuery && !isAllEmpty && (
-          <Tabs defaultValue="santos" className="mt-6">
-            <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted/50 p-1 rounded-full">
+          <Tabs defaultValue="santos" className="mt-spacing-lg">
+            <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-full">
               <TabsTrigger value="santos" className="text-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
               <TabsTrigger value="glossario" className="text-xs flex-1 min-w-[80px]">Glossário ({counts.glossario})</TabsTrigger>
               <TabsTrigger value="comunidade" className="text-xs flex-1 min-w-[80px]">Comunidade ({counts.comunidade})</TabsTrigger>
@@ -142,7 +142,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               <TabsTrigger value="jornadas" className="text-xs flex-1 min-w-[80px]">Jornadas ({counts.jornadas})</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="santos" className="space-y-2 mt-4">
+            <TabsContent value="santos" className="space-y-spacing-xs mt-spacing-md">
               <AnimatePresence mode="popLayout">
               {saints.results?.map((s, i) => (
                 <SearchResultCard
@@ -150,7 +150,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   title={s.name}
                   subtitle={s.title}
                   score={(s as any).similarityScore}
-                  icon={<Icons.User className="w-4 h-4" />}
+                  icon={<Icons.User className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(`/santos/${s.id}`)}
                   index={i}
                 />
@@ -159,7 +159,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {saints.results?.length === 0 && <EmptyState text="Nenhum santo encontrado." />}
             </TabsContent>
 
-            <TabsContent value="glossario" className="space-y-2 mt-4">
+            <TabsContent value="glossario" className="space-y-spacing-xs mt-spacing-md">
               <AnimatePresence mode="popLayout">
               {glossary.results?.map((g, i) => (
                 <SearchResultCard
@@ -167,7 +167,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   title={g.term}
                   subtitle={g.definition}
                   score={(g as any).similarityScore}
-                  icon={<Icons.BookOpen className="w-4 h-4" />}
+                  icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(AppRoute.GLOSSARY)}
                   index={i}
                 />
@@ -176,7 +176,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {glossary.results?.length === 0 && <EmptyState text="Nenhum termo encontrado." />}
             </TabsContent>
 
-            <TabsContent value="comunidade" className="space-y-2 mt-4">
+            <TabsContent value="comunidade" className="space-y-spacing-xs mt-spacing-md">
               <AnimatePresence mode="popLayout">
               {community.results?.map((p, i) => (
                 <SearchResultCard
@@ -184,7 +184,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   title={p.title || p.content.slice(0, 60)}
                   subtitle={p.content}
                   score={(p as any).similarityScore}
-                  icon={<Icons.MessageCircle className="w-4 h-4" />}
+                  icon={<Icons.MessageCircle className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(AppRoute.COMMUNITY)}
                   index={i}
                 />
@@ -193,8 +193,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {community.results?.length === 0 && <EmptyState text="Nenhuma discussão encontrada." />}
             </TabsContent>
 
-            <TabsContent value="temas" className="space-y-2 mt-4">
-              <div className="flex flex-wrap gap-2" role="list" ref={tagsRef}>
+            <TabsContent value="temas" className="space-y-spacing-xs mt-spacing-md">
+              <div className="flex flex-wrap gap-spacing-xs" role="list" ref={tagsRef}>
                 {tags.results?.map((t, idx) => (
                   <Button
                     key={t.id}
@@ -203,7 +203,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     onKeyDown={(e) => handleTagsKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${t.slug}`))}
                     tabIndex={tagsActiveIndex === idx ? 0 : -1}
                     data-roving-item="true"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
+                    className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
                     aria-label={`Tema: ${t.label}`}
                   >
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}
@@ -215,7 +215,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               {tags.results?.length === 0 && <EmptyState text="Nenhum tema encontrado." />}
             </TabsContent>
 
-            <TabsContent value="jornadas" className="space-y-2 mt-4">
+            <TabsContent value="jornadas" className="space-y-spacing-xs mt-spacing-md">
               <AnimatePresence mode="popLayout">
               {journeys.results?.map((j, i) => (
                 <SearchResultCard
@@ -223,7 +223,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   title={j.title}
                   subtitle={j.subtitle}
                   score={(j as any).similarityScore}
-                  icon={<Icons.Compass className="w-4 h-4" />}
+                  icon={<Icons.Compass className="w-spacing-md h-spacing-md" />}
                   onClick={() => navigate(`/jornadas/${j.id}`)}
                   index={i}
                 />
@@ -236,8 +236,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       </div>
 
         {!hasQuery && (
-          <div className="text-center py-12 text-muted-foreground">
-            <Icons.Search className="w-12 h-12 mx-auto opacity-20 mb-4" />
+          <div className="text-center py-spacing-2xl text-muted-foreground">
+            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto opacity-20 mb-spacing-md" />
             <p className="text-sm">Digite pelo menos 2 caracteres para buscar</p>
           </div>
         )}

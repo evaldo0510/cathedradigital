@@ -66,15 +66,15 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       tabIndex={0}
       aria-label={`${title}${subtitle ? `. ${subtitle}` : ''}. Clique para ver detalhes.`}
       className={cn(
-        'premium-card bg-card border border-border/20 cursor-pointer hover:shadow-premium-hover transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-premium-sm',
+        'premium-card bg-card border border-border/20 cursor-pointer hover:shadow-premium-hover transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-sm',
         className,
       )}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-    <CardContent className="p-3 flex items-center gap-3">
+    <CardContent className="p-spacing-sm flex items-center gap-spacing-sm">
       {icon && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-premium bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+        <div className="flex-shrink-0 w-spacing-xl h-spacing-xl rounded-premium bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
           {icon}
         </div>
       )}
@@ -84,10 +84,10 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           <p className="text-xs text-muted-foreground line-clamp-1">{subtitle}</p>
         )}
       </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-spacing-xs flex-shrink-0">
         <RelevanceBadge score={score} size="xs" />
         {showArrow && (
-          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
     </CardContent>

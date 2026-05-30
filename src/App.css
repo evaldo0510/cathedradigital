@@ -1,18 +1,18 @@
 /* Desktop Grid and Layout Optimization */
 .desktop-layout {
-  @apply max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-8 px-4 sm:px-6 lg:px-8;
+  @apply max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-spacing-xl px-spacing-md sm:px-spacing-lg lg:px-spacing-xl;
 }
 
 .desktop-main {
-  @apply w-full max-w-4xl mx-auto space-y-10;
+  @apply w-full max-w-spacing-4xl mx-auto space-y-spacing-xl;
 }
 
 .desktop-aside {
-  @apply sticky top-24 h-fit;
+  @apply sticky top-spacing-4xl h-fit;
 }
 
 .content-section {
-  @apply space-y-8;
+  @apply space-y-spacing-xl;
 }
 
 #root {

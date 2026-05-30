@@ -117,11 +117,11 @@ const SpiritualGoals: React.FC = () => {
   const progress = Math.min((goal.achieved_count / goal.goal_count) * 100, 100);
 
   return (
-    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-8">
+    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-spacing-xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-primary/10 rounded-2xl">
-              <Target className="w-5 h-5 text-primary" />
+          <div className="flex items-center gap-spacing-sm">
+            <div className="p-spacing-xs bg-primary/10 rounded-premium">
+              <Target className="w-spacing-md h-spacing-md text-primary" />
             </div>
             <div>
               <h3 className="text-xl font-bold font-serif">Meta da Semana</h3>
@@ -134,7 +134,7 @@ const SpiritualGoals: React.FC = () => {
             onClick={() => setIsEditing(!isEditing)}
             className="text-[10px] font-black uppercase tracking-widest"
           >
-            {isEditing ? 'Cancelar' : <Settings2 className="w-4 h-4" />}
+            {isEditing ? 'Cancelar' : <Settings2 className="w-spacing-md h-spacing-md" />}
           </Button>
         </div>
 
@@ -144,35 +144,35 @@ const SpiritualGoals: React.FC = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="space-y-6"
+              className="space-y-spacing-lg"
             >
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">Quantos passos nesta semana?</label>
-                <div className="flex gap-2">
+                <div className="flex gap-spacing-xs">
                   <Input 
                     type="number" 
                     value={newGoalCount} 
                     onChange={(e) => setNewGoalCount(parseInt(e.target.value))}
                     className="bg-background border-primary/10 rounded-xl"
                   />
-                  <Button onClick={handleUpdateGoal} className="rounded-xl px-6">Salvar</Button>
+                  <Button onClick={handleUpdateGoal} className="rounded-xl px-spacing-lg">Salvar</Button>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-primary/5">
+              <div className="grid grid-cols-2 gap-spacing-md pt-spacing-md border-t border-primary/5">
                 <Button 
                   variant={reminderSettings?.push_enabled ? "default" : "outline"}
                   onClick={() => toggleReminder('push')}
-                  className="rounded-xl gap-2 text-[10px] font-black uppercase tracking-widest h-12"
+                  className="rounded-xl gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
-                  <Bell className="w-3.5 h-3.5" /> Push {reminderSettings?.push_enabled ? 'ON' : 'OFF'}
+                  <Bell className="w-spacing-sm h-spacing-sm" /> Push {reminderSettings?.push_enabled ? 'ON' : 'OFF'}
                 </Button>
                 <Button 
                   variant={reminderSettings?.email_enabled ? "default" : "outline"}
                   onClick={() => toggleReminder('email')}
-                  className="rounded-xl gap-2 text-[10px] font-black uppercase tracking-widest h-12"
+                  className="rounded-xl gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
-                  <Calendar className="w-3.5 h-3.5" /> E-mail {reminderSettings?.email_enabled ? 'ON' : 'OFF'}
+                  <Calendar className="w-spacing-sm h-spacing-sm" /> E-mail {reminderSettings?.email_enabled ? 'ON' : 'OFF'}
                 </Button>
               </div>
             </motion.div>
@@ -180,22 +180,22 @@ const SpiritualGoals: React.FC = () => {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="space-y-6"
+              className="space-y-spacing-lg"
             >
-              <div className="flex justify-between items-end mb-2">
-                <div className="space-y-1">
+              <div className="flex justify-between items-end mb-spacing-xs">
+                <div className="space-y-spacing-2xs">
                   <span className="text-4xl font-display font-bold text-primary">{goal.achieved_count}</span>
-                  <span className="text-xl text-muted-foreground/40 font-serif italic mx-2">/</span>
+                  <span className="text-xl text-muted-foreground/40 font-serif italic mx-spacing-xs">/</span>
                   <span className="text-xl font-bold text-muted-foreground">{goal.goal_count} passos</span>
                 </div>
                 {progress === 100 && (
                   <Badge className="bg-primary/20 text-primary border-primary/10 animate-bounce">
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Meta Alcançada
+                    <CheckCircle2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Meta Alcançada
                   </Badge>
                 )}
               </div>
               
-              <Progress value={progress} className="h-2 bg-primary/5" />
+              <Progress value={progress} className="h-spacing-xs bg-primary/5" />
               
               <p className="text-xs text-muted-foreground/60 font-serif italic">
                 {progress === 100 

@@ -21,15 +21,15 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="flex items-center justify-between px-4 md:px-8 py-3 bg-card border-b border-border"
+        className="flex items-center justify-between px-spacing-md md:px-spacing-xl py-spacing-sm bg-card border-b border-border"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-spacing-sm min-w-0">
           <Button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-secondary transition-colors flex-shrink-0"
+            className="p-spacing-xs rounded-full hover:bg-secondary transition-colors flex-shrink-0"
           >
-            <X className="w-5 h-5 text-foreground" />
+            <X className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
           <h3 className="text-sm font-bold text-foreground truncate">{title}</h3>
         </div>
@@ -37,9 +37,9 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary hover:underline flex-shrink-0"
+          className="flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs text-xs font-bold text-primary hover:underline flex-shrink-0"
         >
-          Abrir original <ExternalLink className="w-3.5 h-3.5" />
+          Abrir original <ExternalLink className="w-spacing-sm h-spacing-sm" />
         </a>
       </motion.div>
       <div className="flex-1" onClick={e => e.stopPropagation()}>

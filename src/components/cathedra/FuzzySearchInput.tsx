@@ -45,7 +45,7 @@ export interface FuzzySearchInputProps {
   size?: 'md' | 'lg';
   /** aria-label for the input (defaults to the placeholder). */
   ariaLabel?: string;
-  /** Optional extra classes for the wrapper (e.g. `max-w-2xl mx-auto`). */
+  /** Optional extra classes for the wrapper (e.g. `max-w-spacing-2xl mx-auto`). */
   className?: string;
   /** Optional id for the input element. */
   inputId?: string;
@@ -58,16 +58,16 @@ const SIZE_TOKENS: Record<NonNullable<FuzzySearchInputProps['size']>, {
   clearWrap: string;
 }> = {
   md: {
-    input: 'pl-11 pr-10 py-3 text-sm rounded-full',
-    icon: 'w-4 h-4',
-    iconWrap: 'left-4',
-    clearWrap: 'right-3',
+    input: 'pl-spacing-xl pr-spacing-xl py-spacing-sm text-sm rounded-full',
+    icon: 'w-spacing-md h-spacing-md',
+    iconWrap: 'left-spacing-md',
+    clearWrap: 'right-spacing-sm',
   },
   lg: {
-    input: 'pl-14 pr-14 py-5 text-base rounded-full shadow-soft',
-    icon: 'w-5 h-5',
-    iconWrap: 'left-6',
-    clearWrap: 'right-6',
+    input: 'pl-spacing-2xl pr-spacing-2xl py-spacing-md text-base rounded-full shadow-md',
+    icon: 'w-spacing-md h-spacing-md',
+    iconWrap: 'left-spacing-lg',
+    clearWrap: 'right-spacing-lg',
   },
 };
 
@@ -89,7 +89,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
     <div className={cn('relative', className)}>
       <Search
         className={cn(
-          'absolute top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none',
+          'absolute top-spacing-2xs/2 -translate-y-1/2 text-muted-foreground pointer-events-none',
           tokens.icon,
           tokens.iconWrap,
         )}
@@ -114,7 +114,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
           onClick={() => onChange('')}
           aria-label="Limpar busca"
           className={cn(
-            'absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
+            'absolute top-spacing-2xs/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors',
             tokens.clearWrap,
           )}
         >
@@ -124,9 +124,9 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
       {showHint && (
         <div 
           aria-live="polite"
-          className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground"
+          className="absolute -bottom-spacing-lg left-spacing-2xs/2 -translate-x-1/2 flex items-center gap-spacing-2xs text-xs font-bold uppercase tracking-widest text-muted-foreground"
         >
-          <Loader2 className="w-3 h-3 animate-spin" />
+          <Loader2 className="w-spacing-sm h-spacing-sm animate-spin" />
           Buscando…
         </div>
       )}

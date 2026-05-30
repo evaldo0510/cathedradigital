@@ -34,10 +34,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="h-full flex flex-col items-center justify-center text-center p-8 bg-muted/10 rounded-full border border-dashed border-border/40"
+            className="h-full flex flex-col items-center justify-center text-center p-spacing-xl bg-muted/10 rounded-full border border-dashed border-border/40"
           >
-            <Sparkles className="h-10 w-10 text-primary/60 mb-4" />
-            <h3 className="text-xl font-bold text-foreground mb-2">Selecione um termo</h3>
+            <Sparkles className="h-spacing-xl w-spacing-xl text-primary/60 mb-spacing-md" />
+            <h3 className="text-xl font-bold text-foreground mb-spacing-xs">Selecione um termo</h3>
             <p className="text-muted-foreground text-sm">Escolha um termo da lista para explorar sua profundidade teológica.</p>
           </motion.div>
         ) : (
@@ -47,11 +47,11 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-            className="bg-card border border-border rounded-full p-6 md:p-8 space-y-6 shadow-soft"
+            className="bg-card border border-border rounded-full p-spacing-lg md:p-spacing-xl space-y-spacing-lg shadow-md"
           >
             {/* Term Header */}
             <div>
-              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-premium-tiny uppercase tracking-[0.15em] font-black mb-2">
+              <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-xs uppercase tracking-[0.15em] font-black mb-spacing-xs">
                 {selectedTerm.category || 'Conceito'}
               </Badge>
               <h2 className="text-3xl md:text-4xl font-black text-foreground tracking-tight">
@@ -60,8 +60,8 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             </div>
 
             {/* Definition */}
-            <div className="space-y-1">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Definição</p>
+            <div className="space-y-spacing-2xs">
+              <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Definição</p>
               <p className="text-foreground/90 leading-relaxed text-base font-medium italic">
                 {selectedTerm.definition}
               </p>
@@ -69,12 +69,12 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Bible */}
             {(selectedTerm.bibleVerses || selectedTerm.reference) && (
-              <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Book className="w-4 h-4 text-blue-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
+              <div className="bg-blue-500/5 border border-blue-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <Book className="w-spacing-md h-spacing-md text-blue-600" />
+                  <p className="text-xs font-black uppercase tracking-widest text-blue-600">📖 Bíblia</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-spacing-xs">
                   {(selectedTerm.bibleVerses || [selectedTerm.reference!]).flatMap((v, vIdx) => {
                     const segments = parseBibleReferences(v);
                     const bibleRefs = segments.filter(s => s.type === 'bibleRef' && s.abbr);
@@ -106,12 +106,12 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Catechism */}
             {selectedTerm.catechismReferences && (
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Bookmark className="w-4 h-4 text-amber-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
+              <div className="bg-amber-500/5 border border-amber-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <Bookmark className="w-spacing-md h-spacing-md text-amber-600" />
+                  <p className="text-xs font-black uppercase tracking-widest text-amber-600">📘 Catecismo</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-spacing-xs">
                   {selectedTerm.catechismReferences.flatMap((r, rIdx) => {
                     const paraMatches = [...r.matchAll(/§(\d+)/g)];
                     
@@ -137,12 +137,12 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Magisterium */}
             {selectedTerm.magisteriumReferences && (
-              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-emerald-600" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
+              <div className="bg-emerald-500/5 border border-emerald-500/10 rounded-premium p-spacing-md space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <Globe className="w-spacing-md h-spacing-md text-emerald-600" />
+                  <p className="text-xs font-black uppercase tracking-widest text-emerald-600">📜 Magistério</p>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-spacing-xs">
                   {selectedTerm.magisteriumReferences.map((m, idx) => {
                     const docName = m.replace(/\s*\(.*?\)\s*$/, '').replace(/\s*n\.\s*\d.*$/, '').trim();
                     return (
@@ -160,10 +160,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Practical Application */}
             {selectedTerm.practicalApplication && (
-              <div className="bg-primary/5 border border-primary/10 rounded-premium p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-primary" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
+              <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <Target className="w-spacing-md h-spacing-md text-primary" />
+                  <p className="text-xs font-black uppercase tracking-widest text-primary">🧠 Aplicação</p>
                 </div>
                 <p className="text-foreground/80 leading-relaxed text-sm font-medium">
                   {selectedTerm.practicalApplication}
@@ -173,10 +173,10 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
 
             {/* Deep Interpretation */}
             {selectedTerm.deepInterpretation && (
-              <div className="bg-muted/30 rounded-premium p-4 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Quote className="w-4 h-4 text-muted-foreground" />
-                  <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
+              <div className="bg-muted/30 rounded-premium p-spacing-md space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <Quote className="w-spacing-md h-spacing-md text-muted-foreground" />
+                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Interpretação</p>
                 </div>
                 <p className="text-foreground/70 leading-relaxed text-sm italic font-serif">
                   {selectedTerm.deepInterpretation}
@@ -185,22 +185,22 @@ const EncyclopediaTermDetail: React.FC<EncyclopediaTermDetailProps> = ({
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col gap-3 pt-2">
+            <div className="flex flex-col gap-spacing-sm pt-spacing-xs">
               <Button
                 onClick={() => onStudyWithLogos(selectedTerm.term)}
                 variant="outline"
-                className="w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
+                className="w-full rounded-full h-spacing-2xl gap-spacing-xs font-bold text-xs uppercase tracking-widest border-primary/20 text-primary hover:bg-primary/10"
               >
-                <Brain className="w-4 h-4" />
+                <Brain className="w-spacing-md h-spacing-md" />
                 🤖 Refletir com Logos
               </Button>
 
               <Button
                 onClick={() => onLiveThis(selectedTerm)}
-                className={`w-full rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
+                className={`w-full rounded-full h-spacing-2xl gap-spacing-xs font-bold text-xs uppercase tracking-widest ${selectedTerm.journey_id ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'border-border text-foreground/70 hover:bg-muted/50'}`}
                 variant={selectedTerm.journey_id ? 'default' : 'outline'}
               >
-                {selectedTerm.journey_id ? <Compass className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
+                {selectedTerm.journey_id ? <Compass className="w-spacing-md h-spacing-md" /> : <Heart className="w-spacing-md h-spacing-md" />}
                 🚀 Viver isso {selectedTerm.journey_id ? '— Jornada Prática' : ''}
               </Button>
             </div>

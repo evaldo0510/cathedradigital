@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-xs whitespace-nowrap rounded-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-spacing-xs whitespace-nowrap rounded-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -24,14 +24,14 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-14 px-xl text-xs [&_svg]:size-5",
-        sm: "h-11 px-lg text-[10px] [&_svg]:size-4",
-        xs: "h-9 px-md text-[9px] [&_svg]:size-3.5",
-        lg: "h-16 px-2xl text-sm [&_svg]:size-6",
-        xl: "h-20 px-3xl text-base [&_svg]:size-7",
-        icon: "h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5",
-        "icon-sm": "h-10 w-10 p-0 flex items-center justify-center [&_svg]:size-4",
-        "icon-xs": "h-8 w-8 p-0 flex items-center justify-center [&_svg]:size-3.5",
+        default: "h-spacing-2xl px-spacing-xl text-xs [&_svg]:size-spacing-md",
+        sm: "h-spacing-xl px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
+        xs: "h-spacing-xl px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
+        lg: "h-spacing-3xl px-spacing-2xl text-sm [&_svg]:size-spacing-lg",
+        xl: "h-spacing-3xl px-spacing-3xl text-base [&_svg]:size-spacing-lg",
+        icon: "h-spacing-2xl w-spacing-2xl p-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-sm": "h-spacing-xl w-spacing-xl p-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-xs": "h-spacing-xl w-spacing-xl p-0 flex items-center justify-center [&_svg]:size-spacing-sm",
       },
     },
     defaultVariants: {

@@ -46,25 +46,25 @@ const DiagnosticsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-10 py-8">
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium text-primary">
-          <Icons.Zap className="w-4 h-4" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Painel de Controle</span>
+    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl py-spacing-xl">
+      <div className="text-center space-y-spacing-sm">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary">
+          <Icons.Zap className="w-spacing-md h-spacing-md" />
+          <span className="text-xs font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
+        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
         {/* Status Cards */}
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Supabase Core</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-3 h-3 rounded-full animate-pulse ${
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <div className={`w-spacing-sm h-spacing-sm rounded-full animate-pulse ${
                 supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-secondary' : 'bg-secondary/50'
               }`} />
               <span className="text-lg font-bold text-foreground">
@@ -76,12 +76,12 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Banco de Dados</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Icons.History className="w-5 h-5 text-primary" />
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <Icons.History className="w-spacing-md h-spacing-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.table_count || 0} Tabelas</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Integridade: 100% (Normal)</p>
@@ -89,12 +89,12 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Comunidade</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Icons.Message className="w-5 h-5 text-primary" />
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <Icons.Message className="w-spacing-md h-spacing-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.post_count || 0} Discussões</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Atividade: Alta (Últimas 24h)</p>
@@ -102,11 +102,11 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-8 space-y-6">
-        <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-3">
-          <Icons.Zap className="w-5 h-5 text-primary" /> Relatório de Serviços
+      <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg">
+        <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-spacing-sm">
+          <Icons.Zap className="w-spacing-md h-spacing-md text-primary" /> Relatório de Serviços
         </h2>
-        <div className="grid gap-4">
+        <div className="grid gap-spacing-md">
           {[
             { label: 'Autenticação (Magic Link)', status: 'Online' },
             { label: 'Edge Functions (AI Study)', status: 'Online' },
@@ -114,9 +114,9 @@ const DiagnosticsPage: React.FC = () => {
             { label: 'Realtime (Notificações)', status: 'Avisos' },
             { label: 'Analytics API', status: 'Online' },
           ].map((service, i) => (
-            <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
+            <div key={i} className="flex items-center justify-between py-spacing-sm border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
-              <span className={`text-premium-tiny font-black uppercase tracking-widest px-3 py-1 rounded-full ${
+              <span className={`text-xs font-black uppercase tracking-widest px-spacing-sm py-spacing-2xs rounded-full ${
                 service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
@@ -124,11 +124,11 @@ const DiagnosticsPage: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
-          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-premium-tiny">
+        <div className="pt-spacing-md flex flex-col sm:flex-row justify-center gap-spacing-sm">
+          <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-xs">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>
-          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-premium-tiny hover:bg-red-500/5 hover:text-red-600">
+          <Button asChild variant="ghost" className="rounded-full font-black uppercase tracking-widest text-xs hover:bg-red-500/5 hover:text-red-600">
             <a href="/security-audit">Auditoria de Segurança</a>
           </Button>
         </div>

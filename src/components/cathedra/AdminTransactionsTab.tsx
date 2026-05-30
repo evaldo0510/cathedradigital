@@ -14,21 +14,21 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
     </CardHeader>
     <CardContent>
       {transactions.length === 0 ? (
-        <p className="text-center text-muted-foreground py-8">Nenhuma transação registrada.</p>
+        <p className="text-center text-muted-foreground py-spacing-xl">Nenhuma transação registrada.</p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-spacing-sm">
           {transactions.map((t: any) => (
-            <div key={t.id} className="flex items-center justify-between p-4 rounded-premium bg-muted/30 border border-border/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-premium bg-primary/10 flex items-center justify-center">
-                  <ArrowUpRight className="w-4 h-4 text-primary" />
+            <div key={t.id} className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/30 border border-border/50">
+              <div className="flex items-center gap-spacing-sm">
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center">
+                  <ArrowUpRight className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-spacing-xs">
                     <p className="font-medium text-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-premium-tiny bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
-                        <User className="w-2.5 h-2.5" />
+                      <span className="text-xs bg-muted px-spacing-2xs py-spacing-3xs rounded text-muted-foreground flex items-center gap-spacing-2xs">
+                        <User className="w-spacing-xs h-spacing-xs" />
                         {t.profiles.name}
                       </span>
                     )}
@@ -36,7 +36,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
                   <p className="text-xs text-muted-foreground">{new Date(t.created_at).toLocaleDateString('pt-BR')}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-spacing-sm">
                 <Badge variant={t.status === 'approved' ? 'default' : 'secondary'}>{t.status || 'pendente'}</Badge>
                 <span className="font-bold text-sm">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)}

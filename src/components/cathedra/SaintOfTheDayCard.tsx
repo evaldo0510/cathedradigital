@@ -78,8 +78,8 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
 
   if (!saint) {
     return (
-      <CathedraCard className="p-8 text-center opacity-60">
-        <Icons.Saints className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+      <CathedraCard className="p-spacing-xl text-center opacity-60">
+        <Icons.Saints className="w-spacing-xl h-spacing-xl text-muted-foreground mx-auto mb-spacing-sm" />
         <p className="text-sm text-muted-foreground font-serif italic">Nenhum santo encontrado para hoje</p>
       </CathedraCard>
     );
@@ -98,9 +98,9 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
         variant="interactive"
         padding="none"
         onClick={handleNavigate}
-        className="w-full flex items-center gap-6 group text-left p-5"
+        className="w-full flex items-center gap-spacing-lg group text-left p-spacing-md"
       >
-        <div className="w-20 h-20 rounded-premium-sm overflow-hidden border border-border/20 shadow-soft shrink-0">
+        <div className="w-spacing-3xl h-spacing-3xl rounded-sm overflow-hidden border border-border/20 shadow-md shrink-0">
           <SacredImage
             src={saint.image}
             alt={saint.name}
@@ -108,17 +108,17 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-premium-tiny font-black uppercase tracking-[0.2em] text-secondary/80 mb-1">
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-secondary/80 mb-spacing-2xs">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>
           <h3 className="text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors truncate">
             {saint.name}
           </h3>
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-1 leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-spacing-xs line-clamp-1 leading-relaxed">
             {saint.bio?.slice(0, 100)}...
           </p>
         </div>
-        <ChevronRight className="w-5 h-5 text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
+        <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground/60 group-hover:text-primary transition-colors shrink-0" />
       </CathedraCard>
     );
   }
@@ -142,38 +142,38 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       onClick={handleNavigate}
       className="group p-0 overflow-hidden flex flex-col sm:flex-row h-full"
     >
-      <div className="w-full sm:w-1/3 h-56 sm:h-auto relative shrink-0 overflow-hidden">
+      <div className="w-full sm:w-spacing-2xs/3 h-spacing-4xl sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 
           src={saint.image} 
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        <div className="absolute bottom-6 left-6 right-6">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-white/70 mb-1">{saint.feastDay}</p>
+        <div className="absolute bottom-spacing-lg left-spacing-lg right-spacing-lg">
+          <p className="text-xs font-black uppercase tracking-widest text-white/70 mb-spacing-2xs">{saint.feastDay}</p>
           <h3 className="text-2xl font-serif font-bold text-white leading-tight">{saint.name}</h3>
         </div>
       </div>
-      <div className="flex-1 p-8 md:p-10 space-y-6 flex flex-col justify-center">
-        <div className="space-y-4">
-          <p className="text-xl text-primary font-serif italic mb-2">
+      <div className="flex-1 p-spacing-xl md:p-spacing-xl space-y-spacing-lg flex flex-col justify-center">
+        <div className="space-y-spacing-md">
+          <p className="text-xl text-primary font-serif italic mb-spacing-xs">
             "{saint.title === 'Santo do Dia' ? 'Exemplo de Santidade' : (saint.title || 'Exemplo de Santidade')}"
           </p>
           <p className="text-sm text-muted-foreground font-serif italic line-clamp-4 leading-relaxed">
             {saint.quotes?.[0] || saint.bio}
           </p>
         </div>
-        <div className="flex items-center justify-between pt-6 border-t border-border/40">
-          <div className="flex gap-2">
+        <div className="flex items-center justify-between pt-spacing-lg border-t border-border/40">
+          <div className="flex gap-spacing-xs">
             {saint.virtues?.slice(0, 2).map((v: string) => (
-              <span key={v} className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">{v}</span>
+              <span key={v} className="px-spacing-sm py-spacing-2xs bg-primary/5 text-primary text-xs font-black uppercase rounded-full tracking-wider">{v}</span>
             )) || (
-              <span className="px-3 py-1 bg-primary/5 text-primary text-premium-tiny font-black uppercase rounded-full tracking-wider">Fé</span>
+              <span className="px-spacing-sm py-spacing-2xs bg-primary/5 text-primary text-xs font-black uppercase rounded-full tracking-wider">Fé</span>
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
-              <Sparkles className="w-5 h-5" />
+          <div className="flex items-center gap-spacing-sm">
+            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-500">
+              <Sparkles className="w-spacing-md h-spacing-md" />
             </div>
             <span className="text-premium-small font-black uppercase tracking-widest text-primary">Conhecer</span>
           </div>

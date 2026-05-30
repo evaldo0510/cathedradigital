@@ -199,25 +199,25 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               duration: settings.reduceAnimations ? 0.3 : 0.6, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-6 z-[170] shadow-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-0 left-0 bottom-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-spacing-lg z-[170] shadow-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - Cinematic extension of the atmosphere */}
-            <header className="flex items-center justify-between mb-4 pb-2 border-b border-primary/[0.01] dark:border-white/[0.01]">
+            <header className="flex items-center justify-between mb-spacing-md pb-spacing-xs border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
-                className="flex items-center gap-4 cursor-pointer group outline-none" 
+                className="flex items-center gap-spacing-md cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-10 h-10 rounded-2xl bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-[2000ms]">
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-spacing-xs group-hover:scale-105 transition-transform duration-[2000ms]">
                   <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} />
                 </div>
-                <div className="space-y-0.5">
+                <div className="space-y-spacing-3xs">
                   <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
                   <p className="text-[6.5px] font-bold uppercase text-primary/10 tracking-[0.6em]">
                     Sacrum Archivum
@@ -230,20 +230,20 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-9 h-9 text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
+                className="rounded-full w-spacing-xl h-spacing-xl text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-3.5 h-3.5" />
+                <Icons.X className="w-spacing-sm h-spacing-sm" />
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-2 overflow-y-auto pb-4 no-scrollbar pr-1" role="navigation">
+            <nav className="flex-1 space-y-spacing-xs overflow-y-auto pb-spacing-md no-scrollbar pr-spacing-2xs" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between py-2 px-4 group/trigger hover:bg-primary/[0.02] rounded-xl transition-all">
+                    <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-xl transition-all">
                       <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/30 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
-                      <Icons.ChevronDown className="w-3 h-3 text-primary/10 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1} />
+                      <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/10 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -253,7 +253,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <ul className="space-y-1 mt-1">
+                      <ul className="space-y-spacing-2xs mt-spacing-2xs">
                         {section.items.map((item, idx) => {
                           const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                           return (
@@ -265,7 +265,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-4 px-4 py-1.5 rounded-xl text-[8.5px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-xl text-[8.5px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[40px]
                                   ${isActive
                                     ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
@@ -275,12 +275,12 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 </span>
                                 <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-full flex-shrink-0">
                                     {cacheCount}
                                   </span>
                                 )}
-                                {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-1 py-0.5 rounded flex-shrink-0">PRO</span>}
-                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-0.5 h-0.5 rounded-full bg-primary/40 flex-shrink-0" />}
+                                {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-spacing-2xs py-spacing-3xs rounded flex-shrink-0">PRO</span>}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-spacing-3xs h-spacing-3xs rounded-full bg-primary/40 flex-shrink-0" />}
                               </Button>
                             </li>
                           );
@@ -292,29 +292,29 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               )))}
             </nav>
 
-            <div className="pt-4 mt-auto space-y-4">
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-2 gap-2">
+            <div className="pt-spacing-md mt-auto space-y-spacing-md">
+              <div className="flex flex-col gap-spacing-sm">
+                <div className="grid grid-cols-2 gap-spacing-xs">
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-10 rounded-xl border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
+                    className="h-spacing-xl rounded-xl border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-3.5 h-3.5 text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-3.5 h-3.5 opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
+                    {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
                     <span className="text-[7.5px] font-black uppercase tracking-widest text-muted-foreground/40 group-hover/btn:text-muted-foreground/80 transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
                     variant="ghost"
                     onClick={onToggleHighContrast} 
-                    className={`h-10 rounded-xl border flex items-center justify-center gap-2 transition-all ${
+                    className={`h-spacing-xl rounded-xl border flex items-center justify-center gap-spacing-xs transition-all ${
                       isHighContrast 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
                         : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-3.5 h-3.5" />
+                    <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />
                     <span className="text-[7.5px] font-black uppercase tracking-widest">A11y</span>
                   </Button>
                 </div>
@@ -323,23 +323,23 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   <Button 
                     variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full h-10 rounded-xl border flex items-center justify-center gap-3 transition-all ${
+                    className={`w-full h-spacing-xl rounded-xl border flex items-center justify-center gap-spacing-sm transition-all ${
                       isSpeaking 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
                         : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="w-3.5 h-3.5 animate-pulse" /> : <Icons.Volume2 className="w-3.5 h-3.5" />}
+                    {isSpeaking ? <Icons.MessageCircle className="w-spacing-sm h-spacing-sm animate-pulse" /> : <Icons.Volume2 className="w-spacing-sm h-spacing-sm" />}
                     <span className="text-[7.5px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
-                <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                <div className="flex flex-wrap gap-spacing-2xs justify-center mt-spacing-xs">
                   {(['pt', 'en', 'es', 'la'] as const).map((l) => (
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
+                      className={`px-spacing-sm py-spacing-2xs text-[7px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
                           ? 'bg-primary/5 text-primary border-primary/10 shadow-none' 
                           : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
@@ -350,7 +350,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   ))}
                 </div>
 
-                <div className="flex justify-center gap-6 py-2 mt-2">
+                <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
                   <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Instagram size={14} /></a>
                   <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Youtube size={14} /></a>
                   <a href="#" className="text-muted-foreground/20 hover:text-primary/60 transition-colors"><Icons.Whatsapp size={14} /></a>
@@ -358,12 +358,12 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </div>
 
               {user ? (
-                <div className="p-5 bg-primary/[0.01] dark:bg-white/[0.005] rounded-[2rem] border border-primary/[0.01] dark:border-white/[0.01]">
+                <div className="p-spacing-md bg-primary/[0.01] dark:bg-white/[0.005] rounded-[2rem] border border-primary/[0.01] dark:border-white/[0.01]">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
-                    className="flex items-center gap-3 cursor-pointer group"
+                    className="flex items-center gap-spacing-sm cursor-pointer group"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-none group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-spacing-xl h-spacing-xl rounded-xl bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-none group-hover:scale-105 transition-transform overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
@@ -372,15 +372,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[10px] font-bold truncate text-primary/70">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-0.5">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between gap-2 mt-4">
+                  <div className="flex items-center justify-between gap-spacing-xs mt-spacing-md">
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-9 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -389,14 +389,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-9 w-9 rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
+                      className="h-spacing-xl w-spacing-xl rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
                     >
-                      <Icons.LogOut className="w-3.5 h-3.5" />
+                      <Icons.LogOut className="w-spacing-sm h-spacing-sm" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-12 bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}

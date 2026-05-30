@@ -9,25 +9,25 @@ const features = [
   { 
     title: "Logos IA", 
     description: "Um mentor espiritual para os tempos modernos, treinado com o Magistério da Igreja.", 
-    icon: <Sparkles className="h-6 w-6" />, 
+    icon: <Sparkles className="h-spacing-lg w-spacing-lg" />, 
     route: AppRoute.DASHBOARD 
   },
   { 
     title: "Enciclopédia Católica", 
     description: "Lexicon Theologicum digital completo, navegável de A a Z.", 
-    icon: <BookOpen className="h-6 w-6" />, 
+    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
     route: AppRoute.ENCYCLOPEDIA 
   },
   { 
     title: "Bíblia Sagrada", 
     description: "Escrituras com ferramentas de estudo avançadas e busca inteligente.", 
-    icon: <BookOpen className="h-6 w-6" />, 
+    icon: <BookOpen className="h-spacing-lg w-spacing-lg" />, 
     route: AppRoute.BIBLE 
   },
   { 
     title: "Catecismo da Igreja", 
     description: "Doutrina cristã sistemática e orgânica, fiel ao Magistério.", 
-    icon: <Hash className="h-6 w-6" />, 
+    icon: <Hash className="h-spacing-lg w-spacing-lg" />, 
     route: AppRoute.CATECHISM 
   },
 ];
@@ -42,7 +42,7 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       as="button"
       variant="interactive"
       padding="none"
-      className="p-8 flex flex-col items-center text-center space-y-6 group w-full appearance-none"
+      className="p-spacing-xl flex flex-col items-center text-center space-y-spacing-lg group w-full appearance-none"
       onClick={() => onNavigate(feature.route)}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -54,10 +54,10 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
       role="button"
       tabIndex={0}
     >
-      <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
-        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-6 h-6" })}
+      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors" aria-hidden="true">
+        {React.cloneElement(feature.icon as React.ReactElement, { className: "w-spacing-lg h-spacing-lg" })}
       </div>
-      <div className="space-y-2 w-full">
+      <div className="space-y-spacing-xs w-full">
         <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
@@ -77,13 +77,13 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
   return (
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
-        <div className="text-center space-y-6 max-w-3xl mx-auto mb-20 md:mb-24">
-          <span className="text-premium-tiny font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
+        <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto mb-spacing-3xl md:mb-spacing-4xl">
+          <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
           <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
           <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-xl md:gap-spacing-xl">
           {features.map((feature) => (
             <FeatureCard key={feature.title} feature={feature} onNavigate={onNavigate} />
           ))}

@@ -47,19 +47,19 @@ const FeedbackWidget = () => {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 lg:bottom-6 lg:right-6 z-[200]">
+    <div className="fixed bottom-spacing-3xl right-spacing-md lg:bottom-spacing-lg lg:right-spacing-lg z-[200]">
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-full p-6 overflow-hidden"
+            className="absolute bottom-spacing-3xl right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-full p-spacing-lg overflow-hidden"
           >
             {submitted ? (
-              <div className="text-center py-8 space-y-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
-                  <Send className="w-8 h-8 text-primary" />
+              <div className="text-center py-spacing-xl space-y-spacing-md">
+                <div className="w-spacing-3xl h-spacing-3xl bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
+                  <Send className="w-spacing-xl h-spacing-xl text-primary" />
                 </div>
                 <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
                 <p className="text-sm text-muted-foreground font-serif italic">
@@ -67,19 +67,19 @@ const FeedbackWidget = () => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-spacing-md">
                 <div className="flex items-center justify-between">
                   <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-                    <X className="w-5 h-5" />
+                    <X className="w-spacing-md h-spacing-md" />
                   </Button>
                 </div>
                 
-                <p className="text-xs text-muted-foreground font-serif italic mb-4">
+                <p className="text-xs text-muted-foreground font-serif italic mb-spacing-md">
                   Como podemos tornar o Cathedra mais acolhedor para você?
                 </p>
 
-                <div className="flex gap-2 justify-center py-2">
+                <div className="flex gap-spacing-xs justify-center py-spacing-xs">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Button
                       key={star}
@@ -87,7 +87,7 @@ const FeedbackWidget = () => {
                       onClick={() => setRating(star)}
                       className={`transition-all ${rating >= star ? 'text-secondary scale-110' : 'text-muted-foreground/30'}`}
                     >
-                      <Star className="w-6 h-6 fill-current" />
+                      <Star className="w-spacing-lg h-spacing-lg fill-current" />
                     </Button>
                   ))}
                 </div>
@@ -96,13 +96,13 @@ const FeedbackWidget = () => {
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder="O que você achou do projeto? O que falta para você começar a usar?"
-                  className="w-full h-32 px-4 py-3 rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
+                  className="w-full h-spacing-4xl px-spacing-md py-spacing-sm rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
                 />
 
                 <Button 
                   type="submit" 
                   disabled={isSubmitting || (!feedback && rating === 0)}
-                  className="w-full rounded-full font-bold uppercase tracking-widest text-premium-tiny h-12"
+                  className="w-full rounded-full font-bold uppercase tracking-widest text-xs h-spacing-2xl"
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar Feedback'}
                 </Button>
@@ -116,9 +116,9 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-2 p-3 lg:px-5 lg:py-3 bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-tiny min-w-0"
+        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-xs min-w-0"
       >
-        <MessageSquare className="w-4 h-4 shrink-0" />
+        <MessageSquare className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>
       </motion.button>
     </div>

@@ -361,97 +361,97 @@ const AdminJourneysTab: React.FC = () => {
   );
 
   if (loading) {
-    return <div className="space-y-4 animate-pulse">
-      {[1, 2, 3].map(i => <div key={i} className="h-20 bg-muted/40 rounded-premium" />)}
+    return <div className="space-y-spacing-md animate-pulse">
+      {[1, 2, 3].map(i => <div key={i} className="h-spacing-3xl bg-muted/40 rounded-premium" />)}
     </div>;
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-spacing-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Jornadas</h2>
           <p className="text-sm text-muted-foreground">Crie e edite trilhas de crescimento espiritual.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-spacing-xs">
           <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input
               placeholder="Buscar jornada..."
-              className="pl-9 w-full sm:w-[250px]"
+              className="pl-spacing-xl w-full sm:w-[250px]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="gap-2" onClick={() => setIsAddJourneyDialogOpen(true)}>
-            <Plus className="w-4 h-4" /> Nova Jornada
+          <Button className="gap-spacing-xs" onClick={() => setIsAddJourneyDialogOpen(true)}>
+            <Plus className="w-spacing-md h-spacing-md" /> Nova Jornada
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-spacing-md">
         {filteredJourneys.map((journey) => (
           <div key={journey.id} className="border rounded-premium overflow-hidden bg-card">
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => toggleJourneySteps(journey.id)}>
-                {selectedJourneyId === journey.id ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
-                <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
-                  <Map className="w-5 h-5 text-primary" />
+            <div className="p-spacing-md flex items-center justify-between">
+              <div className="flex items-center gap-spacing-sm cursor-pointer flex-1" onClick={() => toggleJourneySteps(journey.id)}>
+                {selectedJourneyId === journey.id ? <ChevronDown className="w-spacing-md h-spacing-md text-muted-foreground" /> : <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />}
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center">
+                  <Map className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold flex items-center gap-2">
+                  <h3 className="font-bold flex items-center gap-spacing-xs">
                     {journey.title}
-                    {journey.is_premium && <Badge variant="secondary" className="text-premium-tiny bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
-                    {!journey.is_active && <Badge variant="outline" className="text-premium-tiny">Inativa</Badge>}
+                    {journey.is_premium && <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
+                    {!journey.is_active && <Badge variant="outline" className="text-xs">Inativa</Badge>}
                   </h3>
                   <p className="text-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-spacing-xs">
                 <Button variant="ghost" size="icon" onClick={() => {
                   setEditingJourney({...journey});
                   setIsEditDialogOpen(true);
                 }}>
-                  <Edit className="w-4 h-4" />
+                  <Edit className="w-spacing-md h-spacing-md" />
                 </Button>
                 <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10" onClick={(e) => {
                   e.stopPropagation();
                   initiateDeleteJourney(journey);
                 }}>
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-spacing-md h-spacing-md" />
                 </Button>
 
               </div>
             </div>
 
             {selectedJourneyId === journey.id && (
-              <div className="bg-muted/30 border-t p-4 space-y-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold flex items-center gap-2"><Layers className="w-4 h-4" /> Passos da Jornada</h4>
-                  <Button variant="outline" size="sm" className="h-8 text-xs gap-1" onClick={() => handleCreateStep(journey.id)}>
-                    <Plus className="w-3.5 h-3.5" /> Adicionar Passo
+              <div className="bg-muted/30 border-t p-spacing-md space-y-spacing-sm">
+                <div className="flex items-center justify-between mb-spacing-xs">
+                  <h4 className="text-sm font-semibold flex items-center gap-spacing-xs"><Layers className="w-spacing-md h-spacing-md" /> Passos da Jornada</h4>
+                  <Button variant="outline" size="sm" className="h-spacing-xl text-xs gap-spacing-2xs" onClick={() => handleCreateStep(journey.id)}>
+                    <Plus className="w-spacing-sm h-spacing-sm" /> Adicionar Passo
                   </Button>
                 </div>
                 {stepsLoading ? (
-                  <div className="space-y-2">
-                    {[1, 2].map(i => <div key={i} className="h-10 bg-muted animate-pulse rounded" />)}
+                  <div className="space-y-spacing-xs">
+                    {[1, 2].map(i => <div key={i} className="h-spacing-xl bg-muted animate-pulse rounded" />)}
                   </div>
                 ) : steps.length === 0 ? (
-                  <p className="text-sm text-muted-foreground italic text-center py-4">Nenhum passo cadastrado nesta jornada.</p>
+                  <p className="text-sm text-muted-foreground italic text-center py-spacing-md">Nenhum passo cadastrado nesta jornada.</p>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-spacing-xs">
                     {steps.map(step => (
-                      <div key={step.id} className="flex items-center justify-between bg-card p-3 rounded-premium border text-sm group">
-                        <div className="flex items-center gap-3">
-                          <span className="w-6 h-6 rounded bg-muted flex items-center justify-center font-bold text-premium-tiny">{step.step_order}</span>
+                      <div key={step.id} className="flex items-center justify-between bg-card p-spacing-sm rounded-premium border text-sm group">
+                        <div className="flex items-center gap-spacing-sm">
+                          <span className="w-spacing-lg h-spacing-lg rounded bg-muted flex items-center justify-center font-bold text-xs">{step.step_order}</span>
                           <div>
                             <p className="font-medium">{step.title}</p>
                             <p className="text-xs text-muted-foreground">{step.step_type}</p>
                           </div>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditStep(step)}><Edit className="w-3.5 h-3.5" /></Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDeleteStep(step.id)}><Trash2 className="w-3.5 h-3.5" /></Button>
+                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg" onClick={() => handleEditStep(step)}><Edit className="w-spacing-sm h-spacing-sm" /></Button>
+                          <Button variant="ghost" size="icon" className="h-spacing-lg w-spacing-lg text-destructive" onClick={() => handleDeleteStep(step.id)}><Trash2 className="w-spacing-sm h-spacing-sm" /></Button>
                         </div>
                       </div>
                     ))}
@@ -469,41 +469,41 @@ const AdminJourneysTab: React.FC = () => {
             <DialogTitle>Editar Jornada</DialogTitle>
           </DialogHeader>
           {editingJourney && (
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+            <div className="grid gap-spacing-md py-spacing-md">
+              <div className="grid grid-cols-2 gap-spacing-md">
+                <div className="space-y-spacing-xs">
                   <Label>Título</Label>
                   <Input value={editingJourney.title} onChange={e => setEditingJourney({...editingJourney, title: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-spacing-xs">
                   <Label>Subtítulo</Label>
                   <Input value={editingJourney.subtitle || ''} onChange={e => setEditingJourney({...editingJourney, subtitle: e.target.value})} />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <Label>Descrição</Label>
                 <Textarea value={editingJourney.description || ''} onChange={e => setEditingJourney({...editingJourney, description: e.target.value})} />
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-spacing-md">
+                <div className="space-y-spacing-xs">
                   <Label>Categoria</Label>
                   <Input value={editingJourney.category || ''} onChange={e => setEditingJourney({...editingJourney, category: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-spacing-xs">
                   <Label>Dificuldade</Label>
                   <Input value={editingJourney.difficulty || ''} onChange={e => setEditingJourney({...editingJourney, difficulty: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-spacing-xs">
                   <Label>Dias Estimados</Label>
                   <Input type="number" value={editingJourney.estimated_days || 0} onChange={e => setEditingJourney({...editingJourney, estimated_days: parseInt(e.target.value)})} />
                 </div>
               </div>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
+              <div className="flex gap-spacing-md">
+                <label className="flex items-center gap-spacing-xs cursor-pointer">
                   <input type="checkbox" checked={editingJourney.is_active} onChange={e => setEditingJourney({...editingJourney, is_active: e.target.checked})} className="rounded border-gray-300" />
                   <span className="text-sm">Ativa</span>
                 </label>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label className="flex items-center gap-spacing-xs cursor-pointer">
                   <input type="checkbox" checked={editingJourney.is_premium} onChange={e => setEditingJourney({...editingJourney, is_premium: e.target.checked})} className="rounded border-gray-300" />
                   <span className="text-sm">Premium (PRO)</span>
                 </label>
@@ -512,8 +512,8 @@ const AdminJourneysTab: React.FC = () => {
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSaveJourney} className="gap-2">
-              <Save className="w-4 h-4" /> Salvar
+            <Button onClick={handleSaveJourney} className="gap-spacing-xs">
+              <Save className="w-spacing-md h-spacing-md" /> Salvar
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -525,28 +525,28 @@ const AdminJourneysTab: React.FC = () => {
             <DialogTitle>Editar Passo da Jornada</DialogTitle>
           </DialogHeader>
           {editingStep && (
-            <div className="flex-1 overflow-y-auto pr-2 space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+            <div className="flex-1 overflow-y-auto pr-spacing-xs space-y-spacing-md py-spacing-md">
+              <div className="grid grid-cols-2 gap-spacing-md">
+                <div className="space-y-spacing-xs">
                   <Label>Título</Label>
                   <Input value={editingStep.title} onChange={e => setEditingStep({...editingStep, title: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-spacing-xs">
                   <Label>Subtítulo</Label>
                   <Input value={editingStep.subtitle || ''} onChange={e => setEditingStep({...editingStep, subtitle: e.target.value})} />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+              <div className="grid grid-cols-2 gap-spacing-md">
+                <div className="space-y-spacing-xs">
                   <Label>Tipo de Passo</Label>
                   <Input value={editingStep.step_type} onChange={e => setEditingStep({...editingStep, step_type: e.target.value})} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-spacing-xs">
                   <Label>Ordem</Label>
                   <Input type="number" value={editingStep.step_order} onChange={e => setEditingStep({...editingStep, step_order: parseInt(e.target.value)})} />
                 </div>
               </div>
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <Label>Conteúdo (JSON)</Label>
                 <div className="relative group">
                    <Textarea 
@@ -554,8 +554,8 @@ const AdminJourneysTab: React.FC = () => {
                      value={stepContentString} 
                      onChange={e => setStepContentString(e.target.value)} 
                    />
-                   <div className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="sm" className="h-7 text-premium-tiny uppercase tracking-tighter" onClick={() => {
+                   <div className="absolute right-spacing-xs top-spacing-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                     <Button variant="outline" size="sm" className="h-spacing-lg text-xs uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
@@ -566,14 +566,14 @@ const AdminJourneysTab: React.FC = () => {
                      }}>Formatar</Button>
                    </div>
                 </div>
-                <p className="text-premium-tiny text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+                <p className="text-xs text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
               </div>
             </div>
           )}
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooter className="pt-spacing-md border-t">
             <Button variant="outline" onClick={() => setIsEditStepDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSaveStep} className="gap-2">
-              <Save className="w-4 h-4" /> Salvar Passo
+            <Button onClick={handleSaveStep} className="gap-spacing-xs">
+              <Save className="w-spacing-md h-spacing-md" /> Salvar Passo
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -585,41 +585,41 @@ const AdminJourneysTab: React.FC = () => {
             <DialogTitle>Nova Jornada</DialogTitle>
             <DialogDescription>Crie uma nova trilha espiritual para os usuários.</DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+          <div className="grid gap-spacing-md py-spacing-md">
+            <div className="grid grid-cols-2 gap-spacing-md">
+              <div className="space-y-spacing-xs">
                 <Label>Título</Label>
                 <Input placeholder="Ex: Caminho de Santidade" value={newJourney.title} onChange={e => setNewJourney({...newJourney, title: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <Label>Subtítulo</Label>
                 <Input placeholder="Ex: 7 dias de reflexão" value={newJourney.subtitle} onChange={e => setNewJourney({...newJourney, subtitle: e.target.value})} />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-spacing-xs">
               <Label>Descrição</Label>
               <Textarea placeholder="Descreva o propósito desta jornada..." value={newJourney.description} onChange={e => setNewJourney({...newJourney, description: e.target.value})} />
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-3 gap-spacing-md">
+              <div className="space-y-spacing-xs">
                 <Label>Categoria</Label>
                 <Input value={newJourney.category} onChange={e => setNewJourney({...newJourney, category: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <Label>Dificuldade</Label>
                 <Input value={newJourney.difficulty} onChange={e => setNewJourney({...newJourney, difficulty: e.target.value})} />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-spacing-xs">
                 <Label>Dias Estimados</Label>
                 <Input type="number" value={newJourney.estimated_days} onChange={e => setNewJourney({...newJourney, estimated_days: parseInt(e.target.value)})} />
               </div>
             </div>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex gap-spacing-md">
+              <label className="flex items-center gap-spacing-xs cursor-pointer">
                 <input type="checkbox" checked={newJourney.is_active} onChange={e => setNewJourney({...newJourney, is_active: e.target.checked})} className="rounded border-gray-300" />
                 <span className="text-sm font-medium">Ativa</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-spacing-xs cursor-pointer">
                 <input type="checkbox" checked={newJourney.is_premium} onChange={e => setNewJourney({...newJourney, is_premium: e.target.checked})} className="rounded border-gray-300" />
                 <span className="text-sm font-medium">Premium (PRO)</span>
               </label>
@@ -634,8 +634,8 @@ const AdminJourneysTab: React.FC = () => {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="w-5 h-5" /> Confirmar Exclusão
+            <AlertDialogTitle className="flex items-center gap-spacing-xs text-destructive">
+              <AlertTriangle className="w-spacing-md h-spacing-md" /> Confirmar Exclusão
             </AlertDialogTitle>
             <AlertDialogDescription>
               Você está prestes a excluir a jornada <strong className="text-foreground">"{journeyToDelete?.title}"</strong>.

@@ -68,18 +68,18 @@ const UpgradePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[80dvh] flex flex-col items-center justify-center py-12 md:py-20 px-4 relative overflow-hidden">
+    <div className="min-h-[80dvh] flex flex-col items-center justify-center py-spacing-2xl md:py-spacing-3xl px-spacing-md relative overflow-hidden">
       <Helmet>
         <title>Cathedra PRO — Eleve sua Vida Espiritual</title>
       </Helmet>
 
       {/* Decorative background elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
-        <div className="absolute top-[10%] left-1/4 w-64 h-64 bg-primary/20 rounded-premium " />
-        <div className="absolute bottom-[20%] right-1/4 w-72 h-72 bg-primary/10 rounded-premium " />
+      <div className="absolute top-0 left-spacing-2xs/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
+        <div className="absolute top-[10%] left-spacing-2xs/4 w-spacing-4xl h-spacing-4xl bg-primary/20 rounded-premium " />
+        <div className="absolute bottom-[20%] right-spacing-2xs/4 w-spacing-4xl h-spacing-4xl bg-primary/10 rounded-premium " />
       </div>
 
-      <div className="max-w-3xl w-full text-center space-y-8">
+      <div className="max-w-spacing-3xl w-full text-center space-y-spacing-xl">
         <motion.div 
           variants={fadeUp} 
           initial="hidden" 
@@ -87,9 +87,9 @@ const UpgradePage: React.FC = () => {
           custom={0}
           className="flex justify-center"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-premium text-primary">
-            <Crown className="w-4 h-4" />
-            <span className="text-premium-tiny font-black uppercase tracking-widest">Cathedra PRO</span>
+          <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 border border-primary/20 rounded-premium text-primary">
+            <Crown className="w-spacing-md h-spacing-md" />
+            <span className="text-xs font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
         </motion.div>
 
@@ -98,12 +98,12 @@ const UpgradePage: React.FC = () => {
           initial="hidden" 
           animate="visible" 
           custom={1}
-          className="space-y-4"
+          className="space-y-spacing-md"
         >
           <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight text-balance">
             Sua caminhada de fé merece <span className="text-primary italic">profundidade</span>.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-serif italic max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
             O Cathedra PRO foi desenhado para quem deseja ir além do essencial e vivenciar a plenitude da nossa tradição.
           </p>
         </motion.div>
@@ -113,14 +113,14 @@ const UpgradePage: React.FC = () => {
           initial="hidden" 
           animate="visible" 
           custom={2}
-          className="grid sm:grid-cols-2 gap-6 text-left py-8"
+          className="grid sm:grid-cols-2 gap-spacing-lg text-left py-spacing-xl"
         >
           {BENEFITS.map((benefit, i) => (
-            <div key={i} className="group p-5 rounded-premium bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
-              <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform duration-500">
-                <benefit.icon className="w-5 h-5" />
+            <div key={i} className="group p-spacing-md rounded-premium bg-card border border-border/50 hover:border-primary/30 transition-all duration-500 ">
+              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-md group-hover:scale-110 transition-transform duration-500">
+                <benefit.icon className="w-spacing-md h-spacing-md" />
               </div>
-              <h3 className="font-bold text-lg mb-1">{benefit.title}</h3>
+              <h3 className="font-bold text-lg mb-spacing-2xs">{benefit.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
             </div>
           ))}
@@ -131,27 +131,27 @@ const UpgradePage: React.FC = () => {
           initial="hidden" 
           animate="visible" 
           custom={3}
-          className="flex flex-col items-center gap-6"
+          className="flex flex-col items-center gap-spacing-lg"
         >
           <Button 
             size="lg"
-            className="h-16 px-10 rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
+            className="h-spacing-3xl px-spacing-xl rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
             onClick={() => navigate(AppRoute.CHECKOUT)}
             disabled={isPremium}
           >
             {isPremium ? (
-              <span className="flex items-center gap-2">Experiência Desbloqueada <Zap className="w-5 h-5 fill-current" /></span>
+              <span className="flex items-center gap-spacing-xs">Experiência Desbloqueada <Zap className="w-spacing-md h-spacing-md fill-current" /></span>
             ) : (
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-spacing-xs">
                 Desbloquear experiência completa
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform" />
               </span>
             )}
           </Button>
           
-          <div className="flex items-center gap-6 text-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
+          <div className="flex items-center gap-spacing-lg text-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
             <span>Acesso Imediato</span>
-            <div className="w-1 h-1 rounded-premium bg-border" />
+            <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-border" />
             <span>Cancele quando quiser</span>
           </div>
         </motion.div>
@@ -162,29 +162,29 @@ const UpgradePage: React.FC = () => {
             initial="hidden" 
             animate="visible" 
             custom={4}
-            className="pt-12 border-t border-border/50"
+            className="pt-spacing-2xl border-t border-border/50"
           >
-            <div className="flex flex-col items-center gap-4 bg-muted/30 p-8 rounded-[2.5rem] border border-dashed border-primary/30">
-              <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-2">
-                <FlaskConical className="w-6 h-6" />
+            <div className="flex flex-col items-center gap-spacing-md bg-muted/30 p-spacing-xl rounded-[2.5rem] border border-dashed border-primary/30">
+              <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-xs">
+                <FlaskConical className="w-spacing-lg h-spacing-lg" />
               </div>
               <h3 className="text-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
-              <p className="text-sm text-muted-foreground font-serif italic mb-4 max-w-sm">
+              <p className="text-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm">
                 Como administrador, você pode simular o checkout e o retorno do Mercado Pago para validar o fluxo de liberação PRO.
               </p>
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center gap-spacing-sm">
                 <Button 
                   variant="outline"
                   onClick={simulatePayment}
                   disabled={isSimulating || isPremium}
-                  className="rounded-full border-primary/30 text-primary hover:bg-primary/5 h-12 px-6 font-bold"
+                  className="rounded-full border-primary/30 text-primary hover:bg-primary/5 h-spacing-2xl px-spacing-lg font-bold"
                 >
                   {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
                 </Button>
                 <Button 
                   variant="ghost"
                   onClick={() => navigate(AppRoute.TRANSACTIONS)}
-                  className="rounded-full h-12 px-6 font-bold"
+                  className="rounded-full h-spacing-2xl px-spacing-lg font-bold"
                 >
                   Ver Histórico de Transações
                 </Button>

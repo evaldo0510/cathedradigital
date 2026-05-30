@@ -97,12 +97,12 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
 
   const sections = useMemo(() => {
     const s = [
-      { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-4 h-4" />, value: content.textoBase, isPremium: false },
-      { id: 'explicacao', label: 'Explicação', icon: <Icons.Info className="w-4 h-4" />, value: content.explicacao, isPremium: true },
-      { id: 'interpretacaoProfunda', label: 'Sentido Profundo', icon: <Icons.Sparkle className="w-4 h-4" />, value: content.interpretacaoProfunda, isPremium: true },
-      { id: 'aplicacaoPratica', label: 'Vida Prática', icon: <Icons.Zap className="w-4 h-4" />, value: content.aplicacaoPratica, isPremium: true },
-      { id: 'reflexaoFinal', label: 'Reflexão', icon: <Icons.Heart className="w-4 h-4" />, value: content.reflexaoFinal, isPremium: true },
-      { id: 'exercicio', label: 'Exercício de Fé', icon: <Icons.PenTool className="w-4 h-4" />, value: content.exercicio, isPremium: true },
+      { id: 'textoBase', label: 'Acesso Inicial', icon: <Icons.Book className="w-spacing-md h-spacing-md" />, value: content.textoBase, isPremium: false },
+      { id: 'explicacao', label: 'Explicação', icon: <Icons.Info className="w-spacing-md h-spacing-md" />, value: content.explicacao, isPremium: true },
+      { id: 'interpretacaoProfunda', label: 'Sentido Profundo', icon: <Icons.Sparkle className="w-spacing-md h-spacing-md" />, value: content.interpretacaoProfunda, isPremium: true },
+      { id: 'aplicacaoPratica', label: 'Vida Prática', icon: <Icons.Zap className="w-spacing-md h-spacing-md" />, value: content.aplicacaoPratica, isPremium: true },
+      { id: 'reflexaoFinal', label: 'Reflexão', icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, value: content.reflexaoFinal, isPremium: true },
+      { id: 'exercicio', label: 'Exercício de Fé', icon: <Icons.PenTool className="w-spacing-md h-spacing-md" />, value: content.exercicio, isPremium: true },
     ];
 
     // If it's catechism, we might want to show all sections even if empty to satisfy the "clear message" requirement
@@ -116,16 +116,16 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
   if (sections.length === 0) return null;
 
   return (
-    <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500" aria-label="Aprofundamento teológico">
+    <section className="space-y-spacing-xl animate-in fade-in slide-in-from-bottom-spacing-md duration-500" aria-label="Aprofundamento teológico">
       {title && (
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-spacing-sm mb-spacing-lg">
           <div className="h-px flex-1 bg-border/40" />
-          <h3 className="text-premium-tiny font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
+          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
           <div className="h-px flex-1 bg-border/40" />
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
         {sections.map((section, idx) => {
           const isLocked = section.isPremium && !isPremium;
 
@@ -136,24 +136,24 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
-              className={`p-6 rounded-premium border transition-all relative overflow-hidden ${
+              className={`p-spacing-lg rounded-premium border transition-all relative overflow-hidden ${
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
               } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-premium'}`}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`p-2 rounded-full ${
+              <div className="flex items-center gap-spacing-sm mb-spacing-md">
+                <div className={`p-spacing-xs rounded-full ${
                   isLocked ? 'bg-muted text-muted-foreground' : (section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground')
                 } transition-colors`}>
-                  {isLocked ? <Lock className="w-4 h-4" /> : section.icon}
+                  {isLocked ? <Lock className="w-spacing-md h-spacing-md" /> : section.icon}
                 </div>
                 <h4 className={`text-xs font-black uppercase tracking-widest ${
                   isLocked ? 'text-muted-foreground' : (section.id === 'textoBase' ? 'text-primary' : 'text-muted-foreground group-hover:text-primary')
                 }`}>
                   {section.label}
                   {section.isPremium && !isLocked && (
-                    <span className="ml-2 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-premium-tiny">PRO</span>
+                    <span className="ml-spacing-xs px-spacing-2xs py-spacing-3xs rounded-full bg-primary/10 text-primary text-xs">PRO</span>
                   )}
                 </h4>
               </div>
@@ -162,7 +162,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 {section.value ? (
                   <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
                     {section.value.split('\n\n').map((paragraph, pIdx) => (
-                      <p key={pIdx} className={pIdx > 0 ? 'mt-3' : ''}>
+                      <p key={pIdx} className={pIdx > 0 ? 'mt-spacing-sm' : ''}>
                         {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
                           if (seg.type === 'bibleRef') {
                             return (
@@ -189,23 +189,23 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                     ))}
                   </div>
                 ) : (
-                  <div className="py-4 px-2 rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
-                    <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                  <div className="py-spacing-md px-spacing-xs rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
+                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
                   </div>
                 )}
 
                 {isLocked && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center space-y-3 p-4 text-center">
-                    <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center space-y-spacing-sm p-spacing-md text-center">
+                    <Sparkles className="w-spacing-lg h-spacing-lg text-primary animate-pulse" />
                     <p className="text-sm font-bold text-foreground">
                       Continue aprofundando essa experiência
                     </p>
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="font-bold text-premium-tiny uppercase tracking-widest h-9"
+                      className="font-bold text-xs uppercase tracking-widest h-spacing-xl"
                       onClick={() => navigate(AppRoute.PRICING)}
                     >
                       Desbloquear PRO
@@ -215,34 +215,34 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
               </div>
 
               {section.id === 'reflexaoFinal' && !isLocked && (
-                <div className="mt-6 pt-6 border-t border-border/40 space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Icons.MessageSquare className="w-4 h-4 text-primary mt-0.5" />
+                <div className="mt-spacing-lg pt-spacing-lg border-t border-border/40 space-y-spacing-md">
+                  <div className="flex items-start gap-spacing-sm">
+                    <Icons.MessageSquare className="w-spacing-md h-spacing-md text-primary mt-spacing-3xs" />
                     <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
                   </div>
                   
                   {!hasReflected ? (
-                    <div className="space-y-3 pt-2">
+                    <div className="space-y-spacing-sm pt-spacing-xs">
                       <textarea 
                         value={reflectionText}
                         onChange={(e) => setReflectionText(e.target.value)}
                         placeholder="Escreva sua reflexão aqui..."
-                        className="w-full min-h-[100px] p-4 rounded-3xl bg-muted/20 border border-border/40 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
+                        className="w-full min-h-[100px] p-spacing-md rounded-premium bg-muted/20 border border-border/40 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
                       />
                       <div className="flex justify-end">
                         <Button 
                           onClick={saveReflection}
                           disabled={!reflectionText.trim() || isSubmitting}
-                          className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-2"
+                          className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
                         >
-                          {isSubmitting ? <Icons.Loader className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+                          {isSubmitting ? <Icons.Loader className="w-spacing-sm h-spacing-sm animate-spin" /> : <Send className="w-spacing-sm h-spacing-sm" />}
                           Guardar Reflexão
                         </Button>
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/5 border border-emerald-500/20 rounded-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> Reflexão Integrada ao Diário
+                    <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-emerald-500/5 border border-emerald-500/20 rounded-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
+                      <CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Reflexão Integrada ao Diário
                     </div>
                   )}
                 </div>

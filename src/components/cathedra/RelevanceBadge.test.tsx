@@ -41,15 +41,15 @@ describe('<RelevanceBadge />', () => {
   it('applies the "sm" size variant by default', () => {
     render(<RelevanceBadge score={0.5} />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-premium-tiny');
-    expect(badge.className).toContain('px-2');
+    expect(badge.className).toContain('text-xs');
+    expect(badge.className).toContain('px-spacing-xs');
   });
 
   it('applies the "xs" size variant when requested', () => {
     render(<RelevanceBadge score={0.5} size="xs" />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-premium-tiny');
-    expect(badge.className).toContain('px-1.5');
+    expect(badge.className).toContain('text-xs');
+    expect(badge.className).toContain('px-spacing-2xs');
   });
 
   it('exposes an accessible aria-label and tooltip with the percentage', () => {

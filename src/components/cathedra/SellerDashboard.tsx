@@ -66,10 +66,10 @@ const WithdrawalRequests: React.FC = () => {
 
 const SellerDashboard: React.FC = () => {
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-8 px-4 animate-in fade-in duration-700">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-          <Store className="w-6 h-6" />
+    <div className="max-w-6xl mx-auto space-y-spacing-xl py-spacing-xl px-spacing-md animate-in fade-in duration-700">
+      <div className="flex items-center gap-spacing-md">
+        <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+          <Store className="w-spacing-lg h-spacing-lg" />
         </div>
         <div>
           <h1 className="text-3xl font-serif font-bold tracking-tight">Painel do Vendedor</h1>
@@ -77,7 +77,7 @@ const SellerDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-xl">
         <WalletHistory />
         <WithdrawalRequests />
       </div>

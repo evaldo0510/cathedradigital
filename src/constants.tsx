@@ -136,13 +136,13 @@ export const COLORS = {
 import cathedraLogo from './assets/cathedra-logo.png';
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
-  className = "w-12 h-12", 
+  className = "w-spacing-2xl h-spacing-2xl", 
   variant = 'gold' 
 }, ref) => {
   return (
     <div ref={ref} className={cn(
       "relative flex items-center justify-center group overflow-hidden", 
-      variant === 'blue' && "bg-primary rounded-full p-2 border border-primary/10 dark:bg-primary/20",
+      variant === 'blue' && "bg-primary rounded-full p-spacing-xs border border-primary/10 dark:bg-primary/20",
       className
     )}>
       <img 

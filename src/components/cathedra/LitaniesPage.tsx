@@ -237,13 +237,13 @@ const LitaniesPage: React.FC = () => {
 
   if (litany) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
-        <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft self-start md:self-center">
-            <ArrowLeft className="w-6 h-6 text-foreground" />
+      <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
+        <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg">
+          <Button onClick={() => setSelectedId(null)} className="p-spacing-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-md self-start md:self-center">
+            <ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
           </Button>
-          <div className="space-y-1">
-            <span className={`inline-flex px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
+          <div className="space-y-spacing-2xs">
+            <span className={`inline-flex px-spacing-sm py-spacing-2xs rounded-full text-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
@@ -251,18 +251,18 @@ const LitaniesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="premium-card p-8 md:p-16 space-y-10">
+        <div className="premium-card p-spacing-xl md:p-spacing-3xl space-y-spacing-xl">
           {/* Opening */}
           {litany.opening && (
-            <div className="text-center pb-8 border-b border-border/50">
+            <div className="text-center pb-spacing-xl border-b border-border/50">
               <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.opening}</p>
             </div>
           )}
 
           {/* Invocations */}
-          <div className="space-y-1 max-w-2xl mx-auto">
+          <div className="space-y-spacing-2xs max-w-spacing-2xl mx-auto">
             {litany.invocations.map((inv, i) => (
-              <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-4 py-3 border-b border-border/30 last:border-0 group">
+              <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-spacing-2xs md:gap-spacing-md py-spacing-sm border-b border-border/30 last:border-0 group">
                 <p className="flex-1 font-serif text-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
                 <p className="font-serif italic text-primary font-bold text-base shrink-0 opacity-80">{inv.response}</p>
               </div>
@@ -271,7 +271,7 @@ const LitaniesPage: React.FC = () => {
 
           {/* Closing */}
           {litany.closing && (
-            <div className="text-center pt-8 border-t border-border/50">
+            <div className="text-center pt-spacing-xl border-t border-border/50">
               <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.closing}</p>
             </div>
           )}
@@ -281,45 +281,45 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-12">
-      <div className="text-center space-y-4 pt-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium">
-          <Heart className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
+    <div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl">
+      <div className="text-center space-y-spacing-md pt-spacing-md">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
+          <Heart className="w-spacing-md h-spacing-md text-primary" />
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
-        <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">
           Orações de invocação e súplica consagradas pela tradição secular da Igreja.
         </p>
       </div>
 
-      <div className="max-w-md mx-auto relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
+      <div className="max-w-spacing-md mx-auto relative group">
+        <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground transition-colors group-focus-within:text-primary" />
         <input 
           value={searchQuery} 
           onChange={e => setSearchQuery(e.target.value)} 
           placeholder="Buscar por título ou categoria..."
-          className="w-full pl-12 pr-4 py-4 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft" 
+          className="w-full pl-spacing-2xl pr-spacing-md py-spacing-md rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-md" 
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
         {filtered.map(l => (
           <Button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-              <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
+            className="text-left p-spacing-xl rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-spacing-xl opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+              <BookOpen className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
             </div>
-            <div className="relative z-10 space-y-4">
-              <span className={`inline-block font-serif px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+            <div className="relative z-10 space-y-spacing-md">
+              <span className={`inline-block font-serif px-spacing-sm py-spacing-2xs rounded-full text-xs font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
-              <div className="space-y-1">
+              <div className="space-y-spacing-2xs">
                 <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
                 {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
-              <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary pt-2">
-                Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+              <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-primary pt-spacing-xs">
+                Começar Oração <ChevronRight className="w-spacing-sm h-spacing-sm transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Button>

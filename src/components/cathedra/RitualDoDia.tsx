@@ -224,17 +224,17 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-1 md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-1 md:pt-0">
+      <div className="relative z-10 p-spacing-2xs md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-spacing-2xs md:pt-0">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-12 pb-2 md:pb-12">
-          <div className="flex flex-col gap-2 md:gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-xs md:gap-spacing-2xl pb-spacing-xs md:pb-spacing-2xl">
+          <div className="flex flex-col gap-spacing-xs md:gap-spacing-md">
             <span className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/30 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
-            <div className="flex items-center gap-6 md:gap-8">
+            <div className="flex items-center gap-spacing-lg md:gap-spacing-xl">
               {progress > 0 && (
-                <div className="flex items-center gap-4 md:gap-5">
-                  <div className="h-1 w-24 md:w-32 bg-primary/[0.03] rounded-full overflow-hidden">
+                <div className="flex items-center gap-spacing-md md:gap-spacing-md">
+                  <div className="h-spacing-2xs w-spacing-4xl md:w-spacing-4xl bg-primary/[0.03] rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
@@ -247,23 +247,23 @@ const RitualDoDia: React.FC = () => {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-spacing-md">
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className={cn("w-10 h-10 p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
+              className={cn("w-spacing-xl h-spacing-xl p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
               onClick={() => updateSettings(!isSilent, reminderTime)}
             >
-              {isSilent ? <VolumeX className="w-5 h-5" strokeWidth={1.2} /> : <Sparkles className="w-5 h-5" strokeWidth={1} />}
+              {isSilent ? <VolumeX className="w-spacing-md h-spacing-md" strokeWidth={1.2} /> : <Sparkles className="w-spacing-md h-spacing-md" strokeWidth={1} />}
             </CathedraButton>
 
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
+              className="w-spacing-xl h-spacing-xl p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
               onClick={exportPDF}
             >
-              <Download className="w-5 h-5" strokeWidth={1.2} />
+              <Download className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
             </CathedraButton>
             
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
@@ -271,18 +271,18 @@ const RitualDoDia: React.FC = () => {
                 <CathedraButton 
                   variant="ghost" 
                   size="sm" 
-                  className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
+                  className="w-spacing-xl h-spacing-xl p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
                 >
-                  <Settings2 className="w-5 h-5" strokeWidth={1.2} />
+                  <Settings2 className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
                 </CathedraButton>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border-primary/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2.5rem] dark:border-primary/20">
                 <DialogHeader>
                   <DialogTitle className="font-display text-3xl text-primary">Configurações</DialogTitle>
                 </DialogHeader>
-                <div className="grid gap-8 py-8">
+                <div className="grid gap-spacing-xl py-spacing-xl">
                   <div className="flex items-center justify-between">
-                    <div className="space-y-1">
+                    <div className="space-y-spacing-2xs">
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Modo Silencioso</Label>
                       <p className="text-xs text-muted-foreground/40 font-serif italic">Foco absoluto na leitura.</p>
                     </div>
@@ -291,23 +291,23 @@ const RitualDoDia: React.FC = () => {
                       onCheckedChange={(val) => updateSettings(val, reminderTime)}
                     />
                   </div>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Clock className="w-4 h-4 text-primary/40" />
+                  <div className="space-y-spacing-md">
+                    <div className="flex items-center gap-spacing-sm">
+                      <Clock className="w-spacing-md h-spacing-md text-primary/40" />
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Lembrete</Label>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex gap-spacing-sm">
                       <Input 
                         type="time" 
                         value={reminderTime}
                         onChange={(e) => setReminderTime(e.target.value)}
-                        className="font-mono text-sm border-primary/10 bg-background/50 rounded-full h-12 px-6 focus:ring-1 focus:ring-primary/20"
+                        className="font-mono text-sm border-primary/10 bg-background/50 rounded-full h-spacing-2xl px-spacing-lg focus:ring-1 focus:ring-primary/20"
                       />
                       <CathedraButton 
                         onClick={() => updateSettings(isSilent, reminderTime)}
                         variant="primary"
                         size="sm"
-                        className="h-12 px-8"
+                        className="h-spacing-2xl px-spacing-xl"
                       >
                         Salvar
                       </CathedraButton>
@@ -320,72 +320,72 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Content Sections */}
-        <div className="grid grid-cols-1 gap-4 md:gap-12 lg:gap-20">
+        <div className="grid grid-cols-1 gap-spacing-md md:gap-spacing-2xl lg:gap-spacing-3xl">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-2 md:space-y-4 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+          <section className="space-y-spacing-xs md:space-y-spacing-md max-w-spacing-4xl mx-auto text-center" aria-labelledby="lectio-heading">
             <h4 id="lectio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/15 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
-                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-premium outline-none",
                 progress >= 25 ? 'opacity-30 grayscale scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-[16px] md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-4 md:px-2 transition-all duration-[2000ms] group-hover:text-primary">
+              <blockquote className="text-[16px] md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-spacing-md md:px-spacing-xs transition-all duration-[2000ms] group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-4 md:mt-6 text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
+              <p className="mt-spacing-md md:mt-spacing-lg text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </button>
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-2 md:space-y-6 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+          <section className="space-y-spacing-xs md:space-y-spacing-lg max-w-spacing-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
             <h4 id="meditatio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
-                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                "w-full text-center group transition-all duration-1000 focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-premium outline-none",
                 progress >= 50 ? 'opacity-30 scale-[0.98]' : 'opacity-100'
               )}
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-[14px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-4 transition-colors duration-[2000ms]">
+              <p className="text-[14px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-spacing-md transition-colors duration-[2000ms]">
                 {ritual.reflection}
               </p>
             </button>
           </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 lg:gap-20 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md md:gap-spacing-2xl lg:gap-spacing-3xl items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-3 md:space-y-8 text-center p-3 md:p-10 lg:p-16 bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
+            <section className="space-y-spacing-sm md:space-y-spacing-xl text-center p-spacing-sm md:p-spacing-xl lg:p-spacing-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
               <h4 id="traditio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
-                  "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                  "w-full text-center group transition-all duration-1000 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-premium outline-none",
                   progress >= 75 ? 'opacity-30' : 'opacity-100'
                 )}
                 onClick={() => handleProgress(75)}
                 aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-[12px] md:text-xl lg:text-2xl leading-relaxed text-foreground/70 font-serif tracking-tight selection:bg-primary/5 px-2">
+                <p className="text-[12px] md:text-xl lg:text-2xl leading-relaxed text-foreground/70 font-serif tracking-tight selection:bg-primary/5 px-spacing-xs">
                   {ritual?.catechism?.text || ''}
                 </p>
-                <p className="mt-8 md:mt-10 text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
+                <p className="mt-spacing-xl md:mt-spacing-xl text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
                   §{ritual?.catechism?.number || ''}
                 </p>
               </button>
             </section>
 
             {/* 4. Prayer */}
-            <section className="space-y-3 md:space-y-8 text-center p-3 md:p-10 lg:p-16 bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="oratio-heading">
+            <section className="space-y-spacing-sm md:space-y-spacing-xl text-center p-spacing-sm md:p-spacing-xl lg:p-spacing-3xl bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="oratio-heading">
               <h4 id="oratio-heading" className="text-[6.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(
-                  "w-full text-center group transition-all duration-1000 px-2 md:px-4 h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-2xl outline-none",
+                  "w-full text-center group transition-all duration-1000 px-spacing-xs md:px-spacing-md h-full flex flex-col justify-center focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-8 rounded-premium outline-none",
                   progress >= 100 ? 'opacity-30' : 'opacity-100'
                 )}
                 onClick={() => handleProgress(100)}
@@ -400,7 +400,7 @@ const RitualDoDia: React.FC = () => {
         </div>
 
         {/* Footer Actions */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-primary/[0.01]">
+        <div className="pt-spacing-xl flex flex-col sm:flex-row items-center justify-between gap-spacing-lg border-t border-primary/[0.01]">
           <AudioContentPlayer
             text={audioText}
             title="Ouvir Ritual Completo"
@@ -408,7 +408,7 @@ const RitualDoDia: React.FC = () => {
             className="text-primary/40 hover:text-primary transition-colors"
           />
           
-          <div className="flex gap-6">
+          <div className="flex gap-spacing-lg">
             {progress > 0 && (
               <CathedraButton 
                 variant="ghost" 
@@ -432,7 +432,7 @@ const RitualDoDia: React.FC = () => {
               <CathedraButton 
                 variant="primary"
                 size="md"
-                className="px-12"
+                className="px-spacing-2xl"
                 onClick={() => {
                   const sections = [25, 50, 75, 100];
                   const nextProgress = sections.find(s => s > progress) || 100;
@@ -440,12 +440,12 @@ const RitualDoDia: React.FC = () => {
                 }}
               >
                 {progress === 0 ? 'Iniciar' : 'Continuar'}
-                <ArrowRight className="ml-3 w-4 h-4" />
+                <ArrowRight className="ml-spacing-sm w-spacing-md h-spacing-md" />
               </CathedraButton>
             )}
             {progress === 100 && (
-              <div className="flex items-center gap-3 text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-10 py-5 bg-primary/[0.01] rounded-full border border-primary/5 shadow-sm">
-                <CheckCircle2 className="w-4 h-4" />
+              <div className="flex items-center gap-spacing-sm text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-spacing-xl py-spacing-md bg-primary/[0.01] rounded-full border border-primary/5 shadow-sm">
+                <CheckCircle2 className="w-spacing-md h-spacing-md" />
                 Concluído
               </div>
             )}

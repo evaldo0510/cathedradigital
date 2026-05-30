@@ -9,18 +9,18 @@ import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
   return (
-    <div className="desktop-layout pt-12 pb-24">
+    <div className="desktop-layout pt-spacing-2xl pb-spacing-4xl">
       <SEOHead 
         title="Transparência e Integridade | Cathedra" 
         description="Saiba como os conteúdos da Cathedra são gerados e revisados. Nosso compromisso com a verdade sem uso de Inteligência Artificial."
         path="/transparencia"
       />
       
-      <div className="max-w-3xl mx-auto space-y-16 px-4">
+      <div className="max-w-spacing-3xl mx-auto space-y-spacing-3xl px-spacing-md">
         {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-premium bg-primary/10 text-primary text-premium-tiny font-black uppercase tracking-[0.2em] border border-primary/20">
-            <ShieldCheck className="w-3 h-3" />
+        <div className="text-center space-y-spacing-md">
+          <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary text-xs font-black uppercase tracking-[0.2em] border border-primary/20">
+            <ShieldCheck className="w-spacing-sm h-spacing-sm" />
             Integridade Doutrinária
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-black text-primary leading-tight tracking-tight">
@@ -36,14 +36,14 @@ const TransparencyPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="p-8 rounded-[2.5rem] bg-primary/5 border border-primary/20 relative overflow-hidden"
+          className="p-spacing-xl rounded-[2.5rem] bg-primary/5 border border-primary/20 relative overflow-hidden"
         >
-          <div className="absolute top-0 right-0 p-8 opacity-5">
-            <Icons.Zap className="w-24 h-24 text-primary" />
+          <div className="absolute top-0 right-0 p-spacing-xl opacity-5">
+            <Icons.Zap className="w-spacing-4xl h-spacing-4xl text-primary" />
           </div>
-          <div className="relative space-y-6">
-            <div className="flex items-center gap-3 text-primary">
-              <CheckCircle className="w-6 h-6" />
+          <div className="relative space-y-spacing-lg">
+            <div className="flex items-center gap-spacing-sm text-primary">
+              <CheckCircle className="w-spacing-lg h-spacing-lg" />
               <h2 className="text-xl font-bold uppercase tracking-wider">Compromisso 100% Sem IA</h2>
             </div>
             <p className="text-foreground/80 leading-relaxed font-serif text-lg">
@@ -57,19 +57,19 @@ const TransparencyPage: React.FC = () => {
 
 
         {/* Content Generation */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 text-primary">
-              <Search className="w-5 h-5" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
+          <div className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm text-primary">
+              <Search className="w-spacing-md h-spacing-md" />
               <h3 className="font-bold uppercase tracking-widest text-xs">Fontes Primárias</h3>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Todos os textos bíblicos e parágrafos do Catecismo são extraídos de edições oficiais e fontes de domínio público reconhecidas. Não realizamos alterações nos textos sagrados.
             </p>
           </div>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 text-primary">
-              <FileText className="w-5 h-5" />
+          <div className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm text-primary">
+              <FileText className="w-spacing-md h-spacing-md" />
               <h3 className="font-bold uppercase tracking-widest text-xs">Revisão Manual</h3>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -79,20 +79,20 @@ const TransparencyPage: React.FC = () => {
         </div>
 
         {/* Contact & Review */}
-        <section className="space-y-8 pt-8 border-t border-border">
-          <div className="text-center space-y-2">
+        <section className="space-y-spacing-xl pt-spacing-xl border-t border-border">
+          <div className="text-center space-y-spacing-xs">
             <h2 className="text-2xl font-display font-bold">Contato e Revisão Manual</h2>
             <p className="text-muted-foreground text-sm">Se você encontrar qualquer imprecisão ou desejar sugerir uma melhoria na curadoria, utilize os canais abaixo para uma revisão humana imediata.</p>
 
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-spacing-md">
             <Button 
               asChild
-              className="h-14 px-8 w-full sm:w-auto shadow-premium-hover"
+              className="h-spacing-2xl px-spacing-xl w-full sm:w-auto shadow-premium-hover"
             >
-              <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-3">
-                <Mail className="w-4 h-4" />
+              <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-spacing-sm">
+                <Mail className="w-spacing-md h-spacing-md" />
                 Enviar E-mail
               </a>
             </Button>
@@ -102,23 +102,23 @@ const TransparencyPage: React.FC = () => {
                 trackEvent('social_link_click', { platform: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP });
                 window.open(SOCIAL_LINKS.WHATSAPP, '_blank');
               }}
-              className="h-14 px-8 border border-primary/20 w-full sm:w-auto shadow-soft gap-3"
+              className="h-spacing-2xl px-spacing-xl border border-primary/20 w-full sm:w-auto shadow-md gap-spacing-sm"
             >
-              <Icons.MessageSquare className="w-4 h-4" />
+              <Icons.MessageSquare className="w-spacing-md h-spacing-md" />
               Suporte WhatsApp
             </Button>
           </div>
         </section>
 
         {/* Offline Mode & Runtime Integrity */}
-        <div className="p-8 rounded-[2rem] border border-border text-center space-y-4">
-          <Icons.WifiOff className="w-8 h-8 text-muted-foreground mx-auto" />
+        <div className="p-spacing-xl rounded-[2rem] border border-border text-center space-y-spacing-md">
+          <Icons.WifiOff className="w-spacing-xl h-spacing-xl text-muted-foreground mx-auto" />
           <h3 className="font-bold uppercase tracking-widest text-xs text-foreground">Independência de Runtime</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed max-w-md mx-auto italic">
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-spacing-md mx-auto italic">
             O site foi projetado para funcionar de forma soberana. As chamadas para provedores externos foram reduzidas ao mínimo essencial (Supabase para dados), garantindo que a plataforma opere mesmo sem conexão estável e sem depender de serviços de terceiros que possam comprometer a integridade do conteúdo.
           </p>
-          <div className="pt-4">
-            <span className="px-4 py-2 rounded-full bg-secondary/10 text-primary text-premium-tiny font-black uppercase tracking-widest border border-primary/10">
+          <div className="pt-spacing-md">
+            <span className="px-spacing-md py-spacing-xs rounded-full bg-secondary/10 text-primary text-xs font-black uppercase tracking-widest border border-primary/10">
               PWA Habilitado para Uso Offline
             </span>
           </div>

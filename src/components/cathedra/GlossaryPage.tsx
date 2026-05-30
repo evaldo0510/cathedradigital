@@ -161,22 +161,22 @@ const GlossaryPage: React.FC = () => {
   return (
     <>
     <SEOHead title="Glossário Teológico" description="Consulte o glossário de termos teológicos e católicos. Definições claras e acessíveis para aprofundar seus estudos." path="/glossary" keywords="glossário teológico, termos católicos, vocabulário religioso, teologia" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Glossário", path: "/glossary" }]} />
-    <div className="max-w-5xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto space-y-spacing-xl">
       {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.BookOpen className="w-4 h-4 text-primary" />
-          <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
+      <div className="text-center space-y-spacing-sm">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
+          <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary" />
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
-        <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+        <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
           "Nem toda palavra é só significado… algumas são portas."
         </p>
       </div>
 
       {/* Search */}
       <FuzzySearchInput
-        className="max-w-md mx-auto"
+        className="max-w-spacing-md mx-auto"
         value={searchQuery}
         onChange={setSearchQuery}
         placeholder="Digite uma palavra ou sentimento…"
@@ -185,10 +185,10 @@ const GlossaryPage: React.FC = () => {
 
       {/* Category tabs */}
       {!loading && terms.length > 0 && (
-        <div className="flex gap-2 justify-center flex-wrap">
+        <div className="flex gap-spacing-xs justify-center flex-wrap">
           {categories.map(cat => (
             <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+              className={`px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -199,26 +199,26 @@ const GlossaryPage: React.FC = () => {
 
       {/* Stats */}
       {!loading && (
-        <div className="flex justify-center gap-6 text-center">
+        <div className="flex justify-center gap-spacing-lg text-center">
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Termos</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Termos</p>
           </div>
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Categorias</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
           </div>
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{enrichedCount}</p>
-            <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Com reflexão</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground">Com reflexão</p>
           </div>
         </div>
       )}
 
       {/* Search results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
-        <div className="space-y-2">
-          <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+        <div className="space-y-spacing-xs">
+          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           <AnimatePresence mode="popLayout">
           {searchResults.map((term, i) => (
             <SearchResultCard
@@ -226,7 +226,7 @@ const GlossaryPage: React.FC = () => {
               title={term.term}
               subtitle={term.definition}
               score={term.similarityScore}
-              icon={<BookOpen className="w-4 h-4" />}
+              icon={<BookOpen className="w-spacing-md h-spacing-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
               index={i}
             />
@@ -236,10 +236,10 @@ const GlossaryPage: React.FC = () => {
       )}
 
       {/* Glossary list */}
-      <div className="space-y-3">
+      <div className="space-y-spacing-sm">
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+          <div className="flex justify-center py-spacing-2xl">
+            <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
           </div>
         ) : filtered.length > 0 ? (
           filtered.map(term => {
@@ -253,64 +253,64 @@ const GlossaryPage: React.FC = () => {
                 }`}>
                 <Button
                   onClick={() => setExpandedId(isExpanded ? null : term.id)}
-                  className="w-full text-left p-6 flex items-start gap-4"
+                  className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
                       {term.category && (
-                        <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-spacing-xs py-spacing-3xs rounded-full text-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
                           {term.category}
                         </span>
                       )}
                       {enrichment && (
-                        <span className="px-2 py-0.5 rounded-full text-premium-tiny font-bold bg-primary/10 text-primary uppercase tracking-wider">
-                          <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
+                        <span className="px-spacing-xs py-spacing-3xs rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
+                          <Icons.Sparkles className="w-spacing-xs h-spacing-xs inline mr-spacing-2xs" /> Com reflexão
                         </span>
                       )}
                     </div>
                     <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (
-                      <p className="text-sm text-muted-foreground line-clamp-1 mt-1">{term.definition}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mt-spacing-2xs">{term.definition}</p>
                     )}
                   </div>
-                  <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </Button>
 
                 {isExpanded && (
-                  <div className="px-6 pb-6 space-y-4 border-t border-border pt-4">
+                  <div className="px-spacing-lg pb-spacing-lg space-y-spacing-md border-t border-border pt-spacing-md">
                     {/* Layer 1: Simple definition */}
-                    <div className="space-y-1">
-                      <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">📘 Definição</p>
+                    <div className="space-y-spacing-2xs">
+                      <p className="text-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
                       <p className="text-foreground/90 leading-relaxed font-serif">{term.definition}</p>
                     </div>
 
                     {enrichment && (
                       <>
                         {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-premium p-5 text-center space-y-2">
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
+                        <div className="bg-primary/5 rounded-premium p-spacing-md text-center space-y-spacing-xs">
+                          <p className="text-xs font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
                           <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-premium p-5 text-center space-y-2">
-                          <p className="text-premium-tiny font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
+                        <div className="bg-accent/30 rounded-premium p-spacing-md text-center space-y-spacing-xs">
+                          <p className="text-xs font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
                           <p className="text-foreground font-bold text-base">{enrichment.question}</p>
                         </div>
 
                         {/* Related verse */}
                         {enrichment.relatedVerse && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Icons.Book className="w-4 h-4 text-primary" />
+                          <div className="flex items-center gap-spacing-xs text-sm text-muted-foreground">
+                            <Icons.Book className="w-spacing-md h-spacing-md text-primary" />
                             <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
                           </div>
                         )}
 
                         {/* Journey Link */}
                         {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-5 space-y-3">
-                            <div className="flex items-center gap-2">
-                              <Icons.Compass className="w-5 h-5 text-primary" />
+                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
+                            <div className="flex items-center gap-spacing-xs">
+                              <Icons.Compass className="w-spacing-md h-spacing-md text-primary" />
                               <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
                             </div>
                             <p className="text-xs text-foreground/80 leading-relaxed">
@@ -318,7 +318,7 @@ const GlossaryPage: React.FC = () => {
                             </p>
                             <Button 
                               onClick={() => navigate(`/jornadas/${term.journey_id}`)}
-                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-tiny tracking-widest py-4"
+                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-xs tracking-widest py-spacing-md"
                             >
                               Iniciar Jornada Prática
                             </Button>
@@ -329,9 +329,9 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <Button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-spacing-sm rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-spacing-xs group"
                           >
-                            <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <Icons.Heart className="w-spacing-md h-spacing-md group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}
                           </Button>
                         )}
@@ -343,10 +343,10 @@ const GlossaryPage: React.FC = () => {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-muted/20 rounded-premium">
-            <Icons.Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+          <div className="text-center py-spacing-2xl bg-muted/20 rounded-premium">
+            <Icons.Search className="w-spacing-xl h-spacing-xl text-muted-foreground mx-auto mb-spacing-sm" />
             <p className="text-muted-foreground">Nenhum termo encontrado.</p>
-            <p className="text-xs text-muted-foreground mt-1">Tente buscar por outro sentimento ou palavra.</p>
+            <p className="text-xs text-muted-foreground mt-spacing-2xs">Tente buscar por outro sentimento ou palavra.</p>
           </div>
         )}
       </div>
