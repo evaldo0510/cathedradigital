@@ -1074,7 +1074,7 @@ const Bible: React.FC = memo(() => {
               </div>
             </div>
 
-            <div className="flex-1 w-full max-w-[var(--layout-max-width)] mx-auto">
+            <div className="flex-1 w-full max-w-4xl mx-auto">
               <div className="w-full relative">
                 <div className="py-8 md:py-20 lg:py-24">
                   <Relatio 
@@ -1409,15 +1409,15 @@ const Bible: React.FC = memo(() => {
 
             {/* If end of book */}
             {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-                <Card className="premium-card border-secondary/40 bg-secondary/5 text-center p-8">
-                  <div className="flex flex-col items-center gap-4">
-                    <Icons.CheckCircle2 className="w-12 h-12 text-primary" />
-                    <h2 className="text-xl font-bold font-serif">Livro Concluído!</h2>
-                    <p className="text-sm text-muted-foreground">Você concluiu a leitura de {selectedBook.name}. Que a Palavra de Deus continue frutificando em seu coração.</p>
-                    <Button onClick={() => setViewMode('books')} className="mt-4">Ver Todos os Livros</Button>
-                  </div>
-                </Card>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-20 space-y-8">
+                <div className="w-20 h-20 rounded-full bg-primary/5 flex items-center justify-center mx-auto">
+                  <Icons.CheckCircle2 className="w-10 h-10 text-primary/40" />
+                </div>
+                <div className="space-y-3">
+                  <h2 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Livro Concluído!</h2>
+                  <p className="text-sm text-muted-foreground/60 italic font-serif max-w-md mx-auto">Você concluiu a leitura de {selectedBook.name}. Que a Palavra de Deus continue frutificando em seu coração.</p>
+                </div>
+                <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">Ver Todos os Livros</Button>
               </motion.div>
             )}
           {!settings.totalSilence && showLogosAI && (
@@ -1456,7 +1456,7 @@ const Bible: React.FC = memo(() => {
         title={selectedBook.name}
         icon={Icons.Bible}
       >
-        <div className="max-w-4xl mx-auto space-y-16 pb-32">
+        <div className="w-full space-y-16 pb-32">
           <div className="flex justify-center">
             <Button 
               variant="ghost" 
@@ -1519,7 +1519,7 @@ const Bible: React.FC = memo(() => {
         path="/bible"
       />
 
-      <div className="max-w-4xl mx-auto space-y-12 pb-32">
+      <div className="w-full space-y-12 pb-32">
         {/* Unidade de Busca Unificada */}
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
