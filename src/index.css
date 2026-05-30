@@ -212,11 +212,16 @@
 }
 
 @layer components {
+  /* Layout Único - Sistema de Containers */
   .app-container {
     @apply w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-8 md:px-12 lg:px-16;
   }
 
-  /* Shared Module Header Style */
+  .contemplative-container {
+    @apply w-full max-w-[var(--layout-max-width)] mx-auto px-[var(--layout-padding-mobile)] md:px-[var(--layout-padding)] py-[var(--layout-padding)] md:py-[calc(var(--layout-padding)*2)];
+  }
+
+  /* Shared Module Header Style - Deprecated in favor of ContemplativeLayout props */
   .module-header {
     @apply text-center mb-10 md:mb-20 space-y-4 md:space-y-6;
   }
@@ -229,13 +234,6 @@
     @apply space-y-4 md:space-y-8;
   }
 
-  .padding-rhythm {
-    @apply p-3 md:p-6;
-  }
-
-  .header-margin-rhythm {
-    @apply mb-4 md:mb-10;
-  }
 
 
   /* Unified Search Input Utility */
