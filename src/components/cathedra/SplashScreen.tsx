@@ -20,7 +20,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
         initial={{ opacity: 1 }}
         animate={{ opacity: phase === 'exit' ? 0 : 1 }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[hsl(var(--primary))] overflow-hidden"
+        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-background overflow-hidden transition-colors duration-1000"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
@@ -62,8 +62,8 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10"
         >
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium overflow-hidden border-[3px] border-secondary/50 shadow-premium-hover bg-primary">
-            <Icons.Logo className="w-full h-full p-4" variant="blue" />
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-premium overflow-hidden border-[1px] border-primary/5 shadow-premium-hover bg-background/50 backdrop-blur-md">
+            <Icons.Logo className="w-full h-full p-4 opacity-40" variant="dark" />
           </div>
         </motion.div>
 
@@ -77,7 +77,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
             animate={{ opacity: 1, letterSpacing: '0.3em' }}
             transition={{ duration: 1, delay: 0.9 }}
-            className="text-2xl md:text-3xl font-display font-bold text-secondary uppercase tracking-[0.3em]"
+            className="text-2xl md:text-3xl font-display font-light text-primary uppercase tracking-[0.4em]"
           >
             Cathedra
           </motion.h2>
@@ -85,7 +85,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="text-premium-tiny md:text-xs font-bold uppercase tracking-[0.35em] text-primary mt-2"
+            className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30 mt-3"
           >
             Digital Sanctuarium
           </motion.p>
@@ -96,7 +96,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
             transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
-            className="h-full bg-gradient-to-r from-primary/60 via-primary to-primary/60 rounded-full"
+            className="h-full bg-primary/10 rounded-full"
           />
         </motion.div>
       </motion.div>

@@ -25,36 +25,36 @@
   }
 
   :root {
-    /* Base Colors - Premium Off-White */
-    --background: 45 40% 98.8%;   /* #FEFDFB Cleaner off-white */
+    /* Base Colors - Premium Off-White (More refined, less paper-like) */
+    --background: 45 40% 99.4%;   /* #FFFEFD Pure clarity */
     --foreground: 220 30% 6%;     /* #0D0F12 Deeper, sharper Graphite */
     
-    --card: 45 40% 98.8%;         /* Surface matches background for lower perception of boxes */
+    --card: 45 40% 99.4%;         /* Seamless surface */
     --card-foreground: 220 30% 6%;
     
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 6%;
     --popover-blur: 16px;
     
-    /* Brand Colors - Sovereign Authority */
-    --primary: 220 30% 4%;       /* #070809 Near black */
+    /* Brand Colors - Sovereign Authority (Refined to be less aggressive) */
+    --primary: 220 20% 12%;       /* #1B1E23 Elegant Charcoal Blue instead of Near-Black */
     --primary-foreground: 45 40% 99%;
     
-    --secondary: 40 30% 40%;     /* More elegant, less saturated Gold */
-    --secondary-foreground: 220 30% 5%;
+    --secondary: 40 25% 45%;     /* More sophisticated Gold */
+    --secondary-foreground: 220 20% 8%;
     
     /* Interface Colors - Subdued Contrast */
-    --muted: 45 20% 95%;         /* Warm muted for secondary surface */
-    --muted-foreground: 220 15% 45%; /* Legible but soft */
+    --muted: 45 20% 97%;         /* Even softer surface */
+    --muted-foreground: 220 10% 50%; 
     
-    --accent: 40 30% 40% / 0.04;
+    --accent: 40 30% 40% / 0.03;
     --accent-foreground: 220 20% 10%;
     
     --destructive: 0 65% 48%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 30% 4% / 0.03; /* Extremely subtle borders */
-    --input: 220 30% 4% / 0.04;
+    --border: 220 30% 4% / 0.02; /* Nearly invisible borders */
+    --input: 220 30% 4% / 0.03;
     --ring: 40 30% 40% / 0.1;
     
     /* Design Tokens */
@@ -93,41 +93,41 @@
     --space-mobile-header-mb: 0.4rem;
     
     --space-desktop-base: 2rem;
-    --space-desktop-section: 12rem; /* Increased for breathing room */
-    --space-desktop-stack: 4.5rem;   /* Increased for breathing room */
+    --space-desktop-section: 12rem;
+    --space-desktop-stack: 4.5rem;
     --space-desktop-padding: 3.5rem;
     --space-desktop-header-mb: 10rem;
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 20% 4%;      /* Sophisticated Deep Blue-Grey, NOT black */
-    --foreground: 45 15% 85%;      /* Brighter but warm, high legibility */
+    --background: 220 20% 7%;      /* Lightened for OLED mobile elegance */
+    --foreground: 45 15% 88%;      /* More luminous, softer contrast */
     
-    --card: 220 20% 4%;            /* Blend with background */
-    --card-foreground: 45 15% 85%;
+    --card: 220 20% 7%;            /* Blend perfectly */
+    --card-foreground: 45 15% 88%;
     
-    --popover: 220 25% 6%;
-    --popover-foreground: 45 15% 85%;
+    --popover: 220 25% 8%;
+    --popover-foreground: 45 15% 88%;
     --popover-blur: 24px;
     
-    --primary: 42 20% 60%;         /* Luminous Gold in dark mode */
-    --primary-foreground: 220 20% 2%;
+    --primary: 42 20% 65%;         /* Softer Luminous Gold */
+    --primary-foreground: 220 20% 4%;
     
-    --secondary: 220 20% 6%;      
-    --secondary-foreground: 42 20% 60%;
+    --secondary: 220 20% 9%;      
+    --secondary-foreground: 42 20% 65%;
     
-    --muted: 220 20% 6%;           /* Surface secundária sutil */
-    --muted-foreground: 220 10% 50%; /* Less aggressive grey */
+    --muted: 220 20% 9%;           
+    --muted-foreground: 220 10% 55%; 
     
-    --accent: 42 20% 60% / 0.05;
-    --accent-foreground: 42 20% 60%;
+    --accent: 42 20% 65% / 0.05;
+    --accent-foreground: 42 20% 65%;
     
     --destructive: 0 40% 30%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 45 15% 85% / 0.05;   /* Light, airy borders in dark */
-    --input: 45 15% 85% / 0.08;
-    --ring: 42 20% 60% / 0.1;
+    --border: 45 15% 85% / 0.04;   
+    --input: 45 15% 85% / 0.06;
+    --ring: 42 20% 65% / 0.1;
     
     --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.4);
   }
