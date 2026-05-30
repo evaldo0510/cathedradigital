@@ -118,9 +118,9 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-sm md:text-base', leading: 'leading-relaxed' },
-  { label: 'M', size: 'text-base md:text-lg', leading: 'leading-[1.75]' },
-  { label: 'G', size: 'text-lg md:text-xl', leading: 'leading-[1.9]' },
+  { label: 'P', size: 'text-base md:text-lg', leading: 'leading-relaxed' },
+  { label: 'M', size: 'text-lg md:text-xl', leading: 'leading-[1.75]' },
+  { label: 'G', size: 'text-xl md:text-2xl', leading: 'leading-[1.9]' },
 ];
 
 const Bible: React.FC = memo(() => {
@@ -926,8 +926,8 @@ const Bible: React.FC = memo(() => {
 
         {/* Content with Side Nav */}
         <div className="mt-12 md:mt-24">
-          <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
-            <div className="flex-1 w-full max-w-[75ch] mx-auto relative">
+          <div className="flex flex-col gap-12 lg:gap-24 items-start">
+            <div className="flex-1 w-full max-w-[70ch] mx-auto relative">
               {currentChapterNotes.length > 0 && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
                   <p className="text-premium-tiny font-medium uppercase tracking-[0.3em] text-primary/40 px-4">Destaques & Notas</p>
@@ -1003,7 +1003,7 @@ const Bible: React.FC = memo(() => {
                             ${highlightedVerse === v.number ? 'bg-primary/[0.03] rounded-lg' : 'hover:bg-primary/[0.01]'}`}>
                           <div className="flex items-start gap-3 md:gap-5">
 
-                            <span className="text-[0.65em] font-bold text-primary/10 mt-2.5 select-none group-hover:text-primary/30 transition-colors duration-700 w-4 shrink-0 text-right">{v.number}</span>
+                            <span className="text-[0.7em] font-serif italic text-primary/20 mt-3 select-none group-hover:text-primary/40 transition-colors duration-700 w-6 shrink-0 text-right">{v.number}</span>
                             <div className="flex-1 cursor-pointer" onClick={() => {
                               const vNum = v.number;
                               setHighlightedVerse(vNum === highlightedVerse ? null : vNum);
@@ -1021,7 +1021,7 @@ const Bible: React.FC = memo(() => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-3xl text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
+                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-[2.5rem] text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1075,6 +1075,12 @@ const Bible: React.FC = memo(() => {
                                 <Icons.Sparkles className="w-3 h-3" />
                               </Button>
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
+                              <ShareButton 
+                                title={`${selectedBook.name} ${selectedChapter}:${v.number}`} 
+                                text={v.text} 
+                                url={buildBibleAbsoluteUrl({ abbr: selectedBook.abbr, chapter: selectedChapter, verse: v.number })}
+                                className="w-6 h-6 p-0 text-primary/40 hover:text-primary"
+                              />
                             </div>
                           </div>
                         </div>
@@ -1086,7 +1092,7 @@ const Bible: React.FC = memo(() => {
               </div>
             </div>
 
-            <div className="flex-1 w-full max-w-4xl mx-auto">
+            <div className="flex-1 w-full max-w-[70ch] mx-auto">
               <div className="w-full relative">
                 <div className="py-8 md:py-20 lg:py-24">
                   <Relatio 
@@ -1433,7 +1439,7 @@ const Bible: React.FC = memo(() => {
               </motion.div>
             )}
           {!settings.totalSilence && showLogosAI && (
-            <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="w-full max-w-[70ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <React.Suspense fallback={<BibleChapterSkeleton />}>
                 <LogosAI 
                   isOpen={showLogosAI} 

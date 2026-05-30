@@ -108,7 +108,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             ref={panelRef}
-            className="fixed bottom-0 left-0 right-0 bg-background border-t rounded-t-[2.5rem] z-[301] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col outline-none"
+            className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[70ch] bg-background border-t rounded-t-[2.5rem] z-[301] shadow-2xl overflow-hidden max-h-[90vh] flex flex-col outline-none"
             tabIndex={-1}
           >
             {/* Handle for drag indicator */}
@@ -170,7 +170,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         {settings.theme === theme.id && (
                           <motion.div 
                             layoutId="theme-active"
-                            className="absolute top-2 right-2"
+                            className="absolute top-2 right-2 z-10"
                           >
                             <div className="w-4 h-4 bg-primary rounded-full flex items-center justify-center">
                               <Check className="w-2.5 h-2.5 text-primary-foreground" />

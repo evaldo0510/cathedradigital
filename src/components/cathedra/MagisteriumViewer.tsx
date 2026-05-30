@@ -368,7 +368,7 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
+    <div className="w-full max-w-[70ch] mx-auto pb-32 relative reader-container overflow-x-hidden">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
@@ -411,60 +411,13 @@ const MagisteriumViewer: React.FC = () => {
       </div>
 
 
-      <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
-        {/* Elegant side navigation - Hidden on mobile for focused reading */}
-        <aside className="hidden lg:flex flex-col w-full max-w-[280px] space-y-12 sticky top-32">
+      <div className="flex flex-col gap-12 lg:gap-24 items-start">
 
-          <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
-            <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
-            <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
-            <p className="text-xs text-muted-foreground italic text-center leading-relaxed">"O Magistério não está acima da Palavra de Deus, mas ao seu serviço." (Dei Verbum, 10)</p>
-          </div>
-
-          {currentDocNotes.length > 0 && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Marcações</p>
-              <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
-                {currentDocNotes.map(note => {
-                  const pIdx = note.content_id.includes(':') ? parseInt(note.content_id.split(':')[1]) : null;
-                  
-                  return (
-                    <button
-                      key={note.id}
-                      onClick={() => {
-                        if (pIdx !== null) {
-                          const el = document.getElementById(`para-${pIdx}`);
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
-                            setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
-                          }
-                        }
-                      }}
-                      className={`flex flex-col gap-1.5 px-4 py-3 rounded-2xl border text-left transition-all hover:bg-primary/5
-                        ${note.highlight_color ? `bg-${note.highlight_color}-50/50 border-${note.highlight_color}-200/30` : 'bg-card border-primary/5'}`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Parágrafo {pIdx !== null ? pIdx + 1 : ''}</span>
-                        {note.highlight_color && (
-                          <div className={`w-2 h-2 rounded-full highlight-${note.highlight_color}`} />
-                        )}
-                      </div>
-                      <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
-                        {note.note_text === 'Destacado para meditação' ? 'Destaque visual' : note.note_text}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </aside>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 w-full max-w-[75ch] mx-auto relative"
+          className="flex-1 w-full max-w-[70ch] mx-auto relative"
         >
             {/* Visual Indicator for Keyboard Shortcuts */}
             {settings.totalSilence && (
@@ -488,8 +441,9 @@ const MagisteriumViewer: React.FC = () => {
               }}
               className={`py-8 md:py-24 prose prose-slate dark:prose-invert max-w-none reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
-                prose-headings:font-serif prose-headings:text-primary 
-                prose-blockquote:border-primary/20 prose-blockquote:bg-primary/5 prose-blockquote:p-6 prose-blockquote:rounded-3xl prose-blockquote:italic
+                prose-p:leading-[1.8] prose-p:mb-8
+                prose-headings:font-serif prose-headings:text-primary prose-headings:mb-8
+                prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-8 prose-blockquote:rounded-3xl prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
 
@@ -583,7 +537,7 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {content && (
-        <div className="w-full max-w-[72ch] mx-auto mb-12 space-y-12">
+        <div className="w-full max-w-[70ch] mx-auto mb-12 space-y-12">
           <ChapterNotesList 
             notes={currentDocNotes} 
             onDeleteNote={deleteDocNote}
@@ -660,7 +614,7 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {!settings.totalSilence && showLogosAI && (
-        <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="w-full max-w-[70ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <LogosAI 
             isOpen={showLogosAI} 
             onClose={() => {
