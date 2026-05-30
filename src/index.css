@@ -255,11 +255,11 @@
     @apply border-l-2 border-primary/30 pl-10 italic my-14 text-primary font-light bg-primary/[0.03] py-8 pr-8 rounded-r-[3rem];
   }
 
-  /* Kindle-like atmospheric transitions */
-  .reading-theme-paper { background-color: #F8F5EE; }
-  .reading-theme-sepia { background-color: #E1D7C1; }
-  .reading-theme-dark { background-color: #0F172A; }
-  .reading-theme-night { background-color: #000000; }
+  /* Atmosphere & Theme Depth - Variable Surface Levels */
+  .reading-theme-paper { background-color: #FEFDFB; }
+  .reading-theme-sepia { background-color: #E8E2D2; }
+  .reading-theme-dark { background-color: hsl(220 20% 7%); }
+  .reading-theme-night { background-color: hsl(220 25% 4%); }
 }
 
 @layer components {
@@ -336,7 +336,7 @@
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/80;
   }
 
   .btn-premium-secondary {
@@ -344,11 +344,11 @@
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border-primary/5 text-primary/40 hover:border-primary/20 hover:text-primary;
+    @apply btn-premium bg-transparent border-primary/10 text-primary/60 hover:border-primary/30 hover:text-primary;
   }
 
   .btn-premium-ghost {
-    @apply btn-premium bg-transparent text-primary/20 hover:text-primary hover:bg-primary/[0.02];
+    @apply btn-premium bg-transparent text-primary/30 hover:text-primary hover:bg-primary/[0.04];
   }
 
   /* Desktop two-column layout: main content + optional side panel */
