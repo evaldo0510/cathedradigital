@@ -80,7 +80,7 @@
     --btn-radius: 9999px;
     --layout-max-width: 1800px;
     --transition-premium: 3200ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 1800ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 1500ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 0.4rem;
@@ -99,35 +99,35 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 60% 0.6%;    /* Abyssal Silent Navy */
-    --foreground: 45 5% 75%;       /* Aged Parchment white */
+    --background: 220 60% 0.3%;    /* Abyssal Silent Navy - deeper for cinematic depth */
+    --foreground: 45 8% 70%;       /* Soft antique white, less glare */
     
-    --card: 220 40% 1%;            /* Ghost elevation */
-    --card-foreground: 45 5% 75%;
+    --card: 220 40% 0.7%;          /* Near-invisible elevation */
+    --card-foreground: 45 8% 70%;
     
-    --popover: 220 45% 1%;
-    --popover-foreground: 45 5% 75%;
+    --popover: 220 45% 0.7%;
+    --popover-foreground: 45 8% 70%;
     
-    --primary: 42 20% 50%;         /* Atmospheric, muted Gold */
-    --primary-foreground: 220 50% 0.5%;
+    --primary: 42 15% 45%;         /* Muted, sophisticated Sovereign Gold */
+    --primary-foreground: 220 50% 0.1%;
     
-    --secondary: 220 30% 0.8%;      
-    --secondary-foreground: 42 20% 50%;
+    --secondary: 220 30% 0.5%;      
+    --secondary-foreground: 42 15% 45%;
     
-    --muted: 220 20% 1.5%;
-    --muted-foreground: 220 5% 40%; /* Minimum interference */
+    --muted: 220 20% 1%;
+    --muted-foreground: 220 5% 30%; /* Minimum interference */
     
-    --accent: 42 20% 50% / 0.02;
-    --accent-foreground: 42 20% 50%;
+    --accent: 42 15% 45% / 0.02;
+    --accent-foreground: 42 15% 45%;
     
-    --destructive: 0 40% 30%;
+    --destructive: 0 40% 20%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 20% 10% / 0.002; /* Invisible structure */
-    --input: 220 20% 10% / 0.002;
-    --ring: 42 20% 50% / 0.04;
+    --border: 220 20% 10% / 0.0005; /* Theoretical boundary */
+    --input: 220 20% 10% / 0.0005;
+    --ring: 42 15% 45% / 0.02;
     
-    --shadow-premium: 0 120px 400px -80px rgba(0, 0, 0, 1);
+    --shadow-premium: 0 200px 600px -120px rgba(0, 0, 0, 1);
   }
 
   .high-contrast {
