@@ -310,4 +310,82 @@ reports/
       expect(result.summary).toMatchSnapshot('summary-with-overrides');
     });
   });
+
+  describe('Matriz de Combinações de Flags com Overrides', () => {
+    const MATRIX_DIR = 'matrix-reports-test';
+    const MATRIX_README = 'MATRIX-README-test.md';
+
+    beforeEach(() => {
+      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+      mkdirSync(MATRIX_DIR);
+      // Criamos um arquivo extra para forçar divergência
+      writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      
+      writeFileSync(MATRIX_README, `
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── expected-file.json
+\`\`\`
+`);
+    });
+
+    afterEach(() => {
+      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+      if (existsSync(MATRIX_README)) rmSync(MATRIX_README);
+      if (existsSync('divergences.md')) rmSync('divergences.md');
+    });
+
+    const runMatrix = (args: string[]) => {
+      const summaryPath = `summary-matrix-${args.join('-') || 'no-args'}.md`;
+      const env = {
+        ...process.env,
+        GITHUB_ACTIONS: 'true',
+        GITHUB_STEP_SUMMARY: summaryPath,
+        REPORTS_DIR_OVERRIDE: MATRIX_DIR,
+        README_PATH_OVERRIDE: MATRIX_README,
+      };
+
+      try {
+        const output = execSync(`bun run ${SCRIPT_PATH} ${args.join(' ')}`, {
+          env,
+          encoding: 'utf8',
+        });
+        const summary = existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: 0, output, summary };
+      } catch (error: any) {
+        const summary = existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: error.status, output: error.stdout, summary };
+      }
+    };
+
+    const combinations = [
+      { name: 'Padrão (sem flags)', args: [] },
+      { name: 'Apenas Falha', args: ['--fail-on-divergence'] },
+      { name: 'Apenas Atualização', args: ['--update'] },
+      { name: 'Atualização em Dry Run', args: ['--update', '--dry-run'] },
+      { name: 'Atualização com Falha (ignorado)', args: ['--update', '--fail-on-divergence'] },
+      { name: 'Dry Run com Falha', args: ['--update', '--dry-run', '--fail-on-divergence'] },
+    ];
+
+    combinations.forEach(({ name, args }) => {
+      it(`deve validar a combinação: ${name} [${args.join(' ')}]`, () => {
+        const result = runMatrix(args);
+        const readmeContent = readFileSync(MATRIX_README, 'utf8');
+        
+        expect({
+          combination: name,
+          args,
+          exitCode: result.status,
+          summary: result.summary,
+          readmeUpdated: readmeContent.includes('extra-file.json')
+        }).toMatchSnapshot();
+      });
+    });
+  });
 });
