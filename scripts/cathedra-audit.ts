@@ -119,7 +119,7 @@ if (dryRun) console.log('--- DRY RUN MODE: No files will be modified ---');
 forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
   try {
-    const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" --color=never`;
+    const command = `rg -n "${pattern.regex.replace(/\\/g, '\\\\')}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" --color=never`;
     const rawOutput = execSync(command, { encoding: 'utf8' }).trim();
     
     if (rawOutput) {
