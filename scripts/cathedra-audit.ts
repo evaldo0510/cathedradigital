@@ -66,7 +66,7 @@ export const forbiddenPatterns = [
   { 
     name: 'Direct Typography', 
     id: 'typography',
-    regex: 'text-(xs|sm|base|lg|xl|[2-9]xl)',
+    regex: '\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b',
     exclude: [],
     suggestion: 'Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size="lg" />',
     fix: (match: string) => {
