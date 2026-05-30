@@ -1451,45 +1451,53 @@ const Bible: React.FC = memo(() => {
   if (viewMode === 'chapters' && selectedBook) {
     return (
       <ContemplativeLayout
-        subtitle={`${selectedBook.name}`}
-        title="Capítulos"
+        subtitle="Selectio Capitulorum"
+        title={selectedBook.name}
         icon={Icons.Bible}
       >
-        <div className="space-y-8">
-          <Button 
-            variant="ghost" 
-            onClick={goBack}
-            className="group flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 hover:text-primary transition-all"
-          >
-            <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
-            Voltar aos Livros
-          </Button>
+        <div className="max-w-4xl mx-auto space-y-16 pb-32">
+          <div className="flex justify-center">
+            <Button 
+              variant="ghost" 
+              onClick={goBack}
+              className="px-8 py-3 h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all"
+            >
+              <Icons.ArrowLeft className="w-3.5 h-3.5 mr-2" />
+              Voltar aos Livros
+            </Button>
+          </div>
 
           <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
-            {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => {
+            {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch, idx) => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
-              
+
               return (
-                <motion.button 
-                  key={ch} 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <CathedraCard
+                  key={ch}
+                  variant="interactive"
+                  padding="none"
                   onClick={() => selectChapter(ch)}
-                  className={`aspect-square flex flex-col items-center justify-center rounded-xl border text-sm font-bold transition-all relative group
-                    ${isRead 
-                      ? 'bg-primary text-primary-foreground border-primary' 
-                      : isLastReadChapter
-                        ? 'bg-primary/5 border-primary/20 text-primary'
-                        : 'bg-card border-primary/5 text-primary/60 hover:border-primary/20 hover:text-primary'}`}
+                  className={cn(
+                    "aspect-square flex flex-col items-center justify-center group relative overflow-hidden",
+                    isRead && "bg-primary/[0.02]"
+                  )}
                 >
-                  <span>{ch}</span>
+                  <span className={cn(
+                    "text-base font-display group-hover:scale-125 transition-all duration-700",
+                    isLastReadChapter ? "text-primary font-bold" : "text-foreground/70"
+                  )}>
+                    {ch}
+                  </span>
                   {isLastReadChapter && (
-                    <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[7px] font-black uppercase tracking-widest text-primary animate-pulse whitespace-nowrap">
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[6px] font-black uppercase tracking-[0.1em] text-primary animate-pulse">
                       Retomar
                     </span>
                   )}
-                </motion.button>
+                  {isRead && !isLastReadChapter && (
+                    <div className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-primary/40" />
+                  )}
+                </CathedraCard>
               );
             })}
           </div>
@@ -1498,105 +1506,111 @@ const Bible: React.FC = memo(() => {
     );
   }
 
-
   return (
-    <ContemplativeLayout 
-      subtitle="Sacra Scriptura"
-      title="Bíblia"
+    <ContemplativeLayout
+      subtitle="Verbum Domini"
+      title="Bíblia Sagrada"
       icon={Icons.Bible}
     >
       <SEOHead 
         title="Bíblia Sagrada | Cathedra Digital"
-        description="Explore as Sagradas Escrituras em uma experiência contemplativa premium."
+        description="Acesse o Antigo e Novo Testamento com recursos de busca, anotações e conexões teológicas."
         path="/bible"
-        type="book"
       />
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Book",
-          "name": "Bíblia Sagrada",
-          "author": "Inspirada por Deus / Tradição da Igreja",
-          "genre": "Religioso / Sagrada Escritura",
-          "publisher": {
-            "@type": "Organization",
-            "name": "Cathedra Digital"
-          },
-          "about": "Palavra de Deus e base da fé católica."
-        })}
-      </script>
-      
-      <div className="space-y-12">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-primary/[0.04] pb-8">
-          <div className="flex gap-2">
+
+      <div className="max-w-4xl mx-auto space-y-12 pb-32">
+        {/* Unidade de Busca Unificada */}
+        <div className="relative group">
+          <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+          <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+          <input
+            type="text"
+            placeholder="Buscar livro ou abreviação..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input-premium pl-16"
+          />
+        </div>
+
+        <div className="flex justify-center mb-16">
+          <div className="flex bg-primary/[0.02] p-1.5 rounded-full border border-primary/5">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
-                className={`px-6 py-2 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] transition-all
-                  ${testament === t 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground/30 hover:text-primary'}`}
+                className={`px-8 py-3 h-auto rounded-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
+                  testament === t 
+                    ? 'bg-background text-primary shadow-premium scale-[1.05]' 
+                    : 'text-muted-foreground/30 hover:text-primary'
+                }`}
               >
                 {t}
               </Button>
             ))}
           </div>
-          
-          <div className="relative group w-full md:w-64">
-            <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/60 group-focus-within:text-primary transition-colors" />
-            <input
-              type="text"
-              placeholder="Buscar livro..."
-              className="search-input-premium py-2 pl-10 text-xs"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
         </div>
 
-        <div className="space-y-16">
-          {filteredCategories.map((cat) => (
-            <section key={cat.label} className="space-y-8">
-              <div className="flex items-center gap-4">
-                <div className="w-6 h-6 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center">
-                  <cat.icon className="w-3 h-3 text-primary/60" />
+        <div className="space-y-24">
+          {filteredCategories.map((category, catIdx) => (
+            <div key={category.label} className="space-y-8">
+              <div className="flex items-center gap-6">
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${category.bgColor} opacity-60`}>
+                  <category.icon className={`w-5 h-5 ${category.color}`} strokeWidth={1} />
                 </div>
-                <h2 className="text-[9px] font-bold text-primary/40 uppercase tracking-[0.4em]">{cat.label}</h2>
-                <div className="h-px flex-1 bg-border/5" />
+                <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40">
+                  {category.label}
+                </h2>
+                <div className="h-px flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
               </div>
-              
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
-                {cat.books.map(book => {
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {category.books.map((book, bookIdx) => {
                   const isRead = completedBooks.has(book.abbr);
+                  const progress = chaptersRead[book.abbr]?.size || 0;
+                  
                   return (
-                    <motion.button
+                    <CathedraCard
                       key={book.abbr}
-                      whileHover={{ y: -2 }}
-                      whileTap={{ scale: 0.98 }}
+                      variant="interactive"
+                      padding="none"
                       onClick={() => selectBook(book)}
-                      className={`text-left p-4 md:p-5 rounded-xl border transition-all flex flex-col gap-3 relative group
-                        ${isRead ? 'border-primary/20 bg-primary/[0.02]' : 'bg-card border-primary/5 hover:border-primary/10 hover:shadow-sm'}`}
+                      className="group"
                     >
-                      <div className="flex justify-between items-start">
-                        <span className="text-[9px] font-bold text-primary/40 uppercase tracking-widest">{book.abbr}</span>
-                        {isRead && <Icons.CheckCircle2 className="w-3 h-3 text-primary/60" />}
+                      <div className="p-6 flex items-center justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <span className="text-[8px] font-black tracking-widest text-primary/20 group-hover:text-primary transition-colors">{book.abbr}</span>
+                            <h3 className="text-sm font-bold tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
+                              {book.name}
+                            </h3>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[7px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                              {book.chapters} {book.chapters === 1 ? 'Capítulo' : 'Capítulos'}
+                            </span>
+                            {progress > 0 && (
+                              <div className="flex items-center gap-1">
+                                <div className="w-1 h-1 rounded-full bg-primary/20" />
+                                <span className="text-[7px] font-bold text-primary/40">{Math.round((progress / book.chapters) * 100)}%</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <Icons.ChevronRight className="w-3.5 h-3.5 text-primary/10 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                       </div>
-                      <div className="space-y-0.5">
-                        <h3 className="font-display font-medium text-base text-primary group-hover:text-primary/80 transition-colors leading-tight">{book.name}</h3>
-                        <p className="text-[8px] text-muted-foreground uppercase tracking-widest">{book.chapters} Cap</p>
-                      </div>
-                    </motion.button>
+                    </CathedraCard>
                   );
                 })}
               </div>
-            </section>
+            </div>
           ))}
         </div>
       </div>
     </ContemplativeLayout>
   );
 });
+
+export default Bible;
 
 export default Bible;
