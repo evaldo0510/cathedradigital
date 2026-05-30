@@ -128,7 +128,7 @@ const BibliotecaPage: React.FC = () => {
       subtitle="Sacrum Archivum"
       icon={Icons.Compass}
     >
-      <div className="max-w-5xl mx-auto space-y-16 pb-32">
+      <div className="w-full space-y-16 pb-32">
         <div className="relative group max-w-2xl mx-auto">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />

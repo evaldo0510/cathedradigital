@@ -240,7 +240,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedSection.title} title="CIC" icon={Icons.Catechism}>
-        <div className="max-w-4xl mx-auto space-y-12">
+        <div className="max-w-4xl space-y-12">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-4 py-4 border-b border-primary/5 mb-12">
              <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>
@@ -281,7 +281,7 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'sections' && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
-        <div className="max-w-4xl mx-auto space-y-12 pb-32">
+        <div className="w-full space-y-12 pb-32">
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-8 py-3 h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-3.5 h-3.5 mr-2" /> Voltar às Partes
@@ -309,7 +309,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
-      <div className="max-w-4xl mx-auto space-y-12 pb-32">
+      <div className="w-full space-y-12 pb-32">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />

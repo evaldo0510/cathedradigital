@@ -19,14 +19,14 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   title, 
   subtitle, 
   className,
-  maxW = 'max-w-[var(--layout-max-width)]',
+  maxW = 'max-w-6xl',
   headerActions,
   icon: Icon
 }) => {
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-2 md:pt-12 pb-12 md:pb-64 will-change-[transform,opacity]", className)}>
+    <div className={cn("min-h-screen pt-2 md:pt-12 pb-12 md:pb-64 will-change-[transform,opacity] flex flex-col items-center", className)}>
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", 

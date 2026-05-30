@@ -47,8 +47,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           >
             <Icons.Logo className="w-5 h-5 md:w-6 md:h-6 transition-all group-hover:scale-105 opacity-80" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[9px] md:text-[11px] font-display font-light uppercase tracking-[0.3em] text-primary/40 leading-none transition-all group-hover:text-primary">
-                {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1).replace('magisterium', 'Magistério')) || 'Cathedra'}
+              <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] text-primary/40 leading-none transition-all group-hover:text-primary">
+                {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1).replace('magisterium', 'Magistério').replace('bible', 'Bíblia').replace('catechism', 'Catecismo')) || 'Cathedra'}
               </span>
             </div>
           </div>
