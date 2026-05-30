@@ -19,7 +19,7 @@ interface BibleVersePopoverProps {
   onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
-const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
+const BibleVersePopover: React.FC<BibleVersePopoverProps> = React.memo(({
   abbr,
   chapter,
   verse,
@@ -124,6 +124,6 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
+});
 
 export default BibleVersePopover;

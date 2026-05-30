@@ -14,7 +14,7 @@ interface CatechismPopoverProps {
   variant?: 'default' | 'mini';
 }
 
-const CatechismPopover: React.FC<CatechismPopoverProps> = ({
+const CatechismPopover: React.FC<CatechismPopoverProps> = React.memo(({
   paragraph,
   onNavigate,
   variant = 'default',
@@ -76,6 +76,6 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = ({
       </PopoverContent>
     </Popover>
   );
-};
+});
 
 export default CatechismPopover;

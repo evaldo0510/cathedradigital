@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const ReadingControlPanel: React.FC = () => {
+const ReadingControlPanel: React.FC = React.memo(() => {
   const { settings, updateSettings, resetSettings } = useReadingSettings();
   const navigate = useNavigate();
 
@@ -280,6 +280,6 @@ const ReadingControlPanel: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default ReadingControlPanel;
