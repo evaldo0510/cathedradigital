@@ -169,8 +169,13 @@ if (updateMode) {
     
     if (process.env.GITHUB_ACTIONS) {
       let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
-      summary += `🔄 **Status:** Sincronizado\n`;
-      summary += `📝 **Motivo do Exit Code:** README atualizado automaticamente.\n\n`;
+      if (hasDivergence) {
+        summary += `🔄 **Status:** Sincronizado\n`;
+        summary += `📝 **Motivo do Exit Code:** README atualizado automaticamente.\n\n`;
+      } else {
+        summary += `✅ **Status:** Sucesso (Já Sincronizado)\n`;
+        summary += `📝 **Motivo do Exit Code:** Nenhuma divergência detectada; README mantido.\n\n`;
+      }
       writeSummary(summary);
     }
 
