@@ -5,7 +5,7 @@ import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
-import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+
 import { cn } from '@/lib/utils';
 
 interface AppHeaderProps {
@@ -24,7 +24,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useLang();
-  const { settings } = useReadingSettings();
+  
   
   const isDashboard = pathname === '/';
 
