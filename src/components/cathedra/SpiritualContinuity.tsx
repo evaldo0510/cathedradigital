@@ -11,9 +11,15 @@ interface SpiritualContinuityProps {
   data?: any;
   isLoading?: boolean;
   profile?: Profile | null;
+  variant?: 'default' | 'glass' | 'outline';
 }
 
-const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propData, isLoading: propLoading, profile: propProfile }) => {
+const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ 
+  data: propData, 
+  isLoading: propLoading, 
+  profile: propProfile,
+  variant = 'default'
+}) => {
   const navigate = useNavigate();
   const [internalData, setInternalData] = React.useState<any>(null);
   const [internalLoading, setInternalLoading] = React.useState(false);

@@ -69,6 +69,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
+          variant="glass"
         />
         <div className="flex justify-center -mt-6 md:-mt-10 mb-8 md:mb-20">
           <CathedraButton 
@@ -112,7 +113,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="interactive" padding="none" className="flex-1 p-6 md:p-24 lg:p-32">
+          <CathedraCard variant="outline" padding="none" className="flex-1 p-5 md:p-24 lg:p-32 border-primary/[0.03] bg-primary/[0.002]">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -129,14 +130,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-8 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-8 md:gap-16 group"
+            variant="glass"
+            className="flex-1 p-6 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/5 shadow-none"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
-              <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
+              <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
             <div className="relative z-10 space-y-5 text-center">
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
+              <h3 className="text-xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
               <p className="text-xs md:text-sm text-muted-foreground/60 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
@@ -149,13 +151,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/60 font-serif italic focus:ring-1 focus:ring-primary/20"
+                  className="h-12 md:h-16 pl-10 md:pl-14 pr-10 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-sm md:text-lg placeholder:text-muted-foreground/40 font-serif italic focus:ring-1 focus:ring-primary/20"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
-                <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-primary/60 group-hover/input:text-primary/60 transition-colors" />
+                <MessageSquare className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-5 md:h-5 text-primary/40 group-hover/input:text-primary/60 transition-colors" />
                 <button 
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"
                 >
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
