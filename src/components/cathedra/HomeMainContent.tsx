@@ -69,6 +69,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
+          variant="glass"
         />
         <div className="flex justify-center -mt-6 md:-mt-10 mb-8 md:mb-20">
           <CathedraButton 
@@ -91,15 +92,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="p-3 md:p-32 lg:p-40 border-primary/[0.03] shadow-none bg-primary/[0.005]">
           <RitualDoDia />
         </CathedraCard>
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-6 md:py-24 flex flex-col items-center gap-6 opacity-30 select-none pointer-events-none">
+      <div className="py-8 md:py-32 flex flex-col items-center gap-4 opacity-20 select-none pointer-events-none">
         <div className="w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
-        <Sparkles className="w-4 h-4 text-primary/40" strokeWidth={0.5} />
+        <Sparkles className="w-3 h-3 text-primary/30" strokeWidth={0.5} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
@@ -112,7 +113,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="interactive" padding="none" className="flex-1 p-6 md:p-24 lg:p-32">
+          <CathedraCard variant="outline" padding="none" className="flex-1 p-5 md:p-24 lg:p-32 border-primary/[0.03] bg-primary/[0.002]">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -129,14 +130,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           
           <HomeCard
             ref={logosCardRef}
-            className="flex-1 p-8 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-8 md:gap-16 group"
+            variant="glass"
+            className="flex-1 p-6 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/5 shadow-none"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
-              <Sparkles className="w-6 h-6 md:w-8 md:h-8" strokeWidth={0.5} />
+              <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
             </div>
             
             <div className="relative z-10 space-y-5 text-center">
-              <h3 className="text-2xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
+              <h3 className="text-xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
               <p className="text-xs md:text-sm text-muted-foreground/60 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
@@ -149,13 +151,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-14 md:h-16 pl-12 md:pl-14 pr-12 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-base md:text-lg placeholder:text-muted-foreground/60 font-serif italic focus:ring-1 focus:ring-primary/20"
+                  className="h-12 md:h-16 pl-10 md:pl-14 pr-10 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-sm md:text-lg placeholder:text-muted-foreground/40 font-serif italic focus:ring-1 focus:ring-primary/20"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
-                <MessageSquare className="absolute left-5 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-primary/60 group-hover/input:text-primary/60 transition-colors" />
+                <MessageSquare className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-5 md:h-5 text-primary/40 group-hover/input:text-primary/60 transition-colors" />
                 <button 
                   type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"
                 >
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
@@ -166,7 +168,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-8 md:py-32 flex justify-center">
+      <div className="py-12 md:py-48 flex justify-center opacity-10">
         <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
@@ -178,20 +180,20 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 md:p-40 lg:p-64">
+        <CathedraCard variant="outline" padding="none" className="p-3 md:p-40 lg:p-64 border-primary/[0.02] bg-transparent shadow-none">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1000">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-30 hover:opacity-100 transition-opacity duration-1500">
         <h2 className="sr-only">Futuras Expansões</h2>
         <SectionHeader 
           title="O Futuro" 
           subtitle="Novas salas sendo preparadas para o seu santuário."
           className="header-margin-rhythm"
         />
-        <div className="px-0 md:px-4">
+        <div className="px-0 md:px-4 grayscale opacity-60">
           <ComingSoonSection />
         </div>
       </section>

@@ -11,9 +11,15 @@ interface SpiritualContinuityProps {
   data?: any;
   isLoading?: boolean;
   profile?: Profile | null;
+  variant?: 'default' | 'glass' | 'outline';
 }
 
-const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propData, isLoading: propLoading, profile: propProfile }) => {
+const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ 
+  data: propData, 
+  isLoading: propLoading, 
+  profile: propProfile,
+  variant = 'default'
+}) => {
   const navigate = useNavigate();
   const [internalData, setInternalData] = React.useState<any>(null);
   const [internalLoading, setInternalLoading] = React.useState(false);
@@ -104,7 +110,7 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({ data: propDat
       animate={{ opacity: 1, y: 0 }}
       className="w-full mb-8 md:mb-16"
     >
-      <HomeCard className="p-4 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group">
+      <HomeCard variant={variant} className="p-4 md:p-12 border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-none">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/[0.01] rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8 relative z-10">
