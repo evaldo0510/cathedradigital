@@ -241,6 +241,9 @@ npm run reports:tree -- --pattern="dry-run.*\.json"
 Para atualizar automaticamente a árvore do README com os arquivos atuais de `./reports`:
 ```bash
 npm run reports:verify -- --update
+
+# Simular atualização sem modificar arquivos
+npm run reports:verify -- --update --dry-run
 ```
 
 
