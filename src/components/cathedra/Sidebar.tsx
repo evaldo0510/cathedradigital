@@ -8,6 +8,7 @@ import { AppRoute, User } from '../../types';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -281,54 +282,58 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-8 overflow-y-auto pb-8 no-scrollbar pr-1" role="navigation">
+            <nav className="flex-1 space-y-4 overflow-y-auto pb-8 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
-                <motion.div 
-                  key={section.label}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ 
-                    delay: settings.reduceAnimations ? 0 : 0.1 + (sectionIdx * 0.05), 
-                    duration: settings.reduceAnimations ? 0.4 : 0.8, 
-                    ease: [0.19, 1, 0.22, 1] 
-                  }}
-                  className="mb-6"
-                >
-                  <h3 className="text-[6px] font-black uppercase tracking-[0.8em] text-primary/[0.05] dark:text-primary/10 mb-2 px-4 select-none italic">/ {section.label}</h3>
-                  <ul className="space-y-1">
-                    {section.items.map((item, idx) => {
-                      const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
-                      return (
-                        <li key={idx}>
-                          <Button
-                            variant="ghost"
-                            onClick={() => handleNav(item)}
-                            onMouseEnter={() => prefetchRoute(item.path)}
-                            onTouchStart={() => prefetchRoute(item.path)}
-                             aria-current={isActive ? 'page' : undefined}
-                             aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-2 rounded-xl text-[9px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[42px]
-                              ${isActive
-                                ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
-                                : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
-                          >
-                            <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 14, strokeWidth: isActive ? 1 : 0.4 })}
-                            </span>
-                            <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
-                            {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                              <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
-                                {cacheCount}
-                              </span>
-                            )}
-                            {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-1 py-0.5 rounded flex-shrink-0">PRO</span>}
-                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-0.5 h-0.5 rounded-full bg-primary/40 flex-shrink-0" />}
-                          </Button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </motion.div>
+                <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
+                  <CollapsibleTrigger asChild>
+                    <button className="w-full flex items-center justify-between py-2 px-4 group/trigger hover:bg-primary/[0.02] rounded-xl transition-all">
+                      <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/30 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
+                      <Icons.ChevronDown className="w-3 h-3 text-primary/10 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1} />
+                    </button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <motion.div 
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <ul className="space-y-1 mt-1">
+                        {section.items.map((item, idx) => {
+                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
+                          return (
+                            <li key={idx}>
+                              <Button
+                                variant="ghost"
+                                onClick={() => handleNav(item)}
+                                onMouseEnter={() => prefetchRoute(item.path)}
+                                onTouchStart={() => prefetchRoute(item.path)}
+                                 aria-current={isActive ? 'page' : undefined}
+                                 aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
+                                className={`w-full flex items-center justify-start gap-4 px-4 py-2 rounded-xl text-[9px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[44px]
+                                  ${isActive
+                                    ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
+                                    : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
+                              >
+                                <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
+                                  {React.cloneElement(item.icon as React.ReactElement, { size: 14, strokeWidth: isActive ? 1.2 : 0.8 })}
+                                </span>
+                                <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
+                                {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
+                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                                    {cacheCount}
+                                  </span>
+                                )}
+                                {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-1 py-0.5 rounded flex-shrink-0">PRO</span>}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-0.5 h-0.5 rounded-full bg-primary/40 flex-shrink-0" />}
+                              </Button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </motion.div>
+                  </CollapsibleContent>
+                </Collapsible>
               )))}
             </nav>
 
