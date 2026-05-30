@@ -36,6 +36,7 @@
     "token-audit:clean": "rm -rf reports && mkdir -p reports",
     "reports:tree": "bun run scripts/reports-tree.ts",
     "reports:verify": "bun run scripts/verify-reports.ts",
+    "reports:clean": "bun run scripts/reports-clean.ts",
     "prepare": "husky",
     "test:token-audit": "vitest run scripts/cathedra-audit.test.ts",
     "check-all": "npm run lint && npm run typecheck && npm run test:local:unit && npm run token-audit:ci && npm run test:local:axe"
