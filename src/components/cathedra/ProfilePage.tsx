@@ -461,13 +461,18 @@ const ProfilePage: React.FC = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <Card className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group cursor-pointer" onClick={() => navigate(AppRoute.PRICING)}>
+          <CathedraCard 
+            variant="interactive" 
+            padding="none"
+            className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group" 
+            onClick={() => navigate(AppRoute.PRICING)}
+          >
             <div className="absolute top-0 right-0 p-6 opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
               <Icons.Star className="w-20 h-20 text-secondary fill-current" />
             </div>
-            <CardContent className="p-6 space-y-4">
+            <div className="p-6 space-y-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="px-2 py-0.5 rounded-premium bg-secondary/20 text-amber-800 dark:text-secondary text-premium-tiny font-black uppercase tracking-widest border border-secondary/30">
+                <div className="px-2 py-0.5 rounded-full bg-secondary/20 text-amber-800 dark:text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/30">
                   Acesso Completo
                 </div>
               </div>
@@ -475,15 +480,15 @@ const ProfilePage: React.FC = () => {
               <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
                 Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
               </p>
-              <Button size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-premium-tiny uppercase tracking-widest h-10 px-6">
+              <CathedraButton size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-10 px-6">
                 Ver Planos <Icons.ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
-            </CardContent>
-          </Card>
+              </CathedraButton>
+            </div>
+          </CathedraCard>
         </motion.div>
       )}
 
-      <div className="bg-card border border-border rounded-premium p-6 space-y-5">
+      <CathedraCard className="p-6 space-y-5">
         <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
 
         <div className="space-y-2">
@@ -502,7 +507,7 @@ const ProfilePage: React.FC = () => {
             value={bio}
             onChange={e => setBio(e.target.value)}
             rows={4}
-            className="w-full bg-background border border-border rounded-full p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+            className="w-full bg-background border border-border rounded-2xl p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
           />
         </div>
 
@@ -512,10 +517,9 @@ const ProfilePage: React.FC = () => {
             <Icons.Church className="w-4 h-4 text-primary" />
             <h3 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
           </div>
-          <p className="text-premium-tiny text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiência.</p>
+          <p className="text-[10px] text-muted-foreground -mt-2">Opcional — ajuda a personalizar sua experiênica.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Estado */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Estado</label>
               <select
@@ -530,7 +534,6 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            {/* Diocese */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Diocese</label>
               <select
@@ -546,7 +549,6 @@ const ProfilePage: React.FC = () => {
               </select>
             </div>
 
-            {/* Paróquia */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Paróquia</label>
               <input
@@ -558,7 +560,6 @@ const ProfilePage: React.FC = () => {
               />
             </div>
 
-            {/* Movimento/Pastoral */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-foreground">Movimento / Pastoral</label>
               <select
@@ -575,26 +576,26 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
 
-        <Button
+        <CathedraButton
           onClick={handleSave}
-          disabled={saving}
-          className="w-full py-4 bg-primary text-primary-foreground rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:opacity-90 transition-all disabled:opacity-50"
+          isLoading={saving}
+          className="w-full h-14 bg-primary text-primary-foreground rounded-full font-black uppercase text-[10px] tracking-[0.4em] shadow-premium-hover hover:opacity-90 transition-all"
         >
           {saving ? 'Salvando...' : 'Salvar Alterações'}
-        </Button>
-      </div>
+        </CathedraButton>
+      </CathedraCard>
 
-      <div className="premium-card p-8 space-y-6">
+      <CathedraCard className="p-8 space-y-6">
         <div className="flex items-center gap-2 mb-1">
           <Icons.ShieldCheck className="w-4 h-4 text-primary" />
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Segurança da Conta</h2>
         </div>
         
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-muted/30 rounded-premium border border-border/50">
+          <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
             <div className="space-y-1">
               <p className="text-sm font-bold text-foreground">Vincular Conta Google</p>
-              <p className="text-premium-tiny text-muted-foreground">
+              <p className="text-[10px] text-muted-foreground">
                 Adicione o Google como método de acesso sem perder seus dados atuais.
               </p>
             </div>
@@ -609,10 +610,10 @@ const ProfilePage: React.FC = () => {
             * Ao vincular, você poderá entrar usando tanto seu e-mail/senha quanto sua conta Google.
           </p>
         </div>
-          </div>
-        </div>
-      </ContemplativeLayout>
-    );
-  };
+      </CathedraCard>
+      </div>
+    </ContemplativeLayout>
+  );
+};
 
 export default ProfilePage;
