@@ -10,6 +10,8 @@ interface ContemplativeLayoutProps {
   subtitle?: string;
   className?: string;
   maxW?: string;
+  headerActions?: React.ReactNode;
+  icon?: React.ElementType;
 }
 
 const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({ 
@@ -17,25 +19,38 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   title, 
   subtitle, 
   className,
-  maxW = 'max-w-[1200px]'
+  maxW = 'max-w-[1200px]',
+  headerActions,
+  icon: Icon
 }) => {
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-4 md:pt-72 pb-12 md:pb-96 will-change-transform", className)}>
+    <div className={cn("min-h-screen pt-4 md:pt-48 pb-12 md:pb-96 will-change-transform", className)}>
 
-      {(title || subtitle) && (
-        <header className={cn("header-margin-rhythm px-8 md:px-12 text-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[3000ms] ease-out")}>
-          <div className="w-[0.5px] h-10 md:h-80 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-8 md:mb-40 opacity-30" />
+
+      {(title || subtitle || Icon) && (
+        <header className={cn("header-margin-rhythm px-8 md:px-12 text-center flex flex-col items-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[3000ms] ease-out")}>
+          {Icon && (
+            <div className="mb-8 md:mb-12">
+              <Icon className="w-8 h-8 md:w-12 md:h-12 text-primary opacity-30 mx-auto" strokeWidth={1} />
+            </div>
+          )}
+          <div className="w-[0.5px] h-10 md:h-32 bg-gradient-to-b from-transparent via-primary/10 to-transparent mx-auto mb-8 md:mb-16 opacity-30" />
           {subtitle && (
-            <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.8em] md:tracking-[1.2em] text-primary/20 mb-10 md:mb-20">
+            <p className="text-[8px] md:text-[10px] font-bold uppercase text-primary/30 mb-8 md:mb-16 tracking-[0.8em] md:tracking-[1.2em]">
               {subtitle}
             </p>
           )}
           {title && (
-            <h1 className="text-5xl md:text-9xl lg:text-[8.5rem] tracking-tight text-primary/90 font-display leading-[0.85] filter blur-[0.3px]">
+            <h1 className="text-5xl md:text-9xl lg:text-[8.5rem] tracking-tight text-primary/90 font-display leading-[0.85] filter blur-[0.3px] mb-12">
               {title}
             </h1>
+          )}
+          {headerActions && (
+            <div className="mt-8 md:mt-16 w-full flex justify-center">
+              {headerActions}
+            </div>
           )}
         </header>
       )}
