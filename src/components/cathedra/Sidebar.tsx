@@ -338,11 +338,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-10 rounded-xl border border-primary/[0.03] dark:border-white/[0.03] bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5"
+                    className="h-10 rounded-xl border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-2 transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
-                    {isDark ? <Icons.Sun className="w-4 h-4 text-primary/60" /> : <Icons.Moon className="w-4 h-4 opacity-40" />}
-                    <span className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground/60">{isDark ? 'Claro' : 'Escuro'}</span>
+                    {isDark ? <Icons.Sun className="w-3.5 h-3.5 text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-3.5 h-3.5 opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
+                    <span className="text-[7.5px] font-black uppercase tracking-widest text-muted-foreground/40 group-hover/btn:text-muted-foreground/80 transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
