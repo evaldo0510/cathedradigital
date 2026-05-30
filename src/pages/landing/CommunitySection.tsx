@@ -31,17 +31,17 @@ const CommunitySection = () => {
   ];
 
   return (
-    <section className="w-full py-24 px-6 bg-background relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/[0.02] rounded-premium pointer-events-none" />
+    <section className="w-full py-4xl px-md bg-background relative overflow-hidden">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3xl h-3xl bg-primary/[0.02] rounded-premium pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto space-y-20 relative z-10">
-        <div className="text-center space-y-6 max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto space-y-3xl relative z-10">
+        <div className="text-center space-y-md max-w-3xl mx-auto">
           <motion.div
             variants={fadeUp}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary/10 border border-secondary/20 rounded-full text-secondary text-premium-tiny font-black uppercase tracking-[0.2em]"
+            className="inline-flex items-center gap-xs px-md py-xs bg-secondary/10 border border-secondary/20 rounded-full text-secondary text-[10px] font-semibold uppercase tracking-premium-wide"
           >
             <span>Irmandade Cathedra</span>
           </motion.div>
@@ -79,7 +79,7 @@ const CommunitySection = () => {
               viewport={{ once: true }}
               custom={i + 3}
               whileHover={{ y: -10 }}
-              className="p-8 rounded-[2.5rem] bg-card border border-border/50 shadow-soft hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
+              className="p-xl rounded-xl bg-card border border-border/50 shadow-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-6">
                 <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">

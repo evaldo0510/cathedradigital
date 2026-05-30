@@ -38,16 +38,16 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: shouldReduceMotion ? 1.5 : 3, ease: EASE }}
-        className="mb-8 md:mb-28 lg:mb-32"
+        className="mb-xl md:mb-3xl lg:mb-4xl"
       >
-        <div className="flex flex-col items-center gap-6 md:gap-12">
+        <div className="flex flex-col items-center gap-md md:gap-xl">
           <motion.div 
             initial={{ height: 0 }}
             animate={{ height: shouldReduceMotion ? 40 : 80, opacity: [0.1, 0.3, 0.1] }}
             transition={{ duration: shouldReduceMotion ? 1 : 2.5, delay: 0.8, ease: EASE }}
             className="w-[1.5px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
           />
-          <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[1.2em] md:tracking-[1.4em] text-primary/10 leading-none select-none ml-4">
+          <p className="text-[10px] md:text-xs font-semibold uppercase tracking-premium-widest md:tracking-[1.4em] text-primary/10 leading-none select-none ml-4">
             Sanctuarium Spiritus
           </p>
         </div>
