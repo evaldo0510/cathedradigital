@@ -1467,7 +1467,7 @@ const Bible: React.FC = memo(() => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+          <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
             {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map((ch, idx) => {
               const isRead = chaptersRead[selectedBook.abbr]?.has(ch);
               const isLastReadChapter = lastReadMark?.content_id === selectedBook.abbr && lastReadMark?.chapter === ch;
@@ -1479,23 +1479,21 @@ const Bible: React.FC = memo(() => {
                   padding="none"
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center group relative overflow-hidden",
-                    isRead && "bg-primary/[0.02]"
+                    "aspect-square flex flex-col items-center justify-center group relative overflow-hidden rounded-lg",
+                    isRead && "bg-primary/[0.01]"
                   )}
                 >
                   <span className={cn(
-                    "text-base font-display group-hover:scale-125 transition-all duration-700",
-                    isLastReadChapter ? "text-primary font-bold" : "text-foreground/70"
+                    "text-sm font-display group-hover:scale-110 transition-all duration-700",
+                    isLastReadChapter ? "text-primary font-bold" : "text-foreground/60"
                   )}>
                     {ch}
                   </span>
                   {isLastReadChapter && (
-                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[6px] font-black uppercase tracking-[0.1em] text-primary animate-pulse">
-                      Retomar
-                    </span>
+                    <div className="absolute bottom-1 w-1 h-1 rounded-full bg-primary animate-pulse" />
                   )}
                   {isRead && !isLastReadChapter && (
-                    <div className="absolute top-1.5 right-1.5 w-1 h-1 rounded-full bg-primary/40" />
+                    <div className="absolute top-1 right-1 w-0.5 h-0.5 rounded-full bg-primary/20" />
                   )}
                 </CathedraCard>
               );
@@ -1577,27 +1575,21 @@ const Bible: React.FC = memo(() => {
                       onClick={() => selectBook(book)}
                       className="group"
                     >
-                      <div className="p-6 flex items-center justify-between">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-3">
-                            <span className="text-[8px] font-black tracking-widest text-primary/20 group-hover:text-primary transition-colors">{book.abbr}</span>
-                            <h3 className="text-sm font-bold tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
+                      <div className="p-4 flex items-center justify-between">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[7px] font-black tracking-widest text-primary/20 group-hover:text-primary transition-colors">{book.abbr}</span>
+                            <h3 className="text-xs font-bold tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
                               {book.name}
                             </h3>
                           </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-[7px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[6px] font-bold uppercase tracking-widest text-muted-foreground/30">
                               {book.chapters} {book.chapters === 1 ? 'Capítulo' : 'Capítulos'}
                             </span>
-                            {progress > 0 && (
-                              <div className="flex items-center gap-1">
-                                <div className="w-1 h-1 rounded-full bg-primary/20" />
-                                <span className="text-[7px] font-bold text-primary/40">{Math.round((progress / book.chapters) * 100)}%</span>
-                              </div>
-                            )}
                           </div>
                         </div>
-                        <Icons.ChevronRight className="w-3.5 h-3.5 text-primary/10 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                        <Icons.ChevronRight className="w-3 h-3 text-primary/10 group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
                       </div>
                     </CathedraCard>
                   );
