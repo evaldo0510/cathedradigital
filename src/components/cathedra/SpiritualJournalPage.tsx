@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { HomeCard } from './HomeCard';
+import { CathedraCard } from './CathedraCard';
 import { HomeButton } from './HomeButton';
 import StudyJournal from './StudyJournal';
 
@@ -146,7 +146,7 @@ const SpiritualJournalPage = () => {
           >
             {/* Entry Form */}
             <section className="max-w-4xl mx-auto w-full">
-              <HomeCard padding="lg" className="space-y-16">
+              <CathedraCard padding="lg" className="space-y-16">
                 <div className="space-y-8">
                   <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
                   <div className="flex flex-wrap justify-center gap-6">
@@ -185,7 +185,7 @@ const SpiritualJournalPage = () => {
                     </HomeButton>
                   </div>
                 </div>
-              </HomeCard>
+              </CathedraCard>
             </section>
 
             {/* History */}
