@@ -1,0 +1,47 @@
+name: Cathedra Token Audit
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  push:
+    branches: [ main, master ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      
+      - name: Install dependencies
+        run: bun install
+        
+      - name: Run Token Audit
+        id: audit
+        run: |
+          # Run audit and capture output
+          bun run token-audit --threshold=5 > audit-output.txt 2>&1 || echo "audit_failed=true" >> $GITHUB_ENV
+        
+      - name: Generate PR Comment
+        if: github.event_name == 'pull_request'
+        run: |
+          bun run scripts/generate-pr-comment.ts > pr-comment.md
+          
+      - name: Post PR Comment
+        if: github.event_name == 'pull_request'
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: pr-comment.md
+          comment_tag: cathedra-token-audit
+          
+      - name: Upload Audit Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: cathedra-token-reports
+          path: reports/
+          
+      - name: Fail if Audit Failed
+        if: env.audit_failed == 'true'
+        run: |
+          echo "Token audit failed due to violations exceeding threshold."
+          exit 1
