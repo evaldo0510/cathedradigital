@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
+import { CathedraCard } from './CathedraCard';
 
 interface ConfessionStep {
   title: string;
@@ -90,7 +91,7 @@ const PoenitentiaPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="premium-card p-8 md:p-16 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
+      <CathedraCard padding="lg" className="animate-in fade-in slide-in-from-bottom-4 duration-700 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-[0.02]">
           <Icons.Cross className="w-64 h-64 -mr-16 -mt-16 rotate-12" />
         </div>
@@ -153,10 +154,10 @@ const PoenitentiaPage: React.FC = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </CathedraCard>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="premium-card p-10 space-y-6">
+        <CathedraCard padding="md" className="space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-6 h-6" />
@@ -166,8 +167,8 @@ const PoenitentiaPage: React.FC = () => {
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
           </p>
-        </div>
-        <div className="premium-card p-10 space-y-6">
+        </CathedraCard>
+        <CathedraCard padding="md" className="space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-6 h-6" />
@@ -177,7 +178,7 @@ const PoenitentiaPage: React.FC = () => {
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             No final, o sacerdote dirá: "Eu te absolvo de teus pecados em nome do Pai, e do Filho, e do Espírito Santo." Responda: "Amém."
           </p>
-        </div>
+        </CathedraCard>
       </div>
     </div>
   );

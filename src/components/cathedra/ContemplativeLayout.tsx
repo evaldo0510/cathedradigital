@@ -3,15 +3,16 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
-
 interface ContemplativeLayoutProps {
   children: React.ReactNode;
   title?: string;
   subtitle?: string;
   className?: string;
+  containerClassName?: string;
   maxW?: string;
   headerActions?: React.ReactNode;
   icon?: React.ElementType;
+  showPadding?: boolean;
 }
 
 const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({ 
@@ -19,18 +20,23 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   title, 
   subtitle, 
   className,
+  containerClassName,
   maxW = 'max-w-[var(--layout-max-width)]',
   headerActions,
-  icon: Icon
+  icon: Icon,
+  showPadding = true
 }) => {
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-[var(--layout-padding)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-[var(--layout-padding-mobile)] md:px-[var(--layout-padding)] will-change-[transform,opacity] flex flex-col items-center", className)}>
+    <div className={cn(
+      "min-h-screen will-change-[transform,opacity] flex flex-col items-center", 
+      showPadding && "pt-[var(--layout-padding)] md:pt-[calc(var(--layout-padding)*2)] pb-[calc(var(--layout-padding)*3)] px-[var(--layout-padding-mobile)] md:px-[var(--layout-padding)]",
+      containerClassName
+    )}>
       {(title || subtitle || Icon) && (
         <header className={cn(
-          "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", 
-
+          "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center w-full", 
           !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
         )}>
           {Icon && (
@@ -50,7 +56,6 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
           )}
           {headerActions && (
             <div className="mt-4 md:mt-8 w-full flex justify-center">
-
               {headerActions}
             </div>
           )}

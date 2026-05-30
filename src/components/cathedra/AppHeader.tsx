@@ -16,10 +16,11 @@ interface AppHeaderProps {
   onChangeLang: (lang: Language) => void;
   onSignOut: () => void;
   onOpenSidebar: () => void;
+  isLanding?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = memo(({
-  user, isDark, onToggleDark, lang, onChangeLang, onSignOut, onOpenSidebar
+  user, isDark, onToggleDark, lang, onChangeLang, onSignOut, onOpenSidebar, isLanding = false
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -31,10 +32,13 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-300 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]"
+        className={cn(
+          "sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]",
+          isLanding && !user ? "bg-transparent border-none py-6" : "bg-background/20 backdrop-blur-3xl h-14 md:h-16"
+        )}
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-14 md:h-16 py-1">
+        <div className={cn("app-container flex items-center justify-between py-1", !isLanding || user ? "h-full" : "")}>
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 

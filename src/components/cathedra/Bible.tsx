@@ -23,7 +23,8 @@ import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+// CathedraCard is already imported above
+// import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
@@ -1411,17 +1412,19 @@ const Bible: React.FC = memo(() => {
             {/* Next Chapter Card */}
             {!isLoading && !bibleError && selectedChapter < selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                <Card 
+                <CathedraCard 
+                  variant="interactive"
+                  padding="none"
                   className="premium-card-interactive"
                   onClick={() => navigateChapter(1)}>
-                  <CardContent className="p-6 flex items-center justify-between">
+                  <div className="p-6 flex items-center justify-between">
                     <div>
                       <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">Próximo Capítulo</p>
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
-                  </CardContent>
-                </Card>
+                  </div>
+                </CathedraCard>
               </motion.div>
             )}
 

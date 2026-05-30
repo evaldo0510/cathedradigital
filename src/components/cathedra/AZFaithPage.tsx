@@ -12,6 +12,7 @@ import { useGlossary } from '@/hooks/useGlossary';
 import AlphabetBar from './encyclopedia/AlphabetBar';
 import EncyclopediaTermList from './encyclopedia/EncyclopediaTermList';
 import EncyclopediaTermDetail from './encyclopedia/EncyclopediaTermDetail';
+import ContemplativeLayout from './ContemplativeLayout';
 
 export interface FaithTerm {
   term: string;
@@ -108,29 +109,26 @@ const AZFaithPage: React.FC = () => {
   }
 
   return (
-    <>
+    <ContemplativeLayout
+      title="A–Z da Fé"
+      subtitle="Glossarium Fidei"
+      icon={BookOpen}
+      headerActions={
+        <Button
+          variant={quizMode ? 'default' : 'outline'}
+          onClick={() => setQuizMode(!quizMode)}
+          className="rounded-full gap-2 font-bold text-xs uppercase tracking-widest"
+        >
+          <Brain className="w-4 h-4" />
+          {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
+        </Button>
+      }
+    >
       <SEOHead
         title="A–Z da Fé | Cathedra"
         description="Explore o índice alfabético de termos bíblicos e teológicos."
         path="/az-faith"
       />
-
-      <div className="max-w-6xl mx-auto pb-32 px-4 md:px-8 animate-in fade-in duration-700">
-        <header className="text-center space-y-6 pt-12 mb-16">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 bg-primary/5 rounded-premium border border-primary/10 shadow-inner">
-            <BookOpen className="w-4 h-4 text-primary" />
-            <span className="text-premium-small font-bold uppercase tracking-[0.3em] text-primary/60">Glossarium Fidei</span>
-          </div>
-          <h1 className="text-5xl md:text-8xl font-display font-medium tracking-tight text-primary leading-none">A–Z da Fé</h1>
-          <Button
-            variant={quizMode ? 'default' : 'outline'}
-            onClick={() => setQuizMode(!quizMode)}
-            className="rounded-full gap-2 font-bold text-xs uppercase tracking-widest mt-2"
-          >
-            <Brain className="w-4 h-4" />
-            {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
-          </Button>
-        </header>
 
         {quizMode ? (
           <AZFaithQuiz terms={allTerms} onClose={() => setQuizMode(false)} />
@@ -215,8 +213,7 @@ const AZFaithPage: React.FC = () => {
             </div>
           </>
         )}
-      </div>
-    </>
+    </ContemplativeLayout>
   );
 };
 

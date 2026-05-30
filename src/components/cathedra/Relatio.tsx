@@ -6,7 +6,7 @@ import { BIBLE_TO_CIC, CIC_TO_BIBLE, getBibleDocs, getCatechismDocs } from '@/da
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
-import { Card } from '@/components/ui/card';
+import { CathedraCard } from './CathedraCard';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
@@ -304,8 +304,10 @@ const Relatio: React.FC<RelatioProps> = ({
                       transition={{ duration: 0.5 }}
                       className="group relative"
                     >
-                      <Card 
-                        className="h-full p-5 bg-transparent border-none group-hover:bg-primary/[0.005] transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
+                      <CathedraCard 
+                        padding="md"
+                        variant="default"
+                        className="h-full bg-transparent border-none group-hover:bg-primary/[0.005] transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
 
 
                         onClick={() => {
@@ -416,7 +418,7 @@ const Relatio: React.FC<RelatioProps> = ({
                             <Icons.ArrowRight className="w-3 h-3 text-primary/60" strokeWidth={1.5} />
                           </div>
                         </div>
-                      </Card>
+                      </CathedraCard>
                     </motion.div>
                   );
                 })}

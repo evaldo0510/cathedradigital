@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard } from './CathedraCard';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
@@ -117,8 +117,7 @@ const SpiritualGoals: React.FC = () => {
   const progress = Math.min((goal.achieved_count / goal.goal_count) * 100, 100);
 
   return (
-    <Card className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none">
-      <CardContent className="p-8 md:p-10 space-y-8">
+    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-primary/10 rounded-2xl">
@@ -206,8 +205,7 @@ const SpiritualGoals: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </CardContent>
-    </Card>
+    </CathedraCard>
   );
 };
 

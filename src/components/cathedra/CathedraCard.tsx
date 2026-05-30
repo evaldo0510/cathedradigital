@@ -34,7 +34,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
       <Component
         ref={ref as any}
         className={cn(
-          "relative overflow-hidden transition-all duration-500 rounded-premium",
+          "relative overflow-hidden transition-all duration-500 rounded-premium premium-card",
           variantStyles[variant],
           paddingMap[padding],
           (hover || variant === 'interactive') && "transition-all duration-500",

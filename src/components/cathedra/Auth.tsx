@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { CathedraCard } from './CathedraCard';
 
 interface AuthProps {
   onSuccess: () => void;
@@ -104,7 +105,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         </p>
       </div>
 
-      <div className="premium-card p-8 space-y-6">
+      <CathedraCard padding="md" className="space-y-6">
         {error && (
           <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
@@ -235,7 +236,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             {mode === 'login' ? 'Não tem conta? Criar agora' : mode === 'signup' ? 'Já tem conta? Fazer login' : 'Voltar ao login'}
           </Button>
         </div>
-      </div>
+      </CathedraCard>
 
       <p className="text-center text-xs text-muted-foreground">
         O acesso básico é <span className="font-bold text-foreground">100% gratuito</span>. Recursos de IA requerem plano PRO.
