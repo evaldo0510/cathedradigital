@@ -7,16 +7,26 @@ import { execSync } from 'child_process';
 // Mock child_process and fs to test runAudit without side effects
 vi.mock('child_process', () => ({
   execSync: vi.fn(),
+  default: {
+    execSync: vi.fn()
+  }
 }));
 
-vi.mock('fs', async () => {
-  const actual = await vi.importActual('fs') as any;
+vi.mock('fs', async (importOriginal) => {
+  const actual = await importOriginal() as any;
   return {
     ...actual,
     writeFileSync: vi.fn(),
     readFileSync: vi.fn(),
     mkdirSync: vi.fn(),
     existsSync: vi.fn(),
+    default: {
+      ...actual.default,
+      writeFileSync: vi.fn(),
+      readFileSync: vi.fn(),
+      mkdirSync: vi.fn(),
+      existsSync: vi.fn(),
+    }
   };
 });
 
