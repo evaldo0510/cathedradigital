@@ -174,7 +174,7 @@ const LoadingFallback = () => (
 
 const AppLayout: React.FC = () => {
   useRenderPerf('AppLayout', 10);
-  const { updateSettings } = useReadingSettings();
+  const { settings, updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
   
 
@@ -264,7 +264,7 @@ const AppLayout: React.FC = () => {
       window.removeEventListener('touchstart', handleInteraction);
       window.removeEventListener('mousemove', handleInteraction);
     };
-  }, []); // focusMode is static here, will be refactored next phase if needed
+  }, [settings.focusMode]);
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
@@ -288,18 +288,16 @@ const AppLayout: React.FC = () => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
-  const isDark = document.documentElement.classList.contains('dark');
-  const isHighContrast = document.documentElement.classList.contains('high-contrast');
+  const isDark = settings.theme === 'dark' || settings.theme === 'night';
+  const isHighContrast = settings.highContrast;
 
   const toggleDark = useCallback(() => {
-    const isNowDark = document.documentElement.classList.contains('dark');
-    updateSettings({ theme: isNowDark ? 'paper' : 'dark' });
-  }, [updateSettings]);
+    updateSettings({ theme: settings.theme === 'dark' || settings.theme === 'night' ? 'paper' : 'dark' });
+  }, [settings.theme, updateSettings]);
 
   const toggleHighContrast = useCallback(() => {
-    const isNowHigh = document.documentElement.classList.contains('high-contrast');
-    updateSettings({ highContrast: !isNowHigh });
-  }, [updateSettings]);
+    updateSettings({ highContrast: !isHighContrast });
+  }, [isHighContrast, updateSettings]);
 
   const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
   const handleCloseSidebar = useCallback(() => {
@@ -343,8 +341,7 @@ const AppLayout: React.FC = () => {
   }, [isSidebarOpen, showA11ySettings, showReadingPreferences, handleCloseSidebar]);
 
   const toggleSpeak = useCallback(() => {
-    const isTotalSilence = document.documentElement.classList.contains('total-silence');
-    if (isTotalSilence) return;
+    if (settings.totalSilence) return;
     
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -358,7 +355,7 @@ const AppLayout: React.FC = () => {
       utterance.onend = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
     }
-  }, [lang]);
+  }, [lang, settings.totalSilence]);
 
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
