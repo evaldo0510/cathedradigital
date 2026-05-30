@@ -297,7 +297,7 @@ const Magisterium: React.FC = () => {
             <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
             <input
               placeholder="Buscar documento ou autor..." 
-              className="w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background transition-all font-serif italic text-lg"
+              className="search-input-premium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -331,7 +331,7 @@ const Magisterium: React.FC = () => {
               key={doc.id}
               whileHover={{ y: -8 }}
               onClick={() => navigate(`/magisterium/${doc.id}`)}
-              className="text-left flex flex-col gap-8 p-12 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group h-full"
+              className="text-left flex flex-col gap-8 p-12 premium-card-interactive group h-full"
             >
               <div className="flex justify-between items-start">
                 <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/40 transition-colors">

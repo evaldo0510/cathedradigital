@@ -1059,8 +1059,8 @@ const Catechism: React.FC = memo(() => {
                   key={sec.id} 
                   whileHover={{ x: 8 }}
                   onClick={() => { setSelectedSection(sec); setCurrentParagraph(sec.paragraphs[0]); setViewMode('reading'); }}
-                  className={`text-left p-10 md:p-12 rounded-premium bg-card border transition-all group flex flex-col gap-6 relative
-                    ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : 'border-primary/[0.03] hover:border-primary/10'}`}
+                  className={`text-left p-10 md:p-12 premium-card-interactive group flex flex-col gap-6 relative
+                    ${isLastReadSection ? 'border-secondary/40 ring-1 ring-secondary/10' : ''}`}
                 >
                   <span className="text-[9px] font-bold text-primary/60 uppercase tracking-widest">
                     Seção {sec.id} {isLastReadSection && '• Ponto Salvo'}
@@ -1114,7 +1114,7 @@ const Catechism: React.FC = memo(() => {
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
               placeholder="Ir para o parágrafo..."
-              className="w-full pl-14 pr-24 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background transition-all font-serif italic text-lg"
+              className="search-input-premium pr-24"
             />
             <Button onClick={handleSearch} variant="ghost" className="absolute right-3 top-1/2 -translate-y-1/2 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">
               Ir
@@ -1142,7 +1142,7 @@ const Catechism: React.FC = memo(() => {
               key={part.part} 
               whileHover={{ y: -8 }}
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }}
-              className="text-left p-12 md:p-16 rounded-premium bg-card border border-primary/[0.03] hover:border-primary/10 transition-all group flex flex-col gap-8"
+              className="text-left p-12 md:p-16 premium-card-interactive group flex flex-col gap-8"
             >
               <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60">
                 <Icons.Logo className="w-6 h-6" />

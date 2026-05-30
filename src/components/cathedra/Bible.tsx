@@ -1572,7 +1572,7 @@ const Bible: React.FC = memo(() => {
             <input
               type="text"
               placeholder="Buscar livro..."
-              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/60"
+              className="search-input-premium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
