@@ -323,5 +323,10 @@ const htmlContent = `
 writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
 writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({ ...currentAudit, results, history }, null, 2));
 
-console.log('\nAudit finished. Reports generated in /reports');
-if (!softMode && totalIssues > threshold) process.exit(1);
+  console.log('\nAudit finished. Reports generated in /reports');
+  if (!softMode && totalIssues > threshold) process.exit(1);
+}
+
+if (import.meta.main) {
+  runAudit();
+}
