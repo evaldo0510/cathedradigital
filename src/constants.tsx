@@ -346,12 +346,12 @@ export const Icons = {
   PartyPopper: IconsInternal.PartyPopper,
   
   // Library & Study
-  Bible: IconsInternal.BookOpen,
-  HolyBible: IconsInternal.BookOpen,
+  Bible: IconsInternal.BookMarked,
+  HolyBible: IconsInternal.BookMarked,
   Book: IconsInternal.Book,
   BookOpen: IconsInternal.BookOpen,
   Library: IconsInternal.Library,
-  Catechism: IconsInternal.ShieldCheck,
+  Catechism: IconsInternal.BookText,
   CatechismShield: IconsInternal.ShieldCheck,
   FileText: IconsInternal.FileText,
   Magisterium: IconsInternal.ScrollText,
