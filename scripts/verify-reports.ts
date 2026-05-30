@@ -12,13 +12,12 @@
 import { readdirSync, existsSync, statSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
-// Helper to write GitHub Actions annotations
-function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: string) {
-  if (process.env.GITHUB_ACTIONS) {
-    const filePart = file ? `,file=${file}` : '';
-    console.log(`::${type}${filePart}::${message}`);
-  }
-}
+const REPORTS_DIR = process.env.REPORTS_DIR_OVERRIDE || "reports";
+const README_PATH = process.env.README_PATH_OVERRIDE || "README.md";
+const args = process.argv.slice(2);
+const updateMode = args.includes("--update");
+const dryRun = args.includes("--dry-run");
+const failOnDivergence = args.includes("--fail-on-divergence") || process.env.REPORTS_FAIL_ON_DIVERGENCES === 'true';
 
 const RESET = "\x1b[0m";
 const RED = "\x1b[31m";
@@ -39,20 +38,6 @@ function writeSummary(content: string) {
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, content + "\n");
   }
 }
-
-const REPORTS_DIR = process.env.REPORTS_DIR_OVERRIDE || "reports";
-const README_PATH = process.env.README_PATH_OVERRIDE || "README.md";
-const args = process.argv.slice(2);
-const updateMode = args.includes("--update");
-const dryRun = args.includes("--dry-run");
-const failOnDivergence = args.includes("--fail-on-divergence") || process.env.REPORTS_FAIL_ON_DIVERGENCES === 'true';
-
-
-const RESET = "\x1b[0m";
-const RED = "\x1b[31m";
-const GREEN = "\x1b[32m";
-const YELLOW = "\x1b[33m";
-const BOLD = "\x1b[1m";
 
 if (!existsSync(REPORTS_DIR)) {
   console.log(`${RED}✗ Pasta ./${REPORTS_DIR} não encontrada.${RESET}`);
@@ -264,4 +249,3 @@ if (failOnDivergence) {
 
 console.log(`${YELLOW}${BOLD}Divergências encontradas, mas o modo de falha está desativado.${RESET}\n`);
 process.exit(0);
-
