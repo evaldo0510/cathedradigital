@@ -39,8 +39,8 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         )}
         initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.99, y: 20, filter: 'blur(15px)' })}
         animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 2.2, ease: [0.16, 1, 0.3, 1] })}
-        whileHover={settings.reduceAnimations ? {} : { y: -4, scale: 1.002, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 2.8, ease: [0.16, 1, 0.3, 1] })}
+        whileHover={settings.reduceAnimations ? {} : { y: -5, scale: 1.001, transition: { duration: 1.8, ease: [0.16, 1, 0.3, 1] } }}
         {...props}
       >
         {children}

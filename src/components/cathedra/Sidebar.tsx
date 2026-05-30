@@ -249,8 +249,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            {/* Mobile Header - Refined and cinematic */}
-            <header className="flex items-center justify-between mb-10 pb-6 border-b border-primary/[0.005] dark:border-white/[0.005]">
+            {/* Mobile Header - Cinematic extension of the atmosphere */}
+            <header className="flex items-center justify-between mb-12 pb-6 border-b border-primary/[0.002] dark:border-white/[0.002]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
@@ -307,10 +307,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-2.5 rounded-xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[44px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-2 rounded-xl text-[9px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[42px]
                               ${isActive
-                                ? 'bg-primary/[0.015] dark:bg-white/[0.015] text-primary shadow-[0_2px_10px_-1px_rgba(0,0,0,0.02)]'
-                                : 'text-muted-foreground/15 dark:text-muted-foreground/15 hover:bg-primary/[0.003] dark:hover:bg-white/[0.003] hover:text-primary'}`}
+                                ? 'bg-primary/[0.01] dark:bg-white/[0.01] text-primary shadow-none'
+                                : 'text-muted-foreground/10 dark:text-muted-foreground/10 hover:bg-primary/[0.002] dark:hover:bg-white/[0.002] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
                               {React.cloneElement(item.icon as React.ReactElement, { size: 15, strokeWidth: isActive ? 1.2 : 0.6 })}
