@@ -89,7 +89,9 @@ Deno.serve(async (req) => {
   const cronSecret = Deno.env.get("CRON_SECRET") || "";
   const cronSecretHeader = req.headers.get("x-cron-secret") || "";
   
-  if (providedBearer !== serviceRoleKey && cronSecretHeader !== cronSecret) {
+  const isServiceRole = providedBearer.length > 0 && providedBearer === serviceRoleKey;
+  const isCronSecret = cronSecret.length > 0 && cronSecretHeader === cronSecret;
+  if (!isServiceRole && !isCronSecret) {
     await logSecurityEvent(supabase, {
       type: "UNAUTHORIZED_ACCESS",
       severity: "critical",
