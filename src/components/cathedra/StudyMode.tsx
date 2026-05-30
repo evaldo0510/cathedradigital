@@ -75,7 +75,7 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
     }
   };
   return (
-    <Button onClick={handleCopy} className="mt-spacing-xs inline-flex items-center gap-spacing-2xs text-xs text-muted-foreground hover:text-primary transition-colors">
+    <Button onClick={handleCopy} className="mt-spacing-xs inline-flex items-center gap-spacing-2xs text-premium-xs text-muted-foreground hover:text-primary transition-colors">
       {copied ? <Check className="w-spacing-sm h-spacing-sm" /> : <Copy className="w-spacing-sm h-spacing-sm" />}
       {copied ? 'Copiado' : 'Copiar'}
     </Button>
@@ -344,26 +344,26 @@ const StudyMode: React.FC = () => {
       </div>
       
       <div className="space-y-spacing-md">
-        <h1 className="text-3xl md:text-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
-        <p className="text-lg text-muted-foreground font-serif italic">
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
+        <p className="text-premium-lg text-muted-foreground font-serif italic">
           "Para garantir a integridade absoluta da doutrina e a soberania da sua experiência espiritual, a Cathedra Digital optou por não utilizar serviços de Inteligência Artificial."
         </p>
       </div>
 
-      <div className="bg-card border border-border p-spacing-xl rounded-[2.5rem] shadow-md space-y-spacing-lg">
-        <p className="text-sm text-foreground/80 leading-relaxed">
+      <div className="bg-card border border-border p-spacing-xl rounded-[2.5rem] shadow-premium-md space-y-spacing-lg">
+        <p className="text-premium-sm text-foreground/80 leading-relaxed">
           O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
         </p>
         <div className="flex flex-col sm:flex-row gap-spacing-md justify-center">
           <Button 
-            className="rounded-full h-spacing-2xl px-spacing-xl font-black uppercase text-xs tracking-widest"
+            className="rounded-premium-full h-spacing-2xl px-spacing-xl font-black uppercase text-premium-xs tracking-widest"
             onClick={() => navigate(AppRoute.CATECHISM)}
           >
             Explorar Catecismo
           </Button>
           <Button 
             variant="outline"
-            className="rounded-full h-spacing-2xl px-spacing-xl font-black uppercase text-xs tracking-widest border-primary/20 text-primary"
+            className="rounded-premium-full h-spacing-2xl px-spacing-xl font-black uppercase text-premium-xs tracking-widest border-primary/20 text-primary"
             onClick={() => navigate(AppRoute.TRANSPARENCY)}
           >
             Saiba Mais
@@ -378,8 +378,8 @@ const StudyMode: React.FC = () => {
           { label: 'Fidelidade', desc: 'Fiel ao Magistério Vivo.' }
         ].map(item => (
           <div key={item.label} className="space-y-spacing-2xs">
-            <h4 className="text-xs font-black uppercase tracking-widest text-primary">{item.label}</h4>
-            <p className="text-xs text-muted-foreground">{item.desc}</p>
+            <h4 className="text-premium-xs font-black uppercase tracking-widest text-primary">{item.label}</h4>
+            <p className="text-premium-xs text-muted-foreground">{item.desc}</p>
           </div>
         ))}
       </div>

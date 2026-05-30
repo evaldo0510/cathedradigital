@@ -17,9 +17,9 @@ const FavoritesPage: React.FC = () => {
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Heart className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Favoritos</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">Favoritos</h1>
         <p className="text-muted-foreground font-serif italic">Seus versículos, orações e estudos salvos.</p>
       </div>
 
@@ -27,7 +27,7 @@ const FavoritesPage: React.FC = () => {
         <div className="flex flex-wrap gap-spacing-xs justify-center">
           {types.map(t => (
             <Button key={t} onClick={() => setFilter(t)}
-              className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+              className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
               {typeLabels[t] || t}
             </Button>
           ))}
@@ -39,7 +39,7 @@ const FavoritesPage: React.FC = () => {
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted flex items-center justify-center">
             <Icons.Heart className="w-spacing-xl h-spacing-xl text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
+          <h3 className="text-premium-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
           <p className="text-muted-foreground font-serif italic max-w-spacing-md">
             Ao navegar pela Bíblia, Catecismo e orações, toque no ícone de coração para salvar seus conteúdos favoritos aqui.
           </p>
@@ -51,13 +51,13 @@ const FavoritesPage: React.FC = () => {
               <div className="flex items-start justify-between gap-spacing-md">
                 <div className="space-y-spacing-2xs flex-1">
                   <div className="flex items-center gap-spacing-xs">
-                    <span className="text-xs font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
-                    <span className="text-xs text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
+                    <span className="text-premium-xs text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
                   </div>
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
+                  <p className="text-premium-sm text-muted-foreground font-serif line-clamp-spacing-xs">{item.content}</p>
                 </div>
-                <Button onClick={() => removeFavorite(item.id)} className="p-spacing-xs rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                <Button onClick={() => removeFavorite(item.id)} className="p-spacing-xs rounded-premium-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
                   <Icons.Cross className="w-spacing-md h-spacing-md text-destructive" />
                 </Button>
               </div>

@@ -199,7 +199,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               duration: settings.reduceAnimations ? 0.3 : 0.6, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-spacing-lg z-[170] shadow-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-spacing-0 left-0 bottom-spacing-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-spacing-lg z-[170] shadow-premium-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
@@ -230,7 +230,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-spacing-xl h-spacing-xl text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
+                className="rounded-premium-full w-spacing-xl h-spacing-xl text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
                 <Icons.X className="w-spacing-sm h-spacing-sm" />
@@ -241,7 +241,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-xl transition-all">
+                    <button className="w-full flex items-center justify-between py-spacing-xs px-spacing-md group/trigger hover:bg-primary/[0.02] rounded-premium transition-all">
                       <h3 className="text-[7px] font-black uppercase tracking-[0.8em] text-primary/30 group-hover/trigger:text-primary transition-colors italic">/ {section.label}</h3>
                       <Icons.ChevronDown className="w-spacing-sm h-spacing-sm text-primary/10 group-hover/trigger:text-primary transition-all group-data-[state=open]:rotate-180" strokeWidth={1} />
                     </button>
@@ -265,9 +265,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-xl text-[8.5px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[40px]
+                                className={`w-full flex items-center justify-start gap-spacing-md px-spacing-md py-spacing-2xs rounded-premium text-[8.5px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[40px]
                                   ${isActive
-                                    ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
+                                    ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-premium-none'
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
                               >
                                 <span className={`transition-all duration-700 transform ${isActive ? 'opacity-90 scale-105' : 'opacity-50'}`}>
@@ -275,12 +275,12 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 </span>
                                 <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-full flex-shrink-0">
+                                  <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-spacing-2xs py-spacing-3xs rounded-premium-full flex-shrink-0">
                                     {cacheCount}
                                   </span>
                                 )}
                                 {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-spacing-2xs py-spacing-3xs rounded flex-shrink-0">PRO</span>}
-                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-spacing-3xs h-spacing-3xs rounded-full bg-primary/40 flex-shrink-0" />}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-spacing-3xs h-spacing-3xs rounded-premium-full bg-primary/40 flex-shrink-0" />}
                               </Button>
                             </li>
                           );
@@ -298,7 +298,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-spacing-xl rounded-xl border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
+                    className="h-spacing-xl rounded-premium border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
                     {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
@@ -308,7 +308,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   <Button 
                     variant="ghost"
                     onClick={onToggleHighContrast} 
-                    className={`h-spacing-xl rounded-xl border flex items-center justify-center gap-spacing-xs transition-all ${
+                    className={`h-spacing-xl rounded-premium border flex items-center justify-center gap-spacing-xs transition-all ${
                       isHighContrast 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
                         : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
@@ -323,7 +323,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   <Button 
                     variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full h-spacing-xl rounded-xl border flex items-center justify-center gap-spacing-sm transition-all ${
+                    className={`w-full h-spacing-xl rounded-premium border flex items-center justify-center gap-spacing-sm transition-all ${
                       isSpeaking 
                         ? 'bg-primary/10 border-primary/20 text-primary' 
                         : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
@@ -339,9 +339,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-spacing-sm py-spacing-2xs text-[7px] font-black uppercase rounded-lg border transition-all ${
+                      className={`px-spacing-sm py-spacing-2xs text-[7px] font-black uppercase rounded-premium-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary/5 text-primary border-primary/10 shadow-none' 
+                          ? 'bg-primary/5 text-primary border-primary/10 shadow-premium-none' 
                           : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
                       }`}
                     >
@@ -363,14 +363,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     onClick={() => handleNav(AppRoute.PROFILE)} 
                     className="flex items-center gap-spacing-sm cursor-pointer group"
                   >
-                    <div className="w-spacing-xl h-spacing-xl rounded-xl bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-none group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-premium-none group-hover:scale-105 transition-transform overflow-hidden">
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-xs">{user.name.charAt(0).toUpperCase()}</span>
+                        <span className="text-premium-xs">{user.name.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-spacing-0">
                       <p className="text-[10px] font-bold truncate text-primary/70">{user.name}</p>
                       <p className="text-[7px] uppercase text-primary/30 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
@@ -380,7 +380,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-[8px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-[8px] font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -389,14 +389,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      className="h-spacing-xl w-spacing-xl rounded-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
+                      className="h-spacing-xl w-spacing-xl rounded-premium-lg text-muted-foreground/20 hover:text-destructive/60 hover:bg-destructive/5 transition-colors"
                     >
                       <Icons.LogOut className="w-spacing-sm h-spacing-sm" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-xl font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}

@@ -312,11 +312,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
       <div className="max-w-6xl mx-auto space-y-spacing-xl">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
           <div>
-            <h1 className="text-4xl font-serif font-bold text-foreground mb-spacing-xs flex items-center gap-spacing-sm">
+            <h1 className="text-premium-4xl font-serif font-bold text-foreground mb-spacing-xs flex items-center gap-spacing-sm">
               <Search className="w-spacing-xl h-spacing-xl text-primary" />
               Auditoria de SEO & Social
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-premium-lg">
               Verifique a aparência, tags e cache das imagens Open Graph para cada rota principal.
             </p>
           </div>
@@ -335,22 +335,22 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           </div>
         </div>
 
-        <div className="bg-muted/30 p-spacing-md rounded-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-spacing-md">
+        <div className="bg-muted/30 p-spacing-md rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-spacing-md">
           <div className="flex items-center gap-spacing-md">
-            <div className="p-spacing-xs bg-primary/10 rounded-lg">
+            <div className="p-spacing-xs bg-primary/10 rounded-premium-lg">
               <RefreshCcw className={`w-spacing-md h-spacing-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
             </div>
             <div>
               <h3 className="font-medium">Auditoria de Rotas ({pages.length})</h3>
-              <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
+              <p className="text-premium-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
           <div className="flex flex-wrap gap-spacing-xs items-center">
-            <div className="flex bg-muted rounded-lg p-spacing-2xs mr-spacing-xs border border-border/50">
+            <div className="flex bg-muted rounded-premium-lg p-spacing-2xs mr-spacing-xs border border-border/50">
               <Button 
                 variant={scanMode === 'static' ? 'default' : 'ghost'} 
                 size="sm" 
-                className="h-spacing-lg text-xs px-spacing-sm"
+                className="h-spacing-lg text-premium-xs px-spacing-sm"
                 onClick={() => setScanMode('static')}
               >
                 Rápido (HTML)
@@ -358,7 +358,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <Button 
                 variant={scanMode === 'render' ? 'default' : 'ghost'} 
                 size="sm" 
-                className="h-spacing-lg text-xs px-spacing-sm"
+                className="h-spacing-lg text-premium-xs px-spacing-sm"
                 onClick={() => setScanMode('render')}
               >
                 Render (JS)
@@ -413,7 +413,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
             <div key={page.path} className="space-y-spacing-md">
               <div className="flex items-center justify-between px-spacing-xs">
                 <div className="flex items-center gap-spacing-sm">
-                  <h2 className="text-2xl font-serif font-bold">{page.name}</h2>
+                  <h2 className="text-premium-2xl font-serif font-bold">{page.name}</h2>
                   <Badge variant="outline" className="font-mono">{page.path}</Badge>
                   {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
                   {page.status === 'pending' && <Badge variant="secondary">Pendente</Badge>}
@@ -451,31 +451,31 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
 
               {activeTab === 'preview' ? (
                 <Card className="overflow-hidden border-border/50 shadow-premium">
-                  <CardContent className="p-0">
+                  <CardContent className="p-spacing-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                       {/* Left Side: Metadata & Search Previews */}
                       <div className="p-spacing-lg space-y-spacing-lg border-r border-border/50">
                         <div className="space-y-spacing-md">
                           <div>
                             <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-spacing-2xs">Google Search Preview</div>
-                            <div className="p-spacing-md bg-white dark:bg-[#1a1a1a] rounded-lg border border-border/40 shadow-md">
+                            <div className="p-spacing-md bg-white dark:bg-[#1a1a1a] rounded-premium-lg border border-border/40 shadow-premium-md">
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-spacing-2xs flex items-center gap-spacing-2xs">
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
                               </div>
                               <div className="text-[20px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-tight mb-spacing-2xs">
                                 {page.title || 'Título não detectado'} — Cathedra Digital
                               </div>
-                              <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] line-clamp-2">
+                              <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] line-clamp-spacing-xs">
                                 {page.description || 'Descrição não detectada. Execute o Scan para ler os metadados reais da página.'}
                               </div>
                             </div>
                           </div>
 
                           <div className="grid grid-cols-2 gap-spacing-md">
-                            <div className="p-spacing-sm bg-muted/30 rounded-lg border border-border/30">
+                            <div className="p-spacing-sm bg-muted/30 rounded-premium-lg border border-border/30">
                               <div className="text-[10px] font-bold text-muted-foreground uppercase mb-spacing-2xs">Title Length</div>
                               <div className="flex items-center justify-between">
-                                <span className="font-mono text-lg">{(page.title?.length || 0) + 18}</span>
+                                <span className="font-mono text-premium-lg">{(page.title?.length || 0) + 18}</span>
                                 {(page.title?.length || 0) + 18 <= 60 && (page.title?.length || 0) > 0 ? (
                                   <CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
                                 ) : (
@@ -484,10 +484,10 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               </div>
                               <div className="text-[10px] text-muted-foreground mt-spacing-2xs">Ideal: 50-60 chars</div>
                             </div>
-                            <div className="p-spacing-sm bg-muted/30 rounded-lg border border-border/30">
+                            <div className="p-spacing-sm bg-muted/30 rounded-premium-lg border border-border/30">
                               <div className="text-[10px] font-bold text-muted-foreground uppercase mb-spacing-2xs">Desc Length</div>
                               <div className="flex items-center justify-between">
-                                <span className="font-mono text-lg">{page.description?.length || 0}</span>
+                                <span className="font-mono text-premium-lg">{page.description?.length || 0}</span>
                                 {(page.description?.length || 0) <= 160 && (page.description?.length || 0) >= 120 ? (
                                   <CheckCircle2 className="w-spacing-md h-spacing-md text-green-500" />
                                 ) : (
@@ -499,8 +499,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                           </div>
                           
                           {(page.status === 'missing' || !page.title || !page.description) && (
-                            <div className="p-spacing-md bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                              <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-xs">
+                            <div className="p-spacing-md bg-amber-500/10 border border-amber-500/20 rounded-premium-lg">
+                              <h4 className="text-premium-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-xs">
                                 <AlertCircle className="w-spacing-sm h-spacing-sm" /> Sugestões de Melhoria
                               </h4>
                               <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-spacing-2xs list-disc pl-spacing-md">
@@ -531,7 +531,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
                             </Button>
                           </div>
-                          <div className="border border-border/50 rounded-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-premium">
+                          <div className="border border-border/50 rounded-premium-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-premium">
                             <div className="aspect-[1.91/1] relative group">
                               <img 
                                 src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
@@ -539,15 +539,15 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute top-spacing-xs right-spacing-xs flex gap-spacing-2xs">
-                                <Button size="icon" variant="secondary" className="h-spacing-lg w-spacing-lg rounded-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
+                                <Button size="icon" variant="secondary" className="h-spacing-lg w-spacing-lg rounded-premium-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
                                   <ImageIcon className="h-spacing-sm w-spacing-sm" />
                                 </Button>
                               </div>
                             </div>
                             <div className="p-spacing-sm border-t border-border/50 bg-[#f2f3f5] dark:bg-[#242526]">
                               <div className="text-[11px] text-muted-foreground uppercase truncate tracking-tight">CATHEDRADIGITAL.COM.BR</div>
-                              <div className="text-sm font-bold truncate mt-spacing-3xs">{page.title || page.name} — Cathedra Digital</div>
-                              <div className="text-xs text-muted-foreground line-clamp-1 mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
+                              <div className="text-premium-sm font-bold truncate mt-spacing-3xs">{page.title || page.name} — Cathedra Digital</div>
+                              <div className="text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
                             </div>
                           </div>
                         </div>
@@ -566,7 +566,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               <Copy className="w-spacing-sm h-spacing-sm" /> Copiar Tags
                             </Button>
                           </div>
-                          <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-md">
+                          <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-premium-md">
                             <div className="aspect-[1.91/1] bg-muted">
                               <img 
                                 src={page.metaTags?.ogImage || getDynamicImage(page.title, page.image)} 
@@ -575,9 +575,9 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                               />
                             </div>
                             <div className="p-spacing-sm border-t border-border/20">
-                              <div className="text-sm font-bold truncate">{page.title || page.name}</div>
-                              <div className="text-[13px] text-muted-foreground line-clamp-2 mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
-                              <div className="text-xs text-muted-foreground mt-spacing-2xs flex items-center">
+                              <div className="text-premium-sm font-bold truncate">{page.title || page.name}</div>
+                              <div className="text-[13px] text-muted-foreground line-clamp-spacing-xs mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
+                              <div className="text-premium-xs text-muted-foreground mt-spacing-2xs flex items-center">
                                 <Globe className="w-spacing-sm h-spacing-sm mr-spacing-2xs opacity-50" />
                                 cathedradigital.com.br
                               </div>
@@ -592,8 +592,8 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <Card className="border-border/50 shadow-premium">
                   <CardHeader className="pb-spacing-sm border-b border-border/50 flex flex-row items-center justify-between">
                     <div>
-                      <CardTitle className="text-sm">Generated HTML Tags</CardTitle>
-                      <CardDescription className="text-xs">Paste these into your CMS or manual header if needed.</CardDescription>
+                      <CardTitle className="text-premium-sm">Generated HTML Tags</CardTitle>
+                      <CardDescription className="text-premium-xs">Paste these into your CMS or manual header if needed.</CardDescription>
                     </div>
                     <div className="flex gap-spacing-xs">
                       <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
@@ -606,7 +606,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       </Button>
                     </div>
                   </CardHeader>
-                  <CardContent className="p-0">
+                  <CardContent className="p-spacing-0">
                     <pre className="p-spacing-lg bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
                       {getMetaTagsCode(page)}
                     </pre>
@@ -625,7 +625,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 Dicas de Otimização e Cache
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-spacing-md text-sm text-muted-foreground">
+            <CardContent className="space-y-spacing-md text-premium-sm text-muted-foreground">
               <p>
                 <strong>1. Cache de Imagem:</strong> As imagens dinâmicas utilizam o parâmetro <code>v=yyyy-mm</code>. Isso garante que as redes sociais não usem versões antigas por muito tempo, mas mantém a estabilidade durante o mês atual.
               </p>

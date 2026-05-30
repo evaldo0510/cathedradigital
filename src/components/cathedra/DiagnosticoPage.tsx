@@ -147,16 +147,16 @@ const DiagnosticoPage: React.FC = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', delay: 0.2 }}
-            className="w-spacing-3xl h-spacing-3xl mx-auto rounded-full bg-primary/10 flex items-center justify-center"
+            className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium-full bg-primary/10 flex items-center justify-center"
           >
             <Compass className="w-spacing-xl h-spacing-xl text-primary" />
           </motion.div>
-          <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
+          <h1 className="text-premium-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
           <p className="text-muted-foreground">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
         </div>
 
         <Card className="p-spacing-lg space-y-spacing-md border-primary/20">
-          <h2 className="text-xl font-bold text-foreground">{rec.title}</h2>
+          <h2 className="text-premium-xl font-bold text-foreground">{rec.title}</h2>
           <p className="text-muted-foreground">{rec.description}</p>
           <div className="flex gap-spacing-sm">
             <Button onClick={() => navigate(AppRoute.JORNADAS)} className="flex-1">
@@ -177,12 +177,12 @@ const DiagnosticoPage: React.FC = () => {
     <div className="max-w-spacing-lg mx-auto space-y-spacing-lg">
       <div className="text-center space-y-spacing-xs">
         <Compass className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
-        <h1 className="text-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
-        <p className="text-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
+        <h1 className="text-premium-2xl font-bold font-serif text-foreground">Diagnóstico Espiritual</h1>
+        <p className="text-premium-sm text-muted-foreground">Responda com sinceridade para encontrarmos a jornada ideal para você.</p>
       </div>
 
       <Progress value={progress} className="h-spacing-xs" />
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-premium-xs text-muted-foreground text-center">
         Pergunta {currentStep + 1} de {QUESTIONS.length}
       </p>
 
@@ -195,7 +195,7 @@ const DiagnosticoPage: React.FC = () => {
           transition={{ duration: 0.25 }}
           className="space-y-spacing-md"
         >
-          <h2 className="text-lg font-semibold text-foreground text-center">{question.question}</h2>
+          <h2 className="text-premium-lg font-semibold text-foreground text-center">{question.question}</h2>
 
           <div className="space-y-spacing-sm">
             {question.options.map((opt) => (
@@ -204,14 +204,14 @@ const DiagnosticoPage: React.FC = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleAnswer(opt.value)}
-                className={`w-full flex items-center gap-spacing-sm p-spacing-md rounded-full border transition-all text-left
+                className={`w-full flex items-center gap-spacing-sm p-spacing-md rounded-premium-full border transition-all text-left
                   ${answers[question.id] === opt.value
                     ? 'border-primary bg-primary/10 text-foreground'
                     : 'border-border bg-card text-foreground hover:border-primary/40'
                   }`}
               >
                 <span className="text-primary">{opt.icon}</span>
-                <span className="text-sm font-medium">{opt.label}</span>
+                <span className="text-premium-sm font-medium">{opt.label}</span>
               </motion.button>
             ))}
           </div>

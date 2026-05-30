@@ -142,7 +142,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
   return (
     <div ref={ref} className={cn(
       "relative flex items-center justify-center group overflow-hidden", 
-      variant === 'blue' && "bg-primary rounded-full p-spacing-xs border border-primary/10 dark:bg-primary/20",
+      variant === 'blue' && "bg-primary rounded-premium-full p-spacing-xs border border-primary/10 dark:bg-primary/20",
       className
     )}>
       <img 
@@ -156,7 +156,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         )}
       />
       {variant === 'gold' && (
-        <div className="absolute inset-0 bg-secondary/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+        <div className="absolute inset-0 bg-secondary/5 rounded-premium-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
       )}
     </div>
   );

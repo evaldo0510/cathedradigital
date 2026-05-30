@@ -47,7 +47,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             transition={{ duration: shouldReduceMotion ? 1 : 2.5, delay: 0.8, ease: EASE }}
             className="w-[1.5px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" 
           />
-          <p className="text-[10px] md:text-xs font-semibold uppercase tracking-premium-widest md:tracking-[1.4em] text-primary/10 leading-none select-none ml-spacing-md">
+          <p className="text-[10px] md:text-premium-xs font-semibold uppercase tracking-premium-widest md:tracking-[1.4em] text-primary/10 leading-none select-none ml-spacing-md">
             Sanctuarium Spiritus
           </p>
         </div>
@@ -62,7 +62,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
       >
         <h2 className="text-[3.5rem] sm:text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-[2000ms] group">
           Cathedra
-          <span className="block h-[1px] w-0 group-hover:w-full bg-primary/10 transition-all duration-[3000ms] mx-auto mt-spacing-md" />
+          <span className="block h-[1px] w-spacing-0 group-hover:w-full bg-primary/10 transition-all duration-[3000ms] mx-auto mt-spacing-md" />
         </h2>
       </motion.div>
 
@@ -74,7 +74,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         transition={{ delay: 0.6 }}
         className="space-y-spacing-lg md:space-y-spacing-2xl mb-spacing-2xl md:mb-spacing-4xl lg:mb-spacing-4xl"
       >
-        <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground/40 italic leading-snug tracking-tight px-spacing-xs md:px-spacing-xl">
+        <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-premium-xl sm:text-premium-3xl md:text-premium-5xl lg:text-premium-6xl text-foreground/40 italic leading-snug tracking-tight px-spacing-xs md:px-spacing-xl">
           Habite a profundidade do silêncio, <br /> 
           <span className="text-secondary/70">contemple a clareza da Verdade.</span>
         </p>
@@ -96,7 +96,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="outline"
             onClick={() => navigate('/bible')}
-            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
@@ -106,7 +106,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="primary"
             onClick={onStart}
-            className="w-full md:w-auto min-w-[260px] md:min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-full h-spacing-3xl md:h-spacing-4xl shadow-premium shadow-primary/10 uppercase tracking-[0.6em] text-[10px] md:text-[11px] font-black group overflow-hidden relative border-none"
+            className="w-full md:w-auto min-w-[260px] md:min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-premium-full h-spacing-3xl md:h-spacing-4xl shadow-premium shadow-primary/10 uppercase tracking-[0.6em] text-[10px] md:text-[11px] font-black group overflow-hidden relative border-none"
             aria-label="Continuar jornada"
           >
             <span className="relative z-10">Continuar jornada</span>
@@ -117,7 +117,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
-            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Iniciar leitura"
           >
             Iniciar leitura
@@ -127,7 +127,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
         {/* Lower Monastic Anchor */}
         <div className="flex items-center gap-spacing-xl opacity-[0.03] select-none pointer-events-none">
           <div className="w-spacing-3xl h-px bg-primary" />
-          <div className="w-spacing-xs h-spacing-xs rounded-full border border-primary" />
+          <div className="w-spacing-xs h-spacing-xs rounded-premium-full border border-primary" />
           <div className="w-spacing-3xl h-px bg-primary" />
         </div>
       </motion.div>

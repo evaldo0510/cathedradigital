@@ -15,10 +15,10 @@ const AcolhimentoSection = () => {
         >
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
             <Heart className="w-spacing-md h-spacing-md fill-current" aria-hidden="true" />
-            <span className="text-xs font-black uppercase tracking-widest">Sinta-se em Casa</span>
+            <span className="text-premium-xs font-black uppercase tracking-widest">Sinta-se em Casa</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-display font-bold">Um Espaço Feito por Fiéis para Fiéis</h2>
-          <p className="text-lg text-muted-foreground max-w-spacing-2xl mx-auto font-serif italic">
+          <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold">Um Espaço Feito por Fiéis para Fiéis</h2>
+          <p className="text-premium-lg text-muted-foreground max-w-spacing-2xl mx-auto font-serif italic">
             "Não sois mais estrangeiros, nem hóspedes, mas sois concidadãos dos santos e membros da família de Deus." (Efésios 2,19)
           </p>
         </motion.div>
@@ -49,13 +49,13 @@ const AcolhimentoSection = () => {
               viewport={{ once: true }}
               custom={i + 1}
               whileHover={{ y: -5, scale: 1.02 }}
-              className="space-y-spacing-md p-spacing-xl bg-card rounded-[2.5rem] border border-border/50 shadow-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-300"
+              className="space-y-spacing-md p-spacing-xl bg-card rounded-[2.5rem] border border-border/50 shadow-premium-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-300"
             >
               <div className="w-spacing-xl h-spacing-xl bg-primary/10 rounded-premium flex items-center justify-center text-primary" aria-hidden="true">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold font-serif">{item.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <h3 className="text-premium-xl font-bold font-serif">{item.title}</h3>
+              <p className="text-muted-foreground text-premium-sm leading-relaxed">
                 {item.desc}
               </p>
             </motion.div>

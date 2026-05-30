@@ -13,7 +13,7 @@ const HeroParticles = () => {
         return (
           <motion.div
             key={i}
-            className="absolute w-px h-px bg-primary/40 rounded-full"
+            className="absolute w-px h-px bg-primary/40 rounded-premium-full"
             initial={{ 
               x: xPos, 
               y: yPos,

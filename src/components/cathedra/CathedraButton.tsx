@@ -41,7 +41,7 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
         {...(props as any)}
       >
         {isLoading ? (
-          <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-full animate-spin" />
+          <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-premium-full animate-spin" />
         ) : (
           <>
             {icon && <span className="flex-shrink-0">{icon}</span>}

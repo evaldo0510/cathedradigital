@@ -167,14 +167,14 @@ const CacheManager: React.FC = () => {
       
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-spacing-md">
         <div className="space-y-spacing-2xs">
-          <h1 className="text-3xl font-serif font-bold text-foreground">Sanctuarium Offline</h1>
+          <h1 className="text-premium-3xl font-serif font-bold text-foreground">Sanctuarium Offline</h1>
           <p className="text-muted-foreground">Gerencie a soberania dos seus dados e textos salvos localmente.</p>
         </div>
         <div className="flex items-center gap-spacing-xs">
           <Button 
             variant="outline" 
             size="sm" 
-            className="rounded-full h-spacing-xl px-spacing-lg font-bold"
+            className="rounded-premium-full h-spacing-xl px-spacing-lg font-bold"
             onClick={handleSyncNow}
           >
             <Icons.RotateCcw className="w-spacing-md h-spacing-md mr-spacing-xs" /> Sincronizar
@@ -182,7 +182,7 @@ const CacheManager: React.FC = () => {
           <Button 
             variant="destructive" 
             size="sm" 
-            className="rounded-full h-spacing-xl px-spacing-lg font-bold"
+            className="rounded-premium-full h-spacing-xl px-spacing-lg font-bold"
             onClick={handleClearAll}
             disabled={items.length === 0}
           >
@@ -194,13 +194,13 @@ const CacheManager: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-spacing-xs">
-            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
+            <CardDescription className="text-premium-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.Database className="w-spacing-sm h-spacing-sm" /> Status do Cache
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
-            <p className="text-xs text-muted-foreground mt-spacing-2xs">
+            <div className="text-premium-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
+            <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">
               Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
             </p>
           </CardContent>
@@ -208,15 +208,15 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-spacing-xs">
-            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
+            <CardDescription className="text-premium-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.Share2 className="w-spacing-sm h-spacing-sm" /> Portabilidade
             </CardDescription>
           </CardHeader>
           <CardContent className="flex gap-spacing-xs">
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-spacing-xl text-xs font-black uppercase" onClick={handleExport}>
+            <Button variant="outline" size="sm" className="rounded-premium-full flex-1 h-spacing-xl text-premium-xs font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-spacing-xl text-xs font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" className="rounded-premium-full flex-1 h-spacing-xl text-premium-xs font-black uppercase" onClick={() => fileInputRef.current?.click()}>
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
@@ -225,7 +225,7 @@ const CacheManager: React.FC = () => {
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
           <CardHeader className="pb-spacing-xs">
-            <CardDescription className="text-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
+            <CardDescription className="text-premium-xs font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.Download className="w-spacing-sm h-spacing-sm" /> Pré-carregar
             </CardDescription>
           </CardHeader>
@@ -235,15 +235,15 @@ const CacheManager: React.FC = () => {
                 type="number" 
                 value={preloadCount} 
                 onChange={(e) => setPreloadCount(parseInt(e.target.value))}
-                className="h-spacing-xl w-spacing-3xl text-xs rounded-full"
+                className="h-spacing-xl w-spacing-3xl text-premium-xs rounded-premium-full"
               />
-              <span className="text-xs font-bold text-muted-foreground uppercase">unid.</span>
+              <span className="text-premium-xs font-bold text-muted-foreground uppercase">unid.</span>
             </div>
             <div className="flex gap-spacing-xs">
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-spacing-xl text-xs font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-premium-full flex-1 h-spacing-xl text-premium-xs font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
                 Catecismo
               </Button>
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-spacing-xl text-xs font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-premium-full flex-1 h-spacing-xl text-premium-xs font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
                 Bíblia
               </Button>
             </div>
@@ -253,7 +253,7 @@ const CacheManager: React.FC = () => {
 
       {preloading && (
         <div className="space-y-spacing-xs animate-in fade-in slide-in-from-top-spacing-xs">
-          <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
+          <div className="flex justify-between text-premium-xs font-black uppercase tracking-widest text-primary">
             <span>Pré-carregando conteúdo...</span>
             <span>{progress}%</span>
           </div>
@@ -266,7 +266,7 @@ const CacheManager: React.FC = () => {
           <Button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+            className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
               filter === f 
                 ? 'bg-primary text-primary-foreground shadow-premium' 
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted'
@@ -285,11 +285,11 @@ const CacheManager: React.FC = () => {
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
             <CardContent className="flex flex-col items-center justify-center py-spacing-3xl space-y-spacing-md">
-              <div className="p-spacing-md rounded-premium bg-background border border-border shadow-inner">
+              <div className="p-spacing-md rounded-premium bg-background border border-border shadow-premium-md">
                 <Icons.Library className="w-spacing-xl h-spacing-xl text-muted-foreground/40" />
               </div>
               <p className="text-muted-foreground font-medium italic">Nenhum texto encontrado neste filtro.</p>
-              <Button variant="outline" className="rounded-full" onClick={() => window.history.back()}>Voltar</Button>
+              <Button variant="outline" className="rounded-premium-full" onClick={() => window.history.back()}>Voltar</Button>
             </CardContent>
           </Card>
         ) : (
@@ -304,24 +304,24 @@ const CacheManager: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Card className="rounded-premium border-border/40 shadow-md overflow-hidden group hover:shadow-premium transition-all">
+                  <Card className="rounded-premium border-border/40 shadow-premium-md overflow-hidden group hover:shadow-premium transition-all">
                     <CardContent className="p-spacing-md flex items-center justify-between gap-spacing-md">
                       <div className="flex items-center gap-spacing-md">
-                        <div className={`p-spacing-sm rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
+                        <div className={`p-spacing-sm rounded-premium-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
                           {getStoreIcon(item.store)}
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
-                          <div className="flex items-center gap-spacing-xs text-xs text-muted-foreground font-medium">
+                        <div className="min-w-spacing-0">
+                          <p className="font-bold text-premium-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
+                          <div className="flex items-center gap-spacing-xs text-premium-xs text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>
-                            <span className="w-spacing-2xs h-spacing-2xs rounded-full bg-border" />
+                            <span className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-border" />
                             <span>Salvo {formatDistanceToNow(item.cachedAt, { addSuffix: true, locale: ptBR })}</span>
                           </div>
                         </div>
                       </div>
                       <Button 
                         onClick={() => handleDelete(item.store, item.key)}
-                        className="p-spacing-xs rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
+                        className="p-spacing-xs rounded-premium-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
                         title="Remover do cache"
                       >
                         <Icons.X className="w-spacing-md h-spacing-md" />
@@ -338,9 +338,9 @@ const CacheManager: React.FC = () => {
       <div className="bg-secondary/5 rounded-[2.5rem] p-spacing-xl border border-secondary/20 space-y-spacing-md">
         <div className="flex items-center gap-spacing-sm text-secondary">
           <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />
-          <h2 className="text-lg font-serif font-bold">Nota sobre Soberania de Dados</h2>
+          <h2 className="text-premium-lg font-serif font-bold">Nota sobre Soberania de Dados</h2>
         </div>
-        <p className="text-sm text-muted-foreground leading-relaxed">
+        <p className="text-premium-sm text-muted-foreground leading-relaxed">
           O Cathedra utiliza o armazenamento local do seu navegador (IndexedDB) para garantir que você possa acessar os textos sagrados mesmo sem conexão. 
           Estes arquivos nunca saem do seu dispositivo e podem ser exportados para portabilidade completa. 
           Limpar o cache aqui liberará espaço, mas exigirá uma nova conexão para baixar os conteúdos.

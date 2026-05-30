@@ -43,17 +43,17 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
 
   return (
     <section ref={sectionRef} className="w-full bg-foreground text-background py-spacing-4xl px-spacing-lg overflow-hidden relative">
-      <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
+      <div className="absolute top-spacing-0 left-0 w-full h-full opacity-5 pointer-events-none">
         <div className="absolute inset-0 bg-primary/5" />
       </div>
 
       <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-spacing-3xl items-center relative z-10">
         <div className="space-y-spacing-xl">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-spacing-lg">
-            <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
+            <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold leading-tight">
               Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
             </h2>
-            <p className="text-lg opacity-70 leading-relaxed max-w-spacing-xl">
+            <p className="text-premium-lg opacity-70 leading-relaxed max-w-spacing-xl">
               Criar sua conta permite uma experiência única de crescimento, guardando sua história viva com a Palavra de Deus e o Magistério.
             </p>
           </motion.div>
@@ -65,15 +65,15 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
                   <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </motion.div>
-                  <h3 className="font-bold text-lg">{benefit.title}</h3>
-                  <p className="text-sm opacity-50 leading-relaxed">{benefit.description}</p>
+                  <h3 className="font-bold text-premium-lg">{benefit.title}</h3>
+                  <p className="text-premium-sm opacity-50 leading-relaxed">{benefit.description}</p>
                 </motion.div>
               </motion.div>
             ))}
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <HomeButton size="lg" className="h-spacing-3xl px-spacing-2xl rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <HomeButton size="lg" className="h-spacing-3xl px-spacing-2xl rounded-premium-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
               Criar Conta Gratuitamente
             </HomeButton>
           </motion.div>
@@ -91,8 +91,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             />
             <div className="absolute inset-0 bg-black/40" />
             <div className="absolute bottom-spacing-xl left-spacing-xl right-spacing-xl p-spacing-xl bg-black/60 rounded-premium border border-white/20">
-              <p className="text-xl font-serif mb-spacing-md">Onde está o teu tesouro, aí estará também o teu coração.</p>
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
+              <p className="text-premium-xl font-serif mb-spacing-md">Onde está o teu tesouro, aí estará também o teu coração.</p>
+              <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
             </div>
           </motion.div>
         </div>

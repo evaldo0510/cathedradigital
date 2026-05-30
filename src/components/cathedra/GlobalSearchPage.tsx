@@ -49,7 +49,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
   const { activeIndex: tagsActiveIndex, handleKeyDown: handleTagsKeyDown } = useRovingTabindex(tags.results?.length || 0, tagsRef);
 
   const EmptyState = ({ text }: { text: string }) => (
-    <p className="text-center text-sm text-muted-foreground py-spacing-lg">{text}</p>
+    <p className="text-center text-premium-sm text-muted-foreground py-spacing-lg">{text}</p>
   );
 
   return (
@@ -73,8 +73,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-primary flex items-center justify-center mx-auto shadow-premium transform -rotate-3 hover:rotate-0 transition-transform duration-500" aria-hidden="true">
             <Icons.Search className="w-spacing-xl h-spacing-xl text-white" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
-          <p className="text-muted-foreground font-serif italic text-lg max-w-spacing-lg mx-auto leading-relaxed">
+          <h2 className="text-premium-3xl md:text-premium-5xl font-bold font-serif text-foreground uppercase tracking-widest leading-tight">Logos IA</h2>
+          <p className="text-muted-foreground font-serif italic text-premium-lg max-w-spacing-lg mx-auto leading-relaxed">
             "No princípio era o Verbo..." — Pergunte, pesquise e contemple a Sabedoria da Igreja.
           </p>
         </motion.div>
@@ -83,12 +83,12 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         <div className="bg-card border border-border/40 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl shadow-premium space-y-spacing-xl">
            <div className="flex flex-col gap-spacing-md">
               <div className="flex items-center gap-spacing-sm">
-                 <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/10 flex items-center justify-center">
+                 <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 flex items-center justify-center">
                     <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
                  </div>
-                 <h2 className="text-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
+                 <h2 className="text-premium-xs font-black uppercase tracking-widest text-primary">Conversa com Logos</h2>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-premium-sm text-muted-foreground leading-relaxed">
                 Logos é o seu assistente teológico. Você pode perguntar sobre passagens bíblicas, parágrafos do catecismo ou ensinamentos do Magistério.
               </p>
            </div>
@@ -105,7 +105,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         <div className="space-y-spacing-lg">
           <div className="flex items-center gap-spacing-xl">
-            <h2 className="text-xs font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
+            <h2 className="text-premium-xs font-bold uppercase tracking-[0.5em] text-primary/60 whitespace-nowrap">
               Resultados da Pesquisa
             </h2>
             <div className="h-px flex-1 bg-border/30" />
@@ -125,8 +125,8 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           >
             <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto text-muted-foreground opacity-20" />
             <div className="space-y-spacing-xs">
-              <p className="text-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
-              <p className="text-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
+              <p className="text-premium-lg font-serif italic text-muted-foreground">Nenhum resultado encontrado.</p>
+              <p className="text-premium-sm text-muted-foreground/60">Tente buscar por termos mais genéricos ou verifique a ortografia.</p>
             </div>
           </motion.div>
         )}
@@ -134,12 +134,12 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
         {hasQuery && !isAllEmpty && (
           <Tabs defaultValue="santos" className="mt-spacing-lg">
-            <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-full">
-              <TabsTrigger value="santos" className="text-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
-              <TabsTrigger value="glossario" className="text-xs flex-1 min-w-[80px]">Glossário ({counts.glossario})</TabsTrigger>
-              <TabsTrigger value="comunidade" className="text-xs flex-1 min-w-[80px]">Comunidade ({counts.comunidade})</TabsTrigger>
-              <TabsTrigger value="temas" className="text-xs flex-1 min-w-[80px]">Temas ({counts.temas})</TabsTrigger>
-              <TabsTrigger value="jornadas" className="text-xs flex-1 min-w-[80px]">Jornadas ({counts.jornadas})</TabsTrigger>
+            <TabsList className="w-full flex-wrap h-auto gap-spacing-2xs bg-muted/50 p-spacing-2xs rounded-premium-full">
+              <TabsTrigger value="santos" className="text-premium-xs flex-1 min-w-[80px]">Santos ({counts.santos})</TabsTrigger>
+              <TabsTrigger value="glossario" className="text-premium-xs flex-1 min-w-[80px]">Glossário ({counts.glossario})</TabsTrigger>
+              <TabsTrigger value="comunidade" className="text-premium-xs flex-1 min-w-[80px]">Comunidade ({counts.comunidade})</TabsTrigger>
+              <TabsTrigger value="temas" className="text-premium-xs flex-1 min-w-[80px]">Temas ({counts.temas})</TabsTrigger>
+              <TabsTrigger value="jornadas" className="text-premium-xs flex-1 min-w-[80px]">Jornadas ({counts.jornadas})</TabsTrigger>
             </TabsList>
 
             <TabsContent value="santos" className="space-y-spacing-xs mt-spacing-md">
@@ -203,11 +203,11 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     onKeyDown={(e) => handleTagsKeyDown(e, idx, () => navigate(`${AppRoute.TEMAS}/${t.slug}`))}
                     tabIndex={tagsActiveIndex === idx ? 0 : -1}
                     data-roving-item="true"
-                    className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
+                    className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium-full bg-muted/60 border border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none group"
                     aria-label={`Tema: ${t.label}`}
                   >
                     {t.emoji && <span className="group-hover:scale-110 transition-transform">{t.emoji}</span>}
-                    <span className="text-xs font-medium text-foreground group-hover:text-primary">{t.label}</span>
+                    <span className="text-premium-xs font-medium text-foreground group-hover:text-primary">{t.label}</span>
                     <RelevanceBadge score={(t as any).similarityScore} size="xs" />
                   </Button>
                 ))}
@@ -238,7 +238,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         {!hasQuery && (
           <div className="text-center py-spacing-2xl text-muted-foreground">
             <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto opacity-20 mb-spacing-md" />
-            <p className="text-sm">Digite pelo menos 2 caracteres para buscar</p>
+            <p className="text-premium-sm">Digite pelo menos 2 caracteres para buscar</p>
           </div>
         )}
       </div>

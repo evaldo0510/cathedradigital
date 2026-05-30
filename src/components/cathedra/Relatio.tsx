@@ -198,7 +198,7 @@ const Relatio: React.FC<RelatioProps> = ({
     <section ref={containerRef} className={cn("mt-spacing-2xl pt-spacing-2xl border-t border-primary/[0.01] space-y-spacing-lg mb-spacing-2xl", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-spacing-sm">
-          <div className="w-spacing-lg h-spacing-lg rounded-full bg-primary/[0.03] flex items-center justify-center">
+          <div className="w-spacing-lg h-spacing-lg rounded-premium-full bg-primary/[0.03] flex items-center justify-center">
             <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
           </div>
           <div>
@@ -211,7 +211,7 @@ const Relatio: React.FC<RelatioProps> = ({
             size="icon"
             onClick={toggleAutoCollapse}
             className={cn(
-              "w-spacing-xl h-spacing-xl rounded-full transition-all duration-300",
+              "w-spacing-xl h-spacing-xl rounded-premium-full transition-all duration-300",
               autoCollapse ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary"
             )}
             title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
@@ -219,14 +219,14 @@ const Relatio: React.FC<RelatioProps> = ({
             <Icons.Library className="w-spacing-sm h-spacing-sm" />
           </Button>
 
-          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-spacing-2xs border border-primary/[0.05]">
+          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-premium-full p-spacing-2xs border border-primary/[0.05]">
             {(['subtle', 'normal', 'deep'] as const).map((d) => (
               <button
                 key={d}
                 onClick={() => updateDensity(d)}
                 className={cn(
-                  "px-spacing-sm py-spacing-2xs text-[8px] font-black uppercase tracking-widest rounded-full transition-all duration-300",
-                  density === d ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-primary"
+                  "px-spacing-sm py-spacing-2xs text-[8px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-300",
+                  density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-muted-foreground/60 hover:text-primary"
                 )}
               >
                 {d === 'subtle' ? 'Subtil' : d === 'normal' ? 'Normal' : 'Profunda'}
@@ -237,7 +237,7 @@ const Relatio: React.FC<RelatioProps> = ({
             variant="ghost" 
             size="sm" 
             onClick={() => setIsVisible(!isVisible)}
-            className="text-muted-foreground hover:text-primary transition-colors text-xs uppercase tracking-widest font-black"
+            className="text-muted-foreground hover:text-primary transition-colors text-premium-xs uppercase tracking-widest font-black"
           >
             {isVisible ? 'Ocultar' : 'Revelar'}
           </Button>
@@ -307,7 +307,7 @@ const Relatio: React.FC<RelatioProps> = ({
                       <CathedraCard 
                         padding="md"
                         variant="default"
-                        className="h-full bg-transparent border-none group-hover:bg-primary/[0.005] transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
+                        className="h-full bg-transparent border-none group-hover:bg-primary/[0.005] transition-all duration-700 rounded-premium shadow-premium-none cursor-pointer overflow-hidden flex flex-col"
 
 
                         onClick={() => {
@@ -328,7 +328,7 @@ const Relatio: React.FC<RelatioProps> = ({
                           }
                         }}
                       >
-                        <div className="absolute top-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-full -mr-spacing-3xl -mt-spacing-3xl group-hover:bg-primary/[0.03] transition-colors duration-1000" />
+                        <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-premium-full -mr-spacing-3xl -mt-spacing-3xl group-hover:bg-primary/[0.03] transition-colors duration-1000" />
                         
                         <div className="flex flex-col h-full relative z-10">
                           <div className="flex items-start justify-between mb-spacing-md">
@@ -350,7 +350,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
                                     {item.reason}
                                   </span>
-                                  <div className={cn("w-spacing-2xs h-spacing-2xs rounded-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
+                                  <div className={cn("w-spacing-2xs h-spacing-2xs rounded-premium-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
                                   <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-secondary/60")}>
                                     {strengthLabel}
                                   </span>
@@ -364,7 +364,7 @@ const Relatio: React.FC<RelatioProps> = ({
                                   variant="ghost"
                                   size="icon"
                                   disabled={isOpeningLogos}
-                                  className="w-spacing-lg h-spacing-lg rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
+                                  className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -386,7 +386,7 @@ const Relatio: React.FC<RelatioProps> = ({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="w-spacing-lg h-spacing-lg rounded-full hover:bg-primary/5"
+                                className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   toggleFavorite({
@@ -406,8 +406,8 @@ const Relatio: React.FC<RelatioProps> = ({
                           </div>
                           
                           <div className="flex-1 space-y-spacing-xs">
-                            <h4 className="text-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
-                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
+                            <h4 className="text-premium-base font-bold font-serif text-primary/80 group-hover:text-primary transition-colors duration-500">{item.title}</h4>
+                            <p className="text-premium-sm text-muted-foreground leading-relaxed line-clamp-spacing-sm font-serif italic font-light opacity-70 group-hover:opacity-90 transition-opacity duration-500">
                               {item.content_text.replace(/[#*]/g, '')}
                             </p>
                           </div>
@@ -427,7 +427,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 {loading && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md mt-spacing-md">
                     {[1, 2].map((i) => (
-                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
+                      <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
                       </div>
                     ))}
@@ -449,7 +449,7 @@ const Relatio: React.FC<RelatioProps> = ({
                       containerRef.current?.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-full"
+                  className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-premium-full"
                 >
                   <span className="mr-spacing-xs">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
                   <Icons.ChevronDown className={cn("w-spacing-sm h-spacing-sm transition-transform duration-500", showAll && "rotate-180")} />

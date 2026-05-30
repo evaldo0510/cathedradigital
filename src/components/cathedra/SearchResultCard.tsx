@@ -66,7 +66,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       tabIndex={0}
       aria-label={`${title}${subtitle ? `. ${subtitle}` : ''}. Clique para ver detalhes.`}
       className={cn(
-        'premium-card bg-card border border-border/20 cursor-pointer hover:shadow-premium-hover transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-sm',
+        'premium-card bg-card border border-border/20 cursor-pointer hover:shadow-premium-hover transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-premium-sm',
         className,
       )}
       onClick={onClick}
@@ -78,10 +78,10 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           {icon}
         </div>
       )}
-      <div className="flex-1 min-w-0">
-        <p className="font-semibold text-sm text-foreground truncate">{title}</p>
+      <div className="flex-1 min-w-spacing-0">
+        <p className="font-semibold text-premium-sm text-foreground truncate">{title}</p>
         {subtitle && (
-          <p className="text-xs text-muted-foreground line-clamp-1">{subtitle}</p>
+          <p className="text-premium-xs text-muted-foreground line-clamp-spacing-2xs">{subtitle}</p>
         )}
       </div>
       <div className="flex items-center gap-spacing-xs flex-shrink-0">

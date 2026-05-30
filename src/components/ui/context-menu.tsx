@@ -25,7 +25,7 @@ const ContextMenuSubTrigger = React.forwardRef<
   <ContextMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center rounded-sm px-spacing-xs py-spacing-2xs text-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+      "flex cursor-default select-none items-center rounded-premium-sm px-spacing-xs py-spacing-2xs text-premium-sm outline-none data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
       inset && "pl-spacing-xl",
       className,
     )}
@@ -44,7 +44,7 @@ const ContextMenuSubContent = React.forwardRef<
   <ContextMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden rounded-full border bg-popover p-spacing-2xs text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-spacing-xs data-[side=left]:slide-in-from-right-spacing-xs data-[side=right]:slide-in-from-left-spacing-xs data-[side=top]:slide-in-from-bottom-spacing-xs",
+      "z-50 min-w-[8rem] overflow-hidden rounded-premium-full border bg-popover p-spacing-2xs text-popover-foreground shadow-premium-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-spacing-xs data-[side=left]:slide-in-from-right-spacing-xs data-[side=right]:slide-in-from-left-spacing-xs data-[side=top]:slide-in-from-bottom-spacing-xs",
       className,
     )}
     {...props}
@@ -60,7 +60,7 @@ const ContextMenuContent = React.forwardRef<
     <ContextMenuPrimitive.Content
       ref={ref}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-full border bg-popover p-spacing-2xs text-popover-foreground shadow-md animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-spacing-xs data-[side=left]:slide-in-from-right-spacing-xs data-[side=right]:slide-in-from-left-spacing-xs data-[side=top]:slide-in-from-bottom-spacing-xs",
+        "z-50 min-w-[8rem] overflow-hidden rounded-premium-full border bg-popover p-spacing-2xs text-popover-foreground shadow-premium-md animate-in fade-in-80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-spacing-xs data-[side=left]:slide-in-from-right-spacing-xs data-[side=right]:slide-in-from-left-spacing-xs data-[side=top]:slide-in-from-bottom-spacing-xs",
         className,
       )}
       {...props}
@@ -78,7 +78,7 @@ const ContextMenuItem = React.forwardRef<
   <ContextMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-spacing-xs py-spacing-2xs text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex cursor-default select-none items-center rounded-premium-sm px-spacing-xs py-spacing-2xs text-premium-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
       inset && "pl-spacing-xl",
       className,
     )}
@@ -94,7 +94,7 @@ const ContextMenuCheckboxItem = React.forwardRef<
   <ContextMenuPrimitive.CheckboxItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-spacing-2xs pl-spacing-xl pr-spacing-xs text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex cursor-default select-none items-center rounded-premium-sm py-spacing-2xs pl-spacing-xl pr-spacing-xs text-premium-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
       className,
     )}
     checked={checked}
@@ -117,7 +117,7 @@ const ContextMenuRadioItem = React.forwardRef<
   <ContextMenuPrimitive.RadioItem
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm py-spacing-2xs pl-spacing-xl pr-spacing-xs text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex cursor-default select-none items-center rounded-premium-sm py-spacing-2xs pl-spacing-xl pr-spacing-xs text-premium-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
       className,
     )}
     {...props}
@@ -140,7 +140,7 @@ const ContextMenuLabel = React.forwardRef<
 >(({ className, inset, ...props }, ref) => (
   <ContextMenuPrimitive.Label
     ref={ref}
-    className={cn("px-spacing-xs py-spacing-2xs text-sm font-semibold text-foreground", inset && "pl-spacing-xl", className)}
+    className={cn("px-spacing-xs py-spacing-2xs text-premium-sm font-semibold text-foreground", inset && "pl-spacing-xl", className)}
     {...props}
   />
 ));
@@ -155,7 +155,7 @@ const ContextMenuSeparator = React.forwardRef<
 ContextMenuSeparator.displayName = ContextMenuPrimitive.Separator.displayName;
 
 const ContextMenuShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+  return <span className={cn("ml-auto text-premium-xs tracking-widest text-muted-foreground", className)} {...props} />;
 };
 ContextMenuShortcut.displayName = "ContextMenuShortcut";
 

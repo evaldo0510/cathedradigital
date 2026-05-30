@@ -235,7 +235,7 @@ const JornadaStepPage: React.FC = () => {
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
         <div className="text-center space-y-spacing-md">
           <p className="text-muted-foreground">Etapa não encontrada.</p>
-          <Button onClick={() => navigate(-1)} className="text-primary underline text-sm">Voltar</Button>
+          <Button onClick={() => navigate(-1)} className="text-primary underline text-premium-sm">Voltar</Button>
         </div>
       </div>,
       document.body
@@ -253,18 +253,18 @@ const JornadaStepPage: React.FC = () => {
         <div className="flex items-center gap-spacing-sm max-w-spacing-2xl mx-auto">
           <Button
             onClick={() => navigate(`/jornadas/${journeyId}`)}
-            className="w-spacing-xl h-spacing-xl rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
+            className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
           >
             <X className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-spacing-0">
             <div className="flex items-center gap-spacing-xs">
-              <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
+              <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
               <div className="group relative">
-                <span className="cursor-help px-spacing-2xs py-spacing-3xs rounded-full text-xs font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-spacing-2xs">
+                <span className="cursor-help px-spacing-2xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-spacing-2xs">
                   {userLevelClass} <ShieldQuestion className="w-spacing-xs h-spacing-xs opacity-50" />
                 </span>
-                <div className="absolute left-0 top-full mt-spacing-xs w-spacing-4xl p-spacing-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="absolute left-0 top-full mt-spacing-xs w-spacing-4xl p-spacing-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-premium-xs opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                   <p className="font-bold mb-spacing-2xs">Conteúdo Adaptado</p>
                   <p className="opacity-80">
                     {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
@@ -275,9 +275,9 @@ const JornadaStepPage: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
+            <p className="text-premium-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
-          <span className="text-xs font-bold text-muted-foreground flex items-center gap-spacing-2xs">
+          <span className="text-premium-xs font-bold text-muted-foreground flex items-center gap-spacing-2xs">
             <Clock className="w-spacing-sm h-spacing-sm" /> {step.duration_minutes}min
           </span>
 
@@ -300,17 +300,17 @@ const JornadaStepPage: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-spacing-4xl h-spacing-4xl mx-auto mb-spacing-md rounded-full overflow-hidden border-2 border-primary/20 shadow-premium-hover"
+                className="w-spacing-4xl h-spacing-4xl mx-auto mb-spacing-md rounded-premium-full overflow-hidden border-2 border-primary/20 shadow-premium-hover"
               >
                 <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
               </motion.div>
             )}
-            <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{step.title}</h1>
+            <h1 className="text-premium-2xl md:text-premium-3xl font-bold font-serif text-foreground">{step.title}</h1>
             {step.subtitle && (
-              <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
+              <p className="text-premium-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
             {content.bible_ref && (
-              <div className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-xs font-black uppercase tracking-wider mx-auto">
+              <div className="inline-flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-premium-xs font-black uppercase tracking-wider mx-auto">
                 <BookOpen className="w-spacing-sm h-spacing-sm" /> {content.bible_ref}
               </div>
             )}
@@ -341,22 +341,22 @@ const JornadaStepPage: React.FC = () => {
                   onClick={() => toggleSection(key)}
                   className={`w-full flex items-center gap-spacing-sm p-spacing-md rounded-t-2xl transition-all text-left ${
                     isExpanded
-                      ? 'bg-card border border-b-0 border-border shadow-md'
+                      ? 'bg-card border border-b-0 border-border shadow-premium-md'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
                   } ${isLocked ? 'opacity-70' : ''}`}
                 >
-                  <span className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center flex-shrink-0 ${
+                  <span className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center flex-shrink-0 ${
                     isExpanded ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted text-muted-foreground'
                   }`}>
                     {isLocked ? <Lock className="w-spacing-md h-spacing-md" /> : icon}
                   </span>
                   <div className="flex-1">
                     <div className="flex items-center gap-spacing-xs">
-                      <span className={`text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      <span className={`text-premium-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {label}
                       </span>
                       {sectionIsPremium && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-xs uppercase font-black px-spacing-2xs py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-xs uppercase font-black px-spacing-2xs py-spacing-0">PRO</Badge>
                       )}
                     </div>
                   </div>
@@ -376,18 +376,18 @@ const JornadaStepPage: React.FC = () => {
                         {isLocked ? (
                           <div className="space-y-spacing-md py-spacing-md text-center">
                             <div className="blur-[6px] select-none pointer-events-none opacity-40">
-                              <p className="text-sm font-serif line-clamp-4">
+                              <p className="text-premium-sm font-serif line-clamp-spacing-md">
                                 {sectionContent}
                               </p>
                             </div>
                             <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-spacing-lg space-y-spacing-md rounded-b-2xl">
                               <Sparkles className="w-spacing-xl h-spacing-xl text-primary animate-pulse" />
-                              <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
+                              <p className="text-premium-sm font-bold text-foreground max-w-[180px] leading-relaxed">
                                 Continue aprofundando essa experiência
                               </p>
                               <Button 
                                 size="sm" 
-                                className="font-bold text-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
+                                className="font-bold text-premium-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-premium"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   navigate(AppRoute.PRICING);
@@ -398,7 +398,7 @@ const JornadaStepPage: React.FC = () => {
                             </div>
                           </div>
                         ) : (
-                          <p className={`text-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'padh' ? 'text-lg italic text-primary text-center' : ''}`}>
+                          <p className={`text-premium-sm text-foreground/90 leading-relaxed whitespace-pre-line font-serif ${key === 'padh' ? 'text-premium-lg italic text-primary text-center' : ''}`}>
                             {sectionContent}
                           </p>
                         )}
@@ -419,12 +419,12 @@ const JornadaStepPage: React.FC = () => {
           >
             <div className="flex items-center gap-spacing-xs">
               <PenLine className="w-spacing-md h-spacing-md text-primary" />
-              <h3 className="text-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
+              <h3 className="text-premium-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
             </div>
 
             {(getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
               <div className="bg-primary/5 border border-primary/10 rounded-premium p-spacing-md">
-                <p className="text-sm text-foreground/80 italic font-serif">
+                <p className="text-premium-sm text-foreground/80 italic font-serif">
                   {getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
               </div>
@@ -435,7 +435,7 @@ const JornadaStepPage: React.FC = () => {
               placeholder="Escreva sua reflexão aqui... Suas palavras são privadas e só você pode ver."
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
-              className="min-h-[120px] resize-none text-sm bg-card border-border"
+              className="min-h-[120px] resize-none text-premium-sm bg-card border-border"
               disabled={completed}
             />
           </motion.div>
@@ -451,7 +451,7 @@ const JornadaStepPage: React.FC = () => {
                 onClick={handleSaveReflection}
                 disabled={saving || !reflection.trim()}
                 variant="outline"
-                className="flex-1 rounded-full h-spacing-2xl text-xs uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+                className="flex-1 rounded-premium-full h-spacing-2xl text-premium-xs uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
               >
                 {saving ? (
                   <div className="w-spacing-md h-spacing-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
@@ -464,7 +464,7 @@ const JornadaStepPage: React.FC = () => {
             <Button
               onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
               disabled={saving}
-              className={`${completed ? 'w-full' : 'flex-[2]'} h-spacing-2xl bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-spacing-sm`}
+              className={`${completed ? 'w-full' : 'flex-[2]'} h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-spacing-sm`}
             >
               {saving ? (
                 <>
@@ -488,7 +488,7 @@ const JornadaStepPage: React.FC = () => {
             <div className="mt-spacing-sm">
               <Button
                 onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-spacing-xs"
+                className="w-full h-spacing-2xl bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-spacing-xs"
               >
                 Próxima Etapa
                 <ChevronRight className="w-spacing-md h-spacing-md" />

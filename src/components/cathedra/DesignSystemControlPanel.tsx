@@ -71,7 +71,7 @@ export const ThemeControlPanel: React.FC = () => {
           >
             <div className="space-y-spacing-xs">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Sistemática de Temas</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">Alterne entre estados visuais do Cathedra.</p>
+              <p className="text-premium-xs text-muted-foreground leading-relaxed">Alterne entre estados visuais do Cathedra.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-spacing-xs">
@@ -80,7 +80,7 @@ export const ThemeControlPanel: React.FC = () => {
                   key={t.id}
                   onClick={() => updateSettings({ theme: t.id as any })}
                   className={cn(
-                    "flex items-center justify-between px-spacing-md py-spacing-sm rounded-sm transition-all duration-300 border border-transparent",
+                    "flex items-center justify-between px-spacing-md py-spacing-sm rounded-premium-sm transition-all duration-300 border border-transparent",
                     settings.theme === t.id 
                       ? "bg-primary text-primary-foreground shadow-premium" 
                       : "hover:bg-primary/5 hover:border-primary/5 text-primary/60"
@@ -103,33 +103,33 @@ export const ThemeControlPanel: React.FC = () => {
                 <button
                   onClick={() => updateSettings({ highContrast: !settings.highContrast })}
                   className={cn(
-                    "w-spacing-xl h-spacing-md rounded-full relative transition-colors duration-500",
+                    "w-spacing-xl h-spacing-md rounded-premium-full relative transition-colors duration-500",
                     settings.highContrast ? "bg-secondary" : "bg-primary/10"
                   )}
                 >
                   <motion.div 
                     animate={{ x: settings.highContrast ? 20 : 2 }}
-                    className="absolute top-spacing-2xs w-spacing-sm h-spacing-sm bg-white rounded-full shadow-sm" 
+                    className="absolute top-spacing-2xs w-spacing-sm h-spacing-sm bg-white rounded-premium-full shadow-premium-sm" 
                   />
                 </button>
               </div>
 
               {/* A11y Feedback */}
               <div className={cn(
-                "p-spacing-md rounded-sm border space-y-spacing-sm transition-all duration-500",
+                "p-spacing-md rounded-premium-sm border space-y-spacing-sm transition-all duration-500",
                 contrastStats.ratio >= 4.5 ? "bg-green-500/5 border-green-500/20" : "bg-red-500/5 border-red-500/20"
               )}>
                 <div className="flex items-center justify-between">
                   <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Acessibilidade</span>
                   <span className={cn(
-                    "text-[9px] font-black px-spacing-xs py-spacing-3xs rounded-full uppercase",
+                    "text-[9px] font-black px-spacing-xs py-spacing-3xs rounded-premium-full uppercase",
                     contrastStats.ratio >= 4.5 ? "bg-green-500/20 text-green-600" : "bg-red-500/20 text-red-600"
                   )}>
                     {contrastStats.level}
                   </span>
                 </div>
                 <div className="flex items-center gap-spacing-xs">
-                  <span className="text-xl font-display font-light text-primary">{contrastStats.ratio}:1</span>
+                  <span className="text-premium-xl font-display font-light text-primary">{contrastStats.ratio}:1</span>
                   <span className="text-[10px] text-muted-foreground italic">ratio</span>
                 </div>
 
@@ -151,7 +151,7 @@ export const ThemeControlPanel: React.FC = () => {
                               <a
                                 key={token}
                                 href={`/design-system#${token.replace('--', '')}`}
-                                className="text-[8px] px-spacing-2xs py-spacing-3xs rounded-sm bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors border border-red-500/5"
+                                className="text-[8px] px-spacing-2xs py-spacing-3xs rounded-premium-sm bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-colors border border-red-500/5"
                               >
                                 {token}
                               </a>
@@ -173,7 +173,7 @@ export const ThemeControlPanel: React.FC = () => {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "relative flex items-center gap-spacing-sm px-spacing-md py-spacing-sm rounded-full shadow-premium transition-premium border",
+          "relative flex items-center gap-spacing-sm px-spacing-md py-spacing-sm rounded-premium-full shadow-premium transition-premium border",
           isOpen ? "bg-primary text-primary-foreground border-primary" : "bg-card text-primary border-primary/10 hover:border-primary/20",
           !isOpen && auditIssues.length > 0 && "border-red-500/50 shadow-[0_0_15px_rgba(239,68,68,0.2)]"
         )}
@@ -184,7 +184,7 @@ export const ThemeControlPanel: React.FC = () => {
         </span>
         
         {auditIssues.length > 0 && !isOpen && (
-          <span className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-md h-spacing-md bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-full animate-pulse shadow-premium">
+          <span className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-md h-spacing-md bg-red-500 text-white text-[8px] font-bold flex items-center justify-center rounded-premium-full animate-pulse shadow-premium">
             {auditIssues.length}
           </span>
         )}

@@ -117,7 +117,7 @@ const AZFaithPage: React.FC = () => {
         <Button
           variant={quizMode ? 'default' : 'outline'}
           onClick={() => setQuizMode(!quizMode)}
-          className="rounded-full gap-spacing-xs font-bold text-xs uppercase tracking-widest"
+          className="rounded-premium-full gap-spacing-xs font-bold text-premium-xs uppercase tracking-widest"
         >
           <Brain className="w-spacing-md h-spacing-md" />
           {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
@@ -144,7 +144,7 @@ const AZFaithPage: React.FC = () => {
                   setSearchQuery(e.target.value);
                   if (e.target.value) setSelectedLetter(null);
                 }}
-                className="w-full pl-spacing-xl pr-spacing-xl py-spacing-sm bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+                className="w-full pl-spacing-xl pr-spacing-xl py-spacing-sm bg-card border border-border rounded-premium-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-premium-sm"
               />
               {searchQuery && (
                 <Button onClick={() => setSearchQuery('')} className="absolute right-spacing-md top-spacing-2xs/2 -translate-y-1/2">
@@ -167,7 +167,7 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-spacing-xl py-spacing-md rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-md
+                    className={`px-spacing-xl py-spacing-md rounded-premium-full text-premium-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-premium-md
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-premium ring-4 ring-primary/10'
                         : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-premium'

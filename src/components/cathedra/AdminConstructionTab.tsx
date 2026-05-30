@@ -199,8 +199,8 @@ const AdminConstructionTab: React.FC = () => {
     <div className="space-y-spacing-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
-          <h2 className="text-xl font-bold">Gestão de Obras</h2>
-          <p className="text-sm text-muted-foreground">Gerencie orçamentos e cronogramas de construção.</p>
+          <h2 className="text-premium-xl font-bold">Gestão de Obras</h2>
+          <p className="text-premium-sm text-muted-foreground">Gerencie orçamentos e cronogramas de construção.</p>
         </div>
         <div className="flex gap-spacing-xs">
           <div className="relative">
@@ -232,7 +232,7 @@ const AdminConstructionTab: React.FC = () => {
             </div>
             <div className="space-y-spacing-2xs">
               <p className="font-semibold">Nenhuma obra cadastrada</p>
-              <p className="text-sm text-muted-foreground">Comece criando uma nova obra paroquial.</p>
+              <p className="text-premium-sm text-muted-foreground">Comece criando uma nova obra paroquial.</p>
             </div>
             <Button onClick={() => setIsAddProjectDialogOpen(true)}>Criar Primeira Obra</Button>
           </CardContent>
@@ -243,8 +243,8 @@ const AdminConstructionTab: React.FC = () => {
             <Card key={project.id} className="overflow-hidden group hover:border-primary/50 transition-all">
               <CardHeader className="pb-spacing-sm flex flex-row items-start justify-between">
                 <div>
-                  <CardTitle className="text-lg">{project.name}</CardTitle>
-                  <CardDescription className="line-clamp-1">{project.description || 'Sem descrição'}</CardDescription>
+                  <CardTitle className="text-premium-lg">{project.name}</CardTitle>
+                  <CardDescription className="line-clamp-spacing-2xs">{project.description || 'Sem descrição'}</CardDescription>
                 </div>
                 <Badge variant={project.status === 'concluida' ? 'default' : 'secondary'}>
                   {project.status === 'concluida' ? 'Concluída' : 'Em Andamento'}
@@ -253,13 +253,13 @@ const AdminConstructionTab: React.FC = () => {
               <CardContent className="pb-spacing-sm space-y-spacing-md">
                 <div className="grid grid-cols-2 gap-spacing-md">
                   <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <div className="flex items-center gap-spacing-xs text-premium-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <DollarSign className="w-spacing-sm h-spacing-sm" /> Orçamento
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-spacing-xl gap-spacing-xs text-xs font-black uppercase tracking-widest"
+                      className="w-full h-spacing-xl gap-spacing-xs text-premium-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('budget');
@@ -270,13 +270,13 @@ const AdminConstructionTab: React.FC = () => {
                     </Button>
                   </div>
                   <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
-                    <div className="flex items-center gap-spacing-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <div className="flex items-center gap-spacing-xs text-premium-xs font-bold text-muted-foreground uppercase tracking-widest">
                       <Calendar className="w-spacing-sm h-spacing-sm" /> Cronograma
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-spacing-xl gap-spacing-xs text-xs font-black uppercase tracking-widest"
+                      className="w-full h-spacing-xl gap-spacing-xs text-premium-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('schedule');
@@ -289,7 +289,7 @@ const AdminConstructionTab: React.FC = () => {
                 </div>
               </CardContent>
               <CardFooter className="bg-muted/10 py-spacing-sm flex justify-between">
-                <span className="text-xs text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
+                <span className="text-premium-xs text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
                 <Button variant="ghost" size="sm" className="h-spacing-lg text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
                   <Trash2 className="w-spacing-sm h-spacing-sm" />
                 </Button>
@@ -348,8 +348,8 @@ const AdminConstructionTab: React.FC = () => {
               <FileSpreadsheet className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
             <div className="text-center px-spacing-md">
-              <p className="text-sm font-medium">Arraste sua planilha aqui ou clique no botão</p>
-              <p className="text-xs text-muted-foreground mt-spacing-2xs">Formato suportado: XLSX, XLS, CSV</p>
+              <p className="text-premium-sm font-medium">Arraste sua planilha aqui ou clique no botão</p>
+              <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">Formato suportado: XLSX, XLS, CSV</p>
             </div>
             <div className="relative">
               <Button disabled={uploading} className="relative z-10">
@@ -367,7 +367,7 @@ const AdminConstructionTab: React.FC = () => {
           </div>
           <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium p-spacing-sm flex gap-spacing-sm">
             <AlertCircle className="w-spacing-md h-spacing-md text-amber-500 shrink-0" />
-            <div className="text-xs text-amber-800">
+            <div className="text-premium-xs text-amber-800">
               <p className="font-bold">Atenção!</p>
               <p>Ao subir uma nova planilha, os dados serão adicionados aos já existentes. Para atualizar um dado real, certifique-se que o nome do item é idêntico.</p>
             </div>

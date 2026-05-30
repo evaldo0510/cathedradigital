@@ -120,7 +120,7 @@ const CatechismIntegrity: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-spacing-xl">
         <Icons.Lock className="w-spacing-3xl h-spacing-3xl text-destructive mb-spacing-md opacity-20" />
-        <h2 className="text-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
+        <h2 className="text-premium-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
         <p className="text-muted-foreground">Esta página é para administradores.</p>
       </div>
     );
@@ -130,20 +130,20 @@ const CatechismIntegrity: React.FC = () => {
     <div className="max-w-spacing-4xl mx-auto p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
-          <p className="text-sm text-muted-foreground">Parágrafos sem conteúdo ou com erro de créditos</p>
+          <h1 className="text-premium-2xl font-serif font-bold text-foreground">Integridade do Conteúdo</h1>
+          <p className="text-premium-sm text-muted-foreground">Parágrafos sem conteúdo ou com erro de créditos</p>
         </div>
         <div className="flex flex-wrap items-center gap-spacing-sm">
            <Button 
             onClick={() => navigate('/catechism/debug')}
-            className="px-spacing-md py-spacing-xs rounded-full border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-spacing-xs"
+            className="px-spacing-md py-spacing-xs rounded-premium-full border border-border text-premium-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-spacing-xs"
           >
             <Icons.Settings className="w-spacing-sm h-spacing-sm" /> Debug Geral
           </Button>
 
           <Button 
             onClick={() => navigate('/catechism/verify')}
-            className="px-spacing-md py-spacing-xs rounded-full border border-border text-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-spacing-xs"
+            className="px-spacing-md py-spacing-xs rounded-premium-full border border-border text-premium-xs font-black uppercase tracking-widest hover:bg-muted transition-all flex items-center gap-spacing-xs"
           >
             <Icons.CheckCircle className="w-spacing-sm h-spacing-sm" /> Verificação de Seções
           </Button>
@@ -151,30 +151,30 @@ const CatechismIntegrity: React.FC = () => {
           
           <div className="flex items-center gap-spacing-xs bg-muted/50 p-spacing-2xs rounded-premium border border-border">
             <div className="flex items-center gap-spacing-2xs">
-              <span className="text-xs font-bold text-muted-foreground uppercase px-spacing-2xs">De:</span>
+              <span className="text-premium-xs font-bold text-muted-foreground uppercase px-spacing-2xs">De:</span>
               <input 
                 type="number" 
                 value={startPara} 
                 onChange={e => setStartPara(Number(e.target.value))}
-                className="w-spacing-3xl h-spacing-xl bg-background border border-border rounded-full text-xs font-bold text-center"
+                className="w-spacing-3xl h-spacing-xl bg-background border border-border rounded-premium-full text-premium-xs font-bold text-center"
               />
             </div>
             <div className="flex items-center gap-spacing-2xs">
-              <span className="text-xs font-bold text-muted-foreground uppercase px-spacing-2xs">Até:</span>
+              <span className="text-premium-xs font-bold text-muted-foreground uppercase px-spacing-2xs">Até:</span>
               <input 
                 type="number" 
                 value={endPara} 
                 onChange={e => setEndPara(Number(e.target.value))}
-                className="w-spacing-3xl h-spacing-xl bg-background border border-border rounded-full text-xs font-bold text-center"
+                className="w-spacing-3xl h-spacing-xl bg-background border border-border rounded-premium-full text-premium-xs font-bold text-center"
               />
             </div>
             <div className="flex items-center gap-spacing-2xs ml-spacing-xs border-l border-border pl-spacing-xs">
-              <span className="text-xs font-bold text-muted-foreground uppercase px-spacing-2xs">Lote:</span>
+              <span className="text-premium-xs font-bold text-muted-foreground uppercase px-spacing-2xs">Lote:</span>
               <input 
                 type="number" 
                 value={batchSize} 
                 onChange={e => setBatchSize(Number(e.target.value))}
-                className="w-spacing-2xl h-spacing-xl bg-background border border-border rounded-full text-xs font-bold text-center"
+                className="w-spacing-2xl h-spacing-xl bg-background border border-border rounded-premium-full text-premium-xs font-bold text-center"
               />
             </div>
             <Button 
@@ -210,7 +210,7 @@ const CatechismIntegrity: React.FC = () => {
                 loadData();
               }}
               disabled={isReprocessing}
-              className="ml-spacing-xs px-spacing-md h-spacing-xl rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-spacing-xs shadow-md disabled:opacity-50"
+              className="ml-spacing-xs px-spacing-md h-spacing-xl rounded-premium-full bg-primary text-primary-foreground text-premium-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-spacing-xs shadow-premium-md disabled:opacity-50"
             >
               <Icons.Zap className="w-spacing-sm h-spacing-sm" /> Iniciar
             </Button>
@@ -219,7 +219,7 @@ const CatechismIntegrity: React.FC = () => {
           <Button 
             onClick={loadData}
             disabled={loading}
-            className="p-spacing-xs rounded-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50 ml-auto"
+            className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50 ml-auto"
             title="Recarregar dados"
           >
             <Icons.RotateCcw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
@@ -229,36 +229,36 @@ const CatechismIntegrity: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
         <div className="bg-card border border-border rounded-premium p-spacing-md">
-          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
-          <div className="text-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Nunca Acessados</span>
+          <div className="text-premium-2xl font-serif font-bold text-foreground">{stats.notCached}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-spacing-md">
-          <span className="text-xs font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
-          <div className="text-2xl font-serif font-bold text-foreground">{stats.error402}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-orange-500">Erro 402 (Créditos)</span>
+          <div className="text-premium-2xl font-serif font-bold text-foreground">{stats.error402}</div>
         </div>
         <div className="bg-card border border-border rounded-premium p-spacing-md">
-          <span className="text-xs font-black uppercase tracking-widest text-destructive">Incompletos</span>
-          <div className="text-2xl font-serif font-bold text-foreground">{stats.empty}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-destructive">Incompletos</span>
+          <div className="text-premium-2xl font-serif font-bold text-foreground">{stats.empty}</div>
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-md">
+      <div className="bg-card border border-border rounded-premium overflow-hidden shadow-premium-md">
         <div className="p-spacing-md border-b border-border bg-muted/30 flex items-center justify-between">
           <div className="flex items-center gap-spacing-xs bg-background/50 border border-border rounded-premium p-spacing-2xs">
-            <Button onClick={() => setFilter('all')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
-            <Button onClick={() => setFilter('not_cached')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</Button>
-            <Button onClick={() => setFilter('error_402')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</Button>
-            <Button onClick={() => setFilter('empty')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</Button>
+            <Button onClick={() => setFilter('all')} className={`px-spacing-sm py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
+            <Button onClick={() => setFilter('not_cached')} className={`px-spacing-sm py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'not_cached' ? 'bg-primary text-primary-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}>Não Cacheado</Button>
+            <Button onClick={() => setFilter('error_402')} className={`px-spacing-sm py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'error_402' ? 'bg-primary text-primary-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}>Erro 402</Button>
+            <Button onClick={() => setFilter('empty')} className={`px-spacing-sm py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'empty' ? 'bg-primary text-primary-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}>Incompletos</Button>
           </div>
-          <span className="text-xs text-muted-foreground uppercase font-black">
+          <span className="text-premium-xs text-muted-foreground uppercase font-black">
             {filteredData.length} itens encontrados
           </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-premium-sm">
             <thead>
-              <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
+              <tr className="border-b border-border text-premium-xs font-black uppercase tracking-widest text-muted-foreground">
                 <th className="px-spacing-lg py-spacing-md">§ Parágrafo</th>
                 <th className="px-spacing-lg py-spacing-md">Problema</th>
                 <th className="px-spacing-lg py-spacing-md">Status Atual</th>
@@ -276,15 +276,15 @@ const CatechismIntegrity: React.FC = () => {
                     <td className="px-spacing-lg py-spacing-md font-bold text-primary font-serif">§{item.paragraph}</td>
                     <td className="px-spacing-lg py-spacing-md">
                       {item.status === 'error_402' || (item.status === 'error' && (item.last_error?.includes('402') || item.last_error?.includes('Créditos'))) ? (
-                        <span className="text-xs text-orange-600 font-medium">Falta de Créditos IA</span>
+                        <span className="text-premium-xs text-orange-600 font-medium">Falta de Créditos IA</span>
                       ) : item.status === 'not_cached' ? (
-                        <span className="text-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
+                        <span className="text-premium-xs text-blue-500 font-medium">Nunca Acessado / Sem Cache</span>
                       ) : (
-                        <span className="text-xs text-destructive font-medium">Erro na Geração / Incompleto</span>
+                        <span className="text-premium-xs text-destructive font-medium">Erro na Geração / Incompleto</span>
                       )}
                     </td>
                     <td className="px-spacing-lg py-spacing-md">
-                      <span className="text-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-full bg-muted text-muted-foreground">
+                      <span className="text-premium-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-premium-full bg-muted text-muted-foreground">
                         {item.status}
                       </span>
                     </td>
@@ -292,7 +292,7 @@ const CatechismIntegrity: React.FC = () => {
                       <Button 
                         disabled={isReprocessing}
                         onClick={() => reprocessParagraph(item.paragraph)}
-                        className="p-spacing-xs rounded-full hover:bg-primary/10 text-primary transition-all disabled:opacity-30"
+                        className="p-spacing-xs rounded-premium-full hover:bg-primary/10 text-primary transition-all disabled:opacity-30"
                         title="Reprocessar agora"
                       >
                         <Icons.Zap className="w-spacing-md h-spacing-md" />

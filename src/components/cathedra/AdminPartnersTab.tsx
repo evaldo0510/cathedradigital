@@ -167,8 +167,8 @@ const AdminPartnersTab: React.FC = () => {
     <div className="space-y-spacing-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
-          <h2 className="text-xl font-bold">Gestão de Parceiros</h2>
-          <p className="text-sm text-muted-foreground">Analise solicitações e gerencie instituições parceiras.</p>
+          <h2 className="text-premium-xl font-bold">Gestão de Parceiros</h2>
+          <p className="text-premium-sm text-muted-foreground">Analise solicitações e gerencie instituições parceiras.</p>
         </div>
         <div className="flex items-center gap-spacing-xs">
           <div className="relative">
@@ -188,7 +188,7 @@ const AdminPartnersTab: React.FC = () => {
           <TabsTrigger value="pending" className="gap-spacing-xs">
             Solicitações
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-spacing-2xs py-spacing-3xs rounded-full text-xs font-bold">
+              <span className="bg-primary text-primary-foreground px-spacing-2xs py-spacing-3xs rounded-premium-full text-premium-xs font-bold">
                 {pendingCount}
               </span>
             )}
@@ -198,7 +198,7 @@ const AdminPartnersTab: React.FC = () => {
           <TabsTrigger value="all">Todos</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-0">
+        <TabsContent value={activeTab} className="mt-spacing-0">
           {filteredPartners.length === 0 ? (
             <Card className="border-dashed border-2 py-spacing-2xl">
               <CardContent className="flex flex-col items-center text-center space-y-spacing-md">
@@ -207,7 +207,7 @@ const AdminPartnersTab: React.FC = () => {
                 </div>
                 <div className="space-y-spacing-2xs">
                   <p className="font-semibold">Nenhum parceiro nesta categoria</p>
-                  <p className="text-sm text-muted-foreground">Use a busca ou mude o filtro para encontrar parceiros.</p>
+                  <p className="text-premium-sm text-muted-foreground">Use a busca ou mude o filtro para encontrar parceiros.</p>
                 </div>
               </CardContent>
             </Card>
@@ -217,7 +217,7 @@ const AdminPartnersTab: React.FC = () => {
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
                   <CardHeader className="flex flex-row items-start justify-between pb-spacing-sm">
                     <div className="flex items-center gap-spacing-md">
-                      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-white flex items-center justify-center overflow-hidden border p-spacing-2xs shadow-md">
+                      <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-white flex items-center justify-center overflow-hidden border p-spacing-2xs shadow-premium-md">
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (
@@ -225,11 +225,11 @@ const AdminPartnersTab: React.FC = () => {
                         )}
                       </div>
                       <div>
-                        <CardTitle className="text-lg flex items-center gap-spacing-xs">
+                        <CardTitle className="text-premium-lg flex items-center gap-spacing-xs">
                           {partner.name}
                           {getStatusBadge(partner.status)}
                         </CardTitle>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-spacing-2xs">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-premium-sm text-muted-foreground mt-spacing-2xs">
                           <span className="flex items-center gap-spacing-2xs"><Mail className="w-spacing-sm h-spacing-sm" /> {partner.contact_email}</span>
                           <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
                         </div>
@@ -265,15 +265,15 @@ const AdminPartnersTab: React.FC = () => {
                   </CardHeader>
                   
                   <CardContent className="pb-spacing-md">
-                    <p className="text-sm text-muted-foreground line-clamp-2 italic">
+                    <p className="text-premium-sm text-muted-foreground line-clamp-spacing-xs italic">
                       "{partner.description || "Nenhuma descrição fornecida."}"
                     </p>
                   </CardContent>
                   
-                  <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-spacing-xs py-spacing-sm bg-muted/5">
+                  <CardFooter className="pt-spacing-0 flex items-center justify-between border-t border-border/50 mt-spacing-xs py-spacing-sm bg-muted/5">
                     <div className="flex items-center gap-spacing-xs">
                       {partner.website_url && (
-                        <Button variant="ghost" size="sm" className="h-spacing-xl gap-spacing-2xs text-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
+                        <Button variant="ghost" size="sm" className="h-spacing-xl gap-spacing-2xs text-premium-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
                           <a href={partner.website_url} target="_blank" rel="noopener noreferrer">
                             Site <ExternalLink className="w-spacing-sm h-spacing-sm" />
                           </a>

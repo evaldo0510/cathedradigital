@@ -63,12 +63,12 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
         className="w-spacing-2xl h-spacing-3xs bg-primary/30 mx-auto mb-spacing-md origin-left"
       />
       <motion.p
-        className="text-5xl md:text-6xl font-display font-bold text-primary"
+        className="text-premium-5xl md:text-premium-6xl font-display font-bold text-primary"
         viewport={{ once: true }}
       >
         {isNumeric ? `${count.toLocaleString('pt-BR')}${suffix}` : value}
       </motion.p>
-      <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+      <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
     </motion.div>
   );
 };
@@ -136,8 +136,8 @@ const StatsSection = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-spacing-3xl"
       >
-        <span className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
-        <h2 className="mt-spacing-md text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
+        <span className="text-premium-xs font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
+        <h2 className="mt-spacing-md text-premium-3xl md:text-premium-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
       </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-spacing-xl relative z-10">

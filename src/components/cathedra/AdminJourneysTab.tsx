@@ -370,8 +370,8 @@ const AdminJourneysTab: React.FC = () => {
     <div className="space-y-spacing-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
-          <h2 className="text-xl font-bold">Gestão de Jornadas</h2>
-          <p className="text-sm text-muted-foreground">Crie e edite trilhas de crescimento espiritual.</p>
+          <h2 className="text-premium-xl font-bold">Gestão de Jornadas</h2>
+          <p className="text-premium-sm text-muted-foreground">Crie e edite trilhas de crescimento espiritual.</p>
         </div>
         <div className="flex gap-spacing-xs">
           <div className="relative">
@@ -401,10 +401,10 @@ const AdminJourneysTab: React.FC = () => {
                 <div>
                   <h3 className="font-bold flex items-center gap-spacing-xs">
                     {journey.title}
-                    {journey.is_premium && <Badge variant="secondary" className="text-xs bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
-                    {!journey.is_active && <Badge variant="outline" className="text-xs">Inativa</Badge>}
+                    {journey.is_premium && <Badge variant="secondary" className="text-premium-xs bg-amber-500/10 text-amber-500 border-amber-500/20">PRO</Badge>}
+                    {!journey.is_active && <Badge variant="outline" className="text-premium-xs">Inativa</Badge>}
                   </h3>
-                  <p className="text-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
+                  <p className="text-premium-xs text-muted-foreground">{journey.category} • {journey.estimated_days} dias</p>
                 </div>
               </div>
               <div className="flex items-center gap-spacing-xs">
@@ -427,8 +427,8 @@ const AdminJourneysTab: React.FC = () => {
             {selectedJourneyId === journey.id && (
               <div className="bg-muted/30 border-t p-spacing-md space-y-spacing-sm">
                 <div className="flex items-center justify-between mb-spacing-xs">
-                  <h4 className="text-sm font-semibold flex items-center gap-spacing-xs"><Layers className="w-spacing-md h-spacing-md" /> Passos da Jornada</h4>
-                  <Button variant="outline" size="sm" className="h-spacing-xl text-xs gap-spacing-2xs" onClick={() => handleCreateStep(journey.id)}>
+                  <h4 className="text-premium-sm font-semibold flex items-center gap-spacing-xs"><Layers className="w-spacing-md h-spacing-md" /> Passos da Jornada</h4>
+                  <Button variant="outline" size="sm" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={() => handleCreateStep(journey.id)}>
                     <Plus className="w-spacing-sm h-spacing-sm" /> Adicionar Passo
                   </Button>
                 </div>
@@ -437,16 +437,16 @@ const AdminJourneysTab: React.FC = () => {
                     {[1, 2].map(i => <div key={i} className="h-spacing-xl bg-muted animate-pulse rounded" />)}
                   </div>
                 ) : steps.length === 0 ? (
-                  <p className="text-sm text-muted-foreground italic text-center py-spacing-md">Nenhum passo cadastrado nesta jornada.</p>
+                  <p className="text-premium-sm text-muted-foreground italic text-center py-spacing-md">Nenhum passo cadastrado nesta jornada.</p>
                 ) : (
                   <div className="space-y-spacing-xs">
                     {steps.map(step => (
-                      <div key={step.id} className="flex items-center justify-between bg-card p-spacing-sm rounded-premium border text-sm group">
+                      <div key={step.id} className="flex items-center justify-between bg-card p-spacing-sm rounded-premium border text-premium-sm group">
                         <div className="flex items-center gap-spacing-sm">
-                          <span className="w-spacing-lg h-spacing-lg rounded bg-muted flex items-center justify-center font-bold text-xs">{step.step_order}</span>
+                          <span className="w-spacing-lg h-spacing-lg rounded bg-muted flex items-center justify-center font-bold text-premium-xs">{step.step_order}</span>
                           <div>
                             <p className="font-medium">{step.title}</p>
-                            <p className="text-xs text-muted-foreground">{step.step_type}</p>
+                            <p className="text-premium-xs text-muted-foreground">{step.step_type}</p>
                           </div>
                         </div>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity">
@@ -501,11 +501,11 @@ const AdminJourneysTab: React.FC = () => {
               <div className="flex gap-spacing-md">
                 <label className="flex items-center gap-spacing-xs cursor-pointer">
                   <input type="checkbox" checked={editingJourney.is_active} onChange={e => setEditingJourney({...editingJourney, is_active: e.target.checked})} className="rounded border-gray-300" />
-                  <span className="text-sm">Ativa</span>
+                  <span className="text-premium-sm">Ativa</span>
                 </label>
                 <label className="flex items-center gap-spacing-xs cursor-pointer">
                   <input type="checkbox" checked={editingJourney.is_premium} onChange={e => setEditingJourney({...editingJourney, is_premium: e.target.checked})} className="rounded border-gray-300" />
-                  <span className="text-sm">Premium (PRO)</span>
+                  <span className="text-premium-sm">Premium (PRO)</span>
                 </label>
               </div>
             </div>
@@ -550,12 +550,12 @@ const AdminJourneysTab: React.FC = () => {
                 <Label>Conteúdo (JSON)</Label>
                 <div className="relative group">
                    <Textarea 
-                     className="font-mono text-xs h-[300px]" 
+                     className="font-mono text-premium-xs h-[300px]" 
                      value={stepContentString} 
                      onChange={e => setStepContentString(e.target.value)} 
                    />
                    <div className="absolute right-spacing-xs top-spacing-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="outline" size="sm" className="h-spacing-lg text-xs uppercase tracking-tighter" onClick={() => {
+                     <Button variant="outline" size="sm" className="h-spacing-lg text-premium-xs uppercase tracking-tighter" onClick={() => {
                        try {
                          const parsed = JSON.parse(stepContentString);
                          setStepContentString(JSON.stringify(parsed, null, 2));
@@ -566,7 +566,7 @@ const AdminJourneysTab: React.FC = () => {
                      }}>Formatar</Button>
                    </div>
                 </div>
-                <p className="text-xs text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
+                <p className="text-premium-xs text-muted-foreground italic">Dica: use chaves como 'intro', 'reflection', 'practice', 'prayer' para que o conteúdo apareça no app.</p>
               </div>
             </div>
           )}
@@ -617,11 +617,11 @@ const AdminJourneysTab: React.FC = () => {
             <div className="flex gap-spacing-md">
               <label className="flex items-center gap-spacing-xs cursor-pointer">
                 <input type="checkbox" checked={newJourney.is_active} onChange={e => setNewJourney({...newJourney, is_active: e.target.checked})} className="rounded border-gray-300" />
-                <span className="text-sm font-medium">Ativa</span>
+                <span className="text-premium-sm font-medium">Ativa</span>
               </label>
               <label className="flex items-center gap-spacing-xs cursor-pointer">
                 <input type="checkbox" checked={newJourney.is_premium} onChange={e => setNewJourney({...newJourney, is_premium: e.target.checked})} className="rounded border-gray-300" />
-                <span className="text-sm font-medium">Premium (PRO)</span>
+                <span className="text-premium-sm font-medium">Premium (PRO)</span>
               </label>
             </div>
           </div>

@@ -122,31 +122,31 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             ref={panelRef}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-spacing-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-spacing-xl flex flex-col outline-none"
+            className="fixed right-0 top-spacing-0 bottom-spacing-0 w-full max-w-spacing-sm bg-card border-l border-border/40 shadow-premium-hover z-[201] p-spacing-xl flex flex-col outline-none"
             tabIndex={-1}
             role="dialog"
             aria-labelledby="a11y-title"
           >
             <div className="flex items-center justify-between mb-spacing-xl">
               <div className="flex items-center gap-spacing-sm">
-                <div className="p-spacing-xs rounded-sm bg-primary/10 text-primary">
+                <div className="p-spacing-xs rounded-premium-sm bg-primary/10 text-primary">
                   <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />
                 </div>
-                <h2 id="a11y-title" className="text-xl font-serif font-bold text-primary">Acessibilidade</h2>
+                <h2 id="a11y-title" className="text-premium-xl font-serif font-bold text-primary">Acessibilidade</h2>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full">
+              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-premium-full">
                 <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
 
             <div className="space-y-spacing-xl overflow-y-auto pr-spacing-xs custom-scrollbar flex-1">
               <section className="space-y-spacing-lg">
-                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Aparência e Leitura</h3>
+                <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Aparência e Leitura</h3>
                 
                 <div className="space-y-spacing-md">
                   <div className="flex items-center justify-between group">
                     <div className="space-y-spacing-2xs">
-                      <label htmlFor="dark-mode-toggle" className="text-sm font-bold text-primary cursor-pointer">Modo Escuro</label>
+                      <label htmlFor="dark-mode-toggle" className="text-premium-sm font-bold text-primary cursor-pointer">Modo Escuro</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Reduz o cansaço visual em ambientes com pouca luz.</p>
                     </div>
                     <Switch 
@@ -158,7 +158,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
                   <div className="flex items-center justify-between group pt-spacing-md">
                     <div className="space-y-spacing-2xs">
-                      <label htmlFor="high-contrast-toggle" className="text-sm font-bold text-primary cursor-pointer">Alto Contraste</label>
+                      <label htmlFor="high-contrast-toggle" className="text-premium-sm font-bold text-primary cursor-pointer">Alto Contraste</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Aumenta a distinção entre elementos para facilitar a leitura.</p>
                     </div>
                     <Switch 
@@ -169,7 +169,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   </div>
                   <div className="flex items-center justify-between group pt-spacing-md">
                     <div className="space-y-spacing-2xs">
-                      <label htmlFor="reduce-animations-toggle" className="text-sm font-bold text-primary cursor-pointer">Reduzir Animações</label>
+                      <label htmlFor="reduce-animations-toggle" className="text-premium-sm font-bold text-primary cursor-pointer">Reduzir Animações</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Desativa movimentos excessivos para uma experiência mais estática e rápida.</p>
                     </div>
                     <Switch 
@@ -182,7 +182,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   
                   <div className="flex items-center justify-between group pt-spacing-md">
                     <div className="space-y-spacing-2xs">
-                      <label htmlFor="visible-focus-toggle" className="text-sm font-bold text-primary cursor-pointer">Foco Visível</label>
+                      <label htmlFor="visible-focus-toggle" className="text-premium-sm font-bold text-primary cursor-pointer">Foco Visível</label>
                       <p className="text-[11px] text-muted-foreground leading-relaxed max-w-[200px]">Adiciona uma borda de alto destaque em elementos selecionados.</p>
                     </div>
                     <Switch 
@@ -194,16 +194,16 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
                   <div className="space-y-spacing-md pt-spacing-lg">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-bold text-primary">Tamanho da Fonte</label>
+                      <label className="text-premium-sm font-bold text-primary">Tamanho da Fonte</label>
                       <span className="text-[10px] font-bold text-primary uppercase">{settings.fontSize}</span>
                     </div>
-                    <div className="flex bg-muted/30 rounded-xl p-spacing-2xs gap-spacing-2xs border border-primary/5">
+                    <div className="flex bg-muted/30 rounded-premium p-spacing-2xs gap-spacing-2xs border border-primary/5">
                       {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
                         <button
                           key={s}
                           onClick={() => updateSettings({ fontSize: s })}
-                          className={`flex-1 py-spacing-xs text-[10px] font-bold rounded-lg transition-all ${
-                            settings.fontSize === s ? 'bg-background text-primary shadow-sm' : 'text-muted-foreground/40 hover:text-primary'
+                          className={`flex-1 py-spacing-xs text-[10px] font-bold rounded-premium-lg transition-all ${
+                            settings.fontSize === s ? 'bg-background text-primary shadow-premium-sm' : 'text-muted-foreground/40 hover:text-primary'
                           }`}
                           aria-label={`Mudar tamanho da fonte para ${s}`}
                         >
@@ -216,7 +216,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-spacing-lg pt-spacing-md">
-                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Atalhos de Teclado</h3>
+                <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Atalhos de Teclado</h3>
                 <div className="grid gap-spacing-sm">
                   <ShortcutInput 
                     label="Bíblia" 
@@ -243,8 +243,8 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
 
               <section className="space-y-spacing-lg pt-spacing-md">
                 <div className="flex items-center justify-between mb-spacing-xs">
-                  <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60">Histórico Logos IA</h3>
-                  <span className="text-xs font-bold text-primary">{settings.logosHistoryLimit} itens</span>
+                  <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60">Histórico Logos IA</h3>
+                  <span className="text-premium-xs font-bold text-primary">{settings.logosHistoryLimit} itens</span>
                 </div>
                 <div className="px-spacing-xs">
                   <Slider 
@@ -262,7 +262,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-spacing-lg pt-spacing-md">
-                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Sugestões Logos IA</h3>
+                <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Sugestões Logos IA</h3>
                 <div className="space-y-spacing-md">
                   <div className="flex flex-col gap-spacing-xs">
                     {(['always', 'first_selection', 'never'] as const).map((mode) => (
@@ -275,7 +275,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                             : 'bg-card border-border/10 text-muted-foreground hover:bg-muted/30'
                         }`}
                       >
-                        <span className="text-xs font-bold uppercase tracking-widest">
+                        <span className="text-premium-xs font-bold uppercase tracking-widest">
                           {mode === 'always' ? 'Sempre Exibir' : mode === 'first_selection' ? 'Apenas na Primeira' : 'Nunca Exibir'}
                         </span>
                         {settings.logosSuggestions === mode && <Icons.Check className="w-spacing-md h-spacing-md" />}
@@ -289,7 +289,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               </section>
 
               <section className="space-y-spacing-md pt-spacing-md">
-                <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Impacto na Leitura</h3>
+                <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 border-b border-border/10 pb-spacing-xs">Impacto na Leitura</h3>
                 <div className="p-spacing-md rounded-premium bg-primary/5 border border-primary/10 space-y-spacing-sm">
                   <div className="flex items-center gap-spacing-xs text-[11px] font-bold text-primary">
                     <Icons.Info className="w-spacing-sm h-spacing-sm" />
@@ -303,7 +303,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
               
               <section className="space-y-spacing-lg pt-spacing-xl border-t border-border/10">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60">Auditoria Técnica</h3>
+                  <h3 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60">Auditoria Técnica</h3>
                   {auditResult && (
                     <span className={`text-[10px] font-black uppercase tracking-widest ${auditResult.status === 'premium' ? 'text-green-500' : 'text-amber-500'}`}>
                       Score: {auditResult.wcagScore}%
@@ -314,7 +314,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 <div className="space-y-spacing-md">
                   <Button 
                     variant="outline" 
-                    className="w-full h-spacing-2xl rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
+                    className="w-full h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
                     onClick={runAudit}
                     disabled={isAuditing}
                   >
@@ -324,7 +324,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   <div className="grid grid-cols-2 gap-spacing-sm">
                     <Button 
                       variant="ghost" 
-                      className="h-spacing-2xl rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      className="h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
                       onClick={() => handleExport('json')}
                     >
                       <Icons.Database className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
@@ -332,7 +332,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     </Button>
                     <Button 
                       variant="ghost" 
-                      className="h-spacing-2xl rounded-xl text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      className="h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
                       onClick={() => handleExport('pdf')}
                     >
                       <Icons.FileText className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
@@ -341,7 +341,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   </div>
 
                   {auditResult && auditResult.contrastIssues.length > 0 && (
-                    <div className="p-spacing-md rounded-xl bg-amber-500/5 border border-amber-500/10 space-y-spacing-sm">
+                    <div className="p-spacing-md rounded-premium bg-amber-500/5 border border-amber-500/10 space-y-spacing-sm">
                       <div className="flex items-center gap-spacing-xs text-[10px] font-bold text-amber-600 uppercase tracking-widest">
                         <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm" />
                         <span>Ajustes de Contraste Necessários</span>
@@ -375,7 +375,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             </div>
 
             <div className="pt-spacing-xl border-t border-border/10">
-              <Button className="w-full rounded-full h-spacing-2xl text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium btn-premium-primary" onClick={onClose}>
+              <Button className="w-full rounded-premium-full h-spacing-2xl text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium btn-premium-primary" onClick={onClose}>
                 Concluído
               </Button>
             </div>

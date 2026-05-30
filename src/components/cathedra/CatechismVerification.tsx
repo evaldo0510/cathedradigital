@@ -148,7 +148,7 @@ const CatechismVerification: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-spacing-xl">
         <Icons.Lock className="w-spacing-3xl h-spacing-3xl text-destructive mb-spacing-md opacity-20" />
-        <h2 className="text-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
+        <h2 className="text-premium-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
         <p className="text-muted-foreground">Esta página é para administradores.</p>
       </div>
     );
@@ -163,20 +163,20 @@ const CatechismVerification: React.FC = () => {
     <div className="max-w-5xl mx-auto p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500 pb-spacing-3xl">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
         <div>
-          <h1 className="text-2xl font-serif font-bold text-foreground">Verificação de Conteúdo</h1>
-          <p className="text-sm text-muted-foreground">Comparação entre seções do site e banco de dados oficial</p>
+          <h1 className="text-premium-2xl font-serif font-bold text-foreground">Verificação de Conteúdo</h1>
+          <p className="text-premium-sm text-muted-foreground">Comparação entre seções do site e banco de dados oficial</p>
         </div>
         
         <div className="flex items-center gap-spacing-sm">
           {(stats.missing > 0 || stats.divergent > 0) && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="default" className="rounded-full bg-emerald-600 hover:bg-emerald-700">
+                <Button variant="default" className="rounded-premium-full bg-emerald-600 hover:bg-emerald-700">
                   <Icons.CheckCircle className="w-spacing-md h-spacing-md mr-spacing-xs" />
                   Sincronizar {stats.missing + stats.divergent} Divergências
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="rounded-full border-border bg-card">
+              <AlertDialogContent className="rounded-premium-full border-border bg-card">
                 <AlertDialogHeader>
                   <AlertDialogTitle className="font-serif">Sincronizar com o Banco?</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -185,8 +185,8 @@ const CatechismVerification: React.FC = () => {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="rounded-full">Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleSync} className="rounded-full bg-emerald-600 hover:bg-emerald-700">
+                  <AlertDialogCancel className="rounded-premium-full">Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleSync} className="rounded-premium-full bg-emerald-600 hover:bg-emerald-700">
                     Sincronizar Agora
                   </AlertDialogAction>
                 </AlertDialogFooter>
@@ -199,7 +199,7 @@ const CatechismVerification: React.FC = () => {
             disabled={loading}
             variant="outline"
             size="sm"
-            className="rounded-full"
+            className="rounded-premium-full"
           >
             <Icons.RotateCcw className={`w-spacing-md h-spacing-md mr-spacing-xs ${loading ? 'animate-spin' : ''}`} />
             Recarregar
@@ -209,20 +209,20 @@ const CatechismVerification: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md">
         <Card className="p-spacing-md bg-muted/30 border-border/50">
-          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
-          <div className="text-2xl font-serif font-bold">{stats.total}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
+          <div className="text-premium-2xl font-serif font-bold">{stats.total}</div>
         </Card>
         <Card className="p-spacing-md bg-emerald-500/5 border-emerald-500/20">
-          <span className="text-xs font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
-          <div className="text-2xl font-serif font-bold text-emerald-600">{stats.ok}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
+          <div className="text-premium-2xl font-serif font-bold text-emerald-600">{stats.ok}</div>
         </Card>
         <Card className="p-spacing-md bg-destructive/5 border-destructive/20">
-          <span className="text-xs font-black uppercase tracking-widest text-destructive">Ausentes</span>
-          <div className="text-2xl font-serif font-bold text-destructive">{stats.missing}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-destructive">Ausentes</span>
+          <div className="text-premium-2xl font-serif font-bold text-destructive">{stats.missing}</div>
         </Card>
         <Card className="p-spacing-md bg-amber-500/5 border-amber-500/20">
-          <span className="text-xs font-black uppercase tracking-widest text-amber-600">Divergentes</span>
-          <div className="text-2xl font-serif font-bold text-amber-600">{stats.divergent}</div>
+          <span className="text-premium-xs font-black uppercase tracking-widest text-amber-600">Divergentes</span>
+          <div className="text-premium-2xl font-serif font-bold text-amber-600">{stats.divergent}</div>
         </Card>
       </div>
 
@@ -231,32 +231,32 @@ const CatechismVerification: React.FC = () => {
           <div className="flex items-center gap-spacing-xs bg-muted/50 p-spacing-2xs rounded-premium border border-border">
             <Button 
               onClick={() => setFilter('all')} 
-              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-spacing-md py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
             </Button>
             <Button 
               onClick={() => setFilter('missing')} 
-              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-md' : 'text-muted-foreground hover:text-destructive'}`}
+              className={`px-spacing-md py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-premium-md' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
             </Button>
             <Button 
               onClick={() => setFilter('divergent')} 
-              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-md' : 'text-muted-foreground hover:text-amber-600'}`}
+              className={`px-spacing-md py-spacing-2xs text-premium-xs font-black uppercase tracking-widest rounded-premium-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-premium-md' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
             </Button>
           </div>
-          <span className="text-xs font-black uppercase text-muted-foreground">
+          <span className="text-premium-xs font-black uppercase text-muted-foreground">
             {filteredResults.length} parágrafos exibidos
           </span>
         </div>
 
-        <div className="bg-card border border-border rounded-premium overflow-hidden shadow-md">
-          <table className="w-full text-left text-sm">
+        <div className="bg-card border border-border rounded-premium overflow-hidden shadow-premium-md">
+          <table className="w-full text-left text-premium-sm">
             <thead>
-              <tr className="border-b border-border bg-muted/30 text-xs font-black uppercase tracking-widest text-muted-foreground">
+              <tr className="border-b border-border bg-muted/30 text-premium-xs font-black uppercase tracking-widest text-muted-foreground">
                 <th className="px-spacing-lg py-spacing-md">§ Parágrafo</th>
                 <th className="px-spacing-lg py-spacing-md">Seção</th>
                 <th className="px-spacing-lg py-spacing-md">Status</th>
@@ -283,14 +283,14 @@ const CatechismVerification: React.FC = () => {
                 filteredResults.map((res, i) => (
                   <tr key={`${res.paragraph}-${i}`} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                     <td className="px-spacing-lg py-spacing-md font-bold font-serif text-primary">§{res.paragraph}</td>
-                    <td className="px-spacing-lg py-spacing-md text-xs font-medium text-muted-foreground">{res.section}</td>
+                    <td className="px-spacing-lg py-spacing-md text-premium-xs font-medium text-muted-foreground">{res.section}</td>
                     <td className="px-spacing-lg py-spacing-md">
                       {res.status === 'ok' ? (
-                        <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-xs font-black">OK</Badge>
+                        <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-premium-xs font-black">OK</Badge>
                       ) : res.status === 'missing' ? (
-                        <Badge variant="destructive" className="uppercase text-xs font-black">Ausente</Badge>
+                        <Badge variant="destructive" className="uppercase text-premium-xs font-black">Ausente</Badge>
                       ) : (
-                        <Badge className="bg-amber-500 text-white border-0 uppercase text-xs font-black">Divergente</Badge>
+                        <Badge className="bg-amber-500 text-white border-0 uppercase text-premium-xs font-black">Divergente</Badge>
                       )}
                     </td>
                     <td className="px-spacing-lg py-spacing-md text-premium-small text-muted-foreground italic">

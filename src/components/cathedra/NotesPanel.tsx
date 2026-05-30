@@ -50,7 +50,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
     <div className="relative inline-flex">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-spacing-2xs px-spacing-xs py-spacing-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+        className={`flex items-center gap-spacing-2xs px-spacing-xs py-spacing-2xs rounded-premium-full text-premium-xs font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
           notes.length > 0
             ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
@@ -67,7 +67,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
       {isOpen && (
         <div className="absolute right-0 top-full mt-spacing-xs w-spacing-4xl max-h-spacing-4xl overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-spacing-md space-y-spacing-sm">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-black uppercase tracking-widest text-primary">
+            <h4 className="text-premium-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}
             </h4>
             <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -82,7 +82,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
               onChange={e => setNewNote(e.target.value)}
               placeholder="Escreva sua anotação..."
               rows={2}
-              className="w-full px-spacing-sm py-spacing-xs rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full px-spacing-sm py-spacing-xs rounded-premium-full border border-border bg-background text-foreground text-premium-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <div className="flex items-center justify-between">
               <div className="flex gap-spacing-2xs">
@@ -90,14 +90,14 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
                   <Button
                     key={c.id}
                     onClick={() => setSelectedColor(c.id)}
-                    className={`w-spacing-md h-spacing-md rounded-full border-2 ${c.bg} ${selectedColor === c.id ? c.border : 'border-transparent'}`}
+                    className={`w-spacing-md h-spacing-md rounded-premium-full border-2 ${c.bg} ${selectedColor === c.id ? c.border : 'border-transparent'}`}
                   />
                 ))}
               </div>
               <Button
                 onClick={handleSave}
                 disabled={!newNote.trim()}
-                className="px-spacing-sm py-spacing-2xs rounded-full text-xs font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
+                className="px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-xs font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
               >
                 Salvar
               </Button>
@@ -105,41 +105,41 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           </div>
 
           {/* Existing notes */}
-          {loading && <p className="text-xs text-muted-foreground italic text-center">Carregando...</p>}
+          {loading && <p className="text-premium-xs text-muted-foreground italic text-center">Carregando...</p>}
           {notes.map(note => {
             const cfg = colorCfg(note.highlight_color);
             return (
-              <div key={note.id} className={`rounded-full p-spacing-sm ${cfg.bg} border ${cfg.border} space-y-spacing-2xs`}>
+              <div key={note.id} className={`rounded-premium-full p-spacing-sm ${cfg.bg} border ${cfg.border} space-y-spacing-2xs`}>
                 {editingId === note.id ? (
                   <div className="space-y-spacing-xs">
                     <textarea
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={2}
-                      className="w-full px-spacing-xs py-spacing-2xs rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none"
+                      className="w-full px-spacing-xs py-spacing-2xs rounded-premium-full border border-border bg-background text-foreground text-premium-sm resize-none focus:outline-none"
                     />
                     <div className="flex gap-spacing-xs">
-                      <Button onClick={() => handleUpdate(note.id)} className="text-xs font-bold text-primary">Salvar</Button>
-                      <Button onClick={() => setEditingId(null)} className="text-xs text-muted-foreground">Cancelar</Button>
+                      <Button onClick={() => handleUpdate(note.id)} className="text-premium-xs font-bold text-primary">Salvar</Button>
+                      <Button onClick={() => setEditingId(null)} className="text-premium-xs text-muted-foreground">Cancelar</Button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <p className="text-sm text-foreground leading-relaxed">{note.note_text}</p>
+                    <p className="text-premium-sm text-foreground leading-relaxed">{note.note_text}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-premium-xs text-muted-foreground">
                         {new Date(note.created_at).toLocaleDateString('pt-BR')}
                       </span>
                       <div className="flex gap-spacing-xs">
                         <Button
                           onClick={() => { setEditingId(note.id); setEditText(note.note_text); }}
-                          className="text-xs text-muted-foreground hover:text-foreground"
+                          className="text-premium-xs text-muted-foreground hover:text-foreground"
                         >
                           Editar
                         </Button>
                         <Button
                           onClick={() => deleteNote(note.id)}
-                          className="text-xs text-destructive hover:underline"
+                          className="text-premium-xs text-destructive hover:underline"
                         >
                           Excluir
                         </Button>
@@ -151,7 +151,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
             );
           })}
           {!loading && notes.length === 0 && (
-            <p className="text-xs text-muted-foreground italic text-center py-spacing-xs">Nenhuma anotação ainda.</p>
+            <p className="text-premium-xs text-muted-foreground italic text-center py-spacing-xs">Nenhuma anotação ainda.</p>
           )}
         </div>
       )}

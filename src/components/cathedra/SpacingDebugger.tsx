@@ -30,7 +30,7 @@ export const SpacingDebugger: React.FC = () => {
             variant={isEnabled ? "destructive" : "secondary"}
             size="icon"
             onClick={() => setIsEnabled(!isEnabled)}
-            className="rounded-full shadow-premium border border-white/20 backdrop-blur-sm"
+            className="rounded-premium-full shadow-premium border border-white/20 backdrop-blur-sm"
             title="Alternar Debug de Espaçamentos (Alt+D)"
           >
             {isEnabled ? <EyeOff className="h-spacing-md w-spacing-md" /> : <Layout className="h-spacing-md w-spacing-md" />}

@@ -9,12 +9,12 @@ const PrivacyPage: React.FC = () => {
     <div className="w-full pb-spacing-4xl">
       {/* Redundant back button removed */}
 
-      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-spacing-xs">Política de Privacidade</h1>
-      <p className="text-xs font-black uppercase tracking-widest text-primary mb-spacing-xl">Última atualização: Abril de 2026</p>
+      <h1 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground mb-spacing-xs">Política de Privacidade</h1>
+      <p className="text-premium-xs font-black uppercase tracking-widest text-primary mb-spacing-xl">Última atualização: Abril de 2026</p>
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-spacing-xl text-muted-foreground">
         <section>
-          <h2 className="text-lg font-bold text-foreground">1. Informações Coletadas</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">1. Informações Coletadas</h2>
           <p>
             Coletamos informações que você nos fornece diretamente ao criar uma conta: nome, 
             endereço de e-mail e diocese (opcional). Também coletamos dados de uso como 
@@ -23,7 +23,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">2. Uso das Informações</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">2. Uso das Informações</h2>
           <p>Utilizamos suas informações para:</p>
           <ul className="list-disc pl-spacing-lg space-y-spacing-2xs">
             <li>Fornecer e manter a plataforma funcionando</li>
@@ -35,7 +35,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">3. Proteção de Dados</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">3. Proteção de Dados</h2>
           <p>
             Sua privacidade é sagrada para nós. Implementamos medidas de segurança técnicas 
             e organizacionais para proteger seus dados pessoais contra acesso não autorizado, 
@@ -45,7 +45,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">4. Compartilhamento de Dados</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">4. Compartilhamento de Dados</h2>
           <p>
             Não vendemos, comercializamos ou transferimos suas informações pessoais 
             para terceiros. Compartilhamos dados apenas com provedores de serviço essenciais 
@@ -55,7 +55,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">5. Dados da Comunidade</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">5. Dados da Comunidade</h2>
           <p>
             Publicações nos espaços comunitários são visíveis para outros usuários autenticados. 
             Seu nome e avatar são exibidos junto às suas contribuições. Você pode editar ou 
@@ -64,7 +64,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">6. Cookies e Armazenamento Local</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">6. Cookies e Armazenamento Local</h2>
           <p>
             Utilizamos armazenamento local (localStorage) para salvar preferências como tema 
             (claro/escuro), diocese selecionada e progresso de onboarding. Não utilizamos cookies 
@@ -74,7 +74,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">7. Seus Direitos</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">7. Seus Direitos</h2>
           <p>Você tem direito a:</p>
           <ul className="list-disc pl-spacing-lg space-y-spacing-2xs">
             <li>Acessar seus dados pessoais armazenados</li>
@@ -86,7 +86,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">8. Dados de Menores</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">8. Dados de Menores</h2>
           <p>
             A plataforma é destinada a maiores de 13 anos. Não coletamos intencionalmente 
             informações de menores de 13 anos sem consentimento parental. Se tomarmos 
@@ -96,7 +96,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">9. Alterações nesta Política</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">9. Alterações nesta Política</h2>
           <p>
             Esta política pode ser atualizada periodicamente. Notificaremos sobre mudanças 
             significativas por meio da plataforma. Recomendamos revisar esta política 
@@ -105,7 +105,7 @@ const PrivacyPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">10. Contato</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">10. Contato</h2>
           <p>
             Para questões relacionadas à privacidade ou para exercer seus direitos, 
             entre em contato através da seção de suporte ou pelo e-mail disponibilizado 
@@ -115,7 +115,7 @@ const PrivacyPage: React.FC = () => {
       </div>
 
       <div className="mt-spacing-2xl pt-spacing-lg border-t border-border">
-        <p className="text-xs text-muted-foreground italic text-center">
+        <p className="text-premium-xs text-muted-foreground italic text-center">
           "O Senhor é meu pastor, nada me faltará." — Sl 23,1
         </p>
       </div>

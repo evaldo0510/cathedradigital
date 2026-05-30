@@ -79,7 +79,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
             onClick={() => onNavigate(AppRoute.BIBLE)}
           >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
               <Icons.Bible className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
             <div className="space-y-spacing-sm text-center">
@@ -93,7 +93,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl"
             onClick={() => onNavigate(AppRoute.CATECHISM)}
           >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
               <Icons.Catechism className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
             </div>
             <div className="space-y-spacing-sm text-center">
@@ -120,7 +120,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="rounded-full p-spacing-xs border-primary/5"
+          className="rounded-premium-full p-spacing-xs border-primary/5"
         >
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
             <div className="relative group/input">
@@ -129,13 +129,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
                 placeholder="Logos IA: Pergunte sobre a Fé..."
-                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-full border-none bg-transparent transition-all duration-700 text-sm md:text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-none"
+                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-premium-full border-none bg-transparent transition-all duration-700 text-premium-sm md:text-premium-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-premium-none"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
               <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-700" />
               <button 
                 type="submit"
-                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
+                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
               >
                 <ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
               </button>
@@ -149,11 +149,11 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         <CathedraCard
           variant="interactive"
           padding="none"
-          className="rounded-full border-primary/[0.02]"
+          className="rounded-premium-full border-primary/[0.02]"
           onClick={() => onNavigate(AppRoute.HOJE)}
         >
           <div className="flex items-center gap-spacing-lg px-spacing-xl py-spacing-md group">
-            <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
+            <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
               <Icons.Sun className="w-spacing-md h-spacing-md" strokeWidth={1} />
             </div>
             <div className="text-left">

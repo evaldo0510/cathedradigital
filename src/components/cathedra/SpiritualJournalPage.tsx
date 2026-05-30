@@ -101,34 +101,34 @@ const SpiritualJournalPage = () => {
           <Icons.PenLine className="w-spacing-md h-spacing-md text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
-        <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
+        <h1 className="text-premium-4xl md:text-premium-7xl font-display font-bold text-primary tracking-tight">
           Diário Espiritual
         </h1>
-        <p className="text-lg md:text-xl text-primary/60 italic font-serif leading-relaxed">
+        <p className="text-premium-lg md:text-premium-xl text-primary/60 italic font-serif leading-relaxed">
           "Examina, ó minha alma, o que fizeste hoje diante de Deus."
         </p>
       </header>
 
       <div className="flex justify-center">
-        <div className="inline-flex bg-muted/20 p-spacing-xs rounded-full border border-border/10 backdrop-blur-sm">
+        <div className="inline-flex bg-muted/20 p-spacing-xs rounded-premium-full border border-border/10 backdrop-blur-sm">
           <Button
             variant={activeTab === 'reflection' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('reflection')}
-            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-premium-full px-spacing-xl py-spacing-lg h-spacing-2xl text-premium-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
           >
             <Icons.Sun className="w-spacing-md h-spacing-md mr-spacing-xs" /> Reflexão Diária
           </Button>
           <Button
             variant={activeTab === 'study' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('study')}
-            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-premium-full px-spacing-xl py-spacing-lg h-spacing-2xl text-premium-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
           >
             <Icons.BookOpen className="w-spacing-md h-spacing-md mr-spacing-xs" /> Estudo e Leitura
           </Button>
           <Button
             variant={activeTab === 'relatio' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('relatio')}
-            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-premium-full px-spacing-xl py-spacing-lg h-spacing-2xl text-premium-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
           >
             <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" /> Conexões Salvas
           </Button>
@@ -148,7 +148,7 @@ const SpiritualJournalPage = () => {
             <section className="max-w-spacing-4xl mx-auto w-full">
               <CathedraCard padding="lg" className="space-y-spacing-3xl">
                 <div className="space-y-spacing-xl">
-                  <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
+                  <h3 className="text-premium-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
                   <div className="flex flex-wrap justify-center gap-spacing-lg">
                     {MOODS.map((m) => (
                       <button
@@ -172,7 +172,7 @@ const SpiritualJournalPage = () => {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-                    className="min-h-[300px] rounded-premium border-border/20 p-spacing-xl md:p-spacing-2xl font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+                    className="min-h-[300px] rounded-premium border-border/20 p-spacing-xl md:p-spacing-2xl font-serif text-premium-xl md:text-premium-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-premium-md resize-none placeholder:italic placeholder:opacity-30"
                   />
                   <div className="flex justify-center">
                     <HomeButton 
@@ -220,14 +220,14 @@ const SpiritualJournalPage = () => {
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-spacing-2xs">Registro de Graça</p>
-                            <span className="text-sm font-serif font-bold text-primary">
+                            <span className="text-premium-sm font-serif font-bold text-primary">
                               {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
                             </span>
                           </div>
                         </div>
                         <Icons.Quote className="w-spacing-xl h-spacing-xl text-primary/5" />
                       </div>
-                      <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-spacing-lg border-l-2 border-secondary/20">
+                      <p className="text-premium-xl md:text-premium-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-spacing-lg border-l-2 border-secondary/20">
                         "{entry.content}"
                       </p>
                     </motion.div>
@@ -236,7 +236,7 @@ const SpiritualJournalPage = () => {
               ) : (
                 <div className="text-center py-spacing-4xl opacity-20 hover:opacity-40 transition-opacity duration-1000">
                   <Icons.PenLine className="w-spacing-3xl h-spacing-3xl mx-auto mb-spacing-lg stroke-1" />
-                  <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
+                  <p className="font-serif italic text-premium-xl">Nenhuma reflexão guardada ainda.</p>
                 </div>
               )}
             </section>
@@ -287,7 +287,7 @@ const RelatioFavoritesList = () => {
     return (
       <div className="text-center py-spacing-3xl opacity-30">
         <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl mx-auto mb-spacing-md stroke-1" />
-        <p className="font-serif italic text-lg">Nenhuma conexão salva ainda.</p>
+        <p className="font-serif italic text-premium-lg">Nenhuma conexão salva ainda.</p>
       </div>
     );
   }
@@ -305,7 +305,7 @@ const RelatioFavoritesList = () => {
           <div className="flex items-start justify-between">
             <div className="space-y-spacing-xs">
               <div className="flex items-center gap-spacing-xs">
-                <div className="w-spacing-lg h-spacing-lg rounded-full bg-primary/10 flex items-center justify-center">
+                <div className="w-spacing-lg h-spacing-lg rounded-premium-full bg-primary/10 flex items-center justify-center">
                   <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Relatio</span>
@@ -313,8 +313,8 @@ const RelatioFavoritesList = () => {
                   {format(new Date(fav.timestamp), "d 'de' MMM", { locale: ptBR })}
                 </span>
               </div>
-              <h3 className="text-lg font-serif font-bold text-primary">{fav.title}</h3>
-              <p className="text-sm text-muted-foreground italic line-clamp-2">"{fav.content}"</p>
+              <h3 className="text-premium-lg font-serif font-bold text-primary">{fav.title}</h3>
+              <p className="text-premium-sm text-muted-foreground italic line-clamp-spacing-xs">"{fav.content}"</p>
             </div>
             <Button
               variant="ghost"

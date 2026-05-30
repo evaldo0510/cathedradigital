@@ -63,10 +63,10 @@ const PoenitentiaPage: React.FC = () => {
       <div className="text-center space-y-spacing-md pt-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Sacramentum Poenitentiae</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
-        <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Confissão</h1>
+        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se confessarmos os nossos pecados, Ele é fiel e justo para nos perdoar."</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md px-spacing-xs">
@@ -80,10 +80,10 @@ const PoenitentiaPage: React.FC = () => {
                 : 'bg-card border-border text-foreground hover:border-primary/40 hover:bg-primary/5 hover:shadow-premium'
             }`}
           >
-            <div className={`text-xs font-black opacity-40 uppercase tracking-widest mb-spacing-xs ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
-            <div className="font-serif font-bold text-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
+            <div className={`text-premium-xs font-black opacity-40 uppercase tracking-widest mb-spacing-xs ${activeStep === i ? 'text-white' : 'text-primary'}`}>PASSO {i + 1}</div>
+            <div className="font-serif font-bold text-premium-lg leading-tight group-hover:text-primary transition-colors group-data-[state=active]:text-white">{step.title}</div>
             {activeStep === i && (
-              <div className="absolute top-0 right-0 p-spacing-md opacity-10">
+              <div className="absolute top-spacing-0 right-0 p-spacing-md opacity-10">
                 <Icons.CheckCircle2 className="w-spacing-2xl h-spacing-2xl" />
               </div>
             )}
@@ -92,24 +92,24 @@ const PoenitentiaPage: React.FC = () => {
       </div>
 
       <CathedraCard padding="lg" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-700 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-spacing-2xl opacity-[0.02]">
+        <div className="absolute top-spacing-0 right-0 p-spacing-2xl opacity-[0.02]">
           <Icons.Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
         </div>
 
         <div className="relative space-y-spacing-xl max-w-spacing-3xl mx-auto">
           <div className="space-y-spacing-md text-center">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{CONFESSION_STEPS[activeStep].title}</h2>
-            <p className="text-xl text-muted-foreground italic font-serif leading-relaxed">"{CONFESSION_STEPS[activeStep].description}"</p>
+            <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{CONFESSION_STEPS[activeStep].title}</h2>
+            <p className="text-premium-xl text-muted-foreground italic font-serif leading-relaxed">"{CONFESSION_STEPS[activeStep].description}"</p>
           </div>
 
           {CONFESSION_STEPS[activeStep].items && (
             <div className="space-y-spacing-lg pt-spacing-md">
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Exame de Consciência</h3>
+              <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Exame de Consciência</h3>
               <div className="grid gap-spacing-sm">
                 {CONFESSION_STEPS[activeStep].items?.map((item, i) => (
                   <div key={i} className="flex gap-spacing-md p-spacing-md rounded-premium bg-muted/50 border border-border/50 group hover:bg-white hover:shadow-premium transition-all">
-                    <div className="w-spacing-lg h-spacing-lg rounded-premium bg-primary/10 text-primary flex items-center justify-center font-black text-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
-                    <span className="text-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
+                    <div className="w-spacing-lg h-spacing-lg rounded-premium bg-primary/10 text-primary flex items-center justify-center font-black text-premium-xs shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-colors">{i + 1}</div>
+                    <span className="text-premium-lg text-foreground/90 font-serif leading-relaxed">{item}</span>
                   </div>
                 ))}
               </div>
@@ -117,9 +117,9 @@ const PoenitentiaPage: React.FC = () => {
           )}
 
           {activeStep === 0 && (
-            <div className="mt-spacing-2xl p-spacing-xl bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-spacing-md shadow-md">
+            <div className="mt-spacing-2xl p-spacing-xl bg-primary/5 rounded-[2.5rem] border border-primary/10 text-center space-y-spacing-md shadow-premium-md">
               <Icons.BookOpen className="w-spacing-xl h-spacing-xl text-primary/60 mx-auto" />
-              <p className="text-lg text-foreground/80 font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
+              <p className="text-premium-lg text-foreground/80 font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
                 "O exame de consciência é a confrontação sincera da nossa vida com a lei moral de Deus, o Evangelho e os Seus Mandamentos."
               </p>
             </div>
@@ -131,15 +131,15 @@ const PoenitentiaPage: React.FC = () => {
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                   <Icons.Flame className="w-spacing-md h-spacing-md" />
                 </div>
-                <h3 className="text-xl font-serif font-bold">Ato de Contrição</h3>
+                <h3 className="text-premium-xl font-serif font-bold">Ato de Contrição</h3>
               </div>
               <div className="bg-primary text-primary-foreground p-spacing-xl md:p-spacing-2xl rounded-[3rem] border border-primary/10 shadow-premium-hover shadow-primary/20 relative">
                 <Icons.Sparkles className="absolute -top-spacing-sm -right-spacing-sm w-spacing-xl h-spacing-xl text-white/20 rotate-12" />
-                <p className="text-xl md:text-2xl font-serif leading-relaxed text-center italic opacity-95">
+                <p className="text-premium-xl md:text-premium-2xl font-serif leading-relaxed text-center italic opacity-95">
                   "Meu Deus, porque sois infinitamente bom e Vos amo de todo o meu coração, pesa-me de Vos ter ofendido, e com o auxílio da Vossa divina graça proponho firmemente não tornar a pecar e evitar as próximas ocasiões de pecado. Amém."
                 </p>
               </div>
-              <div className="flex items-center justify-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-primary/60">
+              <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary/60">
                 <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Reze antes ou depois de confessar
               </div>
             </div>
@@ -148,7 +148,7 @@ const PoenitentiaPage: React.FC = () => {
           <div className="flex justify-center pt-spacing-xl">
             <Button 
               onClick={() => setActiveStep((prev) => (prev + 1) % CONFESSION_STEPS.length)}
-              className="px-spacing-xl py-spacing-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-spacing-sm"
+              className="px-spacing-xl py-spacing-md bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95 flex items-center gap-spacing-sm"
             >
               {activeStep === CONFESSION_STEPS.length - 1 ? 'Reiniciar Guia' : 'Próximo Passo'} <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
             </Button>
@@ -162,7 +162,7 @@ const PoenitentiaPage: React.FC = () => {
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-spacing-lg h-spacing-lg" />
             </div>
-            <h3 className="text-2xl font-serif font-bold">Como Começar?</h3>
+            <h3 className="text-premium-2xl font-serif font-bold">Como Começar?</h3>
           </div>
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
@@ -173,7 +173,7 @@ const PoenitentiaPage: React.FC = () => {
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-spacing-lg h-spacing-lg" />
             </div>
-            <h3 className="text-2xl font-serif font-bold">A Absolvição</h3>
+            <h3 className="text-premium-2xl font-serif font-bold">A Absolvição</h3>
           </div>
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             No final, o sacerdote dirá: "Eu te absolvo de teus pecados em nome do Pai, e do Filho, e do Espírito Santo." Responda: "Amém."

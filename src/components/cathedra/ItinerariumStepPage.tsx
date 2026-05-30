@@ -334,7 +334,7 @@ const ItinerariumStepPage: React.FC = () => {
             <X className="w-spacing-md h-spacing-md text-primary" />
           </Button>
           <div className="space-y-spacing-3xs" aria-live="polite">
-            <h1 className="text-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
+            <h1 className="text-premium-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
             <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-spacing-xs">
               <Clock className="w-spacing-sm h-spacing-sm text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
             </p>
@@ -366,10 +366,10 @@ const ItinerariumStepPage: React.FC = () => {
 
           <header className="text-center space-y-spacing-md">
             <Badge variant="outline" className="text-primary/60 border-primary/10">{step.step_type}</Badge>
-            <h2 className="text-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
+            <h2 className="text-premium-3xl font-display font-bold leading-tight">{step.subtitle || step.title}</h2>
           </header>
 
-          <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg md:text-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
+          <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-premium-lg md:text-premium-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
              <div className="space-y-spacing-lg" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.content.html || '') }} />
              {!step.content.html && (
                <div className="flex flex-col items-center justify-center py-spacing-3xl space-y-spacing-lg opacity-30">
@@ -382,7 +382,7 @@ const ItinerariumStepPage: React.FC = () => {
           <div className="space-y-spacing-md pt-spacing-2xl border-t border-border/10">
             <div className="flex items-center gap-spacing-xs text-primary">
               <PenLine className="w-spacing-md h-spacing-md" />
-              <h3 className="text-sm font-black uppercase tracking-widest">Sua Reflexão</h3>
+              <h3 className="text-premium-sm font-black uppercase tracking-widest">Sua Reflexão</h3>
             </div>
             <textarea
               className="w-full bg-muted/30 border border-border/50 rounded-premium p-spacing-lg font-serif italic focus:ring-2 focus:ring-primary/20 outline-none min-h-[150px] transition-all"
@@ -406,12 +406,12 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div data-reading-chrome className="reading-chrome fixed bottom-0 left-0 right-0 p-spacing-lg bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+      <div data-reading-chrome className="reading-chrome fixed bottom-spacing-0 left-0 right-0 p-spacing-lg bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
         <div className="max-w-spacing-2xl mx-auto flex items-center justify-between gap-spacing-md pointer-events-auto">
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-spacing-2xl h-spacing-2xl p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
+            className="rounded-premium-full w-spacing-2xl h-spacing-2xl p-spacing-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex <= 0}
             onClick={() => navigateToStep(currentStepIndex - 1)}
             aria-label="Passo anterior"
@@ -420,7 +420,7 @@ const ItinerariumStepPage: React.FC = () => {
           </Button>
 
           <Button 
-            className="flex-1 h-spacing-2xl rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:opacity-90"
+            className="flex-1 h-spacing-2xl rounded-premium-full shadow-premium text-premium-sm font-black uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:opacity-90"
             onClick={handleComplete}
             disabled={saving}
           >
@@ -430,7 +430,7 @@ const ItinerariumStepPage: React.FC = () => {
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-spacing-2xl h-spacing-2xl p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
+            className="rounded-premium-full w-spacing-2xl h-spacing-2xl p-spacing-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex === -1 || currentStepIndex >= allSteps.length - 1}
             onClick={() => navigateToStep(currentStepIndex + 1)}
             aria-label="Próximo passo"

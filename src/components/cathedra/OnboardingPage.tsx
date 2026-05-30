@@ -261,22 +261,22 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', delay: 0.2 }}
-              className="w-spacing-3xl h-spacing-3xl mx-auto rounded-full bg-primary/10 flex items-center justify-center"
+              className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium-full bg-primary/10 flex items-center justify-center"
             >
               <Compass className="w-spacing-xl h-spacing-xl text-primary" />
             </motion.div>
-            <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
-            <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
+            <h1 className="text-premium-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
+            <p className="text-muted-foreground text-premium-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
           <div className="bg-card border border-primary/20 rounded-premium p-spacing-lg space-y-spacing-sm text-center">
-            <h2 className="text-xl font-bold text-foreground">{title}</h2>
-            <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
+            <h2 className="text-premium-xl font-bold text-foreground">{title}</h2>
+            <p className="text-muted-foreground text-premium-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
 
           <Button
             onClick={handleGoToJourney}
-            className="w-full flex items-center justify-center gap-spacing-xs px-spacing-lg py-spacing-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="w-full flex items-center justify-center gap-spacing-xs px-spacing-lg py-spacing-md bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             Começar Minha Jornada <ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
@@ -305,7 +305,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
                 animate={{ width: `${diagProgress}%` }}
               />
             </div>
-            <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
+            <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Pergunta {diagStep + 1} de {QUESTIONS.length}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -316,13 +316,13 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-spacing-xl"
             >
-              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-spacing-md">{question.question}</h2>
+              <h2 className="text-premium-2xl lg:text-premium-4xl font-serif font-bold text-foreground leading-tight px-spacing-md">{question.question}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
                 {question.options.map((opt) => (
                   <Button
                     key={opt.value}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center gap-spacing-md p-spacing-md rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                    className="flex items-center gap-spacing-md p-spacing-md rounded-premium-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
                   >
                     <div className="p-spacing-sm rounded-premium bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {opt.icon}
@@ -355,14 +355,14 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.25 }}
-            className="bg-card border border-border rounded-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
+            className="bg-card border border-border rounded-premium-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
             <img src={slide.image} alt={slide.title} className="w-full h-spacing-4xl md:h-spacing-4xl lg:h-full lg:w-spacing-2xs/2 object-cover" />
             <div className="p-spacing-lg md:p-spacing-xl lg:p-spacing-3xl text-center lg:text-left lg:w-spacing-2xs/2 space-y-spacing-md lg:space-y-spacing-xl">
               <div className="flex justify-center lg:justify-start text-primary mb-spacing-xs lg:mb-spacing-md">{slide.icon}</div>
-              <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
-              <p className="text-xs lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
-              <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-spacing-md">{slide.description}</p>
+              <h1 className="text-premium-2xl md:text-premium-3xl lg:text-premium-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
+              <p className="text-premium-xs lg:text-premium-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
+              <p className="text-muted-foreground leading-relaxed text-premium-sm lg:text-premium-lg lg:max-w-spacing-md">{slide.description}</p>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -372,7 +372,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             <Button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className={`w-spacing-xs h-spacing-xs rounded-full transition-all ${
+              className={`w-spacing-xs h-spacing-xs rounded-premium-full transition-all ${
                 i === currentSlide ? 'bg-primary w-spacing-lg' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
               }`}
             />
@@ -382,18 +382,18 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <Button onClick={handleSlidePrev} className="flex items-center gap-spacing-2xs text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSlidePrev} className="flex items-center gap-spacing-2xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors">
               <ChevronLeft className="w-spacing-md h-spacing-md" /> Voltar
             </Button>
           ) : (
-            <Button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Button onClick={handleSkipSlides} className="text-premium-sm text-muted-foreground hover:text-foreground transition-colors">
               Pular
             </Button>
           )}
 
           <Button
             onClick={handleSlideNext}
-            className="flex items-center gap-spacing-xs px-spacing-lg py-spacing-sm bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-spacing-xs px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
             <ChevronRight className="w-spacing-md h-spacing-md" />

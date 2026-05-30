@@ -96,8 +96,8 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                     onHighlight(color.name);
                     setPosition(null);
                   }}
-                  className={`w-spacing-lg h-spacing-lg rounded-full ${color.value} border-2 transition-all hover:scale-110 ${
-                    activeColor === color.name ? 'border-primary shadow-sm' : 'border-white/20'
+                  className={`w-spacing-lg h-spacing-lg rounded-premium-full ${color.value} border-2 transition-all hover:scale-110 ${
+                    activeColor === color.name ? 'border-primary shadow-premium-sm' : 'border-white/20'
                   }`}
                   title={`Destaque ${color.name}`}
                 />
@@ -112,7 +112,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                   onAddNote();
                   setPosition(null);
                 }}
-                className="h-spacing-xl rounded-xl px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1"
+                className="h-spacing-xl rounded-premium px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1"
               >
                 <FileText className="w-spacing-sm h-spacing-sm" /> Nota
               </Button>
@@ -124,7 +124,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                   if (onAskLogos) onAskLogos(selectedText);
                   if (!settings.totalSilence) setPosition(null);
                 }}
-                className="h-spacing-xl rounded-xl px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1 text-primary/60"
+                className="h-spacing-xl rounded-premium px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1 text-primary/60"
                 title={settings.totalSilence ? "Aprofundar em silêncio (Logos IA)" : "Aprofundar com Logos IA"}
               >
                 <Sparkles className="w-spacing-sm h-spacing-sm stroke-[1]" /> Logos
@@ -138,7 +138,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                     onDeleteHighlight();
                     setPosition(null);
                   }}
-                  className="h-spacing-xl w-spacing-xl rounded-xl text-destructive hover:bg-destructive/5"
+                  className="h-spacing-xl w-spacing-xl rounded-premium text-destructive hover:bg-destructive/5"
                   title="Excluir Destaque"
                 >
                   <Highlighter className="w-spacing-md h-spacing-md" />
@@ -149,7 +149,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
           
           {selectedText && !activeHighlightId && (
             <div className="px-spacing-sm py-spacing-xs border-t border-primary/5 mt-spacing-2xs">
-              <p className="text-[10px] text-muted-foreground italic line-clamp-1 leading-relaxed">
+              <p className="text-[10px] text-muted-foreground italic line-clamp-spacing-2xs leading-relaxed">
                 "{selectedText}"
               </p>
             </div>

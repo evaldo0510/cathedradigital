@@ -24,20 +24,20 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
         className="flex items-center justify-between px-spacing-md md:px-spacing-xl py-spacing-sm bg-card border-b border-border"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center gap-spacing-sm min-w-0">
+        <div className="flex items-center gap-spacing-sm min-w-spacing-0">
           <Button
             onClick={onClose}
-            className="p-spacing-xs rounded-full hover:bg-secondary transition-colors flex-shrink-0"
+            className="p-spacing-xs rounded-premium-full hover:bg-secondary transition-colors flex-shrink-0"
           >
             <X className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
-          <h3 className="text-sm font-bold text-foreground truncate">{title}</h3>
+          <h3 className="text-premium-sm font-bold text-foreground truncate">{title}</h3>
         </div>
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs text-xs font-bold text-primary hover:underline flex-shrink-0"
+          className="flex items-center gap-spacing-2xs px-spacing-sm py-spacing-2xs text-premium-xs font-bold text-primary hover:underline flex-shrink-0"
         >
           Abrir original <ExternalLink className="w-spacing-sm h-spacing-sm" />
         </a>

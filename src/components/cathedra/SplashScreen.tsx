@@ -26,7 +26,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 0.15, scale: 1.5 }}
           transition={{ duration: 2, ease: 'easeOut' }}
-          className="absolute w-[500px] h-[500px] rounded-full"
+          className="absolute w-[500px] h-[500px] rounded-premium-full"
           style={{
             background: 'radial-gradient(circle, hsl(var(--secondary) / 0.4) 0%, transparent 70%)',
           }}
@@ -52,7 +52,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
               x: (i % 2 === 0 ? -1 : 1) * (20 + i * 12),
             }}
             transition={{ duration: 1.5, delay: 0.2 + i * 0.1, ease: 'easeOut' }}
-            className="absolute w-spacing-2xs h-spacing-2xs rounded-full bg-primary"
+            className="absolute w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary"
           />
         ))}
 
@@ -77,7 +77,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
             animate={{ opacity: 1, letterSpacing: '0.3em' }}
             transition={{ duration: 1, delay: 0.9 }}
-            className="text-2xl md:text-3xl font-display font-light text-primary uppercase tracking-[0.4em]"
+            className="text-premium-2xl md:text-premium-3xl font-display font-light text-primary uppercase tracking-[0.4em]"
           >
             Cathedra
           </motion.h2>
@@ -96,7 +96,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ width: '0%' }}
             animate={{ width: '100%' }}
             transition={{ duration: 2, ease: [0.4, 0, 0.2, 1] }}
-            className="h-full bg-primary/10 rounded-full"
+            className="h-full bg-primary/10 rounded-premium-full"
           />
         </motion.div>
       </motion.div>

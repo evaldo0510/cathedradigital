@@ -120,7 +120,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
       {title && (
         <div className="flex items-center gap-spacing-sm mb-spacing-lg">
           <div className="h-px flex-1 bg-border/40" />
-          <h3 className="text-xs font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
+          <h3 className="text-premium-xs font-black uppercase tracking-[0.3em] text-primary whitespace-nowrap">{title}</h3>
           <div className="h-px flex-1 bg-border/40" />
         </div>
       )}
@@ -140,27 +140,27 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 section.id === 'textoBase' 
                   ? 'bg-primary/5 border-primary/20 md:col-span-2' 
                   : 'bg-card border-border hover:border-primary/30'
-              } ${isLocked ? 'hover:shadow-none cursor-default' : 'hover:shadow-premium'}`}
+              } ${isLocked ? 'hover:shadow-premium-none cursor-default' : 'hover:shadow-premium'}`}
             >
               <div className="flex items-center gap-spacing-sm mb-spacing-md">
-                <div className={`p-spacing-xs rounded-full ${
+                <div className={`p-spacing-xs rounded-premium-full ${
                   isLocked ? 'bg-muted text-muted-foreground' : (section.id === 'textoBase' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-primary group-hover:bg-primary group-hover:text-primary-foreground')
                 } transition-colors`}>
                   {isLocked ? <Lock className="w-spacing-md h-spacing-md" /> : section.icon}
                 </div>
-                <h4 className={`text-xs font-black uppercase tracking-widest ${
+                <h4 className={`text-premium-xs font-black uppercase tracking-widest ${
                   isLocked ? 'text-muted-foreground' : (section.id === 'textoBase' ? 'text-primary' : 'text-muted-foreground group-hover:text-primary')
                 }`}>
                   {section.label}
                   {section.isPremium && !isLocked && (
-                    <span className="ml-spacing-xs px-spacing-2xs py-spacing-3xs rounded-full bg-primary/10 text-primary text-xs">PRO</span>
+                    <span className="ml-spacing-xs px-spacing-2xs py-spacing-3xs rounded-premium-full bg-primary/10 text-primary text-premium-xs">PRO</span>
                   )}
                 </h4>
               </div>
               
               <div className="relative">
                 {section.value ? (
-                  <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-lg italic text-foreground' : 'text-foreground/90 text-sm'}`}>
+                  <div className={`font-serif leading-relaxed ${isLocked ? 'blur-[6px] select-none pointer-events-none opacity-40' : ''} ${section.id === 'textoBase' ? 'text-premium-lg italic text-foreground' : 'text-foreground/90 text-premium-sm'}`}>
                     {section.value.split('\n\n').map((paragraph, pIdx) => (
                       <p key={pIdx} className={pIdx > 0 ? 'mt-spacing-sm' : ''}>
                         {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
@@ -190,7 +190,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                   </div>
                 ) : (
                   <div className="py-spacing-md px-spacing-xs rounded-premium bg-muted/30 border border-dashed border-border/50 text-center">
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground opacity-60">
+                    <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground opacity-60">
                       Conteúdo oficial não disponível para este parágrafo no momento.
                     </p>
                   </div>
@@ -199,13 +199,13 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 {isLocked && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center space-y-spacing-sm p-spacing-md text-center">
                     <Sparkles className="w-spacing-lg h-spacing-lg text-primary animate-pulse" />
-                    <p className="text-sm font-bold text-foreground">
+                    <p className="text-premium-sm font-bold text-foreground">
                       Continue aprofundando essa experiência
                     </p>
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="font-bold text-xs uppercase tracking-widest h-spacing-xl"
+                      className="font-bold text-premium-xs uppercase tracking-widest h-spacing-xl"
                       onClick={() => navigate(AppRoute.PRICING)}
                     >
                       Desbloquear PRO
@@ -218,7 +218,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                 <div className="mt-spacing-lg pt-spacing-lg border-t border-border/40 space-y-spacing-md">
                   <div className="flex items-start gap-spacing-sm">
                     <Icons.MessageSquare className="w-spacing-md h-spacing-md text-primary mt-spacing-3xs" />
-                    <p className="text-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
+                    <p className="text-premium-xs italic text-muted-foreground">Silencie e deixe que esta pergunta ecoe em seu coração.</p>
                   </div>
                   
                   {!hasReflected ? (
@@ -227,13 +227,13 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                         value={reflectionText}
                         onChange={(e) => setReflectionText(e.target.value)}
                         placeholder="Escreva sua reflexão aqui..."
-                        className="w-full min-h-[100px] p-spacing-md rounded-premium bg-muted/20 border border-border/40 text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
+                        className="w-full min-h-[100px] p-spacing-md rounded-premium bg-muted/20 border border-border/40 text-premium-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all"
                       />
                       <div className="flex justify-end">
                         <Button 
                           onClick={saveReflection}
                           disabled={!reflectionText.trim() || isSubmitting}
-                          className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
+                          className="rounded-premium-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
                         >
                           {isSubmitting ? <Icons.Loader className="w-spacing-sm h-spacing-sm animate-spin" /> : <Send className="w-spacing-sm h-spacing-sm" />}
                           Guardar Reflexão
@@ -241,7 +241,7 @@ const DeepContentSection: React.FC<DeepContentSectionProps> = ({ content, title,
                       </div>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-emerald-500/5 border border-emerald-500/20 rounded-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
+                    <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-emerald-500/5 border border-emerald-500/20 rounded-premium-full text-emerald-600 text-[10px] font-black uppercase tracking-widest animate-in fade-in zoom-in-95 duration-500">
                       <CheckCircle2 className="w-spacing-sm h-spacing-sm" /> Reflexão Integrada ao Diário
                     </div>
                   )}

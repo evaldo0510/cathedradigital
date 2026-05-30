@@ -247,17 +247,17 @@ const JornadaCompletePage: React.FC = () => {
               </div>
 
               <div className="space-y-spacing-xs">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
-                <h1 className="text-2xl md:text-3xl font-bold font-serif text-foreground">{journey.title}</h1>
-                <p className="text-sm text-muted-foreground italic">{journey.subtitle}</p>
+                <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Certificado de Conclusão</p>
+                <h1 className="text-premium-2xl md:text-premium-3xl font-bold font-serif text-foreground">{journey.title}</h1>
+                <p className="text-premium-sm text-muted-foreground italic">{journey.subtitle}</p>
               </div>
 
               <div className="border-t border-b border-border/50 py-spacing-md space-y-spacing-2xs">
-                <p className="text-xs text-muted-foreground">Jornada concluída em</p>
-                <p className="text-sm font-semibold text-foreground">{completionDate}</p>
+                <p className="text-premium-xs text-muted-foreground">Jornada concluída em</p>
+                <p className="text-premium-sm font-semibold text-foreground">{completionDate}</p>
               </div>
 
-              <div className="flex items-center justify-center gap-spacing-xs text-xs text-muted-foreground">
+              <div className="flex items-center justify-center gap-spacing-xs text-premium-xs text-muted-foreground">
                 <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
                 <span>CATHEDRA — Digital Sanctuarium</span>
                 <Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
@@ -290,15 +290,15 @@ const JornadaCompletePage: React.FC = () => {
         >
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/5">
             <CardContent className="p-spacing-lg space-y-spacing-md">
-              <h2 className="text-lg font-bold text-foreground flex items-center gap-spacing-xs">
+              <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
                 <Star className="w-spacing-md h-spacing-md text-primary" /> Recompensas
               </h2>
               {xpAwarded > 0 && (
                 <div className="flex items-center gap-spacing-sm p-spacing-sm bg-primary/10 rounded-premium">
-                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center text-lg">⚡</div>
+                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/20 flex items-center justify-center text-premium-lg">⚡</div>
                   <div>
-                    <p className="text-sm font-bold text-foreground">+{xpAwarded} XP</p>
-                    <p className="text-xs text-muted-foreground">Por concluir esta jornada</p>
+                    <p className="text-premium-sm font-bold text-foreground">+{xpAwarded} XP</p>
+                    <p className="text-premium-xs text-muted-foreground">Por concluir esta jornada</p>
                   </div>
                 </div>
               )}
@@ -307,10 +307,10 @@ const JornadaCompletePage: React.FC = () => {
                 if (!badge) return null;
                 return (
                   <div key={badgeId} className="flex items-center gap-spacing-sm p-spacing-sm bg-accent/10 rounded-premium">
-                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-accent/20 flex items-center justify-center text-lg">{badge.icon}</div>
+                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-accent/20 flex items-center justify-center text-premium-lg">{badge.icon}</div>
                     <div>
-                      <p className="text-sm font-bold text-foreground">{badge.name}</p>
-                      <p className="text-xs text-muted-foreground">{badge.description}</p>
+                      <p className="text-premium-sm font-bold text-foreground">{badge.name}</p>
+                      <p className="text-premium-xs text-muted-foreground">{badge.description}</p>
                     </div>
                   </div>
                 );
@@ -328,7 +328,7 @@ const JornadaCompletePage: React.FC = () => {
           transition={{ delay: 0.4 }}
           className="space-y-spacing-md"
         >
-          <h2 className="text-lg font-bold text-foreground flex items-center gap-spacing-xs">
+          <h2 className="text-premium-lg font-bold text-foreground flex items-center gap-spacing-xs">
             <BookOpen className="w-spacing-md h-spacing-md text-primary" /> Suas Reflexões
           </h2>
 
@@ -342,10 +342,10 @@ const JornadaCompletePage: React.FC = () => {
               >
                 <Card className="border-border/50">
                   <CardContent className="p-spacing-md space-y-spacing-xs">
-                    <p className="text-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
+                    <p className="text-premium-xs font-bold uppercase tracking-wider text-primary">{r.title}</p>
                     <div className="flex gap-spacing-xs">
                       <Quote className="w-spacing-md h-spacing-md text-muted-foreground flex-shrink-0 mt-spacing-3xs" />
-                      <p className="text-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
+                      <p className="text-premium-sm text-foreground/80 italic font-serif leading-relaxed">{r.reflection}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -363,7 +363,7 @@ const JornadaCompletePage: React.FC = () => {
           transition={{ delay: 0.7 }}
           className="space-y-spacing-sm"
         >
-          <h2 className="text-lg font-bold text-foreground">Continue sua caminhada</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">Continue sua caminhada</h2>
 
           <Card
             className="border-primary/20 hover:border-primary/40 transition-all cursor-pointer"
@@ -373,10 +373,10 @@ const JornadaCompletePage: React.FC = () => {
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm text-foreground">{nextJourney.title}</h3>
+              <div className="flex-1 min-w-spacing-0">
+                <h3 className="font-bold text-premium-sm text-foreground">{nextJourney.title}</h3>
                 {nextJourney.subtitle && (
-                  <p className="text-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
+                  <p className="text-premium-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>
                 )}
               </div>
               <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground" />

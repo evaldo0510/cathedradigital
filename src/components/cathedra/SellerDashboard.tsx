@@ -6,9 +6,9 @@ import { Store } from 'lucide-react';
 
 const WalletHistory: React.FC = () => {
   return (
-    <Card className="shadow-none border-border/50">
+    <Card className="shadow-premium-none border-border/50">
       <CardHeader>
-        <CardTitle className="text-xl font-serif font-bold">Histórico da Carteira</CardTitle>
+        <CardTitle className="text-premium-xl font-serif font-bold">Histórico da Carteira</CardTitle>
         <CardDescription>Visualize todas as suas movimentações financeiras.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -37,9 +37,9 @@ const WalletHistory: React.FC = () => {
 
 const WithdrawalRequests: React.FC = () => {
   return (
-    <Card className="shadow-none border-border/50">
+    <Card className="shadow-premium-none border-border/50">
       <CardHeader>
-        <CardTitle className="text-xl font-serif font-bold">Solicitações de Saque</CardTitle>
+        <CardTitle className="text-premium-xl font-serif font-bold">Solicitações de Saque</CardTitle>
         <CardDescription>Acompanhe o status dos seus pedidos de resgate.</CardDescription>
       </CardHeader>
       <CardContent>
@@ -72,8 +72,8 @@ const SellerDashboard: React.FC = () => {
           <Store className="w-spacing-lg h-spacing-lg" />
         </div>
         <div>
-          <h1 className="text-3xl font-serif font-bold tracking-tight">Painel do Vendedor</h1>
-          <p className="text-sm text-muted-foreground uppercase tracking-widest font-bold">Gestão de Vendas e Saques</p>
+          <h1 className="text-premium-3xl font-serif font-bold tracking-tight">Painel do Vendedor</h1>
+          <p className="text-premium-sm text-muted-foreground uppercase tracking-widest font-bold">Gestão de Vendas e Saques</p>
         </div>
       </div>
 

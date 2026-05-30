@@ -43,14 +43,14 @@ const ViaCrucis: React.FC = () => {
         <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
             <Cross className="w-spacing-md h-spacing-md text-primary" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
+            <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Via Dolorosa</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
-          <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
+          <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Via Crucis</h1>
+          <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">"Se alguém quer vir após mim, negue-se a si mesmo, tome sua cruz e siga-me."</p>
         </motion.div>
 
         <div className="flex justify-center">
-          <Button onClick={() => setIsJourney(true)} size="lg" className="h-spacing-3xl px-spacing-xl gap-spacing-sm rounded-full shadow-premium-hover">
+          <Button onClick={() => setIsJourney(true)} size="lg" className="h-spacing-3xl px-spacing-xl gap-spacing-sm rounded-premium-full shadow-premium-hover">
             <Play className="w-spacing-md h-spacing-md fill-current" /> Iniciar Via Sacra
           </Button>
         </div>
@@ -58,15 +58,15 @@ const ViaCrucis: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
           {STATIONS.map((s, i) => (
             <Button key={i} onClick={() => { setCurrentStation(i); setIsJourney(true); }}
-              className="text-left p-spacing-lg rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-spacing-lg opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
+              className="text-left p-spacing-lg rounded-premium-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
+              <div className="absolute top-spacing-0 right-0 p-spacing-lg opacity-[0.03] group-hover:opacity-[0.06] transition-opacity">
                 <Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-xl -mt-spacing-xl rotate-12" />
               </div>
               <div className="relative z-10 flex items-center gap-spacing-md">
-                <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
+                <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-premium-lg shrink-0 border border-primary/10 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">{s.num}</div>
                 <div>
-                  <p className="font-serif font-bold text-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
-                  <p className="text-xs text-muted-foreground mt-spacing-2xs uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
+                  <p className="font-serif font-bold text-premium-lg text-foreground group-hover:text-primary transition-colors leading-tight">{s.title}</p>
+                  <p className="text-premium-xs text-muted-foreground mt-spacing-2xs uppercase tracking-widest font-black opacity-60">{s.scripture}</p>
                 </div>
               </div>
             </Button>
@@ -82,13 +82,13 @@ const ViaCrucis: React.FC = () => {
     <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl animate-in fade-in duration-700">
       {/* Navigation */}
       <div className="flex items-center justify-between px-spacing-xs">
-        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-full shadow-md gap-spacing-xs">
+        <Button variant="outline" size="sm" onClick={() => setIsJourney(false)} className="rounded-premium-full shadow-premium-md gap-spacing-xs">
           <ArrowLeft className="w-spacing-md h-spacing-md text-foreground" />
-          <span className="text-xs font-black uppercase tracking-widest hidden md:block">Voltar</span>
+          <span className="text-premium-xs font-black uppercase tracking-widest hidden md:block">Voltar</span>
         </Button>
         <div className="text-center">
-          <p className="text-xs font-black uppercase tracking-[0.2em] text-primary/60 mb-spacing-2xs">Via Sacra</p>
-          <span className="text-sm font-serif font-bold text-foreground">
+          <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60 mb-spacing-2xs">Via Sacra</p>
+          <span className="text-premium-sm font-serif font-bold text-foreground">
             Estação {currentStation + 1} de 14
           </span>
         </div>
@@ -98,21 +98,21 @@ const ViaCrucis: React.FC = () => {
       {/* Progress */}
       <div className="flex gap-spacing-2xs px-spacing-xs">
         {STATIONS.map((_, i) => (
-          <div key={i} className={`flex-1 h-spacing-2xs rounded-full transition-all duration-500 ${i <= currentStation ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary),0.3)]' : 'bg-border'}`} />
+          <div key={i} className={`flex-1 h-spacing-2xs rounded-premium-full transition-all duration-500 ${i <= currentStation ? 'bg-primary shadow-[0_0_8px_rgba(var(--primary),0.3)]' : 'bg-border'}`} />
         ))}
       </div>
 
       {/* Station content */}
       <div className="bg-card border border-border rounded-[3rem] p-spacing-xl md:p-spacing-3xl space-y-spacing-2xl shadow-premium-hover shadow-black/[0.02] relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-spacing-2xl opacity-[0.02]">
+        <div className="absolute top-spacing-0 right-0 p-spacing-2xl opacity-[0.02]">
           <Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
         </div>
         
         <div className="relative text-center space-y-spacing-lg">
-          <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
+          <div className="w-spacing-3xl h-spacing-3xl rounded-[2rem] bg-foreground text-background flex items-center justify-center font-black text-premium-3xl mx-auto shadow-premium-hover border-4 border-background">{station.num}</div>
           <div className="space-y-spacing-xs">
-            <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
-            <p className="text-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-spacing-xs">
+            <h2 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">{station.title}</h2>
+            <p className="text-premium-sm text-primary font-bold uppercase tracking-widest flex items-center justify-center gap-spacing-xs">
               <BookOpen className="w-spacing-md h-spacing-md" /> {station.scripture}
             </p>
           </div>
@@ -120,19 +120,19 @@ const ViaCrucis: React.FC = () => {
 
         <div className="relative space-y-spacing-2xl max-w-spacing-2xl mx-auto">
           <div className="space-y-spacing-md">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
-            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed font-serif text-center italic">"{station.meditation}"</p>
+            <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center">Meditação</h3>
+            <p className="text-premium-xl md:text-premium-2xl text-foreground/90 leading-relaxed font-serif text-center italic">"{station.meditation}"</p>
           </div>
           
           <div className="bg-primary/5 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl border border-primary/10 relative">
             <Flame className="absolute -top-spacing-sm -right-spacing-sm w-spacing-xl h-spacing-xl text-primary/60 rotate-12" />
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Oração</h3>
-            <p className="text-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
+            <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary/40 text-center mb-spacing-lg">Oração</h3>
+            <p className="text-premium-lg text-foreground/80 leading-relaxed font-serif text-center">{station.prayer}</p>
           </div>
           
           <div className="text-center space-y-spacing-xs pt-spacing-md opacity-60">
-            <p className="text-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
-            <p className="text-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
+            <p className="text-premium-sm font-serif font-bold text-foreground">V. Adoramus te, Christe, et benedicimus tibi.</p>
+            <p className="text-premium-sm font-serif italic text-muted-foreground">R. Quia per sanctam Crucem tuam redemisti mundum.</p>
           </div>
 
           <div className="flex justify-center pt-spacing-xs">
@@ -152,7 +152,7 @@ const ViaCrucis: React.FC = () => {
           variant="outline"
           disabled={currentStation <= 0} 
           onClick={() => setCurrentStation(currentStation - 1)}
-          className="flex-1 max-w-[200px] h-spacing-2xl rounded-full"
+          className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full"
         >
           <ChevronLeft className="w-spacing-md h-spacing-md" /> Anterior
         </Button>
@@ -160,14 +160,14 @@ const ViaCrucis: React.FC = () => {
         {currentStation < STATIONS.length - 1 ? (
           <Button 
             onClick={() => setCurrentStation(currentStation + 1)}
-            className="flex-1 max-w-[200px] h-spacing-2xl rounded-full bg-foreground text-background hover:bg-primary"
+            className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-foreground text-background hover:bg-primary"
           >
             Próxima <ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         ) : (
           <Button 
             onClick={() => setIsJourney(false)}
-            className="flex-1 max-w-[200px] h-spacing-2xl rounded-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
+            className="flex-1 max-w-[200px] h-spacing-2xl rounded-premium-full bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20"
           >
             <Icons.Cross className="w-spacing-md h-spacing-md" /> Concluir
           </Button>

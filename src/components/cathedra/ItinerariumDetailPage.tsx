@@ -157,32 +157,32 @@ const ItinerariumDetailPage: React.FC = () => {
       <div className="space-y-spacing-lg">
         <div className="flex items-center justify-between gap-spacing-md flex-wrap">
           <div className="flex items-center gap-spacing-sm">
-            <div className="w-spacing-2xs h-spacing-lg bg-primary/20 rounded-full" />
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
+            <div className="w-spacing-2xs h-spacing-lg bg-primary/20 rounded-premium-full" />
+            <h1 className="text-premium-4xl md:text-premium-5xl font-display font-bold text-primary tracking-tight">{itinerarium.title}</h1>
           </div>
           <Button
             variant="outline"
             size="sm"
-            className="rounded-full gap-spacing-xs border-primary/10 text-[10px] font-black uppercase tracking-widest"
+            className="rounded-premium-full gap-spacing-xs border-primary/10 text-[10px] font-black uppercase tracking-widest"
             onClick={exportFullPDF}
           >
             <FileDown className="w-spacing-md h-spacing-md" /> Exportar Reflexões
           </Button>
         </div>
-        <p className="text-lg md:text-xl text-muted-foreground/80 font-serif italic leading-relaxed">{itinerarium.description}</p>
+        <p className="text-premium-lg md:text-premium-xl text-muted-foreground/80 font-serif italic leading-relaxed">{itinerarium.description}</p>
       </div>
 
-      <Card className="premium-card bg-primary/[0.01] border-primary/5 rounded-[2.5rem] shadow-none overflow-hidden relative">
-        <div className="absolute top-0 right-0 p-spacing-xl opacity-[0.03]">
+      <Card className="premium-card bg-primary/[0.01] border-primary/5 rounded-[2.5rem] shadow-premium-none overflow-hidden relative">
+        <div className="absolute top-spacing-0 right-0 p-spacing-xl opacity-[0.03]">
           <Icons.Compass className="w-spacing-4xl h-spacing-4xl text-primary" />
         </div>
         <CardContent className="p-spacing-xl md:p-spacing-xl space-y-spacing-lg relative z-10">
           <div className="flex justify-between items-end">
             <div className="space-y-spacing-2xs">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40">Progresso Atual</p>
-              <h4 className="text-2xl font-bold font-serif">{Math.round(progress)}% Concluído</h4>
+              <h4 className="text-premium-2xl font-bold font-serif">{Math.round(progress)}% Concluído</h4>
             </div>
-            <span className="text-sm font-bold text-primary/60">{completedSteps.size} de {steps.length} passos</span>
+            <span className="text-premium-sm font-bold text-primary/60">{completedSteps.size} de {steps.length} passos</span>
           </div>
           <Progress value={progress} className="h-spacing-2xs bg-primary/5" />
         </CardContent>
@@ -206,28 +206,28 @@ const ItinerariumDetailPage: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
             >
               <Card 
-                className={`premium-card transition-all duration-700 border-primary/5 rounded-[2rem] shadow-none group ${
+                className={`premium-card transition-all duration-700 border-primary/5 rounded-[2rem] shadow-premium-none group ${
                   isLocked ? 'opacity-30 grayscale pointer-events-none' : 'hover:border-primary/20 hover:bg-primary/[0.01]'
                 } ${isCompleted ? 'bg-primary/[0.02]' : ''}`}
               >
                 <CardContent className="p-spacing-lg md:p-spacing-xl flex items-center justify-between gap-spacing-lg">
-                  <div className="flex items-center gap-spacing-lg flex-1 min-w-0">
+                  <div className="flex items-center gap-spacing-lg flex-1 min-w-spacing-0">
                     <div className={`w-spacing-2xl h-spacing-2xl rounded-premium flex-shrink-0 flex items-center justify-center transition-all duration-700 ${
                       isCompleted 
                         ? 'bg-primary text-primary-foreground shadow-premium' 
                         : 'bg-primary/5 text-primary/40 border border-primary/10'
                     }`}>
-                      {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : <span className="text-sm font-bold">{idx + 1}</span>}
+                      {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : <span className="text-premium-sm font-bold">{idx + 1}</span>}
                     </div>
                     
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-spacing-0">
                       <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                        <h3 className="text-lg md:text-xl font-bold font-serif text-foreground truncate">{step.title}</h3>
+                        <h3 className="text-premium-lg md:text-premium-xl font-bold font-serif text-foreground truncate">{step.title}</h3>
                         {!step.is_free && <Icons.Lock className="w-spacing-sm h-spacing-sm text-primary/60" />}
                       </div>
                       <div className="flex items-center gap-spacing-sm text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
                         <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> {step.duration_minutes} MIN</span>
-                        <div className="w-spacing-2xs h-spacing-2xs rounded-full bg-border" />
+                        <div className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-border" />
                         <span>{step.step_type}</span>
                       </div>
                     </div>
@@ -238,7 +238,7 @@ const ItinerariumDetailPage: React.FC = () => {
                       variant="ghost" 
                       size="sm" 
                       onClick={() => navigate(`/itineraria/${id}/step?step=${step.id}`)}
-                      className="group/btn h-spacing-2xl px-spacing-lg rounded-full border border-primary/5 hover:bg-primary hover:text-primary-foreground transition-all duration-500 text-[10px] font-black uppercase tracking-widest"
+                      className="group/btn h-spacing-2xl px-spacing-lg rounded-premium-full border border-primary/5 hover:bg-primary hover:text-primary-foreground transition-all duration-500 text-[10px] font-black uppercase tracking-widest"
                     >
                       {isCompleted ? 'Revisitar' : 'Iniciar'}
                       <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs group-hover/btn:translate-x-1 transition-transform" />

@@ -78,15 +78,15 @@ export const PWAInstallPrompt = () => {
           <Download className="h-spacing-lg w-spacing-lg text-primary" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h3>
-          <p className="text-xs text-muted-foreground mb-spacing-sm">
+          <h3 className="text-premium-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h3>
+          <p className="text-premium-xs text-muted-foreground mb-spacing-sm">
             Acesse a Bíblia e suas orações com um toque, mesmo offline.
           </p>
           <div className="flex gap-spacing-xs">
-            <Button size="sm" onClick={handleInstallClick} className="h-spacing-xl text-xs px-spacing-md">
+            <Button size="sm" onClick={handleInstallClick} className="h-spacing-xl text-premium-xs px-spacing-md">
               Instalar agora
             </Button>
-            <Button size="sm" variant="ghost" onClick={handleDismiss} className="h-spacing-xl text-xs">
+            <Button size="sm" variant="ghost" onClick={handleDismiss} className="h-spacing-xl text-premium-xs">
               Agora não
             </Button>
           </div>

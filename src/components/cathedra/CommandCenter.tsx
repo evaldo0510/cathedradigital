@@ -140,7 +140,7 @@ const CommandCenter: React.FC = () => {
       description: `${s.title} • Festa: ${s.feastDay}`,
       path: `${AppRoute.SAINTS}?saint=${s.id}`,
       icon: s.image ? (
-        <img src={s.image} alt={s.name} className="w-spacing-md h-spacing-md rounded-full object-cover" />
+        <img src={s.image} alt={s.name} className="w-spacing-md h-spacing-md rounded-premium-full object-cover" />
       ) : (
         <Icons.SaintHalo className="w-spacing-md h-spacing-md" />
       ),
@@ -383,7 +383,7 @@ const CommandCenter: React.FC = () => {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Buscar em tudo: Bíblia, Catecismo, Santos, Jornadas..."
-            className="flex-1 bg-transparent text-foreground text-sm placeholder:text-muted-foreground focus:outline-none"
+            className="flex-1 bg-transparent text-foreground text-premium-sm placeholder:text-muted-foreground focus:outline-none"
             aria-autocomplete="list"
             aria-controls="command-list"
             aria-activedescendant={allItems[selectedIndex] ? `item-${selectedIndex}` : undefined}
@@ -394,7 +394,7 @@ const CommandCenter: React.FC = () => {
               <Icons.X className="w-spacing-md h-spacing-md" />
             </Button>
           )}
-          <kbd className="hidden sm:inline-flex items-center px-spacing-xs py-spacing-3xs rounded bg-muted text-muted-foreground text-xs font-mono font-bold">ESC</kbd>
+          <kbd className="hidden sm:inline-flex items-center px-spacing-xs py-spacing-3xs rounded bg-muted text-muted-foreground text-premium-xs font-mono font-bold">ESC</kbd>
         </div>
 
         {/* Loading indicator */}
@@ -409,13 +409,13 @@ const CommandCenter: React.FC = () => {
         {/* Results */}
         <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-spacing-2xs">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-spacing-md py-spacing-xs text-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
+            <div className="px-spacing-md py-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
 
           {allItems.length === 0 && !globalLoading && (
-            <p className="text-center text-sm text-muted-foreground py-spacing-xl italic">
+            <p className="text-center text-premium-sm text-muted-foreground py-spacing-xl italic">
               {query.length < 2
                 ? 'Digite para buscar em todos os módulos...'
                 : 'Nenhum resultado encontrado.'}
@@ -430,7 +430,7 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-spacing-md pt-spacing-sm pb-spacing-2xs text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-spacing-xs" role="presentation">
+                  <div className="px-spacing-md pt-spacing-sm pb-spacing-2xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-spacing-xs" role="presentation">
                     <div className="w-spacing-md h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
@@ -447,14 +447,14 @@ const CommandCenter: React.FC = () => {
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-spacing-2xs rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-spacing-2xs rounded-premium-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold truncate">{item.label}</p>
-                    <p className="text-xs text-muted-foreground truncate">{item.description}</p>
+                  <div className="flex-1 min-w-spacing-0">
+                    <p className="text-premium-sm font-semibold truncate">{item.label}</p>
+                    <p className="text-premium-xs text-muted-foreground truncate">{item.description}</p>
                   </div>
-                  <span className={`text-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-full ${
+                  <span className={`text-premium-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-premium-full ${
                     TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
@@ -469,16 +469,16 @@ const CommandCenter: React.FC = () => {
         {/* Footer */}
         <div className="flex items-center justify-between px-spacing-md py-spacing-xs border-t border-border bg-muted/30">
           <div className="flex items-center gap-spacing-sm">
-            <span className="text-xs text-muted-foreground">↑↓ navegar</span>
-            <span className="text-xs text-muted-foreground">↵ abrir</span>
+            <span className="text-premium-xs text-muted-foreground">↑↓ navegar</span>
+            <span className="text-premium-xs text-muted-foreground">↵ abrir</span>
           </div>
           <div className="flex items-center gap-spacing-xs">
             {hasGlobalResults && (
-              <span className="text-xs text-primary font-medium">
+              <span className="text-premium-xs text-primary font-medium">
                 Buscando em {new Set(globalResults.map(r => r.type)).size} módulos
               </span>
             )}
-            <span className="text-xs text-muted-foreground font-mono">⌘K</span>
+            <span className="text-premium-xs text-muted-foreground font-mono">⌘K</span>
           </div>
         </div>
       </div>

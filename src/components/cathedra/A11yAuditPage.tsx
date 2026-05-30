@@ -54,16 +54,16 @@ const A11yAuditPage = () => {
       <header className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
           <ShieldCheck className="w-spacing-md h-spacing-md" />
-          <span className="text-xs font-black uppercase tracking-[0.2em]">Quality Assurance</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
-        <h1 className="text-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
+        <h1 className="text-premium-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
         <p className="text-muted-foreground italic font-serif">Validação manual e automatizada para NVDA e VoiceOver.</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
         <Card className="border-primary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
           <CardHeader className="bg-primary/5 border-b border-border/50">
-            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-spacing-xs">
+            <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center gap-spacing-xs">
               <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
               Checklist Manual
             </CardTitle>
@@ -71,7 +71,7 @@ const A11yAuditPage = () => {
           <CardContent className="p-spacing-lg space-y-spacing-lg">
             {sections.map(section => (
               <div key={section.title} className="space-y-spacing-sm">
-                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-spacing-2xs">
+                <h3 className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-spacing-2xs">
                   {section.title}
                 </h3>
                 <div className="space-y-spacing-xs">
@@ -79,9 +79,9 @@ const A11yAuditPage = () => {
                     <Button
                       key={item.id}
                       onClick={() => toggleCheck(item.id)}
-                      className="w-full flex items-center justify-between p-spacing-sm rounded-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
+                      className="w-full flex items-center justify-between p-spacing-sm rounded-premium-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
                     >
-                      <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
+                      <span className="text-premium-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
                       {checklist[item.id] ? (
                         <CheckCircle className="w-spacing-md h-spacing-md text-green-500 fill-green-500/10" />
                       ) : (
@@ -97,12 +97,12 @@ const A11yAuditPage = () => {
 
         <Card className="border-secondary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
           <CardHeader className="bg-secondary/5 border-b border-border/50">
-            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center justify-between">
+            <CardTitle className="text-premium-lg font-black uppercase tracking-widest flex items-center justify-between">
               <div className="flex items-center gap-spacing-xs">
                 <Key className="w-spacing-md h-spacing-md text-secondary" />
                 Auditoria Técnica
               </div>
-              <Button size="sm" onClick={performAudit} className="rounded-full h-spacing-xl text-xs font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
+              <Button size="sm" onClick={performAudit} className="rounded-premium-full h-spacing-xl text-premium-xs font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
             </CardTitle>
@@ -111,20 +111,20 @@ const A11yAuditPage = () => {
             {!auditResults ? (
               <div className="flex flex-col items-center justify-center py-spacing-3xl text-center space-y-spacing-md opacity-40">
                 <Search className="w-spacing-2xl h-spacing-2xl" />
-                <p className="text-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
+                <p className="text-premium-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
               </div>
             ) : (
               <div className="space-y-spacing-md">
-                <div className={`p-spacing-md rounded-full flex items-center gap-spacing-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
+                <div className={`p-spacing-md rounded-premium-full flex items-center gap-spacing-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
                   {auditResults.success ? (
                     <>
                       <CheckCircle className="w-spacing-lg h-spacing-lg text-green-500" />
-                      <p className="text-sm font-bold text-green-600">Nenhum problema técnico detectado no DOM atual.</p>
+                      <p className="text-premium-sm font-bold text-green-600">Nenhum problema técnico detectado no DOM atual.</p>
                     </>
                   ) : (
                     <>
                       <XCircle className="w-spacing-lg h-spacing-lg text-red-500" />
-                      <p className="text-sm font-bold text-red-600">{auditResults.issues.length} problemas encontrados.</p>
+                      <p className="text-premium-sm font-bold text-red-600">{auditResults.issues.length} problemas encontrados.</p>
                     </>
                   )}
                 </div>
@@ -133,7 +133,7 @@ const A11yAuditPage = () => {
                   {auditResults.issues.map((issue, idx) => (
                     <div key={idx} className="flex gap-spacing-sm p-spacing-sm rounded-premium bg-muted/20 border border-border/40">
                       <AlertTriangle className="w-spacing-md h-spacing-md text-amber-500 shrink-0 mt-spacing-3xs" />
-                      <span className="text-xs text-muted-foreground leading-relaxed">{issue}</span>
+                      <span className="text-premium-xs text-muted-foreground leading-relaxed">{issue}</span>
                     </div>
                   ))}
                 </div>
@@ -144,7 +144,7 @@ const A11yAuditPage = () => {
       </div>
 
       <footer className="text-center pt-spacing-xl">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
+        <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Acessibilidade v2.0
         </p>
       </footer>

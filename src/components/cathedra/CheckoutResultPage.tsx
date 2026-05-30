@@ -126,7 +126,7 @@ const CheckoutResultPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-lg">
         <div className="w-spacing-3xl h-spacing-3xl border-4 border-secondary border-t-transparent rounded-premium animate-spin" />
-        <p className="text-muted-foreground font-serif italic text-lg">Confirmando seu pagamento...</p>
+        <p className="text-muted-foreground font-serif italic text-premium-lg">Confirmando seu pagamento...</p>
       </div>
     );
   }
@@ -140,40 +140,40 @@ const CheckoutResultPage: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-xl max-w-spacing-lg mx-auto py-spacing-2xl"
     >
-      <div className={`w-spacing-4xl h-spacing-4xl rounded-full ${c.iconBg} flex items-center justify-center`}>
+      <div className={`w-spacing-4xl h-spacing-4xl rounded-premium-full ${c.iconBg} flex items-center justify-center`}>
         {c.icon}
       </div>
 
       <div className="space-y-spacing-sm">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{c.title}</h1>
-        <p className="text-muted-foreground font-serif italic text-base leading-relaxed">{c.description}</p>
+        <h1 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground">{c.title}</h1>
+        <p className="text-muted-foreground font-serif italic text-premium-base leading-relaxed">{c.description}</p>
       </div>
 
       {txData && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full bg-muted/50 rounded-full p-spacing-lg border border-border/50 space-y-spacing-md"
+          className="w-full bg-muted/50 rounded-premium-full p-spacing-lg border border-border/50 space-y-spacing-md"
         >
           <div className="flex justify-between items-center pb-spacing-xs border-b border-border/50">
-            <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
-            <span className="text-xs font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
+            <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
+            <span className="text-premium-xs font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
           </div>
           
           <div className="space-y-spacing-sm">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Descrição</span>
-              <span className="text-sm font-bold text-foreground">{txData.description || 'Contribuição Cathedra'}</span>
+              <span className="text-premium-sm text-muted-foreground">Descrição</span>
+              <span className="text-premium-sm font-bold text-foreground">{txData.description || 'Contribuição Cathedra'}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Valor</span>
-              <span className="text-lg font-black text-primary">
+              <span className="text-premium-sm text-muted-foreground">Valor</span>
+              <span className="text-premium-lg font-black text-primary">
                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(txData.amount)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Status</span>
-              <span className={`text-xs font-bold uppercase px-spacing-xs py-spacing-3xs rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+              <span className="text-premium-sm text-muted-foreground">Status</span>
+              <span className={`text-premium-xs font-bold uppercase px-spacing-xs py-spacing-3xs rounded-premium-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
                 {state === 'success' ? 'Aprovado' : 'Em processamento'}
               </span>
             </div>
@@ -183,7 +183,7 @@ const CheckoutResultPage: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full h-spacing-xl text-xs font-bold uppercase text-muted-foreground gap-spacing-xs"
+              className="w-full h-spacing-xl text-premium-xs font-bold uppercase text-muted-foreground gap-spacing-xs"
               onClick={() => window.print()}
             >
               <Download className="w-spacing-sm h-spacing-sm" /> Baixar Comprovante
@@ -195,7 +195,7 @@ const CheckoutResultPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row gap-spacing-sm w-full">
         <Button
           onClick={() => navigate(c.primaryAction.route)}
-          className="flex-1 h-spacing-2xl rounded-full font-bold uppercase text-xs tracking-widest"
+          className="flex-1 h-spacing-2xl rounded-premium-full font-bold uppercase text-premium-xs tracking-widest"
         >
           {c.primaryAction.label}
         </Button>
@@ -203,7 +203,7 @@ const CheckoutResultPage: React.FC = () => {
           <Button
             variant="outline"
             onClick={() => navigate(c.secondaryAction!.route)}
-            className="flex-1 h-spacing-2xl rounded-full font-bold uppercase text-xs tracking-widest"
+            className="flex-1 h-spacing-2xl rounded-premium-full font-bold uppercase text-premium-xs tracking-widest"
           >
             {c.secondaryAction.label}
           </Button>
@@ -213,7 +213,7 @@ const CheckoutResultPage: React.FC = () => {
       <Button
         variant="ghost"
         onClick={() => navigate(AppRoute.TRANSACTIONS)}
-        className="text-xs font-serif italic text-muted-foreground hover:text-primary transition-colors mt-spacing-md"
+        className="text-premium-xs font-serif italic text-muted-foreground hover:text-primary transition-colors mt-spacing-md"
       >
         Ver histórico de transações
       </Button>

@@ -82,19 +82,19 @@ const MissalPage: React.FC = () => {
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">Missal Romano</h1>
         <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
       </div>
 
       <div className="flex justify-center gap-spacing-xs flex-wrap">
         <Button onClick={() => setShowLatin(!showLatin)}
-          className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
         </Button>
         <Button onClick={() => setShowRubrics(!showRubrics)}
-          className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
         </Button>
       </div>
@@ -108,7 +108,7 @@ const MissalPage: React.FC = () => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-spacing-sm py-spacing-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-xs font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
@@ -125,8 +125,8 @@ const MissalPage: React.FC = () => {
               className="w-full p-spacing-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
-                <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-spacing-3xs">{section.subtitle}</p>}
+                <h3 className="text-premium-lg font-serif font-bold text-foreground">{section.title}</h3>
+                {section.subtitle && <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground mt-spacing-3xs">{section.subtitle}</p>}
               </div>
               <ChevronDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </Button>
@@ -135,16 +135,16 @@ const MissalPage: React.FC = () => {
               <div className="border-t border-border divide-y divide-border">
                 {section.parts.map((part, i) => (
                   <div key={i} className="p-spacing-md space-y-spacing-sm">
-                    <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
+                    <h4 className="text-premium-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
-                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-spacing-md py-spacing-xs border border-secondary/10">
+                      <p className="text-premium-xs text-primary font-medium italic bg-secondary/5 rounded-premium-full px-spacing-md py-spacing-xs border border-secondary/10">
                         ✠ {part.rubric}
                       </p>
                     )}
                     {showLatin && part.latin && (
-                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-spacing-md whitespace-pre-line">{part.latin}</p>
+                      <p className="text-premium-sm text-muted-foreground font-serif italic bg-muted rounded-premium-full p-spacing-md whitespace-pre-line">{part.latin}</p>
                     )}
-                    <p className="text-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
+                    <p className="text-premium-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>
                 ))}
               </div>

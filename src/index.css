@@ -53,21 +53,21 @@
     --border-medium: 2px;
     
     /* 4. Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
+    --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-premium-md: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
     --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.02);
     --shadow-premium-hover: 0 30px 80px -20px rgba(0, 0, 0, 0.04);
     
     /* 5. Typography Scale */
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.5rem;
-    --text-3xl: 1.875rem;
-    --text-4xl: 2.25rem;
-    --text-5xl: 3rem;
+    --text-premium-xs: 0.75rem;
+    --text-premium-sm: 0.875rem;
+    --text-premium-base: 1rem;
+    --text-premium-lg: 1.125rem;
+    --text-premium-xl: 1.25rem;
+    --text-premium-2xl: 1.5rem;
+    --text-premium-3xl: 1.875rem;
+    --text-premium-4xl: 2.25rem;
+    --text-premium-5xl: 3rem;
     
     --font-weight-light: 300;
     --font-weight-normal: 400;
@@ -180,7 +180,7 @@
 
   h1, .h1 {
     @apply font-display font-light uppercase tracking-premium-widest text-primary;
-    font-size: clamp(var(--text-2xl), 8vw, var(--text-5xl));
+    font-size: clamp(var(--text-premium-2xl), 8vw, var(--text-premium-5xl));
     line-height: 1.05;
     filter: blur(0.1px);
     text-shadow: 0 0 1px hsla(var(--primary) / 0.1);
@@ -188,19 +188,19 @@
 
   h2, .h2 {
     @apply font-display font-light uppercase tracking-premium-wide text-primary/80;
-    font-size: clamp(var(--text-xl), 6vw, var(--text-4xl));
+    font-size: clamp(var(--text-premium-xl), 6vw, var(--text-premium-4xl));
     line-height: 1.15;
   }
 
   h3, .h3 {
     @apply font-display font-light tracking-premium-tight text-primary/70;
-    font-size: clamp(var(--text-lg), 5vw, var(--text-3xl));
+    font-size: clamp(var(--text-premium-lg), 5vw, var(--text-premium-3xl));
     line-height: 1.25;
   }
 
   p, .body-text {
     @apply font-ui font-normal text-foreground/60;
-    font-size: clamp(var(--text-sm), 1vw, var(--text-base));
+    font-size: clamp(var(--text-premium-sm), 1vw, var(--text-premium-base));
     line-height: 1.8;
     max-width: 65ch;
     letter-spacing: 0.01em;
@@ -213,7 +213,7 @@
   /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/10 max-w-[65ch] mx-auto;
-    font-size: clamp(var(--text-base), 1.4vw, var(--text-xl));
+    font-size: clamp(var(--text-premium-base), 1.4vw, var(--text-premium-xl));
     line-height: 2.1;
     letter-spacing: var(--letter-spacing-wide);
     font-weight: var(--font-weight-light);
@@ -221,7 +221,7 @@
   }
 
   @screen sm {
-    .reader-text { font-size: var(--text-xl); }
+    .reader-text { font-size: var(--text-premium-xl); }
   }
 
   @screen md {
@@ -232,10 +232,10 @@
     }
   }
 
-  .font-size-small .reader-text { font-size: var(--text-lg) !important; }
-  .font-size-medium .reader-text { font-size: var(--text-xl) !important; }
-  .font-size-large .reader-text { font-size: var(--text-2xl) !important; }
-  .font-size-extra-large .reader-text { font-size: var(--text-3xl) !important; }
+  .font-size-small .reader-text { font-size: var(--text-premium-lg) !important; }
+  .font-size-medium .reader-text { font-size: var(--text-premium-xl) !important; }
+  .font-size-large .reader-text { font-size: var(--text-premium-2xl) !important; }
+  .font-size-extra-large .reader-text { font-size: var(--text-premium-3xl) !important; }
 
   /* Specific Reader Container */
   .reader-container {
@@ -249,7 +249,7 @@
   }
 
   .prose-premium p {
-    @apply mb-spacing-xl leading-[1.95] text-xl md:text-2xl font-light;
+    @apply mb-spacing-xl leading-[1.95] text-premium-xl md:text-premium-2xl font-light;
     text-align: justify;
     hyphens: auto;
   }
@@ -305,7 +305,7 @@
 
   /* Unified Search Input Utility */
   .search-input-premium {
-    @apply w-full pl-spacing-2xl pr-spacing-lg py-spacing-md rounded-full border border-primary/[0.03] bg-transparent focus:bg-primary/[0.01] focus:ring-1 focus:ring-primary/5 transition-all font-serif italic text-lg placeholder:text-primary/10;
+    @apply w-full pl-spacing-2xl pr-spacing-lg py-spacing-md rounded-premium-full border border-primary/[0.03] bg-transparent focus:bg-primary/[0.01] focus:ring-1 focus:ring-primary/5 transition-all font-serif italic text-premium-lg placeholder:text-primary/10;
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
@@ -376,7 +376,7 @@
   }
 
   .desktop-main {
-    @apply min-w-0;
+    @apply min-w-spacing-0;
   }
 
   .desktop-aside {
@@ -445,11 +445,11 @@
 /* Área de detecção no topo para o Header */
 .focus-mode::before {
   content: '';
-  @apply fixed top-0 left-0 w-full h-spacing-xl z-[141] pointer-events-auto opacity-0;
+  @apply fixed top-spacing-0 left-0 w-full h-spacing-xl z-[141] pointer-events-auto opacity-0;
 }
 
 .focus-mode:has(header:hover)::before {
-  @apply h-0;
+  @apply h-spacing-0;
 }
 
 /* Deep Visual Silence - Refined, Atmospheric, and Contemplative */
@@ -463,7 +463,7 @@
 }
 
 .visual-silence * {
-  @apply transition-all duration-1000 border-transparent !shadow-none;
+  @apply transition-all duration-1000 border-transparent !shadow-premium-none;
 }
 
 .visual-silence header, 

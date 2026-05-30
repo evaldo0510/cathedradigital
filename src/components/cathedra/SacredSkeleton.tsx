@@ -21,7 +21,7 @@ export const PageHeaderSkeleton: React.FC = () => (
 export const CardGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) => (
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-lg animate-pulse">
     {Array.from({ length: count }).map((_, i) => (
-      <Card key={i} className="h-spacing-4xl rounded-premium bg-muted/30 border border-border/40 shadow-md" />
+      <Card key={i} className="h-spacing-4xl rounded-premium bg-muted/30 border border-border/40 shadow-premium-md" />
     ))}
   </div>
 );
@@ -89,7 +89,7 @@ export const CatechismParagraphSkeleton: React.FC<{ paragraph?: number }> = ({ p
 export const LogosChatSkeleton = () => (
   <div className="flex flex-col h-full space-y-spacing-lg p-spacing-md animate-pulse">
     <div className="flex justify-start gap-spacing-sm">
-      <div className="w-spacing-xl h-spacing-xl rounded-full bg-muted shrink-0" />
+      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted shrink-0" />
       <div className="space-y-spacing-xs">
         <div className="h-spacing-3xl w-[200px] rounded-premium rounded-tl-none bg-muted/60" />
         <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded" />
@@ -100,10 +100,10 @@ export const LogosChatSkeleton = () => (
         <div className="h-spacing-2xl w-[150px] rounded-premium rounded-tr-none bg-primary/10" />
         <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded ml-auto" />
       </div>
-      <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/10 shrink-0" />
+      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/10 shrink-0" />
     </div>
     <div className="flex justify-start gap-spacing-sm pt-spacing-md">
-      <div className="w-spacing-xl h-spacing-xl rounded-full bg-muted shrink-0" />
+      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-muted shrink-0" />
       <div className="space-y-spacing-xs">
         <div className="h-spacing-4xl w-[240px] rounded-premium rounded-tl-none bg-muted/60" />
         <div className="h-spacing-sm w-spacing-2xl bg-muted/30 rounded" />
@@ -115,16 +115,16 @@ export const LogosChatSkeleton = () => (
 export const ReadingSkeleton = () => (
   <div className="w-full max-w-spacing-3xl mx-auto space-y-spacing-xl py-spacing-2xl animate-in fade-in duration-700">
     <div className="space-y-spacing-md">
-      <div className="h-spacing-md w-spacing-4xl mx-auto bg-muted rounded-full" />
-      <div className="h-spacing-xl w-spacing-sm/4 mx-auto bg-muted rounded-full" />
+      <div className="h-spacing-md w-spacing-4xl mx-auto bg-muted rounded-premium-full" />
+      <div className="h-spacing-xl w-spacing-sm/4 mx-auto bg-muted rounded-premium-full" />
     </div>
     <div className="space-y-spacing-lg pt-spacing-xl">
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <div key={i} className="flex gap-spacing-md">
-          <div className="h-spacing-md w-spacing-lg shrink-0 mt-spacing-2xs bg-muted/30 rounded-full" />
+          <div className="h-spacing-md w-spacing-lg shrink-0 mt-spacing-2xs bg-muted/30 rounded-premium-full" />
           <div className="space-y-spacing-xs flex-1">
-            <div className={`h-spacing-md bg-muted/60 rounded-full ${i % 2 === 0 ? 'w-full' : 'w-[95%]'}`} />
-            <div className={`h-spacing-md bg-muted/40 rounded-full ${i % 3 === 0 ? 'w-spacing-md/5' : 'w-[90%]'}`} />
+            <div className={`h-spacing-md bg-muted/60 rounded-premium-full ${i % 2 === 0 ? 'w-full' : 'w-[95%]'}`} />
+            <div className={`h-spacing-md bg-muted/40 rounded-premium-full ${i % 3 === 0 ? 'w-spacing-md/5' : 'w-[90%]'}`} />
           </div>
         </div>
       ))}

@@ -68,7 +68,7 @@ export const GuidedReadingFlow: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
-          className={`premium-card p-spacing-2xl md:p-spacing-3xl flex flex-col items-center text-center gap-spacing-2xl ${step.color} border-none shadow-none`}
+          className={`premium-card p-spacing-2xl md:p-spacing-3xl flex flex-col items-center text-center gap-spacing-2xl ${step.color} border-none shadow-premium-none`}
         >
           <div className="space-y-spacing-md">
             <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/60">
@@ -80,13 +80,13 @@ export const GuidedReadingFlow: React.FC = () => {
           </div>
 
           <div className="space-y-spacing-lg max-w-spacing-xl">
-            <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight text-primary">
+            <h2 className="text-premium-4xl md:text-premium-5xl font-display font-medium tracking-tight text-primary">
               {step.title}
             </h2>
-            <p className="text-xl md:text-2xl font-serif italic text-muted-foreground/60 leading-relaxed">
+            <p className="text-premium-xl md:text-premium-2xl font-serif italic text-muted-foreground/60 leading-relaxed">
               "{step.subtitle}"
             </p>
-            <p className="text-base text-muted-foreground/40 leading-relaxed max-w-spacing-md mx-auto">
+            <p className="text-premium-base text-muted-foreground/40 leading-relaxed max-w-spacing-md mx-auto">
               {step.description}
             </p>
           </div>
@@ -96,7 +96,7 @@ export const GuidedReadingFlow: React.FC = () => {
               <Button 
                 variant="ghost" 
                 onClick={prevStep}
-                className="rounded-full px-spacing-xl h-spacing-2xl text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
+                className="rounded-premium-full px-spacing-xl h-spacing-2xl text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-primary transition-all"
               >
                 Voltar
               </Button>
@@ -104,7 +104,7 @@ export const GuidedReadingFlow: React.FC = () => {
             
             <Button 
               onClick={nextStep}
-              className="btn-premium-primary px-spacing-2xl h-spacing-3xl rounded-full group shadow-premium"
+              className="btn-premium-primary px-spacing-2xl h-spacing-3xl rounded-premium-full group shadow-premium"
             >
               {currentStep === steps.length - 1 ? 'Iniciar Leitura' : 'Próximo Passo'}
               <Icons.ArrowRight className="w-spacing-md h-spacing-md ml-spacing-sm group-hover:translate-x-1 transition-transform" />
@@ -116,7 +116,7 @@ export const GuidedReadingFlow: React.FC = () => {
             {steps.map((_, idx) => (
               <div 
                 key={idx}
-                className={`w-spacing-2xs h-spacing-2xs rounded-full transition-all duration-1000 ${
+                className={`w-spacing-2xs h-spacing-2xs rounded-premium-full transition-all duration-1000 ${
                   idx === currentStep ? 'bg-primary w-spacing-xl' : 'bg-primary/10'
                 }`}
               />

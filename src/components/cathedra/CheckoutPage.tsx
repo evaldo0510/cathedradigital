@@ -154,13 +154,13 @@ const CheckoutPage: React.FC = () => {
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Zap className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
+        <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">
           Eleve sua experiência <br />
           <span className="text-primary italic">espiritual.</span>
         </h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-lg">
+        <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-premium-lg">
           Acesse ferramentas exclusivas de estudo e oração para aprofundar sua vida interior.
         </p>
       </div>
@@ -176,13 +176,13 @@ const CheckoutPage: React.FC = () => {
               <Button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
-                className={`flex-1 py-spacing-sm px-spacing-md rounded-full text-sm font-bold transition-all ${
+                className={`flex-1 py-spacing-sm px-spacing-md rounded-premium-full text-premium-sm font-bold transition-all ${
                   selectedPlan === p.id ? 'bg-background text-foreground shadow-premium' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {p.label}
                 {p.badge && selectedPlan === p.id && (
-                  <Badge className="ml-spacing-xs bg-primary/15 text-primary border-primary/30 text-xs">{p.badge}</Badge>
+                  <Badge className="ml-spacing-xs bg-primary/15 text-primary border-primary/30 text-premium-xs">{p.badge}</Badge>
                 )}
               </Button>
             ))}
@@ -191,26 +191,26 @@ const CheckoutPage: React.FC = () => {
           {/* Plan card */}
           <Card className="border-2 border-primary shadow-premium-hover rounded-[2.5rem] overflow-hidden">
             <CardHeader className="text-center bg-primary/5 pb-spacing-xl pt-spacing-2xl space-y-spacing-md">
-              <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
+              <CardTitle className="text-premium-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
               </CardTitle>
               <div className="flex flex-col items-center justify-center">
                 {appliedCoupon && (
-                  <span className="text-xl text-muted-foreground line-through mb-spacing-2xs">
+                  <span className="text-premium-xl text-muted-foreground line-through mb-spacing-2xs">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(plan.price)}
                   </span>
                 )}
-                <span className="text-6xl font-serif font-bold text-foreground">
+                <span className="text-premium-6xl font-serif font-bold text-foreground">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
                     getDiscountedPrice(plan.price)
                   )}
                 </span>
-                <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-spacing-xs">
+                <span className="text-premium-sm font-bold text-muted-foreground uppercase tracking-widest mt-spacing-xs">
                   {plan.period}
                 </span>
               </div>
               {plan.totalLabel && (
-                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-spacing-md py-spacing-2xs rounded-premium inline-block font-serif">
+                <CardDescription className="text-premium-xs font-medium bg-primary/10 text-primary px-spacing-md py-spacing-2xs rounded-premium inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
@@ -218,10 +218,10 @@ const CheckoutPage: React.FC = () => {
               )}
               {appliedCoupon && (
                 <div className="flex items-center justify-center gap-spacing-xs">
-                  <Badge className="bg-primary/15 text-primary border-primary/30 text-xs">
+                  <Badge className="bg-primary/15 text-primary border-primary/30 text-premium-xs">
                     Cupom {appliedCoupon.code} · -{appliedCoupon.discount_percent}%
                   </Badge>
-                  <Button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-xs text-muted-foreground hover:text-destructive">
+                  <Button onClick={() => { setAppliedCoupon(null); setCouponCode(''); }} className="text-premium-xs text-muted-foreground hover:text-destructive">
                     Remover
                   </Button>
                 </div>
@@ -235,13 +235,13 @@ const CheckoutPage: React.FC = () => {
                     placeholder="Código do cupom"
                     value={couponCode}
                     onChange={e => setCouponCode(e.target.value.toUpperCase())}
-                    className="rounded-full uppercase"
+                    className="rounded-premium-full uppercase"
                   />
                   <Button
                     variant="outline"
                     onClick={validateCoupon}
                     disabled={couponLoading || !couponCode.trim()}
-                    className="rounded-full shrink-0"
+                    className="rounded-premium-full shrink-0"
                   >
                     {couponLoading ? '...' : 'Aplicar'}
                   </Button>
@@ -250,22 +250,22 @@ const CheckoutPage: React.FC = () => {
 
               <ul className="space-y-spacing-md">
                 {['Acesso a todas as trilhas de estudo', 'IA Teológica sem limites', 'Download para uso offline', 'Suporte prioritário', 'Sem anúncios', 'Badges exclusivos no perfil'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-spacing-sm text-sm font-serif">
+                  <li key={i} className="flex items-center gap-spacing-sm text-premium-sm font-serif">
                     <Icons.Star className="w-spacing-md h-spacing-md text-primary shrink-0" />
                     <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="p-spacing-xl md:p-spacing-xl pt-0 flex flex-col gap-spacing-md">
+            <CardFooter className="p-spacing-xl md:p-spacing-xl pt-spacing-0 flex flex-col gap-spacing-md">
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
-                className="w-full h-spacing-2xl rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-premium-hover shadow-primary/20"
+                className="w-full h-spacing-2xl rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-premium-hover shadow-primary/20"
               >
                 {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
-              <p className="text-xs text-center text-muted-foreground italic flex items-center justify-center gap-spacing-2xs">
+              <p className="text-premium-xs text-center text-muted-foreground italic flex items-center justify-center gap-spacing-2xs">
                 <Icons.Heart className="w-spacing-sm h-spacing-sm text-primary shrink-0" />
                 Parte do valor da sua assinatura é destinada a projetos de evangelização.
               </p>
@@ -276,10 +276,10 @@ const CheckoutPage: React.FC = () => {
 
       {/* Plan Comparison */}
       <div className="max-w-spacing-3xl mx-auto">
-        <h2 className="text-2xl font-serif font-bold text-center mb-spacing-xl">Gratuito vs PRO</h2>
+        <h2 className="text-premium-2xl font-serif font-bold text-center mb-spacing-xl">Gratuito vs PRO</h2>
         <Card className="rounded-premium overflow-hidden border border-border/50">
-          <CardContent className="p-0">
-            <table className="w-full text-sm">
+          <CardContent className="p-spacing-0">
+            <table className="w-full text-premium-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   <th className="text-left p-spacing-md font-bold">Recurso</th>
@@ -293,13 +293,13 @@ const CheckoutPage: React.FC = () => {
                     <td className="p-spacing-md font-medium">{row.feature}</td>
                     <td className="p-spacing-md text-center">
                       {row.free ? (
-                        <span className="text-primary text-lg">✓</span>
+                        <span className="text-primary text-premium-lg">✓</span>
                       ) : (
-                        <span className="text-muted-foreground text-lg">—</span>
+                        <span className="text-muted-foreground text-premium-lg">—</span>
                       )}
                     </td>
                     <td className="p-spacing-md text-center">
-                      <span className="text-primary text-lg font-bold">✓</span>
+                      <span className="text-primary text-premium-lg font-bold">✓</span>
                     </td>
                   </tr>
                 ))}
@@ -316,8 +316,8 @@ const CheckoutPage: React.FC = () => {
             <div className="mx-auto w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center">
               <Icons.Heart className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
-            <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
-            <CardDescription className="text-sm max-w-spacing-md mx-auto">
+            <CardTitle className="text-premium-xl font-serif font-bold">Doação Voluntária</CardTitle>
+            <CardDescription className="text-premium-sm max-w-spacing-md mx-auto">
               Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
@@ -328,7 +328,7 @@ const CheckoutPage: React.FC = () => {
                 <Button
                   key={val}
                   onClick={() => setDonationAmount(val)}
-                  className={`px-spacing-md py-spacing-xs rounded-full text-sm font-bold border transition-all ${
+                  className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-sm font-bold border transition-all ${
                     donationAmount === val
                       ? 'bg-primary text-primary-foreground border-primary shadow-premium shadow-primary/20'
                       : 'bg-background text-foreground border-border hover:border-primary/50'
@@ -339,14 +339,14 @@ const CheckoutPage: React.FC = () => {
               ))}
             </div>
             <div className="flex gap-spacing-sm items-center">
-              <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Outro valor:</span>
+              <span className="text-premium-sm font-medium text-muted-foreground whitespace-nowrap">Outro valor:</span>
               <Input
                 type="number"
                 min={1}
                 placeholder="R$ 0,00"
                 value={donationAmount || ''}
                 onChange={e => setDonationAmount(e.target.value ? Number(e.target.value) : '')}
-                className="rounded-full"
+                className="rounded-premium-full"
               />
             </div>
           </CardContent>
@@ -355,7 +355,7 @@ const CheckoutPage: React.FC = () => {
               variant="outline"
               onClick={handleDonation}
               disabled={donationLoading || !donationAmount || donationAmount < 1}
-              className="w-full h-spacing-2xl rounded-full font-bold gap-spacing-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+              className="w-full h-spacing-2xl rounded-premium-full font-bold gap-spacing-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
             >
               {donationLoading ? 'Processando...' : (
                 <>
@@ -368,7 +368,7 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       <div className="text-center">
-        <p className="text-xs text-muted-foreground italic">
+        <p className="text-premium-xs text-muted-foreground italic">
           Pagamento processado com segurança pelo Mercado Pago. <br />
           Ao assinar, você concorda com nossos{' '}
           <a href="/termos" className="underline hover:text-primary">termos de serviço</a> e{' '}
@@ -380,8 +380,8 @@ const CheckoutPage: React.FC = () => {
 };
 
 const BenefitsSection: React.FC = () => (
-  <div className="space-y-spacing-xl pr-0 md:pr-spacing-xl">
-    <h2 className="text-2xl font-serif font-bold text-foreground">Por que ser PRO?</h2>
+  <div className="space-y-spacing-xl pr-spacing-0 md:pr-spacing-xl">
+    <h2 className="text-premium-2xl font-serif font-bold text-foreground">Por que ser PRO?</h2>
     <div className="grid gap-spacing-lg">
       {[
         { icon: <Icons.Search className="w-spacing-md h-spacing-md" />, title: 'Colloquium IA Ilimitado', desc: 'Pergunte qualquer coisa sobre teologia e receba respostas baseadas na tradição.' },
@@ -395,7 +395,7 @@ const BenefitsSection: React.FC = () => (
           </div>
           <div className="space-y-spacing-2xs">
             <h3 className="font-bold text-foreground">{benefit.title}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
+            <p className="text-premium-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
           </div>
         </div>
       ))}

@@ -66,15 +66,15 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
             placeholder="Buscar na Palavra..."
-            className="w-full pl-spacing-2xl pr-spacing-md h-spacing-2xl rounded-full border border-primary/[0.03] bg-transparent text-foreground text-sm font-serif italic placeholder:text-muted-foreground/20 focus:outline-none focus:bg-primary/[0.01] transition-all duration-700"
+            className="w-full pl-spacing-2xl pr-spacing-md h-spacing-2xl rounded-premium-full border border-primary/[0.03] bg-transparent text-foreground text-premium-sm font-serif italic placeholder:text-muted-foreground/20 focus:outline-none focus:bg-primary/[0.01] transition-all duration-700"
             autoFocus
           />
         </div>
         <Button onClick={doSearch} disabled={loading || query.trim().length < 2}
-          className="px-spacing-lg py-spacing-sm rounded-full bg-primary text-primary-foreground text-sm font-bold disabled:opacity-40 hover:bg-primary/90 transition-all">
+          className="px-spacing-lg py-spacing-sm rounded-premium-full bg-primary text-primary-foreground text-premium-sm font-bold disabled:opacity-40 hover:bg-primary/90 transition-all">
           {loading ? '...' : 'Buscar'}
         </Button>
-        <Button onClick={onClose} variant="ghost" className="p-spacing-sm rounded-full bg-primary/[0.03] border border-primary/10 hover:bg-primary/5 transition-all" aria-label="Fechar busca">
+        <Button onClick={onClose} variant="ghost" className="p-spacing-sm rounded-premium-full bg-primary/[0.03] border border-primary/10 hover:bg-primary/5 transition-all" aria-label="Fechar busca">
           <Icons.ArrowDown className="w-spacing-md h-spacing-md rotate-90 text-primary/60" />
         </Button>
       </div>
@@ -88,21 +88,21 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       )}
 
       {!loading && searched && results.length === 0 && (
-        <p className="text-center text-muted-foreground text-sm py-spacing-xl italic">Nenhum versículo encontrado para "{query}".</p>
+        <p className="text-center text-muted-foreground text-premium-sm py-spacing-xl italic">Nenhum versículo encontrado para "{query}".</p>
       )}
 
       {!loading && results.length > 0 && (
         <div className="space-y-spacing-2xs">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
+          <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground">{results.length} resultados</p>
           <div className="space-y-spacing-xs max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
                 className="w-full text-left p-spacing-md rounded-premium bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all group h-auto block">
                 <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                  <span className="text-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
-                  <span className="text-xs text-muted-foreground">— {r.bookName}</span>
+                  <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
+                  <span className="text-premium-xs text-muted-foreground">— {r.bookName}</span>
                 </div>
-                <p className="text-sm text-foreground/80 font-serif line-clamp-2">
+                <p className="text-premium-sm text-foreground/80 font-serif line-clamp-spacing-xs">
                   {(() => {
                     const plain = (r.text || '').replace(/<[^>]+>/g, '');
                     if (!query) return plain;
@@ -123,7 +123,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <Button 
                 onClick={loadMore}
                 variant="ghost" 
-                className="w-full text-xs font-bold uppercase tracking-widest text-primary/40 hover:text-primary py-spacing-lg"
+                className="w-full text-premium-xs font-bold uppercase tracking-widest text-primary/40 hover:text-primary py-spacing-lg"
               >
                 Carregar mais resultados
               </Button>
