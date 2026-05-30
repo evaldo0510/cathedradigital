@@ -13,6 +13,8 @@ import { SpiritualContinuity } from './SpiritualContinuity';
 import { CathedraButton } from './CathedraButton';
 import { CathedraCard } from './CathedraCard';
 
+import { useAuth } from '@/hooks/useAuth';
+
 interface HomeMainContentProps {
   user: any;
   profile: any;
