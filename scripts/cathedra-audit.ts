@@ -256,8 +256,9 @@ const htmlContent = `
     </div>
     
     <footer class="mt-8 text-center text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] pb-12">
-      Governance Protocol Active • ${new Date().getFullYear()} Cathedra Product Engineering
+      Governance Protocol Active • Cathedra Product Engineering
     </footer>
+
   </div>
 </body>
 </html>
