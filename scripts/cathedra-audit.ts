@@ -1,7 +1,11 @@
 #!/usr/bin/env bun
 import { execSync } from 'child_process';
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+
+const args = process.argv.slice(2);
+const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '0');
+const softMode = args.includes('--soft');
 
 const forbiddenPatterns = [
   { 
@@ -42,46 +46,39 @@ console.log('--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---');
 forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
   try {
-    // Find files and lines
-    const command = `rg -n "${pattern.regex}" src --no-filename -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**"`;
+    const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**"`;
     const rawOutput = execSync(command, { encoding: 'utf8' }).trim();
     
     if (rawOutput) {
       const lines = rawOutput.split('\n');
       lines.forEach(line => {
-        const [lineNumber, ...contentArr] = line.split(':');
-        const content = contentArr.join(':').trim();
-        
-        // Match the specific class
-        const matches = content.match(new RegExp(pattern.regex, 'g'));
-        if (matches) {
-          matches.forEach(match => {
-            if (!pattern.exclude.includes(match)) {
-              patternIssues.push({
-                file: 'unknown', // rg -n without filename is tricky here, let's refine
-                line: lineNumber,
-                match: match,
-                content: content
-              });
-              totalIssues++;
-            }
-          });
+        const parts = line.split(':');
+        if (parts.length >= 3) {
+          const file = parts[0];
+          const lineNumber = parts[1];
+          const content = parts.slice(2).join(':').trim();
+          
+          const matches = content.match(new RegExp(pattern.regex, 'g'));
+          if (matches) {
+            matches.forEach(match => {
+              if (!pattern.exclude.includes(match)) {
+                patternIssues.push({
+                  file,
+                  line: lineNumber,
+                  match: match,
+                  content: content
+                });
+                totalIssues++;
+              }
+            });
+          }
         }
       });
     }
     
-    // Get summary count
-    const summaryCommand = `rg -o "${pattern.regex}" src --no-filename -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" | sort | uniq -c | sort -nr`;
-    const summaryOutput = execSync(summaryCommand, { encoding: 'utf8' }).trim();
-    const summaryLines = summaryOutput.split('\n').filter(line => {
-      const match = line.trim().split(/\s+/)[1];
-      return match && !pattern.exclude.includes(match);
-    });
-
     results.push({
       ...pattern,
       issuesCount: patternIssues.length,
-      summary: summaryLines,
       details: patternIssues
     });
 
@@ -92,82 +89,135 @@ forbiddenPatterns.forEach(pattern => {
     }
 
   } catch (error) {
-    results.push({ ...pattern, issuesCount: 0, summary: [], details: [] });
+    results.push({ ...pattern, issuesCount: 0, details: [] });
     console.log(`✅ ${pattern.name}: Compliant`);
   }
 });
 
-// Generate Reports
 const reportDir = join(process.cwd(), 'reports');
-try { mkdirSync(reportDir); } catch(e) {}
+if (!existsSync(reportDir)) mkdirSync(reportDir);
 
-// JSON Report
-writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({
+const historyPath = join(reportDir, 'compliance-history.json');
+let history = [];
+if (existsSync(historyPath)) {
+  try {
+    history = JSON.parse(readFileSync(historyPath, 'utf8'));
+  } catch (e) {
+    history = [];
+  }
+}
+
+const currentAudit = {
   timestamp: new Date().toISOString(),
   totalIssues,
-  results
-}, null, 2));
+  categories: results.map(r => ({ id: r.id, count: r.issuesCount }))
+};
 
-// HTML Report
+history.push(currentAudit);
+if (history.length > 30) history.shift();
+writeFileSync(historyPath, JSON.stringify(history, null, 2));
+
 const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cathedra Token Audit</title>
+  <title>Cathedra Compliance Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f9f9fb; color: #1a1a1a; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .issue { color: #e11d48; font-weight: bold; }
-    .success { color: #10b981; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
-    pre { background: #f1f5f9; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
   </style>
 </head>
-<body>
-  <h1>Cathedra Design Token Audit</h1>
-  <div class="card">
-    <h2>Summary</h2>
-    <p>Total Issues: <span class="${totalIssues > 0 ? 'issue' : 'success'}">${totalIssues}</span></p>
-    <p>Generated at: ${new Date().toLocaleString()}</p>
-  </div>
-  ${results.map(r => `
-    <div class="card">
-      <h3>${r.name}</h3>
-      <p>Status: <span class="${r.issuesCount > 0 ? 'issue' : 'success'}">${r.issuesCount > 0 ? 'FAIL' : 'PASS'}</span></p>
-      <p>Suggestion: <em>${r.suggestion}</em></p>
-      ${r.summary.length > 0 ? `
-        <h4>Common Violations:</h4>
-        <pre>${r.summary.join('\n')}</pre>
-      ` : ''}
+<body class="p-4 md:p-8">
+  <div class="max-w-6xl mx-auto">
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-slate-200 gap-4">
+      <div>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">Cathedra Governance</h1>
+        <p class="text-slate-500 font-medium">Design System Compliance & Token Enforcement</p>
+      </div>
+      <div class="bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Snapshot Date</p>
+          <p class="text-sm font-bold text-slate-700">${new Date().toLocaleString()}</p>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+      <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl border border-slate-800">
+        <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">Health Score</p>
+        <p class="text-5xl font-black ${totalIssues > threshold ? 'text-rose-400' : 'text-emerald-400'}">${totalIssues}</p>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight mt-3">Tolerance: ${threshold}</p>
+      </div>
+      ${results.map(r => `
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">${r.name}</p>
+          <p class="text-4xl font-black ${r.issuesCount > 0 ? 'text-rose-600' : 'text-emerald-600'}">${r.issuesCount}</p>
+          <div class="flex items-center mt-3">
+             <div class="w-1.5 h-1.5 rounded-full ${r.issuesCount > 0 ? 'bg-rose-500' : 'bg-emerald-500'} mr-2"></div>
+             <span class="text-[10px] font-bold text-slate-500 uppercase">${r.issuesCount > 0 ? 'Review' : 'Verified'}</span>
+          </div>
+        </div>
+      `).join('')}
     </div>
-  `).join('')}
+
+
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 mb-10 overflow-hidden relative">
+      <div class="flex justify-between items-center mb-8">
+        <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Compliance Trend</h3>
+        <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-widest">Last ${history.length} Snapshots</span>
+      </div>
+      <div class="flex items-end h-32 gap-3 border-b border-slate-100 pb-2">
+        ${history.map((h: any, i: number) => {
+          const maxVal = Math.max(...history.map((x: any) => x.totalIssues), 20);
+          const height = Math.max((h.totalIssues / maxVal) * 100, 5);
+          return `
+            <div class="flex-1 flex flex-col items-center group relative min-w-[20px]">
+              <div class="w-full ${i === history.length - 1 ? 'bg-indigo-600' : 'bg-slate-100 hover:bg-slate-200'} rounded-t-lg transition-all" style="height: ${height}%"></div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+
+
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-12">
+      <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
+        <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Violation Registry</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-slate-50/80 text-slate-400 text-[10px] uppercase font-black tracking-widest border-b border-slate-100">
+            <tr>
+              <th class="px-8 py-5">Domain</th>
+              <th class="px-8 py-5">File</th>
+              <th class="px-8 py-5 text-center">Value</th>
+              <th class="px-8 py-5">Suggestion</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            ${results.flatMap(r => r.details.map(d => `
+              <tr>
+                <td class="px-8 py-6 text-sm font-black text-slate-900 uppercase tracking-tight">${r.name}</td>
+                <td class="px-8 py-6">
+                  <div class="text-sm font-bold text-slate-700 font-mono text-[13px]">${d.file}</div>
+                  <div class="text-[10px] font-black text-slate-400 uppercase mt-1.5">Line ${d.line}</div>
+                </td>
+                <td class="px-8 py-6 text-center">
+                  <span class="px-2.5 py-1.5 bg-rose-50 text-rose-600 rounded-xl text-xs font-black border border-rose-100 font-mono">${d.match}</span>
+                </td>
+                <td class="px-8 py-6 text-xs font-bold text-slate-500">${r.suggestion}</td>
+              </tr>
+            `)).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 `;
+
 writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
+writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({ ...currentAudit, results, history }, null, 2));
 
-// PR Comment Helper (Output to stdout for CI to pick up)
-if (process.env.CI) {
-  console.log('\n--- PR COMMENT SUMMARY ---');
-  console.log('### 🎨 Cathedra Design System Audit');
-  if (totalIssues === 0) {
-    console.log('✅ All components are compliant with official design tokens.');
-  } else {
-    console.log(`❌ Found **${totalIssues}** design token violations.`);
-    console.log('| Category | Issues | Suggestion |');
-    console.log('| :--- | :--- | :--- |');
-    results.forEach(r => {
-      if (r.issuesCount > 0) {
-        console.log(`| ${r.name} | ${r.issuesCount} | ${r.suggestion} |`);
-      }
-    });
-    console.log('\n[View Full Report](token-audit.html)');
-  }
-}
-
-console.log(`\nAudit finished. Reports generated in /reports`);
-
-if (totalIssues > 0) {
-  process.exit(1);
-}
+console.log('\nAudit finished. Reports generated in /reports');
+if (!softMode && totalIssues > threshold) process.exit(1);
