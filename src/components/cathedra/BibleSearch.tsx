@@ -97,7 +97,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
-                className="w-full text-left p-4 rounded-3xl bg-transparent border-none hover:bg-primary/[0.005] transition-all group h-auto block">
+                className="w-full text-left p-4 rounded-3xl bg-transparent border-none hover:bg-primary/[0.02] active:scale-[0.98] transition-all group h-auto block">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
                   <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>

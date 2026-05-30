@@ -30,8 +30,8 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
     return (
       <motion.button
         ref={ref as any}
-        whileTap={settings.reduceAnimations ? {} : { scale: 0.97 }}
-        whileHover={settings.reduceAnimations ? {} : { y: -2, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+        whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
+        whileHover={settings.reduceAnimations ? {} : { y: -1, transition: { duration: 0.2, ease: "easeOut" } }}
         className={cn(
           variantStyles[variant],
           sizeMap[size],
