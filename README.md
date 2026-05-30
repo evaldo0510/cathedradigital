@@ -220,6 +220,22 @@ Para validar se a estrutura atual de `./reports` corresponde exatamente à árvo
 npm run reports:verify
 ```
 
+Para limpar relatórios antigos mantendo o histórico organizado:
+```bash
+# Remover relatórios anteriores a uma data
+npm run reports:clean -- --since=2026-05-01
+```
+
+#### Opções Avançadas de Árvore:
+```bash
+# Saída em JSON para automação
+npm run reports:tree -- --json
+
+# Filtrar por padrão de nome (Regex)
+npm run reports:tree -- --pattern="dry-run.*\.json"
+```
+
+
 Para atualizar automaticamente a árvore do README com os arquivos atuais de `./reports`:
 ```bash
 npm run reports:verify -- --update
