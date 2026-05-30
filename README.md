@@ -190,23 +190,48 @@ O script `cathedra-audit.ts` suporta as seguintes flags:
    ```
    *Validação*: Abra um arquivo modificado e verifique se as classes Tailwind foram substituídas pelos tokens premium.
 
-#### Relatórios e Logs Esperados
+#### Estrutura de Relatórios e Logs (Exemplo Real)
 
-Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, os seguintes arquivos são gerados em uma estrutura organizada dentro da pasta `./reports`:
+Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pasta `./reports` é populada com a seguinte estrutura:
 
 ```text
 reports/
-├── compliance-history.json    # Histórico das últimas 30 execuções (JSON)
-├── token-audit.html           # Dashboard visual interativo (HTML)
-└── token-audit.json           # Dados brutos da última auditoria (JSON)
+├── compliance-history.json    # Histórico de progresso (últimas 30 execuções)
+├── token-audit.html           # Dashboard visual (Abra no navegador para detalhes)
+└── token-audit.json           # Logs técnicos brutos para integração de CI
 ```
 
-| Caminho | Tipo | Descrição |
-|---------|------|-----------|
-| `./reports/token-audit.html` | Dashboard | Visualização rica (HTML) com gráficos de tendência, score de saúde e tabela detalhada de violações. |
-| `./reports/token-audit.json` | JSON | Dados estruturados com resultados da última execução e detalhes de cada violação encontrada. |
-| `./reports/compliance-history.json` | Histórico | Log histórico (JSON) que armazena o progresso de conformidade das últimas 30 execuções. |
-| **Console Output** | Logs em Tempo Real | Resumo imediato no terminal com as mensagens de substituição sugeridas no modo dry-run. |
+Para visualizar a árvore atual no seu terminal, use:
+```bash
+npm run reports:tree
+```
+
+#### Como interpretar os arquivos:
+
+1. **`token-audit.html` (Dashboard)**:
+   - **O que procurar**: Procure pelo "Compliance Score". Se estiver abaixo de 95%, é um sinal de alerta.
+   - **Tabela de Violações**: Lista o arquivo, a linha e a classe sugerida para substituição.
+   - **Gráfico de Tendência**: Mostra se a dívida técnica de tokens está aumentando ou diminuindo.
+
+2. **`token-audit.json` (Dados Brutos)**:
+   - **Uso**: Ideal para ferramentas automatizadas ou se você quiser ver o erro exato retornado pelo regex.
+   - **Estrutura**: Contém um array `violations` com metadados completos de cada arquivo afetado.
+
+3. **`compliance-history.json` (Histórico)**:
+   - **Uso**: Útil para auditorias de longo prazo. Ele registra apenas o `score` e o `timestamp` de cada rodada bem-sucedida.
+
+#### Próximos Passos em Caso de Falha:
+
+Se o audit falhar ou o dry-run mostrar muitas violações:
+
+1. **Analise o Dashboard**: Abra o `reports/token-audit.html` para identificar quais componentes estão mais "sujos".
+2. **Execute o Fix Automático**: 
+   ```bash
+   npm run token-audit:fix
+   ```
+3. **Revisão Manual**: Após o fix, revise os arquivos modificados (use `git diff`) para garantir que a intenção do design foi mantida.
+4. **Commit**: Só realize o commit após o `npm run token-audit` retornar sucesso total (passando pelo threshold).
+
 
 
 
