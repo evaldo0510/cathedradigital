@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense, memo } from 'react';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -123,7 +123,7 @@ const FONT_SIZES = [
   { label: 'G', size: 'text-lg md:text-xl', leading: 'leading-[1.8]' },
 ];
 
-const Bible: React.FC = () => {
+const Bible: React.FC = memo(() => {
   useRenderPerf('Bible', 15);
   const { settings, updateSettings } = useReadingSettings();
   useReadingAutoHide(settings.visualSilence);
@@ -1618,6 +1618,6 @@ const Bible: React.FC = () => {
       </div>
     </ContemplativeLayout>
   );
-};
+});
 
 export default Bible;
