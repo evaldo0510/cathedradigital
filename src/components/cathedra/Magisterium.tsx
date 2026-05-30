@@ -269,7 +269,7 @@ const Magisterium: React.FC = () => {
     <ContemplativeLayout
       subtitle="Magisterium Ecclesiae"
       title="Magistério"
-      maxW="max-w-6xl"
+      icon={Icons.ScrollText}
     >
       <SEOHead 
         title="Magistério da Igreja | Cathedra" 
