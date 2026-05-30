@@ -26,11 +26,11 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-4 md:pt-48 pb-12 md:pb-96 will-change-[transform,opacity]", className)}>
+    <div className={cn("min-h-screen pt-4 md:pt-12 pb-12 md:pb-64 will-change-[transform,opacity]", className)}>
 
 
       {(title || subtitle || Icon) && (
-        <header className={cn("header-margin-rhythm px-6 md:px-12 text-center flex flex-col items-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-12 duration-[2000ms] ease-out")}>
+        <header className={cn("header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1500ms] ease-out")}>
           {Icon && (
             <div className="mb-8 md:mb-12">
               <Icon className="w-8 h-8 md:w-12 md:h-12 text-primary opacity-30 mx-auto" strokeWidth={1} />

@@ -136,15 +136,15 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             variant="glass"
             padding="none"
-            className="flex-1 p-4 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-5 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
+            className="flex-1 p-3 md:p-8 flex flex-col items-center justify-center gap-4 md:gap-8 group border-primary/[0.005] shadow-none bg-transparent"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.005] border border-primary/[0.02] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:bg-primary/[0.01] group-hover:text-primary/40 transition-all duration-1000">
+            <div className="relative z-10 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/[0.005] border border-primary/[0.01] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:bg-primary/[0.01] transition-all duration-1000">
               <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.3} />
             </div>
             
-            <div className="relative z-10 space-y-5 text-center">
-              <h3 className="text-xl md:text-3xl font-display font-medium text-primary/70 tracking-tight">Logos</h3>
-              <p className="text-xs md:text-sm text-muted-foreground/60 leading-relaxed font-serif italic max-w-[200px] md:max-w-[240px] mx-auto tracking-wide">
+            <div className="relative z-10 space-y-2 text-center">
+              <h3 className="text-lg md:text-2xl font-display font-medium text-primary/70 tracking-tight">Logos IA</h3>
+              <p className="hidden md:block text-xs text-muted-foreground/60 leading-relaxed font-serif italic max-w-[240px] mx-auto tracking-wide">
                 "Buscai e encontrareis."
               </p>
             </div>
@@ -156,13 +156,13 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-12 md:h-16 pl-10 md:pl-14 pr-10 md:pr-14 rounded-full border-primary/[0.03] bg-background/20 focus:bg-background/40 transition-all text-sm md:text-lg placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
+                  className="h-10 md:h-14 pl-10 md:pl-12 pr-10 md:pr-12 rounded-full border-primary/[0.05] bg-background/20 focus:bg-background/40 transition-all text-xs md:text-sm placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
-                <MessageSquare className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-5 md:h-5 text-primary/40 group-hover/input:text-primary/60 transition-colors" />
+                <MessageSquare className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-primary/40 transition-colors" />
                 <button 
                   type="submit"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 md:w-11 md:h-11 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn focus:ring-1 focus:ring-primary/20 outline-none"
+                  className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 md:w-12 md:h-12 rounded-full bg-primary/5 text-primary/40 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn outline-none"
                 >
                   <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
