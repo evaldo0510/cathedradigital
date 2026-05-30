@@ -1,43 +1,32 @@
-Refine the mobile scale and screen utilization of Cathedra Digital to create a more compact, fluid, and premium experience.
+After a structural audit of UI/UX and visual architecture, I've identified several areas for refinement to eliminate structural conflicts, redundancies, and performance bottlenecks, especially for the mobile experience.
 
-### Technical Detail Section
-- **Global Tokens**: Adjust `--space-mobile-section`, `--space-mobile-stack-lg`, and `--space-mobile-padding` in `src/index.css` for better density.
-- **Layout Spacing**: Reduce `pt` and `pb` in `ContemplativeLayout.tsx` and `HomeMainContent.tsx` on mobile.
-- **Section Headers**: Tweak `SectionHeader.tsx` to use shorter vertical lines and smaller gaps on mobile.
-- **Card Refinement**:
-  - Normalize `p-` values in `CathedraCard`, `HomeCard`, and `HomeMainDoors`.
-  - Reduce large mobile paddings in `RitualDoDia` (e.g., `p-6` to `p-4`).
-  - Tighten gaps between elements inside cards (icons, titles, descriptions).
-- **Visual Pauses**: Shrink mobile vertical padding in spacer elements across `HomeMainContent`.
-- **Proportions**: Adjust heading sizes and tracking slightly for better mobile fit.
+### 1. Structural De-duplication
+The project currently has overlapping header components (`LandingHeader` and `AppHeader`) and navigation patterns.
+- I will consolidate logic to ensure only one header is active per view, prioritizing `AppHeader` for the logged-in experience.
+- I will refine the `AppHeader` to be more minimalist on mobile, avoiding duplication with the `BottomNav`.
 
-### Implementation Steps
+### 2. Responsiveness & Component Rendering
+Some components are rendering hidden versions of themselves for different breakpoints, causing unnecessary DOM weight.
+- I will optimize conditional rendering to ensure mobile-only elements don't bloat the desktop view and vice-versa.
+- I will specifically refine the `Sidebar` and `BottomNav` interaction to prevent overlay conflicts.
 
-1. **Update `src/index.css`**
-   - Reduce `--space-mobile-section` from `3rem` to `2rem`.
-   - Reduce `--space-mobile-stack-lg` from `2rem` to `1.5rem`.
-   - Tweak `.app-container` mobile padding for better horizontal occupation.
+### 3. Visual & Performance Optimization
+- **Cleanup of Heavy Effects**: I will reduce excessive `backdrop-blur` and multi-layered shadows that impact mobile scroll performance, replacing them with more performant background-color transitions where appropriate.
+- **Block & Card Scaling**: I will refine paddings and margins in `HomeMainContent` and its child blocks (`HomeMainDoors`, `RitualDoDia`) to improve screen utilization on mobile, reducing "dead space" and excessive vertical scroll.
+- **Rendering Audit**: I will use `React.memo` more strategically on heavy components like `RitualDoDia` and `HomeMainContent` to prevent re-renders during global state changes (like theme toggling).
 
-2. **Refine `ContemplativeLayout.tsx`**
-   - Change `pt-12` to `pt-8` and `pb-24` to `pb-16` on mobile.
+### 4. Technical Details
+- **CSS Tokens**: Refine `--card-radius-mobile` and rhythm variables in `index.css` for better mobile density.
+- **Component Refactoring**: 
+    - `AppHeader`: Remove redundant navigation links on mobile.
+    - `Sidebar`: Ensure it behaves as a true singleton and doesn't conflict with other drawers.
+    - `HomeMainContent`: Adjust grid gaps and section paddings for a more "breathable" but compact mobile layout.
 
-3. **Adjust `SectionHeader.tsx`**
-   - Reduce vertical line height on mobile from `h-12` to `h-8`.
-   - Reduce gap from `gap-4` to `gap-3`.
+### Implementation Plan
 
-4. **Refine `HomeMainContent.tsx`**
-   - Reduce bottom padding from `pb-24` to `pb-16`.
-   - Reduce "Visual Pause" paddings from `py-8` and `py-12` to `py-6` and `py-8`.
-   - Update cards to use more consistent, smaller mobile padding.
-
-5. **Polish `RitualDoDia.tsx`**
-   - Reduce header padding and gaps.
-   - Shrink section paddings (e.g., `p-6` -> `p-4`).
-   - Reduce text sizes slightly for the Bible verse on mobile if it exceeds viewport elegantly.
-
-6. **Compact `HomeMainDoors.tsx`**
-   - Reduce card padding from `p-10` to `p-6`.
-   - Reduce gap between elements.
-
-7. **Verify Changes**
-   - Check the mobile preview to ensure improved "useful area" and "visual rhythm".
+1.  **Refine index.css**: Adjust global spacing and radius tokens to reduce visual weight on small screens.
+2.  **Optimize AppHeader**: Ensure it stays out of the way on mobile, especially in reading contexts.
+3.  **Refine HomeMainContent**: Implement better grid scaling and reduce section paddings on mobile.
+4.  **Optimize RitualDoDia**: Compact the layout for mobile to ensure the "core" content is visible without excessive scrolling.
+5.  **Audit Sidebar**: Ensure it uses a single instance and clean transitions.
+6.  **Verify**: Check mobile preview for scroll fluidity and layout consistency.
