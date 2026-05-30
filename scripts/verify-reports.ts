@@ -130,6 +130,16 @@ if (updateMode) {
 console.log(`${BOLD}🔍 Verificando estrutura de ./${REPORTS_DIR}${RESET}\n`);
 
 const actualFiles = getActualFiles();
+
+// JSON Validation
+const corrupted = validateJsonFiles(actualFiles);
+if (corrupted.length > 0) {
+  console.log(`${RED}✗ Relatórios JSON corrompidos detectados:${RESET}`);
+  corrupted.forEach(f => console.log(`  - ${f}`));
+  console.log("");
+  process.exit(1);
+}
+
 const readmeContent = readFileSync(README_PATH, "utf8");
 const treeRegex = /```text\nreports\/\n([\s\S]*?)```/;
 const match = readmeContent.match(treeRegex);
