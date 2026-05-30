@@ -34,6 +34,7 @@
     
     --popover: 0 0% 100%;
     --popover-foreground: 220 30% 6%;
+    --popover-blur: 12px;
     
     /* Brand Colors - Sovereign Authority */
     --primary: 220 30% 4%;       /* #070809 Near black */
@@ -107,6 +108,7 @@
     
     --popover: 220 45% 0.7%;
     --popover-foreground: 45 8% 70%;
+    --popover-blur: 24px;
     
     --primary: 42 15% 45%;         /* Muted, sophisticated Sovereign Gold */
     --primary-foreground: 220 50% 0.1%;
@@ -282,9 +284,9 @@
   }
 
   .premium-card {
-    @apply bg-card/[0.1] border-none transition-all relative overflow-hidden;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    @apply bg-card/[0.05] border-none transition-all relative overflow-hidden;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-subtle);
   }
