@@ -100,36 +100,36 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 20% 6%;      /* Slightly deeper for better OLED contrast */
-    --foreground: 45 15% 92%;      /* More luminous, softer contrast */
+    --background: 220 20% 7%;      /* Softer Graphite instead of black */
+    --foreground: 45 15% 94%;      /* Luminous for reading */
     
-    --card: 220 20% 6%;            /* Blend perfectly */
-    --card-foreground: 45 15% 92%;
+    --card: 220 20% 7%;            /* Perfect seamless surface */
+    --card-foreground: 45 15% 94%;
     
-    --popover: 220 25% 7%;
-    --popover-foreground: 45 15% 92%;
+    --popover: 220 25% 8%;
+    --popover-foreground: 45 15% 94%;
     --popover-blur: 24px;
     
-    --primary: 42 20% 70%;         /* Luminous Gold */
-    --primary-foreground: 220 20% 4%;
+    --primary: 42 20% 75%;         /* Softer, more elegant Gold */
+    --primary-foreground: 220 20% 5%;
     
-    --secondary: 220 20% 8%;      
-    --secondary-foreground: 42 20% 70%;
+    --secondary: 220 20% 10%;      
+    --secondary-foreground: 42 20% 75%;
     
-    --muted: 220 20% 8%;           
-    --muted-foreground: 220 10% 60%; 
+    --muted: 220 20% 9%;           
+    --muted-foreground: 220 10% 55%; 
     
-    --accent: 42 20% 70% / 0.05;
-    --accent-foreground: 42 20% 70%;
+    --accent: 42 20% 75% / 0.04;
+    --accent-foreground: 42 20% 75%;
     
-    --destructive: 0 45% 35%;
+    --destructive: 0 45% 40%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 45 15% 90% / 0.05;   
-    --input: 45 15% 90% / 0.07;
-    --ring: 42 20% 70% / 0.15;
+    --border: 45 15% 90% / 0.04;   
+    --input: 45 15% 90% / 0.05;
+    --ring: 42 20% 75% / 0.12;
     
-    --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.4);
+    --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.45);
   }
 
   .high-contrast {
