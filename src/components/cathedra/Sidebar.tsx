@@ -381,8 +381,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
                       className={`px-3 py-1 text-[7px] font-black uppercase rounded-lg border transition-all ${
                         lang === l 
-                          ? 'bg-primary/10 text-primary border-primary/20 shadow-sm' 
-                          : 'bg-transparent text-muted-foreground/30 border-transparent hover:border-primary/10'
+                          ? 'bg-primary/5 text-primary border-primary/10 shadow-none' 
+                          : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
                       }`}
                     >
                       {l}
