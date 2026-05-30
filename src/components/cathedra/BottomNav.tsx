@@ -136,7 +136,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       />
     )}
   </Button>
-);
+));
 
 interface BottomNavProps {
   onOpenSidebar: () => void;
