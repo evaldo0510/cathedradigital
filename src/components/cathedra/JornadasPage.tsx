@@ -542,7 +542,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileTap={{ scale: 0.99 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                 >
-                  <Card
+                  <CathedraCard
+                    padding="none"
+                    variant="interactive"
                     className={`overflow-hidden cursor-pointer transition-all group relative focus-visible:ring-4 focus-visible:ring-primary outline-none ${
                       isComplete 
                         ? 'border-emerald-500/30 ring-1 ring-emerald-500/10' 
@@ -577,7 +579,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       </div>
                     )}
 
-                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 relative">
+                    <div className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3.5 relative">
                       {/* Title row */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex-1 min-w-0">
@@ -663,8 +665,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           </div>
                         </div>
                       )}
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </CathedraCard>
                 </motion.div>
               </motion.div>
             );
