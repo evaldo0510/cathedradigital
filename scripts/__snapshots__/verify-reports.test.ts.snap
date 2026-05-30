@@ -1,4 +1,95 @@
-// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`reports:verify integration tests > Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE > should NOT modify the custom README in --dry-run mode with overrides > custom-readme-unchanged-dry-run 1`] = `
+"
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── placeholder.json
+\`\`\`
+"
+`;
+
+exports[`reports:verify integration tests > Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE > should write updated content ONLY to the custom README via overrides > custom-readme-updated 1`] = `
+"
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+\`\`\`
+"
+`;
+
+exports[`reports:verify integration tests > should update README and generate divergences.md in --update mode 1`] = `
+"
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+├── compliance-history.json    # Histórico de progresso
+├── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+└── token-audit.json           # Logs técnicos brutos (mais recente)
+\`\`\`
+"
+`;
+
+exports[`reports:verify integration tests > should update README and generate divergences.md in --update mode 2`] = `
+"# Resumo de Atualização dos Relatórios
+
+Data: [NORMALIZED]
+
+## Mudanças na Árvore
+
+### Anterior
+\`\`\`text
+reports/
+├── compliance-history.json    # Histórico de progresso
+└── token-audit.json           # Logs técnicos brutos (mais recente)
+\`\`\`
+
+### Novo
+\`\`\`text
+reports/
+├── compliance-history.json    # Histórico de progresso
+├── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+└── token-audit.json           # Logs técnicos brutos (mais recente)
+\`\`\`
+"
+`;
+
+exports[`reports:verify integration tests Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE should NOT modify the custom README in --dry-run mode with overrides: custom-readme-unchanged-dry-run 1`] = `
+"
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── placeholder.json
+\`\`\`
+"
+`;
+
+exports[`reports:verify integration tests Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE should write updated content ONLY to the custom README via overrides: custom-readme-updated 1`] = `
+"
+#### Estrutura de Relatórios e Logs (Exemplo Real)
+
+Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
+
+\`\`\`text
+reports/
+└── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+\`\`\`
+"
+`;
 
 exports[`reports:verify integration tests should update README and generate divergences.md in --update mode 1`] = `
 "
@@ -35,32 +126,6 @@ reports/
 ├── compliance-history.json    # Histórico de progresso
 ├── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
 └── token-audit.json           # Logs técnicos brutos (mais recente)
-\`\`\`
-"
-`;
-
-exports[`reports:verify integration tests Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE should write updated content ONLY to the custom README via overrides: custom-readme-updated 1`] = `
-"
-#### Estrutura de Relatórios e Logs (Exemplo Real)
-
-Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
-
-\`\`\`text
-reports/
-└── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
-\`\`\`
-"
-`;
-
-exports[`reports:verify integration tests Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE should NOT modify the custom README in --dry-run mode with overrides: custom-readme-unchanged-dry-run 1`] = `
-"
-#### Estrutura de Relatórios e Logs (Exemplo Real)
-
-Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a pasta \`./reports\` é populada com a seguinte estrutura:
-
-\`\`\`text
-reports/
-└── placeholder.json
 \`\`\`
 "
 `;
