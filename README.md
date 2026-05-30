@@ -196,9 +196,9 @@ Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, a pas
 
 ```text
 reports/
-├── compliance-history.json    # Histórico de progresso (últimas 30 execuções)
-├── token-audit.html           # Dashboard visual (Abra no navegador para detalhes)
-└── token-audit.json           # Logs técnicos brutos para integração de CI
+├── compliance-history.json    # [2024-05-20 14:30:05] Histórico de progresso
+├── token-audit.html           # [2024-05-20 14:30:05] Dashboard visual
+└── token-audit.json           # [2024-05-20 14:30:05] Logs técnicos brutos
 ```
 
 Para visualizar a árvore atual no seu terminal, use:
