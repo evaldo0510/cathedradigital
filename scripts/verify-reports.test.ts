@@ -199,19 +199,32 @@ reports/
       }
     });
 
-    const runIsolated = (args: string[] = []) => {
+    const runIsolated = (args: string[] = [], env: any = {}) => {
+      const summaryPath = 'github_step_summary_isolated_test.md';
+      const githubEnv = {
+        ...process.env,
+        ...env,
+        REPORTS_DIR_OVERRIDE: CUSTOM_DIR,
+        README_PATH_OVERRIDE: CUSTOM_README,
+      };
+
+      if (env.GITHUB_ACTIONS) {
+        githubEnv.GITHUB_STEP_SUMMARY = summaryPath;
+        writeFileSync(summaryPath, '');
+      }
+
       try {
         const output = execSync(`bun run ${SCRIPT_PATH} ${args.join(' ')}`, {
-          env: {
-            ...process.env,
-            REPORTS_DIR_OVERRIDE: CUSTOM_DIR,
-            README_PATH_OVERRIDE: CUSTOM_README,
-          },
+          env: githubEnv,
           encoding: 'utf8',
         });
-        return { status: 0, output };
+        const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: 0, output, summary };
       } catch (error: any) {
-        return { status: error.status, output: error.stdout };
+        const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+        return { status: error.status, output: error.stdout, summary };
       }
     };
 
@@ -248,6 +261,15 @@ reports/
       const after = readFileSync(CUSTOM_README, 'utf8');
       expect(after).toBe(before);
       expect(after).toMatchSnapshot('custom-readme-unchanged-dry-run');
+    });
+
+    it('should include override information in GitHub Step Summary', () => {
+      const result = runIsolated([], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0); // Divergence exists but fail-on-divergence is off by default
+      expect(result.summary).toContain('#### ⚙️ Configuração Customizada (Overrides)');
+      expect(result.summary).toContain(`- 📁 **Diretório de Relatórios:** \`${CUSTOM_DIR}\` (via \`REPORTS_DIR_OVERRIDE\`)`);
+      expect(result.summary).toContain(`- 📖 **Caminho do README:** \`${CUSTOM_README}\` (via \`README_PATH_OVERRIDE\`)`);
+      expect(result.summary).toMatchSnapshot('summary-with-overrides');
     });
   });
 });
