@@ -92,7 +92,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 md:p-32 lg:p-40">
+        <CathedraCard padding="none" className="p-3 md:p-32 lg:p-40 border-primary/[0.03] shadow-none bg-primary/[0.005]">
           <RitualDoDia />
         </CathedraCard>
       </section>
@@ -180,20 +180,20 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-4 md:p-40 lg:p-64">
+        <CathedraCard variant="outline" padding="none" className="p-3 md:p-40 lg:p-64 border-primary/[0.02] bg-transparent shadow-none">
           <HomeMainDoors t={t} />
         </CathedraCard>
       </section>
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-40 hover:opacity-100 transition-opacity duration-1000">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-30 hover:opacity-100 transition-opacity duration-1500">
         <h2 className="sr-only">Futuras Expansões</h2>
         <SectionHeader 
           title="O Futuro" 
           subtitle="Novas salas sendo preparadas para o seu santuário."
           className="header-margin-rhythm"
         />
-        <div className="px-0 md:px-4">
+        <div className="px-0 md:px-4 grayscale opacity-60">
           <ComingSoonSection />
         </div>
       </section>
