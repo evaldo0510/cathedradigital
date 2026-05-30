@@ -13,6 +13,7 @@ import { LangContext } from '@/contexts/LangContext';
 /* ── Ripple helper ── */
 function useRipple() {
   const rippleRef = useRef<HTMLSpanElement | null>(null);
+  const hapticRef = useRef<boolean>(false);
 
   const trigger = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const btn = (e.currentTarget as HTMLElement);
@@ -35,6 +36,14 @@ function useRipple() {
       pointer-events:none;
     `;
     btn.appendChild(ripple);
+    
+    // Haptic feedback for mobile
+    if ('vibrate' in navigator && !hapticRef.current) {
+      navigator.vibrate(10);
+      hapticRef.current = true;
+      setTimeout(() => { hapticRef.current = false; }, 200);
+    }
+
     ripple.addEventListener('animationend', () => ripple.remove());
   }, []);
 
@@ -46,7 +55,7 @@ interface BottomNavItemProps {
   icon: React.ElementType;
   route: string;
   isActive: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent | React.TouchEvent) => void;
   onRipple: (e: React.MouseEvent | React.TouchEvent) => void;
   shouldReduceMotion?: boolean;
 }
@@ -62,7 +71,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
 }) => (
   <Button 
     variant="ghost"
-    onClick={(e) => { onRipple(e); onClick(); }}
+    onClick={(e) => { onRipple(e); onClick(e); }}
     onTouchStart={(e) => { prefetchRoute(route); }}
     onMouseEnter={() => prefetchRoute(route)}
     aria-label={label}
@@ -148,7 +157,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar },
+    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar, isMenu: true },
   ];
 
   return (
@@ -161,9 +170,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
     >
       <div className="flex items-center justify-between h-full w-full max-w-md mx-auto relative">
         {items.map((item: any, i: number) => {
-          const isActive = item.route 
-            ? isRouteActive(item.route, currentPath)
-            : false;
+          const isActive = item.isMenu 
+            ? false 
+            : (item.route ? isRouteActive(item.route, currentPath) : false);
 
 
           return (
@@ -174,7 +183,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
               route={item.route || ''}
               isActive={isActive}
               shouldReduceMotion={shouldReduceMotion ?? false}
-              onClick={() => {
+              onClick={(e) => {
               if (item.onClick) item.onClick();
               else if (item.route) navigate(item.route);
             }}

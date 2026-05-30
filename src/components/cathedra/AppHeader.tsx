@@ -34,7 +34,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
         className="bg-background/2 backdrop-blur-xl sticky top-0 z-[140] transition-all duration-1000 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.003]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-14 md:h-36 py-1 md:py-0">
+        <div className="app-container flex items-center justify-between h-12 md:h-36 py-1 md:py-0">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
@@ -45,7 +45,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-5 h-5 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-60" variant="dark" />
+            <Icons.Logo className="w-4 h-4 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-60" variant="dark" />
             <div className="flex flex-col items-start min-w-0">
               <span className="text-[8px] md:text-2xl font-display font-light uppercase tracking-[0.4em] md:tracking-[0.8em] text-primary/10 leading-none transition-premium-slow group-hover:text-primary">
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1)) || 'Cathedra'}
@@ -55,7 +55,7 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
           </div>
 
           {/* Navigation & Controls Section */}
-          <div className="flex items-center justify-end gap-2 md:gap-6">
+          <div className="flex items-center justify-end gap-1 md:gap-6">
             <div className="flex items-center gap-1.5 md:gap-4 lg:gap-6">
 
               {!isDashboard && (
@@ -70,15 +70,15 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 </Button>
               )}
 
-              <div className="flex items-center gap-1.5 md:gap-4">
+              <div className="flex items-center gap-1 md:gap-4">
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-8 h-8 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
+                  className="w-7 h-7 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
-                  <Icons.Search className="w-3.5 h-3.5 md:w-5 md:h-5 opacity-20 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Search className="w-3 h-3 md:w-5 md:h-5 opacity-20 group-hover:opacity-100 transition-opacity" />
                 </Button>
 
                 <Button
@@ -95,42 +95,32 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 </Button>
               </div>
 
-              <div className="flex items-center gap-2 md:gap-4">
+              <div className="flex items-center gap-1 md:gap-4">
                 {/* Desktop-only Profile */}
-                <div className="hidden md:block">
+                <div className="flex md:block">
                   {user ? (
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={() => navigate(AppRoute.PROFILE)}
-                      className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
+                      className="w-8 h-8 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Icons.User className="w-5 h-5 opacity-70" />
+                        <Icons.User className="w-4 h-4 md:w-5 md:h-5 opacity-70" />
                       )}
                     </Button>
                   ) : (
                     <Button 
                       onClick={() => navigate(AppRoute.LOGIN)} 
-                      className="h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/10"
+                      className="h-8 md:h-12 px-4 md:px-8 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/10"
                     >
                       {t('enter')}
                     </Button>
                   )}
                 </div>
 
-                {/* Desktop-only Hamburger */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={onOpenSidebar}
-                  className="hidden md:flex w-12 h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
-                  aria-label="Abrir menu lateral"
-                >
-                  <Icons.Menu className="w-5 h-5 opacity-70 group-hover:opacity-100" />
-                </Button>
               </div>
             </div>
 
