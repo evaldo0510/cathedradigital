@@ -141,19 +141,24 @@ const htmlContent = `
       </div>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
-      <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl">
-        <p class="text-[10px] font-black text-indigo-300 uppercase tracking-widest mb-3">Overall Health</p>
-        <p class="text-5xl font-black">${totalIssues}</p>
-        <p class="text-xs text-slate-400 mt-3 font-bold uppercase">Threshold: ${threshold}</p>
+    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 mb-10 overflow-hidden relative">
+      <div class="flex justify-between items-center mb-8">
+        <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">Compliance Trend</h3>
+        <span class="px-3 py-1 bg-slate-100 text-slate-500 rounded-full text-[10px] font-bold uppercase tracking-widest">Last ${history.length} Snapshots</span>
       </div>
-      ${results.map(r => `
-        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">${r.name}</p>
-          <p class="text-4xl font-black ${r.issuesCount > 0 ? 'text-rose-600' : 'text-emerald-600'}">${r.issuesCount}</p>
-        </div>
-      `).join('')}
+      <div class="flex items-end h-32 gap-3 border-b border-slate-100 pb-2">
+        ${history.map((h: any, i: number) => {
+          const maxVal = Math.max(...history.map((x: any) => x.totalIssues), 20);
+          const height = Math.max((h.totalIssues / maxVal) * 100, 5);
+          return `
+            <div class="flex-1 flex flex-col items-center group relative min-w-[20px]">
+              <div class="w-full ${i === history.length - 1 ? 'bg-indigo-600' : 'bg-slate-100 hover:bg-slate-200'} rounded-t-lg transition-all" style="height: ${height}%"></div>
+            </div>
+          `;
+        }).join('')}
+      </div>
     </div>
+
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden mb-12">
       <div class="px-8 py-6 border-b border-slate-100 bg-slate-50/30">
