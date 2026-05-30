@@ -93,7 +93,6 @@ const Index = () => {
         </ContemplativeLayout>
       )}
     </div>
-    </div>
   );
 };
 
