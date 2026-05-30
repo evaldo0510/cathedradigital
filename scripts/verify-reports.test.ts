@@ -175,6 +175,10 @@ reports/
       if (existsSync(sandboxDir)) rmSync(sandboxDir, { recursive: true, force: true });
       mkdirSync(sandboxDir);
       mkdirSync(join(sandboxDir, 'reports'));
+      // Create the expected files to ensure no divergence
+      writeFileSync(join(sandboxDir, 'reports', 'compliance-history.json'), JSON.stringify([]));
+      writeFileSync(join(sandboxDir, 'reports', 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      
       writeFileSync(join(sandboxDir, 'README.md'), readFileSync(TEST_README, 'utf8'));
       
       const absoluteScriptPath = join(process.cwd(), SCRIPT_PATH);
