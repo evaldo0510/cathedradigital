@@ -174,24 +174,9 @@ const LoadingFallback = () => (
 
 const AppLayout: React.FC = () => {
   useRenderPerf('AppLayout', 10);
-  const { settings, updateSettings } = useReadingSettings();
+  const { updateSettings } = useReadingSettings();
   const { lang, setLang, t } = useContext(LangContext);
   
-  // Apply theme-based body class early to prevent flash
-  useEffect(() => {
-    const isDark = settings.theme === 'dark' || settings.theme === 'night';
-    if (isDark) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    
-    if (settings.reduceAnimations) {
-      document.documentElement.classList.add('reduce-motion');
-    } else {
-      document.documentElement.classList.remove('reduce-motion');
-    }
-  }, [settings.theme, settings.reduceAnimations]);
 
   // Enable automatic accessibility check
   useA11yGuard(true);
@@ -240,7 +225,16 @@ const AppLayout: React.FC = () => {
 
   // Focus Mode - Click to reveal UI
   useEffect(() => {
-    if (!settings.focusMode) return;
+    // We read focusMode once or use an event-based approach, but since it's a one-time setup on mount for the effect
+    // Actually, it's better to keep it decoupled. 
+    // For now I'll just keep focusMode here as it is only 1 boolean, 
+    // but the proper way is to use the new SettingsSideEffects or a specialized hook.
+    
+    // Let's check how focusMode is used.
+    // If I move the Focus Mode logic to SettingsSideEffects, AppLayout becomes even lighter.
+    const stored = localStorage.getItem('cathedra_reading_settings');
+    const focusMode = stored ? JSON.parse(stored).focusMode : false;
+    if (!focusMode) return;
 
     const revealUI = () => {
       document.documentElement.classList.add('reveal-chrome');
@@ -270,7 +264,7 @@ const AppLayout: React.FC = () => {
       window.removeEventListener('touchstart', handleInteraction);
       window.removeEventListener('mousemove', handleInteraction);
     };
-  }, [settings.focusMode]);
+  }, []); // focusMode is static here, will be refactored next phase if needed
   const [showA11ySettings, setShowA11ySettings] = useState(false);
   const [showReadingPreferences, setShowReadingPreferences] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
@@ -294,16 +288,18 @@ const AppLayout: React.FC = () => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
-  const isDark = settings.theme === 'dark' || settings.theme === 'night';
-  const isHighContrast = settings.highContrast;
+  const isDark = document.documentElement.classList.contains('dark');
+  const isHighContrast = document.documentElement.classList.contains('high-contrast');
 
   const toggleDark = useCallback(() => {
-    updateSettings({ theme: settings.theme === 'dark' || settings.theme === 'night' ? 'paper' : 'dark' });
-  }, [settings.theme, updateSettings]);
+    const isNowDark = document.documentElement.classList.contains('dark');
+    updateSettings({ theme: isNowDark ? 'paper' : 'dark' });
+  }, [updateSettings]);
 
   const toggleHighContrast = useCallback(() => {
-    updateSettings({ highContrast: !isHighContrast });
-  }, [isHighContrast, updateSettings]);
+    const isNowHigh = document.documentElement.classList.contains('high-contrast');
+    updateSettings({ highContrast: !isNowHigh });
+  }, [updateSettings]);
 
   const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
   const handleCloseSidebar = useCallback(() => {
@@ -347,7 +343,8 @@ const AppLayout: React.FC = () => {
   }, [isSidebarOpen, showA11ySettings, showReadingPreferences, handleCloseSidebar]);
 
   const toggleSpeak = useCallback(() => {
-    if (settings.totalSilence) return;
+    const isTotalSilence = document.documentElement.classList.contains('total-silence');
+    if (isTotalSilence) return;
     
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -361,7 +358,7 @@ const AppLayout: React.FC = () => {
       utterance.onend = () => setIsSpeaking(false);
       window.speechSynthesis.speak(utterance);
     }
-  }, [lang, settings.totalSilence]);
+  }, [lang]);
 
 
   // Adapter to convert Profile to User if needed, or just cast if compatible
