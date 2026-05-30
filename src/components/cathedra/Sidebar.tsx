@@ -281,7 +281,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-7 overflow-y-auto pb-6 no-scrollbar pr-1" role="navigation">
+            <nav className="flex-1 space-y-10 overflow-y-auto pb-12 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <motion.div 
                   key={section.label}
@@ -294,7 +294,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[6.5px] font-black uppercase tracking-[0.6em] text-primary/[0.05] dark:text-primary/10 mb-3 px-4 select-none italic">/ {section.label}</h3>
+                  <h3 className="text-[6px] font-black uppercase tracking-[0.8em] text-primary/[0.03] dark:text-primary/10 mb-4 px-4 select-none italic">/ {section.label}</h3>
                   <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
