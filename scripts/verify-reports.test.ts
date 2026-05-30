@@ -339,8 +339,19 @@ reports/
       if (existsSync('divergences.md')) rmSync('divergences.md');
     });
 
-    const runMatrix = (args: string[]) => {
-      const summaryPath = `summary-matrix-${args.join('-') || 'no-args'}.md`;
+    const runMatrix = (args: string[], hasDivergence: boolean) => {
+      // Setup environment based on hasDivergence
+      if (existsSync(MATRIX_DIR)) rmSync(MATRIX_DIR, { recursive: true, force: true });
+      mkdirSync(MATRIX_DIR);
+      
+      if (hasDivergence) {
+        writeFileSync(join(MATRIX_DIR, 'extra-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      } else {
+        // Files matching the README
+        writeFileSync(join(MATRIX_DIR, 'expected-file.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
+      }
+
+      const summaryPath = `summary-matrix-${args.join('-') || 'no-args'}-${hasDivergence ? 'divergent' : 'aligned'}.md`;
       const env = {
         ...process.env,
         GITHUB_ACTIONS: 'true',
@@ -364,28 +375,54 @@ reports/
       }
     };
 
-    const combinations = [
-      { name: 'Padrão (sem flags)', args: [] },
-      { name: 'Apenas Falha', args: ['--fail-on-divergence'] },
-      { name: 'Apenas Atualização', args: ['--update'] },
-      { name: 'Atualização em Dry Run', args: ['--update', '--dry-run'] },
-      { name: 'Atualização com Falha (ignorado)', args: ['--update', '--fail-on-divergence'] },
-      { name: 'Dry Run com Falha', args: ['--update', '--dry-run', '--fail-on-divergence'] },
+    const updateScenarios = [
+      { name: 'Update Simples', args: ['--update'] },
+      { name: 'Update com Dry Run', args: ['--update', '--dry-run'] },
+      { name: 'Update com Fail on Divergence', args: ['--update', '--fail-on-divergence'] },
+      { name: 'Update com Dry Run e Fail on Divergence', args: ['--update', '--dry-run', '--fail-on-divergence'] },
     ];
 
-    combinations.forEach(({ name, args }) => {
-      it(`deve validar a combinação: ${name} [${args.join(' ')}]`, () => {
-        const result = runMatrix(args);
+    updateScenarios.forEach(({ name, args }) => {
+      it(`deve validar ${name} COM divergência [${args.join(' ')}]`, () => {
+        const result = runMatrix(args, true);
         const readmeContent = readFileSync(MATRIX_README, 'utf8');
         
         expect({
-          combination: name,
+          scenario: name,
+          divergence: true,
           args,
           exitCode: result.status,
           summary: result.summary,
           readmeUpdated: readmeContent.includes('extra-file.json')
         }).toMatchSnapshot();
       });
+
+      it(`deve validar ${name} SEM divergência [${args.join(' ')}]`, () => {
+        const result = runMatrix(args, false);
+        const readmeContent = readFileSync(MATRIX_README, 'utf8');
+        
+        expect({
+          scenario: name,
+          divergence: false,
+          args,
+          exitCode: result.status,
+          summary: result.summary,
+          readmeUpdated: readmeContent.includes('expected-file.json')
+        }).toMatchSnapshot();
+      });
+    });
+
+    it('deve validar modo Verificação Padrão (sem --update) COM divergência', () => {
+      const result = runMatrix([], true);
+      expect(result.summary).toContain('⚠️ **Status:** Aviso (Divergência Detectada)');
+      expect(result.summary).toMatchSnapshot();
+    });
+
+    it('deve validar modo Verificação com Falha (sem --update) COM divergência', () => {
+      const result = runMatrix(['--fail-on-divergence'], true);
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('❌ **Status:** Falha (Divergência Detectada)');
+      expect(result.summary).toMatchSnapshot();
     });
   });
 });
