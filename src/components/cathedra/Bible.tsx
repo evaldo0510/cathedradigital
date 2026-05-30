@@ -1035,7 +1035,7 @@ const Bible: React.FC = () => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/85 group-hover:text-foreground transition-colors duration-1000">
+                              <p className="leading-[1.9] font-light text-xl md:text-2xl text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-1000">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1049,7 +1049,7 @@ const Bible: React.FC = () => {
                                   </span>
                                 )}
                                 {!currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
-                                  <span className="opacity-90 leading-[1.85]">{v.text}</span>
+                                  <span className="opacity-100 leading-[1.85]">{v.text}</span>
                                 )}
 
                                 

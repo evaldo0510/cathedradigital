@@ -28,13 +28,13 @@ export const ReadingProgressSection: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/20">
+                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/40">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 
                    lastRead.content_type === 'catechism' ? 'Catecismo' : 
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
                 </span>
               </div>
-              <h4 className="text-lg md:text-3xl font-display font-medium text-primary/70 tracking-tight leading-tight">
+              <h4 className="text-lg md:text-3xl font-display font-medium text-primary/80 tracking-tight leading-tight">
                 {lastRead.label || 'Continuar de onde parou'}
               </h4>
             </div>
@@ -42,7 +42,7 @@ export const ReadingProgressSection: React.FC = () => {
 
           <div className="flex items-center gap-8">
             <div className="text-right hidden sm:block">
-              <p className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/20 group-hover:text-primary/60 transition-colors">
+              <p className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary/60 transition-colors">
                 Retomar
               </p>
             </div>

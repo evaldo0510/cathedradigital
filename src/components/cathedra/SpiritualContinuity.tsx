@@ -119,7 +119,7 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
               <Icons.Compass className="w-6 h-6" strokeWidth={1} />
             </div>
             <div className="space-y-1 text-center md:text-left">
-              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60">
+              <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/40">
                 {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
               <h3 className="text-lg md:text-2xl font-serif font-bold text-primary/80">

@@ -254,7 +254,7 @@ const RitualDoDia: React.FC = () => {
               className={cn("w-10 h-10 p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
               onClick={() => updateSettings(!isSilent, reminderTime)}
             >
-              {isSilent ? <VolumeX className="w-5 h-5" /> : <Sparkles className="w-5 h-5" strokeWidth={0.5} />}
+              {isSilent ? <VolumeX className="w-5 h-5" strokeWidth={1.2} /> : <Sparkles className="w-5 h-5" strokeWidth={1} />}
             </CathedraButton>
 
             <CathedraButton 
@@ -263,7 +263,7 @@ const RitualDoDia: React.FC = () => {
               className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
               onClick={exportPDF}
             >
-              <Download className="w-5 h-5" />
+              <Download className="w-5 h-5" strokeWidth={1.2} />
             </CathedraButton>
             
             <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
@@ -273,10 +273,10 @@ const RitualDoDia: React.FC = () => {
                   size="sm" 
                   className="w-10 h-10 p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
                 >
-                  <Settings2 className="w-5 h-5" />
+                  <Settings2 className="w-5 h-5" strokeWidth={1.2} />
                 </CathedraButton>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] border-primary/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2.5rem]">
+              <DialogContent className="sm:max-w-[425px] border-primary/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2.5rem] dark:border-primary/20">
                 <DialogHeader>
                   <DialogTitle className="font-display text-3xl text-primary">Configurações</DialogTitle>
                 </DialogHeader>
