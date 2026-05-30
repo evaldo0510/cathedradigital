@@ -221,8 +221,12 @@ Para validar se a estrutura atual de `./reports` corresponde exatamente à árvo
 ```bash
 npm run reports:verify
 
-# Rodar sem falhar (apenas reportar)
-npm run reports:verify -- --no-fail-on-divergence # (Ou simplesmente omitir a flag no script customizado)
+Para rodar sem falhar (apenas reportar) em CI, você pode definir a variável de ambiente `REPORTS_FAIL_ON_DIVERGENCES=false` nas configurações do GitHub Actions.
+```bash
+# Localmente sem falhar
+npm run reports:verify -- --no-fail-on-divergence
+```
+
 ```
 
 Para limpar relatórios antigos mantendo o histórico organizado:

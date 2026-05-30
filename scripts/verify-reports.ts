@@ -20,12 +20,33 @@ function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: 
   }
 }
 
+const RESET = "\x1b[0m";
+const RED = "\x1b[31m";
+const GREEN = "\x1b[32m";
+const YELLOW = "\x1b[33m";
+const BOLD = "\x1b[1m";
+
+// Helper to write GitHub Actions annotations and summaries
+function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: string) {
+  if (process.env.GITHUB_ACTIONS) {
+    const filePart = file ? `,file=${file}` : '';
+    console.log(`::${type}${filePart}::${message}`);
+  }
+}
+
+function writeSummary(content: string) {
+  if (process.env.GITHUB_STEP_SUMMARY) {
+    appendFileSync(process.env.GITHUB_STEP_SUMMARY, content + "\n");
+  }
+}
+
 const REPORTS_DIR = "reports";
 const README_PATH = "README.md";
 const args = process.argv.slice(2);
 const updateMode = args.includes("--update");
 const dryRun = args.includes("--dry-run");
-const failOnDivergence = args.includes("--fail-on-divergence");
+const failOnDivergence = args.includes("--fail-on-divergence") || process.env.REPORTS_FAIL_ON_DIVERGENCES === 'true';
+
 
 const RESET = "\x1b[0m";
 const RED = "\x1b[31m";
@@ -206,15 +227,40 @@ if (unexpected.length > 0) {
   console.log(`\n  ${BOLD}Dica:${RESET} Rode ${BOLD}npm run reports:verify -- --update${RESET} para sincronizar.`);
 }
 
+// GitHub Summary Generation
+if (process.env.GITHUB_ACTIONS) {
+  let summary = `### 📊 Relatório de Verificação de Estrutura\n\n`;
+  if (!hasDivergence) {
+    summary += `✅ **Sucesso:** A estrutura de \`./reports\` está em conformidade com o README.\n`;
+  } else {
+    summary += `❌ **Divergências Detectadas:**\n\n`;
+    if (corrupted.length > 0) {
+      summary += `#### 🚨 Arquivos Corrompidos (${corrupted.length})\n`;
+      corrupted.forEach(f => summary += `- \`${f}\` (JSON inválido)\n`);
+    }
+    if (missing.length > 0) {
+      summary += `#### Missing Files (${missing.length})\n`;
+      missing.forEach(f => summary += `- \`${f}\` (Documentado no README mas não encontrado)\n`);
+    }
+    if (unexpected.length > 0) {
+      summary += `#### Unexpected Files (${unexpected.length})\n`;
+      unexpected.forEach(f => summary += `- \`${f}\` (Presente em \`./reports\` mas não documentado)\n`);
+      summary += `\n> **Dica:** Rode \`npm run reports:verify -- --update\` localmente para sincronizar.\n`;
+    }
+  }
+  writeSummary(summary);
+}
+
 if (!hasDivergence) {
   console.log(`${GREEN}${BOLD}✓ Estrutura está alinhada.${RESET}`);
   process.exit(0);
 }
 
 if (failOnDivergence) {
-  console.log(`${RED}${BOLD}Divergências encontradas. Finalizando com erro (--fail-on-divergence).${RESET}\n`);
+  console.log(`${RED}${BOLD}Divergências encontradas. Finalizando com erro (REPORTS_FAIL_ON_DIVERGENCES=true).${RESET}\n`);
   process.exit(1);
 }
 
 console.log(`${YELLOW}${BOLD}Divergências encontradas, mas o modo de falha está desativado.${RESET}\n`);
 process.exit(0);
+

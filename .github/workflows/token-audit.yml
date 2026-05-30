@@ -40,6 +40,9 @@ jobs:
           
       - name: Verify Reports Structure (README sync)
         run: npm run reports:verify
+        env:
+          REPORTS_FAIL_ON_DIVERGENCES: ${{ vars.REPORTS_FAIL_ON_DIVERGENCES || 'true' }}
+
 
       - name: Upload Audit Reports
         uses: actions/upload-artifact@v4
