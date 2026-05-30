@@ -1,22 +1,22 @@
 {
-  "timestamp": "2026-05-30T15:54:45.083Z",
-  "totalIssues": 8,
+  "timestamp": "2026-05-30T15:54:49.607Z",
+  "totalIssues": 0,
   "categories": [
     {
       "id": "spacing",
-      "count": 4
+      "count": 0
     },
     {
       "id": "typography",
-      "count": 2
+      "count": 0
     },
     {
       "id": "rounding",
-      "count": 1
+      "count": 0
     },
     {
       "id": "shadows",
-      "count": 1
+      "count": 0
     }
   ],
   "results": [
@@ -37,33 +37,8 @@
         "min-h-0"
       ],
       "suggestion": "Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap=\"md\" />",
-      "issuesCount": 4,
-      "details": [
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "p-4",
-          "content": "<div className=\"p-4 m-2 gap-4 rounded-lg shadow-md text-base\">"
-        },
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "m-2",
-          "content": "<div className=\"p-4 m-2 gap-4 rounded-lg shadow-md text-base\">"
-        },
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "gap-4",
-          "content": "<div className=\"p-4 m-2 gap-4 rounded-lg shadow-md text-base\">"
-        },
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "7",
-          "match": "p-1",
-          "content": "<p className=\"p-1\">World</p>"
-        }
-      ]
+      "issuesCount": 0,
+      "details": []
     },
     {
       "name": "Direct Typography",
@@ -71,21 +46,8 @@
       "regex": "\\btext-(xs|sm|base|lg|xl|[2-9]xl)\\b",
       "exclude": [],
       "suggestion": "Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size=\"lg\" />",
-      "issuesCount": 2,
-      "details": [
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "text-base",
-          "content": "<div className=\"p-spacing-md m-spacing-xs gap-spacing-md rounded-lg shadow-md text-base\">"
-        },
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "6",
-          "match": "text-xl",
-          "content": "<h1 className=\"text-xl\">Hello</h1>"
-        }
-      ]
+      "issuesCount": 0,
+      "details": []
     },
     {
       "name": "Direct Rounding",
@@ -93,15 +55,8 @@
       "regex": "\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b",
       "exclude": [],
       "suggestion": "Use rounded-premium-sm to full (e.g., rounded-premium-md)",
-      "issuesCount": 1,
-      "details": [
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "rounded-lg",
-          "content": "<div className=\"p-spacing-md m-spacing-xs gap-spacing-md rounded-lg shadow-md text-premium-base\">"
-        }
-      ]
+      "issuesCount": 0,
+      "details": []
     },
     {
       "name": "Direct Shadows",
@@ -109,15 +64,8 @@
       "regex": "\\bshadow-(sm|md|lg|xl|2xl|inner|none)\\b",
       "exclude": [],
       "suggestion": "Use shadow-premium-sm to premium-hover (e.g., shadow-premium)",
-      "issuesCount": 1,
-      "details": [
-        {
-          "file": "src/components/TestComponent.tsx",
-          "line": "5",
-          "match": "shadow-md",
-          "content": "<div className=\"p-spacing-md m-spacing-xs gap-spacing-md rounded-premium-lg shadow-md text-premium-base\">"
-        }
-      ]
+      "issuesCount": 0,
+      "details": []
     }
   ],
   "history": [
@@ -360,6 +308,28 @@
         {
           "id": "shadows",
           "count": 1
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:54:49.607Z",
+      "totalIssues": 0,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
         }
       ]
     }
