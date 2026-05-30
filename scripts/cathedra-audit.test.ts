@@ -95,11 +95,17 @@ describe('Cathedra Audit Token Mapping', () => {
       mockedExecSync.mockImplementation((command: string) => {
         // Log to stderr so we see it in test output if needed
         // process.stderr.write(`EXEC: ${command}\n`);
-        return mockRgOutput as any;
+        if (command.includes('rg')) {
+          return mockRgOutput as any;
+        }
+        return '' as any;
       });
       
       const mockedReadFileSync = vi.mocked(readFileSync);
-      mockedReadFileSync.mockReturnValue('<div className="p-4 rounded-md shadow-md text-sm"></div>');
+      mockedReadFileSync.mockImplementation((path: any) => {
+        if (path === 'src/App.tsx') return '<div className="p-4 rounded-md shadow-md text-sm"></div>';
+        return '';
+      });
       
       const mockedExistsSync = vi.mocked(existsSync);
       mockedExistsSync.mockReturnValue(true);
