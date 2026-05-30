@@ -26,8 +26,11 @@ export const useSEO = () => {
   return useQuery({
     queryKey: ['seo-settings'],
     queryFn: async () => {
+      // Use the public-safe view that excludes sensitive credentials
+      // (ga4_measurement_id, gsc_verification_code). Admin tooling reads
+      // the underlying seo_settings table directly under RLS.
       const { data, error } = await supabase
-        .from('seo_settings')
+        .from('public_seo_settings' as any)
         .select('*')
         .maybeSingle();
 
