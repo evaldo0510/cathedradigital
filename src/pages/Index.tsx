@@ -71,7 +71,13 @@ const Index = () => {
         {JSON.stringify(websiteSchema)}
       </script>
 
-      <HeroSection onStart={handleStart} />
+      {!authenticated && <HeroSection onStart={handleStart} />}
+      
+      {authenticated && (
+        <div className="w-full pt-12 md:pt-24 pb-8 text-center animate-in fade-in duration-1000">
+           <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">Cathedra</span>
+        </div>
+      )}
 
       <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
         <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>

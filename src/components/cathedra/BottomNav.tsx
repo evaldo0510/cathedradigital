@@ -159,7 +159,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
 
   const items = [
-    { label: lang === 'pt' ? 'Hoje' : 'Today', icon: Icons.Sun, route: AppRoute.HOJE },
+    { label: lang === 'pt' ? 'Início' : 'Home', icon: Icons.Home, route: '/' },
     { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
     { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
     { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },

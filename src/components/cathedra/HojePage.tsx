@@ -7,8 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
-import RitualDoDia from './RitualDoDia';
-import HomeMainDoors from './HomeMainDoors';
+import { CathedraButton } from './CathedraButton';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -158,18 +157,24 @@ const HojePage: React.FC = () => {
                 </h2>
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
-              <HomeMainDoors t={t} className="grid-cols-1 md:grid-cols-2" />
-            </section>
-
-            {/* RITUAL DO DIA */}
-            <section className="space-y-10 md:space-y-16">
-              <div className="flex items-center gap-6">
-                <h2 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">
-                  Ritual de Hoje
-                </h2>
-                <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+                 <CathedraButton 
+                    variant="outline" 
+                    className="h-32 rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-4 group"
+                    onClick={() => navigate(AppRoute.BIBLE)}
+                 >
+                    <Icons.Bible className="w-8 h-8 text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Bíblia</span>
+                 </CathedraButton>
+                 <CathedraButton 
+                    variant="outline" 
+                    className="h-32 rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-4 group"
+                    onClick={() => navigate(AppRoute.CATECHISM)}
+                 >
+                    <Icons.Catechism className="w-8 h-8 text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Catecismo</span>
+                 </CathedraButton>
               </div>
-              <RitualDoDia />
             </section>
           </div>
 
