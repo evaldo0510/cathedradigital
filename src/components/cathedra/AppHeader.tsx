@@ -95,26 +95,26 @@ const AppHeader: React.FC<AppHeaderProps> = React.memo(({
                 </Button>
               </div>
 
-              <div className="flex items-center gap-2 md:gap-4">
+              <div className="flex items-center gap-1 md:gap-4">
                 {/* Desktop-only Profile */}
-                <div className="hidden md:block">
+                <div className="flex md:block">
                   {user ? (
                     <Button
                       variant="outline"
                       size="icon"
                       onClick={() => navigate(AppRoute.PROFILE)}
-                      className="w-12 h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
+                      className="w-8 h-8 md:w-12 md:h-12 rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <Icons.User className="w-5 h-5 opacity-70" />
+                        <Icons.User className="w-4 h-4 md:w-5 md:h-5 opacity-70" />
                       )}
                     </Button>
                   ) : (
                     <Button 
                       onClick={() => navigate(AppRoute.LOGIN)} 
-                      className="h-12 px-8 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/10"
+                      className="h-8 md:h-12 px-4 md:px-8 rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-xl shadow-primary/10"
                     >
                       {t('enter')}
                     </Button>
