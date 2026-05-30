@@ -211,4 +211,10 @@ if (!hasDivergence) {
   process.exit(0);
 }
 
-process.exit(1);
+if (failOnDivergence) {
+  console.log(`${RED}${BOLD}Divergências encontradas. Finalizando com erro (--fail-on-divergence).${RESET}\n`);
+  process.exit(1);
+}
+
+console.log(`${YELLOW}${BOLD}Divergências encontradas, mas o modo de falha está desativado.${RESET}\n`);
+process.exit(0);
