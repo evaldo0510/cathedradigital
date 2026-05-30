@@ -47,9 +47,8 @@ async function verifyMercadoPagoSignature(
 ): Promise<boolean> {
   const secret = Deno.env.get("MERCADO_PAGO_WEBHOOK_SECRET");
   if (!secret) {
-    // No secret configured — accept (backwards compatible). Configure the secret to enforce.
-    console.warn("[mercadopago-webhook] MERCADO_PAGO_WEBHOOK_SECRET not set; skipping signature verification");
-    return true;
+    console.error("[mercadopago-webhook] MERCADO_PAGO_WEBHOOK_SECRET not configured — rejecting webhook");
+    return false;
   }
 
   const signatureHeader = req.headers.get("x-signature") || "";
