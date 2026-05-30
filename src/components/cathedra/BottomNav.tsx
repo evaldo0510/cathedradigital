@@ -103,7 +103,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-700",
-          isActive ? "text-primary opacity-60" : "text-muted-foreground/15 group-hover:text-primary/60"
+          isActive ? "text-primary opacity-80" : "text-muted-foreground/30 group-hover:text-primary/60"
         )}
         size={20}
         strokeWidth={isActive ? 2 : 1.2}
@@ -121,7 +121,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       className={cn(
         "text-[7px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-700",
-        isActive ? 'text-primary' : 'text-muted-foreground/30'
+        isActive ? 'text-primary' : 'text-muted-foreground/40'
       )}
     >
       {label}
