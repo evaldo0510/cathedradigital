@@ -2612,6 +2612,7 @@ export type Database = {
       check_daily_reminders: { Args: never; Returns: undefined }
       get_latest_journey_title: { Args: { p_user_id: string }; Returns: string }
       immutable_unaccent: { Args: { "": string }; Returns: string }
+      is_current_user_admin: { Args: never; Returns: boolean }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
