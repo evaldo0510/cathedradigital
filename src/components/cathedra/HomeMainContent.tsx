@@ -92,7 +92,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
           className="header-margin-rhythm"
         />
-        <CathedraCard padding="none" className="p-2 md:p-32 lg:p-40 border-primary/[0.01] shadow-none bg-primary/[0.002]">
+        <CathedraCard padding="none" className="p-1 md:p-32 lg:p-40 border-transparent shadow-none bg-transparent">
           <RitualDoDia />
         </CathedraCard>
       </section>
@@ -113,7 +113,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="outline" padding="none" className="flex-1 p-4 md:p-24 lg:p-32 border-primary/[0.005] bg-transparent">
+          <CathedraCard variant="outline" padding="none" className="flex-1 p-4 md:p-24 lg:p-32 border-primary/[0.002] bg-transparent">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -131,7 +131,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <HomeCard
             ref={logosCardRef}
             variant="glass"
-            className="flex-1 p-5 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/[0.005] shadow-none bg-transparent"
+            className="flex-1 p-5 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -180,9 +180,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <CathedraCard variant="outline" padding="none" className="p-2 md:p-40 lg:p-64 border-primary/[0.003] bg-transparent shadow-none">
+        <div className="p-1 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
-        </CathedraCard>
+        </div>
       </section>
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
