@@ -714,7 +714,7 @@ const Catechism: React.FC = memo(() => {
       <ContemplativeLayout
         subtitle={`${selectedSection.title}`}
         title={`CIC`}
-        maxW="max-w-[var(--layout-max-width)]"
+        icon={Icons.Catechism}
       >
         <SEOHead 
           title={`${selectedSection.title} | Catecismo`}
@@ -1041,7 +1041,7 @@ const Catechism: React.FC = memo(() => {
       <ContemplativeLayout
         subtitle={`${selectedPart.part}`}
         title={`${selectedPart.title}`}
-        maxW="max-w-6xl"
+        icon={Icons.Catechism}
       >
         <div className="stack-rhythm">
           <Button 
@@ -1090,7 +1090,7 @@ const Catechism: React.FC = memo(() => {
     <ContemplativeLayout
       subtitle="Codex Fidei"
       title="Catecismo"
-      maxW="max-w-6xl"
+      icon={Icons.Catechism}
     >
       <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" type="book" />
       <script type="application/ld+json">

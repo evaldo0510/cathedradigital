@@ -31,7 +31,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/80 backdrop-blur-md sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
+        className="bg-background/40 backdrop-blur-xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.01]"
         role="banner"
       >
         <div className="app-container flex items-center justify-between h-14 md:h-20 py-2 md:py-0">
@@ -47,8 +47,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           >
             <Icons.Logo className="w-5 h-5 md:w-8 md:h-8 transition-all group-hover:scale-105 opacity-60" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
-              <span className="text-[10px] md:text-sm font-display font-light uppercase tracking-[0.4em] text-primary/60 leading-none transition-all group-hover:text-primary">
-                {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1)) || 'Cathedra'}
+              <span className="text-[10px] md:text-sm font-display font-light uppercase tracking-[0.4em] text-primary/40 leading-none transition-all group-hover:text-primary">
+                {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1).replace('magisterium', 'Magistério')) || 'Cathedra'}
               </span>
             </div>
           </div>

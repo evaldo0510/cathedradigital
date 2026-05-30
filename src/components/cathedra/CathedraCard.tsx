@@ -24,9 +24,9 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
 
     const variantStyles = {
       default: 'premium-card bg-transparent border-transparent will-change-[transform,opacity]',
-      interactive: 'premium-card-interactive bg-transparent hover:bg-muted/30 border-transparent will-change-[transform,opacity]',
+      interactive: 'premium-card-interactive bg-transparent hover:bg-primary/[0.01] border-transparent will-change-[transform,opacity]',
       outline: 'bg-transparent border border-primary/[0.01] dark:border-white/[0.005] rounded-premium will-change-[transform,opacity] transition-all duration-1000',
-      glass: 'bg-background/5 backdrop-blur-sm border border-white/[0.01] dark:border-white/[0.005] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-1000',
+      glass: 'bg-primary/[0.002] backdrop-blur-md border border-white/[0.005] dark:border-white/[0.002] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-1000',
     };
 
     const isClickable = props.onClick || variant === 'interactive';
