@@ -25,6 +25,7 @@ const README_PATH = "README.md";
 const args = process.argv.slice(2);
 const updateMode = args.includes("--update");
 const dryRun = args.includes("--dry-run");
+const failOnDivergence = args.includes("--fail-on-divergence");
 
 const RESET = "\x1b[0m";
 const RED = "\x1b[31m";
@@ -210,4 +211,10 @@ if (!hasDivergence) {
   process.exit(0);
 }
 
-process.exit(1);
+if (failOnDivergence) {
+  console.log(`${RED}${BOLD}Divergências encontradas. Finalizando com erro (--fail-on-divergence).${RESET}\n`);
+  process.exit(1);
+}
+
+console.log(`${YELLOW}${BOLD}Divergências encontradas, mas o modo de falha está desativado.${RESET}\n`);
+process.exit(0);

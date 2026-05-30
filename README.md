@@ -220,6 +220,9 @@ npm run reports:tree -- --since=2026-05-01 --until=2026-05-31
 Para validar se a estrutura atual de `./reports` corresponde exatamente à árvore documentada acima:
 ```bash
 npm run reports:verify
+
+# Rodar sem falhar (apenas reportar)
+npm run reports:verify -- --no-fail-on-divergence # (Ou simplesmente omitir a flag no script customizado)
 ```
 
 Para limpar relatórios antigos mantendo o histórico organizado:
