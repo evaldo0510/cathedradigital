@@ -83,7 +83,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/15 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
     )}
   >
     {isActive && (
@@ -108,7 +108,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-700",
-          isActive ? "text-primary opacity-80" : "text-muted-foreground/30 group-hover:text-primary/60"
+          isActive ? "text-primary opacity-90" : "text-muted-foreground/50 group-hover:text-primary/70"
         )}
         size={20}
         strokeWidth={isActive ? 1.5 : 1}
@@ -126,7 +126,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       className={cn(
         "text-[8px] md:text-[9.5px] font-bold uppercase tracking-[0.2em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-700",
-        isActive ? 'text-primary' : 'text-muted-foreground/40'
+        isActive ? 'text-primary' : 'text-muted-foreground/60'
       )}
     >
       {label}
