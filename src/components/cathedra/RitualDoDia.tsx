@@ -333,7 +333,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-[17px] md:text-5xl lg:text-7xl font-serif italic leading-[1.3] text-primary/70 selection:bg-primary/5 tracking-tighter px-4 md:px-2 transition-all duration-1000 group-hover:text-primary">
+              <blockquote className="text-[18px] md:text-5xl lg:text-7xl font-serif italic leading-[1.4] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-4 md:px-2 transition-all duration-[2000ms] group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-6 md:mt-12 text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
@@ -353,7 +353,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-[14px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 font-serif italic selection:bg-primary/5 px-4">
+              <p className="text-[15px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-4 transition-colors duration-[2000ms]">
                 {ritual.reflection}
               </p>
             </button>
