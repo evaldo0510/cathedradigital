@@ -113,6 +113,91 @@ const defaultSettings: ReadingSettings = {
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
 
+const SettingsSideEffects: React.FC = () => {
+  const { settings } = useReadingSettings();
+  
+  useEffect(() => {
+    // Apply theme to body
+    const root = document.documentElement;
+    root.classList.remove('reading-theme-paper', 'reading-theme-sepia', 'reading-theme-dark', 'reading-theme-night');
+    root.classList.add(`reading-theme-${settings.theme}`);
+    
+    // Night mode specific
+    if (settings.theme === 'night') {
+      root.classList.add('reading-night');
+      root.classList.add('dark');
+    } else if (settings.theme === 'dark') {
+      root.classList.remove('reading-night');
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('reading-night');
+      root.classList.remove('dark');
+    }
+
+    // Apply Contrast
+    root.classList.remove('contrast-soft', 'contrast-high');
+    if (settings.contrast !== 'normal') {
+      root.classList.add(`contrast-${settings.contrast}`);
+    }
+
+    // Apply Spacing
+    root.setAttribute('data-line-spacing', settings.lineSpacing);
+    root.setAttribute('data-letter-spacing', settings.letterSpacing);
+    root.setAttribute('data-side-margins', settings.sideMargins);
+    root.style.setProperty('--reader-column-width', `${settings.columnWidth}ch`);
+
+    const toggleClass = (cls: string, active: boolean) => {
+      if (active) root.classList.add(cls);
+      else root.classList.remove(cls);
+    };
+
+    toggleClass('auto-hide-ui', settings.autoHideUI);
+    toggleClass('visual-silence', settings.visualSilence);
+    toggleClass('high-contrast', settings.highContrast);
+    toggleClass('contemplative-mode', settings.contemplativeMode);
+    toggleClass('visible-focus-mode', settings.visibleFocus);
+    toggleClass('reduce-animations', settings.reduceAnimations);
+    toggleClass('total-silence', settings.totalSilence);
+    toggleClass('full-screen-mode', settings.fullScreen);
+    toggleClass('focus-mode', settings.focusMode);
+    
+  }, [settings]);
+
+  // Auto-hide UI ao rolar (mobile / contemplativo)
+  useEffect(() => {
+    if (!settings.autoHideUI && !settings.contemplativeMode) {
+      document.documentElement.classList.remove('reading-scroll-down');
+      return;
+    }
+    let lastY = window.scrollY;
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (Math.abs(y - lastY) > 8) {
+          if (y > lastY && y > 80) {
+            document.documentElement.classList.add('reading-scroll-down');
+            document.documentElement.classList.remove('reveal-chrome');
+          } else {
+            document.documentElement.classList.remove('reading-scroll-down');
+          }
+          lastY = y;
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.documentElement.classList.remove('reading-scroll-down');
+    };
+  }, [settings.autoHideUI, settings.contemplativeMode]);
+
+  return null;
+};
+
 export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, profile, refreshProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
@@ -153,90 +238,6 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
 
   useEffect(() => {
     localStorage.setItem('cathedra_reading_settings', JSON.stringify(settings));
-    
-    // Apply theme to body
-    const root = document.documentElement;
-    root.classList.remove('reading-theme-paper', 'reading-theme-sepia', 'reading-theme-dark', 'reading-theme-night');
-    root.classList.add(`reading-theme-${settings.theme}`);
-    
-    // Night mode specific
-    if (settings.theme === 'night') {
-      root.classList.add('reading-night');
-      root.classList.add('dark');
-    } else if (settings.theme === 'dark') {
-      root.classList.remove('reading-night');
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('reading-night');
-      root.classList.remove('dark');
-    }
-
-    // Apply Contrast
-    root.classList.remove('contrast-soft', 'contrast-high');
-    if (settings.contrast !== 'normal') {
-      root.classList.add(`contrast-${settings.contrast}`);
-    }
-
-    // Apply Spacing
-    root.setAttribute('data-line-spacing', settings.lineSpacing);
-    root.setAttribute('data-letter-spacing', settings.letterSpacing);
-    root.setAttribute('data-side-margins', settings.sideMargins);
-    root.style.setProperty('--reader-column-width', `${settings.columnWidth}ch`);
-
-    if (settings.autoHideUI) {
-      root.classList.add('auto-hide-ui');
-    } else {
-      root.classList.remove('auto-hide-ui');
-    }
-    
-    
-    if (settings.visualSilence) {
-      root.classList.add('visual-silence');
-    } else {
-      root.classList.remove('visual-silence');
-    }
-
-    if (settings.highContrast) {
-      root.classList.add('high-contrast');
-    } else {
-      root.classList.remove('high-contrast');
-    }
-
-    if (settings.contemplativeMode) {
-      root.classList.add('contemplative-mode');
-    } else {
-      root.classList.remove('contemplative-mode');
-    }
-
-    if (settings.visibleFocus) {
-      root.classList.add('visible-focus-mode');
-    } else {
-      root.classList.remove('visible-focus-mode');
-    }
-
-    if (settings.reduceAnimations) {
-      root.classList.add('reduce-animations');
-    } else {
-      root.classList.remove('reduce-animations');
-    }
-
-    if (settings.totalSilence) {
-      root.classList.add('total-silence');
-    } else {
-      root.classList.remove('total-silence');
-    }
-
-    if (settings.fullScreen) {
-      root.classList.add('full-screen-mode');
-    } else {
-      root.classList.remove('full-screen-mode');
-    }
-
-    if (settings.focusMode) {
-      root.classList.add('focus-mode');
-    } else {
-      root.classList.remove('focus-mode');
-    }
   }, [settings]);
 
 
@@ -309,34 +310,6 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
     };
   }, [updateSettings, settings.totalSilence]);
 
-  // Auto-hide UI ao rolar (mobile / contemplativo)
-  useEffect(() => {
-    if (!settings.autoHideUI && !settings.contemplativeMode) {
-      document.documentElement.classList.remove('reading-scroll-down');
-      return;
-    }
-    let lastY = window.scrollY;
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (Math.abs(y - lastY) > 8) {
-          if (y > lastY && y > 80) {
-            document.documentElement.classList.add('reading-scroll-down');
-            document.documentElement.classList.remove('reveal-chrome');
-          } else {
-            document.documentElement.classList.remove('reading-scroll-down');
-          }
-          lastY = y;
-        }
-        ticking = false;
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [settings.autoHideUI, settings.contemplativeMode]);
 
   // Modo noturno agendado (transição gradual via CSS)
   useEffect(() => {
@@ -360,6 +333,7 @@ export const ReadingSettingsProvider: React.FC<{ children: React.ReactNode }> = 
 
   return (
     <ReadingSettingsContext.Provider value={{ settings, updateSettings, resetSettings, isLoading }}>
+      <SettingsSideEffects />
       {children}
     </ReadingSettingsContext.Provider>
   );
