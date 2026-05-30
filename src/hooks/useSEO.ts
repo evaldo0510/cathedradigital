@@ -35,7 +35,7 @@ export const useSEO = () => {
         .maybeSingle();
 
       if (error) throw error;
-      return data as SEOSettings;
+      return data as unknown as SEOSettings;
     },
     staleTime: 1000 * 60 * 30, // 30 minutes
   });
