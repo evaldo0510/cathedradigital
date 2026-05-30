@@ -66,9 +66,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto space-y-8 md:space-y-16 pb-10 md:pb-24 px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both w-full">
+
         <h2 className="sr-only">Fontes de Sabedoria</h2>
         <SectionHeader 
           title="Biblioteca Sagrada" 
@@ -85,11 +86,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE */}
-      <div className="py-4 md:py-48 flex flex-col items-center gap-2 opacity-[0.02] select-none pointer-events-none">
+      <div className="py-4 md:py-12 flex flex-col items-center gap-2 opacity-[0.02] select-none pointer-events-none">
         <Sparkles className="w-3 h-3 text-primary/10" strokeWidth={0.2} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-48 lg:gap-64 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 lg:gap-24 w-full">
+
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <h2 className="sr-only">Sua Jornada de Leitura</h2>
@@ -155,9 +157,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-8 md:py-[32rem] flex justify-center opacity-[0.05]">
+      <div className="py-8 md:py-24 flex justify-center opacity-[0.05]">
         <div className="w-12 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/3 to-transparent" />
       </div>
+
 
       {/* 4. BIBLIOTECA - REMOVED FROM ORIGINAL POSITION (ALREADY MOVED UP) */}
       

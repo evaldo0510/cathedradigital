@@ -195,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-24 pt-24 border-t border-primary/[0.01] space-y-8 mb-20", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-12 pt-12 border-t border-primary/[0.01] space-y-6 mb-12", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-6 h-6 rounded-full bg-primary/[0.03] flex items-center justify-center">

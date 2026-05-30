@@ -26,10 +26,11 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { settings } = useReadingSettings();
   
   return (
-    <div className={cn("min-h-screen pt-2 md:pt-12 pb-12 md:pb-64 will-change-[transform,opacity] flex flex-col items-center", className)}>
+    <div className={cn("min-h-screen pt-1 md:pt-8 pb-8 md:pb-32 will-change-[transform,opacity] flex flex-col items-center", className)}>
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-4 md:px-12 text-center flex flex-col items-center", 
+
           !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
         )}>
           {Icon && (
@@ -43,12 +44,13 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
             </p>
           )}
           {title && (
-            <h1 className="text-3xl md:text-7xl lg:text-8xl tracking-tighter text-primary/90 font-display leading-[0.9] mb-4">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl tracking-tighter text-primary/90 font-display leading-[0.9] mb-3">
               {title}
             </h1>
           )}
           {headerActions && (
-            <div className="mt-6 md:mt-12 w-full flex justify-center">
+            <div className="mt-4 md:mt-8 w-full flex justify-center">
+
               {headerActions}
             </div>
           )}
