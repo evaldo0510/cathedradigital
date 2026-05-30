@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { AppRoute } from '../../types';
 import { isRouteActive } from '@/lib/navigation-utils';
 
-import { Icons } from '@/constants';
+import { Icons, NAV_ITEMS } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
 
@@ -158,13 +158,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const shouldReduceMotion = useReducedMotion();
 
 
-  const items = [
-    { label: lang === 'pt' ? 'Início' : 'Home', icon: Icons.Home, route: '/' },
-    { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: Icons.Bible, route: AppRoute.BIBLE },
-    { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: Icons.Catechism, route: AppRoute.CATECHISM },
-    { label: 'Logos', icon: Icons.Sparkles, route: '/logos' },
-    { label: t('menu') || 'Menu', icon: Icons.Menu, onClick: onOpenSidebar, isMenu: true },
-  ];
+  const items = NAV_ITEMS(t, lang).map(item => ({
+    ...item,
+    icon: (Icons as any)[item.icon as string]
+  }));
 
   return (
     <nav 

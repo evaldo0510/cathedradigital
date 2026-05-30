@@ -124,6 +124,7 @@ import {
 } from 'lucide-react';
 
 import { cn } from './lib/utils';
+import { AppRoute } from './types';
 
 export const COLORS = {
   primary: '#0F172A',
@@ -132,6 +133,14 @@ export const COLORS = {
   text: '#0F172A',
   accent: '#D4AF37',
 };
+
+export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
+  { label: lang === 'pt' ? 'Início' : 'Home', icon: 'Home', route: '/' },
+  { label: lang === 'pt' ? 'Bíblia' : 'Bible', icon: 'Bible', route: AppRoute.BIBLE },
+  { label: lang === 'pt' ? 'Catecismo' : 'Catechism', icon: 'Catechism', route: AppRoute.CATECHISM },
+  { label: 'Logos', icon: 'Sparkles', route: '/logos' },
+  { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
+];
 
 import cathedraLogo from './assets/cathedra-logo.png';
 
