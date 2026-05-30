@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-full font-ui font-bold uppercase tracking-[0.25em] transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-xs whitespace-nowrap rounded-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -19,16 +19,16 @@ const buttonVariants = cva(
         outline:
           "border border-primary/10 bg-transparent text-primary hover:bg-primary/[0.02] hover:border-primary/20 hover:-translate-y-0.5",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-lg shadow-secondary/10 hover:-translate-y-0.5",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-md shadow-secondary/10 hover:-translate-y-0.5",
         ghost: "hover:bg-primary/[0.02] hover:text-primary text-primary/60",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-14 px-10 text-[10px] [&_svg]:size-5",
-        sm: "h-11 px-8 text-[9px] [&_svg]:size-4",
-        xs: "h-9 px-5 text-[8.5px] [&_svg]:size-3.5",
-        lg: "h-16 px-12 text-[11px] [&_svg]:size-6",
-        xl: "h-20 px-16 text-[13px] [&_svg]:size-7",
+        default: "h-14 px-xl text-xs [&_svg]:size-5",
+        sm: "h-11 px-lg text-[10px] [&_svg]:size-4",
+        xs: "h-9 px-md text-[9px] [&_svg]:size-3.5",
+        lg: "h-16 px-2xl text-sm [&_svg]:size-6",
+        xl: "h-20 px-3xl text-base [&_svg]:size-7",
         icon: "h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5",
         "icon-sm": "h-10 w-10 p-0 flex items-center justify-center [&_svg]:size-4",
         "icon-xs": "h-8 w-8 p-0 flex items-center justify-center [&_svg]:size-3.5",

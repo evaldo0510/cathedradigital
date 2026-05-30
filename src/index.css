@@ -4,7 +4,9 @@
 
 @layer base {
   :root {
-    /* Core Visual Tokens - Cathedra Premium System */
+    /* --- Core Visual Tokens: Cathedra Premium System --- */
+    
+    /* 1. Colors (HSL) */
     --background: 45 35% 99.4%;
     --foreground: 220 25% 10%;
     
@@ -20,18 +22,70 @@
     --muted: 45 20% 97%;
     --muted-foreground: 220 10% 50%; 
     
-    --border: 220 30% 4% / 0.05;
-    --radius: 2rem;
-    --radius-premium: 2.5rem;
+    --accent: 42 20% 95%;
+    --accent-foreground: 220 20% 12%;
     
+    --border: 220 30% 4% / 0.05;
+    --input: 220 30% 4% / 0.05;
+    --ring: 220 20% 12%;
+    
+    /* 2. Spacing Scale (8pt-based) */
+    --spacing-3xs: 0.125rem; /* 2px */
+    --spacing-2xs: 0.25rem;  /* 4px */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 0.75rem;  /* 12px */
+    --spacing-md: 1rem;     /* 16px */
+    --spacing-lg: 1.5rem;   /* 24px */
+    --spacing-xl: 2rem;     /* 32px */
+    --spacing-2xl: 3rem;    /* 48px */
+    --spacing-3xl: 4rem;    /* 64px */
+    --spacing-4xl: 6rem;    /* 96px */
+    
+    /* 3. Borders & Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 2rem;
+    --radius-xl: 2.5rem;
+    --radius-premium: var(--radius-xl);
+    --radius: var(--radius-lg);
+    
+    --border-thin: 1px;
+    --border-medium: 2px;
+    
+    /* 4. Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
     --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.02);
     --shadow-premium-hover: 0 30px 80px -20px rgba(0, 0, 0, 0.04);
     
-    --layout-max-width: 1400px;
-    --layout-padding: 2rem;
-    --layout-padding-mobile: 1rem;
+    /* 5. Typography Scale */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
     
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-wide: 0.05em;
+    --letter-spacing-widest: 0.25em;
+
+    /* 6. Layout Constants */
+    --layout-max-width: 1400px;
+    --layout-padding: var(--spacing-xl);
+    --layout-padding-mobile: var(--spacing-md);
+    
+    /* 7. Transitions */
     --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 200ms ease;
   }
 
   .dark, [data-theme='dark'] {
@@ -125,30 +179,30 @@
   }
 
   h1, .h1 {
-    @apply font-display font-light uppercase tracking-[0.25em] text-primary;
-    font-size: clamp(1.8rem, 8vw, 6.5rem);
+    @apply font-display font-light uppercase tracking-premium-widest text-primary;
+    font-size: clamp(var(--text-2xl), 8vw, var(--text-5xl));
     line-height: 1.05;
-    filter: blur(0.1px); /* Subtlest softening */
+    filter: blur(0.1px);
     text-shadow: 0 0 1px hsla(var(--primary) / 0.1);
   }
 
   h2, .h2 {
-    @apply font-display font-light uppercase tracking-[0.15em] text-primary/80;
-    font-size: clamp(1.4rem, 6vw, 4rem);
+    @apply font-display font-light uppercase tracking-premium-wide text-primary/80;
+    font-size: clamp(var(--text-xl), 6vw, var(--text-4xl));
     line-height: 1.15;
   }
 
   h3, .h3 {
-    @apply font-display font-light tracking-[0.1em] text-primary/70;
-    font-size: clamp(1.1rem, 5vw, 2.6rem);
+    @apply font-display font-light tracking-premium-tight text-primary/70;
+    font-size: clamp(var(--text-lg), 5vw, var(--text-3xl));
     line-height: 1.25;
   }
 
   p, .body-text {
     @apply font-ui font-normal text-foreground/60;
-    font-size: clamp(0.9rem, 1vw, 1rem);
+    font-size: clamp(var(--text-sm), 1vw, var(--text-base));
     line-height: 1.8;
-    max-width: 65ch; /* More comfortable line width */
+    max-width: 65ch;
     letter-spacing: 0.01em;
   }
 
@@ -159,29 +213,29 @@
   /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/10 max-w-[65ch] mx-auto;
-    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    font-size: clamp(var(--text-base), 1.4vw, var(--text-xl));
     line-height: 2.1;
-    letter-spacing: 0.02em;
-    font-weight: 300;
+    letter-spacing: var(--letter-spacing-wide);
+    font-weight: var(--font-weight-light);
     font-variant-numeric: oldstyle-nums;
   }
 
   @screen sm {
-    .reader-text { font-size: 1.4rem; }
+    .reader-text { font-size: var(--text-xl); }
   }
 
   @screen md {
     .reader-text {
       font-size: 1.55rem;
       line-height: 2.3;
-      letter-spacing: 0.02em;
+      letter-spacing: var(--letter-spacing-wide);
     }
   }
 
-  .font-size-small .reader-text { font-size: 1.25rem !important; }
-  .font-size-medium .reader-text { font-size: 1.45rem !important; }
-  .font-size-large .reader-text { font-size: 1.75rem !important; }
-  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
+  .font-size-small .reader-text { font-size: var(--text-lg) !important; }
+  .font-size-medium .reader-text { font-size: var(--text-xl) !important; }
+  .font-size-large .reader-text { font-size: var(--text-2xl) !important; }
+  .font-size-extra-large .reader-text { font-size: var(--text-3xl) !important; }
 
   /* Specific Reader Container */
   .reader-container {
@@ -226,12 +280,25 @@
     @apply text-center mb-10 md:mb-20 space-y-4 md:space-y-6;
   }
 
+  /* Rhythm System */
+  .header-margin-rhythm {
+    @apply mb-xl md:mb-3xl;
+  }
+
   .section-rhythm {
-    @apply py-8 md:py-24;
+    @apply py-xl md:py-4xl;
   }
 
   .stack-rhythm {
-    @apply space-y-4 md:space-y-8;
+    @apply space-y-md md:space-y-xl;
+  }
+
+  .stack-rhythm-lg {
+    @apply space-y-xl md:space-y-3xl;
+  }
+
+  .padding-rhythm {
+    @apply p-md md:p-xl;
   }
 
 
