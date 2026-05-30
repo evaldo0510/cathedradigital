@@ -101,7 +101,10 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
             <h4 className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/20 group-hover:text-primary/80 transition-colors duration-1000">
               {door.label}
             </h4>
-            <p className="text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
+            <p className="hidden md:block text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
+              {door.description}
+            </p>
+            <p className="md:hidden text-[10px] text-muted-foreground/30 font-serif italic tracking-wider leading-relaxed">
               {door.description}
             </p>
           </div>
