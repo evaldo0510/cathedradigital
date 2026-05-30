@@ -46,8 +46,8 @@ reports/
   });
 
   const runVerify = (args: string[] = [], env: any = {}) => {
-    // Create a temporary file for GitHub Summary if requested
-    const summaryPath = join(TEST_DIR, 'summary.md');
+    // Use a file OUTSIDE the reports directory for the summary
+    const summaryPath = 'github_step_summary_test.md';
     const githubEnv = { 
       ...process.env, 
       ...env,
@@ -57,7 +57,7 @@ reports/
     
     if (env.GITHUB_ACTIONS) {
       githubEnv.GITHUB_STEP_SUMMARY = summaryPath;
-      if (!existsSync(summaryPath)) writeFileSync(summaryPath, '');
+      writeFileSync(summaryPath, ''); // Reset summary
     }
 
     try {
@@ -67,9 +67,11 @@ reports/
         encoding: 'utf8' 
       });
       const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      if (existsSync(summaryPath)) rmSync(summaryPath);
       return { status: 0, output, summary };
     } catch (error: any) {
       const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      if (existsSync(summaryPath)) rmSync(summaryPath);
       return { status: error.status, output: error.stdout, summary };
     }
   };
