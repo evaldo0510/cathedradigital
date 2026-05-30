@@ -159,7 +159,7 @@ const BibliotecaPage: React.FC = () => {
                   <div
                     key={item.title}
                     onClick={() => navigate(item.route)}
-                    className="flex flex-col gap-6 p-8 group cursor-pointer transition-all duration-1000 hover:bg-primary/[0.01] rounded-2xl border border-transparent hover:border-primary/[0.03]"
+                    className="flex flex-col gap-6 p-8 group cursor-pointer transition-all duration-1000 hover:bg-primary/[0.005] rounded-2xl border border-transparent"
                   >
                     <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
                       {item.icon}

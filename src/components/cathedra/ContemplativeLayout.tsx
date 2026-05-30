@@ -33,11 +33,10 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
           !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
         )}>
           {Icon && (
-            <div className="mb-4 md:mb-8">
-              <Icon className="w-5 h-5 md:w-10 md:h-10 text-primary opacity-20 mx-auto" strokeWidth={0.5} />
+            <div className="mb-2 md:mb-4">
+              <Icon className="w-4 h-4 md:w-8 md:h-8 text-primary opacity-10 mx-auto" strokeWidth={0.5} />
             </div>
           )}
-          <div className="w-[0.5px] h-4 md:h-16 bg-gradient-to-b from-transparent via-primary/5 to-transparent mx-auto mb-2 md:mb-8 opacity-20" />
           {subtitle && (
             <p className="text-[7px] md:text-[10px] font-black uppercase text-primary/30 mb-2 md:mb-8 tracking-[0.5em] md:tracking-[1em]">
               {subtitle}

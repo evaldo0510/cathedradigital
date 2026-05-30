@@ -66,40 +66,22 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[24rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
-      {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
-      <section className="animate-in fade-in slide-in-from-top-8 duration-1000 delay-150 fill-mode-both w-full">
-        <h2 className="sr-only">Sua Jornada de Leitura</h2>
-        <SectionHeader 
-          align="left"
-          title="Sua Jornada" 
-          subtitle="Continue de onde parou."
-          className="mb-4 md:mb-8"
-        />
-        <div className="w-full p-2 md:p-6 rounded-3xl border border-primary/[0.01] bg-primary/[0.005]">
-          <ReadingProgressSection />
-        </div>
-      </section>
-
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both w-full">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both w-full">
         <h2 className="sr-only">Fontes de Sabedoria</h2>
         <SectionHeader 
           title="Biblioteca Sagrada" 
           subtitle="Bíblia, Catecismo e Magistério."
-          className="mb-6 md:mb-12"
+          className="mb-4 md:mb-12"
         />
-        <div className="p-0.5 md:p-8">
-          <HomeMainDoors t={t} />
-        </div>
+        <HomeMainDoors t={t} />
       </section>
 
       {/* 1. RITUAL DO DIA */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both w-full">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both w-full">
         <h2 className="sr-only">Ritual</h2>
-        <div className="p-1 md:p-8">
-          <RitualDoDia />
-        </div>
+        <RitualDoDia />
       </section>
 
       {/* VISUAL PAUSE */}
@@ -117,9 +99,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="outline" padding="none" className="flex-1 p-3 md:p-24 lg:p-32 border-primary/[0.002] bg-transparent">
+          <div className="flex-1">
             <ReadingProgressSection />
-          </CathedraCard>
+          </div>
         </section>
 
         {/* 3. LOGOS IA - INTELLIGENT COMPANION */}
@@ -136,7 +118,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             ref={logosCardRef}
             variant="glass"
             padding="none"
-            className="flex-1 p-3 md:p-8 flex flex-col items-center justify-center gap-4 md:gap-8 group border-primary/[0.005] shadow-none bg-transparent"
+            className="flex-1 flex flex-col items-center justify-center gap-4 md:gap-8 group border-none shadow-none bg-transparent"
           >
             <div className="relative z-10 w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/[0.005] border border-primary/[0.01] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:bg-primary/[0.01] transition-all duration-1000">
               <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.3} />
