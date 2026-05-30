@@ -159,18 +159,14 @@ const BibliotecaPage: React.FC = () => {
                   <div
                     key={item.title}
                     onClick={() => navigate(item.route)}
-                    className="flex flex-col gap-6 p-8 group cursor-pointer transition-all duration-1000 hover:bg-primary/[0.005] rounded-2xl border border-transparent"
+                    className="flex flex-col gap-4 p-6 group cursor-pointer transition-all duration-1000 hover:bg-primary/[0.005] rounded-xl border border-transparent"
                   >
-                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
+                    <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-1000 group-hover:bg-primary group-hover:text-white", item.color, "bg-primary/[0.02] text-primary/40")}>
                       {item.icon}
                     </div>
-                    <div className="space-y-2 flex-1">
-                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-base tracking-tight">{item.title}</h3>
-                      <p className="text-[11px] leading-relaxed text-muted-foreground/40 line-clamp-2 italic">{item.description}</p>
-                    </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all duration-1000">
-                      <span className="text-[8px] font-black uppercase tracking-widest text-primary/40">Acessar</span>
-                      <Icons.ChevronRight className="w-3 h-3 text-primary/40" />
+                    <div className="space-y-1 flex-1">
+                      <h3 className="font-bold text-foreground/80 group-hover:text-primary transition-colors text-sm tracking-tight">{item.title}</h3>
+                      <p className="text-[10px] leading-relaxed text-muted-foreground/40 line-clamp-2 italic">{item.description}</p>
                     </div>
                   </div>
                 ))}
