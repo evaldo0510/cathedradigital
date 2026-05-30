@@ -383,7 +383,7 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         <SpacingDebugger />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-24 md:pb-80 pt-16 md:pt-80 px-4 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0 max-w-none" : "pb-20 md:pb-80 pt-12 md:pt-80 px-4 md:px-20 lg:px-32 xl:px-48 max-w-[var(--layout-max-width)] mx-auto min-h-screen")}>
           <SwipeNavigation>
             <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
