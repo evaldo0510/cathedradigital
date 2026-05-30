@@ -60,7 +60,7 @@ interface BottomNavItemProps {
   shouldReduceMotion?: boolean;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = ({ 
+const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({ 
   label, 
   icon: Icon, 
   route, 
