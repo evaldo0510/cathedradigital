@@ -536,7 +536,7 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {content && (
-        <div className="w-full max-w-[72ch] mx-auto mb-12 space-y-12">
+        <div className="w-full max-w-[70ch] mx-auto mb-12 space-y-12">
           <ChapterNotesList 
             notes={currentDocNotes} 
             onDeleteNote={deleteDocNote}
@@ -613,7 +613,7 @@ const MagisteriumViewer: React.FC = () => {
 
 
       {!settings.totalSilence && showLogosAI && (
-        <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <div className="w-full max-w-[70ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
           <LogosAI 
             isOpen={showLogosAI} 
             onClose={() => {

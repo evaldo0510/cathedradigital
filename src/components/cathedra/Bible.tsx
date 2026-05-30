@@ -1433,7 +1433,7 @@ const Bible: React.FC = memo(() => {
               </motion.div>
             )}
           {!settings.totalSilence && showLogosAI && (
-            <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <div className="w-full max-w-[70ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
               <React.Suspense fallback={<BibleChapterSkeleton />}>
                 <LogosAI 
                   isOpen={showLogosAI} 
