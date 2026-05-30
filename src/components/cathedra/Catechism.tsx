@@ -286,7 +286,7 @@ const LazyParagraph: React.FC<{
 
 type ViewMode = 'parts' | 'sections' | 'reading';
 
-const Catechism: React.FC = () => {
+const Catechism: React.FC = React.memo(() => {
   useRenderPerf('Catechism', 15);
   const { settings, updateSettings } = useReadingSettings();
   useReadingAutoHide(settings.visualSilence);
@@ -1158,6 +1158,6 @@ const Catechism: React.FC = () => {
       </div>
     </ContemplativeLayout>
   );
-};
+});
 
 export default Catechism;
