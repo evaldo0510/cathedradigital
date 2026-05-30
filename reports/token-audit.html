@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cathedra Token Audit</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9fb; color: #1a1a1a; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .issue { color: #e11d48; font-weight: bold; }
+    .success { color: #10b981; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+    pre { background: #f1f5f9; padding: 10px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>Cathedra Design Token Audit</h1>
+  <div class="card">
+    <h2>Summary</h2>
+    <p>Total Issues: <span class="issue">5</span></p>
+    <p>Generated at: 5/30/2026, 3:40:55 PM</p>
+  </div>
+  
+    <div class="card">
+      <h3>Direct Spacing</h3>
+      <p>Status: <span class="issue">FAIL</span></p>
+      <p>Suggestion: <em>Use spacing-xs to 4xl (e.g., p-spacing-md) or <Stack gap="md" /></em></p>
+      
+        <h4>Common Violations:</h4>
+        <pre>2 w-4.5
+      2 h-4.5
+      1 h-18</pre>
+      
+    </div>
+  
+    <div class="card">
+      <h3>Direct Typography</h3>
+      <p>Status: <span class="success">PASS</span></p>
+      <p>Suggestion: <em>Use text-premium-xs to 5xl (e.g., text-premium-lg) or <Typography size="lg" /></em></p>
+      
+    </div>
+  
+    <div class="card">
+      <h3>Direct Rounding</h3>
+      <p>Status: <span class="success">PASS</span></p>
+      <p>Suggestion: <em>Use rounded-premium-sm to full (e.g., rounded-premium-md)</em></p>
+      
+    </div>
+  
+    <div class="card">
+      <h3>Direct Shadows</h3>
+      <p>Status: <span class="success">PASS</span></p>
+      <p>Suggestion: <em>Use shadow-premium-sm to premium-hover (e.g., shadow-premium)</em></p>
+      
+    </div>
+  
+</body>
+</html>
