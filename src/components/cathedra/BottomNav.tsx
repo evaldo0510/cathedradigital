@@ -60,7 +60,7 @@ interface BottomNavItemProps {
   shouldReduceMotion?: boolean;
 }
 
-const BottomNavItem: React.FC<BottomNavItemProps> = ({ 
+const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({ 
   label, 
   icon: Icon, 
   route, 
@@ -136,7 +136,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
       />
     )}
   </Button>
-);
+));
 
 interface BottomNavProps {
   onOpenSidebar: () => void;
@@ -163,7 +163,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-10 bg-background/0.2 backdrop-blur-3xl rounded-full shadow-none border border-primary/[0.0005] dark:border-white/[0.001] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
+        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-10 bg-background/5 rounded-full shadow-none border border-primary/[0.0005] dark:border-white/[0.001] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all backdrop-blur-md will-change-transform",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
