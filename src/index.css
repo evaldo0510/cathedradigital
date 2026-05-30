@@ -213,29 +213,29 @@
   /* Reading Core - Optimized Rhythm */
   .reader-text {
     @apply font-reader text-foreground selection:bg-primary/10 max-w-[65ch] mx-auto;
-    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    font-size: clamp(var(--text-base), 1.4vw, var(--text-xl));
     line-height: 2.1;
-    letter-spacing: 0.02em;
-    font-weight: 300;
+    letter-spacing: var(--letter-spacing-wide);
+    font-weight: var(--font-weight-light);
     font-variant-numeric: oldstyle-nums;
   }
 
   @screen sm {
-    .reader-text { font-size: 1.4rem; }
+    .reader-text { font-size: var(--text-xl); }
   }
 
   @screen md {
     .reader-text {
       font-size: 1.55rem;
       line-height: 2.3;
-      letter-spacing: 0.02em;
+      letter-spacing: var(--letter-spacing-wide);
     }
   }
 
-  .font-size-small .reader-text { font-size: 1.25rem !important; }
-  .font-size-medium .reader-text { font-size: 1.45rem !important; }
-  .font-size-large .reader-text { font-size: 1.75rem !important; }
-  .font-size-extra-large .reader-text { font-size: 2.1rem !important; }
+  .font-size-small .reader-text { font-size: var(--text-lg) !important; }
+  .font-size-medium .reader-text { font-size: var(--text-xl) !important; }
+  .font-size-large .reader-text { font-size: var(--text-2xl) !important; }
+  .font-size-extra-large .reader-text { font-size: var(--text-3xl) !important; }
 
   /* Specific Reader Container */
   .reader-container {
