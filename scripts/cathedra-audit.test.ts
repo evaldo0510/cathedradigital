@@ -22,6 +22,23 @@ describe('Cathedra Audit Token Mapping', () => {
     it('should return the original if no token exists', () => {
       expect(pattern?.fix('p-99')).toBe('p-99');
     });
+
+    it('should identify matches using the regex', () => {
+      const regex = new RegExp(pattern!.regex, 'g');
+      const content = 'p-4 m-2 gap-1.5 w-full h-auto p-99';
+      const matches = [...content.matchAll(regex)].map(m => m[0]);
+      
+      expect(matches).toContain('p-4');
+      expect(matches).toContain('m-2');
+      expect(matches).toContain('gap-1.5');
+      expect(matches).toContain('w-full');
+      expect(matches).toContain('p-99');
+      
+      // Verification of exclusion logic in the script itself (though we only test fix() here)
+      const validMatches = matches.filter(m => !pattern?.exclude.includes(m));
+      expect(validMatches).not.toContain('w-full');
+      expect(validMatches).toContain('p-4');
+    });
   });
 
   describe('Typography Tokens', () => {
