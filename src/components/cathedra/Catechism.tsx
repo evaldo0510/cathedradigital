@@ -711,7 +711,11 @@ const Catechism: React.FC = memo(() => {
     const fromDashboard = searchParams.get('from') === 'dashboard';
 
     return (
-      <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
+      <ContemplativeLayout
+        subtitle={`${selectedSection.title}`}
+        title={`CIC`}
+        maxW="max-w-[var(--layout-max-width)]"
+      >
         <SEOHead 
           title={`${selectedSection.title} | Catecismo`}
           description={`Leia o Catecismo da Igreja Católica: ${selectedSection.title}`}
@@ -719,7 +723,7 @@ const Catechism: React.FC = memo(() => {
         />
 
         {/* Atmospheric Header - Mobile Only */}
-        <div className="flex items-center justify-between gap-3 flex-wrap bg-background/40 backdrop-blur-3xl p-2 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-24 left-6 right-6 z-40 transition-all duration-700">
+        <div className="flex items-center justify-between gap-2 flex-wrap bg-background/40 backdrop-blur-3xl p-1.5 rounded-full border border-primary/5 shadow-premium-hover header-reading-auto-hide md:hidden fixed top-16 left-4 right-4 z-40 transition-all duration-700">
           <div className="flex items-center gap-1">
             <AudioButton variant="ghost" className="rounded-full w-10 h-10 p-0" />
             <ReadingControlPanel />
@@ -1010,7 +1014,6 @@ const Catechism: React.FC = memo(() => {
 
           </main>
         </div>
-
         {!settings.totalSilence && showLogosAI && (
           <div className="w-full max-w-[72ch] mx-auto mt-24 mb-32 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <LogosAI 
@@ -1026,7 +1029,7 @@ const Catechism: React.FC = memo(() => {
             />
           </div>
         )}
-      </div>
+      </ContemplativeLayout>
     );
   }
 
@@ -1086,7 +1089,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout
       subtitle="Codex Fidei"
-      title="Catecismo da Igreja Católica"
+      title="Catecismo"
       maxW="max-w-6xl"
     >
       <SEOHead title="Catecismo da Igreja Católica" description="Acesse o Catecismo da Igreja Católica online em uma experiência premium." path="/catechism" type="book" />

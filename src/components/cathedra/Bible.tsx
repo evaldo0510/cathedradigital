@@ -1525,7 +1525,7 @@ const Bible: React.FC = memo(() => {
   return (
     <ContemplativeLayout 
       subtitle="A Palavra de Deus"
-      title="Sagrada Escritura"
+      title="Biblia"
       maxW="max-w-6xl"
     >
       <SEOHead 

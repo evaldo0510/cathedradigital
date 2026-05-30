@@ -34,7 +34,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         className="bg-background/2 backdrop-blur-sm sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.02] dark:border-white/[0.01]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-12 md:h-24 py-1 md:py-0">
+        <div className="app-container flex items-center justify-between h-10 md:h-24 py-1 md:py-0">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
@@ -45,7 +45,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-4 h-4 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-30 group-hover:opacity-60" variant={isDark ? "light" : "dark"} />
+            <Icons.Logo className="w-6 h-6 md:w-16 md:h-16 transition-premium-slow group-hover:scale-105 opacity-40 group-hover:opacity-60" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
               <span className="text-[8px] md:text-2xl font-display font-light uppercase tracking-[0.6em] md:tracking-[0.8em] text-primary/30 leading-none transition-premium-slow group-hover:text-primary group-hover:opacity-100">
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1)) || 'Cathedra'}
