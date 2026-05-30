@@ -31,7 +31,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   return (
     <>
       <header 
-        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]"
+        className="bg-background/20 backdrop-blur-3xl sticky top-0 z-[140] transition-all duration-300 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]"
         role="banner"
       >
         <div className="app-container flex items-center justify-between h-14 md:h-16 py-1">
@@ -62,7 +62,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-9 h-9 md:w-11 md:h-11 rounded-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-500 tap-premium"
+                  className="w-9 h-9 md:w-11 md:h-11 rounded-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
                   <Icons.ChevronLeft className="w-4 h-4 md:w-5 md:h-5 opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -74,7 +74,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-7 h-7 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
+                  className="w-7 h-7 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
                   <Icons.Search className="w-4 h-4 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -84,7 +84,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={onToggleDark}
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group hidden md:flex"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-300 group hidden md:flex"
                   aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
                 >
                   {isDark ? 
