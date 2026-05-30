@@ -84,13 +84,13 @@
     --transition-subtle: 600ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Global Spacing Rhythm Tokens */
-    --space-mobile-base: 0.2rem;
-    --space-mobile-section: 0.75rem;
-    --space-mobile-section-sm: 0.4rem;
-    --space-mobile-stack: 0.2rem;
-    --space-mobile-stack-lg: 0.4rem;
-    --space-mobile-padding: 0.35rem;
-    --space-mobile-header-mb: 0.5rem;
+    --space-mobile-base: 0.25rem;
+    --space-mobile-section: 1rem;
+    --space-mobile-section-sm: 0.5rem;
+    --space-mobile-stack: 0.25rem;
+    --space-mobile-stack-lg: 0.5rem;
+    --space-mobile-padding: 0.5rem;
+    --space-mobile-header-mb: 0.75rem;
     
     --space-desktop-base: 2rem;
     --space-desktop-section: 10rem;
