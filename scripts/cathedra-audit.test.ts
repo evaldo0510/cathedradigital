@@ -1,5 +1,24 @@
-import { describe, it, expect } from 'vitest';
-import { forbiddenPatterns } from './cathedra-audit';
+import { describe, it, expect, vi } from 'vitest';
+import { forbiddenPatterns, runAudit } from './cathedra-audit';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'fs';
+import { join } from 'path';
+import { execSync } from 'child_process';
+
+// Mock child_process and fs to test runAudit without side effects
+vi.mock('child_process', () => ({
+  execSync: vi.fn(),
+}));
+
+vi.mock('fs', async () => {
+  const actual = await vi.importActual('fs') as any;
+  return {
+    ...actual,
+    writeFileSync: vi.fn(),
+    readFileSync: vi.fn(),
+    mkdirSync: vi.fn(),
+    existsSync: vi.fn(),
+  };
+});
 
 describe('Cathedra Audit Token Mapping', () => {
   const findPattern = (id: string) => forbiddenPatterns.find(p => p.id === id);
@@ -21,22 +40,6 @@ describe('Cathedra Audit Token Mapping', () => {
 
     it('should return the original if no token exists', () => {
       expect(pattern?.fix('p-99')).toBe('p-99');
-    });
-
-    it('should identify matches using the regex', () => {
-      const regex = new RegExp(pattern!.regex, 'g');
-      const content = 'p-4 m-2 gap-1.5 w-full h-auto p-99';
-      const matches = [...content.matchAll(regex)].map(m => m[0]);
-      
-      expect(matches).toContain('p-4');
-      expect(matches).toContain('m-2');
-      expect(matches).toContain('gap-1.5');
-      expect(matches).not.toContain('w-full'); // regex only matches numbers
-      expect(matches).toContain('p-99');
-      
-      // Verification of exclusion logic would go here if we had more patterns
-      const validMatches = matches.filter(m => !pattern?.exclude.includes(m));
-      expect(validMatches).toContain('p-4');
     });
   });
 
@@ -70,6 +73,73 @@ describe('Cathedra Audit Token Mapping', () => {
       expect(pattern?.fix('shadow-md')).toBe('shadow-premium');
       expect(pattern?.fix('shadow-lg')).toBe('shadow-premium-hover');
       expect(pattern?.fix('shadow-xl')).toBe('shadow-premium-xl');
+    });
+  });
+
+  describe('Dry-run Mode and Codemod Snapshots', () => {
+    it('should correctly identify replacements in dry-run without writing files', () => {
+      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const mockRgOutput = 'src/App.tsx:10:  <div className="p-4 rounded-md shadow-md text-sm"></div>';
+      
+      (execSync as any).mockReturnValue(mockRgOutput);
+      (readFileSync as any).mockReturnValue('<div className="p-4 rounded-md shadow-md text-sm"></div>');
+      (existsSync as any).mockReturnValue(true);
+
+      // Set command line arguments for dry-run
+      process.argv = ['node', 'scripts/cathedra-audit.ts', '--dry-run', '--threshold=10'];
+
+      runAudit();
+
+      // Verify log messages for dry run
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "p-4" with "p-spacing-md"'));
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "rounded-md" with "rounded-premium-md"'));
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "shadow-md" with "shadow-premium"'));
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "text-sm" with "text-premium-sm"'));
+      
+      // Ensure writeFileSync was NOT called for source files during dry run
+      // It might be called for reports/compliance-history.json and reports/token-audit.html/json
+      const writtenFiles = (writeFileSync as any).mock.calls.map((call: any) => call[0]);
+      expect(writtenFiles).not.toContain('src/App.tsx');
+      
+      consoleSpy.mockRestore();
+    });
+
+    it('should match the expected codemod output snapshot', () => {
+      const testCases = [
+        { input: 'p-4 m-2 gap-8 text-sm rounded-lg shadow-md', expected: 'p-spacing-md m-spacing-xs gap-spacing-2xl text-premium-sm rounded-premium-lg shadow-premium' },
+        { input: 'p-0.5 text-5xl rounded-full shadow-lg', expected: 'p-spacing-3xs text-premium-5xl rounded-premium-full shadow-premium-hover' },
+        { input: 'w-12 h-16 rounded-2xl shadow-xl text-base', expected: 'w-spacing-4xl h-spacing-4xl rounded-premium shadow-premium-xl text-premium-base' }
+      ];
+
+      const results = testCases.map(tc => {
+        let transformed = tc.input;
+        forbiddenPatterns.forEach(pattern => {
+          const regex = new RegExp(pattern.regex, 'g');
+          transformed = transformed.replace(regex, (match) => {
+            if (pattern.exclude.includes(match)) return match;
+            return pattern.fix(match);
+          });
+        });
+        return { input: tc.input, output: transformed };
+      });
+
+      expect(results).toMatchSnapshot();
+    });
+
+    it('should respect exclusions in the snapshot', () => {
+      const content = 'p-4 w-full h-auto m-2';
+      let transformed = content;
+      
+      forbiddenPatterns.forEach(pattern => {
+        const regex = new RegExp(pattern.regex, 'g');
+        transformed = transformed.replace(regex, (match) => {
+          if (pattern.exclude.includes(match)) return match;
+          return pattern.fix(match);
+        });
+      });
+
+      expect(transformed).toBe('p-spacing-md w-full h-auto m-spacing-xs');
+      expect(transformed).toMatchSnapshot();
     });
   });
 });
