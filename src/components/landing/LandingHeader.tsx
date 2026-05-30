@@ -84,7 +84,7 @@ const LandingHeader = () => {
               type="button"
             >
               {link.name}
-              <span className="absolute -bottom-spacing-2xs left-0 w-0 h-spacing-3xs bg-primary transition-all group-hover:w-full" />
+              <span className="absolute -bottom-spacing-2xs left-0 w-spacing-0 h-spacing-3xs bg-primary transition-all group-hover:w-full" />
             </Button>
           ))}
           

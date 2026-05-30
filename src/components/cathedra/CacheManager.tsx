@@ -310,7 +310,7 @@ const CacheManager: React.FC = () => {
                         <div className={`p-spacing-sm rounded-premium-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
                           {getStoreIcon(item.store)}
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-spacing-0">
                           <p className="font-bold text-premium-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
                           <div className="flex items-center gap-spacing-xs text-premium-xs text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>

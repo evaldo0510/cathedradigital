@@ -32,7 +32,7 @@ const AparicoesPage: React.FC = () => {
           <Button onClick={() => setSelectedApparition(null)} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
             <Icons.ChevronLeft className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-spacing-0">
             <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>
             <h1 className="text-premium-xl md:text-premium-2xl font-serif font-bold text-foreground">{selectedApparition.title}</h1>
             <p className="text-premium-sm text-muted-foreground">{selectedApparition.location}</p>

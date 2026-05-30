@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-premium-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-xs min-w-0"
+        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-premium-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-xs min-w-spacing-0"
       >
         <MessageSquare className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

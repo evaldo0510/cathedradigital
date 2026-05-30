@@ -354,7 +354,7 @@ const DogmasPage: React.FC = () => {
               className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
             >
               <span className="text-premium-2xl font-serif font-bold text-primary/60 shrink-0 w-spacing-xl">{dogma.id}</span>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-spacing-0">
                 <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
                   <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
                     {dogma.category}

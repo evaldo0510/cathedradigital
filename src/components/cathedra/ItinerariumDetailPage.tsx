@@ -211,7 +211,7 @@ const ItinerariumDetailPage: React.FC = () => {
                 } ${isCompleted ? 'bg-primary/[0.02]' : ''}`}
               >
                 <CardContent className="p-spacing-lg md:p-spacing-xl flex items-center justify-between gap-spacing-lg">
-                  <div className="flex items-center gap-spacing-lg flex-1 min-w-0">
+                  <div className="flex items-center gap-spacing-lg flex-1 min-w-spacing-0">
                     <div className={`w-spacing-2xl h-spacing-2xl rounded-premium flex-shrink-0 flex items-center justify-center transition-all duration-700 ${
                       isCompleted 
                         ? 'bg-primary text-primary-foreground shadow-premium' 
@@ -220,7 +220,7 @@ const ItinerariumDetailPage: React.FC = () => {
                       {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : <span className="text-premium-sm font-bold">{idx + 1}</span>}
                     </div>
                     
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-spacing-0">
                       <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
                         <h3 className="text-premium-lg md:text-premium-xl font-bold font-serif text-foreground truncate">{step.title}</h3>
                         {!step.is_free && <Icons.Lock className="w-spacing-sm h-spacing-sm text-primary/60" />}

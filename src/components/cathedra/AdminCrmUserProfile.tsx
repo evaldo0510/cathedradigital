@@ -100,7 +100,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-premium-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
-            <div className="flex-1 min-w-0 space-y-spacing-xs">
+            <div className="flex-1 min-w-spacing-0 space-y-spacing-xs">
               <div className="flex items-center gap-spacing-xs flex-wrap">
                 <h2 className="text-premium-xl font-bold">{user.name || 'Sem nome'}</h2>
                 {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}

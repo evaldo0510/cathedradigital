@@ -450,7 +450,7 @@ const CommandCenter: React.FC = () => {
                   <span className={`p-spacing-2xs rounded-premium-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-spacing-0">
                     <p className="text-premium-sm font-semibold truncate">{item.label}</p>
                     <p className="text-premium-xs text-muted-foreground truncate">{item.description}</p>
                   </div>

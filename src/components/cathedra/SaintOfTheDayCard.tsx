@@ -107,7 +107,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-spacing-0">
           <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-secondary/80 mb-spacing-2xs">
             {saint.title === 'Santo do Dia' ? 'Santidade Hoje' : (saint.title || 'Santo do Dia')}
           </p>

@@ -236,7 +236,7 @@ const ReadingJournal: React.FC = () => {
             filteredMarks.map((mark) => (
               <Card key={mark.id} className="group overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card/60 backdrop-blur-sm rounded-premium shadow-premium-md hover:shadow-premium">
                 <CardContent className="p-spacing-md sm:p-spacing-lg flex items-center justify-between gap-spacing-md">
-                  <div className="flex items-center gap-spacing-md min-w-0">
+                  <div className="flex items-center gap-spacing-md min-w-spacing-0">
                     <div className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center shrink-0 ${
                       mark.content_type === 'bible' ? 'bg-blue-500/10 text-blue-600' :
                       mark.content_type === 'catechism' ? 'bg-amber-500/10 text-amber-600' :
@@ -246,7 +246,7 @@ const ReadingJournal: React.FC = () => {
                        mark.content_type === 'catechism' ? <Cross className="w-spacing-md h-spacing-md" /> :
                        <Scroll className="w-spacing-md h-spacing-md" />}
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-spacing-0">
                       <div className="flex items-center gap-spacing-xs mb-spacing-3xs">
                         <h3 className="font-bold text-foreground truncate">{mark.label}</h3>
                         {mark.is_last_read && <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-[8px] h-spacing-md">ÚLTIMO PONTO</Badge>}

@@ -369,7 +369,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     </div>
                     <div className="p-spacing-sm sm:p-spacing-md space-y-spacing-xs sm:space-y-spacing-sm">
                       <div className="flex items-center justify-between gap-spacing-sm">
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-spacing-0">
                           <h3 className="font-bold text-foreground text-premium-base sm:text-premium-lg">{journey.title}</h3>
                           {journey.subtitle && (
                             <p className="text-premium-xs text-muted-foreground font-serif italic mt-spacing-3xs">{journey.subtitle}</p>
@@ -582,12 +582,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className="p-spacing-sm sm:p-spacing-md space-y-spacing-xs sm:space-y-spacing-sm relative">
                       {/* Title row */}
                       <div className="flex items-start justify-between gap-spacing-sm">
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-spacing-0">
                             <div className="flex items-center gap-spacing-2xs sm:gap-spacing-xs flex-wrap mb-spacing-2xs">
                               <div className="w-spacing-lg h-spacing-lg sm:w-spacing-xl sm:h-spacing-xl rounded-premium-full sm:rounded-premium bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
                               {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-spacing-md h-spacing-md" />}
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-spacing-0">
                               <h2 className="text-premium-sm sm:text-premium-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
                               {journey.subtitle && (
                                 <p className="text-premium-xs text-muted-foreground font-serif italic truncate">{journey.subtitle}</p>

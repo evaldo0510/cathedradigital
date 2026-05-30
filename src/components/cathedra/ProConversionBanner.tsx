@@ -102,7 +102,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           </motion.div>
 
           {/* Content */}
-          <div className="flex-1 space-y-spacing-2xs min-w-0">
+          <div className="flex-1 space-y-spacing-2xs min-w-spacing-0">
             <h4 className="text-premium-sm font-bold text-foreground">{copy.title}</h4>
             <p className="text-premium-xs text-muted-foreground leading-relaxed">{copy.message}</p>
             {reflectionCount >= 2 && context !== 'logos' && (

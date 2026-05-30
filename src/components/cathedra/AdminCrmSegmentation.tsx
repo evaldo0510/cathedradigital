@@ -179,7 +179,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         <div className="w-spacing-xl h-spacing-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-premium-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-spacing-0">
                           <p className="font-medium text-premium-sm truncate">{u.name || '—'}</p>
                           <p className="text-premium-small text-muted-foreground truncate">{u.email}</p>
                         </div>

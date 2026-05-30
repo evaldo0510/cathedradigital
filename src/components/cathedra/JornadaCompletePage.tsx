@@ -373,7 +373,7 @@ const JornadaCompletePage: React.FC = () => {
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <ArrowRight className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="flex-1 min-w-spacing-0">
                 <h3 className="font-bold text-premium-sm text-foreground">{nextJourney.title}</h3>
                 {nextJourney.subtitle && (
                   <p className="text-premium-xs text-muted-foreground truncate">{nextJourney.subtitle}</p>

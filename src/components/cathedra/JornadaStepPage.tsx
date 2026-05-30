@@ -257,7 +257,7 @@ const JornadaStepPage: React.FC = () => {
           >
             <X className="w-spacing-md h-spacing-md text-foreground" />
           </Button>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-spacing-0">
             <div className="flex items-center gap-spacing-xs">
               <p className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
               <div className="group relative">

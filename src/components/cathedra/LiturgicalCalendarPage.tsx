@@ -528,7 +528,7 @@ const LiturgicalCalendarPage: React.FC = () => {
                     <span className={`text-premium-xs font-black ${LITURGICAL_COLORS[c.color]?.text}`}>{c.date.getDate()}</span>
                     <span className={`text-premium-xs font-bold uppercase ${LITURGICAL_COLORS[c.color]?.text}`}>{MONTH_NAMES[c.date.getMonth()].slice(0, 3)}</span>
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-spacing-0">
                     <p className="text-premium-sm font-bold text-foreground line-clamp-spacing-2xs group-hover:text-primary transition-colors">{c.name}</p>
                     <p className="text-premium-xs text-muted-foreground uppercase tracking-wider font-bold">{c.rank}</p>
                   </div>

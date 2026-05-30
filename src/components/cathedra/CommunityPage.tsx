@@ -449,7 +449,7 @@ const CommunityPage: React.FC = () => {
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-premium-sm">
                       {idx + 1}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-spacing-0">
                       <p className="text-premium-sm font-bold text-foreground truncate">{entry.name}</p>
                       <p className="text-premium-xs text-muted-foreground uppercase tracking-widest">{entry.levelName}</p>
                     </div>
@@ -480,7 +480,7 @@ const CommunityPage: React.FC = () => {
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-premium-xs">
                   {i + 1}
                 </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-spacing-0">
                   <p className="text-premium-xs font-bold text-foreground truncate">{entry.name}</p>
                   <p className="text-premium-xs text-muted-foreground uppercase font-medium">{entry.levelName}</p>
                 </div>

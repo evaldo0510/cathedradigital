@@ -417,7 +417,7 @@ const AdminThemesTab = () => {
                                   </div>
                                 ) : (
                                   <div className="flex items-start justify-between gap-spacing-md">
-                                    <div className="flex-1 min-w-0">
+                                    <div className="flex-1 min-w-spacing-0">
                                       <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                                         <Badge variant="outline" className="text-premium-xs font-bold uppercase border-primary/20 text-primary/70">{item.reference}</Badge>
                                         {item.title && <span className="text-premium-xs font-bold text-foreground/80">— {item.title}</span>}

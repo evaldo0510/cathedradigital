@@ -110,9 +110,9 @@ const AdminCrmAutomations: React.FC = () => {
           <Card key={auto.id}>
             <CardContent className="py-spacing-md px-spacing-md">
               <div className="flex items-center justify-between gap-spacing-md">
-                <div className="flex items-center gap-spacing-sm min-w-0">
+                <div className="flex items-center gap-spacing-sm min-w-spacing-0">
                   {auto.icon}
-                  <div className="min-w-0">
+                  <div className="min-w-spacing-0">
                     <p className="font-semibold text-premium-sm">{auto.name}</p>
                     <p className="text-premium-xs text-muted-foreground">{auto.description}</p>
                   </div>

@@ -51,7 +51,7 @@ const FlowConnector: React.FC<FlowConnectorProps> = ({
               >
                 <CardContent className="p-spacing-md flex items-center gap-spacing-sm">
                   <Icon className="w-spacing-lg h-spacing-lg text-primary" />
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-spacing-0">
                     <p className="text-premium-sm font-semibold text-foreground truncate">{rec.label}</p>
                     <p className="text-premium-xs text-muted-foreground">{rec.reason}</p>
                   </div>

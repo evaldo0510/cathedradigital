@@ -850,7 +850,7 @@ const Bible: React.FC = memo(() => {
             data-testid="bible-highlight-indicator"
             className="flex items-center justify-between gap-spacing-sm px-spacing-md py-spacing-sm rounded-premium-full bg-primary/10 border border-primary/30"
           >
-            <div className="flex items-center gap-spacing-xs min-w-0">
+            <div className="flex items-center gap-spacing-xs min-w-spacing-0">
               <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary shrink-0" />
               <span className="text-premium-sm font-bold text-primary truncate">
                 Destacado: {selectedBook.name} {selectedChapter}:{highlightedVerse}

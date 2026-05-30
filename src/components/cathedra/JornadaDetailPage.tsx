@@ -184,7 +184,7 @@ const JornadaDetailPage: React.FC = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-spacing-0">
                     <div className="flex items-center gap-spacing-xs">
                       <h3 className="font-semibold text-premium-sm text-foreground truncate">{step.title}</h3>
                       {isStepLocked && (

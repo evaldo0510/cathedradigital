@@ -78,7 +78,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           {icon}
         </div>
       )}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-spacing-0">
         <p className="font-semibold text-premium-sm text-foreground truncate">{title}</p>
         {subtitle && (
           <p className="text-premium-xs text-muted-foreground line-clamp-spacing-2xs">{subtitle}</p>

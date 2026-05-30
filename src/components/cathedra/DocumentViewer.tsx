@@ -24,7 +24,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({ url, title, onClose }) 
         className="flex items-center justify-between px-spacing-md md:px-spacing-xl py-spacing-sm bg-card border-b border-border"
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center gap-spacing-sm min-w-0">
+        <div className="flex items-center gap-spacing-sm min-w-spacing-0">
           <Button
             onClick={onClose}
             className="p-spacing-xs rounded-premium-full hover:bg-secondary transition-colors flex-shrink-0"

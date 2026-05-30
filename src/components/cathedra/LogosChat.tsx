@@ -161,7 +161,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-premium-full shadow-premium font-black uppercase tracking-widest text-premium-xs min-w-0"
+        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-premium-full shadow-premium font-black uppercase tracking-widest text-premium-xs min-w-spacing-0"
       >
         <Sparkles className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>

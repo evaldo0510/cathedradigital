@@ -377,7 +377,7 @@ const MagisteriumViewer: React.FC = () => {
 
       {/* Atmospheric Header - More minimal on mobile */}
       <div className="sticky top-spacing-0 z-40 bg-background/80 backdrop-blur-3xl py-spacing-sm px-spacing-md sm:px-spacing-lg mb-spacing-xl md:mb-spacing-3xl border-b border-primary/5 flex items-center justify-between gap-spacing-md header-reading-auto-hide transition-all duration-700">
-        <div className="flex items-center gap-spacing-xs min-w-0">
+        <div className="flex items-center gap-spacing-xs min-w-spacing-0">
           <Button 
             variant="ghost" 
             size="icon" 
@@ -386,7 +386,7 @@ const MagisteriumViewer: React.FC = () => {
           >
             <Icons.ArrowLeft className="w-spacing-md h-spacing-md" />
           </Button>
-          <div className="min-w-0">
+          <div className="min-w-spacing-0">
             <h1 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 truncate leading-none mb-spacing-2xs">{content.title}</h1>
             <p className="text-[8px] text-muted-foreground/60 uppercase tracking-widest font-bold">Magistério</p>
           </div>

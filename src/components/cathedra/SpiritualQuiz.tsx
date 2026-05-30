@@ -335,7 +335,7 @@ const SpiritualQuiz: React.FC = () => {
 
         <div className="flex items-center gap-spacing-sm">
           <span className="text-premium-3xl">{p.emoji}</span>
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-spacing-0">
             <h3 className={`text-premium-base font-bold ${p.color}`}>{p.title}</h3>
             <p className="text-premium-small text-muted-foreground mt-spacing-3xs">💔 {painLabel} · 🔥 {dirLabel}</p>
           </div>

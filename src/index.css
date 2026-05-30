@@ -376,7 +376,7 @@
   }
 
   .desktop-main {
-    @apply min-w-0;
+    @apply min-w-spacing-0;
   }
 
   .desktop-aside {
@@ -449,7 +449,7 @@
 }
 
 .focus-mode:has(header:hover)::before {
-  @apply h-0;
+  @apply h-spacing-0;
 }
 
 /* Deep Visual Silence - Refined, Atmospheric, and Contemplative */

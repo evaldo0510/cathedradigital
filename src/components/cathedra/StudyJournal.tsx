@@ -225,7 +225,7 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
       <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary">
         <Icons.Bookmark className="w-spacing-md h-spacing-md" />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-spacing-0">
         <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-spacing-3xs">{mark.content_type}</p>
         <h4 className="text-premium-sm font-bold truncate">{mark.label || mark.content_id}</h4>
       </div>

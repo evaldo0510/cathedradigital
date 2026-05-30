@@ -255,7 +255,7 @@ const GlossaryPage: React.FC = () => {
                   onClick={() => setExpandedId(isExpanded ? null : term.id)}
                   className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
                 >
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-spacing-0">
                     <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
                       {term.category && (
                         <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
