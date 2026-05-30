@@ -306,6 +306,11 @@
     @apply shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border-white/10;
   }
 
+  /* Unified Search Input Utility */
+  .search-input-premium {
+    @apply w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/30;
+  }
+
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
   @media (max-width: 768px) {
     .header-reading-auto-hide,
@@ -329,7 +334,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, transparent 40%, hsl(var(--background) / 0.15) 100%);
+      background: radial-gradient(circle at center, transparent 40%, hsl(var(--background) / 0.1) 100%);
       pointer-events: none;
       z-index: 10;
     }
