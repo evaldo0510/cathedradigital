@@ -120,7 +120,19 @@ forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
   try {
     const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" --color=never`;
-    const rawOutput = execSync(command, { encoding: 'utf8' }).trim();
+    let rawOutput = '';
+    
+    // Check if we are in test environment to mock rg output more reliably
+    if (process.env.NODE_ENV === 'test') {
+      // In test, execSync is mocked to return the value we want
+      rawOutput = execSync(command, { encoding: 'utf8' }).trim();
+    } else {
+      try {
+        rawOutput = execSync(command, { encoding: 'utf8' }).trim();
+      } catch (e) {
+        // rg returns non-zero exit code if no matches found
+      }
+    }
     
     if (rawOutput) {
       const lines = rawOutput.split('\n');
@@ -133,7 +145,10 @@ forbiddenPatterns.forEach(pattern => {
           const lineNumber = parts[1];
           const content = parts.slice(2).join(':').trim();
           
-          const matches = content.match(new RegExp(pattern.regex, 'g'));
+          // Use the EXACT same regex as defined in forbiddenPatterns
+          const regex = new RegExp(pattern.regex, 'g');
+          const matches = content.match(regex);
+          
           if (matches) {
             matches.forEach(match => {
               if (!pattern.exclude.includes(match)) {

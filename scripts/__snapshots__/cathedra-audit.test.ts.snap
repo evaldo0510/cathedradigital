@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Cathedra Audit Token Mapping > Dry-run Mode and Codemod Snapshots > should match the expected codemod output snapshot 1`] = `
+[
+  {
+    "input": "p-4 m-2 gap-8 text-sm rounded-lg shadow-md",
+    "output": "p-spacing-md m-spacing-xs gap-spacing-2xl text-premium-sm rounded-premium-lg shadow-premium",
+  },
+  {
+    "input": "p-0.5 text-5xl rounded-full shadow-lg",
+    "output": "p-spacing-3xs text-premium-5xl rounded-premium-full shadow-premium-hover",
+  },
+  {
+    "input": "w-12 h-16 rounded-2xl shadow-xl text-base",
+    "output": "w-spacing-4xl h-spacing-4xl rounded-premium shadow-premium-xl text-premium-base",
+  },
+]
+`;
+
+exports[`Cathedra Audit Token Mapping > Dry-run Mode and Codemod Snapshots > should respect exclusions in the snapshot 1`] = `"p-spacing-md w-full h-auto m-spacing-xs"`;
