@@ -361,7 +361,7 @@ const RitualDoDia: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-12 lg:gap-20 items-stretch">
             {/* 3. Catechism */}
-            <section className="space-y-3 md:space-y-12 text-center p-3 md:p-14 lg:p-24 bg-primary/[0.003] border border-primary/[0.01] rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.01]" aria-labelledby="traditio-heading">
+            <section className="space-y-3 md:space-y-12 text-center p-3 md:p-14 lg:p-24 bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="traditio-heading">
               <h4 id="traditio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">III. Traditio</h4>
               <button 
                 className={cn(
@@ -381,7 +381,7 @@ const RitualDoDia: React.FC = () => {
             </section>
 
             {/* 4. Prayer */}
-            <section className="space-y-3 md:space-y-12 text-center p-3 md:p-14 lg:p-24 bg-primary/[0.003] border border-primary/[0.01] rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.01]" aria-labelledby="oratio-heading">
+            <section className="space-y-3 md:space-y-12 text-center p-3 md:p-14 lg:p-24 bg-transparent border-none rounded-[1.5rem] lg:rounded-[5rem] transition-all duration-1000 hover:bg-primary/[0.005]" aria-labelledby="oratio-heading">
               <h4 id="oratio-heading" className="text-[6.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">IV. Oratio</h4>
               <button 
                 className={cn(

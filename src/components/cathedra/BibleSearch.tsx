@@ -66,7 +66,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && doSearch()}
             placeholder="Buscar por palavra-chave..."
-            className="w-full pl-12 pr-4 py-3 rounded-full border border-primary/10 bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="w-full pl-12 pr-4 py-3 rounded-full border border-primary/[0.03] bg-transparent text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/10"
             autoFocus
           />
         </div>
@@ -97,7 +97,7 @@ const BibleSearch: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="space-y-2 max-h-[60vh] overflow-y-auto">
             {results.slice(0, visibleCount).map((r, i) => (
               <Button key={i} onClick={() => goToVerse(r)}
-                className="w-full text-left p-4 rounded-3xl bg-card border border-primary/5 hover:border-primary/20 hover:bg-primary/[0.01] transition-all group h-auto block">
+                className="w-full text-left p-4 rounded-3xl bg-transparent border-none hover:bg-primary/[0.005] transition-all group h-auto block">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{r.bookAbbrev} {r.chapter},{r.verse}</span>
                   <span className="text-premium-tiny text-muted-foreground">— {r.bookName}</span>
