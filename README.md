@@ -184,7 +184,7 @@ O script `cathedra-audit.ts` suporta as seguintes flags:
    ```
    *Validação*: Se o número de problemas for > 5, o comando falhará (útil para testar o comportamento do CI).
 
-3. **Fix (Aplicar Correções)**:
+4. **Fix (Aplicar Correções)**:
    ```bash
    npm run token-audit:fix
    ```
