@@ -58,13 +58,13 @@ const SIZE_TOKENS: Record<NonNullable<FuzzySearchInputProps['size']>, {
   clearWrap: string;
 }> = {
   md: {
-    input: 'pl-spacing-xl pr-spacing-xl py-spacing-sm text-sm rounded-full',
+    input: 'pl-spacing-xl pr-spacing-xl py-spacing-sm text-premium-sm rounded-premium-full',
     icon: 'w-spacing-md h-spacing-md',
     iconWrap: 'left-spacing-md',
     clearWrap: 'right-spacing-sm',
   },
   lg: {
-    input: 'pl-spacing-2xl pr-spacing-2xl py-spacing-md text-base rounded-full shadow-md',
+    input: 'pl-spacing-2xl pr-spacing-2xl py-spacing-md text-premium-base rounded-premium-full shadow-premium-md',
     icon: 'w-spacing-md h-spacing-md',
     iconWrap: 'left-spacing-lg',
     clearWrap: 'right-spacing-lg',
@@ -124,7 +124,7 @@ export const FuzzySearchInput: React.FC<FuzzySearchInputProps> = ({
       {showHint && (
         <div 
           aria-live="polite"
-          className="absolute -bottom-spacing-lg left-spacing-2xs/2 -translate-x-1/2 flex items-center gap-spacing-2xs text-xs font-bold uppercase tracking-widest text-muted-foreground"
+          className="absolute -bottom-spacing-lg left-spacing-2xs/2 -translate-x-1/2 flex items-center gap-spacing-2xs text-premium-xs font-bold uppercase tracking-widest text-muted-foreground"
         >
           <Loader2 className="w-spacing-sm h-spacing-sm animate-spin" />
           Buscando…

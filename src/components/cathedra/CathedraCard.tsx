@@ -27,7 +27,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
       default: 'bg-card/30 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.005] shadow-premium',
       interactive: 'bg-card/30 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.005] shadow-premium hover:shadow-premium-hover hover:border-primary/5 hover:bg-primary/[0.005] active:scale-[0.995] cursor-pointer',
       outline: 'bg-transparent border border-primary/[0.05] dark:border-white/[0.01]',
-      glass: 'bg-white/[0.01] dark:bg-black/[0.01] backdrop-blur-2xl border border-white/[0.02] dark:border-white/[0.005] shadow-none',
+      glass: 'bg-white/[0.01] dark:bg-black/[0.01] backdrop-blur-2xl border border-white/[0.02] dark:border-white/[0.005] shadow-premium-none',
     };
 
     return (

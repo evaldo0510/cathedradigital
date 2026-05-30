@@ -119,9 +119,9 @@ const getAllBooks = (testament: string) => BIBLE_CATEGORIES[testament].flatMap(c
 type ViewMode = 'books' | 'chapters' | 'reading';
 
 const FONT_SIZES = [
-  { label: 'P', size: 'text-base md:text-lg', leading: 'leading-relaxed' },
-  { label: 'M', size: 'text-lg md:text-xl', leading: 'leading-[1.75]' },
-  { label: 'G', size: 'text-xl md:text-2xl', leading: 'leading-[1.9]' },
+  { label: 'P', size: 'text-premium-base md:text-premium-lg', leading: 'leading-relaxed' },
+  { label: 'M', size: 'text-premium-lg md:text-premium-xl', leading: 'leading-[1.75]' },
+  { label: 'G', size: 'text-premium-xl md:text-premium-2xl', leading: 'leading-[1.9]' },
 ];
 
 const Bible: React.FC = memo(() => {
@@ -848,18 +848,18 @@ const Bible: React.FC = memo(() => {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             data-testid="bible-highlight-indicator"
-            className="flex items-center justify-between gap-spacing-sm px-spacing-md py-spacing-sm rounded-full bg-primary/10 border border-primary/30"
+            className="flex items-center justify-between gap-spacing-sm px-spacing-md py-spacing-sm rounded-premium-full bg-primary/10 border border-primary/30"
           >
             <div className="flex items-center gap-spacing-xs min-w-0">
               <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary shrink-0" />
-              <span className="text-sm font-bold text-primary truncate">
+              <span className="text-premium-sm font-bold text-primary truncate">
                 Destacado: {selectedBook.name} {selectedChapter}:{highlightedVerse}
               </span>
             </div>
             <Button
               onClick={() => setHighlightedVerse(null)}
               aria-label="Limpar destaque"
-              className="text-xs font-bold text-primary/70 hover:text-primary transition-colors flex items-center gap-spacing-2xs shrink-0"
+              className="text-premium-xs font-bold text-primary/70 hover:text-primary transition-colors flex items-center gap-spacing-2xs shrink-0"
             >
               Limpar
               <Icons.X className="w-spacing-sm h-spacing-sm" />
@@ -868,13 +868,13 @@ const Bible: React.FC = memo(() => {
         )}
 
         {/* Atmospheric Floating Toolbar - Minimalist */}
-        <div className="flex items-center justify-between gap-spacing-sm flex-wrap bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-full border border-primary/5 header-reading-auto-hide fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-40 transition-all duration-700 shadow-premium md:bottom-spacing-4xl">
+        <div className="flex items-center justify-between gap-spacing-sm flex-wrap bg-background/20 backdrop-blur-3xl p-spacing-2xs rounded-premium-full border border-primary/5 header-reading-auto-hide fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-40 transition-all duration-700 shadow-premium md:bottom-spacing-4xl">
           <div className="flex items-center gap-spacing-2xs">
-            <AudioButton variant="ghost" className="rounded-full w-spacing-xl h-spacing-xl p-0" />
+            <AudioButton variant="ghost" className="rounded-premium-full w-spacing-xl h-spacing-xl p-spacing-0" />
             <ReadingControlPanel />
           </div>
           <div className="flex items-center gap-spacing-2xs">
-            <Button variant="ghost" size="icon" className="rounded-full w-spacing-xl h-spacing-xl p-0" onClick={() => setShowLogosAI(!showLogosAI)}>
+            <Button variant="ghost" size="icon" className="rounded-premium-full w-spacing-xl h-spacing-xl p-spacing-0" onClick={() => setShowLogosAI(!showLogosAI)}>
               <Icons.Sparkles className={`w-spacing-md h-spacing-md ${showLogosAI ? 'text-primary' : 'text-primary/60'}`} />
             </Button>
             <ReadingMark contentType="bible" contentId={selectedBook.abbr} label={`${selectedBook.name} ${selectedChapter}`} chapter={selectedChapter} />
@@ -908,7 +908,7 @@ const Bible: React.FC = memo(() => {
             >
               Anterior
             </button>
-            <span className="text-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
+            <span className="text-premium-xs font-serif italic text-primary/20">Capítulo {selectedChapter}</span>
             <button 
               disabled={selectedChapter >= selectedBook.chapters} 
               onClick={() => navigateChapter(1)}
@@ -931,7 +931,7 @@ const Bible: React.FC = memo(() => {
             <div className="flex-1 w-full max-w-[70ch] mx-auto relative">
               {currentChapterNotes.length > 0 && (
                 <div className="space-y-spacing-md animate-in fade-in slide-in-from-left-spacing-md duration-1000">
-                  <p className="text-xs font-medium uppercase tracking-[0.3em] text-primary/40 px-spacing-md">Destaques & Notas</p>
+                  <p className="text-premium-xs font-medium uppercase tracking-[0.3em] text-primary/40 px-spacing-md">Destaques & Notas</p>
                   <div className="flex flex-col gap-spacing-xs max-h-[40vh] overflow-y-auto no-scrollbar pr-spacing-xs">
                     {currentChapterNotes.map(note => (
                       <button
@@ -949,10 +949,10 @@ const Bible: React.FC = memo(() => {
                         <div className="flex items-center gap-spacing-xs">
                           <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Vs {note.verse}</span>
                           {note.highlight_color && (
-                            <div className={`w-spacing-xs h-spacing-xs rounded-full highlight-${note.highlight_color}`} />
+                            <div className={`w-spacing-xs h-spacing-xs rounded-premium-full highlight-${note.highlight_color}`} />
                           )}
                         </div>
-                        <p className="text-[11px] leading-relaxed line-clamp-2 italic text-muted-foreground">
+                        <p className="text-[11px] leading-relaxed line-clamp-spacing-xs italic text-muted-foreground">
                           {note.note_text === 'Destacado para meditação' ? 'Somente destaque' : note.note_text}
                         </p>
                       </button>
@@ -984,7 +984,7 @@ const Bible: React.FC = memo(() => {
                       <motion.div 
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-spacing-sm border border-white/10 shadow-premium"
+                        className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-premium-full text-[9px] font-black uppercase tracking-widest flex items-center gap-spacing-sm border border-white/10 shadow-premium"
                       >
                         <span className="flex items-center gap-spacing-2xs"><kbd className="bg-white/20 px-spacing-2xs py-spacing-3xs rounded">H</kbd> Destacar</span>
                         <div className="w-px h-spacing-sm bg-white/20" />
@@ -1001,7 +1001,7 @@ const Bible: React.FC = memo(() => {
                         <div key={v.number} 
                           id={`v${v.number}`}
                           className={`group relative py-spacing-sm md:py-spacing-md px-spacing-xs md:px-spacing-lg transition-all duration-700
-                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] rounded-lg' : 'hover:bg-primary/[0.01]'}`}>
+                            ${highlightedVerse === v.number ? 'bg-primary/[0.03] rounded-premium-lg' : 'hover:bg-primary/[0.01]'}`}>
                           <div className="flex items-start gap-spacing-sm md:gap-spacing-md">
 
                             <span className="text-[0.7em] font-serif italic text-primary/20 mt-spacing-sm select-none group-hover:text-primary/40 transition-colors duration-700 w-spacing-lg shrink-0 text-right">{v.number}</span>
@@ -1022,7 +1022,7 @@ const Bible: React.FC = memo(() => {
                                 is_last_read: true
                               });
                             }}>
-                              <p className="leading-[1.8] font-serif font-light text-xl md:text-2xl lg:text-[2.5rem] text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
+                              <p className="leading-[1.8] font-serif font-light text-premium-xl md:text-premium-2xl lg:text-[2.5rem] text-foreground/90 dark:text-foreground/95 group-hover:text-foreground transition-colors duration-700 tracking-tight">
                                 {currentChapterNotes.some(n => n.verse === v.number && n.highlight_color) && (
                                   <span 
                                     onClick={(e) => {
@@ -1030,7 +1030,7 @@ const Bible: React.FC = memo(() => {
                                       const note = currentChapterNotes.find(n => n.verse === v.number && n.highlight_color);
                                       if (note) setActiveHighlight(note);
                                     }}
-                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-spacing-3xs rounded-sm mr-spacing-2xs`}
+                                    className={`highlight-${currentChapterNotes.find(n => n.verse === v.number)?.highlight_color} px-spacing-3xs rounded-premium-sm mr-spacing-2xs`}
                                   >
                                     {v.text}
                                   </span>
@@ -1065,7 +1065,7 @@ const Bible: React.FC = memo(() => {
                               <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="w-spacing-lg h-spacing-lg rounded-full hover:bg-primary/5 text-primary/40 hover:text-primary transition-all"
+                                className="w-spacing-lg h-spacing-lg rounded-premium-full hover:bg-primary/5 text-primary/40 hover:text-primary transition-all"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setHighlightedVerse(v.number);
@@ -1080,7 +1080,7 @@ const Bible: React.FC = memo(() => {
                                 title={`${selectedBook.name} ${selectedChapter}:${v.number}`} 
                                 text={v.text} 
                                 url={buildBibleAbsoluteUrl({ abbr: selectedBook.abbr, chapter: selectedChapter, verse: v.number })}
-                                className="w-spacing-lg h-spacing-lg p-0 text-primary/40 hover:text-primary"
+                                className="w-spacing-lg h-spacing-lg p-spacing-0 text-primary/40 hover:text-primary"
                               />
                             </div>
                           </div>
@@ -1131,13 +1131,13 @@ const Bible: React.FC = memo(() => {
 
             <aside className="reader-navigation-aside space-y-spacing-2xl shrink-0">
               <div className="space-y-spacing-md">
-                <p className="text-xs font-medium uppercase tracking-[0.3em] text-primary/40 px-spacing-md">Capítulos: {selectedBook.name}</p>
+                <p className="text-premium-xs font-medium uppercase tracking-[0.3em] text-primary/40 px-spacing-md">Capítulos: {selectedBook.name}</p>
                 <nav className="flex flex-col gap-spacing-2xs max-h-[40vh] overflow-y-auto no-scrollbar pr-spacing-xs">
                   {Array.from({ length: selectedBook.chapters }, (_, i) => i + 1).map(ch => (
                     <button
                       key={ch}
                       onClick={() => selectChapter(ch)}
-                      className={`flex items-center gap-spacing-sm px-spacing-md py-spacing-xs rounded-full text-sm font-medium transition-all
+                      className={`flex items-center gap-spacing-sm px-spacing-md py-spacing-xs rounded-premium-full text-premium-sm font-medium transition-all
                         ${selectedChapter === ch 
                           ? 'bg-primary text-primary-foreground' 
                           : 'text-muted-foreground hover:bg-primary/5 hover:text-primary'}`}
@@ -1173,7 +1173,7 @@ const Bible: React.FC = memo(() => {
               className="rounded-premium group px-spacing-lg py-spacing-xl flex flex-col items-start gap-spacing-xs hover:bg-primary/5 transition-all w-full sm:w-auto border border-transparent hover:border-primary/5"
             >
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Capítulo Anterior</span>
-              <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-2xl">
+              <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-premium-2xl">
                 <Icons.ChevronLeft className="w-spacing-md h-spacing-md group-hover:-translate-x-1 transition-transform opacity-40" />
                 {selectedBook.name} {selectedChapter - 1}
               </div>
@@ -1197,7 +1197,7 @@ const Bible: React.FC = memo(() => {
                   className="rounded-premium group px-spacing-lg py-spacing-xl flex flex-col items-end gap-spacing-xs hover:bg-primary/5 transition-all text-right w-full sm:w-auto border border-transparent hover:border-primary/5"
                 >
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground/60 group-hover:text-primary/60 transition-colors">Próximo Capítulo</span>
-                  <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-2xl">
+                  <div className="flex items-center gap-spacing-xs text-primary font-display font-light text-premium-2xl">
                     {selectedBook.name} {selectedChapter + 1}
                     <Icons.ChevronRight className="w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform opacity-40" />
                   </div>
@@ -1207,8 +1207,8 @@ const Bible: React.FC = memo(() => {
               <div className="text-center space-y-spacing-xl py-spacing-3xl">
                 <Icons.CheckCircle2 className="w-spacing-3xl h-spacing-3xl text-primary/60 mx-auto" strokeWidth={1} />
                 <div className="space-y-spacing-xs">
-                  <h3 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
-                  <p className="text-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
+                  <h3 className="text-premium-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Contemplação Concluída</h3>
+                  <p className="text-premium-xs text-muted-foreground/50 italic font-serif">"Lâmpada para meus pés é a Tua Palavra e luz para o meu caminho." (Salmo 119, 105)</p>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-spacing-md">
                   <Button 
@@ -1218,7 +1218,7 @@ const Bible: React.FC = memo(() => {
                       setViewMode('chapters');
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="rounded-full px-spacing-2xl py-spacing-lg bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-xs font-black uppercase tracking-widest"
+                    className="rounded-premium-full px-spacing-2xl py-spacing-lg bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium text-premium-xs font-black uppercase tracking-widest"
                   >
                     Finalizar e Voltar
                   </Button>
@@ -1399,7 +1399,7 @@ const Bible: React.FC = memo(() => {
               <Button 
                 variant={chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? "outline" : "default"}
                 onClick={() => markChapterRead(selectedBook.abbr, selectedChapter, selectedBook.chapters)}
-                className="w-full h-spacing-2xl text-base font-bold"
+                className="w-full h-spacing-2xl text-premium-base font-bold"
               >
                 {chaptersRead[selectedBook.abbr]?.has(selectedChapter) ? (
                   <><Icons.CheckCircle2 className="w-spacing-md h-spacing-md mr-spacing-xs" /> Capítulo Lido</>
@@ -1419,8 +1419,8 @@ const Bible: React.FC = memo(() => {
                   onClick={() => navigateChapter(1)}>
                   <div className="p-spacing-lg flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-widest text-primary mb-spacing-2xs">Próximo Capítulo</p>
-                      <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
+                      <p className="text-premium-xs font-black uppercase tracking-widest text-primary mb-spacing-2xs">Próximo Capítulo</p>
+                      <h3 className="text-premium-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-spacing-lg h-spacing-lg text-primary" />
                   </div>
@@ -1431,12 +1431,12 @@ const Bible: React.FC = memo(() => {
             {/* If end of book */}
             {!isLoading && !bibleError && selectedChapter >= selectedBook.chapters && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-spacing-3xl space-y-spacing-xl">
-                <div className="w-spacing-3xl h-spacing-3xl rounded-full bg-primary/5 flex items-center justify-center mx-auto">
+                <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full bg-primary/5 flex items-center justify-center mx-auto">
                   <Icons.CheckCircle2 className="w-spacing-xl h-spacing-xl text-primary/40" />
                 </div>
                 <div className="space-y-spacing-sm">
-                  <h2 className="text-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Livro Concluído!</h2>
-                  <p className="text-sm text-muted-foreground/60 italic font-serif max-w-spacing-md mx-auto">Você concluiu a leitura de {selectedBook.name}. Que a Palavra de Deus continue frutificando em seu coração.</p>
+                  <h2 className="text-premium-2xl font-display text-primary uppercase tracking-[0.2em] font-light">Livro Concluído!</h2>
+                  <p className="text-premium-sm text-muted-foreground/60 italic font-serif max-w-spacing-md mx-auto">Você concluiu a leitura de {selectedBook.name}. Que a Palavra de Deus continue frutificando em seu coração.</p>
                 </div>
                 <Button variant="ghost" onClick={() => setViewMode('books')} className="text-[10px] font-black uppercase tracking-widest text-primary/40 hover:text-primary">Ver Todos os Livros</Button>
               </motion.div>
@@ -1482,7 +1482,7 @@ const Bible: React.FC = memo(() => {
             <Button 
               variant="ghost" 
               onClick={goBack}
-              className="px-spacing-xl py-spacing-sm h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all"
+              className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all"
             >
               <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
               Voltar aos Livros
@@ -1501,21 +1501,21 @@ const Bible: React.FC = memo(() => {
                   padding="none"
                   onClick={() => selectChapter(ch)}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center group relative overflow-hidden rounded-lg",
+                    "aspect-square flex flex-col items-center justify-center group relative overflow-hidden rounded-premium-lg",
                     isRead && "bg-primary/[0.01]"
                   )}
                 >
                   <span className={cn(
-                    "text-sm font-display group-hover:scale-110 transition-all duration-700",
+                    "text-premium-sm font-display group-hover:scale-110 transition-all duration-700",
                     isLastReadChapter ? "text-primary font-bold" : "text-foreground/60"
                   )}>
                     {ch}
                   </span>
                   {isLastReadChapter && (
-                    <div className="absolute bottom-spacing-2xs w-spacing-2xs h-spacing-2xs rounded-full bg-primary animate-pulse" />
+                    <div className="absolute bottom-spacing-2xs w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary animate-pulse" />
                   )}
                   {isRead && !isLastReadChapter && (
-                    <div className="absolute top-spacing-2xs right-spacing-2xs w-spacing-3xs h-spacing-3xs rounded-full bg-primary/20" />
+                    <div className="absolute top-spacing-2xs right-spacing-2xs w-spacing-3xs h-spacing-3xs rounded-premium-full bg-primary/20" />
                   )}
                 </CathedraCard>
               );
@@ -1541,7 +1541,7 @@ const Bible: React.FC = memo(() => {
       <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
         {/* Unidade de Busca Unificada */}
         <div className="relative group">
-          <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+          <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
           <input
             type="text"
@@ -1553,13 +1553,13 @@ const Bible: React.FC = memo(() => {
         </div>
 
         <div className="flex justify-center mb-spacing-xl md:mb-spacing-2xl">
-          <div className="flex bg-primary/[0.02] p-spacing-2xs rounded-full border border-primary/5">
+          <div className="flex bg-primary/[0.02] p-spacing-2xs rounded-premium-full border border-primary/5">
             {(['Antigo Testamento', 'Novo Testamento'] as const).map(t => (
               <Button
                 key={t}
                 variant="ghost"
                 onClick={() => setTestament(t)}
-                className={`px-spacing-xl py-spacing-sm h-auto rounded-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
+                className={`px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${
                   testament === t 
                     ? 'bg-background text-primary shadow-premium scale-[1.05]' 
                     : 'text-muted-foreground/30 hover:text-primary'
@@ -1601,7 +1601,7 @@ const Bible: React.FC = memo(() => {
                         <div className="space-y-spacing-2xs">
                           <div className="flex items-center gap-spacing-xs">
                             <span className="text-[7px] font-black tracking-widest text-primary/20 group-hover:text-primary transition-colors">{book.abbr}</span>
-                            <h3 className="text-xs font-bold tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
+                            <h3 className="text-premium-xs font-bold tracking-tight text-foreground/80 group-hover:text-primary transition-colors">
                               {book.name}
                             </h3>
                           </div>

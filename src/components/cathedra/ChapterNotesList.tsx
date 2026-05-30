@@ -24,8 +24,8 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
       <div className="p-spacing-lg md:p-spacing-xl space-y-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
           <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary/40" />
-          <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">{title}</h3>
-          <span className="ml-auto bg-primary/10 text-primary text-[10px] font-black px-spacing-xs py-spacing-3xs rounded-full">
+          <h3 className="text-premium-sm font-black uppercase tracking-widest text-primary/60">{title}</h3>
+          <span className="ml-auto bg-primary/10 text-primary text-[10px] font-black px-spacing-xs py-spacing-3xs rounded-premium-full">
             {notes.length}
           </span>
         </div>
@@ -38,7 +38,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
               onClick={() => onNoteClick?.(note)}
             >
               <div className="flex items-start gap-spacing-sm">
-                <div className={`w-spacing-2xs h-spacing-2xl rounded-full flex-shrink-0 bg-primary/10`} />
+                <div className={`w-spacing-2xs h-spacing-2xl rounded-premium-full flex-shrink-0 bg-primary/10`} />
                 <div className="space-y-spacing-2xs pr-spacing-xl">
                   <div className="flex items-center gap-spacing-xs">
                     <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">
@@ -48,7 +48,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                       {new Date(note.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-xs text-foreground/80 italic line-clamp-3 leading-relaxed">
+                  <p className="text-premium-xs text-foreground/80 italic line-clamp-spacing-sm leading-relaxed">
                     "{note.note_text}"
                   </p>
                 </div>
@@ -58,7 +58,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-spacing-xs right-spacing-xs h-spacing-lg w-spacing-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:bg-destructive/5"
+                  className="absolute top-spacing-xs right-spacing-xs h-spacing-lg w-spacing-lg rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:bg-destructive/5"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDeleteNote(note.id);

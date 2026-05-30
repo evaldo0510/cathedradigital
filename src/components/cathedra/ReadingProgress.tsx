@@ -76,7 +76,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
         />
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-[150] pointer-events-none pb-[env(safe-area-inset-bottom)]">
+      <div className="fixed bottom-spacing-0 left-0 right-0 z-[150] pointer-events-none pb-[env(safe-area-inset-bottom)]">
         <div className="max-w-[var(--layout-max-width)] mx-auto px-spacing-lg md:px-spacing-3xl py-spacing-lg flex flex-col gap-spacing-md items-end">
           
           <AnimatePresence>
@@ -92,7 +92,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                   onClick={handleBookmark}
                   variant="outline"
                   size="icon"
-                  className="w-spacing-2xl h-spacing-2xl rounded-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
+                  className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                   aria-label="Marcar posição atual"
                 >
                   <Bookmark className="w-spacing-md h-spacing-md text-primary" />
@@ -104,7 +104,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                     onClick={handleReturnToLast}
                     variant="outline"
                     size="icon"
-                    className="w-spacing-2xl h-spacing-2xl rounded-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
+                    className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                     aria-label="Retornar ao último parágrafo"
                   >
                     <CornerRightUp className="w-spacing-md h-spacing-md text-primary" />
@@ -116,7 +116,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                     onClick={onResumeLast}
                     variant="secondary"
                     size="sm"
-                    className="rounded-full shadow-premium text-[10px] font-black uppercase tracking-widest px-spacing-xl h-spacing-2xl border-2 border-secondary bg-secondary text-primary hover:bg-secondary/90 transition-all group relative overflow-hidden tap-premium"
+                    className="rounded-premium-full shadow-premium text-[10px] font-black uppercase tracking-widest px-spacing-xl h-spacing-2xl border-2 border-secondary bg-secondary text-primary hover:bg-secondary/90 transition-all group relative overflow-hidden tap-premium"
                   >
                     <motion.span 
                       animate={{ scale: [1, 1.05, 1] }} 
@@ -134,7 +134,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
                   onClick={onScrollToTop}
                   variant="outline"
                   size="icon"
-                  className="w-spacing-2xl h-spacing-2xl rounded-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
+                  className="w-spacing-2xl h-spacing-2xl rounded-premium-full shadow-premium bg-background/80 backdrop-blur-md border-primary/10 hover:border-primary/30 tap-premium"
                   aria-label="Voltar ao topo"
                 >
                   <ChevronUp className="w-spacing-md h-spacing-md" />
@@ -144,7 +144,7 @@ export const ReadingProgress: React.FC<ReadingProgressProps> = ({
           </AnimatePresence>
 
           {!isSubtle && (
-            <div className="w-full pointer-events-auto bg-background/40 backdrop-blur-xl border border-primary/5 rounded-full p-spacing-2xs shadow-premium overflow-hidden">
+            <div className="w-full pointer-events-auto bg-background/40 backdrop-blur-xl border border-primary/5 rounded-premium-full p-spacing-2xs shadow-premium overflow-hidden">
               <div className="flex items-center justify-between px-spacing-md mb-spacing-2xs">
                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 italic">
                   {label || 'Progresso da Alma'}

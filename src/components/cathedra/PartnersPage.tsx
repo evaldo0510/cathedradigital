@@ -104,7 +104,7 @@ const PartnersPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs rounded-full bg-primary/10 text-primary text-sm font-medium mb-spacing-xs"
+          className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs rounded-premium-full bg-primary/10 text-primary text-premium-sm font-medium mb-spacing-xs"
         >
           <Icons.Handshake className="w-spacing-md h-spacing-md" />
           Unidos pela Missão
@@ -114,7 +114,7 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-4xl md:text-5xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent"
+          className="text-premium-4xl md:text-premium-5xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent"
         >
           Parceiros & Patrocinadores
         </motion.h1>
@@ -123,7 +123,7 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-lg text-muted-foreground max-w-spacing-2xl mx-auto"
+          className="text-premium-lg text-muted-foreground max-w-spacing-2xl mx-auto"
         >
           Instituições, empresas e indivíduos que apoiam a disseminação da Fé e da Cultura Católica através do Cathedra.
         </motion.p>
@@ -161,14 +161,14 @@ const PartnersPage: React.FC = () => {
                     )}
                   </CardHeader>
                   <CardContent className="p-spacing-lg space-y-spacing-sm">
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                    <CardTitle className="text-premium-xl group-hover:text-primary transition-colors">
                       {partner.name}
                     </CardTitle>
-                    <CardDescription className="text-sm line-clamp-3 leading-relaxed">
+                    <CardDescription className="text-premium-sm line-clamp-spacing-sm leading-relaxed">
                       {partner.description || "Sem descrição disponível."}
                     </CardDescription>
                   </CardContent>
-                  <CardFooter className="p-spacing-lg pt-0 mt-auto">
+                  <CardFooter className="p-spacing-lg pt-spacing-0 mt-auto">
                     {partner.website_url && (
                       <Button 
                         variant="ghost" 
@@ -190,13 +190,13 @@ const PartnersPage: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center justify-center py-spacing-3xl px-spacing-lg text-center space-y-spacing-lg bg-muted/20 rounded-full border-2 border-dashed border-border/50"
+            className="flex flex-col items-center justify-center py-spacing-3xl px-spacing-lg text-center space-y-spacing-lg bg-muted/20 rounded-premium-full border-2 border-dashed border-border/50"
           >
             <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/5 flex items-center justify-center">
               <Icons.Community className="w-spacing-xl h-spacing-xl text-muted-foreground/50" />
             </div>
             <div className="space-y-spacing-xs">
-              <h3 className="text-2xl font-semibold text-foreground/80">
+              <h3 className="text-premium-2xl font-semibold text-foreground/80">
                 Em breve novos parceiros farão parte desta missão
               </h3>
               <p className="text-muted-foreground max-w-spacing-md mx-auto">
@@ -206,13 +206,13 @@ const PartnersPage: React.FC = () => {
             
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
-                <Button size="lg" className="rounded-full px-spacing-xl gap-spacing-xs shadow-premium shadow-primary/20">
+                <Button size="lg" className="rounded-premium-full px-spacing-xl gap-spacing-xs shadow-premium shadow-primary/20">
                   <Icons.Plus className="w-spacing-md h-spacing-md" /> Tornar-se um Parceiro
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px] overflow-y-auto max-h-[90dvh]">
                 <DialogHeader>
-                  <DialogTitle className="text-2xl">Candidatura de Parceria</DialogTitle>
+                  <DialogTitle className="text-premium-2xl">Candidatura de Parceria</DialogTitle>
                   <DialogDescription>
                     Preencha os dados abaixo para submeter sua proposta de parceria ou patrocínio.
                   </DialogDescription>
@@ -279,12 +279,12 @@ const PartnersPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="bg-muted/30 p-spacing-md rounded-premium flex gap-spacing-sm text-xs text-muted-foreground leading-relaxed">
+                  <div className="bg-muted/30 p-spacing-md rounded-premium flex gap-spacing-sm text-premium-xs text-muted-foreground leading-relaxed">
                     <Icons.Info className="w-spacing-md h-spacing-md shrink-0 text-primary" />
                     <p>Ao enviar, sua solicitação passará por uma análise administrativa. Apenas parceiros aprovados serão exibidos publicamente na plataforma.</p>
                   </div>
 
-                  <Button type="submit" className="w-full h-spacing-2xl text-base font-semibold" disabled={isSubmitting}>
+                  <Button type="submit" className="w-full h-spacing-2xl text-premium-base font-semibold" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
                         <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" />
@@ -307,21 +307,21 @@ const PartnersPage: React.FC = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="bg-primary/5 rounded-full p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg border border-primary/10"
+          className="bg-primary/5 rounded-premium-full p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg border border-primary/10"
         >
           <div className="max-w-spacing-2xl mx-auto space-y-spacing-md">
-            <h2 className="text-2xl md:text-3xl font-bold">Quer apoiar esta causa?</h2>
+            <h2 className="text-premium-2xl md:text-premium-3xl font-bold">Quer apoiar esta causa?</h2>
             <p className="text-muted-foreground">
               Junte-se a nós como um patrocinador e ajude a manter o Cathedra gratuito e acessível para milhares de fiéis em todo o mundo.
             </p>
             <div className="pt-spacing-md flex flex-col sm:flex-row gap-spacing-md justify-center">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" className="rounded-full px-spacing-xl">Falar com a Equipe</Button>
+                  <Button size="lg" className="rounded-premium-full px-spacing-xl">Falar com a Equipe</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[500px] overflow-y-auto max-h-[90dvh]">
                   <DialogHeader>
-                    <DialogTitle className="text-2xl">Candidatura de Parceria</DialogTitle>
+                    <DialogTitle className="text-premium-2xl">Candidatura de Parceria</DialogTitle>
                     <DialogDescription>
                       Preencha os dados abaixo para submeter sua proposta de parceria ou patrocínio.
                     </DialogDescription>
@@ -349,13 +349,13 @@ const PartnersPage: React.FC = () => {
                         <Input id="logo-bottom" name="logo_url" value={formData.logo_url} onChange={handleInputChange} placeholder="https://..." />
                       </div>
                     </div>
-                    <Button type="submit" className="w-full h-spacing-2xl text-base font-semibold" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full h-spacing-2xl text-premium-base font-semibold" disabled={isSubmitting}>
                       {isSubmitting ? <><Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" /> Enviando...</> : 'Enviar Solicitação'}
                     </Button>
                   </form>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" size="lg" className="rounded-full px-spacing-xl">Saiba Mais</Button>
+              <Button variant="outline" size="lg" className="rounded-premium-full px-spacing-xl">Saiba Mais</Button>
             </div>
           </div>
         </motion.section>

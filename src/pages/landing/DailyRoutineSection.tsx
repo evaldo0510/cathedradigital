@@ -31,9 +31,9 @@ const DailyRoutineSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-primary/[0.01]">
       <div className="app-container space-y-spacing-3xl">
         <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Ritmo</span>
+          <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 italic">O Ritmo</span>
           <h2 className="font-display font-bold text-foreground">Vivência Cotidiana</h2>
-          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
+          <p className="text-muted-foreground/90 font-serif text-premium-lg md:text-premium-xl mx-auto">Fazei tudo para a glória de Deus.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-xl">
@@ -46,7 +46,7 @@ const DailyRoutineSection = () => {
                 <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
-                <span className="text-xs font-display font-bold text-primary/50 uppercase tracking-widest">
+                <span className="text-premium-xs font-display font-bold text-primary/50 uppercase tracking-widest">
                   {step.time}
                 </span>
               </div>
@@ -60,7 +60,7 @@ const DailyRoutineSection = () => {
 
               <ul className="space-y-spacing-sm pt-spacing-lg border-t border-border/10 mt-auto">
                 {step.items.map((item) => (
-                  <li key={item} className="flex items-center gap-spacing-sm text-xs font-medium text-foreground/70">
+                  <li key={item} className="flex items-center gap-spacing-sm text-premium-xs font-medium text-foreground/70">
                     <CheckCircle2 className="w-spacing-md h-spacing-md text-secondary" />
                     {item}
                   </li>

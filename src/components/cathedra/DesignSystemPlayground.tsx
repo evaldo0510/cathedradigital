@@ -21,12 +21,12 @@ const DesignSystemPlayground: React.FC = () => {
       <div className="app-container py-spacing-3xl md:py-spacing-4xl stack-spacing">
         {/* Header Section */}
         <section className="text-center space-y-spacing-xl">
-          <div className="inline-flex items-center gap-spacing-sm px-spacing-lg py-spacing-xs bg-primary/[0.03] border border-primary/10 rounded-full animate-in fade-in duration-1000">
+          <div className="inline-flex items-center gap-spacing-sm px-spacing-lg py-spacing-xs bg-primary/[0.03] border border-primary/10 rounded-premium-full animate-in fade-in duration-1000">
             <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary/40" />
             <span className="h5 !text-primary/40 tracking-[0.5em]">Systema Visualis</span>
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tighter">itinerarium</h1>
-          <p className="font-serif italic text-muted-foreground/60 text-lg md:text-xl max-w-spacing-2xl mx-auto leading-relaxed">
+          <h1 className="text-premium-5xl md:text-7xl lg:text-8xl tracking-tighter">itinerarium</h1>
+          <p className="font-serif italic text-muted-foreground/60 text-premium-lg md:text-premium-xl max-w-spacing-2xl mx-auto leading-relaxed">
             "A beleza é o esplendor da verdade." — Santo Agostinho
           </p>
         </section>
@@ -64,7 +64,7 @@ const DesignSystemPlayground: React.FC = () => {
                 </div>
                 <div className="space-y-spacing-md">
                   <span className="h5 text-secondary">Reading / Serif</span>
-                  <p className="reader-text !mx-0">
+                  <p className="reader-text !mx-spacing-0">
                     No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus. 
                     Ele estava no princípio com Deus. Todas as coisas foram feitas por intermédio dele.
                   </p>
@@ -129,19 +129,19 @@ const DesignSystemPlayground: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl">
             <CathedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Silêncio Visual</h5>
-              <p className="text-sm opacity-60">
+              <p className="text-premium-sm opacity-60">
                 Evite elementos desnecessários. O espaço em branco é um elemento de design ativo que convida à reflexão.
               </p>
             </CathedraCard>
             <CathedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Ritmo Vertical</h5>
-              <p className="text-sm opacity-60">
+              <p className="text-premium-sm opacity-60">
                 Utilize as classes <code className="text-secondary">stack-spacing</code> e <code className="text-secondary">section-spacing</code> para garantir consistência.
               </p>
             </CathedraCard>
             <CathedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Feedback Tátil</h5>
-              <p className="text-sm opacity-60">
+              <p className="text-premium-sm opacity-60">
                 Toda interação deve ter uma resposta sutil e orgânica, simulando a sensação de um objeto real.
               </p>
             </CathedraCard>
@@ -153,7 +153,7 @@ const DesignSystemPlayground: React.FC = () => {
         <div className="space-y-spacing-2xl">
           <SectionHeader title="Santuário Digital" subtitle="Um espaço de oração e estudo sem distrações." />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl">
-            <p className="reader-text !mx-0 !text-lg">
+            <p className="reader-text !mx-spacing-0 !text-premium-lg">
               Esta é uma experiência de overlay premium, projetada para focar a atenção do usuário no que é essencial. 
               Utiliza desfoque de fundo (blur) e tipografia generosa.
             </p>

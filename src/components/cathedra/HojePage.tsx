@@ -182,7 +182,7 @@ const HojePage: React.FC = () => {
             {/* FRASES DO DIA - CONTEMPLAÇÃO */}
             <div className="py-spacing-2xl px-spacing-xl text-center bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] transition-all hover:bg-primary/[0.02] duration-1000">
                <Icons.Quote className="w-spacing-lg h-spacing-lg text-primary/10 mx-auto mb-spacing-xl" />
-               <p className="text-lg md:text-xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
+               <p className="text-premium-lg md:text-premium-xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
                 {todayQuote}
               </p>
             </div>

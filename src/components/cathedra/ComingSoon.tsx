@@ -104,7 +104,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
             key={idx}
             className="flex flex-col items-center text-center gap-spacing-xl group cursor-default"
           >
-            <div className="w-spacing-2xl h-spacing-2xl rounded-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/50 transition-all duration-1000">
+            <div className="w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary/[0.03] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/50 transition-all duration-1000">
               <item.icon className="w-spacing-lg h-spacing-lg" strokeWidth={0.5} />
             </div>
             <div className="space-y-spacing-sm">
@@ -125,20 +125,20 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-spacing-2xl pl-spacing-2xl pr-spacing-4xl rounded-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
+                className="h-spacing-2xl pl-spacing-2xl pr-spacing-4xl rounded-premium-full border-border/10 bg-background/30 focus:bg-background/50 transition-all font-serif italic text-premium-base placeholder:text-muted-foreground/60 focus:ring-1 focus:ring-primary/10"
               />
               <Mail className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/60" />
               <button 
                 type="submit" 
                 disabled={loading}
-                className="absolute right-spacing-2xs top-spacing-2xs/2 -translate-y-1/2 h-spacing-xl px-spacing-lg rounded-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-700 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
+                className="absolute right-spacing-2xs top-spacing-2xs/2 -translate-y-1/2 h-spacing-xl px-spacing-lg rounded-premium-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-700 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
               >
                 {loading ? "..." : "Notificar"}
               </button>
             </div>
           </form>
         ) : (
-          <div className="flex items-center justify-center gap-spacing-sm text-primary/60 py-spacing-md px-spacing-xl rounded-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
+          <div className="flex items-center justify-center gap-spacing-sm text-primary/60 py-spacing-md px-spacing-xl rounded-premium-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
             <CheckCircle2 className="w-spacing-md h-spacing-md" />
             <span className="text-[9px] font-black uppercase tracking-widest">Inscrito no Santuário</span>
           </div>

@@ -133,18 +133,18 @@ const CatechismExplorer: React.FC = () => {
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-spacing-lg">
           <div className="p-spacing-md bg-muted/30 rounded-premium border border-border/50 space-y-spacing-xs">
-            <div className="flex justify-between text-xs font-black uppercase tracking-widest text-muted-foreground">
+            <div className="flex justify-between text-premium-xs font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
               <span className="text-foreground">{allParagraphs.length}</span>
             </div>
-            <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
+            <div className="flex justify-between text-premium-xs font-black uppercase tracking-widest text-primary">
               <span>Filtrados</span>
               <span className="font-black">{filteredParagraphs.length}</span>
             </div>
           </div>
 
           <div className="space-y-spacing-md">
-            <div className="flex items-center gap-spacing-xs text-primary font-bold uppercase text-xs tracking-widest">
+            <div className="flex items-center gap-spacing-xs text-primary font-bold uppercase text-premium-xs tracking-widest">
               <Icons.Search className="w-spacing-sm h-spacing-sm" /> Busca Rápida
             </div>
             <Input 
@@ -156,7 +156,7 @@ const CatechismExplorer: React.FC = () => {
           </div>
 
           <div className="space-y-spacing-md">
-            <div className="flex items-center gap-spacing-xs text-primary font-bold uppercase text-xs tracking-widest">
+            <div className="flex items-center gap-spacing-xs text-primary font-bold uppercase text-premium-xs tracking-widest">
               <Icons.Tag className="w-spacing-sm h-spacing-sm" /> Temas e Tags
             </div>
             <ScrollArea className="h-[400px] pr-spacing-md">
@@ -169,7 +169,7 @@ const CatechismExplorer: React.FC = () => {
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       disabled={currentCount === 0 && !isSelected}
-                      className={`group flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-full text-premium-small transition-all border ${
+                      className={`group flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium-full text-premium-small transition-all border ${
                         isSelected
                           ? 'bg-primary border-primary text-primary-foreground'
                           : currentCount === 0 
@@ -183,7 +183,7 @@ const CatechismExplorer: React.FC = () => {
                           {currentCount}
                         </Badge>
                         {!isSelected && currentCount !== totalCount && (
-                          <span className="text-xs opacity-40">/ {totalCount}</span>
+                          <span className="text-premium-xs opacity-40">/ {totalCount}</span>
                         )}
                       </div>
                     </Button>
@@ -205,7 +205,7 @@ const CatechismExplorer: React.FC = () => {
                 variant="ghost" 
                 size="sm" 
                 onClick={toggleSort}
-                className="text-xs font-black uppercase tracking-widest h-spacing-xl"
+                className="text-premium-xs font-black uppercase tracking-widest h-spacing-xl"
               >
                 <Icons.ArrowDown className={`w-spacing-sm h-spacing-sm mr-spacing-xs transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
                 {sortBy === 'number-asc' ? 'Crescente' : 'Decrescente'}
@@ -229,12 +229,12 @@ const CatechismExplorer: React.FC = () => {
                     onClick={() => navigate(`/catechism?p=${p.paragraph}`)}
                   >
                     <div className="flex gap-spacing-md">
-                      <div className="text-base font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
+                      <div className="text-premium-base font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
                         §{p.paragraph}
                       </div>
                       <div className="flex-1 space-y-spacing-xs">
                         <h3 className="font-serif font-bold text-foreground">{p.titulo}</h3>
-                        <p className="text-muted-foreground line-clamp-3 leading-relaxed">
+                        <p className="text-muted-foreground line-clamp-spacing-sm leading-relaxed">
                           {p.conteudo}
                         </p>
                         <div className="flex flex-wrap gap-spacing-xs pt-spacing-xs">

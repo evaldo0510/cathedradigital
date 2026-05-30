@@ -41,7 +41,7 @@ const CommunitySection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-secondary/10 border border-secondary/20 rounded-full text-secondary text-[10px] font-semibold uppercase tracking-premium-wide"
+            className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-secondary/10 border border-secondary/20 rounded-premium-full text-secondary text-[10px] font-semibold uppercase tracking-premium-wide"
           >
             <span>Irmandade Cathedra</span>
           </motion.div>
@@ -79,13 +79,13 @@ const CommunitySection = () => {
               viewport={{ once: true }}
               custom={i + 3}
               whileHover={{ y: -10 }}
-              className="p-spacing-xl rounded-xl bg-card border border-border/50 shadow-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
+              className="p-spacing-xl rounded-premium bg-card border border-border/50 shadow-premium-md hover:shadow-premium-hover hover:border-primary/20 transition-all duration-500 flex flex-col h-full"
             >
               <div className="flex justify-between items-start mb-spacing-lg">
                 <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
                   {feature.icon}
                 </div>
-                <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-spacing-xs py-spacing-2xs rounded-full">
+                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground/60 bg-muted px-spacing-xs py-spacing-2xs rounded-premium-full">
                   {feature.tag}
                 </span>
               </div>
@@ -114,7 +114,7 @@ const CommunitySection = () => {
                 />
               </div>
             ))}
-            <div className="w-spacing-2xl h-spacing-2xl rounded-premium border-4 border-background bg-primary flex items-center justify-center text-white text-xs font-bold">
+            <div className="w-spacing-2xl h-spacing-2xl rounded-premium border-4 border-background bg-primary flex items-center justify-center text-white text-premium-xs font-bold">
               +1k
             </div>
           </div>

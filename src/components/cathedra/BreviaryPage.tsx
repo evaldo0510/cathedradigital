@@ -101,27 +101,27 @@ const HORAS: HoraInfo[] = [
 const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, onBack }) => (
   <div className="max-w-spacing-3xl mx-auto space-y-spacing-lg">
     <div className="flex items-center gap-spacing-md">
-      <Button onClick={onBack} className="p-spacing-xs rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+      <Button onClick={onBack} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
         <Icons.ChevronLeft className="w-spacing-md h-spacing-md text-foreground" />
       </Button>
       <div>
-        <span className="text-xs font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
-        <h1 className="text-2xl font-display font-bold text-foreground">{hora.title}</h1>
-        <p className="text-xs font-serif italic text-muted-foreground">{hora.latin}</p>
+        <span className="text-premium-xs font-black uppercase tracking-[0.25em] text-primary">{hora.time}</span>
+        <h1 className="text-premium-2xl font-display font-bold text-foreground">{hora.title}</h1>
+        <p className="text-premium-xs font-serif italic text-muted-foreground">{hora.latin}</p>
       </div>
     </div>
 
     <div className="bg-card border border-border rounded-premium p-spacing-lg md:p-spacing-xl space-y-spacing-xl">
       {/* Opening */}
       <div className="text-center space-y-spacing-xs pb-spacing-lg border-b border-border">
-        <p className="text-sm text-primary font-display font-bold">✠ Deus, vinde em meu auxílio.</p>
-        <p className="text-sm text-foreground/70 font-serif italic">℟ Senhor, apressai-vos em socorrer-me.</p>
-        <p className="text-sm text-foreground/70 font-serif italic">Glória ao Pai e ao Filho e ao Espírito Santo.</p>
+        <p className="text-premium-sm text-primary font-display font-bold">✠ Deus, vinde em meu auxílio.</p>
+        <p className="text-premium-sm text-foreground/70 font-serif italic">℟ Senhor, apressai-vos em socorrer-me.</p>
+        <p className="text-premium-sm text-foreground/70 font-serif italic">Glória ao Pai e ao Filho e ao Espírito Santo.</p>
       </div>
 
       {/* Hymn */}
       <div className="space-y-spacing-sm">
-        <h3 className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Hino</h3>
+        <h3 className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Hino</h3>
         <div className="bg-secondary/50 rounded-premium p-spacing-md border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9] italic">{hora.hymn}</p>
         </div>
@@ -129,7 +129,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
       {/* Psalms */}
       <div className="space-y-spacing-sm">
-        <h3 className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Salmodia</h3>
+        <h3 className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Salmodia</h3>
         <div className="space-y-spacing-sm">
           {hora.psalms.map((psalm, i) => (
             <div key={i} className="bg-secondary/30 rounded-premium p-spacing-md border border-border">
@@ -142,7 +142,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
       {/* Reading */}
       {hora.reading && (
         <div className="space-y-spacing-sm">
-          <h3 className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Leitura Breve</h3>
+          <h3 className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Leitura Breve</h3>
           <div className="bg-primary/5 rounded-premium p-spacing-md border border-primary/10">
             <p className="reader-text text-foreground/90 leading-[1.9]">{hora.reading}</p>
           </div>
@@ -151,7 +151,7 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
       {/* Prayer */}
       <div className="space-y-spacing-sm">
-        <h3 className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Oração</h3>
+        <h3 className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground">Oração</h3>
         <div className="bg-secondary/50 rounded-premium p-spacing-md border border-border">
           <p className="reader-text text-foreground/90 leading-[1.9]">{hora.prayer}</p>
         </div>
@@ -159,8 +159,8 @@ const HoraDetail: React.FC<{ hora: HoraInfo; onBack: () => void }> = ({ hora, on
 
       {/* Closing */}
       <div className="text-center pt-spacing-lg border-t border-border space-y-spacing-xs">
-        <p className="text-sm text-primary font-display font-bold">℣ O Senhor nos abençoe e nos guarde de todo mal.</p>
-        <p className="text-sm text-foreground/70 font-serif italic">℟ E nos conduza à vida eterna. Amém.</p>
+        <p className="text-premium-sm text-primary font-display font-bold">℣ O Senhor nos abençoe e nos guarde de todo mal.</p>
+        <p className="text-premium-sm text-foreground/70 font-serif italic">℟ E nos conduza à vida eterna. Amém.</p>
       </div>
     </div>
   </div>
@@ -191,19 +191,19 @@ const BreviaryPage: React.FC = () => {
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.History className="w-spacing-sm h-spacing-sm text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Liturgia Horarum</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-display font-bold text-foreground">Breviário</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-display font-bold text-foreground">Breviário</h1>
         <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto leading-relaxed">
           A Liturgia das Horas santifica cada momento do dia pela oração da Igreja.
         </p>
       </div>
 
       <div className="text-center">
-        <p className="text-xs font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-sm">Hora sugerida agora</p>
+        <p className="text-premium-xs font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-sm">Hora sugerida agora</p>
         <Button
           onClick={() => setSelectedHora(suggestedHora as Hora)}
-          className="px-spacing-lg py-spacing-sm bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-spacing-xs mx-auto"
+          className="px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-spacing-xs mx-auto"
         >
           {HORAS.find(h => h.id === suggestedHora)?.icon} Rezar {HORAS.find(h => h.id === suggestedHora)?.title}
         </Button>
@@ -214,7 +214,7 @@ const BreviaryPage: React.FC = () => {
           <Button
             key={h.id}
             onClick={() => setSelectedHora(h.id)}
-            className={`text-left p-spacing-md rounded-full border transition-all group space-y-spacing-2xs ${
+            className={`text-left p-spacing-md rounded-premium-full border transition-all group space-y-spacing-2xs ${
               h.id === suggestedHora
                 ? 'bg-primary/5 border-primary/30 hover:bg-primary/10'
                 : 'bg-card border-border hover:border-primary/30 hover:bg-primary/5'
@@ -222,13 +222,13 @@ const BreviaryPage: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <span className="opacity-80">{h.icon}</span>
-              <span className="text-xs font-black text-primary tracking-widest">{h.time}</span>
+              <span className="text-premium-xs font-black text-primary tracking-widest">{h.time}</span>
             </div>
-            <h3 className="text-base font-display font-bold text-foreground group-hover:text-primary transition-colors">{h.title}</h3>
-            <p className="text-xs font-serif italic text-muted-foreground">{h.latin}</p>
-            <p className="text-sm text-muted-foreground leading-relaxed">{h.description}</p>
+            <h3 className="text-premium-base font-display font-bold text-foreground group-hover:text-primary transition-colors">{h.title}</h3>
+            <p className="text-premium-xs font-serif italic text-muted-foreground">{h.latin}</p>
+            <p className="text-premium-sm text-muted-foreground leading-relaxed">{h.description}</p>
             {h.id === suggestedHora && (
-              <span className="inline-block font-serif px-spacing-xs py-spacing-3xs rounded text-xs font-black uppercase tracking-wider bg-primary/10 text-primary">
+              <span className="inline-block font-serif px-spacing-xs py-spacing-3xs rounded text-premium-xs font-black uppercase tracking-wider bg-primary/10 text-primary">
                 Hora atual
               </span>
             )}

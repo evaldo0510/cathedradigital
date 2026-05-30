@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-spacing-xs whitespace-nowrap rounded-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-spacing-xs whitespace-nowrap rounded-premium-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
@@ -19,19 +19,19 @@ const buttonVariants = cva(
         outline:
           "border border-primary/10 bg-transparent text-primary hover:bg-primary/[0.02] hover:border-primary/20 hover:-translate-y-0.5",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-md shadow-secondary/10 hover:-translate-y-0.5",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/95 shadow-premium-md shadow-secondary/10 hover:-translate-y-0.5",
         ghost: "hover:bg-primary/[0.02] hover:text-primary text-primary/60",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-spacing-2xl px-spacing-xl text-xs [&_svg]:size-spacing-md",
+        default: "h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md",
         sm: "h-spacing-xl px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
         xs: "h-spacing-xl px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
-        lg: "h-spacing-3xl px-spacing-2xl text-sm [&_svg]:size-spacing-lg",
-        xl: "h-spacing-3xl px-spacing-3xl text-base [&_svg]:size-spacing-lg",
-        icon: "h-spacing-2xl w-spacing-2xl p-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-sm": "h-spacing-xl w-spacing-xl p-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-xs": "h-spacing-xl w-spacing-xl p-0 flex items-center justify-center [&_svg]:size-spacing-sm",
+        lg: "h-spacing-3xl px-spacing-2xl text-premium-sm [&_svg]:size-spacing-lg",
+        xl: "h-spacing-3xl px-spacing-3xl text-premium-base [&_svg]:size-spacing-lg",
+        icon: "h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-sm": "h-spacing-xl w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-xs": "h-spacing-xl w-spacing-xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
       },
     },
     defaultVariants: {

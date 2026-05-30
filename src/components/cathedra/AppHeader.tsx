@@ -33,7 +33,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
     <>
       <header 
         className={cn(
-          "sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]",
+          "sticky top-spacing-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.005]",
           isLanding && !user ? "bg-transparent border-none py-spacing-lg" : "bg-background/20 backdrop-blur-3xl h-spacing-2xl md:h-spacing-3xl"
         )}
         role="banner"
@@ -42,7 +42,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
-            className="flex items-center gap-spacing-xs md:gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-full" 
+            className="flex items-center gap-spacing-xs md:gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-premium-full" 
             role="link" 
             aria-label="Ir para a página inicial do Cathedra"
             tabIndex={0} 
@@ -66,7 +66,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => navigate(-1)}
-                  className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl rounded-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
+                  className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
                   <Icons.ChevronLeft className="w-spacing-md h-spacing-md md:w-spacing-md md:h-spacing-md opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -78,7 +78,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={() => (window as any).dispatchEvent(new CustomEvent('open-command-center'))}
-                  className="w-spacing-lg h-spacing-lg md:w-spacing-2xl md:h-spacing-2xl rounded-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
+                  className="w-spacing-lg h-spacing-lg md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
                   <Icons.Search className="w-spacing-md h-spacing-md md:w-spacing-md md:h-spacing-md opacity-60 group-hover:opacity-100 transition-opacity" />
@@ -88,7 +88,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={onToggleDark}
-                  className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-full hover:bg-primary/[0.03] transition-all duration-300 group hidden md:flex"
+                  className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group hidden md:flex"
                   aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
                 >
                   {isDark ? 
@@ -106,7 +106,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       variant="outline"
                       size="icon"
                       onClick={() => navigate(AppRoute.PROFILE)}
-                      className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
+                      className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
                     >
                       {user.avatar ? (
                         <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
@@ -117,7 +117,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   ) : (
                     <Button 
                       onClick={() => navigate(AppRoute.LOGIN)} 
-                      className="h-spacing-xl md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
+                      className="h-spacing-xl md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-premium-full text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em] md:tracking-[0.3em] bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-premium shadow-primary/10"
                     >
                       {t('enter')}
                     </Button>
@@ -147,7 +147,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   >
                     {item.label}
                     {pathname === item.route && (
-                      <motion.div layoutId="nav-active" className="absolute -bottom-spacing-2xs left-spacing-2xs/2 -translate-x-1/2 w-spacing-2xs h-spacing-2xs rounded-full bg-primary" />
+                      <motion.div layoutId="nav-active" className="absolute -bottom-spacing-2xs left-spacing-2xs/2 -translate-x-1/2 w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary" />
                     )}
                   </Button>
                 ))}

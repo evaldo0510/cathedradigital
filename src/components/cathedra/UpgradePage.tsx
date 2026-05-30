@@ -74,7 +74,7 @@ const UpgradePage: React.FC = () => {
       </Helmet>
 
       {/* Decorative background elements */}
-      <div className="absolute top-0 left-spacing-2xs/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
+      <div className="absolute top-spacing-0 left-spacing-2xs/2 -translate-x-1/2 w-full h-full -z-10 pointer-events-none opacity-20">
         <div className="absolute top-[10%] left-spacing-2xs/4 w-spacing-4xl h-spacing-4xl bg-primary/20 rounded-premium " />
         <div className="absolute bottom-[20%] right-spacing-2xs/4 w-spacing-4xl h-spacing-4xl bg-primary/10 rounded-premium " />
       </div>
@@ -89,7 +89,7 @@ const UpgradePage: React.FC = () => {
         >
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 border border-primary/20 rounded-premium text-primary">
             <Crown className="w-spacing-md h-spacing-md" />
-            <span className="text-xs font-black uppercase tracking-widest">Cathedra PRO</span>
+            <span className="text-premium-xs font-black uppercase tracking-widest">Cathedra PRO</span>
           </div>
         </motion.div>
 
@@ -100,10 +100,10 @@ const UpgradePage: React.FC = () => {
           custom={1}
           className="space-y-spacing-md"
         >
-          <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight text-balance">
+          <h1 className="text-premium-4xl md:text-6xl font-display font-bold tracking-tight text-balance">
             Sua caminhada de fé merece <span className="text-primary italic">profundidade</span>.
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
+          <p className="text-premium-lg md:text-premium-xl text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
             O Cathedra PRO foi desenhado para quem deseja ir além do essencial e vivenciar a plenitude da nossa tradição.
           </p>
         </motion.div>
@@ -120,8 +120,8 @@ const UpgradePage: React.FC = () => {
               <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-md group-hover:scale-110 transition-transform duration-500">
                 <benefit.icon className="w-spacing-md h-spacing-md" />
               </div>
-              <h3 className="font-bold text-lg mb-spacing-2xs">{benefit.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
+              <h3 className="font-bold text-premium-lg mb-spacing-2xs">{benefit.title}</h3>
+              <p className="text-premium-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
             </div>
           ))}
         </motion.div>
@@ -135,7 +135,7 @@ const UpgradePage: React.FC = () => {
         >
           <Button 
             size="lg"
-            className="h-spacing-3xl px-spacing-xl rounded-full text-lg font-bold bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
+            className="h-spacing-3xl px-spacing-xl rounded-premium-full text-premium-lg font-bold bg-primary text-primary-foreground shadow-premium-hover shadow-primary/30 hover:shadow-primary/50 transition-all duration-500 group"
             onClick={() => navigate(AppRoute.CHECKOUT)}
             disabled={isPremium}
           >
@@ -149,7 +149,7 @@ const UpgradePage: React.FC = () => {
             )}
           </Button>
           
-          <div className="flex items-center gap-spacing-lg text-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
+          <div className="flex items-center gap-spacing-lg text-premium-xs font-medium text-muted-foreground/60 tracking-widest uppercase">
             <span>Acesso Imediato</span>
             <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-border" />
             <span>Cancele quando quiser</span>
@@ -168,8 +168,8 @@ const UpgradePage: React.FC = () => {
               <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mb-spacing-xs">
                 <FlaskConical className="w-spacing-lg h-spacing-lg" />
               </div>
-              <h3 className="text-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
-              <p className="text-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm">
+              <h3 className="text-premium-xl font-serif font-bold italic">Zona de Testes (Admin)</h3>
+              <p className="text-premium-sm text-muted-foreground font-serif italic mb-spacing-md max-w-spacing-sm">
                 Como administrador, você pode simular o checkout e o retorno do Mercado Pago para validar o fluxo de liberação PRO.
               </p>
               <div className="flex flex-wrap justify-center gap-spacing-sm">
@@ -177,14 +177,14 @@ const UpgradePage: React.FC = () => {
                   variant="outline"
                   onClick={simulatePayment}
                   disabled={isSimulating || isPremium}
-                  className="rounded-full border-primary/30 text-primary hover:bg-primary/5 h-spacing-2xl px-spacing-lg font-bold"
+                  className="rounded-premium-full border-primary/30 text-primary hover:bg-primary/5 h-spacing-2xl px-spacing-lg font-bold"
                 >
                   {isSimulating ? 'Processando...' : isPremium ? '✓ Já é PRO' : 'Simular Aprovação (Webhook)'}
                 </Button>
                 <Button 
                   variant="ghost"
                   onClick={() => navigate(AppRoute.TRANSACTIONS)}
-                  className="rounded-full h-spacing-2xl px-spacing-lg font-bold"
+                  className="rounded-premium-full h-spacing-2xl px-spacing-lg font-bold"
                 >
                   Ver Histórico de Transações
                 </Button>

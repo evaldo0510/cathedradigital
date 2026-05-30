@@ -54,28 +54,28 @@ const FeedbackWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-spacing-3xl right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-full p-spacing-lg overflow-hidden"
+            className="absolute bottom-spacing-3xl right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-premium-full p-spacing-lg overflow-hidden"
           >
             {submitted ? (
               <div className="text-center py-spacing-xl space-y-spacing-md">
                 <div className="w-spacing-3xl h-spacing-3xl bg-primary/10 rounded-premium flex items-center justify-center mx-auto">
                   <Send className="w-spacing-xl h-spacing-xl text-primary" />
                 </div>
-                <h3 className="text-xl font-serif font-bold">Obrigado!</h3>
-                <p className="text-sm text-muted-foreground font-serif italic">
+                <h3 className="text-premium-xl font-serif font-bold">Obrigado!</h3>
+                <p className="text-premium-sm text-muted-foreground font-serif italic">
                   Seu feedback é precioso para construirmos o Cathedra juntos.
                 </p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-spacing-md">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-serif font-bold text-lg">Deixe seu feedback</h3>
+                  <h3 className="font-serif font-bold text-premium-lg">Deixe seu feedback</h3>
                   <Button type="button" onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
                     <X className="w-spacing-md h-spacing-md" />
                   </Button>
                 </div>
                 
-                <p className="text-xs text-muted-foreground font-serif italic mb-spacing-md">
+                <p className="text-premium-xs text-muted-foreground font-serif italic mb-spacing-md">
                   Como podemos tornar o Cathedra mais acolhedor para você?
                 </p>
 
@@ -96,13 +96,13 @@ const FeedbackWidget = () => {
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder="O que você achou do projeto? O que falta para você começar a usar?"
-                  className="w-full h-spacing-4xl px-spacing-md py-spacing-sm rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
+                  className="w-full h-spacing-4xl px-spacing-md py-spacing-sm rounded-premium-full border border-border bg-background text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none font-serif"
                 />
 
                 <Button 
                   type="submit" 
                   disabled={isSubmitting || (!feedback && rating === 0)}
-                  className="w-full rounded-full font-bold uppercase tracking-widest text-xs h-spacing-2xl"
+                  className="w-full rounded-premium-full font-bold uppercase tracking-widest text-premium-xs h-spacing-2xl"
                 >
                   {isSubmitting ? 'Enviando...' : 'Enviar Feedback'}
                 </Button>
@@ -116,7 +116,7 @@ const FeedbackWidget = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-full shadow-premium-hover font-bold uppercase tracking-widest text-xs min-w-0"
+        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-background border border-border text-foreground rounded-premium-full shadow-premium-hover font-bold uppercase tracking-widest text-premium-xs min-w-0"
       >
         <MessageSquare className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Feedback'}</span>

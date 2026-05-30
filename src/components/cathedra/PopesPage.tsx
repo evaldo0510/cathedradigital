@@ -178,9 +178,9 @@ const PopesPage: React.FC = () => {
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">Os Papas</h1>
+        <h1 className="text-premium-4xl md:text-premium-5xl font-serif font-bold text-foreground">Os Papas</h1>
         <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
       </div>
 
@@ -190,7 +190,7 @@ const PopesPage: React.FC = () => {
           placeholder="Buscar Papa..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-spacing-xl bg-muted/50 border-border/50 rounded-full"
+          className="pl-spacing-xl bg-muted/50 border-border/50 rounded-premium-full"
         />
       </div>
 
@@ -213,26 +213,26 @@ const PopesPage: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   <div className="absolute bottom-spacing-md left-spacing-md right-spacing-md">
                     <div className="flex items-center justify-between mb-spacing-2xs">
-                      <h3 className="text-xl font-serif font-bold text-white">{pope.name}</h3>
+                      <h3 className="text-premium-xl font-serif font-bold text-white">{pope.name}</h3>
                       {pope.isSaint && (
-                        <Badge variant="outline" className="text-xs bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
+                        <Badge variant="outline" className="text-premium-xs bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
                       )}
                     </div>
-                    <p className="text-white/80 text-xs font-serif italic">{pope.title}</p>
+                    <p className="text-white/80 text-premium-xs font-serif italic">{pope.title}</p>
                   </div>
                 </div>
 
                 <CardContent className="p-spacing-md flex-1 flex flex-col space-y-spacing-md">
-                  <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-primary">
+                  <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-primary">
                     <Calendar className="w-spacing-sm h-spacing-sm" /> {pope.reign}
                   </div>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed font-serif">
+                  <p className="text-premium-sm text-muted-foreground leading-relaxed font-serif">
                     {pope.bio}
                   </p>
 
                   <div className="space-y-spacing-xs flex-1">
-                    <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                    <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
                       <Scroll className="w-spacing-sm h-spacing-sm" /> Legado Principal
                     </div>
                     <ul className="space-y-spacing-2xs">
@@ -247,8 +247,8 @@ const PopesPage: React.FC = () => {
 
                   {pope.motto && (
                     <div className="pt-spacing-md border-t border-border/50 text-center">
-                      <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-2xs">Lema</p>
-                      <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
+                      <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-2xs">Lema</p>
+                      <p className="text-premium-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}
                 </CardContent>

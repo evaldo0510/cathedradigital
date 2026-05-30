@@ -72,18 +72,18 @@ const StudyJournal: React.FC = () => {
   return (
     <div className="space-y-spacing-xl animate-in fade-in duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
-        <div className="flex bg-muted/30 p-spacing-2xs rounded-full border border-border/10">
+        <div className="flex bg-muted/30 p-spacing-2xs rounded-premium-full border border-border/10">
           <Button
             variant={activeTab === 'notes' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('notes')}
-            className={`rounded-full px-spacing-lg h-spacing-xl ${activeTab === 'notes' ? 'shadow-premium' : ''}`}
+            className={`rounded-premium-full px-spacing-lg h-spacing-xl ${activeTab === 'notes' ? 'shadow-premium' : ''}`}
           >
             Anotações ({allNotes.length})
           </Button>
           <Button
             variant={activeTab === 'marks' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('marks')}
-            className={`rounded-full px-spacing-lg h-spacing-xl ${activeTab === 'marks' ? 'shadow-premium' : ''}`}
+            className={`rounded-premium-full px-spacing-lg h-spacing-xl ${activeTab === 'marks' ? 'shadow-premium' : ''}`}
           >
             Marcas ({marks.filter(m => !m.is_last_read).length})
           </Button>
@@ -95,7 +95,7 @@ const StudyJournal: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Pesquisar..."
-            className="pl-spacing-xl rounded-full border-border/20 bg-muted/10 focus-visible:ring-primary/20"
+            className="pl-spacing-xl rounded-premium-full border-border/20 bg-muted/10 focus-visible:ring-primary/20"
           />
         </div>
       </div>
@@ -166,16 +166,16 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-spacing-sm">
-          <div className="px-spacing-xs py-spacing-2xs rounded-full bg-primary/5 text-[9px] font-black uppercase tracking-widest text-primary">
+          <div className="px-spacing-xs py-spacing-2xs rounded-premium-full bg-primary/5 text-[9px] font-black uppercase tracking-widest text-primary">
             {note.content_type}
           </div>
-          <span className="text-xs font-bold text-muted-foreground">{note.content_id}</span>
+          <span className="text-premium-xs font-bold text-muted-foreground">{note.content_id}</span>
         </div>
         <div className="flex gap-spacing-2xs opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-full" onClick={() => setIsEditing(!isEditing)}>
+          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full" onClick={() => setIsEditing(!isEditing)}>
             <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-full text-destructive" onClick={() => onDelete(note)}>
+          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full text-destructive" onClick={() => onDelete(note)}>
             <Icons.Trash className="w-spacing-sm h-spacing-sm" />
           </Button>
         </div>
@@ -186,7 +186,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           <textarea
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
-            className="w-full bg-muted/10 rounded-premium p-spacing-md text-sm font-serif leading-relaxed border-none focus:ring-1 focus:ring-primary/20 resize-none"
+            className="w-full bg-muted/10 rounded-premium p-spacing-md text-premium-sm font-serif leading-relaxed border-none focus:ring-1 focus:ring-primary/20 resize-none"
             rows={4}
           />
           <div className="flex justify-end gap-spacing-xs">
@@ -195,7 +195,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           </div>
         </div>
       ) : (
-        <p className="text-sm md:text-base font-serif italic leading-relaxed text-primary/80">
+        <p className="text-premium-sm md:text-premium-base font-serif italic leading-relaxed text-primary/80">
           "{note.note_text}"
         </p>
       )}
@@ -222,12 +222,12 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
     className="bg-muted/10 border border-border/10 rounded-premium p-spacing-lg space-y-spacing-md hover:bg-muted/20 transition-all group relative overflow-hidden"
   >
     <div className="flex items-center gap-spacing-sm">
-      <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/5 flex items-center justify-center text-primary">
+      <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary">
         <Icons.Bookmark className="w-spacing-md h-spacing-md" />
       </div>
       <div className="min-w-0">
         <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-spacing-3xs">{mark.content_type}</p>
-        <h4 className="text-sm font-bold truncate">{mark.label || mark.content_id}</h4>
+        <h4 className="text-premium-sm font-bold truncate">{mark.label || mark.content_id}</h4>
       </div>
     </div>
 
@@ -236,10 +236,10 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
         {format(new Date(mark.created_at), "dd/MM/yyyy")}
       </span>
       <div className="flex gap-spacing-xs">
-        <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-full text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={onDelete}>
+        <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={onDelete}>
           <Icons.Trash className="w-spacing-sm h-spacing-sm" />
         </Button>
-        <Button size="sm" className="h-spacing-xl rounded-full text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
+        <Button size="sm" className="h-spacing-xl rounded-premium-full text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
           Continuar
         </Button>
       </div>

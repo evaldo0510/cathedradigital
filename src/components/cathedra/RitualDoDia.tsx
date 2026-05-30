@@ -224,7 +224,7 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-spacing-2xs md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-spacing-2xs md:pt-0">
+      <div className="relative z-10 p-spacing-2xs md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-spacing-2xs md:pt-spacing-0">
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-xs md:gap-spacing-2xl pb-spacing-xs md:pb-spacing-2xl">
           <div className="flex flex-col gap-spacing-xs md:gap-spacing-md">
@@ -234,7 +234,7 @@ const RitualDoDia: React.FC = () => {
             <div className="flex items-center gap-spacing-lg md:gap-spacing-xl">
               {progress > 0 && (
                 <div className="flex items-center gap-spacing-md md:gap-spacing-md">
-                  <div className="h-spacing-2xs w-spacing-4xl md:w-spacing-4xl bg-primary/[0.03] rounded-full overflow-hidden">
+                  <div className="h-spacing-2xs w-spacing-4xl md:w-spacing-4xl bg-primary/[0.03] rounded-premium-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progress}%` }}
@@ -251,7 +251,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className={cn("w-spacing-xl h-spacing-xl p-0 rounded-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
+              className={cn("w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full transition-colors", isSilent ? 'text-primary' : 'text-primary/60 hover:text-primary')}
               onClick={() => updateSettings(!isSilent, reminderTime)}
             >
               {isSilent ? <VolumeX className="w-spacing-md h-spacing-md" strokeWidth={1.2} /> : <Sparkles className="w-spacing-md h-spacing-md" strokeWidth={1} />}
@@ -260,7 +260,7 @@ const RitualDoDia: React.FC = () => {
             <CathedraButton 
               variant="ghost" 
               size="sm" 
-              className="w-spacing-xl h-spacing-xl p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
+              className="w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full text-primary/60 hover:text-primary transition-colors"
               onClick={exportPDF}
             >
               <Download className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
@@ -271,20 +271,20 @@ const RitualDoDia: React.FC = () => {
                 <CathedraButton 
                   variant="ghost" 
                   size="sm" 
-                  className="w-spacing-xl h-spacing-xl p-0 rounded-full text-primary/60 hover:text-primary transition-colors"
+                  className="w-spacing-xl h-spacing-xl p-spacing-0 rounded-premium-full text-primary/60 hover:text-primary transition-colors"
                 >
                   <Settings2 className="w-spacing-md h-spacing-md" strokeWidth={1.2} />
                 </CathedraButton>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] border-primary/5 bg-card/95 backdrop-blur-xl shadow-premium rounded-[2.5rem] dark:border-primary/20">
                 <DialogHeader>
-                  <DialogTitle className="font-display text-3xl text-primary">Configurações</DialogTitle>
+                  <DialogTitle className="font-display text-premium-3xl text-primary">Configurações</DialogTitle>
                 </DialogHeader>
                 <div className="grid gap-spacing-xl py-spacing-xl">
                   <div className="flex items-center justify-between">
                     <div className="space-y-spacing-2xs">
                       <Label className="text-[10px] font-bold uppercase tracking-widest text-primary/60">Modo Silencioso</Label>
-                      <p className="text-xs text-muted-foreground/40 font-serif italic">Foco absoluto na leitura.</p>
+                      <p className="text-premium-xs text-muted-foreground/40 font-serif italic">Foco absoluto na leitura.</p>
                     </div>
                     <Switch 
                       checked={isSilent} 
@@ -301,7 +301,7 @@ const RitualDoDia: React.FC = () => {
                         type="time" 
                         value={reminderTime}
                         onChange={(e) => setReminderTime(e.target.value)}
-                        className="font-mono text-sm border-primary/10 bg-background/50 rounded-full h-spacing-2xl px-spacing-lg focus:ring-1 focus:ring-primary/20"
+                        className="font-mono text-premium-sm border-primary/10 bg-background/50 rounded-premium-full h-spacing-2xl px-spacing-lg focus:ring-1 focus:ring-primary/20"
                       />
                       <CathedraButton 
                         onClick={() => updateSettings(isSilent, reminderTime)}
@@ -333,7 +333,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-[16px] md:text-4xl lg:text-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-spacing-md md:px-spacing-xs transition-all duration-[2000ms] group-hover:text-primary">
+              <blockquote className="text-[16px] md:text-premium-4xl lg:text-premium-5xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-spacing-md md:px-spacing-xs transition-all duration-[2000ms] group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-spacing-md md:mt-spacing-lg text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
@@ -353,7 +353,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-[14px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-spacing-md transition-colors duration-[2000ms]">
+              <p className="text-[14px] md:text-premium-2xl lg:text-premium-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-spacing-md transition-colors duration-[2000ms]">
                 {ritual.reflection}
               </p>
             </button>
@@ -371,7 +371,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(75)}
                 aria-label={`Trecho do Catecismo. Clique para marcar como lido.`}
               >
-                <p className="text-[12px] md:text-xl lg:text-2xl leading-relaxed text-foreground/70 font-serif tracking-tight selection:bg-primary/5 px-spacing-xs">
+                <p className="text-[12px] md:text-premium-xl lg:text-premium-2xl leading-relaxed text-foreground/70 font-serif tracking-tight selection:bg-primary/5 px-spacing-xs">
                   {ritual?.catechism?.text || ''}
                 </p>
                 <p className="mt-spacing-xl md:mt-spacing-xl text-[8px] md:text-[9px] font-bold text-primary/40 uppercase tracking-[0.6em]">
@@ -391,7 +391,7 @@ const RitualDoDia: React.FC = () => {
                 onClick={() => handleProgress(100)}
                 aria-label={`Oração do dia. Clique para marcar como concluída.`}
               >
-                <p className="text-[16px] md:text-3xl lg:text-4xl leading-tight text-primary/80 font-serif italic selection:bg-primary/5">
+                <p className="text-[16px] md:text-premium-3xl lg:text-premium-4xl leading-tight text-primary/80 font-serif italic selection:bg-primary/5">
                   {ritual?.prayer || ''}
                 </p>
               </button>
@@ -444,7 +444,7 @@ const RitualDoDia: React.FC = () => {
               </CathedraButton>
             )}
             {progress === 100 && (
-              <div className="flex items-center gap-spacing-sm text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-spacing-xl py-spacing-md bg-primary/[0.01] rounded-full border border-primary/5 shadow-sm">
+              <div className="flex items-center gap-spacing-sm text-primary/60 font-bold uppercase tracking-[0.5em] text-[10px] px-spacing-xl py-spacing-md bg-primary/[0.01] rounded-premium-full border border-primary/5 shadow-premium-sm">
                 <CheckCircle2 className="w-spacing-md h-spacing-md" />
                 Concluído
               </div>

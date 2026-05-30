@@ -287,8 +287,8 @@ const UserTransactionsPage: React.FC = () => {
             <Icons.History className="w-spacing-lg h-spacing-lg" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições</p>
+            <h1 className="text-premium-2xl font-black text-foreground">Minhas Doações</h1>
+            <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-bold">Histórico de contribuições</p>
           </div>
         </div>
         
@@ -296,7 +296,7 @@ const UserTransactionsPage: React.FC = () => {
           variant="outline" 
           size="sm" 
           onClick={handleExportPDF}
-          className="gap-spacing-xs font-bold uppercase text-xs tracking-widest rounded-full"
+          className="gap-spacing-xs font-bold uppercase text-premium-xs tracking-widest rounded-premium-full"
         >
           <Icons.Download className="w-spacing-md h-spacing-md" /> Exportar PDF
         </Button>
@@ -309,17 +309,17 @@ const UserTransactionsPage: React.FC = () => {
             placeholder="Buscar por ID ou valor..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-spacing-xl bg-muted/50 border-border/50 focus:bg-background transition-all rounded-full"
+            className="pl-spacing-xl bg-muted/50 border-border/50 focus:bg-background transition-all rounded-premium-full"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="bg-muted/50 border-border/50 rounded-full">
+          <SelectTrigger className="bg-muted/50 border-border/50 rounded-premium-full">
             <div className="flex items-center gap-spacing-xs">
               <Icons.Filter className="w-spacing-md h-spacing-md text-muted-foreground" />
               <SelectValue placeholder="Status" />
             </div>
           </SelectTrigger>
-          <SelectContent className="rounded-full">
+          <SelectContent className="rounded-premium-full">
             <SelectItem value="all">Todos os Status</SelectItem>
             <SelectItem value="approved">Aprovados</SelectItem>
             <SelectItem value="pending">Pendentes</SelectItem>
@@ -351,7 +351,7 @@ const UserTransactionsPage: React.FC = () => {
             <Icons.Heart className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60" />
             <div className="text-center">
               <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
-              <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
+              <p className="text-premium-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
             </div>
           </CardContent>
         </Card>
@@ -365,15 +365,15 @@ const UserTransactionsPage: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
             >
               <Card className="overflow-hidden border-border/50 hover:border-primary/30 transition-all">
-                <CardContent className="p-0">
+                <CardContent className="p-spacing-0">
                   <div className="p-spacing-md md:p-spacing-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-spacing-md">
                     <div className="flex items-center gap-spacing-md">
-                      <div className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                      <div className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                         {tx.is_donation ? <Icons.Heart className="w-spacing-md h-spacing-md fill-current" /> : <Icons.Star className="w-spacing-md h-spacing-md fill-current" />}
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-foreground">{tx.description || (tx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-premium-sm font-bold text-foreground">{tx.description || (tx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</p>
+                        <p className="text-premium-xs text-muted-foreground">
                           {format(new Date(tx.created_at), "dd 'de' MMMM 'de' yyyy, HH:mm", { locale: ptBR })}
                         </p>
                       </div>
@@ -381,35 +381,35 @@ const UserTransactionsPage: React.FC = () => {
 
                     <div className="flex items-center justify-between w-full md:w-auto gap-spacing-lg">
                       <div className="text-right">
-                        <p className="text-lg font-black text-foreground">
+                        <p className="text-premium-lg font-black text-foreground">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
                         </p>
-                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter">Valor</p>
+                        <p className="text-premium-xs text-muted-foreground uppercase font-bold tracking-tighter">Valor</p>
                       </div>
                       <div className="flex flex-col items-end gap-spacing-2xs">
                         {getStatusBadge(tx.status)}
                         {tx.payment_id && (
-                          <p className="text-xs font-mono text-muted-foreground">ID: {tx.payment_id}</p>
+                          <p className="text-premium-xs font-mono text-muted-foreground">ID: {tx.payment_id}</p>
                         )}
                       </div>
                     </div>
                   </div>
                   
                   <div className="bg-muted/30 px-spacing-md md:px-spacing-lg py-spacing-xs border-t border-border/50 flex justify-between items-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                    <span className="text-premium-xs font-bold text-muted-foreground uppercase tracking-widest">
                       {tx.status === 'approved' ? 'Comprovante disponível' : 'Histórico da transação'}
                     </span>
                     <div className="flex gap-spacing-xs">
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-spacing-lg text-xs font-bold uppercase gap-spacing-2xs" 
+                        className="h-spacing-lg text-premium-xs font-bold uppercase gap-spacing-2xs" 
                         onClick={() => setSelectedTx(tx)}
                       >
                         <Icons.Info className="w-spacing-sm h-spacing-sm" /> Detalhes
                       </Button>
                       {tx.status === 'approved' && (
-                        <Button variant="ghost" size="sm" className="h-spacing-lg text-xs font-bold uppercase gap-spacing-2xs" onClick={() => window.print()}>
+                        <Button variant="ghost" size="sm" className="h-spacing-lg text-premium-xs font-bold uppercase gap-spacing-2xs" onClick={() => window.print()}>
                           <Icons.Download className="w-spacing-sm h-spacing-sm" /> Imprimir
                         </Button>
                       )}
@@ -428,12 +428,12 @@ const UserTransactionsPage: React.FC = () => {
 
           {error && transactions.length > 0 && (
             <div className="p-spacing-md rounded-premium bg-destructive/5 border border-destructive/10 text-center space-y-spacing-sm mt-spacing-md">
-              <p className="text-xs text-destructive font-medium">{error}</p>
+              <p className="text-premium-xs text-destructive font-medium">{error}</p>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => fetchTransactions(page)}
-                className="h-spacing-xl text-xs uppercase font-bold text-destructive hover:bg-destructive/10"
+                className="h-spacing-xl text-premium-xs uppercase font-bold text-destructive hover:bg-destructive/10"
               >
                 Tentar novamente
               </Button>
@@ -451,7 +451,7 @@ const UserTransactionsPage: React.FC = () => {
                   setPage(nextPage);
                   fetchTransactions(nextPage);
                 }}
-                className="text-xs uppercase font-bold text-muted-foreground hover:text-primary"
+                className="text-premium-xs uppercase font-bold text-muted-foreground hover:text-primary"
               >
                 Carregar mais
               </Button>
@@ -475,13 +475,13 @@ const UserTransactionsPage: React.FC = () => {
           onPointerDownOutside={() => setSelectedTx(null)}
         >
           <DialogHeader>
-            <DialogTitle className="font-serif text-xl flex items-center gap-spacing-sm">
-              <div className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+            <DialogTitle className="font-serif text-premium-xl flex items-center gap-spacing-sm">
+              <div className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
                 {selectedTx?.is_donation ? <Icons.Heart className="w-spacing-md h-spacing-md fill-current" /> : <Icons.Star className="w-spacing-md h-spacing-md fill-current" />}
               </div>
               Detalhes da Transação
             </DialogTitle>
-            <DialogDescription className="text-xs uppercase tracking-widest font-bold pt-spacing-xs">
+            <DialogDescription className="text-premium-xs uppercase tracking-widest font-bold pt-spacing-xs">
               Informações completas do seu apoio
             </DialogDescription>
           </DialogHeader>
@@ -490,12 +490,12 @@ const UserTransactionsPage: React.FC = () => {
             <div className="space-y-spacing-lg pt-spacing-md">
               <div className="grid grid-cols-2 gap-spacing-md">
                 <div className="space-y-spacing-2xs">
-                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Status</p>
+                  <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Status</p>
                   {getStatusBadge(selectedTx.status)}
                 </div>
                 <div className="space-y-spacing-2xs text-right">
-                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Valor</p>
-                  <p className="text-xl font-black text-foreground">
+                  <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Valor</p>
+                  <p className="text-premium-xl font-black text-foreground">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(selectedTx.amount)}
                   </p>
                 </div>
@@ -503,20 +503,20 @@ const UserTransactionsPage: React.FC = () => {
 
               <div className="space-y-spacing-sm bg-muted/30 p-spacing-md rounded-premium border border-border/50">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase">Descrição</span>
-                  <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
+                  <span className="text-premium-xs font-bold text-muted-foreground uppercase">Descrição</span>
+                  <span className="text-premium-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-muted-foreground uppercase">Data</span>
-                  <span className="text-xs font-medium text-foreground">
+                  <span className="text-premium-xs font-bold text-muted-foreground uppercase">Data</span>
+                  <span className="text-premium-xs font-medium text-foreground">
                     {format(new Date(selectedTx.created_at), "dd/MM/yyyy, HH:mm", { locale: ptBR })}
                   </span>
                 </div>
                 {selectedTx.payment_id && (
                   <div className="flex justify-between items-center group">
-                    <span className="text-xs font-bold text-muted-foreground uppercase">ID Pagamento</span>
+                    <span className="text-premium-xs font-bold text-muted-foreground uppercase">ID Pagamento</span>
                     <div className="flex items-center gap-spacing-xs">
-                      <span className="text-xs font-mono text-foreground">{selectedTx.payment_id}</span>
+                      <span className="text-premium-xs font-mono text-foreground">{selectedTx.payment_id}</span>
                       <Button 
                         variant="ghost" 
                         size="icon" 
@@ -531,8 +531,8 @@ const UserTransactionsPage: React.FC = () => {
                 )}
                 {selectedTx.coupon_code && (
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-muted-foreground uppercase">Cupom</span>
-                    <Badge variant="outline" className="text-xs font-mono">{selectedTx.coupon_code}</Badge>
+                    <span className="text-premium-xs font-bold text-muted-foreground uppercase">Cupom</span>
+                    <Badge variant="outline" className="text-premium-xs font-mono">{selectedTx.coupon_code}</Badge>
                   </div>
                 )}
               </div>
@@ -542,14 +542,14 @@ const UserTransactionsPage: React.FC = () => {
                   <div className="p-spacing-md rounded-premium bg-green-500/5 border border-green-500/10 flex items-center gap-spacing-sm">
                     <Icons.CheckCircle className="w-spacing-md h-spacing-md text-green-500" />
                     <div>
-                      <p className="text-xs font-black uppercase text-green-600">Aprovado</p>
-                      <p className="text-xs text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
+                      <p className="text-premium-xs font-black uppercase text-green-600">Aprovado</p>
+                      <p className="text-premium-xs text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
                     </div>
                   </div>
                   
                   <Button 
                     variant="link" 
-                    className="w-full text-xs font-bold uppercase tracking-widest text-primary gap-spacing-xs h-auto p-0"
+                    className="w-full text-premium-xs font-bold uppercase tracking-widest text-primary gap-spacing-xs h-auto p-spacing-0"
                     onClick={() => window.print()}
                   >
                     <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" /> Ver Comprovante
@@ -559,15 +559,15 @@ const UserTransactionsPage: React.FC = () => {
 
               {selectedTx.error_message && (
                 <div className="p-spacing-md rounded-premium bg-destructive/5 border border-destructive/10">
-                  <p className="text-xs font-black uppercase text-destructive mb-spacing-2xs">Motivo do Problema</p>
-                  <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
+                  <p className="text-premium-xs font-black uppercase text-destructive mb-spacing-2xs">Motivo do Problema</p>
+                  <p className="text-premium-xs text-destructive/80 italic">{selectedTx.error_message}</p>
                 </div>
               )}
 
               <div className="flex gap-spacing-sm">
                 <DialogClose asChild>
                   <Button 
-                    className="flex-1 rounded-full font-bold uppercase text-xs tracking-widest" 
+                    className="flex-1 rounded-premium-full font-bold uppercase text-premium-xs tracking-widest" 
                     autoFocus
                   >
                     Fechar
@@ -576,7 +576,7 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
-                    className="flex-1 rounded-full font-bold uppercase text-xs tracking-widest gap-spacing-xs"
+                    className="flex-1 rounded-premium-full font-bold uppercase text-premium-xs tracking-widest gap-spacing-xs"
                     onClick={() => window.print()}
                   >
                     <Icons.Download className="w-spacing-sm h-spacing-sm" /> Imprimir

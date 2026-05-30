@@ -50,7 +50,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30">
               Cathedra Digital
             </p>
-            <h1 className="text-3xl md:text-6xl font-display font-light text-primary tracking-tight">
+            <h1 className="text-premium-3xl md:text-6xl font-display font-light text-primary tracking-tight">
               {profile?.name ? `Salve, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
             </h1>
           </header>

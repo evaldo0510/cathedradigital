@@ -18,7 +18,7 @@ const TestimonialsSection = () => {
     <section className="w-full section-spacing relative overflow-hidden bg-background">
       <div className="app-container space-y-spacing-3xl relative z-10">
         <div className="text-center space-y-spacing-lg">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
+          <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
           <h2 className="font-display font-bold">Vozes da Comunidade</h2>
         </div>
 
@@ -29,7 +29,7 @@ const TestimonialsSection = () => {
               className="p-spacing-xl space-y-spacing-xl flex flex-col"
             >
               <Quote className="w-spacing-lg h-spacing-lg text-secondary/20" />
-              <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
+              <p className="text-premium-base text-muted-foreground leading-relaxed font-serif flex-1">
                 "{t.text}"
               </p>
 
@@ -39,7 +39,7 @@ const TestimonialsSection = () => {
                 </div>
                 <div>
                   <p className="font-bold text-premium-small">{t.name}</p>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
+                  <p className="text-premium-xs text-muted-foreground uppercase tracking-wider font-bold">{t.role}</p>
                 </div>
               </div>
             </CathedraCard>

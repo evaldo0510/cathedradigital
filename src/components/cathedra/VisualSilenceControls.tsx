@@ -63,7 +63,7 @@ export const VisualSilenceControls: React.FC = () => {
           <div className="flex flex-col gap-spacing-md">
             <control.icon className={`w-spacing-lg h-spacing-lg ${control.active ? 'text-primary-foreground' : 'text-primary/40'}`} strokeWidth={1.5} />
             <div className="space-y-spacing-2xs">
-              <span className="text-xs font-bold uppercase tracking-widest block">
+              <span className="text-premium-xs font-bold uppercase tracking-widest block">
                 {control.label}
               </span>
               <p className={`text-[10px] leading-relaxed ${control.active ? 'text-primary-foreground/60' : 'text-muted-foreground/60'}`}>
@@ -75,7 +75,7 @@ export const VisualSilenceControls: React.FC = () => {
           {control.active && (
             <motion.div 
               layoutId="active-dot"
-              className="absolute top-spacing-md right-spacing-md w-spacing-2xs h-spacing-2xs rounded-full bg-secondary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+              className="absolute top-spacing-md right-spacing-md w-spacing-2xs h-spacing-2xs rounded-premium-full bg-secondary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
             />
           )}
         </motion.button>

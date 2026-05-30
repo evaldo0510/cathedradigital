@@ -69,7 +69,7 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
     <Popover onOpenChange={(open) => open && fetchVerses()}>
       <PopoverTrigger asChild>
         <Button
-          className="px-spacing-xs py-spacing-2xs rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+          className="px-spacing-xs py-spacing-2xs rounded-premium-full bg-card border border-border text-premium-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"
         >
           {label}
         </Button>
@@ -77,18 +77,18 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
       <PopoverContent
         side="top"
         align="start"
-        className="w-spacing-4xl max-h-spacing-4xl overflow-y-auto p-0 rounded-premium border-primary/20 bg-card shadow-premium"
+        className="w-spacing-4xl max-h-spacing-4xl overflow-y-auto p-spacing-0 rounded-premium border-primary/20 bg-card shadow-premium"
       >
         <div className="p-spacing-sm border-b border-border bg-primary/5 flex items-center justify-between">
           <div className="flex items-center gap-spacing-xs">
             <Icons.Book className="w-spacing-sm h-spacing-sm text-primary" />
-            <span className="text-xs font-black uppercase tracking-wider text-primary">
+            <span className="text-premium-xs font-black uppercase tracking-wider text-primary">
               {label}
             </span>
           </div>
           <Button
             onClick={handleNavigate}
-            className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
+            className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
           >
             {verse ? `Ir ao versículo ${verse}` : 'Abrir completo'}
             <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
@@ -105,20 +105,20 @@ const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
           {!loading && verses.length > 0 && (
             <>
               {verses.map(v => (
-                <p key={v.number} className="text-xs leading-relaxed text-foreground/90">
+                <p key={v.number} className="text-premium-xs leading-relaxed text-foreground/90">
                   <sup className="text-primary font-bold mr-spacing-2xs">{v.number}</sup>
                   {v.text}
                 </p>
               ))}
               {!verse && (
-                <p className="text-xs text-muted-foreground italic pt-spacing-2xs border-t border-border">
+                <p className="text-premium-xs text-muted-foreground italic pt-spacing-2xs border-t border-border">
                   Mostrando primeiros versículos...
                 </p>
               )}
             </>
           )}
           {!loading && fetched && verses.length === 0 && (
-            <p className="text-xs text-muted-foreground italic">Texto não disponível.</p>
+            <p className="text-premium-xs text-muted-foreground italic">Texto não disponível.</p>
           )}
         </div>
       </PopoverContent>

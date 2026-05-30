@@ -166,9 +166,9 @@ const GlossaryPage: React.FC = () => {
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.BookOpen className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
         <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
           "Nem toda palavra é só significado… algumas são portas."
         </p>
@@ -188,7 +188,7 @@ const GlossaryPage: React.FC = () => {
         <div className="flex gap-spacing-xs justify-center flex-wrap">
           {categories.map(cat => (
             <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all ${
+              className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -201,16 +201,16 @@ const GlossaryPage: React.FC = () => {
       {!loading && (
         <div className="flex justify-center gap-spacing-lg text-center">
           <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">Termos</p>
+            <p className="text-premium-2xl font-serif font-bold text-foreground">{filtered.length}</p>
+            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Termos</p>
           </div>
           <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
+            <p className="text-premium-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
+            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Categorias</p>
           </div>
           <div>
-            <p className="text-2xl font-serif font-bold text-foreground">{enrichedCount}</p>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">Com reflexão</p>
+            <p className="text-premium-2xl font-serif font-bold text-foreground">{enrichedCount}</p>
+            <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Com reflexão</p>
           </div>
         </div>
       )}
@@ -218,7 +218,7 @@ const GlossaryPage: React.FC = () => {
       {/* Search results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && searchResults && searchResults.length > 0 && (
         <div className="space-y-spacing-xs">
-          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
+          <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           <AnimatePresence mode="popLayout">
           {searchResults.map((term, i) => (
             <SearchResultCard
@@ -248,7 +248,7 @@ const GlossaryPage: React.FC = () => {
 
             return (
               <div key={term.id} id={`term-${term.id}`}
-                className={`bg-card border rounded-full overflow-hidden transition-all ${
+                className={`bg-card border rounded-premium-full overflow-hidden transition-all ${
                   isExpanded ? 'border-primary/40 shadow-premium' : 'border-border hover:border-primary/30'
                 }`}>
                 <Button
@@ -258,19 +258,19 @@ const GlossaryPage: React.FC = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
                       {term.category && (
-                        <span className={`px-spacing-xs py-spacing-3xs rounded-full text-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
                           {term.category}
                         </span>
                       )}
                       {enrichment && (
-                        <span className="px-spacing-xs py-spacing-3xs rounded-full text-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
+                        <span className="px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-bold bg-primary/10 text-primary uppercase tracking-wider">
                           <Icons.Sparkles className="w-spacing-xs h-spacing-xs inline mr-spacing-2xs" /> Com reflexão
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base font-bold text-foreground">{term.term}</h3>
+                    <h3 className="text-premium-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (
-                      <p className="text-sm text-muted-foreground line-clamp-1 mt-spacing-2xs">{term.definition}</p>
+                      <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{term.definition}</p>
                     )}
                   </div>
                   <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -280,7 +280,7 @@ const GlossaryPage: React.FC = () => {
                   <div className="px-spacing-lg pb-spacing-lg space-y-spacing-md border-t border-border pt-spacing-md">
                     {/* Layer 1: Simple definition */}
                     <div className="space-y-spacing-2xs">
-                      <p className="text-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
+                      <p className="text-premium-xs font-black uppercase tracking-widest text-primary">📘 Definição</p>
                       <p className="text-foreground/90 leading-relaxed font-serif">{term.definition}</p>
                     </div>
 
@@ -288,19 +288,19 @@ const GlossaryPage: React.FC = () => {
                       <>
                         {/* Layer 2: P.A.D.H. */}
                         <div className="bg-primary/5 rounded-premium p-spacing-md text-center space-y-spacing-xs">
-                          <p className="text-xs font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
-                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
+                          <p className="text-premium-xs font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
+                          <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-premium-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
                         <div className="bg-accent/30 rounded-premium p-spacing-md text-center space-y-spacing-xs">
-                          <p className="text-xs font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
-                          <p className="text-foreground font-bold text-base">{enrichment.question}</p>
+                          <p className="text-premium-xs font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
+                          <p className="text-foreground font-bold text-premium-base">{enrichment.question}</p>
                         </div>
 
                         {/* Related verse */}
                         {enrichment.relatedVerse && (
-                          <div className="flex items-center gap-spacing-xs text-sm text-muted-foreground">
+                          <div className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground">
                             <Icons.Book className="w-spacing-md h-spacing-md text-primary" />
                             <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
                           </div>
@@ -311,14 +311,14 @@ const GlossaryPage: React.FC = () => {
                           <div className="bg-primary/10 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
                             <div className="flex items-center gap-spacing-xs">
                               <Icons.Compass className="w-spacing-md h-spacing-md text-primary" />
-                              <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
+                              <p className="text-premium-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
                             </div>
-                            <p className="text-xs text-foreground/80 leading-relaxed">
+                            <p className="text-premium-xs text-foreground/80 leading-relaxed">
                               Transforme este conhecimento em hábito com uma jornada curta de 3 a 7 dias.
                             </p>
                             <Button 
                               onClick={() => navigate(`/jornadas/${term.journey_id}`)}
-                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-xs tracking-widest py-spacing-md"
+                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-xs tracking-widest py-spacing-md"
                             >
                               Iniciar Jornada Prática
                             </Button>
@@ -329,7 +329,7 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <Button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-spacing-sm rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-spacing-xs group"
+                            className="w-full py-spacing-sm rounded-premium-full bg-foreground text-background font-black uppercase text-premium-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-spacing-xs group"
                           >
                             <Icons.Heart className="w-spacing-md h-spacing-md group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}
@@ -346,7 +346,7 @@ const GlossaryPage: React.FC = () => {
           <div className="text-center py-spacing-2xl bg-muted/20 rounded-premium">
             <Icons.Search className="w-spacing-xl h-spacing-xl text-muted-foreground mx-auto mb-spacing-sm" />
             <p className="text-muted-foreground">Nenhum termo encontrado.</p>
-            <p className="text-xs text-muted-foreground mt-spacing-2xs">Tente buscar por outro sentimento ou palavra.</p>
+            <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">Tente buscar por outro sentimento ou palavra.</p>
           </div>
         )}
       </div>

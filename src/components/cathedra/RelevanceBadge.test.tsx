@@ -41,14 +41,14 @@ describe('<RelevanceBadge />', () => {
   it('applies the "sm" size variant by default', () => {
     render(<RelevanceBadge score={0.5} />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-xs');
+    expect(badge.className).toContain('text-premium-xs');
     expect(badge.className).toContain('px-spacing-xs');
   });
 
   it('applies the "xs" size variant when requested', () => {
     render(<RelevanceBadge score={0.5} size="xs" />);
     const badge = screen.getByText('50%');
-    expect(badge.className).toContain('text-xs');
+    expect(badge.className).toContain('text-premium-xs');
     expect(badge.className).toContain('px-spacing-2xs');
   });
 
@@ -60,10 +60,10 @@ describe('<RelevanceBadge />', () => {
   });
 
   it('forwards extra className for positioning', () => {
-    render(<RelevanceBadge score={0.6} className="absolute top-0 right-0" />);
+    render(<RelevanceBadge score={0.6} className="absolute top-spacing-0 right-0" />);
     const badge = screen.getByText('60%');
     expect(badge.className).toContain('absolute');
-    expect(badge.className).toContain('top-0');
+    expect(badge.className).toContain('top-spacing-0');
   });
 
   it('clamps percentages above 100%', () => {

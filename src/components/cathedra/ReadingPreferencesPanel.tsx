@@ -85,10 +85,10 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
   ];
 
   const fontSizes = [
-    { id: 'small', label: 'A', className: 'text-xs' },
-    { id: 'medium', label: 'A', className: 'text-base' },
-    { id: 'large', label: 'A', className: 'text-xl' },
-    { id: 'extra-large', label: 'A', className: 'text-2xl' },
+    { id: 'small', label: 'A', className: 'text-premium-xs' },
+    { id: 'medium', label: 'A', className: 'text-premium-base' },
+    { id: 'large', label: 'A', className: 'text-premium-xl' },
+    { id: 'extra-large', label: 'A', className: 'text-premium-2xl' },
   ];
 
   return (
@@ -108,24 +108,24 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             ref={panelRef}
-            className="fixed bottom-0 left-spacing-2xs/2 -translate-x-1/2 w-full max-w-[70ch] bg-background border-t rounded-t-[2.5rem] z-[301] shadow-premium overflow-hidden max-h-[90vh] flex flex-col outline-none"
+            className="fixed bottom-spacing-0 left-spacing-2xs/2 -translate-x-1/2 w-full max-w-[70ch] bg-background border-t rounded-t-[2.5rem] z-[301] shadow-premium overflow-hidden max-h-[90vh] flex flex-col outline-none"
             tabIndex={-1}
           >
             {/* Handle for drag indicator */}
             <div className="flex justify-center py-spacing-md">
-              <div className="w-spacing-2xl h-spacing-2xs rounded-full bg-muted/40" />
+              <div className="w-spacing-2xl h-spacing-2xs rounded-premium-full bg-muted/40" />
             </div>
 
             <div className="px-spacing-xl pb-spacing-lg flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-serif font-bold tracking-tight">Preferências de Leitura</h2>
-                <p className="text-xs text-muted-foreground mt-spacing-3xs">Ajuste sua experiência contemplativa</p>
+                <h2 className="text-premium-xl font-serif font-bold tracking-tight">Preferências de Leitura</h2>
+                <p className="text-premium-xs text-muted-foreground mt-spacing-3xs">Ajuste sua experiência contemplativa</p>
               </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 onClick={onClose}
-                className="rounded-full h-spacing-xl w-spacing-xl hover:bg-muted/50 transition-colors"
+                className="rounded-premium-full h-spacing-xl w-spacing-xl hover:bg-muted/50 transition-colors"
               >
                 <X className="w-spacing-md h-spacing-md" />
               </Button>
@@ -147,12 +147,12 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         className={cn(
                           "group relative flex flex-col items-center justify-center p-spacing-md rounded-premium border-2 transition-all duration-300",
                           settings.theme === theme.id 
-                            ? "border-primary bg-primary/5 shadow-sm" 
+                            ? "border-primary bg-primary/5 shadow-premium-sm" 
                             : "border-muted/20 bg-muted/5 hover:border-muted/40"
                         )}
                       >
                         <div className={cn(
-                          "w-spacing-xl h-spacing-xl rounded-full mb-spacing-sm flex items-center justify-center shadow-inner transition-transform group-active:scale-95",
+                          "w-spacing-xl h-spacing-xl rounded-premium-full mb-spacing-sm flex items-center justify-center shadow-premium-md transition-transform group-active:scale-95",
                           theme.color,
                           settings.theme === theme.id ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""
                         )}>
@@ -162,7 +162,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           )} />
                         </div>
                         <span className={cn(
-                          "text-xs font-medium transition-colors",
+                          "text-premium-xs font-medium transition-colors",
                           settings.theme === theme.id ? "text-primary font-bold" : "text-muted-foreground"
                         )}>
                           {theme.name}
@@ -172,7 +172,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                             layoutId="theme-active"
                             className="absolute top-spacing-xs right-spacing-xs z-10"
                           >
-                            <div className="w-spacing-md h-spacing-md bg-primary rounded-full flex items-center justify-center">
+                            <div className="w-spacing-md h-spacing-md bg-primary rounded-premium-full flex items-center justify-center">
                               <Check className="w-spacing-xs h-spacing-xs text-primary-foreground" />
                             </div>
                           </motion.div>
@@ -202,19 +202,19 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       >
                         <ToggleGroupItem 
                           value="serif" 
-                          className="flex-1 py-spacing-lg rounded-xl data-[state=on]:bg-background data-[state=on]:shadow-sm transition-all"
+                          className="flex-1 py-spacing-lg rounded-premium data-[state=on]:bg-background data-[state=on]:shadow-premium-sm transition-all"
                         >
                           <div className="flex flex-col items-center gap-spacing-2xs">
-                            <span className="font-serif text-lg">Serif</span>
+                            <span className="font-serif text-premium-lg">Serif</span>
                             <span className="text-[9px] uppercase tracking-wider opacity-60">Clássico</span>
                           </div>
                         </ToggleGroupItem>
                         <ToggleGroupItem 
                           value="sans" 
-                          className="flex-1 py-spacing-lg rounded-xl data-[state=on]:bg-background data-[state=on]:shadow-sm transition-all"
+                          className="flex-1 py-spacing-lg rounded-premium data-[state=on]:bg-background data-[state=on]:shadow-premium-sm transition-all"
                         >
                           <div className="flex flex-col items-center gap-spacing-2xs">
-                            <span className="font-sans text-lg">Sans</span>
+                            <span className="font-sans text-premium-lg">Sans</span>
                             <span className="text-[9px] uppercase tracking-wider opacity-60">Moderno</span>
                           </div>
                         </ToggleGroupItem>
@@ -260,21 +260,21 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       onValueChange={(v) => v && updateSettings({ contrast: v as any })}
                       className="w-full"
                     >
-                      <ToggleGroupItem value="soft" className="flex-1 py-spacing-md rounded-xl">
+                      <ToggleGroupItem value="soft" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
-                          <span className="text-xs font-medium">Suave</span>
+                          <span className="text-premium-xs font-medium">Suave</span>
                           <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Relaxado</span>
                         </div>
                       </ToggleGroupItem>
-                      <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-xl">
+                      <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
-                          <span className="text-xs font-medium">Equilibrado</span>
+                          <span className="text-premium-xs font-medium">Equilibrado</span>
                           <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Confortável</span>
                         </div>
                       </ToggleGroupItem>
-                      <ToggleGroupItem value="high" className="flex-1 py-spacing-md rounded-xl">
+                      <ToggleGroupItem value="high" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
-                          <span className="text-xs font-medium">Contraste Máximo</span>
+                          <span className="text-premium-xs font-medium">Contraste Máximo</span>
                           <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Recomendado</span>
                         </div>
                       </ToggleGroupItem>
@@ -304,13 +304,13 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           onValueChange={(v) => v && updateSettings({ lineSpacing: v as any })}
                           className="w-full"
                         >
-                          <ToggleGroupItem value="tight" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="tight" className="flex-1 py-spacing-md rounded-premium">
                             <AlignLeft className="w-spacing-md h-spacing-md scale-y-75" />
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-premium">
                             <AlignLeft className="w-spacing-md h-spacing-md" />
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-premium">
                             <AlignLeft className="w-spacing-md h-spacing-md scale-y-125" />
                           </ToggleGroupItem>
                         </ToggleGroup>
@@ -329,21 +329,21 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           onValueChange={(v) => v && updateSettings({ sideMargins: v as any })}
                           className="w-full"
                         >
-                          <ToggleGroupItem value="standard" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="standard" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
-                              <div className="w-spacing-lg h-spacing-2xs bg-primary/40 rounded-full" />
+                              <div className="w-spacing-lg h-spacing-2xs bg-primary/40 rounded-premium-full" />
                               <span className="text-[8px] uppercase font-bold tracking-tighter">Focado</span>
                             </div>
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="comfortable" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="comfortable" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
-                              <div className="w-spacing-md h-spacing-2xs bg-primary/40 rounded-full" />
+                              <div className="w-spacing-md h-spacing-2xs bg-primary/40 rounded-premium-full" />
                               <span className="text-[8px] uppercase font-bold tracking-tighter">Médio</span>
                             </div>
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
-                              <div className="w-spacing-xs h-spacing-2xs bg-primary/40 rounded-full" />
+                              <div className="w-spacing-xs h-spacing-2xs bg-primary/40 rounded-premium-full" />
                               <span className="text-[8px] uppercase font-bold tracking-tighter">Largo</span>
                             </div>
                           </ToggleGroupItem>
@@ -363,13 +363,13 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           onValueChange={(v) => v && updateSettings({ letterSpacing: v as any })}
                           className="w-full"
                         >
-                          <ToggleGroupItem value="tight" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="tight" className="flex-1 py-spacing-md rounded-premium">
                             <span className="text-[10px] font-bold uppercase">Compacto</span>
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-premium">
                             <span className="text-[10px] font-bold uppercase">Normal</span>
                           </ToggleGroupItem>
-                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-xl">
+                          <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-premium">
                             <span className="text-[10px] font-bold uppercase">Aberto</span>
                           </ToggleGroupItem>
                         </ToggleGroup>
@@ -397,11 +397,11 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       onClick={() => updateSettings({ focusMode: !settings.focusMode })}
                     >
                       <div className="flex flex-col items-start text-left">
-                        <span className="font-bold text-sm">Modo Foco</span>
+                        <span className="font-bold text-premium-sm">Modo Foco</span>
                         <span className="text-[10px] text-muted-foreground">Oculta header e sidebar na leitura</span>
                       </div>
                       <div className={cn(
-                        "w-spacing-lg h-spacing-lg rounded-full flex items-center justify-center transition-colors",
+                        "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.focusMode ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
                         {settings.focusMode ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
@@ -417,11 +417,11 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       onClick={() => updateSettings({ visualSilence: !settings.visualSilence })}
                     >
                       <div className="flex flex-col items-start text-left">
-                        <span className="font-bold text-sm">Silêncio Visual</span>
+                        <span className="font-bold text-premium-sm">Silêncio Visual</span>
                         <span className="text-[10px] text-muted-foreground">Interface minimalista e sem ruído</span>
                       </div>
                       <div className={cn(
-                        "w-spacing-lg h-spacing-lg rounded-full flex items-center justify-center transition-colors",
+                        "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.visualSilence ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
                         {settings.visualSilence ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
@@ -437,11 +437,11 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       onClick={() => updateSettings({ reduceAnimations: !settings.reduceAnimations })}
                     >
                       <div className="flex flex-col items-start text-left">
-                        <span className="font-bold text-sm">Reduzir Movimento</span>
+                        <span className="font-bold text-premium-sm">Reduzir Movimento</span>
                         <span className="text-[10px] text-muted-foreground">Transições suaves e menos flutuação</span>
                       </div>
                       <div className={cn(
-                        "w-spacing-lg h-spacing-lg rounded-full flex items-center justify-center transition-colors",
+                        "w-spacing-lg h-spacing-lg rounded-premium-full flex items-center justify-center transition-colors",
                         settings.reduceAnimations ? "bg-primary text-primary-foreground" : "bg-muted/40"
                       )}>
                         {settings.reduceAnimations ? <Check className="w-spacing-sm h-spacing-sm" /> : null}
@@ -455,7 +455,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                   <Button 
                     variant="ghost" 
                     onClick={resetSettings}
-                    className="w-full h-spacing-2xl rounded-premium text-muted-foreground hover:text-destructive hover:bg-destructive/5 text-xs font-bold uppercase tracking-[0.2em]"
+                    className="w-full h-spacing-2xl rounded-premium text-muted-foreground hover:text-destructive hover:bg-destructive/5 text-premium-xs font-bold uppercase tracking-[0.2em]"
                   >
                     Restaurar Padrões Contemplativos
                   </Button>

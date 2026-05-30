@@ -357,10 +357,10 @@ const MagisteriumViewer: React.FC = () => {
           <Icons.AlertTriangle className="w-spacing-xl h-spacing-xl text-destructive" />
         </div>
         <div className="space-y-spacing-xs">
-          <h2 className="text-2xl font-serif font-bold">Ops! Algo deu errado</h2>
+          <h2 className="text-premium-2xl font-serif font-bold">Ops! Algo deu errado</h2>
           <p className="text-muted-foreground">{error || 'Documento não disponível.'}</p>
         </div>
-        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-full">
+        <Button onClick={() => navigate(-1)} variant="outline" className="rounded-premium-full">
           <Icons.ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
         </Button>
       </div>
@@ -376,13 +376,13 @@ const MagisteriumViewer: React.FC = () => {
       />
 
       {/* Atmospheric Header - More minimal on mobile */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-3xl py-spacing-sm px-spacing-md sm:px-spacing-lg mb-spacing-xl md:mb-spacing-3xl border-b border-primary/5 flex items-center justify-between gap-spacing-md header-reading-auto-hide transition-all duration-700">
+      <div className="sticky top-spacing-0 z-40 bg-background/80 backdrop-blur-3xl py-spacing-sm px-spacing-md sm:px-spacing-lg mb-spacing-xl md:mb-spacing-3xl border-b border-primary/5 flex items-center justify-between gap-spacing-md header-reading-auto-hide transition-all duration-700">
         <div className="flex items-center gap-spacing-xs min-w-0">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(-1)}
-            className="rounded-full hover:bg-primary/5 h-spacing-xl w-spacing-xl shrink-0"
+            className="rounded-premium-full hover:bg-primary/5 h-spacing-xl w-spacing-xl shrink-0"
           >
             <Icons.ArrowLeft className="w-spacing-md h-spacing-md" />
           </Button>
@@ -394,7 +394,7 @@ const MagisteriumViewer: React.FC = () => {
         
         <div className="flex items-center gap-spacing-2xs shrink-0">
           <div className="hidden sm:flex items-center gap-spacing-2xs mr-spacing-xs">
-            <AudioButton variant="outline" className="rounded-full h-spacing-xl w-spacing-xl p-0 border-primary/10" />
+            <AudioButton variant="outline" className="rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 border-primary/10" />
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
           <ReadingControlPanel />
@@ -402,7 +402,7 @@ const MagisteriumViewer: React.FC = () => {
             variant="ghost" 
             size="icon" 
             onClick={() => setShowLogosAI(!showLogosAI)}
-            className={`rounded-full h-spacing-xl w-spacing-xl p-0 transition-all ${showLogosAI ? 'bg-primary text-white scale-110' : 'hover:bg-primary/5 text-primary/40'}`}
+            className={`rounded-premium-full h-spacing-xl w-spacing-xl p-spacing-0 transition-all ${showLogosAI ? 'bg-primary text-white scale-110' : 'hover:bg-primary/5 text-primary/40'}`}
             title="Logos IA"
           >
             <Icons.Sparkles className="w-spacing-md h-spacing-md" />
@@ -424,7 +424,7 @@ const MagisteriumViewer: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-spacing-sm border border-white/10 shadow-premium"
+                className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-premium-full text-[9px] font-black uppercase tracking-widest flex items-center gap-spacing-sm border border-white/10 shadow-premium"
               >
                 <span className="flex items-center gap-spacing-2xs"><kbd className="bg-white/20 px-spacing-2xs py-spacing-3xs rounded">{settings.shortcuts?.highlight?.toUpperCase() || 'H'}</kbd> Destacar</span>
                 <div className="w-px h-spacing-sm bg-white/20" />
@@ -452,11 +452,11 @@ const MagisteriumViewer: React.FC = () => {
                 
                 return (
                   <div key={idx} className="group relative mb-spacing-md" id={`para-${idx}`}>
-                    <div className={cn(note ? `highlight-${note.highlight_color} px-spacing-2xs rounded-sm cursor-pointer` : '')}
+                    <div className={cn(note ? `highlight-${note.highlight_color} px-spacing-2xs rounded-premium-sm cursor-pointer` : '')}
                          onClick={() => note && setActiveHighlight(note)}>
                       <ReactMarkdown>{para}</ReactMarkdown>
                     </div>
-                    <div className="absolute top-0 -right-spacing-2xl flex flex-col gap-spacing-xs opacity-0 group-hover:opacity-100 transition-opacity no-print">
+                    <div className="absolute top-spacing-0 -right-spacing-2xl flex flex-col gap-spacing-xs opacity-0 group-hover:opacity-100 transition-opacity no-print">
                       <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
                       <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
                     </div>
@@ -579,8 +579,8 @@ const MagisteriumViewer: React.FC = () => {
         <div className="text-center space-y-spacing-md">
           <Icons.CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-primary/60 mx-auto" />
           <div className="space-y-spacing-2xs">
-            <h3 className="text-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
-            <p className="text-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>
+            <h3 className="text-premium-xl font-display text-primary uppercase tracking-widest">Contemplação Concluída</h3>
+            <p className="text-premium-xs text-muted-foreground italic">"A leitura busca, a meditação encontra."</p>
           </div>
           <Button 
             onClick={() => {
@@ -596,7 +596,7 @@ const MagisteriumViewer: React.FC = () => {
               });
               navigate(-1);
             }}
-            className="rounded-full px-spacing-2xl py-spacing-lg bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium"
+            className="rounded-premium-full px-spacing-2xl py-spacing-lg bg-primary text-primary-foreground hover:scale-105 transition-all shadow-premium"
           >
             Concluir e Voltar
           </Button>
@@ -605,7 +605,7 @@ const MagisteriumViewer: React.FC = () => {
         <Button 
           variant="ghost" 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="rounded-full px-spacing-xl py-spacing-lg text-muted-foreground/40 hover:text-primary transition-all group"
+          className="rounded-premium-full px-spacing-xl py-spacing-lg text-muted-foreground/40 hover:text-primary transition-all group"
         >
           <Icons.ChevronUp className="w-spacing-md h-spacing-md mr-spacing-xs group-hover:-translate-y-1 transition-transform" /> 
           Voltar ao Topo do Documento

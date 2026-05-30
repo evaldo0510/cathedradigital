@@ -154,7 +154,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
 
       {downloading && (
         <div className="space-y-spacing-sm animate-in fade-in slide-in-from-top-spacing-xs">
-          <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
+          <div className="flex justify-between text-premium-xs font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
@@ -164,10 +164,10 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
 
 
       <div className="space-y-spacing-xs">
-        <h3 className="text-xl font-serif font-bold text-foreground">
+        <h3 className="text-premium-xl font-serif font-bold text-foreground">
           {paragraph ? `Parágrafo §${paragraph} Offline` : 'Catecismo Offline'}
         </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed max-w-spacing-sm mx-auto">
+        <p className="text-premium-sm text-muted-foreground leading-relaxed max-w-spacing-sm mx-auto">
           {isForcedOffline 
             ? 'Você está no modo somente-cache. Este parágrafo ainda não foi baixado para o seu dispositivo.'
             : 'Parece que você está sem conexão. Este parágrafo não está disponível no cache local.'}
@@ -179,7 +179,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={downloading ? handleCancel : () => handleDownload()}
             variant={downloading ? "destructive" : "default"}
-            className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto transition-all"
+            className="rounded-premium-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
               <>
@@ -197,7 +197,7 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={onRetry}
             variant="secondary"
-            className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
+            className="rounded-premium-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
           >
             <Icons.RotateCcw className="w-spacing-md h-spacing-md mr-spacing-xs" /> Tentar Carregar
           </Button>
@@ -205,14 +205,14 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         <Button 
           onClick={() => navigate('/cache-manager')}
           variant="outline"
-          className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
+          className="rounded-premium-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
         >
           <Icons.Library className="w-spacing-md h-spacing-md mr-spacing-xs" /> Gerenciar Cache
         </Button>
       </div>
 
       <div className="pt-spacing-md border-t border-border/40">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+        <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>
       </div>
@@ -225,10 +225,10 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="rounded-full font-bold">Voltar</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-premium-full font-bold">Voltar</AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmCancel}
-              className="rounded-full font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="rounded-premium-full font-bold bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Confirmar e Cancelar
             </AlertDialogAction>

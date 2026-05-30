@@ -10,7 +10,7 @@ const OfflineModeToggle: React.FC = () => {
   return (
     <Button
       onClick={toggle}
-      className={`fixed bottom-spacing-4xl right-spacing-3xl lg:bottom-spacing-lg lg:right-spacing-4xl z-50 p-spacing-sm rounded-full border shadow-premium hover:shadow-premium-hover transition-all group flex items-center gap-spacing-xs ${
+      className={`fixed bottom-spacing-4xl right-spacing-3xl lg:bottom-spacing-lg lg:right-spacing-4xl z-50 p-spacing-sm rounded-premium-full border shadow-premium hover:shadow-premium-hover transition-all group flex items-center gap-spacing-xs ${
         isOfflineMode 
           ? 'bg-primary border-primary text-primary-foreground' 
           : 'bg-card border-border text-muted-foreground'
@@ -28,7 +28,7 @@ const OfflineModeToggle: React.FC = () => {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: 'auto', opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
-            className="text-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
+            className="text-premium-xs font-black uppercase tracking-widest overflow-hidden whitespace-nowrap"
           >
             Offline
           </motion.span>

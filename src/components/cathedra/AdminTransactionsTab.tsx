@@ -25,20 +25,20 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
                 </div>
                 <div>
                   <div className="flex items-center gap-spacing-xs">
-                    <p className="font-medium text-sm">{t.description || 'Transação'}</p>
+                    <p className="font-medium text-premium-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-xs bg-muted px-spacing-2xs py-spacing-3xs rounded text-muted-foreground flex items-center gap-spacing-2xs">
+                      <span className="text-premium-xs bg-muted px-spacing-2xs py-spacing-3xs rounded text-muted-foreground flex items-center gap-spacing-2xs">
                         <User className="w-spacing-xs h-spacing-xs" />
                         {t.profiles.name}
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-muted-foreground">{new Date(t.created_at).toLocaleDateString('pt-BR')}</p>
+                  <p className="text-premium-xs text-muted-foreground">{new Date(t.created_at).toLocaleDateString('pt-BR')}</p>
                 </div>
               </div>
               <div className="flex items-center gap-spacing-sm">
                 <Badge variant={t.status === 'approved' ? 'default' : 'secondary'}>{t.status || 'pendente'}</Badge>
-                <span className="font-bold text-sm">
+                <span className="font-bold text-premium-sm">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)}
                 </span>
               </div>

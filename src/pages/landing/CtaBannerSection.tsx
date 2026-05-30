@@ -21,7 +21,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             <h2 className="font-display font-bold leading-tight text-foreground">
               Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
             </h2>
-            <p className="text-lg text-muted-foreground/90 max-w-spacing-lg mx-auto font-serif">
+            <p className="text-premium-lg text-muted-foreground/90 max-w-spacing-lg mx-auto font-serif">
               "Não tenhas medo, pois Eu estou contigo."
             </p>
           </div>
@@ -33,7 +33,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
             >
               Iniciar Minha Jornada
             </HomeButton>
-            <p className="text-xs text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
+            <p className="text-premium-xs text-muted-foreground font-bold uppercase tracking-[0.4em] opacity-40">
               Acesso totalmente gratuito
             </p>
           </div>

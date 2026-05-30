@@ -97,24 +97,24 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       <Card>
         <CardContent className="pt-spacing-lg">
           <div className="flex flex-col sm:flex-row items-start gap-spacing-md">
-            <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
+            <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-premium-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div className="flex-1 min-w-0 space-y-spacing-xs">
               <div className="flex items-center gap-spacing-xs flex-wrap">
-                <h2 className="text-xl font-bold">{user.name || 'Sem nome'}</h2>
+                <h2 className="text-premium-xl font-bold">{user.name || 'Sem nome'}</h2>
                 {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}
                 {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-spacing-2xs"><Shield className="w-spacing-sm h-spacing-sm" /> Admin</Badge>}
-                <Badge variant="outline" className={`${statusColor} border-current/30 text-xs`}>{statusLabel}</Badge>
+                <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-xs`}>{statusLabel}</Badge>
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-premium-sm text-muted-foreground">
                 <span className="flex items-center gap-spacing-2xs"><Mail className="w-spacing-sm h-spacing-sm" /> {user.email}</span>
                 <span className="flex items-center gap-spacing-2xs"><Calendar className="w-spacing-sm h-spacing-sm" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
                 <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
               </div>
             </div>
             <div className="flex gap-spacing-xs">
-              <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-spacing-2xs text-xs">
+              <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-spacing-2xs text-premium-xs">
                 <Crown className="w-spacing-sm h-spacing-sm" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
               </Button>
             </div>
@@ -134,8 +134,8 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             <CardContent className="pt-spacing-md pb-spacing-sm px-spacing-md flex items-center gap-spacing-sm">
               {stat.icon}
               <div>
-                <p className="text-lg font-bold leading-tight">{stat.value}</p>
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
+                <p className="text-premium-lg font-bold leading-tight">{stat.value}</p>
+                <p className="text-premium-xs text-muted-foreground uppercase tracking-wider">{stat.label}</p>
               </div>
             </CardContent>
           </Card>
@@ -146,11 +146,11 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {/* Diagnosis */}
         <Card>
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-sm flex items-center gap-spacing-xs"><Brain className="w-spacing-md h-spacing-md text-primary" /> Diagnóstico Espiritual</CardTitle>
+            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Brain className="w-spacing-md h-spacing-md text-primary" /> Diagnóstico Espiritual</CardTitle>
           </CardHeader>
           <CardContent>
             {diagnosis ? (
-              <div className="space-y-spacing-xs text-sm">
+              <div className="space-y-spacing-xs text-premium-sm">
                 {typeof diagnosis === 'object' && Object.entries(diagnosis).map(([key, value]) => (
                   <div key={key} className="flex justify-between py-spacing-2xs border-b border-border/30 last:border-0">
                     <span className="text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
@@ -159,7 +159,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm py-spacing-md text-center">Nenhum diagnóstico realizado.</p>
+              <p className="text-muted-foreground text-premium-sm py-spacing-md text-center">Nenhum diagnóstico realizado.</p>
             )}
           </CardContent>
         </Card>
@@ -167,20 +167,20 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         {/* Journey Progress */}
         <Card>
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-sm flex items-center gap-spacing-xs"><Route className="w-spacing-md h-spacing-md text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
+            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs"><Route className="w-spacing-md h-spacing-md text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
           </CardHeader>
           <CardContent>
             {journeyProgress.length > 0 ? (
               <div className="space-y-spacing-xs max-h-[200px] overflow-y-auto">
                 {journeyProgress.slice(0, 10).map((jp: any) => (
-                  <div key={jp.id} className="flex justify-between items-center py-spacing-2xs border-b border-border/30 last:border-0 text-sm">
+                  <div key={jp.id} className="flex justify-between items-center py-spacing-2xs border-b border-border/30 last:border-0 text-premium-sm">
                     <span className="truncate">{(jp.journeys as any)?.title ?? jp.journey_id.slice(0, 8)}</span>
-                    <span className="text-xs text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
+                    <span className="text-premium-xs text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm py-spacing-md text-center">Nenhuma jornada iniciada.</p>
+              <p className="text-muted-foreground text-premium-sm py-spacing-md text-center">Nenhuma jornada iniciada.</p>
             )}
           </CardContent>
         </Card>
@@ -190,16 +190,16 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       {journalEntries.length > 0 && (
         <Card>
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-sm">Últimas Reflexões do Diário</CardTitle>
+            <CardTitle className="text-premium-sm">Últimas Reflexões do Diário</CardTitle>
           </CardHeader>
           <CardContent className="space-y-spacing-sm">
             {journalEntries.map((entry: any) => (
               <div key={entry.id} className="p-spacing-sm rounded-premium bg-muted/30 border border-border/30">
                 <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                  <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
-                  {entry.mood && <Badge variant="secondary" className="text-xs">{entry.mood}</Badge>}
+                  <span className="text-premium-xs text-muted-foreground">{entry.entry_date}</span>
+                  {entry.mood && <Badge variant="secondary" className="text-premium-xs">{entry.mood}</Badge>}
                 </div>
-                <p className="text-sm line-clamp-2">{entry.content}</p>
+                <p className="text-premium-sm line-clamp-spacing-xs">{entry.content}</p>
               </div>
             ))}
           </CardContent>

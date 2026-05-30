@@ -31,12 +31,12 @@ const HowItWorksSection = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="text-xs font-black uppercase tracking-[0.4em] text-primary/60 block italic"
+            className="text-premium-xs font-black uppercase tracking-[0.4em] text-primary/60 block italic"
           >
             Passo a passo
           </motion.span>
-          <h2 className="text-4xl md:text-5xl font-display font-bold">Como Funciona</h2>
-          <p className="text-lg text-muted-foreground max-w-spacing-xl mx-auto">Três passos simples para iniciar sua transformação espiritual</p>
+          <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold">Como Funciona</h2>
+          <p className="text-premium-lg text-muted-foreground max-w-spacing-xl mx-auto">Três passos simples para iniciar sua transformação espiritual</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-spacing-xl md:gap-spacing-2xl relative">
@@ -73,13 +73,13 @@ const HowItWorksSection = () => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + i * 0.2, type: "spring", stiffness: 500 }}
-                  className="absolute -top-spacing-xs -right-spacing-xs w-spacing-lg h-spacing-lg rounded-full bg-primary text-primary-foreground text-xs font-black flex items-center justify-center border border-primary/20"
+                  className="absolute -top-spacing-xs -right-spacing-xs w-spacing-lg h-spacing-lg rounded-premium-full bg-primary text-primary-foreground text-premium-xs font-black flex items-center justify-center border border-primary/20"
                 >
                   {step.num}
                 </motion.span>
               </motion.div>
-              <h3 className="text-xl font-serif font-bold">{step.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-spacing-xs mx-auto">{step.desc}</p>
+              <h3 className="text-premium-xl font-serif font-bold">{step.title}</h3>
+              <p className="text-premium-sm text-muted-foreground leading-relaxed max-w-spacing-xs mx-auto">{step.desc}</p>
             </motion.div>
           ))}
         </div>

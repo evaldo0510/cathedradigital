@@ -106,22 +106,22 @@ const ReadingJournal: React.FC = () => {
       <SEOHead title="Diário & Histórico | Cathedra" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." path="/diario" />
       
       <div className="text-center space-y-spacing-md">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-full text-primary text-[10px] font-black uppercase tracking-widest">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary text-[10px] font-black uppercase tracking-widest">
           <History className="w-spacing-sm h-spacing-sm" /> Memória da Alma
       </div>
 
       {/* Streak and Goals */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg max-w-spacing-2xl mx-auto w-full">
-        <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-md group hover:bg-primary/[0.05] transition-all">
+        <Card className="bg-primary/[0.03] border-primary/10 rounded-[3rem] overflow-hidden shadow-premium-md group hover:bg-primary/[0.05] transition-all">
           <CardContent className="p-spacing-xl flex flex-col items-center text-center gap-spacing-md">
-            <div className="w-spacing-3xl h-spacing-3xl rounded-full bg-primary/10 flex items-center justify-center relative">
+            <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full bg-primary/10 flex items-center justify-center relative">
               <Zap className="w-spacing-xl h-spacing-xl text-primary group-hover:scale-110 transition-transform" />
-              <div className="absolute inset-0 rounded-full border border-primary/20 animate-ping opacity-20" />
+              <div className="absolute inset-0 rounded-premium-full border border-primary/20 animate-ping opacity-20" />
             </div>
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 mb-spacing-xs">Sequência de Graça</p>
-              <h3 className="text-5xl font-display text-primary">{streak}</h3>
-              <p className="text-xs font-bold text-primary/60 mt-spacing-2xs uppercase tracking-widest">{streak === 1 ? 'Dia' : 'Dias'} Consecutivos</p>
+              <h3 className="text-premium-5xl font-display text-primary">{streak}</h3>
+              <p className="text-premium-xs font-bold text-primary/60 mt-spacing-2xs uppercase tracking-widest">{streak === 1 ? 'Dia' : 'Dias'} Consecutivos</p>
             </div>
             <div className="pt-spacing-md border-t border-primary/5 w-full">
               <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Recorde: {profile?.max_streak || streak} dias</p>
@@ -130,15 +130,15 @@ const ReadingJournal: React.FC = () => {
         </Card>
 
         <div className="md:col-span-1">
-          <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-md group hover:bg-secondary/[0.04] transition-all duration-1000">
+          <Card className="bg-secondary/[0.02] border-secondary/10 rounded-[4rem] overflow-hidden shadow-premium-md group hover:bg-secondary/[0.04] transition-all duration-1000">
             <CardContent className="p-spacing-2xl flex flex-col items-center gap-spacing-xl">
-              <div className="w-spacing-4xl h-spacing-4xl rounded-full bg-secondary/5 flex items-center justify-center relative">
+              <div className="w-spacing-4xl h-spacing-4xl rounded-premium-full bg-secondary/5 flex items-center justify-center relative">
                 <Target className={`w-spacing-2xl h-spacing-2xl text-secondary/60 group-hover:rotate-12 transition-transform duration-700 ${daysActiveThisWeek >= weeklyGoal ? 'animate-bounce' : ''}`} />
                 {daysActiveThisWeek >= weeklyGoal && (
                   <motion.div 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-spacing-xs -right-spacing-xs bg-secondary text-white p-spacing-xs rounded-full shadow-premium"
+                    className="absolute -top-spacing-xs -right-spacing-xs bg-secondary text-white p-spacing-xs rounded-premium-full shadow-premium"
                   >
                     <CheckCircle2 className="w-spacing-md h-spacing-md" />
                   </motion.div>
@@ -146,16 +146,16 @@ const ReadingJournal: React.FC = () => {
               </div>
               <div className="w-full text-center space-y-spacing-md">
                 <p className="text-[10px] font-black uppercase tracking-[0.5em] text-secondary/30">Meta da Semana</p>
-                <h3 className="text-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-2xl opacity-20">/ {weeklyGoal}</span></h3>
-                <p className="text-sm font-serif italic text-secondary/60">Dias em contemplação</p>
+                <h3 className="text-6xl font-display text-secondary leading-none">{daysActiveThisWeek} <span className="text-premium-2xl opacity-20">/ {weeklyGoal}</span></h3>
+                <p className="text-premium-sm font-serif italic text-secondary/60">Dias em contemplação</p>
               </div>
               <div className="w-full space-y-spacing-md">
-                <div className="h-spacing-xs w-full bg-secondary/5 rounded-full overflow-hidden">
+                <div className="h-spacing-xs w-full bg-secondary/5 rounded-premium-full overflow-hidden">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min(100, (daysActiveThisWeek / weeklyGoal) * 100)}%` }}
                     transition={{ duration: 1.5, ease: [0.2, 0.8, 0.2, 1] }}
-                    className="h-full bg-secondary/40 rounded-full shadow-premium"
+                    className="h-full bg-secondary/40 rounded-premium-full shadow-premium"
                   />
                 </div>
                 
@@ -173,7 +173,7 @@ const ReadingJournal: React.FC = () => {
                     return (
                       <div key={i} className="flex flex-col items-center gap-spacing-sm">
                         <span className={`text-[8px] font-black uppercase tracking-widest ${isToday ? 'text-secondary' : 'text-secondary/20'}`}>{day}</span>
-                        <div className={`w-spacing-xl h-spacing-xl rounded-full border flex items-center justify-center transition-all duration-700 ${
+                        <div className={`w-spacing-xl h-spacing-xl rounded-premium-full border flex items-center justify-center transition-all duration-700 ${
                           isActive 
                             ? 'bg-secondary/20 border-secondary/20 text-secondary' 
                             : 'bg-transparent border-secondary/5 text-secondary/10'
@@ -194,7 +194,7 @@ const ReadingJournal: React.FC = () => {
         </div>
 
       </div>
-        <h1 className="text-4xl md:text-5xl font-display text-primary">Diário de Jornada</h1>
+        <h1 className="text-premium-4xl md:text-premium-5xl font-display text-primary">Diário de Jornada</h1>
         <p className="text-muted-foreground font-serif italic">"Guarda o que viste, para que não se apague do teu coração."</p>
       </div>
 
@@ -202,7 +202,7 @@ const ReadingJournal: React.FC = () => {
         <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input 
           placeholder="Pesquisar em marcas e anotações..." 
-          className="h-spacing-2xl pl-spacing-2xl rounded-full bg-card border-border/40 focus:ring-primary/20"
+          className="h-spacing-2xl pl-spacing-2xl rounded-premium-full bg-card border-border/40 focus:ring-primary/20"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -210,17 +210,17 @@ const ReadingJournal: React.FC = () => {
 
       <Tabs defaultValue="history" className="w-full" onValueChange={setActiveTab}>
         <div className="flex items-center justify-between gap-spacing-md mb-spacing-xl">
-          <TabsList className="bg-muted/50 p-spacing-2xs rounded-full">
-            <TabsTrigger value="history" className="rounded-full px-spacing-lg py-spacing-xs text-xs font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
+          <TabsList className="bg-muted/50 p-spacing-2xs rounded-premium-full">
+            <TabsTrigger value="history" className="rounded-premium-full px-spacing-lg py-spacing-xs text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
               Histórico
             </TabsTrigger>
-            <TabsTrigger value="notes" className="rounded-full px-spacing-lg py-spacing-xs text-xs font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
+            <TabsTrigger value="notes" className="rounded-premium-full px-spacing-lg py-spacing-xs text-premium-xs font-bold uppercase tracking-widest data-[state=active]:bg-primary data-[state=active]:text-white">
               Anotações
             </TabsTrigger>
           </TabsList>
           
           {activeTab === 'notes' && notes.length > 0 && (
-            <Button onClick={exportPDF} variant="outline" size="sm" className="rounded-full gap-spacing-xs text-xs uppercase tracking-widest font-bold border-primary/20 hover:bg-primary/5">
+            <Button onClick={exportPDF} variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs text-premium-xs uppercase tracking-widest font-bold border-primary/20 hover:bg-primary/5">
               <Download className="w-spacing-md h-spacing-md" /> PDF
             </Button>
           )}
@@ -234,10 +234,10 @@ const ReadingJournal: React.FC = () => {
             </div>
           ) : (
             filteredMarks.map((mark) => (
-              <Card key={mark.id} className="group overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card/60 backdrop-blur-sm rounded-premium shadow-md hover:shadow-premium">
+              <Card key={mark.id} className="group overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card/60 backdrop-blur-sm rounded-premium shadow-premium-md hover:shadow-premium">
                 <CardContent className="p-spacing-md sm:p-spacing-lg flex items-center justify-between gap-spacing-md">
                   <div className="flex items-center gap-spacing-md min-w-0">
-                    <div className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center shrink-0 ${
+                    <div className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center shrink-0 ${
                       mark.content_type === 'bible' ? 'bg-blue-500/10 text-blue-600' :
                       mark.content_type === 'catechism' ? 'bg-amber-500/10 text-amber-600' :
                       'bg-emerald-500/10 text-emerald-600'
@@ -260,14 +260,14 @@ const ReadingJournal: React.FC = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="rounded-full text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                      className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
                       onClick={() => deleteMark(mark.id)}
                     >
                       <Trash2 className="w-spacing-md h-spacing-md" />
                     </Button>
                     <Button 
                       onClick={() => navigate(mark.url || '/')}
-                      className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all h-spacing-xl px-spacing-md text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
+                      className="rounded-premium-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all h-spacing-xl px-spacing-md text-[10px] font-black uppercase tracking-widest gap-spacing-xs"
                     >
                       Voltar <ChevronRight className="w-spacing-sm h-spacing-sm" />
                     </Button>
@@ -286,7 +286,7 @@ const ReadingJournal: React.FC = () => {
             </div>
           ) : (
             filteredNotes.map((note) => (
-              <Card key={note.id} className="overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card rounded-premium shadow-md">
+              <Card key={note.id} className="overflow-hidden hover:border-primary/30 transition-all border-border/40 bg-card rounded-premium shadow-premium-md">
                 <CardContent className="p-spacing-lg space-y-spacing-md">
                   <div className="flex items-start justify-between gap-spacing-md">
                     <div className="flex items-center gap-spacing-xs">
@@ -300,13 +300,13 @@ const ReadingJournal: React.FC = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="rounded-full text-muted-foreground hover:text-destructive h-spacing-xl w-spacing-xl"
+                      className="rounded-premium-full text-muted-foreground hover:text-destructive h-spacing-xl w-spacing-xl"
                       onClick={() => deleteNote(note.id)}
                     >
                       <Trash2 className="w-spacing-md h-spacing-md" />
                     </Button>
                   </div>
-                  <p className="text-sm font-serif leading-relaxed text-foreground/90 whitespace-pre-line">
+                  <p className="text-premium-sm font-serif leading-relaxed text-foreground/90 whitespace-pre-line">
                     {note.note_text}
                   </p>
                   <div className="pt-spacing-md border-t border-border/10 flex justify-end">

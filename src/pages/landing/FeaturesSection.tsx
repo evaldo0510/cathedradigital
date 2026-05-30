@@ -58,8 +58,8 @@ const FeatureCard = ({ feature, onNavigate }: { feature: typeof features[0]; onN
         {React.cloneElement(feature.icon as React.ReactElement, { className: "w-spacing-lg h-spacing-lg" })}
       </div>
       <div className="space-y-spacing-xs w-full">
-        <h3 className="text-xl font-display font-bold text-center">{feature.title}</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
+        <h3 className="text-premium-xl font-display font-bold text-center">{feature.title}</h3>
+        <p className="text-premium-sm text-muted-foreground leading-relaxed text-center">{feature.description}</p>
       </div>
     </CathedraCard>
   );
@@ -78,9 +78,9 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
     <section ref={sectionRef} className="w-full section-spacing relative overflow-hidden">
       <div className="app-container relative z-10">
         <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto mb-spacing-3xl md:mb-spacing-4xl">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
+          <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
           <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
-          <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">A luz de Cristo ilumina o coração.</p>
+          <p className="text-muted-foreground/90 font-serif text-premium-lg md:text-premium-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-spacing-xl md:gap-spacing-xl">

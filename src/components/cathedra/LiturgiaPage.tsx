@@ -94,21 +94,21 @@ const ReadingCard: React.FC<{
     transition={{ duration: 0.5, delay }}
     className="space-y-spacing-lg premium-card p-spacing-xl group relative overflow-hidden"
   >
-    <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
+    <div className="absolute top-spacing-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">{icon}</div>
     <div className="flex items-center justify-between relative z-10">
       <div className="flex items-center gap-spacing-sm">
-        <div className="p-spacing-xs rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-md">{icon}</div>
+        <div className="p-spacing-xs rounded-premium bg-primary/5 text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-premium-md">{icon}</div>
         <div>
-          <h2 className="text-xs font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
-          <p className="text-xs font-bold text-secondary/60 uppercase tracking-[0.2em] mt-spacing-3xs">{reference}</p>
+          <h2 className="text-premium-xs font-black uppercase tracking-[0.25em] text-primary">{label}</h2>
+          <p className="text-premium-xs font-bold text-secondary/60 uppercase tracking-[0.2em] mt-spacing-3xs">{reference}</p>
         </div>
       </div>
     </div>
-    {refrain && <div className="bg-secondary/5 rounded-premium p-spacing-lg border border-secondary/20 border-l-4 shadow-inner"><p className="text-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
-    <p className="text-lg md:text-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
+    {refrain && <div className="bg-secondary/5 rounded-premium p-spacing-lg border border-secondary/20 border-l-4 shadow-premium-md"><p className="text-premium-lg font-serif italic text-primary leading-relaxed antialiased">℟ {refrain}</p></div>}
+    <p className="text-premium-lg md:text-premium-xl leading-[1.8] text-primary font-serif whitespace-pre-line selection:bg-secondary/30 antialiased tracking-tight">{text}</p>
     <div className="flex flex-wrap gap-spacing-sm pt-spacing-lg border-t border-border/40">
-      <Button variant="ghost" size="sm" className="rounded-full h-spacing-xl px-spacing-lg hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-spacing-md h-spacing-md mr-spacing-xs" /> Bíblia</Button>
-      <Button variant="secondary" size="sm" className="rounded-full ml-auto h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-md" onClick={onReflect}><Icons.Lectio className="w-spacing-md h-spacing-md mr-spacing-xs text-secondary" /> Lectio Divina</Button>
+      <Button variant="ghost" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-lg hover:bg-primary hover:text-white transition-all" onClick={onContext}><Icons.Bible className="w-spacing-md h-spacing-md mr-spacing-xs" /> Bíblia</Button>
+      <Button variant="secondary" size="sm" className="rounded-premium-full ml-auto h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={onReflect}><Icons.Lectio className="w-spacing-md h-spacing-md mr-spacing-xs text-secondary" /> Lectio Divina</Button>
     </div>
   </motion.div>
 );
@@ -197,7 +197,7 @@ const LiturgiaPage: React.FC = () => {
       subtitle="Lex Orandi, Lex Credendi"
       icon={Icons.Liturgy}
       headerActions={
-        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs overflow-x-auto max-w-full shadow-inner" role="tablist" aria-label="Navegação da Liturgia">
+        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs overflow-x-auto max-w-full shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
           {[
             { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-spacing-md h-spacing-md" /> },
             { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-spacing-md h-spacing-md" /> },
@@ -205,7 +205,7 @@ const LiturgiaPage: React.FC = () => {
           ].map((tab, idx) => (
             <Button
               key={tab.id}
-              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-spacing-xs px-spacing-xl py-spacing-sm rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-spacing-xs px-spacing-xl py-spacing-sm rounded-premium-full text-premium-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`)}
               onClick={() => setSearchParams({ tab: tab.id })}
@@ -225,20 +225,20 @@ const LiturgiaPage: React.FC = () => {
             <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-spacing-2xl mx-auto space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-spacing-md text-center">
                 <div className="flex items-center justify-center gap-spacing-md">
-                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior" className="rounded-full"><Icons.ChevronLeft className="w-spacing-md h-spacing-md" /></Button>
-                  <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-spacing-xs text-secondary">(Hoje)</span>}</p>
-                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia" className="rounded-full"><Icons.ChevronRight className="w-spacing-md h-spacing-md" /></Button>
+                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior" className="rounded-premium-full"><Icons.ChevronLeft className="w-spacing-md h-spacing-md" /></Button>
+                  <p className="text-premium-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-spacing-xs text-secondary">(Hoje)</span>}</p>
+                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia" className="rounded-premium-full"><Icons.ChevronRight className="w-spacing-md h-spacing-md" /></Button>
                 </div>
-                {isOfflineData && <div className="flex items-center justify-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mt-spacing-md mx-auto w-fit"><Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span></div>}
+                {isOfflineData && <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mt-spacing-md mx-auto w-fit"><Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span></div>}
               </motion.div>
 
               {profile?.diocese && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-premium p-spacing-md flex items-center justify-between group">
                   <div className="flex items-center gap-spacing-sm">
                     <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
-                    <div><p className="text-xs font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-sm font-bold text-primary">{profile.diocese}</h3></div>
+                    <div><p className="text-premium-xs font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-premium-sm font-bold text-primary">{profile.diocese}</h3></div>
                   </div>
-                  <div className="text-right"><p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-xs font-bold text-primary">{profile.estado}</p></div>
+                  <div className="text-right"><p className="text-premium-xs font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-premium-xs font-bold text-primary">{profile.estado}</p></div>
                 </motion.div>
               )}
 
@@ -254,16 +254,16 @@ const LiturgiaPage: React.FC = () => {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-primary text-white rounded-[2rem] p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
                 <Icons.Zap className="w-spacing-xl h-spacing-xl text-secondary mx-auto" />
-                <p className="text-xs font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
-                <p className="text-xl md:text-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
+                <p className="text-premium-xs font-black uppercase tracking-[0.4em] opacity-60">Reflexão do Dia</p>
+                <p className="text-premium-xl md:text-premium-2xl font-serif italic leading-relaxed">"{padhReflection}"</p>
               </motion.div>
 
               {saintsToday.length > 0 && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
-                  <div className="w-spacing-3xl h-spacing-3xl rounded-premium overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-full" /></div>
+                  <div className="w-spacing-3xl h-spacing-3xl rounded-premium overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10"><img src={saintsToday[0].image} alt={saintsToday[0].name} className="w-full h-full object-cover rounded-premium-full" /></div>
                   <div className="space-y-spacing-2xs">
-                    <p className="text-xs font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
-                    <h3 className="text-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>
+                    <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">{saintsToday.length > 1 ? 'Santos do Dia' : 'Santo do Dia'}</p>
+                    <h3 className="text-premium-xl font-display font-black text-primary">{saintsToday.map(s => s.name).join(' e ')}</h3>
                   </div>
                   <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-spacing-xl" onClick={() => navigate(AppRoute.SAINTS)}>Conhecer História <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" /></Button>
                 </motion.div>
@@ -276,15 +276,15 @@ const LiturgiaPage: React.FC = () => {
         </div>
         
         <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
-          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Liturgia das Horas</h3><p className="text-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
+          <div className="desktop-card bg-secondary/5 border-secondary/20"><h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Liturgia das Horas</h3><p className="text-premium-xs text-muted-foreground leading-relaxed italic">Una-se à oração universal da Igreja. Santifique cada hora do seu dia através da meditação das leituras.</p></div>
           {saintsToday.length > 0 && (
             <div className="desktop-card">
               <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-md">Santos de Hoje</h3>
               <div className="space-y-spacing-md">
                 {saintsToday.slice(0, 2).map(s => (
                   <div key={s.id} className="flex items-center gap-spacing-sm group cursor-pointer" onClick={() => navigate(`/santos/${s.id}`)}>
-                    <img src={s.image} alt={s.name} className="w-spacing-xl h-spacing-xl rounded-full object-cover border border-border group-hover:border-primary transition-all" />
-                    <div><p className="text-xs font-bold text-foreground leading-tight">{s.name}</p><p className="text-xs text-muted-foreground uppercase font-medium">{s.title}</p></div>
+                    <img src={s.image} alt={s.name} className="w-spacing-xl h-spacing-xl rounded-premium-full object-cover border border-border group-hover:border-primary transition-all" />
+                    <div><p className="text-premium-xs font-bold text-foreground leading-tight">{s.name}</p><p className="text-premium-xs text-muted-foreground uppercase font-medium">{s.title}</p></div>
                   </div>
                 ))}
               </div>

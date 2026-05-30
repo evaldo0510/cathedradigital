@@ -117,14 +117,14 @@ const SpiritualGoals: React.FC = () => {
   const progress = Math.min((goal.achieved_count / goal.goal_count) * 100, 100);
 
   return (
-    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-none space-y-spacing-xl">
+    <CathedraCard padding="md" className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] overflow-hidden shadow-premium-none space-y-spacing-xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-spacing-sm">
             <div className="p-spacing-xs bg-primary/10 rounded-premium">
               <Target className="w-spacing-md h-spacing-md text-primary" />
             </div>
             <div>
-              <h3 className="text-xl font-bold font-serif">Meta da Semana</h3>
+              <h3 className="text-premium-xl font-bold font-serif">Meta da Semana</h3>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Progresso Espiritual</p>
             </div>
           </div>
@@ -153,9 +153,9 @@ const SpiritualGoals: React.FC = () => {
                     type="number" 
                     value={newGoalCount} 
                     onChange={(e) => setNewGoalCount(parseInt(e.target.value))}
-                    className="bg-background border-primary/10 rounded-xl"
+                    className="bg-background border-primary/10 rounded-premium"
                   />
-                  <Button onClick={handleUpdateGoal} className="rounded-xl px-spacing-lg">Salvar</Button>
+                  <Button onClick={handleUpdateGoal} className="rounded-premium px-spacing-lg">Salvar</Button>
                 </div>
               </div>
 
@@ -163,14 +163,14 @@ const SpiritualGoals: React.FC = () => {
                 <Button 
                   variant={reminderSettings?.push_enabled ? "default" : "outline"}
                   onClick={() => toggleReminder('push')}
-                  className="rounded-xl gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
+                  className="rounded-premium gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
                   <Bell className="w-spacing-sm h-spacing-sm" /> Push {reminderSettings?.push_enabled ? 'ON' : 'OFF'}
                 </Button>
                 <Button 
                   variant={reminderSettings?.email_enabled ? "default" : "outline"}
                   onClick={() => toggleReminder('email')}
-                  className="rounded-xl gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
+                  className="rounded-premium gap-spacing-xs text-[10px] font-black uppercase tracking-widest h-spacing-2xl"
                 >
                   <Calendar className="w-spacing-sm h-spacing-sm" /> E-mail {reminderSettings?.email_enabled ? 'ON' : 'OFF'}
                 </Button>
@@ -184,9 +184,9 @@ const SpiritualGoals: React.FC = () => {
             >
               <div className="flex justify-between items-end mb-spacing-xs">
                 <div className="space-y-spacing-2xs">
-                  <span className="text-4xl font-display font-bold text-primary">{goal.achieved_count}</span>
-                  <span className="text-xl text-muted-foreground/40 font-serif italic mx-spacing-xs">/</span>
-                  <span className="text-xl font-bold text-muted-foreground">{goal.goal_count} passos</span>
+                  <span className="text-premium-4xl font-display font-bold text-primary">{goal.achieved_count}</span>
+                  <span className="text-premium-xl text-muted-foreground/40 font-serif italic mx-spacing-xs">/</span>
+                  <span className="text-premium-xl font-bold text-muted-foreground">{goal.goal_count} passos</span>
                 </div>
                 {progress === 100 && (
                   <Badge className="bg-primary/20 text-primary border-primary/10 animate-bounce">
@@ -197,7 +197,7 @@ const SpiritualGoals: React.FC = () => {
               
               <Progress value={progress} className="h-spacing-xs bg-primary/5" />
               
-              <p className="text-xs text-muted-foreground/60 font-serif italic">
+              <p className="text-premium-xs text-muted-foreground/60 font-serif italic">
                 {progress === 100 
                   ? "Parabéns! Sua alma encontrou descanso na disciplina." 
                   : `Faltam ${goal.goal_count - goal.achieved_count} passos para completar sua meta esta semana.`}

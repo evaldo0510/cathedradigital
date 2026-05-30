@@ -296,7 +296,7 @@ const Magisterium: React.FC = () => {
         {/* Unified Search & Filters */}
         <div className="space-y-spacing-xl">
           <div className="relative group max-w-spacing-4xl mx-auto">
-            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
             <input
               placeholder="Buscar documento, autor ou tema..." 
@@ -309,7 +309,7 @@ const Magisterium: React.FC = () => {
           <div className="flex items-center justify-center gap-spacing-xs overflow-x-auto no-scrollbar py-spacing-xs">
             <Button 
               variant="ghost"
-              className={`rounded-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+              className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
               onClick={() => setSelectedTheme(null)}
             >
               Todos os Temas
@@ -318,7 +318,7 @@ const Magisterium: React.FC = () => {
               <Button 
                 key={theme}
                 variant="ghost"
-                className={`rounded-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
                 onClick={() => setSelectedTheme(theme)}
               >
                 {theme}
@@ -342,21 +342,21 @@ const Magisterium: React.FC = () => {
             >
               <div className="p-spacing-md flex flex-col gap-spacing-md h-full text-left">
                 <div className="flex justify-between items-start">
-                  <div className="w-spacing-xl h-spacing-xl rounded-xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
+                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                     {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                   </div>
                   <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
                 </div>
 
                 <div className="space-y-spacing-xs flex-1">
-                  <h3 className="text-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
+                  <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
                   <p className="text-[8px] font-black text-primary/30 uppercase tracking-[0.2em]">{doc.author}</p>
-                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-2 leading-relaxed">{doc.summary}</p>
+                  <p className="text-[10px] text-muted-foreground/40 italic line-clamp-spacing-xs leading-relaxed">{doc.summary}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
                   {doc.theme.map(t => (
-                    <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-full">
+                    <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-premium-full">
                       {t}
                     </span>
                   ))}
@@ -369,7 +369,7 @@ const Magisterium: React.FC = () => {
         {filteredDocs.length === 0 && (
           <div className="text-center py-spacing-4xl opacity-20">
             <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto mb-spacing-md" strokeWidth={0.5} />
-            <p className="font-serif italic text-sm">Nenhum documento encontrado no silêncio da busca.</p>
+            <p className="font-serif italic text-premium-sm">Nenhum documento encontrado no silêncio da busca.</p>
           </div>
         )}
       </div>

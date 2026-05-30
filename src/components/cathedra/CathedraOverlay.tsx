@@ -57,7 +57,7 @@ export const CathedraOverlay: React.FC<CathedraOverlayProps> = ({
             {showClose && (
               <button
                 onClick={onClose}
-                className="absolute top-spacing-xl right-spacing-xl p-spacing-sm rounded-full hover:bg-primary/5 text-primary/40 hover:text-primary transition-premium"
+                className="absolute top-spacing-xl right-spacing-xl p-spacing-sm rounded-premium-full hover:bg-primary/5 text-primary/40 hover:text-primary transition-premium"
               >
                 <Icons.X className="w-spacing-lg h-spacing-lg" />
               </button>

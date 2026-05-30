@@ -110,29 +110,29 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="w-full mb-spacing-xl md:mb-spacing-3xl"
     >
-      <CathedraCard variant={variant} padding="none" className="p-spacing-md md:p-spacing-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-none">
-        <div className="absolute top-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-full -mr-spacing-4xl -mt-spacing-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
+      <CathedraCard variant={variant} padding="none" className="p-spacing-md md:p-spacing-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-premium-none">
+        <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-premium-full -mr-spacing-4xl -mt-spacing-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
         <div className="flex flex-col md:flex-row items-center justify-between gap-spacing-md md:gap-spacing-xl relative z-10">
           <div className="flex items-center gap-spacing-sm md:gap-spacing-lg">
-            <div className="w-spacing-2xl h-spacing-2xl md:w-spacing-2xl md:h-spacing-2xl rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
+            <div className="w-spacing-2xl h-spacing-2xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
               <Icons.Compass className="w-spacing-lg h-spacing-lg" strokeWidth={1} />
             </div>
             <div className="space-y-spacing-2xs text-center md:text-left">
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/40">
                 {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
-              <h3 className="text-lg md:text-2xl font-serif font-bold text-primary/80">
+              <h3 className="text-premium-lg md:text-premium-2xl font-serif font-bold text-primary/80">
                 {title}
               </h3>
-              <p className="text-xs text-primary/60 italic font-serif">{subtitle}</p>
+              <p className="text-premium-xs text-primary/60 italic font-serif">{subtitle}</p>
             </div>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-spacing-md w-full md:w-auto">
             <Button 
               variant="ghost" 
-              className="rounded-full px-spacing-xl md:px-spacing-2xl h-spacing-2xl md:h-spacing-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-700 w-full md:w-auto"
+              className="rounded-premium-full px-spacing-xl md:px-spacing-2xl h-spacing-2xl md:h-spacing-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-700 w-full md:w-auto"
               onClick={() => navigate(route)}
             >
               Retomar Contemplação

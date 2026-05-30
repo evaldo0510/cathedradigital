@@ -37,11 +37,11 @@ const SecurityDashboard = () => {
   return (
     <div className="p-spacing-xl space-y-spacing-xl">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold flex items-center gap-spacing-xs">
+        <h1 className="text-premium-3xl font-bold flex items-center gap-spacing-xs">
           <Shield className="w-spacing-xl h-spacing-xl text-primary" />
           Painel de Segurança & Auditoria
         </h1>
-        <button onClick={fetchData} className="p-spacing-xs hover:bg-muted rounded-full transition-colors">
+        <button onClick={fetchData} className="p-spacing-xs hover:bg-muted rounded-premium-full transition-colors">
           <RefreshCw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
@@ -49,7 +49,7 @@ const SecurityDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Status RLS</CardTitle>
+            <CardTitle className="text-premium-lg">Status RLS</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs">
@@ -60,7 +60,7 @@ const SecurityDashboard = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Segredos</CardTitle>
+            <CardTitle className="text-premium-lg">Segredos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs">
@@ -71,7 +71,7 @@ const SecurityDashboard = () => {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Alertas Recentes</CardTitle>
+            <CardTitle className="text-premium-lg">Alertas Recentes</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-spacing-xs text-yellow-500">

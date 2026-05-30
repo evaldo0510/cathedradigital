@@ -40,7 +40,7 @@ const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
         size={size === 'lg' ? 'lg' : (sMap[size as string] || 'md')}
         className={cn(
           className, 
-          "text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] rounded-full transition-all duration-700 hover:scale-[1.01] active:scale-[0.98]",
+          "text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] rounded-premium-full transition-all duration-700 hover:scale-[1.01] active:scale-[0.98]",
           "focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-4 focus-visible:outline-none"
         )}
         {...(filteredProps as any)}

@@ -83,7 +83,7 @@ const LogosChat = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-spacing-3xl right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-premium-hover rounded-full flex flex-col overflow-hidden"
+            className="absolute bottom-spacing-3xl right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-premium-hover rounded-premium-full flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-spacing-md border-b border-border bg-background flex items-center justify-between">
@@ -92,8 +92,8 @@ const LogosChat = () => {
                   <Sparkles className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold font-serif text-primary">Logos IA</h3>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
+                  <h3 className="text-premium-sm font-bold font-serif text-primary">Logos IA</h3>
+                  <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
                 </div>
               </div>
               <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -112,7 +112,7 @@ const LogosChat = () => {
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[80%] px-spacing-md py-spacing-xs rounded-full text-sm font-serif ${
+                      className={`max-w-[80%] px-spacing-md py-spacing-xs rounded-premium-full text-premium-sm font-serif ${
                         msg.role === 'user'
                           ? 'bg-secondary text-primary'
                           : 'bg-muted/50 border border-border text-foreground italic'
@@ -125,9 +125,9 @@ const LogosChat = () => {
                 {isTyping && (
                   <div className="flex justify-start">
                     <div className="bg-muted/30 px-spacing-md py-spacing-xs rounded-premium flex gap-spacing-2xs items-center">
-                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-premium-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-premium-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-spacing-2xs h-spacing-2xs bg-muted-foreground rounded-premium-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 )}
@@ -143,11 +143,11 @@ const LogosChat = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Peça uma oração ou reflexão..."
-                  className="w-full pl-spacing-md pr-spacing-2xl py-spacing-sm rounded-full border border-border bg-background text-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
+                  className="w-full pl-spacing-md pr-spacing-2xl py-spacing-sm rounded-premium-full border border-border bg-background text-premium-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
                 />
                 <Button
                   onClick={handleSend}
-                  className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-xl h-spacing-xl rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
+                  className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-xl h-spacing-xl rounded-premium-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
                 >
                   <Send className="w-spacing-md h-spacing-md" />
                 </Button>
@@ -161,7 +161,7 @@ const LogosChat = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-full shadow-premium font-black uppercase tracking-widest text-xs min-w-0"
+        className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-premium-full shadow-premium font-black uppercase tracking-widest text-premium-xs min-w-0"
       >
         <Sparkles className="w-spacing-md h-spacing-md shrink-0" />
         <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>

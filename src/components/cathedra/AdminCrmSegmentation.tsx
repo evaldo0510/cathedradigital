@@ -79,11 +79,11 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   const getStatusBadge = (u: UserProfile) => {
     const status = u.depth_level || 'Inativo';
     switch (status) {
-      case 'Profundo': return <Badge variant="default" className="text-xs">Profundo</Badge>;
-      case 'Engajado': return <Badge variant="secondary" className="text-xs">Engajado</Badge>;
-      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-xs">Ativo</Badge>;
-      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-xs">Novo</Badge>;
-      default: return <Badge variant="destructive" className="text-xs">Inativo</Badge>;
+      case 'Profundo': return <Badge variant="default" className="text-premium-xs">Profundo</Badge>;
+      case 'Engajado': return <Badge variant="secondary" className="text-premium-xs">Engajado</Badge>;
+      case 'Ativo': return <Badge variant="outline" className="border-primary/30 text-primary text-premium-xs">Ativo</Badge>;
+      case 'Novo': return <Badge variant="outline" className="border-secondary/30 text-secondary text-premium-xs">Novo</Badge>;
+      default: return <Badge variant="destructive" className="text-premium-xs">Inativo</Badge>;
     }
   };
 
@@ -118,7 +118,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
           <Button
             key={s.key}
             onClick={() => setSegment(s.key)}
-            className={`p-spacing-sm rounded-full border text-left transition-all ${
+            className={`p-spacing-sm rounded-premium-full border text-left transition-all ${
               segment === s.key 
                 ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
                 : 'border-border/50 bg-card hover:border-primary/30'
@@ -126,9 +126,9 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
           >
             <div className={`flex items-center gap-spacing-2xs ${s.color}`}>
               {s.icon}
-              <span className="text-xs font-black uppercase tracking-wider">{s.label}</span>
+              <span className="text-premium-xs font-black uppercase tracking-wider">{s.label}</span>
             </div>
-            <p className="text-xl font-bold mt-spacing-2xs">{segmentedUsers[s.key].length}</p>
+            <p className="text-premium-xl font-bold mt-spacing-2xs">{segmentedUsers[s.key].length}</p>
           </Button>
         ))}
       </div>
@@ -137,15 +137,15 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
       <Card>
         <CardHeader className="pb-spacing-sm">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm">
+            <CardTitle className="text-premium-sm">
               {segments.find(s => s.key === segment)?.label} — {filtered.length} usuário{filtered.length !== 1 ? 's' : ''}
             </CardTitle>
             <div className="flex items-center gap-spacing-xs">
-              <Button size="sm" variant="outline" className="h-spacing-xl text-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
+              <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
                 <Download className="w-spacing-sm h-spacing-sm" /> CSV
               </Button>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-              <SelectTrigger className="w-[160px] h-spacing-xl text-xs">
+              <SelectTrigger className="w-[160px] h-spacing-xl text-premium-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -157,10 +157,10 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-spacing-0">
           <div className="overflow-x-auto max-h-[500px] overflow-y-auto">
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-card z-10">
+            <table className="w-full text-premium-sm">
+              <thead className="sticky top-spacing-0 bg-card z-10">
                 <tr className="border-b border-border">
                   <th className="text-left p-spacing-sm font-semibold">Usuário</th>
                   <th className="text-center p-spacing-sm font-semibold">Plano</th>
@@ -176,34 +176,34 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                     <td className="p-spacing-sm">
                       <div className="flex items-center gap-spacing-xs">
-                        <div className="w-spacing-xl h-spacing-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                        <div className="w-spacing-xl h-spacing-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-premium-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-sm truncate">{u.name || '—'}</p>
+                          <p className="font-medium text-premium-sm truncate">{u.name || '—'}</p>
                           <p className="text-premium-small text-muted-foreground truncate">{u.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="p-spacing-sm text-center">
-                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-xs">
+                      <Badge variant={u.is_premium ? "default" : "outline"} className="text-premium-xs">
                         {u.is_premium ? 'PRO' : 'Free'}
                       </Badge>
                     </td>
                     <td className="p-spacing-sm text-center">{getStatusBadge(u)}</td>
                     <td className="p-spacing-sm text-center hidden md:table-cell">
-                      <span className="text-xs font-medium">{u.reflections_count || 0}</span>
+                      <span className="text-premium-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
                     <td className="p-spacing-sm text-center hidden lg:table-cell">
-                      <span className="text-xs text-muted-foreground truncate max-w-[150px] block mx-auto">
+                      <span className="text-premium-xs text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>
-                    <td className="p-spacing-sm text-center hidden md:table-cell text-xs text-muted-foreground">
+                    <td className="p-spacing-sm text-center hidden md:table-cell text-premium-xs text-muted-foreground">
                       {u.last_visit ? (hoursSince(u.last_visit) < 24 ? 'Hoje' : `${Math.floor(hoursSince(u.last_visit) / 24)}d atrás`) : '—'}
                     </td>
                     <td className="p-spacing-sm text-center">
-                      <Button size="sm" variant="ghost" className="h-spacing-lg px-spacing-xs text-xs gap-spacing-2xs" onClick={() => onSelectUser(u)}>
+                      <Button size="sm" variant="ghost" className="h-spacing-lg px-spacing-xs text-premium-xs gap-spacing-2xs" onClick={() => onSelectUser(u)}>
                         <Eye className="w-spacing-sm h-spacing-sm" /> Ver
                       </Button>
                     </td>

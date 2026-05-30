@@ -24,10 +24,10 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       >
         <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
           <Feather className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Lectio Divina</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
-        <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto leading-relaxed">
+        <h1 className="text-premium-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Leitura Orante</h1>
+        <p className="text-premium-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto leading-relaxed">
           Que bom ter você aqui. Reserve este momento só para Deus e para você.<br />
           <span className="text-primary/80">Respire fundo. Silencie o coração. Comece.</span>
         </p>
@@ -45,21 +45,21 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        <div className={`w-spacing-2xl h-spacing-2xl rounded-full flex items-center justify-center shrink-0 ${
+        <div className={`w-spacing-2xl h-spacing-2xl rounded-premium-full flex items-center justify-center shrink-0 ${
           selectedPassage === dailyPassage.ref ? 'bg-white/20' : 'bg-primary/10'
         }`}>
           <Heart className={`w-spacing-lg h-spacing-lg ${selectedPassage === dailyPassage.ref ? 'text-white' : 'text-primary'}`} />
         </div>
         <div className="text-left flex-1">
-          <p className={`text-xs font-black uppercase tracking-[0.2em] ${
+          <p className={`text-premium-xs font-black uppercase tracking-[0.2em] ${
             selectedPassage === dailyPassage.ref ? 'text-white/70' : 'text-primary/60'
           }`}>Lectio do Dia</p>
-          <p className={`font-serif font-bold text-lg ${
+          <p className={`font-serif font-bold text-premium-lg ${
             selectedPassage === dailyPassage.ref ? 'text-white' : 'text-foreground'
           }`}>{dailyPassage.title}</p>
           <div className="flex items-center gap-spacing-xs mt-spacing-2xs">
             <Clock className={`w-spacing-sm h-spacing-sm ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`} />
-            <span className={`text-xs ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`}>~15 min · {dailyPassage.ref}</span>
+            <span className={`text-premium-xs ${selectedPassage === dailyPassage.ref ? 'text-white/60' : 'text-muted-foreground'}`}>~15 min · {dailyPassage.ref}</span>
           </div>
         </div>
         <ArrowRight className={`w-spacing-md h-spacing-md group-hover:translate-x-1 transition-transform ${
@@ -76,12 +76,12 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       >
         {STEPS.map((step, i) => (
           <div key={step.id} className="group p-spacing-md rounded-premium bg-card border border-border text-center space-y-spacing-sm hover:border-primary/30 hover:shadow-premium-hover hover:-translate-y-1 transition-all">
-            <div className={`w-spacing-2xl h-spacing-2xl rounded-full mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
+            <div className={`w-spacing-2xl h-spacing-2xl rounded-premium-full mx-auto flex items-center justify-center transition-transform group-hover:scale-110 ${step.color}`}>
               <step.icon className="w-spacing-lg h-spacing-lg" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
-              <p className="font-serif font-bold text-sm text-foreground">{step.title}</p>
+              <p className="text-premium-xs font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
+              <p className="font-serif font-bold text-premium-sm text-foreground">{step.title}</p>
             </div>
           </div>
         ))}
@@ -96,15 +96,15 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       >
         <div className="space-y-spacing-lg max-w-spacing-md mx-auto">
           <div className="text-center space-y-spacing-xs">
-            <h3 className="text-sm font-black uppercase tracking-widest text-primary/60">Ou escolha outra passagem</h3>
-            <p className="text-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
+            <h3 className="text-premium-sm font-black uppercase tracking-widest text-primary/60">Ou escolha outra passagem</h3>
+            <p className="text-premium-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
           </div>
           <div className="relative">
             <input
               value={selectedPassage}
               onChange={e => onPassageChange(e.target.value)}
               placeholder="Ex: Jo 1,1-18 ou Sl 23..."
-              className="w-full px-spacing-lg py-spacing-md rounded-full border border-border bg-muted/30 text-foreground text-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-md"
+              className="w-full px-spacing-lg py-spacing-md rounded-premium-full border border-border bg-muted/30 text-foreground text-premium-base text-center font-serif focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-premium-md"
             />
           </div>
 
@@ -113,7 +113,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               <Button
                 key={p.ref}
                 onClick={() => onPassageChange(p.ref)}
-                className={`px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all border ${
+                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border ${
                   selectedPassage === p.ref
                     ? 'bg-primary border-primary text-white shadow-premium'
                     : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
@@ -129,7 +129,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
           <Button
             disabled={!selectedPassage.trim()}
             onClick={onStart}
-            className="px-spacing-xl py-spacing-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
+            className="px-spacing-xl py-spacing-md bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-30 active:scale-95"
           >
             Iniciar Lectio Divina
           </Button>

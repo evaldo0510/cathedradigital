@@ -56,7 +56,7 @@ const ReadingMark: React.FC<ReadingMarkProps> = ({
       onClick={toggleMark}
       variant="ghost"
       size="icon"
-      className={`rounded-full transition-all active:scale-95 ${isMarked ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
+      className={`rounded-premium-full transition-all active:scale-95 ${isMarked ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
       title={isMarked ? "Remover marca de leitura" : "Marcar para ler depois"}
     >
       <Icons.Bookmark className={`w-spacing-md h-spacing-md ${isMarked ? 'fill-current' : ''}`} />

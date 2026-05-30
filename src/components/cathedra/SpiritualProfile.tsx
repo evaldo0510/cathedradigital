@@ -127,9 +127,9 @@ const SpiritualProfile: React.FC = () => {
         {/* Header/Summary */}
         <section className="text-center space-y-spacing-xl animate-in fade-in slide-in-from-bottom-spacing-md duration-1000">
           <div className="relative w-spacing-4xl h-spacing-4xl mx-auto mb-spacing-xl">
-            <div className="absolute inset-0 rounded-full border border-primary/10 animate-pulse" />
-            <div className="absolute -inset-spacing-md rounded-full border border-primary/5 animate-slow-spin" />
-            <div className="w-full h-full rounded-full bg-primary/5 flex items-center justify-center overflow-hidden border border-primary/10">
+            <div className="absolute inset-0 rounded-premium-full border border-primary/10 animate-pulse" />
+            <div className="absolute -inset-spacing-md rounded-premium-full border border-primary/5 animate-slow-spin" />
+            <div className="w-full h-full rounded-premium-full bg-primary/5 flex items-center justify-center overflow-hidden border border-primary/10">
               {profile.avatar_url ? (
                 <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover opacity-80" />
               ) : (
@@ -139,17 +139,17 @@ const SpiritualProfile: React.FC = () => {
           </div>
           
           <div className="space-y-spacing-xs">
-            <h2 className="text-3xl font-display font-bold text-primary">{profile.name || 'Peregrino'}</h2>
-            <p className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">{levelName}</p>
+            <h2 className="text-premium-3xl font-display font-bold text-primary">{profile.name || 'Peregrino'}</h2>
+            <p className="text-premium-xs font-black uppercase tracking-[0.4em] text-primary/60">{levelName}</p>
           </div>
 
           <div className="flex justify-center gap-spacing-2xl pt-spacing-xl">
             <div className="text-center">
-              <p className="text-2xl font-display text-primary">{profile.streak || 0}</p>
+              <p className="text-premium-2xl font-display text-primary">{profile.streak || 0}</p>
               <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Dias em Oração</p>
             </div>
             <div className="text-center">
-              <p className="text-2xl font-display text-primary">{profile.xp || 0}</p>
+              <p className="text-premium-2xl font-display text-primary">{profile.xp || 0}</p>
               <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Graças (XP)</p>
             </div>
           </div>
@@ -175,12 +175,12 @@ const SpiritualProfile: React.FC = () => {
                   >
                     <div className="flex items-center justify-between gap-spacing-lg p-spacing-lg">
                       <div className="space-y-spacing-xs">
-                        <p className="text-xs text-primary/40 font-bold uppercase tracking-widest">Em progresso</p>
-                        <h4 className="text-lg font-serif font-bold text-primary">{j.title}</h4>
+                        <p className="text-premium-xs text-primary/40 font-bold uppercase tracking-widest">Em progresso</p>
+                        <h4 className="text-premium-lg font-serif font-bold text-primary">{j.title}</h4>
                       </div>
                       <div className="text-right">
-                        <p className="text-xl font-display text-primary">{j.progress}%</p>
-                        <div className="w-spacing-4xl h-spacing-2xs bg-primary/5 rounded-full mt-spacing-xs overflow-hidden">
+                        <p className="text-premium-xl font-display text-primary">{j.progress}%</p>
+                        <div className="w-spacing-4xl h-spacing-2xs bg-primary/5 rounded-premium-full mt-spacing-xs overflow-hidden">
                           <motion.div 
                             initial={{ width: 0 }}
                             animate={{ width: `${j.progress}%` }}
@@ -193,7 +193,7 @@ const SpiritualProfile: React.FC = () => {
                 ))
               ) : (
                 <div className="p-spacing-2xl border border-dashed border-primary/10 rounded-premium text-center opacity-30">
-                  <p className="font-serif italic text-sm">Nenhuma jornada iniciada...</p>
+                  <p className="font-serif italic text-premium-sm">Nenhuma jornada iniciada...</p>
                   <Button 
                     variant="ghost" 
                     className="mt-spacing-lg text-[10px] font-black uppercase tracking-widest"
@@ -218,13 +218,13 @@ const SpiritualProfile: React.FC = () => {
                 contemplatedThemes.map((theme) => (
                   <div 
                     key={theme}
-                    className="px-spacing-lg py-spacing-sm rounded-full bg-primary/[0.02] border border-primary/[0.05] text-[11px] font-bold text-primary/60 tracking-wider hover:bg-primary/5 hover:border-primary/20 transition-all duration-500 cursor-default"
+                    className="px-spacing-lg py-spacing-sm rounded-premium-full bg-primary/[0.02] border border-primary/[0.05] text-[11px] font-bold text-primary/60 tracking-wider hover:bg-primary/5 hover:border-primary/20 transition-all duration-500 cursor-default"
                   >
                     {theme}
                   </div>
                 ))
               ) : (
-                <p className="text-xs text-primary/60 font-serif italic">Logos IA está analisando sua caminhada...</p>
+                <p className="text-premium-xs text-primary/60 font-serif italic">Logos IA está analisando sua caminhada...</p>
               )}
             </div>
           </section>
@@ -240,21 +240,21 @@ const SpiritualProfile: React.FC = () => {
               <div className="p-spacing-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-spacing-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Ritmo</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-serif text-primary/70">{preferences.rhythm === 'soft' ? 'Suave' : preferences.rhythm === 'moderate' ? 'Moderado' : 'Intenso'}</span>
+                  <span className="text-premium-sm font-serif text-primary/70">{preferences.rhythm === 'soft' ? 'Suave' : preferences.rhythm === 'moderate' ? 'Moderado' : 'Intenso'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('rhythm', preferences.rhythm === 'soft' ? 'moderate' : preferences.rhythm === 'moderate' ? 'intense' : 'soft')}>Alterar</Button>
                 </div>
               </div>
               <div className="p-spacing-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-spacing-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Sugestões Logos</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-serif text-primary/70">{preferences.suggestion_mode === 'balanced' ? 'Equilibrado' : 'Aprofundado'}</span>
+                  <span className="text-premium-sm font-serif text-primary/70">{preferences.suggestion_mode === 'balanced' ? 'Equilibrado' : 'Aprofundado'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => updatePreference('suggestion_mode', preferences.suggestion_mode === 'balanced' ? 'deep' : 'balanced')}>Alterar</Button>
                 </div>
               </div>
               <div className="p-spacing-xl rounded-premium bg-primary/[0.01] border border-primary/[0.03] space-y-spacing-md">
                 <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">Lembretes</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-serif text-primary/70">{profile.notification_settings?.email_reminders ? 'Email e Push' : 'Apenas Push'}</span>
+                  <span className="text-premium-sm font-serif text-primary/70">{profile.notification_settings?.email_reminders ? 'Email e Push' : 'Apenas Push'}</span>
                   <Button variant="ghost" size="sm" className="text-[9px]" onClick={() => toggleEmailReminders()}>Alternar</Button>
                 </div>
               </div>
@@ -275,8 +275,8 @@ const SpiritualProfile: React.FC = () => {
                     <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">
                       {format(new Date(reading.visited_at), "d 'de' MMM", { locale: ptBR })}
                     </p>
-                    <h4 className="text-base font-serif font-bold text-primary/80 line-clamp-1">{reading.title || 'Leitura'}</h4>
-                    <p className="text-xs text-primary/40 italic line-clamp-2">Continuar contemplação...</p>
+                    <h4 className="text-premium-base font-serif font-bold text-primary/80 line-clamp-spacing-2xs">{reading.title || 'Leitura'}</h4>
+                    <p className="text-premium-xs text-primary/40 italic line-clamp-spacing-xs">Continuar contemplação...</p>
                   </div>
                 ))
               ) : (
@@ -297,7 +297,7 @@ const SpiritualProfile: React.FC = () => {
                 favoriteReflections.map((ref) => (
                   <div key={ref.id} className="relative p-spacing-xl rounded-premium border border-primary/5 bg-primary/[0.01] hover:bg-primary/[0.03] transition-all duration-1000 group">
                     <Icons.Quote className="absolute top-spacing-lg left-spacing-lg w-spacing-xl h-spacing-xl text-primary/5 group-hover:text-primary/60 transition-colors" />
-                    <p className="text-lg font-serif italic text-primary/70 leading-relaxed mb-spacing-lg pt-spacing-md">
+                    <p className="text-premium-lg font-serif italic text-primary/70 leading-relaxed mb-spacing-lg pt-spacing-md">
                       "{ref.content.length > 150 ? `${ref.content.substring(0, 150)}...` : ref.content}"
                     </p>
                     <p className="text-[9px] font-black uppercase tracking-widest text-primary/60">
@@ -315,14 +315,14 @@ const SpiritualProfile: React.FC = () => {
         {/* Logos Suggestion */}
         <section className="pt-spacing-4xl border-t border-primary/5">
           <div className="premium-card p-spacing-2xl md:p-spacing-3xl bg-primary/[0.005] border-primary/[0.02] text-center space-y-spacing-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-spacing-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+            <div className="absolute top-spacing-0 left-0 w-full h-spacing-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
             
             <div className="space-y-spacing-lg">
-              <div className="w-spacing-2xl h-spacing-2xl rounded-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center mx-auto text-primary/60">
+              <div className="w-spacing-2xl h-spacing-2xl rounded-premium-full bg-primary/[0.02] border border-primary/[0.05] flex items-center justify-center mx-auto text-primary/60">
                 <Icons.Sparkles className="w-spacing-md h-spacing-md" strokeWidth={0.5} />
               </div>
-              <h3 className="text-xl md:text-2xl font-serif font-bold text-primary/80">O que sua alma busca hoje?</h3>
-              <p className="text-sm md:text-base text-primary/40 font-serif italic max-w-spacing-xl mx-auto">
+              <h3 className="text-premium-xl md:text-premium-2xl font-serif font-bold text-primary/80">O que sua alma busca hoje?</h3>
+              <p className="text-premium-sm md:text-premium-base text-primary/40 font-serif italic max-w-spacing-xl mx-auto">
                 "A Logos IA pode ajudar a conectar os temas de sua jornada e sugerir novos caminhos de contemplação."
               </p>
             </div>
@@ -330,7 +330,7 @@ const SpiritualProfile: React.FC = () => {
             <div className="flex justify-center pt-spacing-xl">
               <Button 
                 variant="ghost" 
-                className="rounded-full px-spacing-2xl h-spacing-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] transition-all duration-700"
+                className="rounded-premium-full px-spacing-2xl h-spacing-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[10px] transition-all duration-700"
                 onClick={() => navigate('/logos')}
               >
                 Conversar com Logos

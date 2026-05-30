@@ -139,21 +139,21 @@ const Certamen: React.FC = () => {
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
             {pct >= 80 ? <Trophy className="w-spacing-xl h-spacing-xl" /> : pct >= 50 ? <BookOpen className="w-spacing-xl h-spacing-xl" /> : <Heart className="w-spacing-xl h-spacing-xl" />}
           </div>
-          <h2 className="text-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
-          <p className="text-5xl font-black text-primary">{score}/{answered}</p>
+          <h2 className="text-premium-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
+          <p className="text-premium-5xl font-black text-primary">{score}/{answered}</p>
           <div className="space-y-spacing-xs">
-            <p className="text-lg text-muted-foreground font-serif italic">
+            <p className="text-premium-lg text-muted-foreground font-serif italic">
               {pct >= 80 ? 'Excelente! Conhecimento sólido da fé!' : pct >= 50 ? 'Bom progresso. Continue estudando!' : 'Continue sua formação. A fé se aprofunda com o estudo.'}
             </p>
-            <p className="text-xs text-muted-foreground">Avaliação realizada em {new Date().toLocaleDateString('pt-BR')}</p>
+            <p className="text-premium-xs text-muted-foreground">Avaliação realizada em {new Date().toLocaleDateString('pt-BR')}</p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-spacing-md justify-center pt-spacing-md">
-            <Button onClick={restart} className="px-spacing-xl py-spacing-md bg-secondary text-secondary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-spacing-xs">
+            <Button onClick={restart} className="px-spacing-xl py-spacing-md bg-secondary text-secondary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/80 transition-all flex items-center justify-center gap-spacing-xs">
               <RotateCcw className="w-spacing-md h-spacing-md" />
               Tentar Novamente
             </Button>
-            <Button onClick={shareResult} className="px-spacing-xl py-spacing-md bg-primary text-primary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs shadow-premium shadow-primary/20">
+            <Button onClick={shareResult} className="px-spacing-xl py-spacing-md bg-primary text-primary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs shadow-premium shadow-primary/20">
               <Share2 className="w-spacing-md h-spacing-md" />
               Compartilhar Resultado
             </Button>
@@ -170,22 +170,22 @@ const Certamen: React.FC = () => {
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Certamen Fidei</span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Quiz da Fé</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">Quiz da Fé</h1>
         <p className="text-muted-foreground font-serif italic">Teste seus conhecimentos teológicos e compartilhe com sua comunidade.</p>
       </div>
 
       <div className="flex flex-wrap gap-spacing-xs justify-center">
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => { setCategory(cat); restart(); }}
-            className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-premium scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+            className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-premium scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
             {cat}
           </Button>
         ))}
       </div>
 
-      <div className="flex items-center justify-between text-sm px-spacing-xs">
+      <div className="flex items-center justify-between text-premium-sm px-spacing-xs">
         <span className="text-muted-foreground font-bold">Pergunta {currentIndex + 1}/{filtered.length}</span>
         <div className="h-spacing-xs flex-1 mx-spacing-md bg-muted rounded-premium overflow-hidden">
           <motion.div 
@@ -197,9 +197,9 @@ const Certamen: React.FC = () => {
         <span className="text-primary font-black">{score} acertos</span>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg shadow-md">
-        <span className="text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-spacing-xs py-spacing-2xs rounded">{question.category}</span>
-        <h2 className="text-xl md:text-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
+      <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg shadow-premium-md">
+        <span className="text-premium-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-spacing-xs py-spacing-2xs rounded">{question.category}</span>
+        <h2 className="text-premium-xl md:text-premium-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
         <div className="space-y-spacing-sm">
           {question.options.map((opt, idx) => {
@@ -211,8 +211,8 @@ const Certamen: React.FC = () => {
             }
             return (
               <Button key={idx} onClick={() => handleAnswer(idx)}
-                className={`w-full text-left p-spacing-md rounded-full border font-bold text-sm transition-all flex items-center gap-spacing-md ${cls}`}>
-                <span className="w-spacing-xl h-spacing-xl rounded-full bg-background flex items-center justify-center text-muted-foreground text-xs">{String.fromCharCode(65 + idx)}</span>
+                className={`w-full text-left p-spacing-md rounded-premium-full border font-bold text-premium-sm transition-all flex items-center gap-spacing-md ${cls}`}>
+                <span className="w-spacing-xl h-spacing-xl rounded-premium-full bg-background flex items-center justify-center text-muted-foreground text-premium-xs">{String.fromCharCode(65 + idx)}</span>
                 <span className="flex-1">{opt}</span>
               </Button>
             );
@@ -223,16 +223,16 @@ const Certamen: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-muted rounded-full p-spacing-lg space-y-spacing-sm border border-border"
+            className="bg-muted rounded-premium-full p-spacing-lg space-y-spacing-sm border border-border"
           >
-            <p className="text-sm font-bold text-foreground flex items-center gap-spacing-xs">
+            <p className="text-premium-sm font-bold text-foreground flex items-center gap-spacing-xs">
               {selected === question.correct ? '✅ Resposta Correta!' : '❌ Ops, não foi dessa vez.'}
             </p>
-            <p className="text-sm text-muted-foreground font-serif leading-relaxed italic">{question.explanation}</p>
+            <p className="text-premium-sm text-muted-foreground font-serif leading-relaxed italic">{question.explanation}</p>
             
             <Button 
               onClick={nextQuestion}
-              className="w-full mt-spacing-md py-spacing-md bg-primary text-primary-foreground rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs"
+              className="w-full mt-spacing-md py-spacing-md bg-primary text-primary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs"
             >
               {currentIndex >= filtered.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta'}
               <Icons.ArrowRight className="w-spacing-md h-spacing-md" />

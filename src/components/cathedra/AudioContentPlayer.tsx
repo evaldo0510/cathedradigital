@@ -154,7 +154,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         disabled={isLoading}
         variant={variant}
         size="sm"
-        className={`rounded-full flex items-center gap-spacing-xs transition-all ${
+        className={`rounded-premium-full flex items-center gap-spacing-xs transition-all ${
           isPlaying ? 'bg-primary/10 text-primary border-primary/30' : ''
         }`}
       >
@@ -170,7 +170,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
         ) : (
           <Headphones className="w-spacing-md h-spacing-md" />
         )}
-        {showTitle && <span className="text-xs font-black uppercase tracking-widest">{title}</span>}
+        {showTitle && <span className="text-premium-xs font-black uppercase tracking-widest">{title}</span>}
       </Button>
       
       {isPlaying && (

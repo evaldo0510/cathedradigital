@@ -181,11 +181,11 @@ const Footer: React.FC = React.memo(() => {
              <div className="flex items-center gap-spacing-lg">
                <Icons.Logo className="w-spacing-2xl h-spacing-2xl flex-shrink-0" variant="blue" />
                <div>
-                 <h3 className="text-2xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
+                 <h3 className="text-premium-2xl font-serif font-bold text-foreground tracking-tight">CATHEDRA</h3>
                  <p className="text-premium-small font-black uppercase text-primary tracking-[0.4em]">Digital Sanctuarium</p>
                </div>
             </div>
-            <p className="text-base text-muted-foreground leading-relaxed max-w-spacing-sm">
+            <p className="text-premium-base text-muted-foreground leading-relaxed max-w-spacing-sm">
               {lang === 'pt' 
                 ? 'Uma plataforma dedicada ao estudo, oração e vivência da fé católica, unindo a tradição milenar à tecnologia moderna.'
                 : 'A platform dedicated to the study, prayer, and living of the Catholic faith, uniting ancient tradition with modern technology.'}
@@ -197,7 +197,7 @@ const Footer: React.FC = React.memo(() => {
                 { icon: <Icons.Whatsapp />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
 
               ].map((social, i) => (
-                <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-spacing-xl h-spacing-xl p-0 flex items-center justify-center">
+                <Button key={i} variant="ghost" size="icon" asChild className="text-muted-foreground dark:text-foreground/70 hover:text-primary transition-all rounded-premium-full bg-foreground/5 dark:bg-foreground/10 border border-foreground/10 dark:border-foreground/20 hover:border-primary/30 w-spacing-xl h-spacing-xl p-spacing-0 flex items-center justify-center">
                   <a href={social.url} target="_blank" rel="noopener noreferrer" onClick={() => handleSocialClick(social.platform, social.url)} aria-label={social.platform}>
                     {social.icon}
                   </a>
@@ -208,14 +208,14 @@ const Footer: React.FC = React.memo(() => {
 
           <div>
             <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-lg flex items-center gap-spacing-xs">
-              <span className="text-lg">🏛️</span> Santa Sé
+              <span className="text-premium-lg">🏛️</span> Santa Sé
             </h4>
             <ul className="flex flex-col gap-spacing-md" role="list">
               {vaticanLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-spacing-xs group decoration-transparent">
+                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-spacing-0 h-auto gap-spacing-xs group decoration-transparent">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-spacing-2xs h-spacing-2xs rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      <span className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary/30 group-hover:bg-primary transition-colors" />
                       {link.title}
                     </a>
                   </Button>
@@ -226,14 +226,14 @@ const Footer: React.FC = React.memo(() => {
 
           <div>
             <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-lg flex items-center gap-spacing-xs">
-              <span className="text-lg">🇧🇷</span> CNBB
+              <span className="text-premium-lg">🇧🇷</span> CNBB
             </h4>
             <ul className="flex flex-col gap-spacing-md" role="list">
               {cnbbLinks.map(link => (
                 <li key={link.title}>
-                  <Button variant="link" asChild className="text-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-0 h-auto gap-spacing-xs group decoration-transparent">
+                  <Button variant="link" asChild className="text-premium-sm text-muted-foreground dark:text-muted-foreground/80 hover:text-primary transition-colors flex items-center justify-start p-spacing-0 h-auto gap-spacing-xs group decoration-transparent">
                     <a href={link.url} target="_blank" rel="noopener noreferrer">
-                      <span className="w-spacing-2xs h-spacing-2xs rounded-full bg-primary/30 group-hover:bg-primary transition-colors" />
+                      <span className="w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary/30 group-hover:bg-primary transition-colors" />
                       {link.title}
                     </a>
                   </Button>
@@ -248,7 +248,7 @@ const Footer: React.FC = React.memo(() => {
               <select 
                 value={selectedDiocese}
                 onChange={(e) => handleDioceseChange(e.target.value)}
-                className="w-full bg-foreground/5 border border-foreground/10 rounded-full px-spacing-md py-spacing-xs text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
+                className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full px-spacing-md py-spacing-xs text-premium-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors cursor-pointer appearance-none"
               >
                 <option value="">{lang === 'pt' ? 'Selecione sua Diocese' : 'Select your Diocese'}</option>
                 {DIOCESES_BR.map(d => (
@@ -256,7 +256,7 @@ const Footer: React.FC = React.memo(() => {
                 ))}
               </select>
               {dioceseUrl && (
-                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-spacing-xs mt-spacing-sm p-0 h-auto text-xs text-primary hover:underline">
+                <Button variant="link" size="sm" asChild className="inline-flex items-center gap-spacing-xs mt-spacing-sm p-spacing-0 h-auto text-premium-xs text-primary hover:underline">
                   <a href={dioceseUrl} target="_blank" rel="noopener noreferrer">
                     {lang === 'pt' ? 'Acessar portal' : 'Access portal'} <Icons.ExternalLink className="w-spacing-sm h-spacing-sm opacity-100" />
                   </a>
@@ -265,7 +265,7 @@ const Footer: React.FC = React.memo(() => {
             </div>
             <div>
               <h4 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary mb-spacing-md">{lang === 'pt' ? 'Boletim Informativo' : 'Newsletter'}</h4>
-              <p className="text-xs text-muted-foreground mb-spacing-md leading-relaxed">
+              <p className="text-premium-xs text-muted-foreground mb-spacing-md leading-relaxed">
                 {lang === 'pt' 
                   ? 'Receba reflexões teológicas e atualizações da plataforma em seu e-mail.'
                   : 'Receive theological reflections and platform updates in your email.'}
@@ -277,12 +277,12 @@ const Footer: React.FC = React.memo(() => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full bg-foreground/5 border border-foreground/10 rounded-full pl-spacing-md pr-spacing-2xl py-spacing-xs text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-foreground/5 border border-foreground/10 rounded-premium-full pl-spacing-md pr-spacing-2xl py-spacing-xs text-premium-sm focus:outline-none focus:border-primary/50 transition-colors"
                 />
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="absolute right-spacing-2xs top-spacing-2xs bottom-spacing-2xs px-spacing-sm bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all disabled:opacity-50"
+                  className="absolute right-spacing-2xs top-spacing-2xs bottom-spacing-2xs px-spacing-sm bg-primary text-primary-foreground rounded-premium-full hover:scale-105 transition-all disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <div className="w-spacing-md h-spacing-md border-2 border-primary-foreground border-t-transparent rounded-premium animate-spin" />
@@ -300,7 +300,7 @@ const Footer: React.FC = React.memo(() => {
             <p className="text-premium-small font-black uppercase tracking-[0.4em] text-muted-foreground/60 dark:text-muted-foreground/70">
               © {new Date().getFullYear()} CATHEDRA • OMNIA AD MAIOREM DEI GLORIAM
             </p>
-            <p className="text-base font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-spacing-xs tracking-widest">
+            <p className="text-premium-base font-bold text-muted-foreground/80 dark:text-muted-foreground/90 flex items-center gap-spacing-xs tracking-widest">
               {lang === 'pt' ? 'Criado por' : 'Created by'}
               <Button 
                 onClick={() => navigate(AppRoute.ADMIN)} 
@@ -338,7 +338,7 @@ const Footer: React.FC = React.memo(() => {
             </nav>
             <Button 
               onClick={scrollToTop} 
-              className="p-spacing-xs bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
+              className="p-spacing-xs bg-foreground/5 dark:bg-foreground/10 hover:bg-primary hover:text-primary-foreground rounded-premium-full transition-all border border-foreground/10 dark:border-foreground/20 group focus-visible:ring-2 focus-visible:ring-primary outline-none"
               aria-label="Voltar ao topo"
             >
               <Icons.ArrowDown className="rotate-180 opacity-100 group-hover:text-primary-foreground" />

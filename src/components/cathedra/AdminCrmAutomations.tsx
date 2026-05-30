@@ -103,7 +103,7 @@ const AdminCrmAutomations: React.FC = () => {
     <div className="space-y-spacing-lg">
       {/* Automation Status */}
       <div className="space-y-spacing-sm">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-spacing-xs">
+        <h3 className="text-premium-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-spacing-xs">
           <Zap className="w-spacing-md h-spacing-md" /> Automações Configuradas
         </h3>
         {automations.map(auto => (
@@ -113,15 +113,15 @@ const AdminCrmAutomations: React.FC = () => {
                 <div className="flex items-center gap-spacing-sm min-w-0">
                   {auto.icon}
                   <div className="min-w-0">
-                    <p className="font-semibold text-sm">{auto.name}</p>
-                    <p className="text-xs text-muted-foreground">{auto.description}</p>
+                    <p className="font-semibold text-premium-sm">{auto.name}</p>
+                    <p className="text-premium-xs text-muted-foreground">{auto.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-spacing-sm shrink-0">
                   <div className="text-right hidden sm:block">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
+                    <p className="text-premium-xs text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
                     {auto.edgeFunction && (
-                      <p className="text-xs font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
+                      <p className="text-premium-xs font-mono text-muted-foreground/70">{auto.edgeFunction}</p>
                     )}
                   </div>
                   <Badge className={auto.status === 'active'
@@ -144,7 +144,7 @@ const AdminCrmAutomations: React.FC = () => {
       {/* Manual Notification */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-spacing-xs">
+          <CardTitle className="text-premium-sm flex items-center gap-spacing-xs">
             <Send className="w-spacing-md h-spacing-md text-primary" /> Enviar Notificação Manual
           </CardTitle>
           <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
@@ -157,7 +157,7 @@ const AdminCrmAutomations: React.FC = () => {
                 size="sm"
                 variant={manualTarget === target ? 'default' : 'outline'}
                 onClick={() => setManualTarget(target)}
-                className="text-xs"
+                className="text-premium-xs"
               >
                 {target === 'all' ? 'Todos' : target === 'at_risk' ? 'Em Risco' : 'PRO'}
               </Button>

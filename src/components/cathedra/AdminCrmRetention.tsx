@@ -59,7 +59,7 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   const isGood = invertColor ? direction === 'down' : direction === 'up';
   const isBad = invertColor ? direction === 'up' : direction === 'down';
   const badge = (
-    <span className={`inline-flex items-center gap-spacing-3xs text-xs font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
+    <span className={`inline-flex items-center gap-spacing-3xs text-premium-xs font-medium cursor-default ${isGood ? 'text-primary' : isBad ? 'text-destructive' : 'text-muted-foreground'}`}>
       {direction === 'up' && <ArrowUp className="w-spacing-sm h-spacing-sm" />}
       {direction === 'down' && <ArrowDown className="w-spacing-sm h-spacing-sm" />}
       {direction === 'flat' && <Minus className="w-spacing-sm h-spacing-sm" />}
@@ -70,7 +70,7 @@ const DeltaBadge: React.FC<{ current: number; previous: number; invertColor?: bo
   return (
     <Tooltip>
       <TooltipTrigger asChild>{badge}</TooltipTrigger>
-      <TooltipContent side="top" className="text-xs">{tooltip}</TooltipContent>
+      <TooltipContent side="top" className="text-premium-xs">{tooltip}</TooltipContent>
     </Tooltip>
   );
 };
@@ -288,7 +288,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
     if (!active || !payload?.[0]) return null;
     const label = payload[0]?.payload?.label || '';
     return (
-      <div className="rounded-premium bg-popover px-spacing-xs py-spacing-2xs text-xs font-medium text-popover-foreground shadow-premium border border-border">
+      <div className="rounded-premium bg-popover px-spacing-xs py-spacing-2xs text-premium-xs font-medium text-popover-foreground shadow-premium border border-border">
         {label}: {Number(payload[0].value).toFixed(1)}
       </div>
     );
@@ -322,14 +322,14 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
               key={opt.value}
               size="sm"
               variant={periodMonths === opt.value ? 'default' : 'outline'}
-              className="h-spacing-xl text-xs"
+              className="h-spacing-xl text-premium-xs"
               onClick={() => setPeriodMonths(opt.value)}
             >
               {opt.label}
             </Button>
           ))}
         </div>
-        <Button size="sm" variant="outline" className="h-spacing-xl text-xs gap-spacing-2xs" onClick={exportRetentionCsv} disabled={filteredUsers.length === 0}>
+        <Button size="sm" variant="outline" className="h-spacing-xl text-premium-xs gap-spacing-2xs" onClick={exportRetentionCsv} disabled={filteredUsers.length === 0}>
           <Download className="w-spacing-sm h-spacing-sm" /> Exportar CSV
         </Button>
       </div>
@@ -339,7 +339,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'Taxa de Retenção',
             icon: <TrendingUp className="h-spacing-md w-spacing-md text-primary" />,
-            value: <span className="text-3xl font-bold text-primary">{metrics.retentionRate}%</span>,
+            value: <span className="text-premium-3xl font-bold text-primary">{metrics.retentionRate}%</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.retentionRate)} previous={prevPeriod.retentionRate} tooltip={periodLabel} /> : null,
             sub: <>{metrics.active.length} ativos de {filteredUsers.length}</>,
             spark: <Sparkline data={sparklines.retention} />,
@@ -347,7 +347,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'Taxa de Churn',
             icon: <TrendingDown className="h-spacing-md w-spacing-md text-destructive" />,
-            value: <span className="text-3xl font-bold text-destructive">{metrics.churnRate}%</span>,
+            value: <span className="text-premium-3xl font-bold text-destructive">{metrics.churnRate}%</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.churnRate)} previous={prevPeriod.churnRate} invertColor tooltip={periodLabel} /> : null,
             sub: <>{metrics.churned.length} inativos ({'>'}14 dias)</>,
             spark: <Sparkline data={sparklines.churn} color="hsl(var(--destructive))" />,
@@ -355,7 +355,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'Streak Médio',
             icon: <Flame className="h-spacing-md w-spacing-md text-accent-foreground" />,
-            value: <span className="text-3xl font-bold">{metrics.avgStreak}</span>,
+            value: <span className="text-premium-3xl font-bold">{metrics.avgStreak}</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={parseFloat(metrics.avgStreak)} previous={prevPeriod.avgStreak} tooltip={periodLabel} /> : null,
             sub: 'dias consecutivos',
             spark: <Sparkline data={sparklines.streak} />,
@@ -363,7 +363,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'Novos (7d)',
             icon: <UserPlus className="h-spacing-md w-spacing-md text-primary" />,
-            value: <span className="text-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>,
+            value: <span className="text-premium-3xl font-bold text-primary">{metrics.newUsers7d.length}</span>,
             delta: prevPeriod && periodLabel ? <DeltaBadge current={metrics.newUsers7d.length} previous={prevPeriod.newUsers7d} tooltip={periodLabel} /> : null,
             sub: <>{metrics.newUsers30d.length} nos últimos 30 dias</>,
             spark: <Sparkline data={sparklines.newUsers} />,
@@ -371,7 +371,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'LTV Médio',
             icon: <DollarSign className="h-spacing-md w-spacing-md text-primary" />,
-            value: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return <span className="text-3xl font-bold">R$ {ltv.toFixed(2)}</span>; })(),
+            value: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return <span className="text-premium-3xl font-bold">R$ {ltv.toFixed(2)}</span>; })(),
             delta: (() => { const ltv = metrics.premium.length > 0 ? filteredRevenue / metrics.premium.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={ltv} previous={prevPeriod.ltv} tooltip={periodLabel} /> : null; })(),
             sub: 'receita / cliente PRO',
             spark: <Sparkline data={sparklines.ltv} />,
@@ -379,7 +379,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           {
             title: 'ARPU',
             icon: <DollarSign className="h-spacing-md w-spacing-md text-muted-foreground" />,
-            value: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return <span className="text-3xl font-bold">R$ {arpu.toFixed(2)}</span>; })(),
+            value: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return <span className="text-premium-3xl font-bold">R$ {arpu.toFixed(2)}</span>; })(),
             delta: (() => { const arpu = filteredUsers.length > 0 ? filteredRevenue / filteredUsers.length : 0; return prevPeriod && periodLabel ? <DeltaBadge current={arpu} previous={prevPeriod.arpu} tooltip={periodLabel} /> : null; })(),
             sub: 'receita / usuário total',
             spark: <Sparkline data={sparklines.arpu} />,
@@ -393,7 +393,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
           >
             <Card className="h-full">
               <CardHeader className="flex flex-row items-center justify-between pb-spacing-xs space-y-0">
-                <CardTitle className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{kpi.title}</CardTitle>
+                <CardTitle className="text-premium-xs font-medium uppercase tracking-wider text-muted-foreground">{kpi.title}</CardTitle>
                 {kpi.icon}
               </CardHeader>
               <CardContent>
@@ -417,7 +417,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Distribuição de Streaks</CardTitle>
+            <CardTitle className="text-premium-sm">Distribuição de Streaks</CardTitle>
             <CardDescription>Frequência de dias consecutivos</CardDescription>
           </CardHeader>
           <CardContent className="h-[260px]">
@@ -435,7 +435,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-sm">Saúde da Base</CardTitle>
+            <CardTitle className="text-premium-sm">Saúde da Base</CardTitle>
             <CardDescription>Ativos vs Em Risco vs Inativos</CardDescription>
           </CardHeader>
           <CardContent className="h-[260px] flex items-center justify-center">
@@ -451,7 +451,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <p className="text-muted-foreground text-sm">Sem dados suficientes.</p>
+              <p className="text-muted-foreground text-premium-sm">Sem dados suficientes.</p>
             )}
           </CardContent>
         </Card>
@@ -460,7 +460,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       {/* Conversion Funnel */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Funil de Conversão</CardTitle>
+          <CardTitle className="text-premium-sm">Funil de Conversão</CardTitle>
           <CardDescription>Cadastro → Ativo → PRO</CardDescription>
         </CardHeader>
         <CardContent className="h-[280px]">
@@ -479,7 +479,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-muted-foreground text-sm text-center pt-spacing-3xl">Sem dados suficientes.</p>
+            <p className="text-muted-foreground text-premium-sm text-center pt-spacing-3xl">Sem dados suficientes.</p>
           )}
         </CardContent>
       </Card>
@@ -487,7 +487,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       {/* MRR Chart */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Receita Mensal Recorrente (MRR)</CardTitle>
+          <CardTitle className="text-premium-sm">Receita Mensal Recorrente (MRR)</CardTitle>
           <CardDescription>Evolução mensal da receita aprovada</CardDescription>
         </CardHeader>
         <CardContent className="h-[280px]">
@@ -508,7 +508,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <p className="text-muted-foreground text-sm text-center pt-spacing-3xl">Sem transações aprovadas.</p>
+            <p className="text-muted-foreground text-premium-sm text-center pt-spacing-3xl">Sem transações aprovadas.</p>
           )}
         </CardContent>
       </Card>
@@ -516,7 +516,7 @@ const AdminCrmRetention: React.FC<Props> = ({ users, totalRevenue, transactions 
       {metrics.atRisk.length > 0 && (
         <Card className="border-secondary/30 bg-secondary/5">
           <CardHeader className="pb-spacing-sm">
-            <CardTitle className="text-sm flex items-center gap-spacing-xs text-secondary">
+            <CardTitle className="text-premium-sm flex items-center gap-spacing-xs text-secondary">
               <AlertTriangle className="w-spacing-md h-spacing-md" /> Usuários em Risco ({metrics.atRisk.length})
             </CardTitle>
             <CardDescription>Não acessam há 4-14 dias. Considere enviar notificação de reengajamento.</CardDescription>

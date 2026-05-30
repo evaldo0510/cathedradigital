@@ -82,7 +82,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-2xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
+      "flex flex-col items-center justify-center gap-spacing-2xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
       isActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-primary'
     )}
   >
@@ -90,7 +90,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <motion.div
         layoutId="bottom-nav-active-bg"
         data-testid="bottom-nav-active-bg"
-        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-full z-0"
+        className="absolute inset-x-1.5 inset-y-1.5 bg-primary/[0.03] rounded-premium-full z-0"
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 30 }}
       />
     )}
@@ -136,7 +136,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <motion.div 
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
-        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-primary rounded-full z-10" 
+        className="absolute bottom-spacing-2xs w-spacing-3xs h-spacing-3xs bg-primary rounded-premium-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
@@ -169,7 +169,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-spacing-sm left-spacing-sm right-spacing-sm z-[160] lg:hidden h-spacing-xl bg-background/5 rounded-full shadow-none border border-primary/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-spacing-xs overflow-hidden transition-all backdrop-blur-sm will-change-transform",
+        "fixed bottom-spacing-sm left-spacing-sm right-spacing-sm z-[160] lg:hidden h-spacing-xl bg-background/5 rounded-premium-full shadow-premium-none border border-primary/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-spacing-xs overflow-hidden transition-all backdrop-blur-sm will-change-transform",
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

@@ -58,7 +58,7 @@ const PricingSection = () => {
     <section className="w-full section-spacing bg-background relative overflow-hidden">
       <div className="app-container space-y-spacing-3xl">
         <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/70 block italic">Investimento Espiritual</span>
+          <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/70 block italic">Investimento Espiritual</span>
           <h2 className="font-display font-bold text-foreground">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
           <p className="text-muted-foreground/90 font-serif max-w-spacing-2xl mx-auto">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
@@ -74,7 +74,7 @@ const PricingSection = () => {
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-spacing-sm left-spacing-2xs/2 -translate-x-1/2 bg-secondary text-primary-foreground text-xs font-bold uppercase tracking-[0.3em] px-spacing-md py-spacing-2xs rounded-premium">
+                <div className="absolute -top-spacing-sm left-spacing-2xs/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-xs font-bold uppercase tracking-[0.3em] px-spacing-md py-spacing-2xs rounded-premium">
                   Mais Escolhido
                 </div>
               )}
@@ -89,10 +89,10 @@ const PricingSection = () => {
 
                 <div className="space-y-spacing-xs">
                   <div className="flex items-baseline gap-spacing-2xs">
-                    <span className="text-3xl font-bold">{tier.price}</span>
+                    <span className="text-premium-3xl font-bold">{tier.price}</span>
                     {tier.period && <span className="text-muted-foreground text-premium-small">{tier.period}</span>}
                   </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                  <p className="text-premium-xs text-muted-foreground leading-relaxed">
                     {tier.desc}
                   </p>
                 </div>

@@ -74,10 +74,10 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
           >
             <div className="flex items-center justify-between">
               <div className="space-y-spacing-2xs">
-                <h3 className="text-xl font-display font-light text-primary uppercase tracking-widest">{title}</h3>
+                <h3 className="text-premium-xl font-display font-light text-primary uppercase tracking-widest">{title}</h3>
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 italic">Scriptum Sanctuarium</p>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full opacity-40 hover:opacity-100">
+              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-premium-full opacity-40 hover:opacity-100">
                 <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
@@ -89,7 +89,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                   <button
                     key={c.name}
                     onClick={() => setColor(c.name)}
-                    className={`w-spacing-xl h-spacing-xl rounded-full ${c.value} border-2 transition-all hover:scale-110 flex items-center justify-center ${
+                    className={`w-spacing-xl h-spacing-xl rounded-premium-full ${c.value} border-2 transition-all hover:scale-110 flex items-center justify-center ${
                       color === c.name ? 'border-primary shadow-premium ring-4 ring-primary/5' : 'border-white/20'
                     }`}
                   >
@@ -108,7 +108,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                 onKeyDown={handleKeyDown}
                 placeholder="O que esta passagem diz ao seu coração?"
                 rows={4}
-                className="w-full bg-primary/[0.02] border border-primary/5 rounded-premium p-spacing-lg text-foreground font-serif italic text-lg focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-primary/60 resize-none"
+                className="w-full bg-primary/[0.02] border border-primary/5 rounded-premium p-spacing-lg text-foreground font-serif italic text-premium-lg focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-primary/60 resize-none"
                />
                <p className="text-center text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest">Atalho: Ctrl + Enter para salvar</p>
             </div>

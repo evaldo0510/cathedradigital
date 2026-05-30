@@ -10,12 +10,12 @@ const TermsPage: React.FC = () => {
     <div className="w-full pb-spacing-4xl">
       {/* Redundant back button removed */}
 
-      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-spacing-xs">Termos de Uso</h1>
-      <p className="text-xs font-black uppercase tracking-widest text-primary mb-spacing-xl">Última atualização: Abril de 2026</p>
+      <h1 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground mb-spacing-xs">Termos de Uso</h1>
+      <p className="text-premium-xs font-black uppercase tracking-widest text-primary mb-spacing-xl">Última atualização: Abril de 2026</p>
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-spacing-xl text-muted-foreground">
         <section>
-          <h2 className="text-lg font-bold text-foreground">1. Aceitação dos Termos</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">1. Aceitação dos Termos</h2>
           <p>
             Ao acessar e utilizar a plataforma Cathedra Digital, você concorda com estes Termos de Uso. 
             Se você não concordar com qualquer parte destes termos, não deverá utilizar nossos serviços.
@@ -24,7 +24,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">2. Descrição dos Serviços</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">2. Descrição dos Serviços</h2>
           <p>
             A Cathedra Digital oferece acesso a textos sagrados, documentos do Magistério, 
             ferramentas de oração, estudos bíblicos e catequéticos, e uma comunidade de formação. 
@@ -34,7 +34,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">3. Conta de Usuário</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">3. Conta de Usuário</h2>
           <p>
             Para acessar determinadas funcionalidades, é necessário criar uma conta. 
             Você é responsável por manter a confidencialidade de suas credenciais de acesso 
@@ -44,7 +44,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">4. Assinatura PRO</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">4. Assinatura PRO</h2>
           <p>
             A assinatura PRO concede acesso a recursos avançados como o Colloquium IA e 
             ferramentas exclusivas de estudo. O pagamento é processado de forma segura e 
@@ -54,7 +54,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">5. Propriedade Intelectual</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">5. Propriedade Intelectual</h2>
           <p>
             Os textos bíblicos, catequéticos e magisteriais pertencem às suas respectivas fontes. 
             A interface, design, código e funcionalidades exclusivas da plataforma são propriedade 
@@ -63,7 +63,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">6. Conduta do Usuário</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">6. Conduta do Usuário</h2>
           <p>
             O usuário compromete-se a utilizar a plataforma de forma respeitosa, em conformidade 
             com os valores cristãos e a doutrina católica. É expressamente proibido publicar 
@@ -73,7 +73,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">7. Limitação de Responsabilidade</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">7. Limitação de Responsabilidade</h2>
           <p>
             A Cathedra Digital oferece seus serviços "como estão". Não garantimos a disponibilidade 
             ininterrupta do serviço nem a ausência total de erros. Os conteúdos não substituem 
@@ -82,7 +82,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">8. Alterações nos Termos</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">8. Alterações nos Termos</h2>
           <p>
             Reservamo-nos o direito de modificar estes termos a qualquer momento. 
             As alterações serão comunicadas por meio da plataforma e entrarão em vigor 
@@ -92,7 +92,7 @@ const TermsPage: React.FC = () => {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-foreground">9. Contato</h2>
+          <h2 className="text-premium-lg font-bold text-foreground">9. Contato</h2>
           <p>
             Para dúvidas sobre estes Termos de Uso, entre em contato conosco 
             através da seção de suporte da plataforma ou pelo e-mail disponibilizado 
@@ -102,7 +102,7 @@ const TermsPage: React.FC = () => {
       </div>
 
       <div className="mt-spacing-2xl pt-spacing-lg border-t border-border">
-        <p className="text-xs text-muted-foreground italic text-center">
+        <p className="text-premium-xs text-muted-foreground italic text-center">
           "Conhecereis a verdade, e a verdade vos libertará." — Jo 8,32
         </p>
       </div>

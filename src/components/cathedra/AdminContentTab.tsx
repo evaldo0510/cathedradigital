@@ -130,8 +130,8 @@ const AdminContentTab: React.FC = () => {
     <div className="space-y-spacing-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
-          <h2 className="text-xl font-bold">Gestão de Conteúdo</h2>
-          <p className="text-sm text-muted-foreground">Modere postagens da comunidade.</p>
+          <h2 className="text-premium-xl font-bold">Gestão de Conteúdo</h2>
+          <p className="text-premium-sm text-muted-foreground">Modere postagens da comunidade.</p>
         </div>
         <div className="relative">
           <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
@@ -149,7 +149,7 @@ const AdminContentTab: React.FC = () => {
           <TabsTrigger value="pending" className="gap-spacing-xs">
             Pendentes
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-spacing-2xs py-spacing-3xs rounded-full text-xs font-bold">
+              <span className="bg-primary text-primary-foreground px-spacing-2xs py-spacing-3xs rounded-premium-full text-premium-xs font-bold">
                 {pendingCount}
               </span>
             )}
@@ -168,32 +168,32 @@ const AdminContentTab: React.FC = () => {
             </Card>
           ) : (
             filteredPosts.map((post) => (
-              <Card key={post.id} className="overflow-hidden shadow-none border-border/40">
+              <Card key={post.id} className="overflow-hidden shadow-premium-none border-border/40">
                 <CardHeader className="flex flex-row items-center justify-between pb-spacing-2xs pt-spacing-sm px-spacing-sm">
                   <div className="flex items-center gap-spacing-xs">
                     <User className="w-spacing-sm h-spacing-sm text-muted-foreground" />
-                    <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
-                    <span className="text-xs text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
-                    {post.category && <Badge variant="outline" className="text-xs uppercase h-spacing-md px-spacing-2xs">{post.category}</Badge>}
+                    <span className="text-premium-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
+                    <span className="text-premium-xs text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
+                    {post.category && <Badge variant="outline" className="text-premium-xs uppercase h-spacing-md px-spacing-2xs">{post.category}</Badge>}
                   </div>
                   <div className="scale-90 origin-right">
                     {getStatusBadge(post.status)}
                   </div>
                 </CardHeader>
                 <CardContent className="px-spacing-sm pb-spacing-xs pt-spacing-2xs">
-                  {post.title && <h3 className="text-sm font-bold mb-spacing-3xs">{post.title}</h3>}
-                  <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
+                  {post.title && <h3 className="text-premium-sm font-bold mb-spacing-3xs">{post.title}</h3>}
+                  <p className="text-premium-xs text-muted-foreground whitespace-pre-wrap line-clamp-spacing-sm">{post.content}</p>
                 </CardContent>
                 <CardFooter className="bg-muted/10 border-t border-border/10 py-spacing-2xs px-spacing-sm flex justify-end gap-spacing-2xs">
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-spacing-lg text-xs font-bold uppercase tracking-widest px-spacing-xs">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs">
                     <Trash2 className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-spacing-lg text-xs font-bold uppercase tracking-widest px-spacing-xs">
+                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs">
                         <X className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Rejeitar
                       </Button>
-                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-spacing-lg text-xs font-bold uppercase tracking-widest px-spacing-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-spacing-lg text-premium-xs font-bold uppercase tracking-widest px-spacing-xs bg-emerald-600 hover:bg-emerald-700 text-white">
                         <Check className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> Aprovar
                       </Button>
                     </>
