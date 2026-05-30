@@ -368,7 +368,7 @@ const MagisteriumViewer: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-[var(--layout-max-width)] mx-auto pb-32 relative reader-container overflow-x-hidden">
+    <div className="w-full max-w-[70ch] mx-auto pb-32 relative reader-container overflow-x-hidden">
       <SEOHead 
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
@@ -411,32 +411,7 @@ const MagisteriumViewer: React.FC = () => {
       </div>
 
 
-      <div className="flex flex-col xl:flex-row gap-12 lg:gap-24 items-start">
-        {/* Elegant side navigation - Hidden on mobile for focused reading */}
-        <aside className="hidden lg:flex flex-col w-full max-w-[280px] space-y-12 sticky top-32">
-
-          <div className="bg-primary/5 border border-primary/10 rounded-3xl p-6 space-y-4">
-            <Icons.Scroll className="w-8 h-8 text-primary/40 mx-auto" />
-            <p className="text-center text-premium-tiny font-black uppercase tracking-widest text-primary/60">Biblioteca do Magistério</p>
-            <p className="text-xs text-muted-foreground italic text-center leading-relaxed">"O Magistério não está acima da Palavra de Deus, mas ao seu serviço." (Dei Verbum, 10)</p>
-          </div>
-
-          {currentDocNotes.length > 0 && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-left-4 duration-1000">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/40 px-4">Minhas Marcações</p>
-              <div className="flex flex-col gap-2 max-h-[60vh] overflow-y-auto no-scrollbar pr-2">
-                {currentDocNotes.map(note => {
-                  const pIdx = note.content_id.includes(':') ? parseInt(note.content_id.split(':')[1]) : null;
-                  
-                  return (
-                    <button
-                      key={note.id}
-                      onClick={() => {
-                        if (pIdx !== null) {
-                          const el = document.getElementById(`para-${pIdx}`);
-                          if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            el.classList.add('ring-2', 'ring-secondary', 'ring-offset-4', 'rounded-xl', 'transition-all', 'duration-1000');
+      <div className="flex flex-col gap-12 lg:gap-24 items-start">
                             setTimeout(() => el.classList.remove('ring-2', 'ring-secondary', 'ring-offset-4'), 3000);
                           }
                         }

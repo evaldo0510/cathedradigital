@@ -151,7 +151,7 @@ const LazyParagraph: React.FC<{
             <Button onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} className="p-1.5 rounded-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary">
               <Icons.Sparkles className="w-3.5 h-3.5" />
             </Button>
-            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
+              <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
@@ -237,8 +237,8 @@ const Catechism: React.FC = memo(() => {
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     return (
-      <ContemplativeLayout subtitle={selectedSection.title} title="CIC" icon={Icons.Catechism}>
-        <div className="max-w-4xl space-y-12">
+      <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
+        <div className="max-w-[70ch] mx-auto space-y-12">
           {/* Unified Reading Navigation */}
           <div className="flex items-center justify-between gap-4 py-4 border-b border-primary/5 mb-12">
              <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>
