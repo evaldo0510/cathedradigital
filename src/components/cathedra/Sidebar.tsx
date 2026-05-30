@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { prefetchRoute } from '@/lib/prefetch';
-import { Icons } from '../../constants';
+import { Icons, NAV_ITEMS } from '../../constants';
 import { AppRoute, User } from '../../types';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
