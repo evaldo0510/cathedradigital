@@ -290,32 +290,33 @@ const Magisterium: React.FC = () => {
         })}
       </script>
 
-      <div className="space-y-24">
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-6 items-center justify-between border-b border-primary/[0.04] pb-8">
-          <div className="relative group w-full md:w-80">
-            <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-primary/60" />
+      <div className="max-w-6xl mx-auto space-y-12 pb-32">
+        {/* Unified Search & Filters */}
+        <div className="space-y-8">
+          <div className="relative group max-w-4xl mx-auto">
+            <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />
             <input
-              placeholder="Buscar documento ou autor..." 
-              className="search-input-premium py-2 pl-12 text-xs"
+              placeholder="Buscar documento, autor ou tema..." 
+              className="search-input-premium pl-16"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+          <div className="flex items-center justify-center gap-2 overflow-x-auto no-scrollbar py-2">
             <Button 
               variant="ghost"
-              className={`rounded-full px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all ${selectedTheme === null ? 'bg-primary text-white' : 'text-primary/40 hover:text-primary'}`}
+              className={`rounded-full px-6 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
               onClick={() => setSelectedTheme(null)}
             >
-              Todos
+              Todos os Temas
             </Button>
-            {THEMES.slice(0, 5).map(theme => (
+            {THEMES.slice(0, 6).map(theme => (
               <Button 
                 key={theme}
                 variant="ghost"
-                className={`rounded-full px-5 py-1.5 text-[9px] font-bold uppercase tracking-widest transition-all ${selectedTheme === theme ? 'bg-primary text-white' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-full px-6 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
                 onClick={() => setSelectedTheme(theme)}
               >
                 {theme}
@@ -325,41 +326,48 @@ const Magisterium: React.FC = () => {
         </div>
 
         {/* Documents Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredDocs.map((doc, idx) => (
-            <motion.button
+            <CathedraCard
               key={doc.id}
-              whileHover={{ y: -4 }}
+              variant="interactive"
+              padding="none"
               onClick={() => navigate(`/magisterium/${doc.id}`)}
-              className="text-left flex flex-col gap-6 p-6 rounded-2xl border border-primary/5 bg-card hover:border-primary/10 hover:shadow-sm transition-all group h-full"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 }}
+              className="group h-full"
             >
-              <div className="flex justify-between items-start">
-                <div className="w-12 h-12 rounded-full bg-primary/[0.02] border border-primary/10 flex items-center justify-center text-primary/60 group-hover:text-primary/40 transition-colors">
-                  {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" /> : <Icons.FileText className="w-5 h-5" />}
+              <div className="p-8 flex flex-col gap-6 h-full text-left">
+                <div className="flex justify-between items-start">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
+                    {doc.type === 'Encíclica' ? <Icons.Scroll className="w-5 h-5" strokeWidth={1} /> : <Icons.FileText className="w-5 h-5" strokeWidth={1} />}
+                  </div>
+                  <span className="text-[9px] font-black text-secondary/50 tracking-widest">{doc.year}</span>
                 </div>
-                <span className="text-[10px] font-bold text-secondary/40 border border-secondary/10 px-3 py-1 rounded-full">{doc.year}</span>
-              </div>
 
-              <div className="space-y-4 flex-1">
-                <h3 className="text-2xl font-display font-medium text-primary group-hover:text-secondary transition-colors leading-tight">{doc.title}</h3>
-                <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.2em]">{doc.author}</p>
-                <p className="text-sm text-muted-foreground/40 font-serif italic line-clamp-3 leading-relaxed">{doc.summary}</p>
-              </div>
+                <div className="space-y-3 flex-1">
+                  <h3 className="text-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{doc.title}</h3>
+                  <p className="text-[9px] font-black text-primary/40 uppercase tracking-[0.2em]">{doc.author}</p>
+                  <p className="text-[11px] text-muted-foreground/50 italic line-clamp-3 leading-relaxed">{doc.summary}</p>
+                </div>
 
-              <div className="flex flex-wrap gap-2 pt-4">
-                {doc.theme.map(t => (
-                  <span key={t} className="text-[8px] font-bold text-primary/60 bg-primary/[0.01] px-3 py-1 rounded-full uppercase tracking-widest">
-                    {t}
-                  </span>
-                ))}
+                <div className="flex flex-wrap gap-1.5 pt-4 border-t border-primary/[0.03]">
+                  {doc.theme.map(t => (
+                    <span key={t} className="text-[7px] font-black text-primary/30 uppercase tracking-[0.15em] bg-primary/[0.01] px-2 py-0.5 rounded-full">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </motion.button>
+            </CathedraCard>
           ))}
         </div>
 
         {filteredDocs.length === 0 && (
-          <div className="text-center py-20 border border-dashed border-primary/5 rounded-premium bg-primary/[0.01]">
-            <p className="text-muted-foreground/30 font-serif italic text-sm">Nenhum documento encontrado no silêncio da busca.</p>
+          <div className="text-center py-32 opacity-20">
+            <Icons.Search className="w-12 h-12 mx-auto mb-4" strokeWidth={0.5} />
+            <p className="font-serif italic text-sm">Nenhum documento encontrado no silêncio da busca.</p>
           </div>
         )}
       </div>
