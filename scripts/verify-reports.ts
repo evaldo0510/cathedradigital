@@ -34,6 +34,27 @@ function getActualFiles() {
     .sort();
 }
 
+function validateJsonFiles(files: string[]) {
+  const jsonFiles = files.filter(f => f.endsWith('.json'));
+  const corrupted: string[] = [];
+  
+  jsonFiles.forEach(file => {
+    const content = readFileSync(join(REPORTS_DIR, file), 'utf8');
+    try {
+      const data = JSON.parse(content);
+      // Basic schema check
+      if (file === 'compliance-history.json') {
+        if (!Array.isArray(data)) throw new Error("History must be an array");
+      } else if (file.startsWith('token-audit')) {
+        if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
+      }
+    } catch (e) {
+      corrupted.push(file);
+    }
+  });
+  return corrupted;
+}
+
 function generateTreeString(files: string[]) {
   let tree = "reports/\n";
   files.forEach((file, index) => {
