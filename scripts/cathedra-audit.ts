@@ -4,7 +4,7 @@ import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const args = process.argv.slice(2);
-const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '0');
+const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '5');
 const softMode = args.includes('--soft');
 
 const forbiddenPatterns = [
