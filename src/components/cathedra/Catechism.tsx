@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
+import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
@@ -32,7 +33,6 @@ import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import ReadingMark from './ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { toast } from 'sonner';
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';

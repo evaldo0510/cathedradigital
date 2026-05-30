@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense, memo } from 'react';
+import { useRenderPerf } from '@/hooks/useRenderPerf';
 import BackToThemeBanner from './BackToThemeBanner';
 import { motion, AnimatePresence } from 'framer-motion';
 import SEOHead from '@/components/SEOHead';
@@ -34,7 +35,6 @@ const LogosAI = lazy(() => import('./LogosAI'));
 const LogosContextualSuggestions = lazy(() => import('./LogosContextualSuggestions').then(m => ({ default: m.LogosContextualSuggestions })));
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
-import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { History, LayoutPanelLeft, Compass, ChevronLeft, ChevronRight, X, StopCircle } from 'lucide-react';
 import ContemplativeLayout from './ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
