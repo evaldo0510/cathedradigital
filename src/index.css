@@ -74,60 +74,60 @@
     --spacing-2xl: 12rem;   /* 192px */
     
     /* Design System Tokens */
-    --card-radius: 5rem;
-    --card-radius-mobile: 1.5rem;
+    --card-radius: 4rem;
+    --card-radius-mobile: 1rem;
     --card-shadow: none;
     --card-shadow-hover: none;
     --btn-radius: 9999px;
-    --layout-max-width: 1800px;
-    --transition-premium: 1200ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    --layout-max-width: 1600px;
+    --transition-premium: 1000ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 500ms cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Global Spacing Rhythm Tokens */
-    --space-mobile-base: 0.25rem;
-    --space-mobile-section: 0.5rem;
-    --space-mobile-section-sm: 0.25rem;
-    --space-mobile-stack: 0.2rem;
-    --space-mobile-stack-lg: 0.4rem;
-    --space-mobile-padding: 0.75rem;
-    --space-mobile-header-mb: 0.4rem;
+    /* Global Spacing Rhythm Tokens - Optimized for Mobile Reading */
+    --space-mobile-base: 0.15rem;
+    --space-mobile-section: 0.4rem;
+    --space-mobile-section-sm: 0.2rem;
+    --space-mobile-stack: 0.15rem;
+    --space-mobile-stack-lg: 0.3rem;
+    --space-mobile-padding: 0.6rem;
+    --space-mobile-header-mb: 0.3rem;
     
-    --space-desktop-base: 2rem;
-    --space-desktop-section: 12rem;
-    --space-desktop-stack: 4.5rem;
-    --space-desktop-padding: 3.5rem;
-    --space-desktop-header-mb: 10rem;
+    --space-desktop-base: 1.5rem;
+    --space-desktop-section: 8rem;
+    --space-desktop-stack: 3rem;
+    --space-desktop-padding: 3rem;
+    --space-desktop-header-mb: 6rem;
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 20% 7%;      /* Lightened for OLED mobile elegance */
-    --foreground: 45 15% 88%;      /* More luminous, softer contrast */
+    --background: 220 20% 6%;      /* Slightly deeper for better OLED contrast */
+    --foreground: 45 15% 92%;      /* More luminous, softer contrast */
     
-    --card: 220 20% 7%;            /* Blend perfectly */
-    --card-foreground: 45 15% 88%;
+    --card: 220 20% 6%;            /* Blend perfectly */
+    --card-foreground: 45 15% 92%;
     
-    --popover: 220 25% 8%;
-    --popover-foreground: 45 15% 88%;
+    --popover: 220 25% 7%;
+    --popover-foreground: 45 15% 92%;
     --popover-blur: 24px;
     
-    --primary: 42 20% 65%;         /* Softer Luminous Gold */
+    --primary: 42 20% 70%;         /* Luminous Gold */
     --primary-foreground: 220 20% 4%;
     
-    --secondary: 220 20% 9%;      
-    --secondary-foreground: 42 20% 65%;
+    --secondary: 220 20% 8%;      
+    --secondary-foreground: 42 20% 70%;
     
-    --muted: 220 20% 9%;           
-    --muted-foreground: 220 10% 55%; 
+    --muted: 220 20% 8%;           
+    --muted-foreground: 220 10% 60%; 
     
-    --accent: 42 20% 65% / 0.05;
-    --accent-foreground: 42 20% 65%;
+    --accent: 42 20% 70% / 0.05;
+    --accent-foreground: 42 20% 70%;
     
-    --destructive: 0 40% 30%;
+    --destructive: 0 45% 35%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 45 15% 85% / 0.04;   
-    --input: 45 15% 85% / 0.06;
-    --ring: 42 20% 65% / 0.1;
+    --border: 45 15% 90% / 0.05;   
+    --input: 45 15% 90% / 0.07;
+    --ring: 42 20% 70% / 0.15;
     
     --shadow-premium: 0 40px 120px -40px rgba(0, 0, 0, 0.4);
   }

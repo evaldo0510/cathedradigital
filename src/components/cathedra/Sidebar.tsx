@@ -244,14 +244,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[min(250px,85vw)] sm:w-[320px] md:w-[380px] bg-background/95 backdrop-blur-xl border-r border-primary/[0.02] dark:border-white/[0.01] flex flex-col p-4 md:p-12 z-[170] shadow-2xl overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-0 left-0 bottom-0 w-[min(240px,80vw)] sm:w-[320px] md:w-[380px] bg-background/95 backdrop-blur-xl border-r border-primary/[0.02] dark:border-white/[0.01] flex flex-col p-4 md:p-12 z-[170] shadow-2xl overflow-hidden admin-hide touch-none pt-[calc(0.5rem+env(safe-area-inset-top,0px))] pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header - Cinematic extension of the atmosphere */}
-            <header className="flex items-center justify-between mb-8 pb-4 border-b border-primary/[0.01] dark:border-white/[0.01]">
+            <header className="flex items-center justify-between mb-4 pb-2 border-b border-primary/[0.01] dark:border-white/[0.01]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
@@ -282,7 +282,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-4 overflow-y-auto pb-8 no-scrollbar pr-1" role="navigation">
+            <nav className="flex-1 space-y-2 overflow-y-auto pb-4 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
@@ -310,7 +310,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-4 px-4 py-2 rounded-xl text-[9px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[44px]
+                                className={`w-full flex items-center justify-start gap-4 px-4 py-1.5 rounded-xl text-[8.5px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[40px]
                                   ${isActive
                                     ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
                                     : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
@@ -337,7 +337,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               )))}
             </nav>
 
-            <div className="pt-6 mt-auto space-y-6">
+            <div className="pt-4 mt-auto space-y-4">
               <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 

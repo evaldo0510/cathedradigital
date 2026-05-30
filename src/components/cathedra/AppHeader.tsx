@@ -34,7 +34,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         className="bg-background/2 backdrop-blur-sm sticky top-0 z-[140] transition-all duration-700 pt-[env(safe-area-inset-top,0px)] will-change-[transform,opacity] admin-hide header-reading-auto-hide border-b border-primary/[0.02] dark:border-white/[0.01]"
         role="banner"
       >
-        <div className="app-container flex items-center justify-between h-12 md:h-24 py-1 md:py-0">
+        <div className="app-container flex items-center justify-between h-10 md:h-24 py-1 md:py-0">
 
           {/* Logo Section - Minimalist on Mobile */}
           <div 
