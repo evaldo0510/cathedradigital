@@ -313,7 +313,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                                 : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.2 : 0.9 })}
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.5 : 1.1 })}
                             </span>
                             <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
