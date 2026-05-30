@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const ReadingControlPanel: React.FC = React.memo(() => {
+const ReadingControlPanel: React.FC = memo(() => {
   const { settings, updateSettings, resetSettings } = useReadingSettings();
   const navigate = useNavigate();
 

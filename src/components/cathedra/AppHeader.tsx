@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppRoute, Language } from '@/types';
@@ -18,7 +18,7 @@ interface AppHeaderProps {
   onOpenSidebar: () => void;
 }
 
-const AppHeader: React.FC<AppHeaderProps> = React.memo(({
+const AppHeader: React.FC<AppHeaderProps> = memo(({
   user, isDark, onToggleDark, lang, onChangeLang, onSignOut, onOpenSidebar
 }) => {
   const navigate = useNavigate();

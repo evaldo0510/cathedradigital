@@ -123,7 +123,7 @@ const FONT_SIZES = [
   { label: 'G', size: 'text-lg md:text-xl', leading: 'leading-[1.8]' },
 ];
 
-const Bible: React.FC = React.memo(() => {
+const Bible: React.FC = memo(() => {
   useRenderPerf('Bible', 15);
   const { settings, updateSettings } = useReadingSettings();
   useReadingAutoHide(settings.visualSilence);

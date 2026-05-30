@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -19,7 +19,7 @@ interface BibleVersePopoverProps {
   onNavigate?: (abbr: string, chapter: number, verse?: number) => void;
 }
 
-const BibleVersePopover: React.FC<BibleVersePopoverProps> = React.memo(({
+const BibleVersePopover: React.FC<BibleVersePopoverProps> = memo(({
   abbr,
   chapter,
   verse,

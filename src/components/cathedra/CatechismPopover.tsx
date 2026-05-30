@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -14,7 +14,7 @@ interface CatechismPopoverProps {
   variant?: 'default' | 'mini';
 }
 
-const CatechismPopover: React.FC<CatechismPopoverProps> = React.memo(({
+const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
   paragraph,
   onNavigate,
   variant = 'default',

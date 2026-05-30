@@ -286,7 +286,7 @@ const LazyParagraph: React.FC<{
 
 type ViewMode = 'parts' | 'sections' | 'reading';
 
-const Catechism: React.FC = React.memo(() => {
+const Catechism: React.FC = memo(() => {
   useRenderPerf('Catechism', 15);
   const { settings, updateSettings } = useReadingSettings();
   useReadingAutoHide(settings.visualSilence);
