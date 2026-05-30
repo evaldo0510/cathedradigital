@@ -12,6 +12,14 @@
 import { readdirSync, existsSync, statSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
+// Helper to write GitHub Actions annotations
+function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: string) {
+  if (process.env.GITHUB_ACTIONS) {
+    const filePart = file ? `,file=${file}` : '';
+    console.log(`::${type}${filePart}::${message}`);
+  }
+}
+
 const REPORTS_DIR = "reports";
 const README_PATH = "README.md";
 const args = process.argv.slice(2);
