@@ -258,7 +258,7 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-10 h-10 rounded-2xl bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-[1500ms]">
+                <div className="w-10 h-10 rounded-2xl bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-[2000ms]">
                   <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} />
                 </div>
                 <div className="space-y-0.5">
@@ -309,11 +309,11 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
                             className={`w-full flex items-center justify-start gap-4 px-4 py-2 rounded-xl text-[9px] font-bold transition-all duration-[1200ms] outline-none h-auto min-h-[42px]
                               ${isActive
-                                ? 'bg-primary/[0.01] dark:bg-white/[0.01] text-primary shadow-none'
-                                : 'text-muted-foreground/10 dark:text-muted-foreground/10 hover:bg-primary/[0.002] dark:hover:bg-white/[0.002] hover:text-primary'}`}
+                                ? 'bg-primary/[0.005] dark:bg-white/[0.005] text-primary shadow-none'
+                                : 'text-muted-foreground/10 dark:text-muted-foreground/5 hover:bg-primary/[0.001] dark:hover:bg-white/[0.001] hover:text-primary'}`}
                           >
                             <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 15, strokeWidth: isActive ? 1.2 : 0.6 })}
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 14, strokeWidth: isActive ? 1 : 0.4 })}
                             </span>
                             <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
