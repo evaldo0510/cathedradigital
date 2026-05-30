@@ -179,13 +179,19 @@ let hasDivergence = false;
 if (missing.length > 0) {
   hasDivergence = true;
   console.log(`${RED}${BOLD}✗ Arquivos faltando:${RESET}`);
-  missing.forEach(f => console.log(`  ${RED}- ${f}${RESET}`));
+  missing.forEach(f => {
+    console.log(`  ${RED}- ${f}${RESET}`);
+    annotate('error', `Arquivo documentado no README mas ausente em ./${REPORTS_DIR}: ${f}`, README_PATH);
+  });
 }
 
 if (unexpected.length > 0) {
   hasDivergence = true;
   console.log(`${YELLOW}${BOLD}⚠ Arquivos inesperados:${RESET}`);
-  unexpected.forEach(f => console.log(`  ${YELLOW}- ${f}${RESET}`));
+  unexpected.forEach(f => {
+    console.log(`  ${YELLOW}- ${f}${RESET}`);
+    annotate('warning', `Arquivo presente em ./${REPORTS_DIR} mas não documentado no README: ${f}`, README_PATH);
+  });
   console.log(`\n  ${BOLD}Dica:${RESET} Rode ${BOLD}npm run reports:verify -- --update${RESET} para sincronizar.`);
 }
 
