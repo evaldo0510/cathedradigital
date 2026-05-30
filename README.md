@@ -206,6 +206,13 @@ Para visualizar a árvore atual no seu terminal, use:
 npm run reports:tree
 ```
 
+Para validar se a estrutura atual de `./reports` corresponde exatamente à árvore documentada acima (apontando arquivos faltando ou inesperados), use:
+```bash
+npm run reports:verify
+```
+*Saída esperada em caso de sucesso*: `✓ Estrutura de ./reports está alinhada com o README.`
+*Em caso de divergência*: o comando lista os arquivos faltando/extras e finaliza com código de saída `1`, ideal para uso em CI.
+
 #### Como interpretar os arquivos:
 
 1. **`token-audit.html` (Dashboard)**:
