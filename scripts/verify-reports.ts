@@ -25,6 +25,7 @@ const README_PATH = "README.md";
 const args = process.argv.slice(2);
 const updateMode = args.includes("--update");
 const dryRun = args.includes("--dry-run");
+const failOnDivergence = args.includes("--fail-on-divergence");
 
 const RESET = "\x1b[0m";
 const RED = "\x1b[31m";
