@@ -13,6 +13,7 @@ import { LangContext } from '@/contexts/LangContext';
 /* ── Ripple helper ── */
 function useRipple() {
   const rippleRef = useRef<HTMLSpanElement | null>(null);
+  const hapticRef = useRef<boolean>(false);
 
   const trigger = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const btn = (e.currentTarget as HTMLElement);
@@ -35,6 +36,14 @@ function useRipple() {
       pointer-events:none;
     `;
     btn.appendChild(ripple);
+    
+    // Haptic feedback for mobile
+    if ('vibrate' in navigator && !hapticRef.current) {
+      navigator.vibrate(10);
+      hapticRef.current = true;
+      setTimeout(() => { hapticRef.current = false; }, 200);
+    }
+
     ripple.addEventListener('animationend', () => ripple.remove());
   }, []);
 
