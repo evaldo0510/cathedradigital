@@ -8,7 +8,9 @@ Ao executar \`npm run token-audit:dry-run\` ou \`npm run token-audit:report\`, a
 
 \`\`\`text
 reports/
-└── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+├── compliance-history.json    # Histórico de progresso
+├── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+└── token-audit.json           # Logs técnicos brutos (mais recente)
 \`\`\`
 "
 `;
@@ -30,7 +32,9 @@ reports/
 ### Novo
 \`\`\`text
 reports/
-└── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+├── compliance-history.json    # Histórico de progresso
+├── token-audit-dry-run-2026-05-30T10-00-00.json    # [2026-05-30 10 00:00] Log histórico
+└── token-audit.json           # Logs técnicos brutos (mais recente)
 \`\`\`
 "
 `;
