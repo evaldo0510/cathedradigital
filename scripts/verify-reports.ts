@@ -36,7 +36,21 @@ function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: 
 function writeSummary(content: string) {
   const summaryPath = process.env.GITHUB_STEP_SUMMARY;
   if (summaryPath) {
-    appendFileSync(summaryPath, content + "\n");
+    let finalContent = content;
+    
+    // Add override information if active
+    if (process.env.REPORTS_DIR_OVERRIDE || process.env.README_PATH_OVERRIDE) {
+      finalContent += `#### ⚙️ Configuração Customizada (Overrides)\n`;
+      if (process.env.REPORTS_DIR_OVERRIDE) {
+        finalContent += `- 📁 **Diretório de Relatórios:** \`${REPORTS_DIR}\` (via \`REPORTS_DIR_OVERRIDE\`)\n`;
+      }
+      if (process.env.README_PATH_OVERRIDE) {
+        finalContent += `- 📖 **Caminho do README:** \`${README_PATH}\` (via \`README_PATH_OVERRIDE\`)\n`;
+      }
+      finalContent += `\n`;
+    }
+    
+    appendFileSync(summaryPath, finalContent + "\n");
   }
 }
 
