@@ -91,14 +91,22 @@ describe('Cathedra Audit Token Mapping', () => {
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
       const mockRgOutput = 'src/App.tsx:10:  <div className="p-4 rounded-md shadow-md text-sm"></div>';
       
-      (execSync as any).mockReturnValue(mockRgOutput);
-      (readFileSync as any).mockReturnValue('<div className="p-4 rounded-md shadow-md text-sm"></div>');
-      (existsSync as any).mockReturnValue(true);
+      const mockedExecSync = vi.mocked(execSync);
+      mockedExecSync.mockReturnValue(mockRgOutput as any);
+      
+      const mockedReadFileSync = vi.mocked(readFileSync);
+      mockedReadFileSync.mockReturnValue('<div className="p-4 rounded-md shadow-md text-sm"></div>');
+      
+      const mockedExistsSync = vi.mocked(existsSync);
+      mockedExistsSync.mockReturnValue(true);
 
       // Set command line arguments for dry-run
       process.argv = ['node', 'scripts/cathedra-audit.ts', '--dry-run', '--threshold=10'];
 
       runAudit();
+
+      // Debug: print calls if fails again
+      // consoleSpy.mock.calls.forEach(call => process.stderr.write(`CALL: ${call[0]}\n`));
 
       // Verify log messages for dry run
       expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('[DRY RUN] Would replace "p-4" with "p-spacing-md"'));
