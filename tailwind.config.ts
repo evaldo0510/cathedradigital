@@ -37,6 +37,10 @@ export default {
         'premium-3xl': 'var(--text-3xl)',
         'premium-4xl': 'var(--text-4xl)',
         'premium-5xl': 'var(--text-5xl)',
+        'premium-6xl': '3.75rem',
+        'premium-7xl': '4.5rem',
+        'premium-8xl': '6rem',
+        'premium-9xl': '8rem',
       },
       borderRadius: {
         'premium-none': '0',

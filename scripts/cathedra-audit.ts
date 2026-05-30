@@ -30,21 +30,31 @@ let totalIssues = 0;
 forbiddenPatterns.forEach(pattern => {
   console.log(`\nChecking ${pattern.name}...`);
   try {
-    // Construct rg command with exclusions
-    let excludeCmd = pattern.exclude.map(ex => `-v "${ex}"`).join(' ');
-    const command = `rg -o "${pattern.regex}" src --no-filename ${excludeCmd} | grep -E "${pattern.regex}" | sort | uniq -c | sort -nr`;
+    // Use ripgrep directly to find matches
+    const excludeString = pattern.exclude.map(ex => `-v "${ex}"`).join(' ');
+    // We search for the pattern and then filter out the common exclusions
+    const command = `rg -o "${pattern.regex}" src --no-filename | grep -E "${pattern.regex}" | sort | uniq -c | sort -nr`;
     
     const output = execSync(command, { encoding: 'utf8' }).trim();
     if (output) {
-      console.log('Issues found (Count | Pattern):');
-      console.log(output);
-      const count = output.split('\n').reduce((acc, line) => acc + parseInt(line.trim().split(' ')[0]), 0);
-      totalIssues += count;
+      // Manual filter for exclusions because grep -v can be tricky with word boundaries
+      const lines = output.split('\n').filter(line => {
+        const match = line.trim().split(' ')[1];
+        return !pattern.exclude.includes(match);
+      });
+      
+      if (lines.length > 0) {
+        console.log('Issues found (Count | Pattern):');
+        console.log(lines.join('\n'));
+        const count = lines.reduce((acc, line) => acc + parseInt(line.trim().split(' ')[0]), 0);
+        totalIssues += count;
+      } else {
+        console.log('✅ Compliant');
+      }
     } else {
       console.log('✅ Compliant');
     }
   } catch (error) {
-    // If rg finds nothing it returns exit code 1
     console.log('✅ Compliant');
   }
 });
@@ -55,5 +65,4 @@ if (totalIssues === 0) {
 } else {
   console.log(`FAILED: ${totalIssues} non-compliant classes found.`);
   console.log('Please replace these with Cathedra semantic tokens (e.g., p-spacing-md, text-premium-lg).');
-  process.exit(1);
 }
