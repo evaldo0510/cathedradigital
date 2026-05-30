@@ -195,15 +195,14 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-24 pt-24 border-t border-border/5 space-y-10 mb-20", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-16 pt-16 border-t border-primary/[0.03] space-y-8 mb-20", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-            <Icons.Sparkles className="w-4 h-4 text-primary" />
+          <div className="w-6 h-6 rounded-full bg-primary/[0.03] flex items-center justify-center">
+            <Icons.Sparkles className="w-3 h-3 text-primary/40" />
           </div>
           <div>
-            <h3 id="relatio-heading" className="text-xs font-black uppercase tracking-[0.2em] text-primary">Relatio Contextual</h3>
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">Conexões na Tradição</p>
+            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">Relatio Contextual</h3>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -306,7 +305,7 @@ const Relatio: React.FC<RelatioProps> = ({
                       className="group relative"
                     >
                       <Card 
-                        className="h-full p-6 bg-card/40 backdrop-blur-md border border-primary/5 group-hover:border-primary/20 transition-all duration-700 rounded-premium-lg shadow-none cursor-pointer overflow-hidden flex flex-col"
+                        className="h-full p-5 bg-primary/[0.005] dark:bg-white/[0.002] backdrop-blur-3xl border border-primary/[0.03] group-hover:border-primary/10 transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
 
 
                         onClick={() => {
