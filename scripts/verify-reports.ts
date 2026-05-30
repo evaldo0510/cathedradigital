@@ -40,8 +40,8 @@ function writeSummary(content: string) {
   }
 }
 
-const REPORTS_DIR = "reports";
-const README_PATH = "README.md";
+const REPORTS_DIR = process.env.REPORTS_DIR_OVERRIDE || "reports";
+const README_PATH = process.env.README_PATH_OVERRIDE || "README.md";
 const args = process.argv.slice(2);
 const updateMode = args.includes("--update");
 const dryRun = args.includes("--dry-run");
