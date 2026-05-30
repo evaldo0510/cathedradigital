@@ -137,11 +137,11 @@ const AdminPartnersTab: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Aprovado</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-2xs"><CheckCircle2 className="w-sm h-sm" /> Aprovado</Badge>;
       case 'rejected':
-        return <Badge variant="destructive" className="gap-1.5"><XCircle className="w-3.5 h-3.5" /> Rejeitado</Badge>;
+        return <Badge variant="destructive" className="gap-2xs"><XCircle className="w-sm h-sm" /> Rejeitado</Badge>;
       default:
-        return <Badge variant="secondary" className="gap-1.5 bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-3.5 h-3.5" /> Pendente</Badge>;
+        return <Badge variant="secondary" className="gap-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-sm h-sm" /> Pendente</Badge>;
     }
   };
 
@@ -155,7 +155,7 @@ const AdminPartnersTab: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
         {[1, 2, 3].map(i => (
           <div key={i} className="h-48 rounded-premium bg-muted/40 animate-pulse border border-border" />
         ))}
@@ -165,17 +165,17 @@ const AdminPartnersTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Parceiros</h2>
           <p className="text-sm text-muted-foreground">Analise solicitações e gerencie instituições parceiras.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-xs">
           <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-xs top-xs h-md w-md text-muted-foreground" />
             <Input
               placeholder="Buscar parceiro..."
-              className="pl-9 w-[200px] sm:w-[300px]"
+              className="pl-xl w-[200px] sm:w-[300px]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -185,10 +185,10 @@ const AdminPartnersTab: React.FC = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
-          <TabsTrigger value="pending" className="gap-2">
+          <TabsTrigger value="pending" className="gap-xs">
             Solicitações
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-premium-tiny font-bold">
+              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-premium-tiny font-bold">
                 {pendingCount}
               </span>
             )}
@@ -200,10 +200,10 @@ const AdminPartnersTab: React.FC = () => {
 
         <TabsContent value={activeTab} className="mt-0">
           {filteredPartners.length === 0 ? (
-            <Card className="border-dashed border-2 py-12">
+            <Card className="border-dashed border-2 py-2xl">
               <CardContent className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 rounded-premium bg-muted flex items-center justify-center">
-                  <Building2 className="w-8 h-8 text-muted-foreground" />
+                <div className="w-3xl h-3xl rounded-premium bg-muted flex items-center justify-center">
+                  <Building2 className="w-xl h-xl text-muted-foreground" />
                 </div>
                 <div className="space-y-1">
                   <p className="font-semibold">Nenhum parceiro nesta categoria</p>
@@ -212,34 +212,34 @@ const AdminPartnersTab: React.FC = () => {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-md">
               {filteredPartners.map((partner) => (
                 <Card key={partner.id} className="group hover:border-primary/30 transition-all bg-card ">
-                  <CardHeader className="flex flex-row items-start justify-between pb-3">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-premium bg-white flex items-center justify-center overflow-hidden border p-1 shadow-soft">
+                  <CardHeader className="flex flex-row items-start justify-between pb-sm">
+                    <div className="flex items-center gap-md">
+                      <div className="w-2xl h-2xl rounded-premium bg-white flex items-center justify-center overflow-hidden border p-2xs shadow-soft">
                         {partner.logo_url ? (
                           <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-contain" />
                         ) : (
-                          <Building2 className="w-6 h-6 text-muted-foreground" />
+                          <Building2 className="w-lg h-lg text-muted-foreground" />
                         )}
                       </div>
                       <div>
-                        <CardTitle className="text-lg flex items-center gap-2">
+                        <CardTitle className="text-lg flex items-center gap-xs">
                           {partner.name}
                           {getStatusBadge(partner.status)}
                         </CardTitle>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-1">
-                          <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> {partner.contact_email}</span>
-                          <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2xs">
+                          <span className="flex items-center gap-2xs"><Mail className="w-sm h-sm" /> {partner.contact_email}</span>
+                          <span className="flex items-center gap-2xs"><Clock className="w-sm h-sm" /> {new Date(partner.created_at).toLocaleDateString('pt-BR')}</span>
                         </div>
                       </div>
                     </div>
                     
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="w-4 h-4" />
+                        <Button variant="ghost" size="icon" className="h-xl w-xl">
+                          <MoreHorizontal className="w-md h-md" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
@@ -247,57 +247,57 @@ const AdminPartnersTab: React.FC = () => {
                           setEditingPartner({...partner});
                           setIsEditDialogOpen(true);
                         }}>
-                          <Edit className="w-4 h-4 mr-2" /> Editar Detalhes
+                          <Edit className="w-md h-md mr-xs" /> Editar Detalhes
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'approved')} className="text-emerald-500">
-                          <CheckCircle2 className="w-4 h-4 mr-2" /> Aprovar
+                          <CheckCircle2 className="w-md h-md mr-xs" /> Aprovar
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleUpdateStatus(partner.id, 'rejected')} className="text-destructive">
-                          <XCircle className="w-4 h-4 mr-2" /> Rejeitar
+                          <XCircle className="w-md h-md mr-xs" /> Rejeitar
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleDelete(partner.id)} className="text-destructive">
-                          <Trash2 className="w-4 h-4 mr-2" /> Excluir permanentemente
+                          <Trash2 className="w-md h-md mr-xs" /> Excluir permanentemente
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </CardHeader>
                   
-                  <CardContent className="pb-4">
+                  <CardContent className="pb-md">
                     <p className="text-sm text-muted-foreground line-clamp-2 italic">
                       "{partner.description || "Nenhuma descrição fornecida."}"
                     </p>
                   </CardContent>
                   
-                  <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-2 py-3 bg-muted/5">
-                    <div className="flex items-center gap-2">
+                  <CardFooter className="pt-0 flex items-center justify-between border-t border-border/50 mt-xs py-sm bg-muted/5">
+                    <div className="flex items-center gap-xs">
                       {partner.website_url && (
-                        <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
+                        <Button variant="ghost" size="sm" className="h-xl gap-2xs text-xs text-primary hover:text-primary hover:bg-primary/10" asChild>
                           <a href={partner.website_url} target="_blank" rel="noopener noreferrer">
-                            Site <ExternalLink className="w-3.5 h-3.5" />
+                            Site <ExternalLink className="w-sm h-sm" />
                           </a>
                         </Button>
                       )}
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-xs">
                       {partner.status === 'pending' && (
                         <>
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-8 text-destructive hover:bg-destructive/10 hover:text-destructive gap-1" 
+                            className="h-xl text-destructive hover:bg-destructive/10 hover:text-destructive gap-2xs" 
                             onClick={() => handleUpdateStatus(partner.id, 'rejected')}
                           >
-                            <X className="w-4 h-4" /> Rejeitar
+                            <X className="w-md h-md" /> Rejeitar
                           </Button>
                           <Button 
                             size="sm" 
-                            className="h-8 bg-emerald-500 hover:bg-emerald-600 text-white gap-1" 
+                            className="h-xl bg-emerald-500 hover:bg-emerald-600 text-white gap-2xs" 
                             onClick={() => handleUpdateStatus(partner.id, 'approved')}
                           >
-                            <Check className="w-4 h-4" /> Aprovar
+                            <Check className="w-md h-md" /> Aprovar
                           </Button>
                         </>
                       )}
@@ -305,13 +305,13 @@ const AdminPartnersTab: React.FC = () => {
                          <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="h-8 gap-1"
+                          className="h-xl gap-2xs"
                           onClick={() => {
                             setEditingPartner({...partner});
                             setIsEditDialogOpen(true);
                           }}
                         >
-                          <Edit className="w-4 h-4" /> Editar
+                          <Edit className="w-md h-md" /> Editar
                         </Button>
                       )}
                     </div>
@@ -334,8 +334,8 @@ const AdminPartnersTab: React.FC = () => {
           </DialogHeader>
 
           {editingPartner && (
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4 py-md">
+              <div className="grid grid-cols-2 gap-md">
                 <div className="space-y-2">
                   <Label htmlFor="edit-name">Nome</Label>
                   <Input 
@@ -365,7 +365,7 @@ const AdminPartnersTab: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-md">
                 <div className="space-y-2">
                   <Label htmlFor="edit-website">Site (URL)</Label>
                   <Input 
@@ -386,7 +386,7 @@ const AdminPartnersTab: React.FC = () => {
 
               <div className="space-y-2">
                 <Label>Status Atual</Label>
-                <div className="flex gap-2">
+                <div className="flex gap-xs">
                   <Button 
                     variant={editingPartner.status === 'pending' ? 'secondary' : 'outline'} 
                     size="sm" 

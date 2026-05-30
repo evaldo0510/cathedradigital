@@ -302,7 +302,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
   };
 
   return (
-    <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-2xl px-md sm:px-lg lg:px-xl">
       <SEOHead 
         title="Verificação de SEO e Metadados" 
         description="Painel de controle para auditoria e verificação de metadados, imagens Open Graph e Twitter Cards com suporte a cache dinâmico."
@@ -310,23 +310,23 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
       />
       
       <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
           <div>
-            <h1 className="text-4xl font-serif font-bold text-foreground mb-2 flex items-center gap-3">
-              <Search className="w-10 h-10 text-primary" />
+            <h1 className="text-4xl font-serif font-bold text-foreground mb-xs flex items-center gap-sm">
+              <Search className="w-xl h-xl text-primary" />
               Auditoria de SEO & Social
             </h1>
             <p className="text-muted-foreground text-lg">
               Verifique a aparência, tags e cache das imagens Open Graph para cada rota principal.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-xs">
             <Button variant="outline" size="sm" onClick={() => window.open(`https://search.google.com/test/rich-results`, '_blank')}>
-              <Globe className="w-4 h-4 mr-2" />
+              <Globe className="w-md h-md mr-xs" />
               Rich Results Test
             </Button>
             <Button variant="outline" size="sm" onClick={() => window.open(`https://developers.facebook.com/tools/debug/`, '_blank')}>
-              <Facebook className="w-4 h-4 mr-2" />
+              <Facebook className="w-md h-md mr-xs" />
               FB Debugger
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
@@ -335,22 +335,22 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           </div>
         </div>
 
-        <div className="bg-muted/30 p-4 rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <RefreshCcw className={`w-5 h-5 text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
+        <div className="bg-muted/30 p-md rounded-premium-sm border border-border/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-md">
+          <div className="flex items-center gap-md">
+            <div className="p-xs bg-primary/10 rounded-lg">
+              <RefreshCcw className={`w-md h-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
             </div>
             <div>
               <h3 className="font-medium">Auditoria de Rotas ({pages.length})</h3>
               <p className="text-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-2 items-center">
-            <div className="flex bg-muted rounded-lg p-1 mr-2 border border-border/50">
+          <div className="flex flex-wrap gap-xs items-center">
+            <div className="flex bg-muted rounded-lg p-2xs mr-xs border border-border/50">
               <Button 
                 variant={scanMode === 'static' ? 'default' : 'ghost'} 
                 size="sm" 
-                className="h-7 text-xs px-3"
+                className="h-lg text-xs px-sm"
                 onClick={() => setScanMode('static')}
               >
                 Rápido (HTML)
@@ -358,7 +358,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <Button 
                 variant={scanMode === 'render' ? 'default' : 'ghost'} 
                 size="sm" 
-                className="h-7 text-xs px-3"
+                className="h-lg text-xs px-sm"
                 onClick={() => setScanMode('render')}
               >
                 Render (JS)
@@ -371,7 +371,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               onClick={scanAll}
               disabled={isScanningAll || isLoadingSitemap}
             >
-              {isScanningAll ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
+              {isScanningAll ? <Loader2 className="w-md h-md mr-xs animate-spin" /> : <Search className="w-md h-md mr-xs" />}
               Varrer Todas
             </Button>
             <Button 
@@ -380,16 +380,16 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               onClick={exportCSV}
               disabled={pages.length === 0}
             >
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="w-md h-md mr-xs" />
               Exportar CSV
             </Button>
-            <div className="h-8 w-[1px] bg-border mx-2 hidden md:block" />
+            <div className="h-xl w-[1px] bg-border mx-xs hidden md:block" />
             <Button 
               variant={activeTab === 'preview' ? 'default' : 'outline'} 
               size="sm" 
               onClick={() => setActiveTab('preview')}
             >
-              <ImageIcon className="w-4 h-4 mr-2" />
+              <ImageIcon className="w-md h-md mr-xs" />
               Visualização
             </Button>
             <Button 
@@ -397,22 +397,22 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               size="sm" 
               onClick={() => setActiveTab('tags')}
             >
-              <Code className="w-4 h-4 mr-2" />
+              <Code className="w-md h-md mr-xs" />
               Tags HTML
             </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-12">
+        <div className="grid grid-cols-1 gap-2xl">
           {isLoadingSitemap ? (
-            <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            <div className="flex flex-col items-center justify-center py-3xl gap-md">
+              <Loader2 className="w-xl h-xl text-primary animate-spin" />
               <p className="text-muted-foreground">Carregando rotas do sitemap...</p>
             </div>
           ) : pages.map((page) => (
             <div key={page.path} className="space-y-4">
-              <div className="flex items-center justify-between px-2">
-                <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between px-xs">
+                <div className="flex items-center gap-sm">
                   <h2 className="text-2xl font-serif font-bold">{page.name}</h2>
                   <Badge variant="outline" className="font-mono">{page.path}</Badge>
                   {page.status === 'ok' && <Badge className="bg-green-500/10 text-green-500 border-green-500/20">Válido</Badge>}
@@ -424,27 +424,27 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                     </Badge>
                   )}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-xs">
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={() => scanRoute(page.path)}
                     disabled={page.status === 'scanning'}
                   >
-                    <RefreshCcw className={`w-3.5 h-3.5 mr-2 ${page.status === 'scanning' ? 'animate-spin' : ''}`} />
+                    <RefreshCcw className={`w-sm h-sm mr-xs ${page.status === 'scanning' ? 'animate-spin' : ''}`} />
                     Scan
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => window.open(`${BASE_URL}${page.path}`, '_blank')}>
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-md h-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => copyToClipboard(`${BASE_URL}${page.path}`, 'Link')} title="Copiar Link">
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-md h-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')} title="Copiar Tags HTML">
-                    <Code className="w-4 h-4" />
+                    <Code className="w-md h-md" />
                   </Button>
                   <Button variant="ghost" size="sm" onClick={() => downloadHTML(page)} title="Baixar Tags HTML">
-                    <Download className="w-4 h-4" />
+                    <Download className="w-md h-md" />
                   </Button>
                 </div>
               </div>
@@ -454,15 +454,15 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                   <CardContent className="p-0">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                       {/* Left Side: Metadata & Search Previews */}
-                      <div className="p-6 space-y-6 border-r border-border/50">
+                      <div className="p-lg space-y-6 border-r border-border/50">
                         <div className="space-y-4">
                           <div>
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Google Search Preview</div>
-                            <div className="p-4 bg-white dark:bg-[#1a1a1a] rounded-lg border border-border/40 shadow-soft">
-                              <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-1 flex items-center gap-1">
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2xs">Google Search Preview</div>
+                            <div className="p-md bg-white dark:bg-[#1a1a1a] rounded-lg border border-border/40 shadow-soft">
+                              <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] mb-2xs flex items-center gap-2xs">
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
                               </div>
-                              <div className="text-[20px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-tight mb-1">
+                              <div className="text-[20px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-tight mb-2xs">
                                 {page.title || 'Título não detectado'} — Cathedra Digital
                               </div>
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] line-clamp-2">
@@ -471,39 +471,39 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="p-3 bg-muted/30 rounded-lg border border-border/30">
-                              <div className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Title Length</div>
+                          <div className="grid grid-cols-2 gap-md">
+                            <div className="p-sm bg-muted/30 rounded-lg border border-border/30">
+                              <div className="text-[10px] font-bold text-muted-foreground uppercase mb-2xs">Title Length</div>
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-lg">{(page.title?.length || 0) + 18}</span>
                                 {(page.title?.length || 0) + 18 <= 60 && (page.title?.length || 0) > 0 ? (
-                                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                  <CheckCircle2 className="w-md h-md text-green-500" />
                                 ) : (
-                                  <AlertCircle className="w-4 h-4 text-amber-500" />
+                                  <AlertCircle className="w-md h-md text-amber-500" />
                                 )}
                               </div>
-                              <div className="text-[10px] text-muted-foreground mt-1">Ideal: 50-60 chars</div>
+                              <div className="text-[10px] text-muted-foreground mt-2xs">Ideal: 50-60 chars</div>
                             </div>
-                            <div className="p-3 bg-muted/30 rounded-lg border border-border/30">
-                              <div className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Desc Length</div>
+                            <div className="p-sm bg-muted/30 rounded-lg border border-border/30">
+                              <div className="text-[10px] font-bold text-muted-foreground uppercase mb-2xs">Desc Length</div>
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-lg">{page.description?.length || 0}</span>
                                 {(page.description?.length || 0) <= 160 && (page.description?.length || 0) >= 120 ? (
-                                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                  <CheckCircle2 className="w-md h-md text-green-500" />
                                 ) : (
-                                  <AlertCircle className="w-4 h-4 text-amber-500" />
+                                  <AlertCircle className="w-md h-md text-amber-500" />
                                 )}
                               </div>
-                              <div className="text-[10px] text-muted-foreground mt-1">Ideal: 120-160 chars</div>
+                              <div className="text-[10px] text-muted-foreground mt-2xs">Ideal: 120-160 chars</div>
                             </div>
                           </div>
                           
                           {(page.status === 'missing' || !page.title || !page.description) && (
-                            <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-                              <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                <AlertCircle className="w-3.5 h-3.5" /> Sugestões de Melhoria
+                            <div className="p-md bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                              <h4 className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-xs flex items-center gap-xs">
+                                <AlertCircle className="w-sm h-sm" /> Sugestões de Melhoria
                               </h4>
-                              <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-1 list-disc pl-4">
+                              <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-1 list-disc pl-md">
                                 {!page.title && <li>O título está ausente. Use o componente SEOHead para definir um título único.</li>}
                                 {page.title && (page.title.length + 18) > 60 && <li>O título está muito longo e será cortado no Google. Reduza para menos de 60 caracteres.</li>}
                                 {!page.description && <li>A descrição está ausente. Adicione uma meta descrição de 120-160 caracteres para melhorar o CTR.</li>}
@@ -516,19 +516,19 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                       </div>
 
                       {/* Right Side: Social Media Previews */}
-                      <div className="p-6 bg-muted/10 space-y-8">
+                      <div className="p-lg bg-muted/10 space-y-8">
                         <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
-                              <Share2 className="w-3 h-3" /> Facebook / WhatsApp
+                          <div className="flex items-center justify-between mb-xs">
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2xs">
+                              <Share2 className="w-sm h-sm" /> Facebook / WhatsApp
                             </div>
                             <Button 
                               variant="ghost" 
                               size="xs" 
-                              className="h-6 px-2 text-[10px] gap-1"
+                              className="h-lg px-xs text-[10px] gap-2xs"
                               onClick={() => copyToClipboard(getSocialTagsOnly(page, 'facebook'), 'Tags Facebook')}
                             >
-                              <Copy className="w-3 h-3" /> Copiar Tags
+                              <Copy className="w-sm h-sm" /> Copiar Tags
                             </Button>
                           </div>
                           <div className="border border-border/50 rounded-lg overflow-hidden bg-white dark:bg-[#1a1a1a] shadow-premium">
@@ -538,32 +538,32 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                                 alt="OG Preview" 
                                 className="w-full h-full object-cover"
                               />
-                              <div className="absolute top-2 right-2 flex gap-1">
-                                <Button size="icon" variant="secondary" className="h-7 w-7 rounded-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
-                                  <ImageIcon className="h-3.5 w-3.5" />
+                              <div className="absolute top-xs right-xs flex gap-2xs">
+                                <Button size="icon" variant="secondary" className="h-lg w-lg rounded-full opacity-80" onClick={() => window.open(page.metaTags?.ogImage || getDynamicImage(page.title, page.image), '_blank')}>
+                                  <ImageIcon className="h-sm w-sm" />
                                 </Button>
                               </div>
                             </div>
-                            <div className="p-3 border-t border-border/50 bg-[#f2f3f5] dark:bg-[#242526]">
+                            <div className="p-sm border-t border-border/50 bg-[#f2f3f5] dark:bg-[#242526]">
                               <div className="text-[11px] text-muted-foreground uppercase truncate tracking-tight">CATHEDRADIGITAL.COM.BR</div>
-                              <div className="text-sm font-bold truncate mt-0.5">{page.title || page.name} — Cathedra Digital</div>
-                              <div className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{page.description || 'Descrição não disponível'}</div>
+                              <div className="text-sm font-bold truncate mt-3xs">{page.title || page.name} — Cathedra Digital</div>
+                              <div className="text-xs text-muted-foreground line-clamp-1 mt-3xs">{page.description || 'Descrição não disponível'}</div>
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2 flex items-center gap-1">
-                              <Twitter className="w-3 h-3" /> Twitter Card (Large)
+                          <div className="flex items-center justify-between mb-xs">
+                            <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-xs flex items-center gap-2xs">
+                              <Twitter className="w-sm h-sm" /> Twitter Card (Large)
                             </div>
                             <Button 
                               variant="ghost" 
                               size="xs" 
-                              className="h-6 px-2 text-[10px] gap-1"
+                              className="h-lg px-xs text-[10px] gap-2xs"
                               onClick={() => copyToClipboard(getSocialTagsOnly(page, 'twitter'), 'Tags Twitter')}
                             >
-                              <Copy className="w-3 h-3" /> Copiar Tags
+                              <Copy className="w-sm h-sm" /> Copiar Tags
                             </Button>
                           </div>
                           <div className="border border-border/40 rounded-premium overflow-hidden bg-white dark:bg-[#15202b] shadow-soft">
@@ -574,11 +574,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <div className="p-3 border-t border-border/20">
+                            <div className="p-sm border-t border-border/20">
                               <div className="text-sm font-bold truncate">{page.title || page.name}</div>
-                              <div className="text-[13px] text-muted-foreground line-clamp-2 mt-0.5">{page.description || 'Descrição não disponível'}</div>
-                              <div className="text-xs text-muted-foreground mt-1 flex items-center">
-                                <Globe className="w-3 h-3 mr-1 opacity-50" />
+                              <div className="text-[13px] text-muted-foreground line-clamp-2 mt-3xs">{page.description || 'Descrição não disponível'}</div>
+                              <div className="text-xs text-muted-foreground mt-2xs flex items-center">
+                                <Globe className="w-sm h-sm mr-2xs opacity-50" />
                                 cathedradigital.com.br
                               </div>
                             </div>
@@ -590,24 +590,24 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 </Card>
               ) : (
                 <Card className="border-border/50 shadow-premium">
-                  <CardHeader className="pb-3 border-b border-border/50 flex flex-row items-center justify-between">
+                  <CardHeader className="pb-sm border-b border-border/50 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-sm">Generated HTML Tags</CardTitle>
                       <CardDescription className="text-xs">Paste these into your CMS or manual header if needed.</CardDescription>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-xs">
                       <Button variant="outline" size="sm" onClick={() => copyToClipboard(getMetaTagsCode(page), 'Tags HTML')}>
-                        <Copy className="w-4 h-4 mr-2" />
+                        <Copy className="w-md h-md mr-xs" />
                         Copiar Código
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => downloadHTML(page)}>
-                        <Download className="w-4 h-4 mr-2" />
+                        <Download className="w-md h-md mr-xs" />
                         Baixar HTML
                       </Button>
                     </div>
                   </CardHeader>
                   <CardContent className="p-0">
-                    <pre className="p-6 bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
+                    <pre className="p-lg bg-muted/40 text-[11px] font-mono overflow-x-auto leading-relaxed">
                       {getMetaTagsCode(page)}
                     </pre>
                   </CardContent>
@@ -617,11 +617,11 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
           ))}
         </div>
 
-        <div className="pt-12 border-t border-border/50">
+        <div className="pt-2xl border-t border-border/50">
           <Card className="bg-primary/5 border-primary/20">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-primary" />
+              <CardTitle className="flex items-center gap-xs">
+                <AlertCircle className="w-md h-md text-primary" />
                 Dicas de Otimização e Cache
               </CardTitle>
             </CardHeader>

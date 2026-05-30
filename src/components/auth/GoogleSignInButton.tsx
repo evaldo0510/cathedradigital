@@ -63,11 +63,11 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
       onClick={handleSignIn}
       disabled={loading}
       className={cn(
-        "gap-3",
+        "gap-sm",
         className
       )}
     >
-      {showIcon && <Icons.Google className={cn("w-5 h-5", loading && "animate-pulse")} />}
+      {showIcon && <Icons.Google className={cn("w-md h-md", loading && "animate-pulse")} />}
       {size !== 'icon' && (loading ? 'Aguarde...' : text)}
     </Button>
   );

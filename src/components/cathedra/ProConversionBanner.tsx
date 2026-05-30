@@ -80,25 +80,25 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-6 md:p-8 shadow-premium"
+        className="relative overflow-hidden rounded-full border border-primary/20 bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 p-lg md:p-xl shadow-premium"
       >
         {/* Dismiss */}
         <Button
           onClick={handleDismiss}
-          className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-primary/10 transition-colors"
+          className="absolute top-sm right-sm p-2xs rounded-full hover:bg-primary/10 transition-colors"
           aria-label="Fechar"
         >
-          <X className="w-4 h-4 text-muted-foreground" />
+          <X className="w-md h-md text-muted-foreground" />
         </Button>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-md">
           {/* Icon */}
           <motion.div
-            className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0"
+            className="w-2xl h-2xl rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0"
             animate={{ rotate: [0, -5, 5, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
           >
-            <Crown className="w-7 h-7 text-primary" />
+            <Crown className="w-lg h-lg text-primary" />
           </motion.div>
 
           {/* Content */}
@@ -106,8 +106,8 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
             <h4 className="text-sm font-bold text-foreground">{copy.title}</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">{copy.message}</p>
             {reflectionCount >= 2 && context !== 'logos' && (
-              <div className="flex items-center gap-1.5 text-xs text-primary/70">
-                <Flame className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-2xs text-xs text-primary/70">
+                <Flame className="w-sm h-sm" />
                 <span>{reflectionCount} reflexões escritas</span>
               </div>
             )}
@@ -116,9 +116,9 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           {/* CTA */}
           <Button
             onClick={() => navigate(AppRoute.UPGRADE)}
-            className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
+            className="flex items-center gap-xs px-md py-sm bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-widest hover:opacity-90 transition-all shadow-premium whitespace-nowrap flex-shrink-0"
           >
-            Desbloquear experiência completa <ArrowRight className="w-3.5 h-3.5" />
+            Desbloquear experiência completa <ArrowRight className="w-sm h-sm" />
           </Button>
         </div>
       </motion.div>

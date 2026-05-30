@@ -21,16 +21,16 @@ import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 
 const SECTION_CONFIG = [
-  { key: 'padh', label: 'A Palavra', icon: <Sparkles className="w-4 h-4" />, isPremium: false },
-  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-4 h-4" />, isPremium: false },
-  { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-4 h-4" />, isPremium: true },
+  { key: 'padh', label: 'A Palavra', icon: <Sparkles className="w-md h-md" />, isPremium: false },
+  { key: 'interpretation', label: 'Reflexão', icon: <Icons.Bible className="w-md h-md" />, isPremium: false },
+  { key: 'practical_direction', label: 'Prática do Dia', icon: <Hand className="w-md h-md" />, isPremium: true },
+  { key: 'guided_exercise', label: 'Exercício Espiritual', icon: <PenLine className="w-md h-md" />, isPremium: true },
   
   // Legacy / Hybrid mappings
-  { key: 'intro', label: 'Introdução', icon: <BookOpen className="w-4 h-4" />, isPremium: false },
-  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-4 h-4" />, isPremium: true },
-  { key: 'practice', label: 'Prática', icon: <Hand className="w-4 h-4" />, isPremium: true },
-  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-4 h-4" />, isPremium: true },
+  { key: 'intro', label: 'Introdução', icon: <BookOpen className="w-md h-md" />, isPremium: false },
+  { key: 'reflection', label: 'Reflexão', icon: <PenLine className="w-md h-md" />, isPremium: true },
+  { key: 'practice', label: 'Prática', icon: <Hand className="w-md h-md" />, isPremium: true },
+  { key: 'prayer', label: 'Oração', icon: <Sparkles className="w-md h-md" />, isPremium: true },
 ];
 
 type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -224,7 +224,7 @@ const JornadaStepPage: React.FC = () => {
   if (loading) {
     return createPortal(
       <div className="fixed inset-0 bg-background flex items-center justify-center z-[200]">
-        <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+        <div className="w-xl h-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>,
       document.body
     );
@@ -249,23 +249,23 @@ const JornadaStepPage: React.FC = () => {
       className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden"
     >
       {/* Immersive Header */}
-      <div className="flex-shrink-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 border-b border-border/50">
-        <div className="flex items-center gap-3 max-w-2xl mx-auto">
+      <div className="flex-shrink-0 px-md pt-[max(0.75rem,env(safe-area-inset-top))] pb-sm border-b border-border/50">
+        <div className="flex items-center gap-sm max-w-2xl mx-auto">
           <Button
             onClick={() => navigate(`/jornadas/${journeyId}`)}
-            className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
+            className="w-xl h-xl rounded-full bg-muted flex items-center justify-center hover:bg-muted-foreground/20 transition-colors"
           >
-            <X className="w-4 h-4 text-foreground" />
+            <X className="w-md h-md text-foreground" />
           </Button>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xs">
               <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground truncate">{journeyTitle}</p>
               <div className="group relative">
-                <span className="cursor-help px-1.5 py-0.5 rounded-full text-premium-tiny font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-1">
-                  {userLevelClass} <ShieldQuestion className="w-2 h-2 opacity-50" />
+                <span className="cursor-help px-2xs py-3xs rounded-full text-premium-tiny font-black uppercase bg-primary/10 text-primary border border-primary/20 flex items-center gap-2xs">
+                  {userLevelClass} <ShieldQuestion className="w-xs h-xs opacity-50" />
                 </span>
-                <div className="absolute left-0 top-full mt-2 w-48 p-2 bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-premium-tiny opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                  <p className="font-bold mb-1">Conteúdo Adaptado</p>
+                <div className="absolute left-0 top-full mt-xs w-48 p-xs bg-popover text-popover-foreground rounded-premium border border-border shadow-premium-hover text-premium-tiny opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                  <p className="font-bold mb-2xs">Conteúdo Adaptado</p>
                   <p className="opacity-80">
                     {userLevelClass === 'iniciante' && "Nível Iniciante: conteúdo simplificado e guiado."}
                     {userLevelClass === 'intermediário' && "Nível Intermediário: foco em reflexão e aprofundamento."}
@@ -277,19 +277,19 @@ const JornadaStepPage: React.FC = () => {
 
             <p className="text-xs text-muted-foreground">Etapa {step.step_order} de {totalSteps}</p>
           </div>
-          <span className="text-premium-tiny font-bold text-muted-foreground flex items-center gap-1">
-            <Clock className="w-3 h-3" /> {step.duration_minutes}min
+          <span className="text-premium-tiny font-bold text-muted-foreground flex items-center gap-2xs">
+            <Clock className="w-sm h-sm" /> {step.duration_minutes}min
           </span>
 
         </div>
-        <div className="max-w-2xl mx-auto mt-2">
-          <Progress value={stepProgress} className="h-1" />
+        <div className="max-w-2xl mx-auto mt-xs">
+          <Progress value={stepProgress} className="h-2xs" />
         </div>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-auto">
-        <div className="max-w-2xl mx-auto px-4 py-6 space-y-6 pb-24">
+        <div className="max-w-2xl mx-auto px-md py-lg space-y-6 pb-4xl">
           {/* Step Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -300,7 +300,7 @@ const JornadaStepPage: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-primary/20 shadow-premium-hover"
+                className="w-4xl h-4xl mx-auto mb-md rounded-full overflow-hidden border-2 border-primary/20 shadow-premium-hover"
               >
                 <SacredImage src={saintImage} alt={step.subtitle || ''} className="w-full h-full object-cover" />
               </motion.div>
@@ -310,12 +310,12 @@ const JornadaStepPage: React.FC = () => {
               <p className="text-sm text-muted-foreground italic">{step.subtitle}</p>
             )}
             {content.bible_ref && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-premium bg-primary/10 text-primary border border-primary/20 text-premium-tiny font-black uppercase tracking-wider mx-auto">
-                <BookOpen className="w-3 h-3" /> {content.bible_ref}
+              <div className="inline-flex items-center gap-2xs px-sm py-2xs rounded-premium bg-primary/10 text-primary border border-primary/20 text-premium-tiny font-black uppercase tracking-wider mx-auto">
+                <BookOpen className="w-sm h-sm" /> {content.bible_ref}
               </div>
             )}
             
-            <div className="flex justify-center pt-2">
+            <div className="flex justify-center pt-xs">
               <AudioContentPlayer 
                 text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map(s => getVariantContent(s.key, content)).filter(Boolean).join('. ')}`}
                 title="Ouvir conteúdo"
@@ -339,28 +339,28 @@ const JornadaStepPage: React.FC = () => {
               >
                 <Button
                   onClick={() => toggleSection(key)}
-                  className={`w-full flex items-center gap-3 p-4 rounded-t-2xl transition-all text-left ${
+                  className={`w-full flex items-center gap-sm p-md rounded-t-2xl transition-all text-left ${
                     isExpanded
                       ? 'bg-card border border-b-0 border-border shadow-soft'
                       : 'bg-card border border-border rounded-b-2xl hover:border-primary/30'
                   } ${isLocked ? 'opacity-70' : ''}`}
                 >
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  <span className={`w-xl h-xl rounded-full flex items-center justify-center flex-shrink-0 ${
                     isExpanded ? 'bg-primary text-primary-foreground shadow-premium' : 'bg-muted text-muted-foreground'
                   }`}>
-                    {isLocked ? <Lock className="w-4 h-4" /> : icon}
+                    {isLocked ? <Lock className="w-md h-md" /> : icon}
                   </span>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-xs">
                       <span className={`text-sm font-bold ${isExpanded ? 'text-foreground' : 'text-muted-foreground'}`}>
                         {label}
                       </span>
                       {sectionIsPremium && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-1.5 py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-premium-tiny uppercase font-black px-2xs py-0">PRO</Badge>
                       )}
                     </div>
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-md h-md text-muted-foreground transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </Button>
 
                 <AnimatePresence>
@@ -372,16 +372,16 @@ const JornadaStepPage: React.FC = () => {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-5 relative min-h-[140px]">
+                      <div className="bg-card border border-t-0 border-border rounded-b-2xl p-md relative min-h-[140px]">
                         {isLocked ? (
-                          <div className="space-y-4 py-4 text-center">
+                          <div className="space-y-4 py-md text-center">
                             <div className="blur-[6px] select-none pointer-events-none opacity-40">
                               <p className="text-sm font-serif line-clamp-4">
                                 {sectionContent}
                               </p>
                             </div>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-6 space-y-4 rounded-b-2xl">
-                              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-card  p-lg space-y-4 rounded-b-2xl">
+                              <Sparkles className="w-xl h-xl text-primary animate-pulse" />
                               <p className="text-sm font-bold text-foreground max-w-[180px] leading-relaxed">
                                 Continue aprofundando essa experiência
                               </p>
@@ -417,13 +417,13 @@ const JornadaStepPage: React.FC = () => {
             transition={{ delay: 0.4 }}
             className="space-y-3"
           >
-            <div className="flex items-center gap-2">
-              <PenLine className="w-4 h-4 text-primary" />
+            <div className="flex items-center gap-xs">
+              <PenLine className="w-md h-md text-primary" />
               <h3 className="text-sm font-bold text-foreground">Pergunta Final & Reflexão</h3>
             </div>
 
             {(getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)) && (
-              <div className="bg-primary/5 border border-primary/10 rounded-premium p-4">
+              <div className="bg-primary/5 border border-primary/10 rounded-premium p-md">
                 <p className="text-sm text-foreground/80 italic font-serif">
                   {getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || getVariantContent('question', content)}
                 </p>
@@ -443,20 +443,20 @@ const JornadaStepPage: React.FC = () => {
       </div>
 
       {/* Fixed Bottom Action */}
-      <div className="flex-shrink-0 border-t border-border/50 bg-background  px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="flex-shrink-0 border-t border-border/50 bg-background  px-md py-sm pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="max-w-2xl mx-auto">
-          <div className="flex gap-2">
+          <div className="flex gap-xs">
             {!completed && (
               <Button
                 onClick={handleSaveReflection}
                 disabled={saving || !reflection.trim()}
                 variant="outline"
-                className="flex-1 rounded-full h-14 text-premium-tiny uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
+                className="flex-1 rounded-full h-2xl text-premium-tiny uppercase font-black tracking-widest border-primary/20 text-primary hover:bg-primary/5"
               >
                 {saving ? (
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-premium animate-spin" />
+                  <div className="w-md h-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
                 ) : (
-                  <><Save className="w-4 h-4 mr-2" /> Salvar</>
+                  <><Save className="w-md h-md mr-xs" /> Salvar</>
                 )}
               </Button>
             )}
@@ -464,34 +464,34 @@ const JornadaStepPage: React.FC = () => {
             <Button
               onClick={completed ? () => navigate(`/jornadas/${journeyId}`) : completeStep}
               disabled={saving}
-              className={`${completed ? 'w-full' : 'flex-[2]'} h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3`}
+              className={`${completed ? 'w-full' : 'flex-[2]'} h-2xl bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-sm`}
             >
               {saving ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-premium animate-spin" />
+                  <div className="w-md h-md border-2 border-current border-t-transparent rounded-premium animate-spin" />
                   Salvando...
                 </>
               ) : completed ? (
                 <>
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="w-md h-md" />
                   Voltar à Jornada
                 </>
               ) : (
                 <>
-                  <Check className="w-5 h-5" />
+                  <Check className="w-md h-md" />
                   Concluir Etapa
                 </>
               )}
             </Button>
           </div>
           {completed && nextStep && (
-            <div className="mt-3">
+            <div className="mt-sm">
               <Button
                 onClick={() => navigate(`/jornadas/${journeyId}/step?step=${nextStep.id}`)}
-                className="w-full h-14 bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full h-2xl bg-primary text-primary-foreground rounded-full text-premium-tiny font-black uppercase tracking-[0.2em] shadow-premium-hover shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-xs"
               >
                 Próxima Etapa
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-md h-md" />
               </Button>
             </div>
           )}

@@ -87,35 +87,35 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button variant="ghost" size="sm" onClick={onBack} className="gap-1.5">
-          <ArrowLeft className="w-4 h-4" /> Voltar
+      <div className="flex items-center gap-sm">
+        <Button variant="ghost" size="sm" onClick={onBack} className="gap-2xs">
+          <ArrowLeft className="w-md h-md" /> Voltar
         </Button>
       </div>
 
       {/* Profile Card */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row items-start gap-5">
-            <div className="w-16 h-16 rounded-premium bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
+        <CardContent className="pt-lg">
+          <div className="flex flex-col sm:flex-row items-start gap-md">
+            <div className="w-3xl h-3xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-2xl shrink-0">
               {user.name?.charAt(0)?.toUpperCase() || '?'}
             </div>
             <div className="flex-1 min-w-0 space-y-2">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-xs flex-wrap">
                 <h2 className="text-xl font-bold">{user.name || 'Sem nome'}</h2>
-                {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-1"><Crown className="w-3 h-3" /> PRO</Badge>}
-                {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-1"><Shield className="w-3 h-3" /> Admin</Badge>}
+                {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-2xs"><Crown className="w-sm h-sm" /> PRO</Badge>}
+                {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-2xs"><Shield className="w-sm h-sm" /> Admin</Badge>}
                 <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-tiny`}>{statusLabel}</Badge>
               </div>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {user.email}</span>
-                <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
+                <span className="flex items-center gap-2xs"><Mail className="w-sm h-sm" /> {user.email}</span>
+                <span className="flex items-center gap-2xs"><Calendar className="w-sm h-sm" /> Cadastro: {new Date(user.created_at).toLocaleDateString('pt-BR')}</span>
+                <span className="flex items-center gap-2xs"><Clock className="w-sm h-sm" /> Última atividade: {user.last_visit ? (statusHours < 24 ? 'Hoje' : `${Math.floor(statusHours/24)}d atrás`) : 'Nunca'}</span>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-1.5 text-xs">
-                <Crown className="w-3.5 h-3.5" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
+            <div className="flex gap-xs">
+              <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-2xs text-xs">
+                <Crown className="w-sm h-sm" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
               </Button>
             </div>
           </div>
@@ -123,15 +123,15 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-sm">
         {[
-          { icon: <Star className="w-4 h-4 text-primary" />, label: 'Nível', value: user.level ?? 1 },
-          { icon: <MessageCircle className="w-4 h-4 text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
-          { icon: <Flame className="w-4 h-4 text-secondary" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
-          { icon: <Brain className="w-4 h-4 text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
+          { icon: <Star className="w-md h-md text-primary" />, label: 'Nível', value: user.level ?? 1 },
+          { icon: <MessageCircle className="w-md h-md text-primary" />, label: 'Reflexões', value: user.reflections_count || 0 },
+          { icon: <Flame className="w-md h-md text-secondary" />, label: 'Freq. Acesso', value: `${user.streak ?? 0}d` },
+          { icon: <Brain className="w-md h-md text-primary" />, label: 'Profundidade', value: user.depth_level || 'Iniciante' },
         ].map((stat, i) => (
           <Card key={i}>
-            <CardContent className="pt-4 pb-3 px-4 flex items-center gap-3">
+            <CardContent className="pt-md pb-sm px-md flex items-center gap-sm">
               {stat.icon}
               <div>
                 <p className="text-lg font-bold leading-tight">{stat.value}</p>
@@ -142,45 +142,45 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
         {/* Diagnosis */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2"><Brain className="w-4 h-4 text-primary" /> Diagnóstico Espiritual</CardTitle>
+          <CardHeader className="pb-sm">
+            <CardTitle className="text-sm flex items-center gap-xs"><Brain className="w-md h-md text-primary" /> Diagnóstico Espiritual</CardTitle>
           </CardHeader>
           <CardContent>
             {diagnosis ? (
               <div className="space-y-2 text-sm">
                 {typeof diagnosis === 'object' && Object.entries(diagnosis).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-1.5 border-b border-border/30 last:border-0">
+                  <div key={key} className="flex justify-between py-2xs border-b border-border/30 last:border-0">
                     <span className="text-muted-foreground capitalize">{key.replace(/_/g, ' ')}</span>
                     <span className="font-medium">{String(value)}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm py-4 text-center">Nenhum diagnóstico realizado.</p>
+              <p className="text-muted-foreground text-sm py-md text-center">Nenhum diagnóstico realizado.</p>
             )}
           </CardContent>
         </Card>
 
         {/* Journey Progress */}
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm flex items-center gap-2"><Route className="w-4 h-4 text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
+          <CardHeader className="pb-sm">
+            <CardTitle className="text-sm flex items-center gap-xs"><Route className="w-md h-md text-primary" /> Jornadas ({journeyProgress.length} etapas)</CardTitle>
           </CardHeader>
           <CardContent>
             {journeyProgress.length > 0 ? (
               <div className="space-y-2 max-h-[200px] overflow-y-auto">
                 {journeyProgress.slice(0, 10).map((jp: any) => (
-                  <div key={jp.id} className="flex justify-between items-center py-1.5 border-b border-border/30 last:border-0 text-sm">
+                  <div key={jp.id} className="flex justify-between items-center py-2xs border-b border-border/30 last:border-0 text-sm">
                     <span className="truncate">{(jp.journeys as any)?.title ?? jp.journey_id.slice(0, 8)}</span>
                     <span className="text-premium-tiny text-muted-foreground shrink-0">{new Date(jp.completed_at).toLocaleDateString('pt-BR')}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-sm py-4 text-center">Nenhuma jornada iniciada.</p>
+              <p className="text-muted-foreground text-sm py-md text-center">Nenhuma jornada iniciada.</p>
             )}
           </CardContent>
         </Card>
@@ -189,13 +189,13 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
       {/* Journal */}
       {journalEntries.length > 0 && (
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader className="pb-sm">
             <CardTitle className="text-sm">Últimas Reflexões do Diário</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {journalEntries.map((entry: any) => (
-              <div key={entry.id} className="p-3 rounded-premium bg-muted/30 border border-border/30">
-                <div className="flex items-center gap-2 mb-1">
+              <div key={entry.id} className="p-sm rounded-premium bg-muted/30 border border-border/30">
+                <div className="flex items-center gap-xs mb-2xs">
                   <span className="text-xs text-muted-foreground">{entry.entry_date}</span>
                   {entry.mood && <Badge variant="secondary" className="text-premium-tiny">{entry.mood}</Badge>}
                 </div>

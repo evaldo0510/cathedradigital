@@ -28,9 +28,9 @@ const AparicoesPage: React.FC = () => {
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Back + Header */}
-        <div className="flex items-center gap-4">
-          <Button onClick={() => setSelectedApparition(null)} className="p-2 rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
-            <Icons.ChevronLeft className="w-5 h-5 text-foreground" />
+        <div className="flex items-center gap-md">
+          <Button onClick={() => setSelectedApparition(null)} className="p-xs rounded-full bg-card border border-border hover:bg-primary/10 transition-all">
+            <Icons.ChevronLeft className="w-md h-md text-foreground" />
           </Button>
           <div className="flex-1 min-w-0">
             <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">{selectedApparition.country} • {selectedApparition.year}</span>
@@ -39,41 +39,41 @@ const AparicoesPage: React.FC = () => {
           </div>
           <Button
             onClick={() => handleToggleFavorite(selectedApparition)}
-            className={`p-2 rounded-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
+            className={`p-xs rounded-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
           >
-            <Icons.Heart className={`w-5 h-5 ${isFav ? 'fill-primary' : ''}`} />
+            <Icons.Heart className={`w-md h-md ${isFav ? 'fill-primary' : ''}`} />
           </Button>
-          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-16 h-16 rounded-full object-cover shadow-premium" loading="lazy" />
+          <img src={selectedApparition.imageSrc} alt={selectedApparition.title} className="w-3xl h-3xl rounded-full object-cover shadow-premium" loading="lazy" />
         </div>
 
         {/* Quick facts */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-sm">
           {[
             { label: 'Data', value: selectedApparition.date },
             { label: 'Vidente(s)', value: selectedApparition.seer.split(',')[0] },
             { label: 'Festa Litúrgica', value: selectedApparition.liturgicalFeast },
             { label: 'Status', value: selectedApparition.approved ? 'Aprovada pela Igreja' : 'Em análise' },
           ].map(fact => (
-            <div key={fact.label} className="p-3 rounded-premium bg-card border border-border">
-              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-1">{fact.label}</p>
+            <div key={fact.label} className="p-sm rounded-premium bg-card border border-border">
+              <p className="text-premium-tiny font-black uppercase tracking-widest text-primary mb-2xs">{fact.label}</p>
               <p className="text-xs font-semibold text-foreground">{fact.value}</p>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-muted rounded-premium">
+        <div className="flex gap-2xs p-2xs bg-muted rounded-premium">
           {[
-            { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-3.5 h-3.5" /> },
-            { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-3.5 h-3.5" /> },
-            { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-3.5 h-3.5" /> },
-            { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-3.5 h-3.5" /> },
+            { id: 'historia' as const, label: 'A Aparição', icon: <Icons.Book className="w-sm h-sm" /> },
+            { id: 'vidente' as const, label: 'O Vidente', icon: <Icons.Users className="w-sm h-sm" /> },
+            { id: 'mensagem' as const, label: 'A Mensagem', icon: <Icons.Heart className="w-sm h-sm" /> },
+            { id: 'profundidade' as const, label: 'Profundidade', icon: <Icons.Star className="w-sm h-sm" /> },
           ].map(tab => (
             <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-bold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-xs py-xs rounded-full text-xs font-bold transition-all ${
                 activeTab === tab.id ? 'bg-card text-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'
               }`}
             >
@@ -91,7 +91,7 @@ const AparicoesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2 }}
-            className="bg-card border border-border rounded-full p-6 md:p-8"
+            className="bg-card border border-border rounded-full p-lg md:p-xl"
           >
             {activeTab === 'historia' && (
               <div className="space-y-4">
@@ -122,7 +122,7 @@ const AparicoesPage: React.FC = () => {
             {activeTab === 'mensagem' && (
               <div className="space-y-6">
                 <h2 className="text-lg font-serif font-bold text-foreground">A Mensagem de Maria</h2>
-                <blockquote className="border-l-4 border-primary pl-4 py-2">
+                <blockquote className="border-l-4 border-primary pl-md py-xs">
                   <p className="font-serif italic text-foreground/90 leading-[1.9] text-base">
                     {parseTheologicalReferences(selectedApparition.message).map((seg, i) => {
                       if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -148,8 +148,8 @@ const AparicoesPage: React.FC = () => {
               />
             )}
             {activeTab === 'profundidade' && !selectedApparition.textoBase && (
-              <div className="text-center py-12 space-y-4">
-                <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto opacity-20" />
+              <div className="text-center py-2xl space-y-4">
+                <Icons.Search className="w-2xl h-2xl text-muted-foreground mx-auto opacity-20" />
                 <p className="text-muted-foreground italic font-serif">Conteúdo profundo em preparação para esta aparição.</p>
               </div>
             )}
@@ -164,8 +164,8 @@ const AparicoesPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.Heart className="w-4 h-4 text-primary" />
+        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
+          <Icons.Heart className="w-md h-md text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Aparições Marianas</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Aparições de Nossa Senhora</h1>
@@ -175,22 +175,22 @@ const AparicoesPage: React.FC = () => {
       </div>
 
       {/* Timeline intro */}
-      <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap">
+      <div className="flex items-center justify-center gap-md md:gap-lg flex-wrap">
         {APPARITIONS.map((a, i) => (
           <React.Fragment key={a.id}>
-            <div className="flex flex-col items-center gap-1">
-              <img src={a.imageSrc} alt={a.title} className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-soft" loading="lazy" />
+            <div className="flex flex-col items-center gap-2xs">
+              <img src={a.imageSrc} alt={a.title} className="w-xl h-xl md:w-2xl md:h-2xl rounded-full object-cover shadow-soft" loading="lazy" />
               <span className="text-premium-tiny font-black text-primary">{a.year}</span>
             </div>
             {i < APPARITIONS.length - 1 && (
-              <div className="hidden md:block w-6 h-px bg-border" />
+              <div className="hidden md:block w-lg h-px bg-border" />
             )}
           </React.Fragment>
         ))}
       </div>
 
       {/* Apparition cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
         {APPARITIONS.map((apparition, index) => {
           const isFav = isFavorite('aparicao', apparition.title);
           return (
@@ -206,23 +206,23 @@ const AparicoesPage: React.FC = () => {
                 <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-40 object-cover" loading="lazy" />
                 <Button
                   onClick={(e) => handleToggleFavorite(apparition, e)}
-                  className={`absolute top-3 right-3 p-2 rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
+                  className={`absolute top-sm right-sm p-xs rounded-full  transition-all ${isFav ? 'bg-primary/20 text-primary' : 'bg-black/30 text-white/80 hover:text-white'}`}
                   title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
                 >
-                  <Icons.Heart className={`w-4 h-4 ${isFav ? 'fill-primary' : ''}`} />
+                  <Icons.Heart className={`w-md h-md ${isFav ? 'fill-primary' : ''}`} />
                 </Button>
               </div>
-              <div className="p-5">
-                <div className="mb-3">
+              <div className="p-md">
+                <div className="mb-sm">
                   <span className="text-premium-tiny font-black text-primary uppercase tracking-widest">{apparition.country} • {apparition.year}</span>
-                  <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
+                  <h2 className="text-lg md:text-xl font-serif font-bold text-foreground mt-2xs group-hover:text-primary transition-colors">
                     {apparition.title}
                   </h2>
                 </div>
-                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{apparition.summary}</p>
+                <p className="text-sm text-muted-foreground mb-sm line-clamp-2">{apparition.summary}</p>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Icons.Users className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-xs text-muted-foreground">
+                    <Icons.Users className="w-sm h-sm" />
                     <span className="text-premium-tiny font-bold">{apparition.seer.split(',')[0]}</span>
                   </div>
                   <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">Ler com profundidade →</span>
@@ -234,8 +234,8 @@ const AparicoesPage: React.FC = () => {
       </div>
 
       {/* Catechism reference */}
-      <div className="bg-card border border-border rounded-premium p-6 text-center space-y-3">
-        <Icons.Cross className="w-6 h-6 text-primary mx-auto" />
+      <div className="bg-card border border-border rounded-premium p-lg text-center space-y-3">
+        <Icons.Cross className="w-lg h-lg text-primary mx-auto" />
         <h3 className="font-serif font-bold text-foreground">Fundamentação no Catecismo</h3>
         <p className="text-sm text-muted-foreground max-w-xl mx-auto">
           O Catecismo da Igreja Católica (§67) ensina que as revelações privadas "não pertencem ao depósito da fé",

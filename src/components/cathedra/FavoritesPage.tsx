@@ -15,8 +15,8 @@ const FavoritesPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.Heart className="w-4 h-4 text-primary" />
+        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
+          <Icons.Heart className="w-md h-md text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Biblioteca Pessoal</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Favoritos</h1>
@@ -24,10 +24,10 @@ const FavoritesPage: React.FC = () => {
       </div>
 
       {favorites.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex flex-wrap gap-xs justify-center">
           {types.map(t => (
             <Button key={t} onClick={() => setFilter(t)}
-              className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+              className={`px-md py-xs rounded-full text-xs font-bold transition-all ${t === filter ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
               {typeLabels[t] || t}
             </Button>
           ))}
@@ -36,8 +36,8 @@ const FavoritesPage: React.FC = () => {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[40vh] space-y-4 text-center">
-          <div className="w-16 h-16 rounded-premium bg-muted flex items-center justify-center">
-            <Icons.Heart className="w-8 h-8 text-muted-foreground" />
+          <div className="w-3xl h-3xl rounded-premium bg-muted flex items-center justify-center">
+            <Icons.Heart className="w-xl h-xl text-muted-foreground" />
           </div>
           <h3 className="text-xl font-serif font-bold text-foreground">Nenhum favorito ainda</h3>
           <p className="text-muted-foreground font-serif italic max-w-md">
@@ -47,18 +47,18 @@ const FavoritesPage: React.FC = () => {
       ) : (
         <div className="space-y-3">
           {filtered.map(item => (
-            <div key={item.id} className="bg-card border border-border rounded-premium p-5 group hover:border-primary/30 transition-all">
-              <div className="flex items-start justify-between gap-4">
+            <div key={item.id} className="bg-card border border-border rounded-premium p-md group hover:border-primary/30 transition-all">
+              <div className="flex items-start justify-between gap-md">
                 <div className="space-y-1 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-xs">
                     <span className="text-premium-tiny font-black uppercase tracking-widest text-primary">{typeLabels[item.type] || item.type}</span>
                     <span className="text-premium-tiny text-muted-foreground">{new Date(item.timestamp).toLocaleDateString('pt-BR')}</span>
                   </div>
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-sm text-muted-foreground font-serif line-clamp-2">{item.content}</p>
                 </div>
-                <Button onClick={() => removeFavorite(item.id)} className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
-                  <Icons.Cross className="w-4 h-4 text-destructive" />
+                <Button onClick={() => removeFavorite(item.id)} className="p-xs rounded-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                  <Icons.Cross className="w-md h-md text-destructive" />
                 </Button>
               </div>
             </div>

@@ -41,10 +41,10 @@ const GuidedReadingPage: React.FC = () => {
         path="/jornada-guiada"
       />
 
-      <main className="app-container py-32 md:py-48 flex flex-col items-center">
-        <header className="text-center space-y-8 mb-20 md:mb-32 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-4 px-6 py-2 bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">
-            <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />
+      <main className="app-container py-4xl md:py-48 flex flex-col items-center">
+        <header className="text-center space-y-8 mb-3xl md:mb-4xl max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-md px-lg py-xs bg-primary/[0.01] border border-border/10 rounded-full text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">
+            <div className="w-2xs h-2xs rounded-full bg-primary animate-pulse" />
             Experiência Guiada
           </div>
           
@@ -61,11 +61,11 @@ const GuidedReadingPage: React.FC = () => {
           <GuidedReadingFlow />
         </section>
 
-        <footer className="mt-32 text-center space-y-6 opacity-30 hover:opacity-100 transition-opacity duration-1000">
+        <footer className="mt-4xl text-center space-y-6 opacity-30 hover:opacity-100 transition-opacity duration-1000">
           <p className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40">
             Mosteiro Digital Moderno
           </p>
-          <div className="h-20 w-px bg-gradient-to-b from-primary/20 to-transparent mx-auto" />
+          <div className="h-3xl w-px bg-gradient-to-b from-primary/20 to-transparent mx-auto" />
         </footer>
       </main>
     </div>

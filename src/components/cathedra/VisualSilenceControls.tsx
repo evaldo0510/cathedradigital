@@ -46,7 +46,7 @@ export const VisualSilenceControls: React.FC = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-md md:gap-lg">
       {controls.map((control) => (
         <motion.button
           key={control.id}
@@ -54,14 +54,14 @@ export const VisualSilenceControls: React.FC = () => {
           whileTap={{ scale: 0.98 }}
           onClick={() => updateSettings({ [control.id]: !control.active } as any)}
           className={`
-            relative p-6 rounded-premium border text-left transition-all duration-300
+            relative p-lg rounded-premium border text-left transition-all duration-300
             ${control.active 
               ? 'bg-primary border-primary text-primary-foreground shadow-premium' 
               : 'bg-card/50 border-border/40 text-foreground/70 hover:border-primary/20 hover:bg-card'}
           `}
         >
-          <div className="flex flex-col gap-4">
-            <control.icon className={`w-6 h-6 ${control.active ? 'text-primary-foreground' : 'text-primary/40'}`} strokeWidth={1.5} />
+          <div className="flex flex-col gap-md">
+            <control.icon className={`w-lg h-lg ${control.active ? 'text-primary-foreground' : 'text-primary/40'}`} strokeWidth={1.5} />
             <div className="space-y-1">
               <span className="text-xs font-bold uppercase tracking-widest block">
                 {control.label}
@@ -75,7 +75,7 @@ export const VisualSilenceControls: React.FC = () => {
           {control.active && (
             <motion.div 
               layoutId="active-dot"
-              className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+              className="absolute top-md right-md w-2xs h-2xs rounded-full bg-secondary shadow-[0_0_8px_rgba(212,175,55,0.8)]"
             />
           )}
         </motion.button>

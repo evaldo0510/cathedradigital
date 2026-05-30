@@ -73,9 +73,9 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
             transform: 'translateX(-50%)',
             zIndex: 1000
           }}
-          className="flex flex-col gap-2 p-2 bg-card/90 backdrop-blur-2xl border border-primary/10 rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] min-w-[240px]"
+          className="flex flex-col gap-xs p-xs bg-card/90 backdrop-blur-2xl border border-primary/10 rounded-[1.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] min-w-[240px]"
         >
-          <div className="flex items-center justify-between px-2 pt-1">
+          <div className="flex items-center justify-between px-xs pt-2xs">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">
               {activeHighlightId ? 'Editar Destaque' : 'Ações de Leitura'}
             </p>
@@ -83,12 +83,12 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
               onClick={() => setPosition(null)}
               className="text-primary/60 hover:text-primary transition-colors"
             >
-              <X className="w-3 h-3" />
+              <X className="w-sm h-sm" />
             </button>
           </div>
 
-          <div className="flex items-center gap-1.5 p-1 bg-muted/30 rounded-2xl">
-            <div className="flex gap-1 pr-1.5 border-r border-primary/5">
+          <div className="flex items-center gap-2xs p-2xs bg-muted/30 rounded-premium">
+            <div className="flex gap-2xs pr-2xs border-r border-primary/5">
               {highlightColors.map((color) => (
                 <button
                   key={color.name}
@@ -96,7 +96,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                     onHighlight(color.name);
                     setPosition(null);
                   }}
-                  className={`w-7 h-7 rounded-full ${color.value} border-2 transition-all hover:scale-110 ${
+                  className={`w-lg h-lg rounded-full ${color.value} border-2 transition-all hover:scale-110 ${
                     activeColor === color.name ? 'border-primary shadow-sm' : 'border-white/20'
                   }`}
                   title={`Destaque ${color.name}`}
@@ -104,7 +104,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
               ))}
             </div>
             
-            <div className="flex items-center gap-1 flex-1">
+            <div className="flex items-center gap-2xs flex-1">
               <Button
                 variant="ghost"
                 size="sm"
@@ -112,9 +112,9 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                   onAddNote();
                   setPosition(null);
                 }}
-                className="h-9 rounded-xl px-3 text-[10px] font-bold uppercase tracking-widest gap-2 hover:bg-primary/5 flex-1"
+                className="h-xl rounded-xl px-sm text-[10px] font-bold uppercase tracking-widest gap-xs hover:bg-primary/5 flex-1"
               >
-                <FileText className="w-3.5 h-3.5" /> Nota
+                <FileText className="w-sm h-sm" /> Nota
               </Button>
 
               <Button
@@ -124,10 +124,10 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                   if (onAskLogos) onAskLogos(selectedText);
                   if (!settings.totalSilence) setPosition(null);
                 }}
-                className="h-9 rounded-xl px-3 text-[10px] font-bold uppercase tracking-widest gap-2 hover:bg-primary/5 flex-1 text-primary/60"
+                className="h-xl rounded-xl px-sm text-[10px] font-bold uppercase tracking-widest gap-xs hover:bg-primary/5 flex-1 text-primary/60"
                 title={settings.totalSilence ? "Aprofundar em silêncio (Logos IA)" : "Aprofundar com Logos IA"}
               >
-                <Sparkles className="w-3.5 h-3.5 stroke-[1]" /> Logos
+                <Sparkles className="w-sm h-sm stroke-[1]" /> Logos
               </Button>
 
               {activeHighlightId && onDeleteHighlight && (
@@ -138,17 +138,17 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                     onDeleteHighlight();
                     setPosition(null);
                   }}
-                  className="h-9 w-9 rounded-xl text-destructive hover:bg-destructive/5"
+                  className="h-xl w-xl rounded-xl text-destructive hover:bg-destructive/5"
                   title="Excluir Destaque"
                 >
-                  <Highlighter className="w-4 h-4" />
+                  <Highlighter className="w-md h-md" />
                 </Button>
               )}
             </div>
           </div>
           
           {selectedText && !activeHighlightId && (
-            <div className="px-3 py-2 border-t border-primary/5 mt-1">
+            <div className="px-sm py-xs border-t border-primary/5 mt-2xs">
               <p className="text-[10px] text-muted-foreground italic line-clamp-1 leading-relaxed">
                 "{selectedText}"
               </p>

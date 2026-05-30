@@ -93,12 +93,12 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container py-12 md:py-24 space-y-16 md:space-y-32">
+    <div className="app-container py-2xl md:py-4xl space-y-16 md:space-y-32">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
       <header className="text-center space-y-8 max-w-3xl mx-auto">
         <div className="premium-tag mx-auto">
-          <Icons.PenLine className="w-4 h-4 text-secondary" />
+          <Icons.PenLine className="w-md h-md text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
         <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
@@ -110,27 +110,27 @@ const SpiritualJournalPage = () => {
       </header>
 
       <div className="flex justify-center">
-        <div className="inline-flex bg-muted/20 p-2 rounded-full border border-border/10 backdrop-blur-sm">
+        <div className="inline-flex bg-muted/20 p-xs rounded-full border border-border/10 backdrop-blur-sm">
           <Button
             variant={activeTab === 'reflection' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('reflection')}
-            className={`rounded-full px-8 py-6 h-12 text-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.Sun className="w-4 h-4 mr-2" /> Reflexão Diária
+            <Icons.Sun className="w-md h-md mr-xs" /> Reflexão Diária
           </Button>
           <Button
             variant={activeTab === 'study' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('study')}
-            className={`rounded-full px-8 py-6 h-12 text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.BookOpen className="w-4 h-4 mr-2" /> Estudo e Leitura
+            <Icons.BookOpen className="w-md h-md mr-xs" /> Estudo e Leitura
           </Button>
           <Button
             variant={activeTab === 'relatio' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('relatio')}
-            className={`rounded-full px-8 py-6 h-12 text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.Sparkles className="w-4 h-4 mr-2" /> Conexões Salvas
+            <Icons.Sparkles className="w-md h-md mr-xs" /> Conexões Salvas
           </Button>
         </div>
       </div>
@@ -149,18 +149,18 @@ const SpiritualJournalPage = () => {
               <CathedraCard padding="lg" className="space-y-16">
                 <div className="space-y-8">
                   <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
-                  <div className="flex flex-wrap justify-center gap-6">
+                  <div className="flex flex-wrap justify-center gap-lg">
                     {MOODS.map((m) => (
                       <button
                         key={m.id}
                         onClick={() => setMood(m.id)}
-                        className={`flex flex-col items-center gap-4 p-6 rounded-premium border transition-all duration-700 ${
+                        className={`flex flex-col items-center gap-md p-lg rounded-premium border transition-all duration-700 ${
                           mood === m.id 
                             ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
                             : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
                         }`}
                       >
-                        <m.icon className="w-8 h-8" />
+                        <m.icon className="w-xl h-xl" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{m.label}</span>
                       </button>
                     ))}
@@ -172,14 +172,14 @@ const SpiritualJournalPage = () => {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-                    className="min-h-[300px] rounded-premium border-border/20 p-8 md:p-12 font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+                    className="min-h-[300px] rounded-premium border-border/20 p-xl md:p-2xl font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
                   />
                   <div className="flex justify-center">
                     <HomeButton 
                       onClick={saveEntry}
                       disabled={isLoading || !content.trim()}
                       variant="primary"
-                      className="px-16 h-14"
+                      className="px-3xl h-2xl"
                     >
                       {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
                     </HomeButton>
@@ -190,7 +190,7 @@ const SpiritualJournalPage = () => {
 
             {/* History */}
             <section className="space-y-12 max-w-4xl mx-auto w-full">
-              <div className="flex items-center gap-10">
+              <div className="flex items-center gap-xl">
                 <div className="h-px flex-1 bg-border/40" />
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap uppercase">
                   Memória da Alma
@@ -205,37 +205,37 @@ const SpiritualJournalPage = () => {
                   ))}
                 </div>
               ) : entries.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-12">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-2xl">
                   {entries.map((entry) => (
                     <motion.div
                       key={entry.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-card p-10 md:p-14 rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                      className="bg-card p-xl md:p-2xl rounded-premium border border-border/40 shadow-premium space-y-8 relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
-                            {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-6 h-6" }) || <Icons.Sun className="w-6 h-6" />}
+                        <div className="flex items-center gap-md">
+                          <div className="w-2xl h-2xl rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
+                            {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-lg h-lg" }) || <Icons.Sun className="w-lg h-lg" />}
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-1">Registro de Graça</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-2xs">Registro de Graça</p>
                             <span className="text-sm font-serif font-bold text-primary">
                               {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
                             </span>
                           </div>
                         </div>
-                        <Icons.Quote className="w-10 h-10 text-primary/5" />
+                        <Icons.Quote className="w-xl h-xl text-primary/5" />
                       </div>
-                      <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-6 border-l-2 border-secondary/20">
+                      <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-lg border-l-2 border-secondary/20">
                         "{entry.content}"
                       </p>
                     </motion.div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-32 opacity-20 hover:opacity-40 transition-opacity duration-1000">
-                  <Icons.PenLine className="w-16 h-16 mx-auto mb-6 stroke-1" />
+                <div className="text-center py-4xl opacity-20 hover:opacity-40 transition-opacity duration-1000">
+                  <Icons.PenLine className="w-3xl h-3xl mx-auto mb-lg stroke-1" />
                   <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
                 </div>
               )}
@@ -263,7 +263,7 @@ const SpiritualJournalPage = () => {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-4xl mx-auto w-full space-y-12"
           >
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-xl">
               <div className="h-px flex-1 bg-border/40" />
               <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap">
                 Relatio Favoritos
@@ -285,28 +285,28 @@ const RelatioFavoritesList = () => {
 
   if (relatioFavs.length === 0) {
     return (
-      <div className="text-center py-20 opacity-30">
-        <Icons.Sparkles className="w-12 h-12 mx-auto mb-4 stroke-1" />
+      <div className="text-center py-3xl opacity-30">
+        <Icons.Sparkles className="w-2xl h-2xl mx-auto mb-md stroke-1" />
         <p className="font-serif italic text-lg">Nenhuma conexão salva ainda.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 gap-lg">
       {relatioFavs.map((fav) => (
         <motion.div
           key={fav.id}
           layout
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-card p-6 rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
+          className="bg-card p-lg rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
         >
           <div className="flex items-start justify-between">
             <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icons.Sparkles className="w-3 h-3 text-primary" />
+              <div className="flex items-center gap-xs">
+                <div className="w-lg h-lg rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icons.Sparkles className="w-sm h-sm text-primary" />
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Relatio</span>
                 <span className="text-[10px] text-muted-foreground opacity-40">
@@ -322,7 +322,7 @@ const RelatioFavoritesList = () => {
               onClick={() => removeFavorite(fav.id)}
               className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
             >
-              <Icons.Trash className="w-4 h-4" />
+              <Icons.Trash className="w-md h-md" />
             </Button>
           </div>
         </motion.div>

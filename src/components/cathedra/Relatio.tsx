@@ -195,37 +195,37 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-12 pt-12 border-t border-primary/[0.01] space-y-6 mb-12", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-2xl pt-2xl border-t border-primary/[0.01] space-y-6 mb-2xl", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 rounded-full bg-primary/[0.03] flex items-center justify-center">
-            <Icons.Sparkles className="w-3 h-3 text-primary/40" />
+        <div className="flex items-center gap-sm">
+          <div className="w-lg h-lg rounded-full bg-primary/[0.03] flex items-center justify-center">
+            <Icons.Sparkles className="w-sm h-sm text-primary/40" />
           </div>
           <div>
             <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/10 group-hover:text-primary/30 transition-all duration-1000">Relatio Contextual</h3>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-md">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleAutoCollapse}
             className={cn(
-              "w-8 h-8 rounded-full transition-all duration-300",
+              "w-xl h-xl rounded-full transition-all duration-300",
               autoCollapse ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary"
             )}
             title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
           >
-            <Icons.Library className="w-3.5 h-3.5" />
+            <Icons.Library className="w-sm h-sm" />
           </Button>
 
-          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-1 border border-primary/[0.05]">
+          <div className="hidden sm:flex items-center bg-primary/[0.03] rounded-full p-2xs border border-primary/[0.05]">
             {(['subtle', 'normal', 'deep'] as const).map((d) => (
               <button
                 key={d}
                 onClick={() => updateDensity(d)}
                 className={cn(
-                  "px-3 py-1 text-[8px] font-black uppercase tracking-widest rounded-full transition-all duration-300",
+                  "px-sm py-2xs text-[8px] font-black uppercase tracking-widest rounded-full transition-all duration-300",
                   density === d ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground/60 hover:text-primary"
                 )}
               >
@@ -257,7 +257,7 @@ const Relatio: React.FC<RelatioProps> = ({
             <LayoutGroup id="relatio-cards">
             {/* Static References */}
             {(staticRefs.cicParagraphs.length > 0 || staticRefs.bibleRefs.length > 0 || staticRefs.documents.length > 0) && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-xs">
                 {staticRefs.cicParagraphs.map(p => (
                   <CatechismPopover key={`static-cic-${p}`} paragraph={p} onNavigate={onNavigateToCIC} />
                 ))}
@@ -285,7 +285,7 @@ const Relatio: React.FC<RelatioProps> = ({
             {/* Dynamic Connections */}
             {connections.length > 0 && (
               <div className="space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
 
                   {(showAll ? connections : connections.slice(0, 4)).map((item) => {
                   const isFav = isFavorite('relatio', item.title);
@@ -328,16 +328,16 @@ const Relatio: React.FC<RelatioProps> = ({
                           }
                         }}
                       >
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/[0.01] rounded-full -mr-16 -mt-16 group-hover:bg-primary/[0.03] transition-colors duration-1000" />
+                        <div className="absolute top-0 right-0 w-4xl h-4xl bg-primary/[0.01] rounded-full -mr-3xl -mt-3xl group-hover:bg-primary/[0.03] transition-colors duration-1000" />
                         
                         <div className="flex flex-col h-full relative z-10">
-                          <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-premium bg-primary/[0.03] border border-primary/[0.05] flex-shrink-0 flex items-center justify-center text-primary/40 group-hover:text-primary group-hover:bg-primary/[0.05] transition-all duration-700">
-                                {item.type === 'bible' && <Icons.Bible className="w-4 h-4" strokeWidth={1} />}
-                                {item.type === 'catechism' && <Icons.CatechismShield className="w-4 h-4" strokeWidth={1} />}
-                                {item.type === 'magisterium' && <Icons.Magisterium className="w-4 h-4" strokeWidth={1} />}
-                                {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-4 h-4" strokeWidth={1} />}
+                          <div className="flex items-start justify-between mb-md">
+                            <div className="flex items-center gap-sm">
+                              <div className="w-xl h-xl rounded-premium bg-primary/[0.03] border border-primary/[0.05] flex-shrink-0 flex items-center justify-center text-primary/40 group-hover:text-primary group-hover:bg-primary/[0.05] transition-all duration-700">
+                                {item.type === 'bible' && <Icons.Bible className="w-md h-md" strokeWidth={1} />}
+                                {item.type === 'catechism' && <Icons.CatechismShield className="w-md h-md" strokeWidth={1} />}
+                                {item.type === 'magisterium' && <Icons.Magisterium className="w-md h-md" strokeWidth={1} />}
+                                {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-md h-md" strokeWidth={1} />}
                               </div>
                               <div className="space-y-0.5">
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40 group-hover:text-primary transition-colors">
@@ -346,11 +346,11 @@ const Relatio: React.FC<RelatioProps> = ({
                                    item.type === 'magisterium' ? 'Magistério' : 
                                    item.type === 'saint' ? 'Tradição' : 'Jornada'}
                                 </p>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-xs">
                                   <span className="text-[8px] font-bold text-muted-foreground/40 uppercase tracking-widest">
                                     {item.reason}
                                   </span>
-                                  <div className={cn("w-1 h-1 rounded-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
+                                  <div className={cn("w-2xs h-2xs rounded-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
                                   <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-secondary/60")}>
                                     {strengthLabel}
                                   </span>
@@ -358,13 +358,13 @@ const Relatio: React.FC<RelatioProps> = ({
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="flex items-center gap-2xs opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                               {onSelectLogosQuery && (
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   disabled={isOpeningLogos}
-                                  className="w-7 h-7 rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
+                                  className="w-lg h-lg rounded-full hover:bg-primary/5 text-primary/60 hover:text-primary disabled:opacity-30"
                                   title="Pedir explicação à Logos IA"
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -379,14 +379,14 @@ const Relatio: React.FC<RelatioProps> = ({
                                     setTimeout(() => setIsOpeningLogos(false), 1500);
                                   }}
                                 >
-                                  <Icons.Sparkles className={cn("w-3.5 h-3.5", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
+                                  <Icons.Sparkles className={cn("w-sm h-sm", isOpeningLogos && "animate-pulse")} strokeWidth={1.5} />
                                 </Button>
                               )}
 
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="w-7 h-7 rounded-full hover:bg-primary/5"
+                                className="w-lg h-lg rounded-full hover:bg-primary/5"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   toggleFavorite({
@@ -396,11 +396,11 @@ const Relatio: React.FC<RelatioProps> = ({
                                   });
                                   toast.success(isFav ? 'Removido dos favoritos' : 'Conexão salva', {
                                     description: item.title,
-                                    icon: <Icons.Star className="w-4 h-4 fill-secondary text-secondary" />
+                                    icon: <Icons.Star className="w-md h-md fill-secondary text-secondary" />
                                   });
                                 }}
                               >
-                                <Icons.Star className={cn("w-3.5 h-3.5", isFav ? "fill-secondary text-secondary" : "text-primary/60")} strokeWidth={1.5} />
+                                <Icons.Star className={cn("w-sm h-sm", isFav ? "fill-secondary text-secondary" : "text-primary/60")} strokeWidth={1.5} />
                               </Button>
                             </div>
                           </div>
@@ -413,9 +413,9 @@ const Relatio: React.FC<RelatioProps> = ({
                           </div>
 
                           
-                          <div className="mt-4 pt-4 border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                          <div className="mt-md pt-md border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
                             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">Explorar Conexão</span>
-                            <Icons.ArrowRight className="w-3 h-3 text-primary/60" strokeWidth={1.5} />
+                            <Icons.ArrowRight className="w-sm h-sm text-primary/60" strokeWidth={1.5} />
                           </div>
                         </div>
                       </CathedraCard>
@@ -425,7 +425,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 </div>
 
                 {loading && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-md mt-md">
                     {[1, 2].map((i) => (
                       <div key={`skeleton-${i}`} className="h-[180px] w-full rounded-premium-lg bg-primary/[0.02] animate-pulse overflow-hidden relative">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/[0.05] to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
@@ -438,7 +438,7 @@ const Relatio: React.FC<RelatioProps> = ({
 
 
             {connections.length > 4 && (
-              <div className="flex flex-col items-center gap-4 pt-4">
+              <div className="flex flex-col items-center gap-md pt-md">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -451,8 +451,8 @@ const Relatio: React.FC<RelatioProps> = ({
                   }}
                   className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/40 hover:text-primary transition-all group rounded-full"
                 >
-                  <span className="mr-2">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
-                  <Icons.ChevronDown className={cn("w-3 h-3 transition-transform duration-500", showAll && "rotate-180")} />
+                  <span className="mr-xs">{showAll ? 'Recolher Conexões' : `Ver mais ${connections.length - 4} conexões`}</span>
+                  <Icons.ChevronDown className={cn("w-sm h-sm transition-transform duration-500", showAll && "rotate-180")} />
                 </Button>
                 
                 {showAll && (

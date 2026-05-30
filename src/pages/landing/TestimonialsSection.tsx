@@ -22,19 +22,19 @@ const TestimonialsSection = () => {
           <h2 className="font-display font-bold">Vozes da Comunidade</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-xl md:gap-xl">
           {testimonials.slice(0, 3).map((t) => (
             <CathedraCard
               key={t.name}
-              className="p-8 space-y-8 flex flex-col"
+              className="p-xl space-y-8 flex flex-col"
             >
-              <Quote className="w-6 h-6 text-secondary/20" />
+              <Quote className="w-lg h-lg text-secondary/20" />
               <p className="text-base text-muted-foreground leading-relaxed font-serif flex-1">
                 "{t.text}"
               </p>
 
-              <div className="pt-8 border-t border-border/10 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
+              <div className="pt-xl border-t border-border/10 flex items-center gap-md">
+                <div className="w-2xl h-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary font-bold text-premium-small">
                   {t.avatar}
                 </div>
                 <div>

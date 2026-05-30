@@ -203,15 +203,15 @@ const InstitutionalVideoSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="relative w-full py-24 md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
+    <section ref={sectionRef} className="relative w-full py-4xl md:py-40 bg-background overflow-hidden" aria-labelledby="video-section-title">
       {/* Cinematic Background Layers */}
       <div className="absolute inset-0 z-0 bg-background/50" aria-hidden="true">
         <motion.div style={{ y: shouldReduceMotion ? 0 : y1 }} className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/2 rounded-premium" />
         <motion.div style={{ y: shouldReduceMotion ? 0 : y2 }} className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/2 rounded-premium" />
       </div>
 
-      <div className="container px-6 mx-auto relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="container px-lg mx-auto relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl items-center">
           
           <motion.div 
             style={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity, scale }}
@@ -227,7 +227,7 @@ const InstitutionalVideoSection = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-6 pt-4">
+            <div className="grid grid-cols-2 gap-lg pt-md">
               {[
                 { title: "Liturgia Viva", desc: "Igreja em tempo real." },
                 { title: "Magistério Fiel", desc: "100% Doutrina Católica." },
@@ -287,13 +287,13 @@ const InstitutionalVideoSection = () => {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-24 h-24 bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-premium group/btn overflow-hidden relative"
+                  className="w-4xl h-4xl bg-white/20 border border-white/30 rounded-full flex items-center justify-center shadow-premium group/btn overflow-hidden relative"
                 >
                   <div className="absolute inset-0 bg-primary/20 scale-0 group-hover/btn:scale-100 transition-transform duration-500 rounded-premium" />
-                  <Play className="w-10 h-10 text-white fill-white relative z-10 ml-1" />
+                  <Play className="w-xl h-xl text-white fill-white relative z-10 ml-2xs" />
                 </motion.div>
                 
-                <div className="text-center space-y-2 px-8">
+                <div className="text-center space-y-2 px-xl">
                   <h3 className="font-display font-bold text-white tracking-tight">
                     Assistir Apresentação
                   </h3>
@@ -304,7 +304,7 @@ const InstitutionalVideoSection = () => {
               </div>
 
               {/* Progress Indicator Decorative */}
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10">
+              <div className="absolute bottom-0 left-0 right-0 h-2xs bg-white/10">
                 <motion.div 
                   initial={shouldReduceMotion ? { width: "100%" } : { width: 0 }}
                   whileInView={{ width: "100%" }}
@@ -318,13 +318,13 @@ const InstitutionalVideoSection = () => {
             <motion.div
               animate={shouldReduceMotion ? { y: 0 } : { y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-6 hidden md:flex items-center gap-3 p-4 bg-card border border-border rounded-full shadow-premium-hover z-20 cursor-pointer select-none"
+              className="absolute -bottom-lg -right-lg hidden md:flex items-center gap-sm p-md bg-card border border-border rounded-full shadow-premium-hover z-20 cursor-pointer select-none"
               onClick={toggleMute}
               role="button"
               aria-label={isMuted ? "Ativar som" : "Desativar som"}
             >
-              <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center">
-                {isMuted ? <VolumeX className="w-5 h-5 text-primary" /> : <Volume2 className="w-5 h-5 text-primary" />}
+              <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center">
+                {isMuted ? <VolumeX className="w-md h-md text-primary" /> : <Volume2 className="w-md h-md text-primary" />}
               </div>
               <div className="space-y-0.5">
                 <p className="text-premium-tiny font-black text-primary uppercase tracking-tighter">
@@ -345,7 +345,7 @@ const InstitutionalVideoSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-12"
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-md md:p-2xl"
             onClick={handleClose}
             role="dialog"
             aria-modal="true"
@@ -360,10 +360,10 @@ const InstitutionalVideoSection = () => {
               onClick={e => e.stopPropagation()}
             >
               {/* Top Controls Overlay */}
-              <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-black/60">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 rounded-premium border border-white/20">
-                    <Languages className="w-4 h-4 text-white/70" />
+              <div className="absolute top-0 left-0 right-0 p-lg flex justify-between items-center z-50 bg-black/60">
+                <div className="flex items-center gap-md">
+                  <div className="flex items-center gap-xs px-sm py-2xs bg-white/10 rounded-premium border border-white/20">
+                    <Languages className="w-md h-md text-white/70" />
                     <select 
                       value={currentLang}
                       onChange={(e) => {
@@ -385,20 +385,20 @@ const InstitutionalVideoSection = () => {
                   
                   <Button 
                     onClick={toggleMute}
-                    className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
+                    className="p-xs bg-white/10 hover:bg-white/20 rounded-full transition-all border border-white/20"
                     aria-label={isMuted ? "Ativar som" : "Desativar som"}
                   >
-                    {isMuted ? <VolumeX className="w-5 h-5 text-white" /> : <Volume2 className="w-5 h-5 text-white" />}
+                    {isMuted ? <VolumeX className="w-md h-md text-white" /> : <Volume2 className="w-md h-md text-white" />}
                   </Button>
                 </div>
 
                 <Button 
                   ref={closeBtnRef}
                   onClick={handleClose}
-                  className="p-4 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-premium"
+                  className="p-md bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all group focus:outline-none focus-visible:ring-4 focus-visible:ring-primary shadow-premium"
                   aria-label="Fechar vídeo de apresentação (Esc)"
                 >
-                  <X className="w-7 h-7 text-white group-hover:rotate-90 transition-transform duration-300" />
+                  <X className="w-lg h-lg text-white group-hover:rotate-90 transition-transform duration-300" />
                 </Button>
               </div>
 

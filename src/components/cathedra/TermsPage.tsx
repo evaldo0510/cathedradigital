@@ -7,11 +7,11 @@ const TermsPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full pb-24">
+    <div className="w-full pb-4xl">
       {/* Redundant back button removed */}
 
-      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-2">Termos de Uso</h1>
-      <p className="text-xs font-black uppercase tracking-widest text-primary mb-10">Última atualização: Abril de 2026</p>
+      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-xs">Termos de Uso</h1>
+      <p className="text-xs font-black uppercase tracking-widest text-primary mb-xl">Última atualização: Abril de 2026</p>
 
       <div className="prose prose-sm dark:prose-invert max-w-none space-y-8 text-muted-foreground">
         <section>
@@ -101,7 +101,7 @@ const TermsPage: React.FC = () => {
         </section>
       </div>
 
-      <div className="mt-12 pt-6 border-t border-border">
+      <div className="mt-2xl pt-lg border-t border-border">
         <p className="text-xs text-muted-foreground italic text-center">
           "Conhecereis a verdade, e a verdade vos libertará." — Jo 8,32
         </p>

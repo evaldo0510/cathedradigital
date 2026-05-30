@@ -146,19 +146,19 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-8 text-center space-y-6 my-10"
+      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-xl text-center space-y-6 my-xl"
     >
-      <div className="mx-auto w-16 h-16 rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
-        <Icons.WifiOff className="w-8 h-8 text-primary/40" />
+      <div className="mx-auto w-3xl h-3xl rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
+        <Icons.WifiOff className="w-xl h-xl text-primary/40" />
       </div>
 
       {downloading && (
-        <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
+        <div className="space-y-3 animate-in fade-in slide-in-from-top-xs">
           <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
-          <Progress value={progress} className="h-1.5" />
+          <Progress value={progress} className="h-2xs" />
         </div>
       )}
 
@@ -174,20 +174,20 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-sm">
         {paragraph && isOnline && (
           <Button 
             onClick={downloading ? handleCancel : () => handleDownload()}
             variant={downloading ? "destructive" : "default"}
-            className="rounded-full h-10 px-6 font-bold w-full sm:w-auto transition-all"
+            className="rounded-full h-xl px-lg font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
               <>
-                <Icons.X className="w-4 h-4 mr-2" /> Cancelar
+                <Icons.X className="w-md h-md mr-xs" /> Cancelar
               </>
             ) : (
               <>
-                <Icons.Download className="w-4 h-4 mr-2" /> Baixar Agora
+                <Icons.Download className="w-md h-md mr-xs" /> Baixar Agora
               </>
             )}
           </Button>
@@ -197,21 +197,21 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={onRetry}
             variant="secondary"
-            className="rounded-full h-10 px-6 font-bold w-full sm:w-auto"
+            className="rounded-full h-xl px-lg font-bold w-full sm:w-auto"
           >
-            <Icons.RotateCcw className="w-4 h-4 mr-2" /> Tentar Carregar
+            <Icons.RotateCcw className="w-md h-md mr-xs" /> Tentar Carregar
           </Button>
         )}
         <Button 
           onClick={() => navigate('/cache-manager')}
           variant="outline"
-          className="rounded-full h-10 px-6 font-bold w-full sm:w-auto"
+          className="rounded-full h-xl px-lg font-bold w-full sm:w-auto"
         >
-          <Icons.Library className="w-4 h-4 mr-2" /> Gerenciar Cache
+          <Icons.Library className="w-md h-md mr-xs" /> Gerenciar Cache
         </Button>
       </div>
 
-      <div className="pt-4 border-t border-border/40">
+      <div className="pt-md border-t border-border/40">
         <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>

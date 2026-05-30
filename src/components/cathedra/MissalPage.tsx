@@ -80,27 +80,27 @@ const MissalPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.Cross className="w-4 h-4 text-primary" />
+        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
+          <Icons.Cross className="w-md h-md text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
         <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
       </div>
 
-      <div className="flex justify-center gap-2 flex-wrap">
+      <div className="flex justify-center gap-xs flex-wrap">
         <Button onClick={() => setShowLatin(!showLatin)}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-md py-xs rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
         </Button>
         <Button onClick={() => setShowRubrics(!showRubrics)}
-          className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-md py-xs rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
         </Button>
       </div>
 
       {/* Quick navigation */}
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-xs justify-center">
         {MISSAL_SECTIONS.map(section => (
           <Button
             key={section.id}
@@ -108,7 +108,7 @@ const MissalPage: React.FC = () => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-3 py-1.5 rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all ${
+            className={`px-sm py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
@@ -122,27 +122,27 @@ const MissalPage: React.FC = () => {
           <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-premium overflow-hidden">
             <Button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
-              className="w-full p-5 flex items-center justify-between text-left hover:bg-primary/5 transition-all"
+              className="w-full p-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-0.5">{section.subtitle}</p>}
+                {section.subtitle && <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground mt-3xs">{section.subtitle}</p>}
               </div>
-              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-md h-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </Button>
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">
                 {section.parts.map((part, i) => (
-                  <div key={i} className="p-5 space-y-3">
+                  <div key={i} className="p-md space-y-3">
                     <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
-                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-4 py-2 border border-secondary/10">
+                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-md py-xs border border-secondary/10">
                         ✠ {part.rubric}
                       </p>
                     )}
                     {showLatin && part.latin && (
-                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-4 whitespace-pre-line">{part.latin}</p>
+                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-md whitespace-pre-line">{part.latin}</p>
                     )}
                     <p className="text-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>

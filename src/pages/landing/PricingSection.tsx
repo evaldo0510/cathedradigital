@@ -17,7 +17,7 @@ const PricingSection = () => {
       ],
       button: "Começar Agora",
       popular: false,
-      icon: <Heart className="w-5 h-5 text-primary" />
+      icon: <Heart className="w-md h-md text-primary" />
     },
     {
       name: "Irmandade Premium",
@@ -34,7 +34,7 @@ const PricingSection = () => {
       ],
       button: "Ser Premium",
       popular: true,
-      icon: <Sparkles className="w-5 h-5 text-primary" />
+      icon: <Sparkles className="w-md h-md text-primary" />
     },
     {
       name: "Benfeitor Anual",
@@ -50,7 +50,7 @@ const PricingSection = () => {
       ],
       button: "Apoiar a Missão",
       popular: false,
-      icon: <Zap className="w-5 h-5 text-primary" />
+      icon: <Zap className="w-md h-md text-primary" />
     }
   ];
 
@@ -65,30 +65,30 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid md:grid-cols-3 gap-xl md:gap-xl">
           {tiers.map((tier) => (
             <CathedraCard
               key={tier.name}
-              className={`p-8 relative flex flex-col h-full ${
+              className={`p-xl relative flex flex-col h-full ${
                 tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-tiny font-bold uppercase tracking-[0.3em] px-4 py-1.5 rounded-premium">
+                <div className="absolute -top-sm left-2xs/2 -translate-x-1/2 bg-secondary text-primary-foreground text-premium-tiny font-bold uppercase tracking-[0.3em] px-md py-2xs rounded-premium">
                   Mais Escolhido
                 </div>
               )}
 
               <div className="space-y-6 flex-1">
                 <div className="flex justify-between items-center">
-                  <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center">
+                  <div className="w-2xl h-2xl rounded-premium bg-primary/5 flex items-center justify-center">
                     {tier.icon}
                   </div>
                   <h3 className="font-bold font-serif">{tier.name}</h3>
                 </div>
 
                 <div className="space-y-2">
-                  <div className="flex items-baseline gap-1">
+                  <div className="flex items-baseline gap-2xs">
                     <span className="text-3xl font-bold">{tier.price}</span>
                     {tier.period && <span className="text-muted-foreground text-premium-small">{tier.period}</span>}
                   </div>
@@ -97,17 +97,17 @@ const PricingSection = () => {
                   </p>
                 </div>
 
-                <ul className="space-y-4 py-6 border-t border-border/10">
+                <ul className="space-y-4 py-lg border-t border-border/10">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3 text-premium-small">
-                      <Check className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+                    <li key={feature} className="flex items-start gap-sm text-premium-small">
+                      <Check className="w-md h-md text-secondary mt-3xs flex-shrink-0" />
                       <span className="text-muted-foreground leading-snug">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="mt-8">
+              <div className="mt-xl">
                 <HomeButton 
                   variant={tier.popular ? "primary" : "outline"}
                   className="w-full"

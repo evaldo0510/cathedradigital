@@ -29,14 +29,14 @@ const ProShowcase: React.FC = () => {
       className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-premium"
     >
       {/* Decorative glows */}
-      <div className="absolute -top-24 -right-24 w-72 h-72 bg-secondary/15 rounded-premium  pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-primary/10 rounded-premium  pointer-events-none" />
+      <div className="absolute -top-4xl -right-4xl w-72 h-72 bg-secondary/15 rounded-premium  pointer-events-none" />
+      <div className="absolute -bottom-3xl -left-3xl w-56 h-56 bg-primary/10 rounded-premium  pointer-events-none" />
 
-      <div className="relative z-10 p-6 md:p-8 space-y-6">
+      <div className="relative z-10 p-lg md:p-xl space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-premium bg-secondary/20 border border-secondary/30">
-            <Crown className="w-3.5 h-3.5 text-secondary" />
+          <div className="inline-flex items-center gap-xs px-sm py-2xs rounded-premium bg-secondary/20 border border-secondary/30">
+            <Crown className="w-sm h-sm text-secondary" />
             <span className="text-premium-tiny font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-xl md:text-2xl font-black text-foreground leading-tight">
@@ -49,7 +49,7 @@ const ProShowcase: React.FC = () => {
         </div>
 
         {/* Benefits grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-sm">
           {BENEFITS.map((b, i) => {
             const Icon = b.icon;
             return (
@@ -58,9 +58,9 @@ const ProShowcase: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.05 }}
-                className="p-3 rounded-full bg-background/60 border border-border/60 space-y-1.5"
+                className="p-sm rounded-full bg-background/60 border border-border/60 space-y-1.5"
               >
-                <Icon className="w-4 h-4 text-secondary" />
+                <Icon className="w-md h-md text-secondary" />
                 <p className="text-xs font-bold text-foreground leading-tight">{b.label}</p>
                 <p className="text-premium-tiny text-muted-foreground leading-snug">{b.desc}</p>
               </motion.div>
@@ -69,13 +69,13 @@ const ProShowcase: React.FC = () => {
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col items-center gap-3 pt-2">
+        <div className="flex flex-col items-center gap-sm pt-xs">
           <Button
             onClick={() => navigate(AppRoute.PRICING)}
-            className="w-full max-w-sm rounded-full h-12 gap-2 font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
+            className="w-full max-w-sm rounded-full h-2xl gap-xs font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
           >
-            <Crown className="w-4 h-4" /> Conheça o PRO
-            <ArrowRight className="w-4 h-4" />
+            <Crown className="w-md h-md" /> Conheça o PRO
+            <ArrowRight className="w-md h-md" />
           </Button>
           <p className="text-premium-tiny text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser

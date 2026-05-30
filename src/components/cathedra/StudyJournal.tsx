@@ -71,31 +71,31 @@ const StudyJournal: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex bg-muted/30 p-1.5 rounded-full border border-border/10">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
+        <div className="flex bg-muted/30 p-2xs rounded-full border border-border/10">
           <Button
             variant={activeTab === 'notes' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('notes')}
-            className={`rounded-full px-6 h-10 ${activeTab === 'notes' ? 'shadow-premium' : ''}`}
+            className={`rounded-full px-lg h-xl ${activeTab === 'notes' ? 'shadow-premium' : ''}`}
           >
             Anotações ({allNotes.length})
           </Button>
           <Button
             variant={activeTab === 'marks' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('marks')}
-            className={`rounded-full px-6 h-10 ${activeTab === 'marks' ? 'shadow-premium' : ''}`}
+            className={`rounded-full px-lg h-xl ${activeTab === 'marks' ? 'shadow-premium' : ''}`}
           >
             Marcas ({marks.filter(m => !m.is_last_read).length})
           </Button>
         </div>
 
         <div className="relative w-full md:w-80">
-          <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Icons.Search className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Pesquisar..."
-            className="pl-11 rounded-full border-border/20 bg-muted/10 focus-visible:ring-primary/20"
+            className="pl-xl rounded-full border-border/20 bg-muted/10 focus-visible:ring-primary/20"
           />
         </div>
       </div>
@@ -107,7 +107,7 @@ const StudyJournal: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 gap-lg"
           >
             {filteredNotes.length > 0 ? (
               filteredNotes.map((note) => (
@@ -129,7 +129,7 @@ const StudyJournal: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-3 gap-lg"
           >
             {filteredMarks.length > 0 ? (
               filteredMarks.map((mark) => (
@@ -162,21 +162,21 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
   return (
     <motion.div
       layout
-      className="bg-card border border-border/40 rounded-premium p-6 space-y-4 hover:border-primary/20 transition-all group"
+      className="bg-card border border-border/40 rounded-premium p-lg space-y-4 hover:border-primary/20 transition-all group"
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="px-2 py-1 rounded-full bg-primary/5 text-[9px] font-black uppercase tracking-widest text-primary">
+        <div className="flex items-center gap-sm">
+          <div className="px-xs py-2xs rounded-full bg-primary/5 text-[9px] font-black uppercase tracking-widest text-primary">
             {note.content_type}
           </div>
           <span className="text-xs font-bold text-muted-foreground">{note.content_id}</span>
         </div>
-        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={() => setIsEditing(!isEditing)}>
-            <Icons.PenLine className="w-3.5 h-3.5" />
+        <div className="flex gap-2xs opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="ghost" size="icon" className="h-xl w-xl rounded-full" onClick={() => setIsEditing(!isEditing)}>
+            <Icons.PenLine className="w-sm h-sm" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-destructive" onClick={() => onDelete(note)}>
-            <Icons.Trash className="w-3.5 h-3.5" />
+          <Button variant="ghost" size="icon" className="h-xl w-xl rounded-full text-destructive" onClick={() => onDelete(note)}>
+            <Icons.Trash className="w-sm h-sm" />
           </Button>
         </div>
       </div>
@@ -186,10 +186,10 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           <textarea
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
-            className="w-full bg-muted/10 rounded-2xl p-4 text-sm font-serif leading-relaxed border-none focus:ring-1 focus:ring-primary/20 resize-none"
+            className="w-full bg-muted/10 rounded-premium p-md text-sm font-serif leading-relaxed border-none focus:ring-1 focus:ring-primary/20 resize-none"
             rows={4}
           />
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-xs">
             <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>Cancelar</Button>
             <Button size="sm" onClick={() => { onUpdate(note, editText); setIsEditing(false); }}>Salvar</Button>
           </div>
@@ -200,12 +200,12 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
         </p>
       )}
 
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center justify-between pt-xs">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest">
           {format(new Date(note.created_at), "d 'de' MMM, yy", { locale: ptBR })}
         </span>
-        <Button variant="ghost" size="sm" className="h-7 text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
-          Ver Contexto <Icons.ArrowRight className="ml-1 w-3 h-3" />
+        <Button variant="ghost" size="sm" className="h-lg text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
+          Ver Contexto <Icons.ArrowRight className="ml-2xs w-sm h-sm" />
         </Button>
       </div>
     </motion.div>
@@ -219,27 +219,27 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
 }) => (
   <motion.div
     layout
-    className="bg-muted/10 border border-border/10 rounded-premium p-6 space-y-4 hover:bg-muted/20 transition-all group relative overflow-hidden"
+    className="bg-muted/10 border border-border/10 rounded-premium p-lg space-y-4 hover:bg-muted/20 transition-all group relative overflow-hidden"
   >
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary">
-        <Icons.Bookmark className="w-5 h-5" />
+    <div className="flex items-center gap-sm">
+      <div className="w-xl h-xl rounded-full bg-primary/5 flex items-center justify-center text-primary">
+        <Icons.Bookmark className="w-md h-md" />
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-0.5">{mark.content_type}</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary/40 mb-3xs">{mark.content_type}</p>
         <h4 className="text-sm font-bold truncate">{mark.label || mark.content_id}</h4>
       </div>
     </div>
 
-    <div className="flex items-center justify-between pt-2">
+    <div className="flex items-center justify-between pt-xs">
       <span className="text-[10px] text-muted-foreground">
         {format(new Date(mark.created_at), "dd/MM/yyyy")}
       </span>
-      <div className="flex gap-2">
-        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={onDelete}>
-          <Icons.Trash className="w-3.5 h-3.5" />
+      <div className="flex gap-xs">
+        <Button variant="ghost" size="icon" className="h-xl w-xl rounded-full text-destructive opacity-0 group-hover:opacity-100 transition-opacity" onClick={onDelete}>
+          <Icons.Trash className="w-sm h-sm" />
         </Button>
-        <Button size="sm" className="h-8 rounded-full text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
+        <Button size="sm" className="h-xl rounded-full text-[10px] font-bold uppercase tracking-widest" onClick={onNavigate}>
           Continuar
         </Button>
       </div>
@@ -248,8 +248,8 @@ const MarkCard = ({ mark, onDelete, onNavigate }: {
 );
 
 const EmptyState = ({ icon: Icon, message }: { icon: any; message: string }) => (
-  <div className="col-span-full py-20 text-center opacity-30">
-    <Icon className="w-12 h-12 mx-auto mb-4 stroke-1" />
+  <div className="col-span-full py-3xl text-center opacity-30">
+    <Icon className="w-2xl h-2xl mx-auto mb-md stroke-1" />
     <p className="font-serif italic">{message}</p>
   </div>
 );

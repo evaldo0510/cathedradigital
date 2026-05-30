@@ -18,10 +18,10 @@ const WhatsAppButton = () => {
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-6 left-6 z-[200] w-14 h-14 bg-background border border-border text-foreground rounded-full flex items-center justify-center shadow-premium-hover group"
+      className="fixed bottom-lg left-lg z-[200] w-2xl h-2xl bg-background border border-border text-foreground rounded-full flex items-center justify-center shadow-premium-hover group"
     >
-      <MessageCircle className="w-6 h-6" />
-      <span className="absolute left-16 bg-background border border-border px-3 py-1.5 rounded-full text-premium-tiny font-black uppercase tracking-widest text-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-premium-hover pointer-events-none">
+      <MessageCircle className="w-lg h-lg" />
+      <span className="absolute left-3xl bg-background border border-border px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest text-foreground opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-premium-hover pointer-events-none">
         Fale conosco
       </span>
     </motion.a>

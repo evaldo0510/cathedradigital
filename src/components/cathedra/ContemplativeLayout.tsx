@@ -37,11 +37,11 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
       {(title || subtitle || Icon) && (
         <header className={cn(
           "header-margin-rhythm px-md md:px-xl text-center flex flex-col items-center w-full", 
-          !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-4 duration-[1000ms] ease-out"
+          !settings.reduceAnimations && "animate-in fade-in slide-in-from-top-md duration-[1000ms] ease-out"
         )}>
           {Icon && (
             <div className="mb-sm md:mb-lg">
-              <Icon className="w-5 h-5 md:w-8 md:h-8 text-primary/20 mx-auto transition-all duration-1000 group-hover:text-primary/40 group-hover:scale-110" strokeWidth={0.3} />
+              <Icon className="w-md h-md md:w-xl md:h-xl text-primary/20 mx-auto transition-all duration-1000 group-hover:text-primary/40 group-hover:scale-110" strokeWidth={0.3} />
             </div>
           )}
           {subtitle && (

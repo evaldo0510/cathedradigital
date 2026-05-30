@@ -99,11 +99,11 @@ const AdminContentTab: React.FC = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'approved':
-        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1.5"><CheckCircle2 className="w-3.5 h-3.5" /> Aprovado</Badge>;
+        return <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-2xs"><CheckCircle2 className="w-sm h-sm" /> Aprovado</Badge>;
       case 'rejected':
-        return <Badge variant="destructive" className="gap-1.5"><XCircle className="w-3.5 h-3.5" /> Rejeitado</Badge>;
+        return <Badge variant="destructive" className="gap-2xs"><XCircle className="w-sm h-sm" /> Rejeitado</Badge>;
       default:
-        return <Badge variant="secondary" className="gap-1.5 bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-3.5 h-3.5" /> Pendente</Badge>;
+        return <Badge variant="secondary" className="gap-2xs bg-amber-500/10 text-amber-500 border-amber-500/20"><Clock className="w-sm h-sm" /> Pendente</Badge>;
     }
   };
 
@@ -120,7 +120,7 @@ const AdminContentTab: React.FC = () => {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map(i => (
-          <Card key={i} className="h-32 bg-muted/40 animate-pulse" />
+          <Card key={i} className="h-4xl bg-muted/40 animate-pulse" />
         ))}
       </div>
     );
@@ -128,16 +128,16 @@ const AdminContentTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Conteúdo</h2>
           <p className="text-sm text-muted-foreground">Modere postagens da comunidade.</p>
         </div>
         <div className="relative">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-xs top-xs h-md w-md text-muted-foreground" />
           <Input
             placeholder="Buscar conteúdo ou autor..."
-            className="pl-9 w-full sm:w-[300px]"
+            className="pl-xl w-full sm:w-[300px]"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -146,10 +146,10 @@ const AdminContentTab: React.FC = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
-          <TabsTrigger value="pending" className="gap-2">
+          <TabsTrigger value="pending" className="gap-xs">
             Pendentes
             {pendingCount > 0 && (
-              <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-full text-premium-tiny font-bold">
+              <span className="bg-primary text-primary-foreground px-2xs py-3xs rounded-full text-premium-tiny font-bold">
                 {pendingCount}
               </span>
             )}
@@ -162,39 +162,39 @@ const AdminContentTab: React.FC = () => {
 
         <TabsContent value={activeTab} className="space-y-4">
           {filteredPosts.length === 0 ? (
-            <Card className="border-dashed border-2 py-12 text-center">
-              <MessageSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+            <Card className="border-dashed border-2 py-2xl text-center">
+              <MessageSquare className="w-2xl h-2xl text-muted-foreground mx-auto mb-md opacity-20" />
               <p className="font-medium">Nenhum conteúdo encontrado</p>
             </Card>
           ) : (
             filteredPosts.map((post) => (
               <Card key={post.id} className="overflow-hidden shadow-none border-border/40">
-                <CardHeader className="flex flex-row items-center justify-between pb-1 pt-3 px-3">
-                  <div className="flex items-center gap-2">
-                    <User className="w-3.5 h-3.5 text-muted-foreground" />
+                <CardHeader className="flex flex-row items-center justify-between pb-2xs pt-sm px-sm">
+                  <div className="flex items-center gap-xs">
+                    <User className="w-sm h-sm text-muted-foreground" />
                     <span className="text-xs font-bold">{post.profiles?.name || 'Usuário'}</span>
                     <span className="text-premium-tiny text-muted-foreground">• {new Date(post.created_at).toLocaleDateString('pt-BR')}</span>
-                    {post.category && <Badge variant="outline" className="text-premium-tiny uppercase h-4 px-1">{post.category}</Badge>}
+                    {post.category && <Badge variant="outline" className="text-premium-tiny uppercase h-md px-2xs">{post.category}</Badge>}
                   </div>
                   <div className="scale-90 origin-right">
                     {getStatusBadge(post.status)}
                   </div>
                 </CardHeader>
-                <CardContent className="px-3 pb-2 pt-1">
-                  {post.title && <h3 className="text-sm font-bold mb-0.5">{post.title}</h3>}
+                <CardContent className="px-sm pb-xs pt-2xs">
+                  {post.title && <h3 className="text-sm font-bold mb-3xs">{post.title}</h3>}
                   <p className="text-xs text-muted-foreground whitespace-pre-wrap line-clamp-3">{post.content}</p>
                 </CardContent>
-                <CardFooter className="bg-muted/10 border-t border-border/10 py-1.5 px-3 flex justify-end gap-1.5">
-                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-7 text-premium-tiny font-bold uppercase tracking-widest px-2">
-                    <Trash2 className="w-3 h-3 mr-1" /> Excluir
+                <CardFooter className="bg-muted/10 border-t border-border/10 py-2xs px-sm flex justify-end gap-2xs">
+                  <Button variant="ghost" size="sm" onClick={() => handleDelete(post.id)} className="text-destructive h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs">
+                    <Trash2 className="w-sm h-sm mr-2xs" /> Excluir
                   </Button>
                   {post.status === 'pending' && (
                     <>
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-7 text-premium-tiny font-bold uppercase tracking-widest px-2">
-                        <X className="w-3 h-3 mr-1" /> Rejeitar
+                      <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(post.id, 'rejected')} className="h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs">
+                        <X className="w-sm h-sm mr-2xs" /> Rejeitar
                       </Button>
-                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-7 text-premium-tiny font-bold uppercase tracking-widest px-2 bg-emerald-600 hover:bg-emerald-700 text-white">
-                        <Check className="w-3 h-3 mr-1" /> Aprovar
+                      <Button size="sm" onClick={() => handleUpdateStatus(post.id, 'approved')} className="h-lg text-premium-tiny font-bold uppercase tracking-widest px-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                        <Check className="w-sm h-sm mr-2xs" /> Aprovar
                       </Button>
                     </>
                   )}

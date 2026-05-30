@@ -9,13 +9,13 @@ interface CtaBannerSectionProps {
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full section-spacing">
     <div className="app-container">
-      <CathedraCard className="text-center space-y-10 py-20 md:py-28 relative overflow-hidden group border-primary/10">
+      <CathedraCard className="text-center space-y-10 py-3xl md:py-4xl relative overflow-hidden group border-primary/10">
         {/* Subtle background glow */}
         <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
         
         <div className="relative z-10 space-y-10">
           <div className="relative inline-flex items-center justify-center">
-            <Church className="w-16 h-16 text-primary" />
+            <Church className="w-3xl h-3xl text-primary" />
           </div>
           <div className="space-y-4">
             <h2 className="font-display font-bold leading-tight text-foreground">
@@ -25,7 +25,7 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
               "Não tenhas medo, pois Eu estou contigo."
             </p>
           </div>
-          <div className="flex flex-col items-center gap-6">
+          <div className="flex flex-col items-center gap-lg">
             <HomeButton 
               size="lg" 
               onClick={onStart}

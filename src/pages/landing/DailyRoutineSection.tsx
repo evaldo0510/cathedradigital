@@ -7,21 +7,21 @@ const DailyRoutineSection = () => {
     {
       time: "Manhã",
       title: "Despertar com a Liturgia",
-      icon: <Sun className="w-6 h-6 text-primary" />,
+      icon: <Sun className="w-lg h-lg text-primary" />,
       desc: "Comece seu dia com as leituras da Santa Missa e o Santo do Dia. Consagre suas primeiras horas ao Senhor.",
       items: ["Liturgia Diária", "Santo do Dia", "Oferecimento da Manhã"]
     },
     {
       time: "Tarde",
       title: "Nutrição do Intelecto",
-      icon: <Coffee className="w-6 h-6 text-primary" />,
+      icon: <Coffee className="w-lg h-lg text-primary" />,
       desc: "Aproveite pequenos intervalos para mergulhar no Catecismo ou tirar dúvidas teológicas com o Logos IA.",
       items: ["Parágrafo do CIC", "Consulta ao Logos IA", "Anotações de Estudo"]
     },
     {
       time: "Noite",
       title: "Repouso na Graça",
-      icon: <Moon className="h-6 w-6 text-primary" />,
+      icon: <Moon className="h-lg w-lg text-primary" />,
       desc: "Finalize a jornada com o exame de consciência e o diário espiritual. Transforme seu dia em uma oferta de amor.",
       items: ["Exame de Consciência", "Diário Espiritual", "Oração de Completas"]
     }
@@ -36,14 +36,14 @@ const DailyRoutineSection = () => {
           <p className="text-muted-foreground/90 font-serif text-lg md:text-xl mx-auto">Fazei tudo para a glória de Deus.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-xl md:gap-xl">
           {dayFlow.map((step) => (
             <CathedraCard
               key={step.title}
-              className="p-8 flex flex-col space-y-8"
+              className="p-xl flex flex-col space-y-8"
             >
               <div className="flex justify-between items-center">
-                <div className="w-12 h-12 rounded-premium bg-primary/5 flex items-center justify-center text-primary">
+                <div className="w-2xl h-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary">
                   {step.icon}
                 </div>
                 <span className="text-xs font-display font-bold text-primary/50 uppercase tracking-widest">
@@ -58,10 +58,10 @@ const DailyRoutineSection = () => {
                 </p>
               </div>
 
-              <ul className="space-y-3 pt-6 border-t border-border/10 mt-auto">
+              <ul className="space-y-3 pt-lg border-t border-border/10 mt-auto">
                 {step.items.map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-xs font-medium text-foreground/70">
-                    <CheckCircle2 className="w-4 h-4 text-secondary" />
+                  <li key={item} className="flex items-center gap-sm text-xs font-medium text-foreground/70">
+                    <CheckCircle2 className="w-md h-md text-secondary" />
                     {item}
                   </li>
                 ))}

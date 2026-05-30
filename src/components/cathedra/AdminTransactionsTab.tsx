@@ -14,21 +14,21 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
     </CardHeader>
     <CardContent>
       {transactions.length === 0 ? (
-        <p className="text-center text-muted-foreground py-8">Nenhuma transação registrada.</p>
+        <p className="text-center text-muted-foreground py-xl">Nenhuma transação registrada.</p>
       ) : (
         <div className="space-y-3">
           {transactions.map((t: any) => (
-            <div key={t.id} className="flex items-center justify-between p-4 rounded-premium bg-muted/30 border border-border/50">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-premium bg-primary/10 flex items-center justify-center">
-                  <ArrowUpRight className="w-4 h-4 text-primary" />
+            <div key={t.id} className="flex items-center justify-between p-md rounded-premium bg-muted/30 border border-border/50">
+              <div className="flex items-center gap-sm">
+                <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center">
+                  <ArrowUpRight className="w-md h-md text-primary" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-xs">
                     <p className="font-medium text-sm">{t.description || 'Transação'}</p>
                     {t.profiles?.name && (
-                      <span className="text-premium-tiny bg-muted px-1.5 py-0.5 rounded text-muted-foreground flex items-center gap-1">
-                        <User className="w-2.5 h-2.5" />
+                      <span className="text-premium-tiny bg-muted px-2xs py-3xs rounded text-muted-foreground flex items-center gap-2xs">
+                        <User className="w-xs h-xs" />
                         {t.profiles.name}
                       </span>
                     )}
@@ -36,7 +36,7 @@ const AdminTransactionsTab: React.FC<AdminTransactionsTabProps> = ({ transaction
                   <p className="text-xs text-muted-foreground">{new Date(t.created_at).toLocaleDateString('pt-BR')}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-sm">
                 <Badge variant={t.status === 'approved' ? 'default' : 'secondary'}>{t.status || 'pendente'}</Badge>
                 <span className="font-bold text-sm">
                   {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(t.amount)}

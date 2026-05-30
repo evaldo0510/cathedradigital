@@ -50,28 +50,28 @@ const A11yAuditPage = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4 space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto py-xl px-md space-y-8 animate-in fade-in duration-500">
       <header className="text-center space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium text-primary border border-primary/20">
-          <ShieldCheck className="w-4 h-4" />
+        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium text-primary border border-primary/20">
+          <ShieldCheck className="w-md h-md" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em]">Quality Assurance</span>
         </div>
         <h1 className="text-4xl font-serif font-bold text-foreground">Auditoria de Acessibilidade</h1>
         <p className="text-muted-foreground italic font-serif">Validação manual e automatizada para NVDA e VoiceOver.</p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
         <Card className="border-primary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
           <CardHeader className="bg-primary/5 border-b border-border/50">
-            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-2">
-              <Icons.ShieldCheck className="w-5 h-5 text-primary" />
+            <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center gap-xs">
+              <Icons.ShieldCheck className="w-md h-md text-primary" />
               Checklist Manual
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-6">
+          <CardContent className="p-lg space-y-6">
             {sections.map(section => (
               <div key={section.title} className="space-y-3">
-                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-1">
+                <h3 className="text-premium-tiny font-black uppercase tracking-[0.2em] text-muted-foreground/60 border-b border-border/40 pb-2xs">
                   {section.title}
                 </h3>
                 <div className="space-y-2">
@@ -79,13 +79,13 @@ const A11yAuditPage = () => {
                     <Button
                       key={item.id}
                       onClick={() => toggleCheck(item.id)}
-                      className="w-full flex items-center justify-between p-3 rounded-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
+                      className="w-full flex items-center justify-between p-sm rounded-full border border-border/40 bg-background/50 hover:bg-muted/30 transition-all group"
                     >
                       <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground">{item.label}</span>
                       {checklist[item.id] ? (
-                        <CheckCircle className="w-5 h-5 text-green-500 fill-green-500/10" />
+                        <CheckCircle className="w-md h-md text-green-500 fill-green-500/10" />
                       ) : (
-                        <div className="w-5 h-5 rounded-premium border-2 border-border/60" />
+                        <div className="w-md h-md rounded-premium border-2 border-border/60" />
                       )}
                     </Button>
                   ))}
@@ -98,41 +98,41 @@ const A11yAuditPage = () => {
         <Card className="border-secondary/20 bg-card  rounded-[2rem] shadow-premium-hover overflow-hidden">
           <CardHeader className="bg-secondary/5 border-b border-border/50">
             <CardTitle className="text-lg font-black uppercase tracking-widest flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Key className="w-5 h-5 text-secondary" />
+              <div className="flex items-center gap-xs">
+                <Key className="w-md h-md text-secondary" />
                 Auditoria Técnica
               </div>
-              <Button size="sm" onClick={performAudit} className="rounded-full h-8 text-premium-tiny font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
+              <Button size="sm" onClick={performAudit} className="rounded-full h-xl text-premium-tiny font-black uppercase tracking-widest bg-secondary hover:bg-secondary/80">
                 Escanear DOM
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="p-lg space-y-4">
             {!auditResults ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 opacity-40">
-                <Search className="w-12 h-12" />
+              <div className="flex flex-col items-center justify-center py-3xl text-center space-y-4 opacity-40">
+                <Search className="w-2xl h-2xl" />
                 <p className="text-sm font-serif italic">Clique em Escanear para validar referências ARIA e IDs duplicados nesta página.</p>
               </div>
             ) : (
               <div className="space-y-4">
-                <div className={`p-4 rounded-full flex items-center gap-3 ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
+                <div className={`p-md rounded-full flex items-center gap-sm ${auditResults.success ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
                   {auditResults.success ? (
                     <>
-                      <CheckCircle className="w-6 h-6 text-green-500" />
+                      <CheckCircle className="w-lg h-lg text-green-500" />
                       <p className="text-sm font-bold text-green-600">Nenhum problema técnico detectado no DOM atual.</p>
                     </>
                   ) : (
                     <>
-                      <XCircle className="w-6 h-6 text-red-500" />
+                      <XCircle className="w-lg h-lg text-red-500" />
                       <p className="text-sm font-bold text-red-600">{auditResults.issues.length} problemas encontrados.</p>
                     </>
                   )}
                 </div>
 
-                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
+                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-xs scrollbar-thin">
                   {auditResults.issues.map((issue, idx) => (
-                    <div key={idx} className="flex gap-3 p-3 rounded-premium bg-muted/20 border border-border/40">
-                      <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                    <div key={idx} className="flex gap-sm p-sm rounded-premium bg-muted/20 border border-border/40">
+                      <AlertTriangle className="w-md h-md text-amber-500 shrink-0 mt-3xs" />
                       <span className="text-xs text-muted-foreground leading-relaxed">{issue}</span>
                     </div>
                   ))}
@@ -143,7 +143,7 @@ const A11yAuditPage = () => {
         </Card>
       </div>
 
-      <footer className="text-center pt-8">
+      <footer className="text-center pt-xl">
         <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground opacity-50">
           Cathedra Digital — Protocolo de Acessibilidade v2.0
         </p>

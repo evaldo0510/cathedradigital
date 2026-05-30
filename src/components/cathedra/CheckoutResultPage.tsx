@@ -98,7 +98,7 @@ const CheckoutResultPage: React.FC = () => {
     secondaryAction?: { label: string; route: string };
   }> = {
     success: {
-      icon: <CheckCircle2 className="w-10 h-10 text-primary" />,
+      icon: <CheckCircle2 className="w-xl h-xl text-primary" />,
       iconBg: 'bg-primary/10',
       title: 'Pagamento aprovado!',
       description: 'Seu acesso PRO foi liberado. Aproveite todos os recursos exclusivos do Cathedra.',
@@ -106,14 +106,14 @@ const CheckoutResultPage: React.FC = () => {
       secondaryAction: { label: 'Explorar Trilhas', route: AppRoute.TRILHAS },
     },
     pending: {
-      icon: <Clock className="w-10 h-10 text-accent-foreground" />,
+      icon: <Clock className="w-xl h-xl text-accent-foreground" />,
       iconBg: 'bg-accent',
       title: 'Pagamento em análise',
       description: 'Seu pagamento foi recebido e está sendo processado. Assim que for aprovado, seu acesso PRO será liberado automaticamente.',
       primaryAction: { label: 'Voltar ao Dashboard', route: AppRoute.DASHBOARD },
     },
     failure: {
-      icon: <XCircle className="w-10 h-10 text-destructive" />,
+      icon: <XCircle className="w-xl h-xl text-destructive" />,
       iconBg: 'bg-destructive/10',
       title: 'Pagamento não concluído',
       description: 'O pagamento foi cancelado ou recusado. Nenhuma cobrança foi realizada. Você pode tentar novamente quando quiser.',
@@ -125,7 +125,7 @@ const CheckoutResultPage: React.FC = () => {
   if (state === 'loading') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-        <div className="w-16 h-16 border-4 border-secondary border-t-transparent rounded-premium animate-spin" />
+        <div className="w-3xl h-3xl border-4 border-secondary border-t-transparent rounded-premium animate-spin" />
         <p className="text-muted-foreground font-serif italic text-lg">Confirmando seu pagamento...</p>
       </div>
     );
@@ -138,9 +138,9 @@ const CheckoutResultPage: React.FC = () => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 max-w-lg mx-auto py-12"
+      className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-8 max-w-lg mx-auto py-2xl"
     >
-      <div className={`w-24 h-24 rounded-full ${c.iconBg} flex items-center justify-center`}>
+      <div className={`w-4xl h-4xl rounded-full ${c.iconBg} flex items-center justify-center`}>
         {c.icon}
       </div>
 
@@ -153,9 +153,9 @@ const CheckoutResultPage: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-full bg-muted/50 rounded-full p-6 border border-border/50 space-y-4"
+          className="w-full bg-muted/50 rounded-full p-lg border border-border/50 space-y-4"
         >
-          <div className="flex justify-between items-center pb-2 border-b border-border/50">
+          <div className="flex justify-between items-center pb-xs border-b border-border/50">
             <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Resumo da Transação</span>
             <span className="text-premium-tiny font-mono text-muted-foreground">#{txData.payment_id || txData.id.slice(0, 8)}</span>
           </div>
@@ -173,7 +173,7 @@ const CheckoutResultPage: React.FC = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-muted-foreground">Status</span>
-              <span className={`text-premium-tiny font-bold uppercase px-2 py-0.5 rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+              <span className={`text-premium-tiny font-bold uppercase px-xs py-3xs rounded-full ${state === 'success' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
                 {state === 'success' ? 'Aprovado' : 'Em processamento'}
               </span>
             </div>
@@ -183,19 +183,19 @@ const CheckoutResultPage: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm" 
-              className="w-full h-8 text-premium-tiny font-bold uppercase text-muted-foreground gap-2"
+              className="w-full h-xl text-premium-tiny font-bold uppercase text-muted-foreground gap-xs"
               onClick={() => window.print()}
             >
-              <Download className="w-3 h-3" /> Baixar Comprovante
+              <Download className="w-sm h-sm" /> Baixar Comprovante
             </Button>
           )}
         </motion.div>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-3 w-full">
+      <div className="flex flex-col sm:flex-row gap-sm w-full">
         <Button
           onClick={() => navigate(c.primaryAction.route)}
-          className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
+          className="flex-1 h-2xl rounded-full font-bold uppercase text-xs tracking-widest"
         >
           {c.primaryAction.label}
         </Button>
@@ -203,7 +203,7 @@ const CheckoutResultPage: React.FC = () => {
           <Button
             variant="outline"
             onClick={() => navigate(c.secondaryAction!.route)}
-            className="flex-1 h-12 rounded-full font-bold uppercase text-xs tracking-widest"
+            className="flex-1 h-2xl rounded-full font-bold uppercase text-xs tracking-widest"
           >
             {c.secondaryAction.label}
           </Button>
@@ -213,7 +213,7 @@ const CheckoutResultPage: React.FC = () => {
       <Button
         variant="ghost"
         onClick={() => navigate(AppRoute.TRANSACTIONS)}
-        className="text-xs font-serif italic text-muted-foreground hover:text-primary transition-colors mt-4"
+        className="text-xs font-serif italic text-muted-foreground hover:text-primary transition-colors mt-md"
       >
         Ver histórico de transações
       </Button>

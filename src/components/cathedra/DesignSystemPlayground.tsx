@@ -18,11 +18,11 @@ const DesignSystemPlayground: React.FC = () => {
         path="/design-system"
       />
       
-      <div className="app-container py-20 md:py-32 stack-spacing">
+      <div className="app-container py-3xl md:py-4xl stack-spacing">
         {/* Header Section */}
         <section className="text-center space-y-8">
-          <div className="inline-flex items-center gap-3 px-6 py-2 bg-primary/[0.03] border border-primary/10 rounded-full animate-in fade-in duration-1000">
-            <Icons.Sparkles className="w-4 h-4 text-primary/40" />
+          <div className="inline-flex items-center gap-sm px-lg py-xs bg-primary/[0.03] border border-primary/10 rounded-full animate-in fade-in duration-1000">
+            <Icons.Sparkles className="w-md h-md text-primary/40" />
             <span className="h5 !text-primary/40 tracking-[0.5em]">Systema Visualis</span>
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tighter">itinerarium</h1>
@@ -34,8 +34,8 @@ const DesignSystemPlayground: React.FC = () => {
         {/* Typography Section */}
         <section className="space-y-16">
           <SectionHeader title="Tipografia" subtitle="Hierarquia e ritmos para leitura contemplativa." align="left" />
-          <div className="premium-card p-10 md:p-20 space-y-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          <div className="premium-card p-xl md:p-3xl space-y-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3xl">
               <div className="space-y-12">
                 <div className="space-y-4">
                   <span className="h5 text-secondary">Display / H1</span>
@@ -78,7 +78,7 @@ const DesignSystemPlayground: React.FC = () => {
         <section className="space-y-16">
           <SectionHeader title="Componentes" subtitle="Elementos modulares com feedback tátil premium." align="left" />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-xl">
             <div className="space-y-4">
               <span className="h5 opacity-40">Primary Button</span>
               <CathedraButton variant="primary" className="w-full">Iniciar</CathedraButton>
@@ -97,26 +97,26 @@ const DesignSystemPlayground: React.FC = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2xl pt-2xl">
             <div className="space-y-8">
               <span className="h5 opacity-40">Input Fields</span>
               <CathedraInput 
                 label="Email" 
                 placeholder="exemplo@igreja.org" 
-                icon={<Icons.Mail className="w-5 h-5" />}
+                icon={<Icons.Mail className="w-md h-md" />}
               />
               <CathedraInput 
                 label="Senha" 
                 type="password" 
                 placeholder="••••••••" 
                 error="Senha muito curta"
-                icon={<Icons.Lock className="w-5 h-5" />}
+                icon={<Icons.Lock className="w-md h-md" />}
               />
             </div>
             <div className="space-y-8 flex flex-col justify-end">
               <span className="h5 opacity-40">Overlays & Modals</span>
-              <CathedraCard variant="interactive" className="p-12 flex flex-col items-center justify-center gap-6" onClick={() => setIsOverlayOpen(true)}>
-                <Icons.Maximize className="w-8 h-8 text-secondary" />
+              <CathedraCard variant="interactive" className="p-2xl flex flex-col items-center justify-center gap-lg" onClick={() => setIsOverlayOpen(true)}>
+                <Icons.Maximize className="w-xl h-xl text-secondary" />
                 <h4 className="text-center">Abrir Overlay Premium</h4>
               </CathedraCard>
             </div>
@@ -126,7 +126,7 @@ const DesignSystemPlayground: React.FC = () => {
         {/* Guidelines Section */}
         <section className="space-y-16">
           <SectionHeader title="Ratio et Regula" subtitle="Princípios para manter o silêncio visual." align="left" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-xl">
             <CathedraCard padding="sm" className="space-y-4">
               <h5 className="text-secondary">Silêncio Visual</h5>
               <p className="text-sm opacity-60">
@@ -152,7 +152,7 @@ const DesignSystemPlayground: React.FC = () => {
       <CathedraOverlay isOpen={isOverlayOpen} onClose={() => setIsOverlayOpen(false)}>
         <div className="space-y-12">
           <SectionHeader title="Santuário Digital" subtitle="Um espaço de oração e estudo sem distrações." />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2xl">
             <p className="reader-text !mx-0 !text-lg">
               Esta é uma experiência de overlay premium, projetada para focar a atenção do usuário no que é essencial. 
               Utiliza desfoque de fundo (blur) e tipografia generosa.

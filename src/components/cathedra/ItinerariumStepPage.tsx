@@ -319,50 +319,50 @@ const ItinerariumStepPage: React.FC = () => {
     toast.success("PDF gerado com sucesso!");
   };
 
-  if (loading || !step) return <div className="p-24 text-center">Iniciando passo contemplativo...</div>;
+  if (loading || !step) return <div className="p-4xl text-center">Iniciando passo contemplativo...</div>;
 
   return createPortal(
     <div className="fixed inset-0 bg-background z-[200] flex flex-col overflow-hidden">
-      <div data-reading-chrome className="reading-chrome px-6 py-4 border-b border-border/50 flex items-center justify-between bg-background/80 backdrop-blur-xl">
-        <div className="flex items-center gap-4">
+      <div data-reading-chrome className="reading-chrome px-lg py-md border-b border-border/50 flex items-center justify-between bg-background/80 backdrop-blur-xl">
+        <div className="flex items-center gap-md">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={() => navigate(`/itineraria/${itinerariumId}`)}
             aria-label="Voltar para o itinerário"
           >
-            <X className="w-5 h-5 text-primary" />
+            <X className="w-md h-md text-primary" />
           </Button>
           <div className="space-y-0.5" aria-live="polite">
             <h1 className="text-sm font-bold truncate max-w-[200px] text-primary">{step.title}</h1>
-            <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-2">
-              <Clock className="w-3 h-3 text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
+            <p className="text-[10px] text-foreground font-bold uppercase tracking-widest flex items-center gap-xs">
+              <Clock className="w-sm h-sm text-primary" /> {step.duration_minutes} min • Passo {step.step_order}
             </p>
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-xs">
           <Button
             variant="ghost"
             size="sm"
-            className="gap-2 text-[10px] font-black uppercase tracking-widest hidden md:flex"
+            className="gap-xs text-[10px] font-black uppercase tracking-widest hidden md:flex"
             onClick={exportStepPDF}
           >
-            <FileText className="w-3.5 h-3.5" /> PDF
+            <FileText className="w-sm h-sm" /> PDF
           </Button>
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-2 text-[10px] font-black uppercase tracking-widest border-primary/20"
+            className="gap-xs text-[10px] font-black uppercase tracking-widest border-primary/20"
             onClick={() => setIsLogosOpen(true)}
           >
-            <Sparkles className="w-3.5 h-3.5 text-primary" /> Logos IA
+            <Sparkles className="w-sm h-sm text-primary" /> Logos IA
           </Button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar reader-container" data-side-margins={settings.sideMargins} style={{ maxWidth: `${settings.columnWidth}ch`, margin: '0 auto' }}>
-        <div className="mx-auto px-4 md:px-6 py-12 space-y-12 pb-32 reader-text">
+        <div className="mx-auto px-md md:px-lg py-2xl space-y-12 pb-4xl reader-text">
 
           <header className="text-center space-y-4">
             <Badge variant="outline" className="text-primary/60 border-primary/10">{step.step_type}</Badge>
@@ -372,20 +372,20 @@ const ItinerariumStepPage: React.FC = () => {
           <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg md:text-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
              <div className="space-y-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.content.html || '') }} />
              {!step.content.html && (
-               <div className="flex flex-col items-center justify-center py-20 space-y-6 opacity-30">
-                 <Icons.Sparkles className="w-12 h-12 animate-pulse" />
+               <div className="flex flex-col items-center justify-center py-3xl space-y-6 opacity-30">
+                 <Icons.Sparkles className="w-2xl h-2xl animate-pulse" />
                  <p className="italic text-center font-serif">O conteúdo deste passo está sendo preparado em silêncio...</p>
                </div>
              )}
           </article>
 
-          <div className="space-y-4 pt-12 border-t border-border/10">
-            <div className="flex items-center gap-2 text-primary">
-              <PenLine className="w-4 h-4" />
+          <div className="space-y-4 pt-2xl border-t border-border/10">
+            <div className="flex items-center gap-xs text-primary">
+              <PenLine className="w-md h-md" />
               <h3 className="text-sm font-black uppercase tracking-widest">Sua Reflexão</h3>
             </div>
             <textarea
-              className="w-full bg-muted/30 border border-border/50 rounded-2xl p-6 font-serif italic focus:ring-2 focus:ring-primary/20 outline-none min-h-[150px] transition-all"
+              className="w-full bg-muted/30 border border-border/50 rounded-premium p-lg font-serif italic focus:ring-2 focus:ring-primary/20 outline-none min-h-[150px] transition-all"
               placeholder="O que o Espírito diz ao seu coração hoje?"
               value={reflection}
               onChange={(e) => setReflection(e.target.value)}
@@ -406,21 +406,21 @@ const ItinerariumStepPage: React.FC = () => {
         </div>
       </div>
 
-      <div data-reading-chrome className="reading-chrome fixed bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
-        <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 pointer-events-auto">
+      <div data-reading-chrome className="reading-chrome fixed bottom-0 left-0 right-0 p-lg bg-gradient-to-t from-background via-background to-transparent pointer-events-none">
+        <div className="max-w-2xl mx-auto flex items-center justify-between gap-md pointer-events-auto">
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
+            className="rounded-full w-2xl h-2xl p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex <= 0}
             onClick={() => navigateToStep(currentStepIndex - 1)}
             aria-label="Passo anterior"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-lg h-lg" />
           </Button>
 
           <Button 
-            className="flex-1 h-14 rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:opacity-90"
+            className="flex-1 h-2xl rounded-full shadow-premium text-sm font-black uppercase tracking-[0.2em] bg-primary text-primary-foreground hover:opacity-90"
             onClick={handleComplete}
             disabled={saving}
           >
@@ -430,12 +430,12 @@ const ItinerariumStepPage: React.FC = () => {
           <Button
             variant="outline"
             size="lg"
-            className="rounded-full w-14 h-14 p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
+            className="rounded-full w-2xl h-2xl p-0 flex-shrink-0 border-primary/20 hover:border-primary/40 bg-background/50"
             disabled={currentStepIndex === -1 || currentStepIndex >= allSteps.length - 1}
             onClick={() => navigateToStep(currentStepIndex + 1)}
             aria-label="Próximo passo"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-lg h-lg" />
           </Button>
         </div>
       </div>

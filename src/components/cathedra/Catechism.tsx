@@ -66,7 +66,7 @@ const CatechismContent: React.FC<{
 
   if (!isVisible) {
     return (
-      <div className="reader-text text-foreground/30 leading-[2] text-lg py-4 h-24 flex items-center">
+      <div className="reader-text text-foreground/30 leading-[2] text-lg py-md h-4xl flex items-center">
         <span className="text-sm text-muted-foreground italic">Rolar para carregar §{paragraph}...</span>
       </div>
     );
@@ -78,9 +78,9 @@ const CatechismContent: React.FC<{
 
   if (isError) {
     return (
-      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-4 text-destructive font-serif text-sm py-4 space-y-2">
-        <div className="font-bold flex items-center gap-2">
-           <Icons.Cross className="w-4 h-4" />
+      <div className="reader-text bg-destructive/5 border border-destructive/10 rounded-premium p-md text-destructive font-serif text-sm py-md space-y-2">
+        <div className="font-bold flex items-center gap-xs">
+           <Icons.Cross className="w-md h-md" />
            Ops! Problema ao carregar o parágrafo §{paragraph}.
         </div>
         <Button onClick={() => window.location.reload()} variant="outline" size="sm">Tentar novamente</Button>
@@ -101,7 +101,7 @@ const CatechismContent: React.FC<{
               const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
               if (h) {
                 return (
-                  <span onClick={() => onHighlightClick?.(h)} className={`highlight-${h.highlight_color} px-1 rounded-sm cursor-pointer hover:brightness-95 transition-all`}>
+                  <span onClick={() => onHighlightClick?.(h)} className={`highlight-${h.highlight_color} px-2xs rounded-sm cursor-pointer hover:brightness-95 transition-all`}>
                     {props.children}
                   </span>
                 );
@@ -140,16 +140,16 @@ const LazyParagraph: React.FC<{
   }, []);
 
   return (
-    <div ref={ref} id={`p${p}`} className={`scroll-mt-28 transition-all duration-700 pb-12 border-b border-primary/[0.03] last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
-      <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center gap-3">
+    <div ref={ref} id={`p${p}`} className={`scroll-mt-4xl transition-all duration-700 pb-2xl border-b border-primary/[0.03] last:border-0 last:pb-0 ${currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'}`}>
+      <div className="flex items-center gap-md mb-lg">
+        <div className="flex items-center gap-sm">
           <span className="text-lg md:text-xl font-display font-light tracking-[0.1em] text-primary/30">§{p}</span>
-          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-1.5 rounded-full hover:bg-primary/5 transition-all">
-              <Icons.Heart className={`w-3.5 h-3.5 transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
+          <div className="flex items-center gap-3xs opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button onClick={() => toggleFavorite({ type: 'catechism', title: `CIC §${p}`, content: `Catecismo da Igreja Católica, parágrafo §${p}` })} className="p-2xs rounded-full hover:bg-primary/5 transition-all">
+              <Icons.Heart className={`w-sm h-sm transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
             </Button>
-            <Button onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} className="p-1.5 rounded-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary">
-              <Icons.Sparkles className="w-3.5 h-3.5" />
+            <Button onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))} className="p-2xs rounded-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary">
+              <Icons.Sparkles className="w-sm h-sm" />
             </Button>
               <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
@@ -240,9 +240,9 @@ const Catechism: React.FC = memo(() => {
       <ContemplativeLayout subtitle={selectedSection.title} title="Catecismo" icon={Icons.Catechism}>
         <div className="max-w-[70ch] mx-auto space-y-12">
           {/* Unified Reading Navigation */}
-          <div className="flex items-center justify-between gap-4 py-4 border-b border-primary/5 mb-12">
+          <div className="flex items-center justify-between gap-md py-md border-b border-primary/5 mb-2xl">
              <Button variant="ghost" onClick={goBack} className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary">← Sumário</Button>
-             <div className="flex items-center gap-6">
+             <div className="flex items-center gap-lg">
                 <Button 
                   disabled={selectedSection.id <= 1}
                   onClick={() => {
@@ -268,7 +268,7 @@ const Catechism: React.FC = memo(() => {
             ))}
           </div>
 
-          <div className="mt-32 pt-24 border-t border-primary/5">
+          <div className="mt-4xl pt-4xl border-t border-primary/5">
              <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
           </div>
         </div>
@@ -279,22 +279,22 @@ const Catechism: React.FC = memo(() => {
   if (viewMode === 'sections' && selectedPart) {
     return (
       <ContemplativeLayout subtitle={selectedPart.part} title={selectedPart.title} icon={Icons.Catechism}>
-        <div className="w-full space-y-12 pb-32">
+        <div className="w-full space-y-12 pb-4xl">
           <div className="flex justify-center">
-            <Button variant="ghost" onClick={goBack} className="px-8 py-3 h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
-              <Icons.ChevronLeft className="w-3.5 h-3.5 mr-2" /> Voltar às Partes
+            <Button variant="ghost" onClick={goBack} className="px-xl py-sm h-auto rounded-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
+              <Icons.ChevronLeft className="w-sm h-sm mr-xs" /> Voltar às Partes
             </Button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
             {selectedPart.sections.map((sec, idx) => (
               <CathedraCard key={sec.id} variant="interactive" padding="none" onClick={() => { setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group">
-                <div className="p-6 flex items-center justify-between h-full">
+                <div className="p-lg flex items-center justify-between h-full">
                   <div className="space-y-2 text-left">
                     <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
                     <h3 className="text-base font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{sec.title}</h3>
                     <p className="text-[9px] text-muted-foreground/50 italic tracking-wider uppercase">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
                   </div>
-                  <Icons.ChevronRight className="w-3.5 h-3.5 text-primary/10 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+                  <Icons.ChevronRight className="w-sm h-sm text-primary/10 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>
               </CathedraCard>
             ))}
@@ -307,29 +307,29 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout subtitle="Sacra Doctrina" title="Catecismo" icon={Icons.Catechism}>
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
-      <div className="w-full space-y-12 pb-32">
+      <div className="w-full space-y-12 pb-4xl">
         <div className="relative group">
           <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-          <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />
-          <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-16" />
+          <Icons.Search className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+          <input type="text" placeholder="Buscar por parágrafo (§) ou tema..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} className="search-input-premium pl-3xl" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
           {CIC_SECTIONS.map((part, idx) => (
             <div 
               key={part.part} 
               onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-6 flex flex-col justify-between h-full space-y-6 text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2rem] border border-transparent hover:border-primary/[0.03]"
+              className="group cursor-pointer p-lg flex flex-col justify-between h-full space-y-6 text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2rem] border border-transparent hover:border-primary/[0.03]"
             >
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-sm">
                   <span className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/30">{part.part}</span>
                   <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
                 </div>
                 <h2 className="text-xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight">{part.title}</h2>
               </div>
-              <div className="flex items-center justify-between pt-2 opacity-0 group-hover:opacity-100 transition-all duration-1000">
+              <div className="flex items-center justify-between pt-xs opacity-0 group-hover:opacity-100 transition-all duration-1000">
                  <p className="text-[9px] text-muted-foreground/40 italic uppercase tracking-widest">{part.sections.length} Seções</p>
-                 <Icons.ChevronRight className="w-3.5 h-3.5 text-primary/20" />
+                 <Icons.ChevronRight className="w-sm h-sm text-primary/20" />
               </div>
             </div>
           ))}

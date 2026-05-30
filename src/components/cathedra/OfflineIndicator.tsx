@@ -47,9 +47,9 @@ const OfflineIndicator: React.FC = () => {
   }
 
   return (
-    <div className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-[200] px-5 py-2.5 ${color} text-white rounded-full shadow-premium-hover flex flex-col items-center gap-1 animate-in fade-in slide-in-from-bottom-4 transition-colors`}>
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-white/70 animate-pulse" />
+    <div className={`fixed bottom-md left-2xs/2 -translate-x-1/2 z-[200] px-md py-xs ${color} text-white rounded-full shadow-premium-hover flex flex-col items-center gap-2xs animate-in fade-in slide-in-from-bottom-md transition-colors`}>
+      <div className="flex items-center gap-xs">
+        <span className="w-xs h-xs rounded-full bg-white/70 animate-pulse" />
         <span className="text-xs font-bold uppercase tracking-wider">
           {title}
         </span>

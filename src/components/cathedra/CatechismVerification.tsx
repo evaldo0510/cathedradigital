@@ -146,9 +146,9 @@ const CatechismVerification: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
-        <Icons.Lock className="w-16 h-16 text-destructive mb-4 opacity-20" />
-        <h2 className="text-xl font-bold mb-2">Acesso Restrito</h2>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-xl">
+        <Icons.Lock className="w-3xl h-3xl text-destructive mb-md opacity-20" />
+        <h2 className="text-xl font-bold mb-xs">Acesso Restrito</h2>
         <p className="text-muted-foreground">Esta página é para administradores.</p>
       </div>
     );
@@ -160,19 +160,19 @@ const CatechismVerification: React.FC = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8 animate-in fade-in duration-500 pb-20">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto p-lg space-y-8 animate-in fade-in duration-500 pb-3xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
         <div>
           <h1 className="text-2xl font-serif font-bold text-foreground">Verificação de Conteúdo</h1>
           <p className="text-sm text-muted-foreground">Comparação entre seções do site e banco de dados oficial</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-sm">
           {(stats.missing > 0 || stats.divergent > 0) && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="default" className="rounded-full bg-emerald-600 hover:bg-emerald-700">
-                  <Icons.CheckCircle className="w-4 h-4 mr-2" />
+                  <Icons.CheckCircle className="w-md h-md mr-xs" />
                   Sincronizar {stats.missing + stats.divergent} Divergências
                 </Button>
               </AlertDialogTrigger>
@@ -201,26 +201,26 @@ const CatechismVerification: React.FC = () => {
             size="sm"
             className="rounded-full"
           >
-            <Icons.RotateCcw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <Icons.RotateCcw className={`w-md h-md mr-xs ${loading ? 'animate-spin' : ''}`} />
             Recarregar
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="p-4 bg-muted/30 border-border/50">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
+        <Card className="p-md bg-muted/30 border-border/50">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
           <div className="text-2xl font-serif font-bold">{stats.total}</div>
         </Card>
-        <Card className="p-4 bg-emerald-500/5 border-emerald-500/20">
+        <Card className="p-md bg-emerald-500/5 border-emerald-500/20">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
           <div className="text-2xl font-serif font-bold text-emerald-600">{stats.ok}</div>
         </Card>
-        <Card className="p-4 bg-destructive/5 border-destructive/20">
+        <Card className="p-md bg-destructive/5 border-destructive/20">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-destructive">Ausentes</span>
           <div className="text-2xl font-serif font-bold text-destructive">{stats.missing}</div>
         </Card>
-        <Card className="p-4 bg-amber-500/5 border-amber-500/20">
+        <Card className="p-md bg-amber-500/5 border-amber-500/20">
           <span className="text-premium-tiny font-black uppercase tracking-widest text-amber-600">Divergentes</span>
           <div className="text-2xl font-serif font-bold text-amber-600">{stats.divergent}</div>
         </Card>
@@ -228,22 +228,22 @@ const CatechismVerification: React.FC = () => {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-premium border border-border">
+          <div className="flex items-center gap-xs bg-muted/50 p-2xs rounded-premium border border-border">
             <Button 
               onClick={() => setFilter('all')} 
-              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-md py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-soft' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
             </Button>
             <Button 
               onClick={() => setFilter('missing')} 
-              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-soft' : 'text-muted-foreground hover:text-destructive'}`}
+              className={`px-md py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-soft' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
             </Button>
             <Button 
               onClick={() => setFilter('divergent')} 
-              className={`px-4 py-1.5 text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-soft' : 'text-muted-foreground hover:text-amber-600'}`}
+              className={`px-md py-2xs text-premium-tiny font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-soft' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
             </Button>
@@ -257,34 +257,34 @@ const CatechismVerification: React.FC = () => {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
-                <th className="px-6 py-4">§ Parágrafo</th>
-                <th className="px-6 py-4">Seção</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Detalhes</th>
+                <th className="px-lg py-md">§ Parágrafo</th>
+                <th className="px-lg py-md">Seção</th>
+                <th className="px-lg py-md">Status</th>
+                <th className="px-lg py-md">Detalhes</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <Icons.Loader className="w-8 h-8 animate-spin text-primary/40" />
+                  <td colSpan={4} className="px-lg py-2xl text-center">
+                    <div className="flex flex-col items-center gap-md">
+                      <Icons.Loader className="w-xl h-xl animate-spin text-primary/40" />
                       <span className="text-muted-foreground animate-pulse">Analisando base de dados...</span>
                     </div>
                   </td>
                 </tr>
               ) : filteredResults.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-muted-foreground italic">
+                  <td colSpan={4} className="px-lg py-2xl text-center text-muted-foreground italic">
                     Nenhum item encontrado com este filtro.
                   </td>
                 </tr>
               ) : (
                 filteredResults.map((res, i) => (
                   <tr key={`${res.paragraph}-${i}`} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                    <td className="px-6 py-4 font-bold font-serif text-primary">§{res.paragraph}</td>
-                    <td className="px-6 py-4 text-xs font-medium text-muted-foreground">{res.section}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-lg py-md font-bold font-serif text-primary">§{res.paragraph}</td>
+                    <td className="px-lg py-md text-xs font-medium text-muted-foreground">{res.section}</td>
+                    <td className="px-lg py-md">
                       {res.status === 'ok' ? (
                         <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-premium-tiny font-black">OK</Badge>
                       ) : res.status === 'missing' ? (
@@ -293,7 +293,7 @@ const CatechismVerification: React.FC = () => {
                         <Badge className="bg-amber-500 text-white border-0 uppercase text-premium-tiny font-black">Divergente</Badge>
                       )}
                     </td>
-                    <td className="px-6 py-4 text-premium-small text-muted-foreground italic">
+                    <td className="px-lg py-md text-premium-small text-muted-foreground italic">
                       {res.details || 'Conteúdo sincronizado'}
                     </td>
                   </tr>

@@ -88,11 +88,11 @@ describe("Button Accessibility & Keyboard Navigation", () => {
     );
     
     const button = screen.getByRole("button", { name: /search settings/i });
-    expect(button).toHaveClass("h-12 w-12");
+    expect(button).toHaveClass("h-2xl w-2xl");
     
     const icon = button.querySelector("svg");
     expect(icon).toBeInTheDocument();
-    // The size is controlled by the button's [&_svg]:size-5 class in standard variants
+    // The size is controlled by the button's [&_svg]:size-md class in standard variants
   });
 
   it("handles multiple icons or complex children without breaking alignment", () => {
@@ -105,7 +105,7 @@ describe("Button Accessibility & Keyboard Navigation", () => {
     );
     
     const button = screen.getByRole("button");
-    expect(button).toHaveClass("inline-flex items-center justify-center gap-2.5");
+    expect(button).toHaveClass("inline-flex items-center justify-center gap-xs");
   });
 
   it("matches snapshot for premium styling", () => {

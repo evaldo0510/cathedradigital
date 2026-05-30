@@ -42,14 +42,14 @@ describe('<RelevanceBadge />', () => {
     render(<RelevanceBadge score={0.5} />);
     const badge = screen.getByText('50%');
     expect(badge.className).toContain('text-premium-tiny');
-    expect(badge.className).toContain('px-2');
+    expect(badge.className).toContain('px-xs');
   });
 
   it('applies the "xs" size variant when requested', () => {
     render(<RelevanceBadge score={0.5} size="xs" />);
     const badge = screen.getByText('50%');
     expect(badge.className).toContain('text-premium-tiny');
-    expect(badge.className).toContain('px-1.5');
+    expect(badge.className).toContain('px-2xs');
   });
 
   it('exposes an accessible aria-label and tooltip with the percentage', () => {

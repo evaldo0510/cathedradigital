@@ -117,22 +117,22 @@ const CatechismExplorer: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-8 space-y-4 md:space-y-8 min-h-screen pb-20">
+    <div className="max-w-4xl mx-auto p-md md:p-xl space-y-4 md:space-y-8 min-h-screen pb-3xl">
       <SEOHead 
         title="Explorador do Catecismo | Cathedra" 
         description="Navegue pelos parágrafos do Catecismo da Igreja Católica com filtros inteligentes e temas."
         path="/catechism/explorer"
       />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-xs">
         <h1 className="font-serif font-bold text-foreground">Explorador do Catecismo</h1>
         <p className="text-muted-foreground">Conteúdo dogmático local e sempre disponível.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-xl">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="p-4 bg-muted/30 rounded-premium border border-border/50 space-y-2">
+          <div className="p-md bg-muted/30 rounded-premium border border-border/50 space-y-2">
             <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">
               <span>Total Geral</span>
               <span className="text-foreground">{allParagraphs.length}</span>
@@ -144,8 +144,8 @@ const CatechismExplorer: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-bold uppercase text-premium-tiny tracking-widest">
-              <Icons.Search className="w-3 h-3" /> Busca Rápida
+            <div className="flex items-center gap-xs text-primary font-bold uppercase text-premium-tiny tracking-widest">
+              <Icons.Search className="w-sm h-sm" /> Busca Rápida
             </div>
             <Input 
               placeholder="Ex: §142, fé, pecado..." 
@@ -156,11 +156,11 @@ const CatechismExplorer: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-bold uppercase text-premium-tiny tracking-widest">
-              <Icons.Tag className="w-3 h-3" /> Temas e Tags
+            <div className="flex items-center gap-xs text-primary font-bold uppercase text-premium-tiny tracking-widest">
+              <Icons.Tag className="w-sm h-sm" /> Temas e Tags
             </div>
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="flex flex-wrap gap-2">
+            <ScrollArea className="h-[400px] pr-md">
+              <div className="flex flex-wrap gap-xs">
                 {globalTagCounts.map(([tag, totalCount]) => {
                   const currentCount = dynamicTagCounts[tag] || 0;
                   const isSelected = selectedTags.includes(tag);
@@ -169,7 +169,7 @@ const CatechismExplorer: React.FC = () => {
                       key={tag}
                       onClick={() => toggleTag(tag)}
                       disabled={currentCount === 0 && !isSelected}
-                      className={`group flex items-center gap-2 px-3 py-1.5 rounded-full text-premium-small transition-all border ${
+                      className={`group flex items-center gap-xs px-sm py-2xs rounded-full text-premium-small transition-all border ${
                         isSelected
                           ? 'bg-primary border-primary text-primary-foreground'
                           : currentCount === 0 
@@ -178,8 +178,8 @@ const CatechismExplorer: React.FC = () => {
                       }`}
                     >
                       <span>{tag}</span>
-                      <div className="flex items-center gap-1">
-                        <Badge variant="secondary" className={`px-1 h-3.5 min-w-[14px] flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : ''}`}>
+                      <div className="flex items-center gap-2xs">
+                        <Badge variant="secondary" className={`px-2xs h-sm min-w-[14px] flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : ''}`}>
                           {currentCount}
                         </Badge>
                         {!isSelected && currentCount !== totalCount && (
@@ -196,18 +196,18 @@ const CatechismExplorer: React.FC = () => {
 
         {/* Content Area */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-md">
             <div className="text-premium-small font-medium text-muted-foreground">
               {filteredParagraphs.length} resultados encontrados
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xs">
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={toggleSort}
-                className="text-premium-tiny font-black uppercase tracking-widest h-8"
+                className="text-premium-tiny font-black uppercase tracking-widest h-xl"
               >
-                <Icons.ArrowDown className={`w-3 h-3 mr-2 transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
+                <Icons.ArrowDown className={`w-sm h-sm mr-xs transition-transform ${sortBy === 'number-desc' ? 'rotate-180' : ''}`} />
                 {sortBy === 'number-asc' ? 'Crescente' : 'Decrescente'}
               </Button>
             </div>
@@ -225,10 +225,10 @@ const CatechismExplorer: React.FC = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <Card 
-                    className="p-4 md:p-6 cursor-pointer hover:border-primary/20 transition-all group bg-background/50 backdrop-blur-sm"
+                    className="p-md md:p-lg cursor-pointer hover:border-primary/20 transition-all group bg-background/50 backdrop-blur-sm"
                     onClick={() => navigate(`/catechism?p=${p.paragraph}`)}
                   >
-                    <div className="flex gap-4">
+                    <div className="flex gap-md">
                       <div className="text-premium-base font-serif font-bold text-primary opacity-60 group-hover:opacity-100 transition-opacity">
                         §{p.paragraph}
                       </div>
@@ -237,7 +237,7 @@ const CatechismExplorer: React.FC = () => {
                         <p className="text-muted-foreground line-clamp-3 leading-relaxed">
                           {p.conteudo}
                         </p>
-                        <div className="flex flex-wrap gap-2 pt-2">
+                        <div className="flex flex-wrap gap-xs pt-xs">
                           {p.tags.map(tag => (
                             <Badge key={tag} variant="secondary" className="font-bold uppercase tracking-wider bg-muted/50 text-muted-foreground group-hover:text-primary group-hover:bg-primary/5 transition-all">
                               {tag}
@@ -245,18 +245,18 @@ const CatechismExplorer: React.FC = () => {
                           ))}
                         </div>
                       </div>
-                      <Icons.ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-all self-center" />
+                      <Icons.ChevronRight className="w-md h-md text-muted-foreground group-hover:text-primary transition-all self-center" />
                     </div>
                   </Card>
                 </motion.div>
               ))}
 
               {filteredParagraphs.length === 0 && (
-                <div className="text-center py-20 bg-muted/20 rounded-premium border-2 border-dashed border-border">
-                  <Icons.Search className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-20" />
+                <div className="text-center py-3xl bg-muted/20 rounded-premium border-2 border-dashed border-border">
+                  <Icons.Search className="w-2xl h-2xl text-muted-foreground mx-auto mb-md opacity-20" />
                   <h3 className="font-bold">Nenhum parágrafo encontrado</h3>
                   <p className="text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
-                  <Button variant="link" onClick={clearAll} className="mt-2">
+                  <Button variant="link" onClick={clearAll} className="mt-xs">
                     Limpar tudo
                   </Button>
                 </div>
@@ -266,7 +266,7 @@ const CatechismExplorer: React.FC = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 pt-8">
+            <div className="flex items-center justify-center gap-xs pt-xl">
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -275,7 +275,7 @@ const CatechismExplorer: React.FC = () => {
               >
                 Anterior
               </Button>
-              <div className="text-premium-small font-bold px-4">
+              <div className="text-premium-small font-bold px-md">
                 Página {currentPage} de {totalPages}
               </div>
               <Button 

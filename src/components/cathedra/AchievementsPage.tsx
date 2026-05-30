@@ -39,15 +39,15 @@ const AchievementsPage: React.FC = () => {
   const progress = Math.round((totalEarned / totalPossible) * 100);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 py-12 md:py-24 px-6">
+    <div className="max-w-4xl mx-auto space-y-12 py-2xl md:py-4xl px-lg">
       {/* Header */}
       <div className="text-center space-y-6">
         <motion.div 
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="inline-flex items-center gap-3 px-5 py-2 bg-primary/5 rounded-full border border-primary/10"
+          className="inline-flex items-center gap-sm px-md py-xs bg-primary/5 rounded-full border border-primary/10"
         >
-          <Trophy className="w-5 h-5 text-primary" />
+          <Trophy className="w-md h-md text-primary" />
           <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">Sacra Victoria</span>
         </motion.div>
         <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground tracking-tight">Suas Conquistas</h1>
@@ -57,9 +57,9 @@ const AchievementsPage: React.FC = () => {
       </div>
 
       {/* Summary Card */}
-      <Card className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] p-8 md:p-12 shadow-none overflow-hidden relative">
-        <div className="absolute top-0 right-0 p-12 opacity-[0.03]">
-          <Sparkles className="w-32 h-32 text-primary" />
+      <Card className="premium-card bg-primary/[0.02] border-primary/5 rounded-[2.5rem] p-xl md:p-2xl shadow-none overflow-hidden relative">
+        <div className="absolute top-0 right-0 p-2xl opacity-[0.03]">
+          <Sparkles className="w-4xl h-4xl text-primary" />
         </div>
         <div className="relative z-10 space-y-6">
           <div className="flex items-center justify-between">
@@ -69,18 +69,18 @@ const AchievementsPage: React.FC = () => {
             </div>
             <div className="text-4xl font-display font-bold text-primary">{progress}%</div>
           </div>
-          <Progress value={progress} className="h-3 bg-primary/5" />
+          <Progress value={progress} className="h-sm bg-primary/5" />
         </div>
       </Card>
 
       <div className="space-y-16">
         {/* New Dynamic Achievements */}
         <section className="space-y-8">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-md">
             <h2 className="text-2xl font-bold font-serif">Marcos das Trilhas</h2>
             <div className="flex-1 h-px bg-primary/5" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg">
             {dbAchievements.map((ach, i) => {
               const unlocked = earnedAchievementIds.has(ach.id);
               return (
@@ -89,20 +89,20 @@ const AchievementsPage: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className={`relative rounded-[2rem] border p-6 transition-all duration-700 ${
+                  className={`relative rounded-[2rem] border p-lg transition-all duration-700 ${
                     unlocked
                       ? 'bg-primary/[0.03] border-primary/20 shadow-premium'
                       : 'bg-muted/30 border-border opacity-40'
                   }`}
                 >
-                  <div className="flex items-start gap-5">
-                    <div className="text-4xl bg-background w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm border border-border/50">
+                  <div className="flex items-start gap-md">
+                    <div className="text-4xl bg-background w-3xl h-3xl rounded-premium flex items-center justify-center shadow-sm border border-border/50">
                       {ach.icon}
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between">
                         <h3 className="font-bold text-foreground font-serif">{ach.name}</h3>
-                        {!unlocked && <Lock className="w-3.5 h-3.5 text-muted-foreground/40" />}
+                        {!unlocked && <Lock className="w-sm h-sm text-muted-foreground/40" />}
                       </div>
                       <p className="text-xs text-muted-foreground leading-relaxed">{ach.description}</p>
                       {unlocked && (
@@ -120,22 +120,22 @@ const AchievementsPage: React.FC = () => {
 
         {/* Legacy Bible Badges */}
         <section className="space-y-8">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-md">
             <h2 className="text-2xl font-bold font-serif">Estudo das Escrituras</h2>
             <div className="flex-1 h-px bg-primary/5" />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-lg">
             {BADGE_DEFINITIONS.map((badge, i) => {
               const unlocked = earnedBadgesLegacy.has(badge.id);
               return (
                 <motion.div
                   key={badge.id}
-                  className={`p-6 rounded-[2rem] border transition-all duration-700 flex flex-col items-center text-center space-y-4 ${
+                  className={`p-lg rounded-[2rem] border transition-all duration-700 flex flex-col items-center text-center space-y-4 ${
                     unlocked ? 'bg-card border-primary/10 shadow-premium' : 'bg-muted/10 border-border opacity-30'
                   }`}
                 >
-                  <div className={`text-3xl w-14 h-14 rounded-full flex items-center justify-center ${unlocked ? 'bg-primary/10' : 'bg-muted'}`}>
-                    {unlocked ? '🏆' : <Lock className="w-5 h-5" />}
+                  <div className={`text-3xl w-2xl h-2xl rounded-full flex items-center justify-center ${unlocked ? 'bg-primary/10' : 'bg-muted'}`}>
+                    {unlocked ? '🏆' : <Lock className="w-md h-md" />}
                   </div>
                   <div className="space-y-1">
                     <h4 className="font-bold text-sm">{badge.name}</h4>

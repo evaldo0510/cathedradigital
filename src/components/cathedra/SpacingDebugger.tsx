@@ -25,15 +25,15 @@ export const SpacingDebugger: React.FC = () => {
     <>
       {/* Floating Toggle Button - Visible only on mobile/dev */}
       {isVisible && (
-        <div className="fixed bottom-20 right-4 z-[99999] md:hidden">
+        <div className="fixed bottom-3xl right-md z-[99999] md:hidden">
           <Button
             variant={isEnabled ? "destructive" : "secondary"}
             size="icon"
             onClick={() => setIsEnabled(!isEnabled)}
-            className="rounded-full shadow-lg border border-white/20 backdrop-blur-sm"
+            className="rounded-full shadow-premium border border-white/20 backdrop-blur-sm"
             title="Alternar Debug de Espaçamentos (Alt+D)"
           >
-            {isEnabled ? <EyeOff className="h-4 w-4" /> : <Layout className="h-4 w-4" />}
+            {isEnabled ? <EyeOff className="h-md w-md" /> : <Layout className="h-md w-md" />}
           </Button>
         </div>
       )}

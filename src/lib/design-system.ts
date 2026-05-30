@@ -16,13 +16,13 @@ export const DESIGN_TOKENS = {
     soft: "0 4px 15px -2px rgba(0, 0, 0, 0.02)",
   },
   spacing: {
-    section: "py-20 sm:py-28 md:py-36 lg:py-56",
+    section: "py-3xl sm:py-4xl md:py-36 lg:py-56",
     stack: "space-y-8 md:space-y-12 lg:space-y-16",
-    container: "w-full max-w-[1280px] mx-auto px-4 sm:px-8 md:px-12 lg:px-16",
+    container: "w-full max-w-[1280px] mx-auto px-md sm:px-xl md:px-2xl lg:px-3xl",
   },
   grid: {
-    standard: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 lg:gap-14",
-    responsive: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12",
+    standard: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg md:gap-xl lg:gap-2xl",
+    responsive: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-xl md:gap-2xl",
   }
 } as const;
 

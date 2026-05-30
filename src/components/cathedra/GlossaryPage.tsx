@@ -164,8 +164,8 @@ const GlossaryPage: React.FC = () => {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-premium">
-          <Icons.BookOpen className="w-4 h-4 text-primary" />
+        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
+          <Icons.BookOpen className="w-md h-md text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Lexicon Theologicum</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">📘 Palavras que Revelam</h1>
@@ -185,10 +185,10 @@ const GlossaryPage: React.FC = () => {
 
       {/* Category tabs */}
       {!loading && terms.length > 0 && (
-        <div className="flex gap-2 justify-center flex-wrap">
+        <div className="flex gap-xs justify-center flex-wrap">
           {categories.map(cat => (
             <Button key={cat} onClick={() => setCategory(cat)}
-              className={`px-4 py-2 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
+              className={`px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all ${
                 category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
               }`}>
               {cat}
@@ -199,7 +199,7 @@ const GlossaryPage: React.FC = () => {
 
       {/* Stats */}
       {!loading && (
-        <div className="flex justify-center gap-6 text-center">
+        <div className="flex justify-center gap-lg text-center">
           <div>
             <p className="text-2xl font-serif font-bold text-foreground">{filtered.length}</p>
             <p className="text-premium-tiny uppercase tracking-widest text-muted-foreground">Termos</p>
@@ -226,7 +226,7 @@ const GlossaryPage: React.FC = () => {
               title={term.term}
               subtitle={term.definition}
               score={term.similarityScore}
-              icon={<BookOpen className="w-4 h-4" />}
+              icon={<BookOpen className="w-md h-md" />}
               onClick={() => setExpandedId(expandedId === term.id ? null : term.id)}
               index={i}
             />
@@ -238,8 +238,8 @@ const GlossaryPage: React.FC = () => {
       {/* Glossary list */}
       <div className="space-y-3">
         {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-8 h-8 border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+          <div className="flex justify-center py-2xl">
+            <div className="w-xl h-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
           </div>
         ) : filtered.length > 0 ? (
           filtered.map(term => {
@@ -253,31 +253,31 @@ const GlossaryPage: React.FC = () => {
                 }`}>
                 <Button
                   onClick={() => setExpandedId(isExpanded ? null : term.id)}
-                  className="w-full text-left p-6 flex items-start gap-4"
+                  className="w-full text-left p-lg flex items-start gap-md"
                 >
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <div className="flex items-center gap-xs mb-2xs flex-wrap">
                       {term.category && (
-                        <span className={`px-2 py-0.5 rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-xs py-3xs rounded-full text-premium-tiny font-black uppercase tracking-widest ${CATEGORY_COLORS[term.category] || 'bg-muted text-muted-foreground'}`}>
                           {term.category}
                         </span>
                       )}
                       {enrichment && (
-                        <span className="px-2 py-0.5 rounded-full text-premium-tiny font-bold bg-primary/10 text-primary uppercase tracking-wider">
-                          <Icons.Sparkles className="w-2.5 h-2.5 inline mr-1" /> Com reflexão
+                        <span className="px-xs py-3xs rounded-full text-premium-tiny font-bold bg-primary/10 text-primary uppercase tracking-wider">
+                          <Icons.Sparkles className="w-xs h-xs inline mr-2xs" /> Com reflexão
                         </span>
                       )}
                     </div>
                     <h3 className="text-base font-bold text-foreground">{term.term}</h3>
                     {!isExpanded && (
-                      <p className="text-sm text-muted-foreground line-clamp-1 mt-1">{term.definition}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1 mt-2xs">{term.definition}</p>
                     )}
                   </div>
-                  <Icons.ArrowDown className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <Icons.ArrowDown className={`w-md h-md text-muted-foreground shrink-0 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                 </Button>
 
                 {isExpanded && (
-                  <div className="px-6 pb-6 space-y-4 border-t border-border pt-4">
+                  <div className="px-lg pb-lg space-y-4 border-t border-border pt-md">
                     {/* Layer 1: Simple definition */}
                     <div className="space-y-1">
                       <p className="text-premium-tiny font-black uppercase tracking-widest text-primary">📘 Definição</p>
@@ -287,30 +287,30 @@ const GlossaryPage: React.FC = () => {
                     {enrichment && (
                       <>
                         {/* Layer 2: P.A.D.H. */}
-                        <div className="bg-primary/5 rounded-premium p-5 text-center space-y-2">
+                        <div className="bg-primary/5 rounded-premium p-md text-center space-y-2">
                           <p className="text-premium-tiny font-black uppercase tracking-widest text-primary/70">🧠 Reflexão Poética</p>
                           <p className="text-foreground font-serif italic leading-relaxed whitespace-pre-line text-sm">{enrichment.padh}</p>
                         </div>
 
                         {/* Layer 3: Inner question */}
-                        <div className="bg-accent/30 rounded-premium p-5 text-center space-y-2">
+                        <div className="bg-accent/30 rounded-premium p-md text-center space-y-2">
                           <p className="text-premium-tiny font-black uppercase tracking-widest text-accent-foreground/70">❓ Pergunta Interior</p>
                           <p className="text-foreground font-bold text-base">{enrichment.question}</p>
                         </div>
 
                         {/* Related verse */}
                         {enrichment.relatedVerse && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Icons.Book className="w-4 h-4 text-primary" />
+                          <div className="flex items-center gap-xs text-sm text-muted-foreground">
+                            <Icons.Book className="w-md h-md text-primary" />
                             <span className="font-serif italic">Referência: {enrichment.relatedVerse}</span>
                           </div>
                         )}
 
                         {/* Journey Link */}
                         {term.journey_id && (
-                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-5 space-y-3">
-                            <div className="flex items-center gap-2">
-                              <Icons.Compass className="w-5 h-5 text-primary" />
+                          <div className="bg-primary/10 border border-primary/20 rounded-premium p-md space-y-3">
+                            <div className="flex items-center gap-xs">
+                              <Icons.Compass className="w-md h-md text-primary" />
                               <p className="text-xs font-bold text-primary uppercase tracking-widest">Jornada Prática</p>
                             </div>
                             <p className="text-xs text-foreground/80 leading-relaxed">
@@ -318,7 +318,7 @@ const GlossaryPage: React.FC = () => {
                             </p>
                             <Button 
                               onClick={() => navigate(`/jornadas/${term.journey_id}`)}
-                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-tiny tracking-widest py-4"
+                              className="w-full bg-primary hover:bg-primary/90 text-white font-bold uppercase text-premium-tiny tracking-widest py-md"
                             >
                               Iniciar Jornada Prática
                             </Button>
@@ -329,9 +329,9 @@ const GlossaryPage: React.FC = () => {
                         {enrichment.relatedRoute && (
                           <Button
                             onClick={() => navigate(enrichment.relatedRoute!)}
-                            className="w-full py-3.5 rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-sm rounded-full bg-foreground text-background font-black uppercase text-xs tracking-[0.2em] shadow-premium hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-xs group"
                           >
-                            <Icons.Heart className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <Icons.Heart className="w-md h-md group-hover:scale-110 transition-transform" />
                             {enrichment.relatedLabel || 'Aprofundar'}
                           </Button>
                         )}
@@ -343,10 +343,10 @@ const GlossaryPage: React.FC = () => {
             );
           })
         ) : (
-          <div className="text-center py-12 bg-muted/20 rounded-premium">
-            <Icons.Search className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+          <div className="text-center py-2xl bg-muted/20 rounded-premium">
+            <Icons.Search className="w-xl h-xl text-muted-foreground mx-auto mb-sm" />
             <p className="text-muted-foreground">Nenhum termo encontrado.</p>
-            <p className="text-xs text-muted-foreground mt-1">Tente buscar por outro sentimento ou palavra.</p>
+            <p className="text-xs text-muted-foreground mt-2xs">Tente buscar por outro sentimento ou palavra.</p>
           </div>
         )}
       </div>

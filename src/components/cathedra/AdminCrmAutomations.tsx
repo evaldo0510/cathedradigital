@@ -17,7 +17,7 @@ const automations = [
     id: 'daily_streak',
     name: 'Lembrete de Streak',
     description: 'Envia notificação diária para manter o streak ativo.',
-    icon: <Flame className="w-5 h-5 text-orange-500" />,
+    icon: <Flame className="w-md h-md text-orange-500" />,
     schedule: 'Diário — 08:00',
     status: 'active' as const,
     edgeFunction: 'daily-streak-push',
@@ -26,7 +26,7 @@ const automations = [
     id: 'retention_3d',
     name: 'Reengajamento (3 dias)',
     description: 'Notifica usuários inativos há 3+ dias com conteúdo personalizado.',
-    icon: <UserMinus className="w-5 h-5 text-secondary" />,
+    icon: <UserMinus className="w-md h-md text-secondary" />,
     schedule: 'Diário — 10:00',
     status: 'active' as const,
     edgeFunction: 'retention-notifications',
@@ -35,7 +35,7 @@ const automations = [
     id: 'community_digest',
     name: 'Resumo da Comunidade',
     description: 'Notificação semanal com destaques da comunidade.',
-    icon: <MessageCircle className="w-5 h-5 text-primary" />,
+    icon: <MessageCircle className="w-md h-md text-primary" />,
     schedule: 'Semanal — Domingo 09:00',
     status: 'inactive' as const,
     edgeFunction: null,
@@ -103,21 +103,21 @@ const AdminCrmAutomations: React.FC = () => {
     <div className="space-y-6">
       {/* Automation Status */}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-          <Zap className="w-4 h-4" /> Automações Configuradas
+        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-xs">
+          <Zap className="w-md h-md" /> Automações Configuradas
         </h3>
         {automations.map(auto => (
           <Card key={auto.id}>
-            <CardContent className="py-4 px-5">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 min-w-0">
+            <CardContent className="py-md px-md">
+              <div className="flex items-center justify-between gap-md">
+                <div className="flex items-center gap-sm min-w-0">
                   {auto.icon}
                   <div className="min-w-0">
                     <p className="font-semibold text-sm">{auto.name}</p>
                     <p className="text-xs text-muted-foreground">{auto.description}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-sm shrink-0">
                   <div className="text-right hidden sm:block">
                     <p className="text-premium-tiny text-muted-foreground uppercase tracking-wider">{auto.schedule}</p>
                     {auto.edgeFunction && (
@@ -129,9 +129,9 @@ const AdminCrmAutomations: React.FC = () => {
                     : 'bg-muted text-muted-foreground'
                   }>
                     {auto.status === 'active' ? (
-                      <><CheckCircle2 className="w-3 h-3 mr-1" /> Ativo</>
+                      <><CheckCircle2 className="w-sm h-sm mr-2xs" /> Ativo</>
                     ) : (
-                      <><Clock className="w-3 h-3 mr-1" /> Inativo</>
+                      <><Clock className="w-sm h-sm mr-2xs" /> Inativo</>
                     )}
                   </Badge>
                 </div>
@@ -144,13 +144,13 @@ const AdminCrmAutomations: React.FC = () => {
       {/* Manual Notification */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-2">
-            <Send className="w-4 h-4 text-primary" /> Enviar Notificação Manual
+          <CardTitle className="text-sm flex items-center gap-xs">
+            <Send className="w-md h-md text-primary" /> Enviar Notificação Manual
           </CardTitle>
           <CardDescription>Dispare uma notificação diretamente para um segmento de usuários.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2">
+          <div className="flex gap-xs">
             {(['all', 'at_risk', 'premium'] as const).map(target => (
               <Button
                 key={target}
@@ -174,8 +174,8 @@ const AdminCrmAutomations: React.FC = () => {
             onChange={e => setManualMessage(e.target.value)}
             rows={3}
           />
-          <Button onClick={handleSendManual} disabled={sending} className="gap-2">
-            <Send className="w-4 h-4" /> {sending ? 'Enviando...' : 'Enviar Notificação'}
+          <Button onClick={handleSendManual} disabled={sending} className="gap-xs">
+            <Send className="w-md h-md" /> {sending ? 'Enviando...' : 'Enviar Notificação'}
           </Button>
         </CardContent>
       </Card>

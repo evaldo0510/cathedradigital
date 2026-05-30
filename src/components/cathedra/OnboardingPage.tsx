@@ -15,56 +15,56 @@ import onboardingCommunity from '@/assets/onboarding-community.jpg';
 /* ── Intro slides ── */
 const SLIDES = [
   {
-    icon: <Sparkles className="w-10 h-10" />,
+    icon: <Sparkles className="w-xl h-xl" />,
     title: 'O Ecossistema Cathedra',
     subtitle: 'Sua vida espiritual integrada',
     description: 'Um ambiente digital sagrado que une oração, estudo, formação e comunidade em uma experiência única e personalizada.',
     image: onboardingBible,
   },
   {
-    icon: <Sun className="w-10 h-10" />,
+    icon: <Sun className="w-xl h-xl" />,
     title: 'A Aba "Hoje"',
     subtitle: 'Seu ponto de partida diário',
     description: 'Encontre aqui o que você precisa para o dia: Liturgia, o Santo do dia, orações recomendadas e seu progresso espiritual.',
     image: onboardingPrayer,
   },
   {
-    icon: <BookOpen className="w-10 h-10" />,
+    icon: <BookOpen className="w-xl h-xl" />,
     title: 'Biblioteca e Scriptuarium',
     subtitle: 'O tesouro da Tradição',
     description: 'Navegue pela Bíblia, Catecismo e documentos do Magistério. Use a busca inteligente para encontrar respostas em milênios de sabedoria.',
     image: onboardingBible,
   },
   {
-    icon: <Zap className="w-10 h-10" />,
+    icon: <Zap className="w-xl h-xl" />,
     title: 'Logos IA: Estudo Profundo',
     subtitle: 'Inteligência Contemplativa',
     description: 'Dúvidas sobre a fé? O Logos IA explica temas complexos usando apenas fontes seguras e tradicionais da Igreja Católica.',
     image: onboardingStudy,
   },
   {
-    icon: <Compass className="w-10 h-10" />,
+    icon: <Compass className="w-xl h-xl" />,
     title: 'Jornadas de Formação',
     subtitle: 'Caminhos de Santidade',
     description: 'Siga trilhas estruturadas de aprendizado. Do básico ao avançado, cada passo é uma nova descoberta na sua caminhada de fé.',
     image: onboardingCommunity,
   },
   {
-    icon: <Users className="w-10 h-10" />,
+    icon: <Users className="w-xl h-xl" />,
     title: 'Aula Magna e Comunidade',
     subtitle: 'Crescendo em Fraternidade',
     description: 'Partilhe reflexões, veja o que outros fiéis estão meditando e sinta-se parte de uma comunidade viva e orante.',
     image: onboardingCommunity,
   },
   {
-    icon: <Heart className="w-10 h-10" />,
+    icon: <Heart className="w-xl h-xl" />,
     title: 'Como Usar?',
     subtitle: 'Simples e Profundo',
     description: 'Navegue pelo menu inferior para alternar entre as áreas. Marque leituras como concluídas para ganhar XP e acompanhar sua evolução.',
     image: onboardingPrayer,
   },
   {
-    icon: <Compass className="w-10 h-10" />,
+    icon: <Compass className="w-xl h-xl" />,
     title: 'Pronto para Começar?',
     subtitle: 'Seu Diagnóstico Espiritual',
     description: 'A seguir, faremos algumas perguntas para personalizar sua experiência e recomendar a jornada ideal para o seu momento.',
@@ -84,50 +84,50 @@ const QUESTIONS: DiagnosisQuestion[] = [
     id: 'moment',
     question: 'Como você descreveria seu momento espiritual atual?',
     options: [
-      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Sun className="w-5 h-5" /> },
-      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <BookOpen className="w-5 h-5" /> },
-      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Heart className="w-5 h-5" /> },
-      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Church className="w-5 h-5" /> },
+      { label: 'Estou começando a buscar Deus', value: 'beginning', icon: <Sun className="w-md h-md" /> },
+      { label: 'Tenho fé, mas quero aprofundar', value: 'deepening', icon: <BookOpen className="w-md h-md" /> },
+      { label: 'Passo por um momento difícil', value: 'struggling', icon: <Heart className="w-md h-md" /> },
+      { label: 'Quero servir melhor a Igreja', value: 'serving', icon: <Church className="w-md h-md" /> },
     ],
   },
   {
     id: 'prayer',
     question: 'Qual é sua relação com a oração?',
     options: [
-      { label: 'Quase não rezo', value: 'rarely', icon: <Hand className="w-5 h-5" /> },
-      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Sun className="w-5 h-5" /> },
-      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Sparkles className="w-5 h-5" /> },
-      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Heart className="w-5 h-5" /> },
+      { label: 'Quase não rezo', value: 'rarely', icon: <Hand className="w-md h-md" /> },
+      { label: 'Rezo às vezes, mas sem constância', value: 'sometimes', icon: <Sun className="w-md h-md" /> },
+      { label: 'Tenho vida de oração regular', value: 'regular', icon: <Sparkles className="w-md h-md" /> },
+      { label: 'Busco oração contemplativa', value: 'contemplative', icon: <Heart className="w-md h-md" /> },
     ],
   },
   {
     id: 'knowledge',
     question: 'Quanto você conhece da doutrina católica?',
     options: [
-      { label: 'Muito pouco, o básico', value: 'basic', icon: <BookOpen className="w-5 h-5" /> },
-      { label: 'Conheço razoavelmente', value: 'moderate', icon: <BookOpen className="w-5 h-5" /> },
-      { label: 'Estudo com frequência', value: 'advanced', icon: <Sparkles className="w-5 h-5" /> },
-      { label: 'Tenho formação teológica', value: 'theological', icon: <Church className="w-5 h-5" /> },
+      { label: 'Muito pouco, o básico', value: 'basic', icon: <BookOpen className="w-md h-md" /> },
+      { label: 'Conheço razoavelmente', value: 'moderate', icon: <BookOpen className="w-md h-md" /> },
+      { label: 'Estudo com frequência', value: 'advanced', icon: <Sparkles className="w-md h-md" /> },
+      { label: 'Tenho formação teológica', value: 'theological', icon: <Church className="w-md h-md" /> },
     ],
   },
   {
     id: 'sacraments',
     question: 'Como é sua vivência sacramental?',
     options: [
-      { label: 'Não frequento os sacramentos', value: 'none', icon: <Church className="w-5 h-5" /> },
-      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Church className="w-5 h-5" /> },
-      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Sparkles className="w-5 h-5" /> },
-      { label: 'Vida sacramental intensa', value: 'intense', icon: <Heart className="w-5 h-5" /> },
+      { label: 'Não frequento os sacramentos', value: 'none', icon: <Church className="w-md h-md" /> },
+      { label: 'Vou à Missa aos domingos', value: 'sunday', icon: <Church className="w-md h-md" /> },
+      { label: 'Missa frequente e confissão regular', value: 'frequent', icon: <Sparkles className="w-md h-md" /> },
+      { label: 'Vida sacramental intensa', value: 'intense', icon: <Heart className="w-md h-md" /> },
     ],
   },
   {
     id: 'goal',
     question: 'O que você mais deseja nesta jornada?',
     options: [
-      { label: 'Encontrar paz interior', value: 'peace', icon: <Heart className="w-5 h-5" /> },
-      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <BookOpen className="w-5 h-5" /> },
-      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Sun className="w-5 h-5" /> },
-      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Sparkles className="w-5 h-5" /> },
+      { label: 'Encontrar paz interior', value: 'peace', icon: <Heart className="w-md h-md" /> },
+      { label: 'Conhecer melhor a fé', value: 'knowledge', icon: <BookOpen className="w-md h-md" /> },
+      { label: 'Criar uma rotina espiritual', value: 'routine', icon: <Sun className="w-md h-md" /> },
+      { label: 'Transformação profunda de vida', value: 'transformation', icon: <Sparkles className="w-md h-md" /> },
     ],
   },
 ];
@@ -250,7 +250,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const title = categoryNames[recommendedCategory] || 'Formação Integral';
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-md">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -261,24 +261,24 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: 'spring', delay: 0.2 }}
-              className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center"
+              className="w-3xl h-3xl mx-auto rounded-full bg-primary/10 flex items-center justify-center"
             >
-              <Compass className="w-10 h-10 text-primary" />
+              <Compass className="w-xl h-xl text-primary" />
             </motion.div>
             <h1 className="text-2xl font-bold font-serif text-foreground">Sua Jornada Recomendada</h1>
             <p className="text-muted-foreground text-sm">Com base nas suas respostas, preparamos o caminho ideal para você.</p>
           </div>
 
-          <div className="bg-card border border-primary/20 rounded-premium p-6 space-y-3 text-center">
+          <div className="bg-card border border-primary/20 rounded-premium p-lg space-y-3 text-center">
             <h2 className="text-xl font-bold text-foreground">{title}</h2>
             <p className="text-muted-foreground text-sm">Uma jornada guiada pensada especialmente para o seu momento espiritual.</p>
           </div>
 
           <Button
             onClick={handleGoToJourney}
-            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="w-full flex items-center justify-center gap-xs px-lg py-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
-            Começar Minha Jornada <ChevronRight className="w-4 h-4" />
+            Começar Minha Jornada <ChevronRight className="w-md h-md" />
           </Button>
         </motion.div>
       </div>
@@ -291,14 +291,14 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
     const diagProgress = ((diagStep) / QUESTIONS.length) * 100;
 
     return (
-      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-md">
         <div className="w-full max-w-lg lg:max-w-4xl space-y-6 lg:space-y-10 text-center">
-          <div className="flex justify-center mb-6">
-            <Icons.Logo className="w-16 h-16" variant="blue" />
+          <div className="flex justify-center mb-lg">
+            <Icons.Logo className="w-3xl h-3xl" variant="blue" />
           </div>
           
-          <div className="space-y-2 mb-8">
-            <div className="w-full h-1 bg-muted rounded-premium overflow-hidden">
+          <div className="space-y-2 mb-xl">
+            <div className="w-full h-2xs bg-muted rounded-premium overflow-hidden">
               <motion.div 
                 className="h-full bg-primary"
                 initial={{ width: 0 }}
@@ -316,15 +316,15 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-8"
             >
-              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-4">{question.question}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h2 className="text-2xl lg:text-4xl font-serif font-bold text-foreground leading-tight px-md">{question.question}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-md">
                 {question.options.map((opt) => (
                   <Button
                     key={opt.value}
                     onClick={() => handleDiagAnswer(opt.value)}
-                    className="flex items-center gap-4 p-5 rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
+                    className="flex items-center gap-md p-md rounded-full border border-border bg-card hover:border-primary/50 hover:bg-primary/5 transition-all text-left group"
                   >
-                    <div className="p-3 rounded-premium bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="p-sm rounded-premium bg-muted group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {opt.icon}
                     </div>
                     <span className="font-bold text-foreground">{opt.label}</span>
@@ -342,10 +342,10 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
   const slide = SLIDES[currentSlide];
 
   return (
-    <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-4">
+    <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-md">
       <div className="w-full max-w-lg lg:max-w-5xl space-y-6 lg:space-y-10">
         <div className="flex justify-center">
-          <Icons.Logo className="w-20 h-20" variant="blue" />
+          <Icons.Logo className="w-3xl h-3xl" variant="blue" />
         </div>
 
         <AnimatePresence mode="wait">
@@ -357,9 +357,9 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             transition={{ duration: 0.25 }}
             className="bg-card border border-border rounded-full overflow-hidden lg:flex lg:items-center lg:min-h-[500px]"
           >
-            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-1/2 object-cover" />
-            <div className="p-6 md:p-8 lg:p-16 text-center lg:text-left lg:w-1/2 space-y-4 lg:space-y-8">
-              <div className="flex justify-center lg:justify-start text-primary mb-2 lg:mb-4">{slide.icon}</div>
+            <img src={slide.image} alt={slide.title} className="w-full h-48 md:h-64 lg:h-full lg:w-2xs/2 object-cover" />
+            <div className="p-lg md:p-xl lg:p-3xl text-center lg:text-left lg:w-2xs/2 space-y-4 lg:space-y-8">
+              <div className="flex justify-center lg:justify-start text-primary mb-xs lg:mb-md">{slide.icon}</div>
               <h1 className="text-2xl md:text-3xl lg:text-5xl font-serif font-bold text-foreground leading-tight">{slide.title}</h1>
               <p className="text-premium-tiny lg:text-xs font-black uppercase tracking-widest text-primary">{slide.subtitle}</p>
               <p className="text-muted-foreground leading-relaxed text-sm lg:text-lg lg:max-w-md">{slide.description}</p>
@@ -367,23 +367,23 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-xs">
           {SLIDES.map((_, i) => (
             <Button
               key={i}
               onClick={() => setCurrentSlide(i)}
-              className={`w-2.5 h-2.5 rounded-full transition-all ${
-                i === currentSlide ? 'bg-primary w-6' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+              className={`w-xs h-xs rounded-full transition-all ${
+                i === currentSlide ? 'bg-primary w-lg' : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
               }`}
             />
           ))}
-          <div className="w-2.5 h-2.5 rounded-premium bg-muted-foreground/30" />
+          <div className="w-xs h-xs rounded-premium bg-muted-foreground/30" />
         </div>
 
         <div className="flex items-center justify-between">
           {currentSlide > 0 ? (
-            <Button onClick={handleSlidePrev} className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ChevronLeft className="w-4 h-4" /> Voltar
+            <Button onClick={handleSlidePrev} className="flex items-center gap-2xs text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ChevronLeft className="w-md h-md" /> Voltar
             </Button>
           ) : (
             <Button onClick={handleSkipSlides} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -393,10 +393,10 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
           <Button
             onClick={handleSlideNext}
-            className="flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
+            className="flex items-center gap-xs px-lg py-sm bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
             {isLastSlide ? 'Diagnóstico' : 'Próximo'}
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-md h-md" />
           </Button>
         </div>
       </div>

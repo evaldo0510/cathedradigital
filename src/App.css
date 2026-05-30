@@ -1,6 +1,6 @@
 /* Desktop Grid and Layout Optimization */
 .desktop-layout {
-  @apply max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-8 px-4 sm:px-6 lg:px-8;
+  @apply max-w-[1280px] mx-auto grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-xl px-md sm:px-lg lg:px-xl;
 }
 
 .desktop-main {
@@ -8,7 +8,7 @@
 }
 
 .desktop-aside {
-  @apply sticky top-24 h-fit;
+  @apply sticky top-4xl h-fit;
 }
 
 .content-section {

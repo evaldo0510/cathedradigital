@@ -60,7 +60,7 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '📢': <Megaphone className="w-inherit h-inherit" />,
 };
 
-export const getTagIcon = (emoji: string, className = "w-3.5 h-3.5") => {
+export const getTagIcon = (emoji: string, className = "w-sm h-sm") => {
   const icon = tagIconMap[emoji] || <Hash className="w-inherit h-inherit" />;
   return React.cloneElement(icon as React.ReactElement, { className });
 };
@@ -119,15 +119,15 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   ...props
 }, ref) => {
   const sizeClasses = {
-    xs: 'px-2 py-0.5 text-premium-tiny gap-1',
-    sm: 'px-2.5 py-1 text-premium-tiny gap-1.5',
-    md: 'px-3.5 py-2 text-premium-small gap-1.5'
+    xs: 'px-xs py-3xs text-premium-tiny gap-2xs',
+    sm: 'px-xs py-2xs text-premium-tiny gap-2xs',
+    md: 'px-sm py-xs text-premium-small gap-2xs'
   };
 
   const iconSizes = {
-    xs: 'w-2.5 h-2.5',
-    sm: 'w-3 h-3',
-    md: 'w-3.5 h-3.5'
+    xs: 'w-xs h-xs',
+    sm: 'w-sm h-sm',
+    md: 'w-sm h-sm'
   };
 
   return (
@@ -162,8 +162,8 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       `}
     >
       {isSuggested && !isSelected && (
-        <div className="absolute -top-1 -right-1">
-          <Sparkles className={`text-secondary animate-pulse ${size === 'xs' ? 'w-2 h-2' : 'w-2.5 h-2.5'}`} />
+        <div className="absolute -top-2xs -right-2xs">
+          <Sparkles className={`text-secondary animate-pulse ${size === 'xs' ? 'w-xs h-xs' : 'w-xs h-xs'}`} />
         </div>
       )}
       <span className="group-hover/tag:scale-110 transition-transform opacity-80 group-hover/tag:opacity-100">

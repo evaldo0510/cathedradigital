@@ -120,15 +120,15 @@ const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
-  ({ w = 'w-full', h = 'h-4', className = '' }, ref) => (
+  ({ w = 'w-full', h = 'h-md', className = '' }, ref) => (
     <div ref={ref} className={`${w} ${h} rounded-full bg-muted/60 animate-pulse ${className}`} />
   )
 );
 SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-8 animate-in fade-in duration-[2000ms] ease-out">
-    <div className="relative mb-24">
+  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-xl animate-in fade-in duration-[2000ms] ease-out">
+    <div className="relative mb-4xl">
       <motion.div 
         animate={{ 
           scale: [1, 1.2, 1],
@@ -136,19 +136,19 @@ const LoadingFallback = () => (
           filter: ["blur(30px)", "blur(60px)", "blur(30px)"]
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0 w-32 h-32 -left-4 -top-4 rounded-full bg-primary/5" 
+        className="absolute inset-0 w-4xl h-4xl -left-md -top-md rounded-full bg-primary/5" 
       />
-      <div className="w-20 h-20 rounded-full bg-primary/[0.01] border border-primary/[0.03] relative z-10 flex items-center justify-center">
+      <div className="w-3xl h-3xl rounded-full bg-primary/[0.01] border border-primary/[0.03] relative z-10 flex items-center justify-center">
          <motion.div 
           animate={{ opacity: [0.1, 0.3, 0.1], scale: [0.95, 1, 0.95] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="w-8 h-8 rounded-full border border-primary/10"
+          className="w-xl h-xl rounded-full border border-primary/10"
         />
       </div>
       <motion.div 
         animate={{ rotate: 360 }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 w-20 h-20 rounded-full border-t border-primary/[0.05] z-20" 
+        className="absolute inset-0 w-3xl h-3xl rounded-full border-t border-primary/[0.05] z-20" 
       />
     </div>
     <div className="space-y-12 w-full max-w-sm flex flex-col items-center">
@@ -348,7 +348,7 @@ const AppLayout: React.FC = () => {
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
-          className="sr-only focus:not-sr-only focus:fixed focus:top-6 focus:left-6 focus:z-[250] focus:px-6 focus:py-3 focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-lg focus:left-lg focus:z-[250] focus:px-lg focus:py-sm focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
         >
           {t('skip_to_content')}
         </a>

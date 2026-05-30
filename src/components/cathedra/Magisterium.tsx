@@ -32,7 +32,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'ansiedade',
     theme: 'Ansiedade',
-    icon: <Icons.Activity className="w-5 h-5" />,
+    icon: <Icons.Activity className="w-md h-md" />,
     question: 'O que a Igreja diz sobre a ansiedade?',
     magisteriumAnswer: 'A confiança em Deus é o caminho da paz interior. "Não andeis ansiosos" não é um comando vazio — é um convite a entregar o peso ao único que pode carregá-lo.',
     sourceDoc: 'Gaudete et Exsultate §112',
@@ -49,7 +49,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'medo',
     theme: 'Medo',
-    icon: <Icons.Sun className="w-5 h-5" />,
+    icon: <Icons.Sun className="w-md h-md" />,
     question: 'O que a Igreja diz sobre o medo?',
     magisteriumAnswer: 'O medo é humano, mas não deve governar. A presença de Deus é mais forte que qualquer escuridão. "Não temas, porque eu te resgatei."',
     sourceDoc: 'Spe Salvi §32',
@@ -66,7 +66,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'proposito',
     theme: 'Propósito',
-    icon: <Icons.Compass className="w-5 h-5" />,
+    icon: <Icons.Compass className="w-md h-md" />,
     question: 'Qual é o sentido da minha vida?',
     magisteriumAnswer: 'Cada pessoa tem uma vocação única. A santidade não é privilégio de poucos, mas chamado universal — é encontrar Deus no concreto da vida.',
     sourceDoc: 'Gaudete et Exsultate §14',
@@ -83,7 +83,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'sofrimento',
     theme: 'Sofrimento',
-    icon: <Icons.Cross className="w-5 h-5" />,
+    icon: <Icons.Cross className="w-md h-md" />,
     question: 'Por que existe sofrimento?',
     magisteriumAnswer: 'O sofrimento, quando unido à cruz de Cristo, tem poder redentor. Não é castigo, mas mistério de amor e transformação.',
     sourceDoc: 'Salvifici Doloris §19',
@@ -100,7 +100,7 @@ const SPIRITUAL_GUIDANCE = [
   {
     id: 'relacionamentos',
     theme: 'Relacionamentos',
-    icon: <Icons.Heart className="w-5 h-5" />,
+    icon: <Icons.Heart className="w-md h-md" />,
     question: 'Como amar de verdade?',
     magisteriumAnswer: 'O amor autêntico é dom de si mesmo. Não é posse, é entrega. A família é escola de amor e comunhão.',
     sourceDoc: 'Amoris Laetitia §89',
@@ -292,24 +292,24 @@ const Magisterium: React.FC = () => {
         })}
       </script>
 
-      <div className="w-full space-y-12 pb-32">
+      <div className="w-full space-y-12 pb-4xl">
         {/* Unified Search & Filters */}
         <div className="space-y-8">
           <div className="relative group max-w-4xl mx-auto">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-            <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/20 group-focus-within:text-primary transition-all duration-700" />
+            <Icons.Search className="absolute left-lg top-2xs/2 -translate-y-1/2 w-md h-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
             <input
               placeholder="Buscar documento, autor ou tema..." 
-              className="search-input-premium pl-16"
+              className="search-input-premium pl-3xl"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center justify-center gap-2 overflow-x-auto no-scrollbar py-2">
+          <div className="flex items-center justify-center gap-xs overflow-x-auto no-scrollbar py-xs">
             <Button 
               variant="ghost"
-              className={`rounded-full px-6 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+              className={`rounded-full px-lg py-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
               onClick={() => setSelectedTheme(null)}
             >
               Todos os Temas
@@ -318,7 +318,7 @@ const Magisterium: React.FC = () => {
               <Button 
                 key={theme}
                 variant="ghost"
-                className={`rounded-full px-6 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
+                className={`rounded-full px-lg py-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedTheme === theme ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/40 hover:text-primary'}`}
                 onClick={() => setSelectedTheme(theme)}
               >
                 {theme}
@@ -328,7 +328,7 @@ const Magisterium: React.FC = () => {
         </div>
 
         {/* Documents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-md">
           {filteredDocs.map((doc, idx) => (
             <CathedraCard
               key={doc.id}
@@ -340,10 +340,10 @@ const Magisterium: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
               className="group h-full"
             >
-              <div className="p-5 flex flex-col gap-4 h-full text-left">
+              <div className="p-md flex flex-col gap-md h-full text-left">
                 <div className="flex justify-between items-start">
-                  <div className="w-10 h-10 rounded-xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
-                    {doc.type === 'Encíclica' ? <Icons.Scroll className="w-4 h-4" strokeWidth={1} /> : <Icons.FileText className="w-4 h-4" strokeWidth={1} />}
+                  <div className="w-xl h-xl rounded-xl bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
+                    {doc.type === 'Encíclica' ? <Icons.Scroll className="w-md h-md" strokeWidth={1} /> : <Icons.FileText className="w-md h-md" strokeWidth={1} />}
                   </div>
                   <span className="text-[8px] font-black text-secondary/30 tracking-widest">{doc.year}</span>
                 </div>
@@ -354,9 +354,9 @@ const Magisterium: React.FC = () => {
                   <p className="text-[10px] text-muted-foreground/40 italic line-clamp-2 leading-relaxed">{doc.summary}</p>
                 </div>
 
-                <div className="flex flex-wrap gap-1 pt-3 border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
+                <div className="flex flex-wrap gap-2xs pt-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
                   {doc.theme.map(t => (
-                    <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-1.5 py-0.5 rounded-full">
+                    <span key={t} className="text-[6px] font-black text-primary/30 uppercase tracking-[0.1em] bg-primary/[0.01] px-2xs py-3xs rounded-full">
                       {t}
                     </span>
                   ))}
@@ -367,8 +367,8 @@ const Magisterium: React.FC = () => {
         </div>
 
         {filteredDocs.length === 0 && (
-          <div className="text-center py-32 opacity-20">
-            <Icons.Search className="w-12 h-12 mx-auto mb-4" strokeWidth={0.5} />
+          <div className="text-center py-4xl opacity-20">
+            <Icons.Search className="w-2xl h-2xl mx-auto mb-md" strokeWidth={0.5} />
             <p className="font-serif italic text-sm">Nenhum documento encontrado no silêncio da busca.</p>
           </div>
         )}

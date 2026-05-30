@@ -35,24 +35,24 @@ const SecurityDashboard = () => {
   };
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-xl space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Shield className="w-8 h-8 text-primary" />
+        <h1 className="text-3xl font-bold flex items-center gap-xs">
+          <Shield className="w-xl h-xl text-primary" />
           Painel de Segurança & Auditoria
         </h1>
-        <button onClick={fetchData} className="p-2 hover:bg-muted rounded-full transition-colors">
-          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+        <button onClick={fetchData} className="p-xs hover:bg-muted rounded-full transition-colors">
+          <RefreshCw className={`w-md h-md ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Status RLS</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xs">
               <CheckCircle className="text-green-500" />
               <span>Proteção Ativa em 142 tabelas</span>
             </div>
@@ -63,7 +63,7 @@ const SecurityDashboard = () => {
             <CardTitle className="text-lg">Segredos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xs">
               <CheckCircle className="text-green-500" />
               <span>MercadoPago: Rotacionado há 2h</span>
             </div>
@@ -74,7 +74,7 @@ const SecurityDashboard = () => {
             <CardTitle className="text-lg">Alertas Recentes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2 text-yellow-500">
+            <div className="flex items-center gap-xs text-yellow-500">
               <AlertTriangle />
               <span>3 tentativas de payload excedido</span>
             </div>
@@ -109,7 +109,7 @@ const SecurityDashboard = () => {
               ))}
               {logs.length === 0 && !loading && (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={4} className="text-center py-xl text-muted-foreground">
                     Nenhum evento de segurança registrado.
                   </TableCell>
                 </TableRow>
@@ -146,7 +146,7 @@ const SecurityDashboard = () => {
               ))}
               {rlsResults.length === 0 && !loading && (
                 <TableRow>
-                  <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={3} className="text-center py-xl text-muted-foreground">
                     Aguardando execução do pipeline de CI.
                   </TableCell>
                 </TableRow>

@@ -8,22 +8,22 @@ const registerBenefits = [
   { 
     title: "Vida de Oração", 
     description: "Sincronize seu plano de leitura bíblica e estudos teológicos em todos os seus dispositivos.", 
-    icon: <Bookmark className="h-4 w-4 text-primary" /> 
+    icon: <Bookmark className="h-md w-md text-primary" /> 
   },
   { 
     title: "Tesouros Pessoais", 
     description: "Guarde versículos, orações e meditações que tocam seu coração para consultas rápidas.", 
-    icon: <Star className="h-4 w-4 text-primary" /> 
+    icon: <Star className="h-md w-md text-primary" /> 
   },
   { 
     title: "Constância", 
     description: "Acompanhe sua jornada com metas de estudo, insígnias e lembretes para manter o hábito espiritual.", 
-    icon: <Trophy className="h-4 w-4 text-primary" /> 
+    icon: <Trophy className="h-md w-md text-primary" /> 
   },
   { 
     title: "Estudo Guiado", 
     description: "Desbloqueie o acesso completo ao Logos IA para diálogos teológicos sem limites.", 
-    icon: <ShieldCheck className="h-4 w-4 text-primary" /> 
+    icon: <ShieldCheck className="h-md w-md text-primary" /> 
   },
 ];
 
@@ -42,12 +42,12 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
   const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.1, 1.05, 1]);
 
   return (
-    <section ref={sectionRef} className="w-full bg-foreground text-background py-24 px-6 overflow-hidden relative">
+    <section ref={sectionRef} className="w-full bg-foreground text-background py-4xl px-lg overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
         <div className="absolute inset-0 bg-primary/5" />
       </div>
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-3xl items-center relative z-10">
         <div className="space-y-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-6">
             <h2 className="text-4xl md:text-5xl font-display font-bold leading-tight">
@@ -58,11 +58,11 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-md">
             {registerBenefits.map((benefit, i) => (
               <motion.div key={benefit.title} variants={cardHover} initial="rest" whileHover="hover" whileTap="tap">
-                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-6 rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full">
-                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-8 h-8 rounded-premium bg-primary/20 flex items-center justify-center">
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i} className="space-y-3 p-lg rounded-premium bg-card/50 border border-white/10 cursor-pointer h-full">
+                  <motion.div whileHover={{ rotate: 15, scale: 1.15 }} transition={{ type: "spring", stiffness: 400 }} className="w-xl h-xl rounded-premium bg-primary/20 flex items-center justify-center">
                     {benefit.icon}
                   </motion.div>
                   <h3 className="font-bold text-lg">{benefit.title}</h3>
@@ -73,7 +73,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <HomeButton size="lg" className="h-16 px-12 rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <HomeButton size="lg" className="h-3xl px-2xl rounded-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
               Criar Conta Gratuitamente
             </HomeButton>
           </motion.div>
@@ -90,8 +90,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
               style={{ y: imageY, scale: imageScale }}
             />
             <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute bottom-10 left-10 right-10 p-8 bg-black/60 rounded-premium border border-white/20">
-              <p className="text-xl font-serif mb-4">Onde está o teu tesouro, aí estará também o teu coração.</p>
+            <div className="absolute bottom-xl left-xl right-xl p-xl bg-black/60 rounded-premium border border-white/20">
+              <p className="text-xl font-serif mb-md">Onde está o teu tesouro, aí estará também o teu coração.</p>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">Mateus 6,21</p>
             </div>
           </motion.div>

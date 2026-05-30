@@ -32,20 +32,20 @@ const PAGE_SIZE = 10;
 
 const TransactionSkeleton: React.FC = () => (
   <Card className="overflow-hidden border-border/50 opacity-60 animate-pulse">
-    <CardContent className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-premium bg-muted" />
+    <CardContent className="p-md md:p-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-md">
+      <div className="flex items-center gap-md">
+        <div className="w-xl h-xl rounded-premium bg-muted" />
         <div className="space-y-2">
-          <div className="h-4 w-32 bg-muted rounded" />
-          <div className="h-3 w-24 bg-muted rounded" />
+          <div className="h-md w-4xl bg-muted rounded" />
+          <div className="h-sm w-4xl bg-muted rounded" />
         </div>
       </div>
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-lg">
         <div className="space-y-2 text-right">
-          <div className="h-5 w-20 bg-muted rounded" />
-          <div className="h-2 w-10 bg-muted rounded ml-auto" />
+          <div className="h-md w-3xl bg-muted rounded" />
+          <div className="h-xs w-xl bg-muted rounded ml-auto" />
         </div>
-        <div className="h-6 w-16 bg-muted rounded-premium" />
+        <div className="h-lg w-3xl bg-muted rounded-premium" />
       </div>
     </CardContent>
   </Card>
@@ -261,18 +261,18 @@ const UserTransactionsPage: React.FC = () => {
 
   if (loading && transactions.length === 0) {
     return (
-    <div className="max-w-4xl mx-auto space-y-8 py-6">
+    <div className="max-w-4xl mx-auto space-y-8 py-lg">
       <div className="sr-only" aria-live="polite" role="status">
         {announcement}
       </div>
-        <div className="flex items-center gap-4 animate-pulse">
-          <div className="w-12 h-12 rounded-premium bg-muted" />
+        <div className="flex items-center gap-md animate-pulse">
+          <div className="w-2xl h-2xl rounded-premium bg-muted" />
           <div className="space-y-2">
-            <div className="h-6 w-48 bg-muted rounded" />
-            <div className="h-4 w-64 bg-muted rounded" />
+            <div className="h-lg w-48 bg-muted rounded" />
+            <div className="h-md w-64 bg-muted rounded" />
           </div>
         </div>
-        <div className="grid gap-4">
+        <div className="grid gap-md">
           {[1, 2, 3].map(i => <TransactionSkeleton key={i} />)}
         </div>
       </div>
@@ -280,11 +280,11 @@ const UserTransactionsPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 py-6">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-            <Icons.History className="w-6 h-6" />
+    <div className="max-w-4xl mx-auto space-y-8 py-lg">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-md">
+        <div className="flex items-center gap-md">
+          <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+            <Icons.History className="w-lg h-lg" />
           </div>
           <div>
             <h1 className="text-2xl font-black text-foreground">Minhas Doações</h1>
@@ -296,26 +296,26 @@ const UserTransactionsPage: React.FC = () => {
           variant="outline" 
           size="sm" 
           onClick={handleExportPDF}
-          className="gap-2 font-bold uppercase text-premium-tiny tracking-widest rounded-full"
+          className="gap-xs font-bold uppercase text-premium-tiny tracking-widest rounded-full"
         >
-          <Icons.Download className="w-4 h-4" /> Exportar PDF
+          <Icons.Download className="w-md h-md" /> Exportar PDF
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
         <div className="md:col-span-2 relative">
-          <Icons.Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Icons.Search className="absolute left-sm top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
           <Input 
             placeholder="Buscar por ID ou valor..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-muted/50 border-border/50 focus:bg-background transition-all rounded-full"
+            className="pl-xl bg-muted/50 border-border/50 focus:bg-background transition-all rounded-full"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="bg-muted/50 border-border/50 rounded-full">
-            <div className="flex items-center gap-2">
-              <Icons.Filter className="w-4 h-4 text-muted-foreground" />
+            <div className="flex items-center gap-xs">
+              <Icons.Filter className="w-md h-md text-muted-foreground" />
               <SelectValue placeholder="Status" />
             </div>
           </SelectTrigger>
@@ -330,25 +330,25 @@ const UserTransactionsPage: React.FC = () => {
 
       {error && transactions.length === 0 ? (
         <Card className="border-destructive/20 bg-destructive/5">
-          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-            <Icons.AlertTriangle className="w-12 h-12 text-destructive/50" />
+          <CardContent className="flex flex-col items-center justify-center py-2xl space-y-4">
+            <Icons.AlertTriangle className="w-2xl h-2xl text-destructive/50" />
             <div className="text-center">
               <p className="text-destructive font-medium">{error}</p>
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => fetchTransactions(0)}
-                className="mt-4 gap-2 border-destructive/20 text-destructive hover:bg-destructive/10"
+                className="mt-md gap-xs border-destructive/20 text-destructive hover:bg-destructive/10"
               >
-                <Icons.RotateCcw className="w-4 h-4" /> Tentar Novamente
+                <Icons.RotateCcw className="w-md h-md" /> Tentar Novamente
               </Button>
             </div>
           </CardContent>
         </Card>
       ) : transactions.length === 0 ? (
         <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-            <Icons.Heart className="w-12 h-12 text-muted-foreground/60" />
+          <CardContent className="flex flex-col items-center justify-center py-2xl space-y-4">
+            <Icons.Heart className="w-2xl h-2xl text-muted-foreground/60" />
             <div className="text-center">
               <p className="text-muted-foreground font-medium">Nenhuma transação encontrada.</p>
               <p className="text-xs text-muted-foreground">Tente ajustar seus filtros ou busca.</p>
@@ -356,7 +356,7 @@ const UserTransactionsPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-md">
           {transactions.map((tx, idx) => (
             <motion.div
               key={tx.id}
@@ -366,10 +366,10 @@ const UserTransactionsPage: React.FC = () => {
             >
               <Card className="overflow-hidden border-border/50 hover:border-primary/30 transition-all">
                 <CardContent className="p-0">
-                  <div className="p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
-                        {tx.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
+                  <div className="p-md md:p-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-md">
+                    <div className="flex items-center gap-md">
+                      <div className={`w-xl h-xl rounded-full flex items-center justify-center ${tx.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                        {tx.is_donation ? <Icons.Heart className="w-md h-md fill-current" /> : <Icons.Star className="w-md h-md fill-current" />}
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{tx.description || (tx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</p>
@@ -379,14 +379,14 @@ const UserTransactionsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between w-full md:w-auto gap-6">
+                    <div className="flex items-center justify-between w-full md:w-auto gap-lg">
                       <div className="text-right">
                         <p className="text-lg font-black text-foreground">
                           {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(tx.amount)}
                         </p>
                         <p className="text-premium-tiny text-muted-foreground uppercase font-bold tracking-tighter">Valor</p>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
+                      <div className="flex flex-col items-end gap-2xs">
                         {getStatusBadge(tx.status)}
                         {tx.payment_id && (
                           <p className="text-premium-tiny font-mono text-muted-foreground">ID: {tx.payment_id}</p>
@@ -395,22 +395,22 @@ const UserTransactionsPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="bg-muted/30 px-4 md:px-6 py-2 border-t border-border/50 flex justify-between items-center">
+                  <div className="bg-muted/30 px-md md:px-lg py-xs border-t border-border/50 flex justify-between items-center">
                     <span className="text-premium-tiny font-bold text-muted-foreground uppercase tracking-widest">
                       {tx.status === 'approved' ? 'Comprovante disponível' : 'Histórico da transação'}
                     </span>
-                    <div className="flex gap-2">
+                    <div className="flex gap-xs">
                       <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-6 text-premium-tiny font-bold uppercase gap-1.5" 
+                        className="h-lg text-premium-tiny font-bold uppercase gap-2xs" 
                         onClick={() => setSelectedTx(tx)}
                       >
-                        <Icons.Info className="w-3 h-3" /> Detalhes
+                        <Icons.Info className="w-sm h-sm" /> Detalhes
                       </Button>
                       {tx.status === 'approved' && (
-                        <Button variant="ghost" size="sm" className="h-6 text-premium-tiny font-bold uppercase gap-1.5" onClick={() => window.print()}>
-                          <Icons.Download className="w-3 h-3" /> Imprimir
+                        <Button variant="ghost" size="sm" className="h-lg text-premium-tiny font-bold uppercase gap-2xs" onClick={() => window.print()}>
+                          <Icons.Download className="w-sm h-sm" /> Imprimir
                         </Button>
                       )}
                     </div>
@@ -421,19 +421,19 @@ const UserTransactionsPage: React.FC = () => {
           ))}
           
           {loadingMore && (
-            <div className="grid gap-4 mt-4">
+            <div className="grid gap-md mt-md">
               {[1, 2].map(i => <TransactionSkeleton key={i} />)}
             </div>
           )}
 
           {error && transactions.length > 0 && (
-            <div className="p-4 rounded-premium bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-4">
+            <div className="p-md rounded-premium bg-destructive/5 border border-destructive/10 text-center space-y-3 mt-md">
               <p className="text-xs text-destructive font-medium">{error}</p>
               <Button 
                 variant="ghost" 
                 size="sm" 
                 onClick={() => fetchTransactions(page)}
-                className="h-8 text-premium-tiny uppercase font-bold text-destructive hover:bg-destructive/10"
+                className="h-xl text-premium-tiny uppercase font-bold text-destructive hover:bg-destructive/10"
               >
                 Tentar novamente
               </Button>
@@ -441,8 +441,8 @@ const UserTransactionsPage: React.FC = () => {
           )}
           
           {hasMore && !loadingMore && !error && (
-            <div ref={loaderRef} className="flex flex-col items-center justify-center py-8 space-y-4">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-premium animate-spin opacity-50" />
+            <div ref={loaderRef} className="flex flex-col items-center justify-center py-xl space-y-4">
+              <div className="w-lg h-lg border-2 border-primary border-t-transparent rounded-premium animate-spin opacity-50" />
               <Button 
                 variant="ghost" 
                 size="sm" 
@@ -475,20 +475,20 @@ const UserTransactionsPage: React.FC = () => {
           onPointerDownOutside={() => setSelectedTx(null)}
         >
           <DialogHeader>
-            <DialogTitle className="font-serif text-xl flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
-                {selectedTx?.is_donation ? <Icons.Heart className="w-5 h-5 fill-current" /> : <Icons.Star className="w-5 h-5 fill-current" />}
+            <DialogTitle className="font-serif text-xl flex items-center gap-sm">
+              <div className={`w-xl h-xl rounded-full flex items-center justify-center ${selectedTx?.is_donation ? 'bg-secondary/10 text-secondary' : 'bg-primary/10 text-primary'}`}>
+                {selectedTx?.is_donation ? <Icons.Heart className="w-md h-md fill-current" /> : <Icons.Star className="w-md h-md fill-current" />}
               </div>
               Detalhes da Transação
             </DialogTitle>
-            <DialogDescription className="text-xs uppercase tracking-widest font-bold pt-2">
+            <DialogDescription className="text-xs uppercase tracking-widest font-bold pt-xs">
               Informações completas do seu apoio
             </DialogDescription>
           </DialogHeader>
 
           {selectedTx && (
-            <div className="space-y-6 pt-4">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-6 pt-md">
+              <div className="grid grid-cols-2 gap-md">
                 <div className="space-y-1">
                   <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Status</p>
                   {getStatusBadge(selectedTx.status)}
@@ -501,7 +501,7 @@ const UserTransactionsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-3 bg-muted/30 p-4 rounded-premium border border-border/50">
+              <div className="space-y-3 bg-muted/30 p-md rounded-premium border border-border/50">
                 <div className="flex justify-between items-center">
                   <span className="text-premium-tiny font-bold text-muted-foreground uppercase">Descrição</span>
                   <span className="text-xs font-bold text-foreground">{selectedTx.description || (selectedTx.is_donation ? 'Doação Voluntária' : 'Assinatura PRO')}</span>
@@ -515,16 +515,16 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.payment_id && (
                   <div className="flex justify-between items-center group">
                     <span className="text-premium-tiny font-bold text-muted-foreground uppercase">ID Pagamento</span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-xs">
                       <span className="text-premium-tiny font-mono text-foreground">{selectedTx.payment_id}</span>
                       <Button 
                         variant="ghost" 
                         size="icon" 
-                        className="h-5 w-5 opacity-50 group-hover:opacity-100 transition-opacity"
+                        className="h-md w-md opacity-50 group-hover:opacity-100 transition-opacity"
                         onClick={() => copyPaymentId(selectedTx.payment_id)}
                         aria-label="Copiar ID do pagamento"
                       >
-                        <Icons.Copy className="w-3 h-3" />
+                        <Icons.Copy className="w-sm h-sm" />
                       </Button>
                     </div>
                   </div>
@@ -539,8 +539,8 @@ const UserTransactionsPage: React.FC = () => {
 
               {selectedTx.status === 'approved' && (
                 <div className="space-y-4">
-                  <div className="p-4 rounded-premium bg-green-500/5 border border-green-500/10 flex items-center gap-3">
-                    <Icons.CheckCircle className="w-5 h-5 text-green-500" />
+                  <div className="p-md rounded-premium bg-green-500/5 border border-green-500/10 flex items-center gap-sm">
+                    <Icons.CheckCircle className="w-md h-md text-green-500" />
                     <div>
                       <p className="text-premium-tiny font-black uppercase text-green-600">Aprovado</p>
                       <p className="text-premium-tiny text-green-600/80">Sua contribuição já está ajudando nossa missão!</p>
@@ -549,22 +549,22 @@ const UserTransactionsPage: React.FC = () => {
                   
                   <Button 
                     variant="link" 
-                    className="w-full text-premium-tiny font-bold uppercase tracking-widest text-primary gap-2 h-auto p-0"
+                    className="w-full text-premium-tiny font-bold uppercase tracking-widest text-primary gap-xs h-auto p-0"
                     onClick={() => window.print()}
                   >
-                    <Icons.ExternalLink className="w-3 h-3" /> Ver Comprovante
+                    <Icons.ExternalLink className="w-sm h-sm" /> Ver Comprovante
                   </Button>
                 </div>
               )}
 
               {selectedTx.error_message && (
-                <div className="p-4 rounded-premium bg-destructive/5 border border-destructive/10">
-                  <p className="text-premium-tiny font-black uppercase text-destructive mb-1">Motivo do Problema</p>
+                <div className="p-md rounded-premium bg-destructive/5 border border-destructive/10">
+                  <p className="text-premium-tiny font-black uppercase text-destructive mb-2xs">Motivo do Problema</p>
                   <p className="text-xs text-destructive/80 italic">{selectedTx.error_message}</p>
                 </div>
               )}
 
-              <div className="flex gap-3">
+              <div className="flex gap-sm">
                 <DialogClose asChild>
                   <Button 
                     className="flex-1 rounded-full font-bold uppercase text-premium-tiny tracking-widest" 
@@ -576,10 +576,10 @@ const UserTransactionsPage: React.FC = () => {
                 {selectedTx.status === 'approved' && (
                   <Button 
                     variant="outline" 
-                    className="flex-1 rounded-full font-bold uppercase text-premium-tiny tracking-widest gap-2"
+                    className="flex-1 rounded-full font-bold uppercase text-premium-tiny tracking-widest gap-xs"
                     onClick={() => window.print()}
                   >
-                    <Icons.Download className="w-3 h-3" /> Imprimir
+                    <Icons.Download className="w-sm h-sm" /> Imprimir
                   </Button>
                 )}
               </div>

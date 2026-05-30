@@ -50,7 +50,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
     <div className="relative inline-flex">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+        className={`flex items-center gap-2xs px-xs py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
           notes.length > 0
             ? 'bg-secondary/20 text-primary border border-secondary/30'
             : 'bg-card border border-border text-muted-foreground hover:text-foreground'
@@ -60,18 +60,18 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <Icons.Book className="w-3.5 h-3.5" />
+        <Icons.Book className="w-sm h-sm" />
         {notes.length > 0 && <span>{notes.length}</span>}
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-4 space-y-3">
+        <div className="absolute right-0 top-full mt-xs w-80 max-h-96 overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-md space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}
             </h4>
             <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
-              <Icons.ArrowDown className="w-4 h-4 rotate-180" />
+              <Icons.ArrowDown className="w-md h-md rotate-180" />
             </Button>
           </div>
 
@@ -82,22 +82,22 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
               onChange={e => setNewNote(e.target.value)}
               placeholder="Escreva sua anotação..."
               rows={2}
-              className="w-full px-3 py-2 rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full px-sm py-xs rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <div className="flex items-center justify-between">
-              <div className="flex gap-1">
+              <div className="flex gap-2xs">
                 {COLORS.map(c => (
                   <Button
                     key={c.id}
                     onClick={() => setSelectedColor(c.id)}
-                    className={`w-5 h-5 rounded-full border-2 ${c.bg} ${selectedColor === c.id ? c.border : 'border-transparent'}`}
+                    className={`w-md h-md rounded-full border-2 ${c.bg} ${selectedColor === c.id ? c.border : 'border-transparent'}`}
                   />
                 ))}
               </div>
               <Button
                 onClick={handleSave}
                 disabled={!newNote.trim()}
-                className="px-3 py-1 rounded-full text-premium-tiny font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
+                className="px-sm py-2xs rounded-full text-premium-tiny font-bold uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 hover:bg-primary/90 transition-all"
               >
                 Salvar
               </Button>
@@ -109,16 +109,16 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           {notes.map(note => {
             const cfg = colorCfg(note.highlight_color);
             return (
-              <div key={note.id} className={`rounded-full p-3 ${cfg.bg} border ${cfg.border} space-y-1`}>
+              <div key={note.id} className={`rounded-full p-sm ${cfg.bg} border ${cfg.border} space-y-1`}>
                 {editingId === note.id ? (
                   <div className="space-y-2">
                     <textarea
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={2}
-                      className="w-full px-2 py-1 rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none"
+                      className="w-full px-xs py-2xs rounded-full border border-border bg-background text-foreground text-sm resize-none focus:outline-none"
                     />
-                    <div className="flex gap-2">
+                    <div className="flex gap-xs">
                       <Button onClick={() => handleUpdate(note.id)} className="text-premium-tiny font-bold text-primary">Salvar</Button>
                       <Button onClick={() => setEditingId(null)} className="text-premium-tiny text-muted-foreground">Cancelar</Button>
                     </div>
@@ -130,7 +130,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
                       <span className="text-premium-tiny text-muted-foreground">
                         {new Date(note.created_at).toLocaleDateString('pt-BR')}
                       </span>
-                      <div className="flex gap-2">
+                      <div className="flex gap-xs">
                         <Button
                           onClick={() => { setEditingId(note.id); setEditText(note.note_text); }}
                           className="text-premium-tiny text-muted-foreground hover:text-foreground"
@@ -151,14 +151,14 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
             );
           })}
           {!loading && notes.length === 0 && (
-            <p className="text-xs text-muted-foreground italic text-center py-2">Nenhuma anotação ainda.</p>
+            <p className="text-xs text-muted-foreground italic text-center py-xs">Nenhuma anotação ainda.</p>
           )}
         </div>
       )}
       {notes.length > 0 && (
         <div className="notes-panel-print hidden">
           {notes.map(note => (
-            <div key={note.id} className="mb-2">
+            <div key={note.id} className="mb-xs">
               <span className="text-[8pt] text-gray-500">{new Date(note.created_at).toLocaleDateString()} — </span>
               {note.note_text}
             </div>

@@ -237,13 +237,13 @@ const LitaniesPage: React.FC = () => {
 
   if (litany) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 pb-12 animate-in fade-in duration-700">
-        <div className="flex flex-col md:flex-row md:items-center gap-6">
-          <Button onClick={() => setSelectedId(null)} className="p-3 rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft self-start md:self-center">
-            <ArrowLeft className="w-6 h-6 text-foreground" />
+      <div className="max-w-4xl mx-auto space-y-8 pb-2xl animate-in fade-in duration-700">
+        <div className="flex flex-col md:flex-row md:items-center gap-lg">
+          <Button onClick={() => setSelectedId(null)} className="p-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-soft self-start md:self-center">
+            <ArrowLeft className="w-lg h-lg text-foreground" />
           </Button>
           <div className="space-y-1">
-            <span className={`inline-flex px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
+            <span className={`inline-flex px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[litany.category] || 'bg-muted text-muted-foreground border-border'}`}>
               {litany.category}
             </span>
             <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
@@ -251,10 +251,10 @@ const LitaniesPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="premium-card p-8 md:p-16 space-y-10">
+        <div className="premium-card p-xl md:p-3xl space-y-10">
           {/* Opening */}
           {litany.opening && (
-            <div className="text-center pb-8 border-b border-border/50">
+            <div className="text-center pb-xl border-b border-border/50">
               <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.opening}</p>
             </div>
           )}
@@ -262,7 +262,7 @@ const LitaniesPage: React.FC = () => {
           {/* Invocations */}
           <div className="space-y-1 max-w-2xl mx-auto">
             {litany.invocations.map((inv, i) => (
-              <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-4 py-3 border-b border-border/30 last:border-0 group">
+              <div key={i} className="flex flex-col md:flex-row md:items-baseline gap-2xs md:gap-md py-sm border-b border-border/30 last:border-0 group">
                 <p className="flex-1 font-serif text-lg text-foreground/90 group-hover:text-primary transition-colors">{inv.call},</p>
                 <p className="font-serif italic text-primary font-bold text-base shrink-0 opacity-80">{inv.response}</p>
               </div>
@@ -271,7 +271,7 @@ const LitaniesPage: React.FC = () => {
 
           {/* Closing */}
           {litany.closing && (
-            <div className="text-center pt-8 border-t border-border/50">
+            <div className="text-center pt-xl border-t border-border/50">
               <p className="font-serif text-lg text-foreground/80 leading-relaxed whitespace-pre-line italic">{litany.closing}</p>
             </div>
           )}
@@ -281,10 +281,10 @@ const LitaniesPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-12 pb-12">
-      <div className="text-center space-y-4 pt-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 border border-primary/10 rounded-premium">
-          <Heart className="w-4 h-4 text-primary" />
+    <div className="max-w-5xl mx-auto space-y-12 pb-2xl">
+      <div className="text-center space-y-4 pt-md">
+        <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 border border-primary/10 rounded-premium">
+          <Heart className="w-md h-md text-primary" />
           <span className="text-premium-tiny font-black uppercase tracking-[0.2em] text-primary">Litaniae</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Litanias</h1>
@@ -294,32 +294,32 @@ const LitaniesPage: React.FC = () => {
       </div>
 
       <div className="max-w-md mx-auto relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <Search className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground transition-colors group-focus-within:text-primary" />
         <input 
           value={searchQuery} 
           onChange={e => setSearchQuery(e.target.value)} 
           placeholder="Buscar por título ou categoria..."
-          className="w-full pl-12 pr-4 py-4 rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft" 
+          className="w-full pl-2xl pr-md py-md rounded-full border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-4 focus:ring-primary/5 transition-all shadow-soft" 
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
         {filtered.map(l => (
           <Button key={l.id} onClick={() => setSelectedId(l.id)}
-            className="text-left p-8 rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-              <BookOpen className="w-32 h-32 -mr-8 -mt-8 rotate-12" />
+            className="text-left p-xl rounded-full bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-xl opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
+              <BookOpen className="w-4xl h-4xl -mr-xl -mt-xl rotate-12" />
             </div>
             <div className="relative z-10 space-y-4">
-              <span className={`inline-block font-serif px-3 py-1 rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
+              <span className={`inline-block font-serif px-sm py-2xs rounded-full text-premium-tiny font-black uppercase tracking-widest border ${CATEGORY_COLORS[l.category] || 'bg-muted text-muted-foreground border-border'}`}>
                 {l.category}
               </span>
               <div className="space-y-1">
                 <h2 className="text-2xl font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{l.title}</h2>
                 {l.latin && <p className="text-xs font-serif italic text-muted-foreground opacity-60">{l.latin}</p>}
               </div>
-              <div className="flex items-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-primary pt-2">
-                Começar Oração <ChevronRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
+              <div className="flex items-center gap-xs text-premium-tiny font-black uppercase tracking-widest text-primary pt-xs">
+                Começar Oração <ChevronRight className="w-sm h-sm transition-transform group-hover:translate-x-1" />
               </div>
             </div>
           </Button>

@@ -55,7 +55,7 @@ const ResetPasswordPage: React.FC = () => {
 
   if (!isRecovery) {
     return (
-      <div className="max-w-md mx-auto text-center space-y-6 py-20">
+      <div className="max-w-md mx-auto text-center space-y-6 py-3xl">
         {/* Logo removed */}
         <h1 className="text-2xl font-serif font-bold text-foreground">Link inválido</h1>
         <p className="text-muted-foreground">Este link de redefinição de senha é inválido ou já expirou.</p>
@@ -67,41 +67,41 @@ const ResetPasswordPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-md mx-auto space-y-8 py-20">
+    <div className="max-w-md mx-auto space-y-8 py-3xl">
       <div className="text-center space-y-4">
         {/* Logo removed */}
         <h1 className="text-3xl font-serif font-bold text-foreground">Nova Senha</h1>
         <p className="text-muted-foreground font-serif italic">Defina sua nova senha abaixo.</p>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-8 space-y-6">
+      <div className="bg-card border border-border rounded-premium p-xl space-y-6">
         {error && (
-          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
+          <div className="p-md bg-destructive/10 border border-destructive/20 rounded-premium text-sm text-destructive font-medium">{error}</div>
         )}
         {success ? (
-          <div className="p-4 bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium text-center">
+          <div className="p-md bg-primary/10 border border-primary/20 rounded-premium text-sm text-primary font-medium text-center">
             Senha atualizada com sucesso! Redirecionando...
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Nova Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-xs block">Nova Senha</label>
               <input
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-md py-sm rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
             <div>
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-2 block">Confirmar Senha</label>
+              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground mb-xs block">Confirmar Senha</label>
               <input
                 type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required minLength={6}
                 placeholder="Repita a nova senha"
-                className="w-full px-4 py-3 rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full px-md py-sm rounded-full border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
             <Button type="submit" disabled={loading}
-              className="w-full py-4 bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
+              className="w-full py-md bg-foreground text-background rounded-full font-black uppercase text-premium-tiny tracking-widest shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-50">
               {loading ? 'Aguarde...' : 'Atualizar Senha'}
             </Button>
           </form>

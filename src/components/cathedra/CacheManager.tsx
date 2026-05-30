@@ -145,10 +145,10 @@ const CacheManager: React.FC = () => {
 
   const getStoreIcon = (store: string) => {
     switch(store) {
-      case 'bible': return <Icons.Bible className="w-4 h-4" />;
-      case 'catechism': return <Icons.ShieldCheck className="w-4 h-4" />;
-      case 'liturgy': return <Icons.Sun className="w-4 h-4" />;
-      default: return <Icons.FileText className="w-4 h-4" />;
+      case 'bible': return <Icons.Bible className="w-md h-md" />;
+      case 'catechism': return <Icons.ShieldCheck className="w-md h-md" />;
+      case 'liturgy': return <Icons.Sun className="w-md h-md" />;
+      default: return <Icons.FileText className="w-md h-md" />;
     }
   };
 
@@ -162,61 +162,61 @@ const CacheManager: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-10 px-4 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="max-w-4xl mx-auto py-xl px-md space-y-8 animate-in fade-in slide-in-from-bottom-md duration-700">
       <SEOHead title="Gerenciar Cache Local" description="Gerencie os textos salvos offline no seu dispositivo." path="/cache-manager" />
       
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-md">
         <div className="space-y-1">
           <h1 className="text-3xl font-serif font-bold text-foreground">Sanctuarium Offline</h1>
           <p className="text-muted-foreground">Gerencie a soberania dos seus dados e textos salvos localmente.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-xs">
           <Button 
             variant="outline" 
             size="sm" 
-            className="rounded-full h-11 px-6 font-bold"
+            className="rounded-full h-xl px-lg font-bold"
             onClick={handleSyncNow}
           >
-            <Icons.RotateCcw className="w-4 h-4 mr-2" /> Sincronizar
+            <Icons.RotateCcw className="w-md h-md mr-xs" /> Sincronizar
           </Button>
           <Button 
             variant="destructive" 
             size="sm" 
-            className="rounded-full h-11 px-6 font-bold"
+            className="rounded-full h-xl px-lg font-bold"
             onClick={handleClearAll}
             disabled={items.length === 0}
           >
-            <Icons.Trash className="w-4 h-4 mr-2" /> Limpar Tudo
+            <Icons.Trash className="w-md h-md mr-xs" /> Limpar Tudo
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
-              <Icons.Database className="w-3 h-3" /> Status do Cache
+          <CardHeader className="pb-xs">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+              <Icons.Database className="w-sm h-sm" /> Status do Cache
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-serif font-bold text-foreground">{stats?.total || 0} Itens</div>
-            <p className="text-premium-tiny text-muted-foreground mt-1">
+            <p className="text-premium-tiny text-muted-foreground mt-2xs">
               Última sincronização: {stats?.lastSync ? format(parseInt(stats.lastSync), "dd/MM 'às' HH:mm", { locale: ptBR }) : 'Nunca'}
             </p>
           </CardContent>
         </Card>
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
-              <Icons.Share2 className="w-3 h-3" /> Portabilidade
+          <CardHeader className="pb-xs">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+              <Icons.Share2 className="w-sm h-sm" /> Portabilidade
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex gap-2">
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-premium-tiny font-black uppercase" onClick={handleExport}>
+          <CardContent className="flex gap-xs">
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={handleExport}>
               Exportar
             </Button>
-            <Button variant="outline" size="sm" className="rounded-full flex-1 h-9 text-premium-tiny font-black uppercase" onClick={() => fileInputRef.current?.click()}>
+            <Button variant="outline" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => fileInputRef.current?.click()}>
               Importar
             </Button>
             <input type="file" ref={fileInputRef} className="hidden" accept=".json" onChange={handleImport} />
@@ -224,26 +224,26 @@ const CacheManager: React.FC = () => {
         </Card>
 
         <Card className="rounded-[2rem] bg-muted/20 border-border/40">
-          <CardHeader className="pb-2">
-            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-2">
-              <Icons.Download className="w-3 h-3" /> Pré-carregar
+          <CardHeader className="pb-xs">
+            <CardDescription className="text-premium-tiny font-black uppercase tracking-widest flex items-center gap-xs">
+              <Icons.Download className="w-sm h-sm" /> Pré-carregar
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-xs">
               <Input 
                 type="number" 
                 value={preloadCount} 
                 onChange={(e) => setPreloadCount(parseInt(e.target.value))}
-                className="h-8 w-16 text-xs rounded-full"
+                className="h-xl w-3xl text-xs rounded-full"
               />
               <span className="text-premium-tiny font-bold text-muted-foreground uppercase">unid.</span>
             </div>
-            <div className="flex gap-2">
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-premium-tiny font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
+            <div className="flex gap-xs">
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => handlePreload('catechism')} disabled={preloading}>
                 Catecismo
               </Button>
-              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-8 text-premium-tiny font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
+              <Button variant="secondary" size="sm" className="rounded-full flex-1 h-xl text-premium-tiny font-black uppercase" onClick={() => handlePreload('bible')} disabled={preloading}>
                 Bíblia
               </Button>
             </div>
@@ -252,21 +252,21 @@ const CacheManager: React.FC = () => {
       </div>
 
       {preloading && (
-        <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+        <div className="space-y-2 animate-in fade-in slide-in-from-top-xs">
           <div className="flex justify-between text-premium-tiny font-black uppercase tracking-widest text-primary">
             <span>Pré-carregando conteúdo...</span>
             <span>{progress}%</span>
           </div>
-          <Progress value={progress} className="h-1.5" />
+          <Progress value={progress} className="h-2xs" />
         </div>
       )}
 
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-xs overflow-x-auto pb-xs scrollbar-none">
         {(['all', 'bible', 'catechism', 'liturgy'] as const).map(f => (
           <Button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-5 py-2.5 rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+            className={`px-md py-xs rounded-full text-premium-tiny font-black uppercase tracking-widest transition-all whitespace-nowrap ${
               filter === f 
                 ? 'bg-primary text-primary-foreground shadow-premium' 
                 : 'bg-muted/50 text-muted-foreground hover:bg-muted'
@@ -277,16 +277,16 @@ const CacheManager: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-md">
         {loading ? (
           Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="h-24 rounded-premium bg-muted/40 animate-pulse" />
+            <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse" />
           ))
         ) : filteredItems.length === 0 ? (
           <Card className="rounded-[2.5rem] border-dashed border-2 bg-muted/20">
-            <CardContent className="flex flex-col items-center justify-center py-16 space-y-4">
-              <div className="p-4 rounded-premium bg-background border border-border shadow-inner">
-                <Icons.Library className="w-8 h-8 text-muted-foreground/40" />
+            <CardContent className="flex flex-col items-center justify-center py-3xl space-y-4">
+              <div className="p-md rounded-premium bg-background border border-border shadow-inner">
+                <Icons.Library className="w-xl h-xl text-muted-foreground/40" />
               </div>
               <p className="text-muted-foreground font-medium italic">Nenhum texto encontrado neste filtro.</p>
               <Button variant="outline" className="rounded-full" onClick={() => window.history.back()}>Voltar</Button>
@@ -305,26 +305,26 @@ const CacheManager: React.FC = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <Card className="rounded-premium border-border/40 shadow-soft overflow-hidden group hover:shadow-premium transition-all">
-                    <CardContent className="p-5 flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        <div className={`p-3 rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
+                    <CardContent className="p-md flex items-center justify-between gap-md">
+                      <div className="flex items-center gap-md">
+                        <div className={`p-sm rounded-full bg-muted/50 text-primary group-hover:bg-primary group-hover:text-white transition-all`}>
                           {getStoreIcon(item.store)}
                         </div>
                         <div className="min-w-0">
                           <p className="font-bold text-sm text-foreground truncate">{item.key.replace('p:', 'Parágrafo ').replace(':', ' Cap. ')}</p>
-                          <div className="flex items-center gap-2 text-premium-tiny text-muted-foreground font-medium">
+                          <div className="flex items-center gap-xs text-premium-tiny text-muted-foreground font-medium">
                             <span className="uppercase tracking-wider">{getStoreLabel(item.store)}</span>
-                            <span className="w-1 h-1 rounded-full bg-border" />
+                            <span className="w-2xs h-2xs rounded-full bg-border" />
                             <span>Salvo {formatDistanceToNow(item.cachedAt, { addSuffix: true, locale: ptBR })}</span>
                           </div>
                         </div>
                       </div>
                       <Button 
                         onClick={() => handleDelete(item.store, item.key)}
-                        className="p-2.5 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
+                        className="p-xs rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all opacity-0 group-hover:opacity-100"
                         title="Remover do cache"
                       >
-                        <Icons.X className="w-4 h-4" />
+                        <Icons.X className="w-md h-md" />
                       </Button>
                     </CardContent>
                   </Card>
@@ -335,9 +335,9 @@ const CacheManager: React.FC = () => {
         )}
       </div>
 
-      <div className="bg-secondary/5 rounded-[2.5rem] p-8 border border-secondary/20 space-y-4">
-        <div className="flex items-center gap-3 text-secondary">
-          <Icons.ShieldCheck className="w-5 h-5" />
+      <div className="bg-secondary/5 rounded-[2.5rem] p-xl border border-secondary/20 space-y-4">
+        <div className="flex items-center gap-sm text-secondary">
+          <Icons.ShieldCheck className="w-md h-md" />
           <h2 className="text-lg font-serif font-bold">Nota sobre Soberania de Dados</h2>
         </div>
         <p className="text-sm text-muted-foreground leading-relaxed">

@@ -55,12 +55,12 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [users]);
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
-    { key: 'all', label: 'Todos', icon: <Users className="w-4 h-4" />, color: 'text-foreground' },
-    { key: 'new', label: 'Novo', icon: <UserCheck className="w-4 h-4" />, color: 'text-primary' },
-    { key: 'active', label: 'Ativo', icon: <Flame className="w-4 h-4" />, color: 'text-primary' },
-    { key: 'engaged', label: 'Engajado', icon: <Star className="w-4 h-4" />, color: 'text-orange-500' },
-    { key: 'deep', label: 'Profundo', icon: <Crown className="w-4 h-4" />, color: 'text-primary' },
-    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-4 h-4" />, color: 'text-destructive' },
+    { key: 'all', label: 'Todos', icon: <Users className="w-md h-md" />, color: 'text-foreground' },
+    { key: 'new', label: 'Novo', icon: <UserCheck className="w-md h-md" />, color: 'text-primary' },
+    { key: 'active', label: 'Ativo', icon: <Flame className="w-md h-md" />, color: 'text-primary' },
+    { key: 'engaged', label: 'Engajado', icon: <Star className="w-md h-md" />, color: 'text-orange-500' },
+    { key: 'deep', label: 'Profundo', icon: <Crown className="w-md h-md" />, color: 'text-primary' },
+    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-md h-md" />, color: 'text-destructive' },
   ];
 
   const filtered = segmentedUsers[segment]
@@ -113,39 +113,39 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   return (
     <div className="space-y-4">
       {/* Segment Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-xs">
         {segments.map(s => (
           <Button
             key={s.key}
             onClick={() => setSegment(s.key)}
-            className={`p-3 rounded-full border text-left transition-all ${
+            className={`p-sm rounded-full border text-left transition-all ${
               segment === s.key 
                 ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
                 : 'border-border/50 bg-card hover:border-primary/30'
             }`}
           >
-            <div className={`flex items-center gap-1.5 ${s.color}`}>
+            <div className={`flex items-center gap-2xs ${s.color}`}>
               {s.icon}
               <span className="text-premium-tiny font-black uppercase tracking-wider">{s.label}</span>
             </div>
-            <p className="text-xl font-bold mt-1">{segmentedUsers[s.key].length}</p>
+            <p className="text-xl font-bold mt-2xs">{segmentedUsers[s.key].length}</p>
           </Button>
         ))}
       </div>
 
       {/* User List */}
       <Card>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-sm">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm">
               {segments.find(s => s.key === segment)?.label} — {filtered.length} usuário{filtered.length !== 1 ? 's' : ''}
             </CardTitle>
-            <div className="flex items-center gap-2">
-              <Button size="sm" variant="outline" className="h-8 text-xs gap-1.5" onClick={exportCsv} disabled={filtered.length === 0}>
-                <Download className="w-3.5 h-3.5" /> CSV
+            <div className="flex items-center gap-xs">
+              <Button size="sm" variant="outline" className="h-xl text-xs gap-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
+                <Download className="w-sm h-sm" /> CSV
               </Button>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-              <SelectTrigger className="w-[160px] h-8 text-xs">
+              <SelectTrigger className="w-[160px] h-xl text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -162,21 +162,21 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-border">
-                  <th className="text-left p-3 font-semibold">Usuário</th>
-                  <th className="text-center p-3 font-semibold">Plano</th>
-                  <th className="text-center p-3 font-semibold">Segmento</th>
-                  <th className="text-center p-3 font-semibold hidden md:table-cell">Reflexões</th>
-                  <th className="text-center p-3 font-semibold hidden lg:table-cell">Jornada</th>
-                  <th className="text-center p-3 font-semibold hidden md:table-cell">Última Ativ.</th>
-                  <th className="text-center p-3 font-semibold">Ações</th>
+                  <th className="text-left p-sm font-semibold">Usuário</th>
+                  <th className="text-center p-sm font-semibold">Plano</th>
+                  <th className="text-center p-sm font-semibold">Segmento</th>
+                  <th className="text-center p-sm font-semibold hidden md:table-cell">Reflexões</th>
+                  <th className="text-center p-sm font-semibold hidden lg:table-cell">Jornada</th>
+                  <th className="text-center p-sm font-semibold hidden md:table-cell">Última Ativ.</th>
+                  <th className="text-center p-sm font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(u => (
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
-                    <td className="p-3">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                    <td className="p-sm">
+                      <div className="flex items-center gap-xs">
+                        <div className="w-xl h-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">
@@ -185,32 +185,32 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-3 text-center">
+                    <td className="p-sm text-center">
                       <Badge variant={u.is_premium ? "default" : "outline"} className="text-premium-tiny">
                         {u.is_premium ? 'PRO' : 'Free'}
                       </Badge>
                     </td>
-                    <td className="p-3 text-center">{getStatusBadge(u)}</td>
-                    <td className="p-3 text-center hidden md:table-cell">
+                    <td className="p-sm text-center">{getStatusBadge(u)}</td>
+                    <td className="p-sm text-center hidden md:table-cell">
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
-                    <td className="p-3 text-center hidden lg:table-cell">
+                    <td className="p-sm text-center hidden lg:table-cell">
                       <span className="text-premium-tiny text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>
-                    <td className="p-3 text-center hidden md:table-cell text-xs text-muted-foreground">
+                    <td className="p-sm text-center hidden md:table-cell text-xs text-muted-foreground">
                       {u.last_visit ? (hoursSince(u.last_visit) < 24 ? 'Hoje' : `${Math.floor(hoursSince(u.last_visit) / 24)}d atrás`) : '—'}
                     </td>
-                    <td className="p-3 text-center">
-                      <Button size="sm" variant="ghost" className="h-7 px-2 text-xs gap-1" onClick={() => onSelectUser(u)}>
-                        <Eye className="w-3 h-3" /> Ver
+                    <td className="p-sm text-center">
+                      <Button size="sm" variant="ghost" className="h-lg px-xs text-xs gap-2xs" onClick={() => onSelectUser(u)}>
+                        <Eye className="w-sm h-sm" /> Ver
                       </Button>
                     </td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
+                  <tr><td colSpan={7} className="p-xl text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
                 )}
               </tbody>
             </table>

@@ -56,7 +56,7 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => {
       )}
       
       {/* Framing Element - Refined Elegant Border */}
-      <div className="absolute inset-6 md:inset-12 lg:inset-20 border border-primary/[0.03] rounded-[4rem] md:rounded-[6rem] pointer-events-none" />
+      <div className="absolute inset-lg md:inset-2xl lg:inset-3xl border border-primary/[0.03] rounded-[4rem] md:rounded-[6rem] pointer-events-none" />
     </motion.div>
   );
 };
