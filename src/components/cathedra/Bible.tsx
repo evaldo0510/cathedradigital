@@ -1612,5 +1612,3 @@ const Bible: React.FC = memo(() => {
 });
 
 export default Bible;
-
-export default Bible;
