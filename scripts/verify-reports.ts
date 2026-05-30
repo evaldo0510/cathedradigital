@@ -238,12 +238,6 @@ if (process.env.GITHUB_ACTIONS) {
   if (!hasDivergence) {
     summary += `✅ **Status:** Sucesso (Estrutura Alinhada)\n`;
     summary += `📝 **Motivo do Exit Code:** Nenhuma divergência detectada.\n\n`;
-  } else if (updateMode && dryRun) {
-    summary += `⚠️ **Status:** Simulação (Dry Run)\n`;
-    summary += `📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.\n\n`;
-  } else if (updateMode) {
-    summary += `🔄 **Status:** Sincronizado\n`;
-    summary += `📝 **Motivo do Exit Code:** README atualizado automaticamente.\n\n`;
   } else if (failOnDivergence) {
     summary += `❌ **Status:** Falha (Divergência Detectada)\n`;
     summary += `📝 **Motivo do Exit Code:** Divergências encontradas com \`--fail-on-divergence\` ativo.\n\n`;
