@@ -126,4 +126,41 @@ reports/
     expect(result.status).toBe(1);
     expect(result.output).toContain('Relatórios JSON corrompidos detectados');
   });
+
+  describe('GitHub Step Summary - Motivo do Exit Code', () => {
+    it('should show "Nenhuma divergência detectada" on success', () => {
+      // Structure already aligned in beforeEach
+      const result = runVerify([], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Nenhuma divergência detectada.');
+    });
+
+    it('should show "Divergências encontradas com `--fail-on-divergence` ativo" on failure', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--fail-on-divergence'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas com `--fail-on-divergence` ativo.');
+    });
+
+    it('should show "Modo Dry Run ativo" in dry-run mode', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--update', '--dry-run'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.');
+    });
+
+    it('should show "README atualizado automaticamente" in update mode', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--update'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** README atualizado automaticamente.');
+    });
+
+    it('should show "modo de falha está desativado" when divergence exists but fail is off', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify([], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.');
+    });
+  });
 });
