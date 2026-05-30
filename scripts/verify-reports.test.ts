@@ -167,6 +167,40 @@ reports/
       expect(result.status).toBe(0);
       expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.');
     });
+    it('should NOT show override information when environment variables are missing', () => {
+      // Create a specific sandbox for this test to avoid using project defaults
+      const sandboxDir = 'sandbox-no-overrides-test';
+      const summaryPath = join(process.cwd(), 'summary-no-overrides.md');
+      
+      if (existsSync(sandboxDir)) rmSync(sandboxDir, { recursive: true, force: true });
+      mkdirSync(sandboxDir);
+      mkdirSync(join(sandboxDir, 'reports'));
+      writeFileSync(join(sandboxDir, 'README.md'), readFileSync(TEST_README, 'utf8'));
+      
+      const absoluteScriptPath = join(process.cwd(), SCRIPT_PATH);
+      
+      try {
+        // Run without the override variables in the environment
+        const env = { ...process.env };
+        delete env.REPORTS_DIR_OVERRIDE;
+        delete env.README_PATH_OVERRIDE;
+        env.GITHUB_ACTIONS = 'true';
+        env.GITHUB_STEP_SUMMARY = summaryPath;
+
+        execSync(`bun run ${absoluteScriptPath}`, {
+          cwd: sandboxDir,
+          env,
+          encoding: 'utf8'
+        });
+        
+        const summary = readFileSync(summaryPath, 'utf8');
+        expect(summary).not.toContain('#### ⚙️ Configuração Customizada (Overrides)');
+        expect(summary).toContain('📝 **Motivo do Exit Code:** Nenhuma divergência detectada.');
+      } finally {
+        if (existsSync(sandboxDir)) rmSync(sandboxDir, { recursive: true, force: true });
+        if (existsSync(summaryPath)) rmSync(summaryPath);
+      }
+    });
   });
 
   describe('Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE', () => {
