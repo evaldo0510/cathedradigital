@@ -26,6 +26,7 @@ import { SearchResultCard } from './SearchResultCard';
 import { useFuzzySearch } from '@/hooks/useFuzzySearch';
 import { BubbleTag, getTagIcon } from './BubbleTag';
 import type { Tables } from '@/integrations/supabase/types';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const DIFFICULTY_LABELS: Record<string, string> = {
   iniciante: 'Iniciante',

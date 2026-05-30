@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const sections = [
   {
