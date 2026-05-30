@@ -353,7 +353,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <Card 
+                  <CathedraCard 
+                    variant="interactive"
+                    padding="none"
                     className="premium-card border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 overflow-hidden shadow-premium-hover shadow-primary/5 relative cursor-pointer focus-visible:ring-4 focus-visible:ring-primary outline-none" 
                     onClick={() => navigate(`/jornadas/${journey.id}`)}
                     role="button"
@@ -365,7 +367,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
                       <Icons.Flame className="w-16 h-16 text-primary" />
                     </div>
-                    <CardContent className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
+                    <div className="p-3.5 sm:p-5 space-y-2.5 sm:space-y-3">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-foreground text-base sm:text-lg">{journey.title}</h3>
@@ -390,8 +392,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                           Continuar <Icons.ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </CathedraCard>
                 </motion.div>
               );
             })}
@@ -406,8 +408,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden">
-            <CardContent className="p-4 sm:p-6 flex items-center gap-4 sm:gap-6">
+          <CathedraCard padding="md" className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden flex items-center gap-4 sm:gap-6">
               <div className="w-10 h-10 rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Icons.Brain className="w-5 h-5 text-primary" />
               </div>
@@ -418,8 +419,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="flex-shrink-0">
                 Diagnóstico <Icons.ArrowRight className="w-4 h-4 ml-1" />
               </Button>
-            </CardContent>
-          </Card>
+          </CathedraCard>
         </motion.div>
       )}
 
