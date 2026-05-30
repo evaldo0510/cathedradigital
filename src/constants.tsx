@@ -170,12 +170,12 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 const createIcon = (IconComponent: any) => 
-  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.1, size = 18, ...props }, ref) => (
+  forwardRef<SVGSVGElement, IconProps>(({ className, strokeWidth = 1.2, size = 18, ...props }, ref) => (
     <IconComponent 
       ref={ref} 
       strokeWidth={strokeWidth} 
       size={size}
-      className={cn("transition-all duration-1000 shrink-0 opacity-40 group-hover:opacity-90 group-hover:scale-105", className)}
+      className={cn("transition-all duration-1000 shrink-0 opacity-50 group-hover:opacity-100 group-hover:scale-105", className)}
       {...props} 
     />
   ));
