@@ -10,7 +10,7 @@ interface CathedraButtonProps extends HTMLMotionProps<"button"> {
   icon?: React.ReactNode;
 }
 
-const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
+const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     const sizeMap = {
@@ -55,4 +55,5 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
 
 CathedraButton.displayName = "CathedraButton";
 
-export { CathedraButton };
+const CathedraButtonExport = CathedraButton;
+export { CathedraButtonExport as CathedraButton };

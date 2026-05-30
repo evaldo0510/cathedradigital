@@ -68,12 +68,17 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
   onClick, 
   onRipple,
   shouldReduceMotion = false
-}) => (
+}) => {
+  const navigate = useNavigate();
+  return (
   <Button 
     variant="ghost"
-    onClick={(e) => { onRipple(e); onClick(e); }}
-    onTouchStart={(e) => { prefetchRoute(route); }}
-    onMouseEnter={() => prefetchRoute(route)}
+    onClick={(e) => { 
+      onRipple(e); 
+      onClick(e); 
+    }}
+    onTouchStart={() => route && prefetchRoute(route)}
+    onMouseEnter={() => route && prefetchRoute(route)}
     aria-label={label}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
@@ -136,7 +141,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       />
     )}
   </Button>
-));
+  );
+});
 
 interface BottomNavProps {
   onOpenSidebar: () => void;
