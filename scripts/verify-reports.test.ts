@@ -265,7 +265,7 @@ reports/
 
     it('should include override information in GitHub Step Summary', () => {
       const result = runIsolated([], { GITHUB_ACTIONS: 'true' });
-      expect(result.status).toBe(1); // placeholder.json documented but not found
+      expect(result.status).toBe(0); // Divergence exists but fail-on-divergence is off by default
       expect(result.summary).toContain('#### ⚙️ Configuração Customizada (Overrides)');
       expect(result.summary).toContain(`- 📁 **Diretório de Relatórios:** \`${CUSTOM_DIR}\` (via \`REPORTS_DIR_OVERRIDE\`)`);
       expect(result.summary).toContain(`- 📖 **Caminho do README:** \`${CUSTOM_README}\` (via \`README_PATH_OVERRIDE\`)`);
