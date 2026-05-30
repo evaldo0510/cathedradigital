@@ -8,6 +8,7 @@ import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
 import RitualDoDia from './RitualDoDia';
+import { CathedraButton } from './CathedraButton';
 import HomeMainDoors from './HomeMainDoors';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
