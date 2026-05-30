@@ -3,13 +3,7 @@ import { execSync } from 'child_process';
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const args = process.argv.slice(2);
-const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '5');
-const softMode = args.includes('--soft');
-const fixMode = args.includes('--fix');
-const dryRun = args.includes('--dry-run');
-
-const spacingMap: Record<string, string> = {
+export const spacingMap: Record<string, string> = {
   '0.5': 'spacing-3xs',
   '1': 'spacing-2xs',
   '1.5': 'spacing-2xs',
@@ -24,7 +18,7 @@ const spacingMap: Record<string, string> = {
   '16': 'spacing-4xl',
 };
 
-const roundingMap: Record<string, string> = {
+export const roundingMap: Record<string, string> = {
   'none': 'premium-none',
   'sm': 'premium-sm',
   'md': 'premium-md',
@@ -35,7 +29,7 @@ const roundingMap: Record<string, string> = {
   'full': 'premium-full',
 };
 
-const shadowMap: Record<string, string> = {
+export const shadowMap: Record<string, string> = {
   'none': 'premium-none',
   'sm': 'premium-sm',
   'md': 'premium',
@@ -44,7 +38,7 @@ const shadowMap: Record<string, string> = {
   '2xl': 'premium-xl',
 };
 
-const typographyMap: Record<string, string> = {
+export const typographyMap: Record<string, string> = {
   'xs': 'premium-xs',
   'sm': 'premium-sm',
   'base': 'premium-base',
@@ -56,7 +50,7 @@ const typographyMap: Record<string, string> = {
   '5xl': 'premium-5xl',
 };
 
-const forbiddenPatterns = [
+export const forbiddenPatterns = [
   { 
     name: 'Direct Spacing', 
     id: 'spacing',
@@ -107,9 +101,16 @@ const forbiddenPatterns = [
   }
 ];
 
-const results: any[] = [];
-let totalIssues = 0;
-let fixedCount = 0;
+export function runAudit() {
+  const args = process.argv.slice(2);
+  const threshold = parseInt(args.find(arg => arg.startsWith('--threshold='))?.split('=')[1] || '5');
+  const softMode = args.includes('--soft');
+  const fixMode = args.includes('--fix');
+  const dryRun = args.includes('--dry-run');
+
+  const results: any[] = [];
+  let totalIssues = 0;
+  let fixedCount = 0;
 
 console.log('--- CATHEDRA DESIGN TOKEN COMPLIANCE AUDIT ---');
 if (fixMode) console.log('--- AUTO-FIX MODE ENABLED ---');
@@ -322,5 +323,10 @@ const htmlContent = `
 writeFileSync(join(reportDir, 'token-audit.html'), htmlContent);
 writeFileSync(join(reportDir, 'token-audit.json'), JSON.stringify({ ...currentAudit, results, history }, null, 2));
 
-console.log('\nAudit finished. Reports generated in /reports');
-if (!softMode && totalIssues > threshold) process.exit(1);
+  console.log('\nAudit finished. Reports generated in /reports');
+  if (!softMode && totalIssues > threshold) process.exit(1);
+}
+
+if (import.meta.main) {
+  runAudit();
+}
