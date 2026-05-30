@@ -317,21 +317,23 @@ const Catechism: React.FC = memo(() => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {CIC_SECTIONS.map((part, idx) => (
-            <CathedraCard key={part.part} variant="interactive" padding="none" onClick={() => { setSelectedPart(part); setViewMode('sections'); }} className="group">
-              <div className="p-10 flex flex-col justify-between h-full space-y-8 text-left">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">{part.part}</span>
-                    <div className="h-px flex-1 bg-primary/[0.05]" />
-                  </div>
-                  <h2 className="text-2xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight">{part.title}</h2>
+            <div 
+              key={part.part} 
+              onClick={() => { setSelectedPart(part); setViewMode('sections'); }} 
+              className="group cursor-pointer p-10 flex flex-col justify-between h-full space-y-8 text-left transition-all duration-1000 hover:bg-primary/[0.01] rounded-[2.5rem] border border-transparent hover:border-primary/[0.03]"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/30">{part.part}</span>
+                  <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
                 </div>
-                <div className="flex items-center justify-between pt-4">
-                   <p className="text-[10px] text-muted-foreground/40 italic uppercase tracking-widest">{part.sections.length} Seções</p>
-                   <Icons.ChevronRight className="w-4 h-4 text-primary/10 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </div>
+                <h2 className="text-2xl font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-tight">{part.title}</h2>
               </div>
-            </CathedraCard>
+              <div className="flex items-center justify-between pt-4 opacity-0 group-hover:opacity-100 transition-all duration-1000">
+                 <p className="text-[10px] text-muted-foreground/40 italic uppercase tracking-widest">{part.sections.length} Seções</p>
+                 <Icons.ChevronRight className="w-4 h-4 text-primary/20" />
+              </div>
+            </div>
           ))}
         </div>
       </div>
