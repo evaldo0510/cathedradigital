@@ -192,7 +192,14 @@ O script `cathedra-audit.ts` suporta as seguintes flags:
 
 #### Relatórios e Logs Esperados
 
-Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, os seguintes arquivos são gerados exatamente nestes caminhos dentro do projeto:
+Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, os seguintes arquivos são gerados em uma estrutura organizada dentro da pasta `./reports`:
+
+```text
+reports/
+├── compliance-history.json    # Histórico das últimas 30 execuções (JSON)
+├── token-audit.html           # Dashboard visual interativo (HTML)
+└── token-audit.json           # Dados brutos da última auditoria (JSON)
+```
 
 | Caminho | Tipo | Descrição |
 |---------|------|-----------|
@@ -200,6 +207,7 @@ Ao executar `npm run token-audit:dry-run` ou `npm run token-audit:report`, os se
 | `./reports/token-audit.json` | JSON | Dados estruturados com resultados da última execução e detalhes de cada violação encontrada. |
 | `./reports/compliance-history.json` | Histórico | Log histórico (JSON) que armazena o progresso de conformidade das últimas 30 execuções. |
 | **Console Output** | Logs em Tempo Real | Resumo imediato no terminal com as mensagens de substituição sugeridas no modo dry-run. |
+
 
 
 #### Troubleshooting (Resolução de Problemas)
