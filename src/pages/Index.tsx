@@ -82,12 +82,14 @@ const Index = () => {
           icon={Icons.Cross}
           className="pb-32"
         >
-          <HomeMainContent 
-            user={user} 
-            profile={profile} 
-            onNavigate={handleNavigate} 
-            t={t} 
-          />
+          <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
+            <HomeMainContent 
+              user={user} 
+              profile={profile} 
+              onNavigate={handleNavigate} 
+              t={t} 
+            />
+          </Suspense>
           
           <Suspense fallback={null}>
             <CookieConsent />
