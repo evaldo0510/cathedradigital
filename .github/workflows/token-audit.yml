@@ -16,11 +16,15 @@ jobs:
       - name: Install dependencies
         run: bun install
         
-      - name: Run Token Audit
+      - name: Run Token Audit Tests
+        run: bun run test scripts/cathedra-audit.test.ts
+
+      - name: Run Token Audit (Check mode)
         id: audit
         run: |
-          # Set threshold to 0 to strictly enforce tokens on CI
+          # Run audit to check compliance
           bun run token-audit --threshold=0 || (echo "audit_failed=true" >> $GITHUB_ENV && exit 1)
+
         
       - name: Generate PR Comment
         if: github.event_name == 'pull_request'
