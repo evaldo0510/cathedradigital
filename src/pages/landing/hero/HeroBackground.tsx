@@ -36,8 +36,8 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => {
       {/* Chiaroscuro Lighting - God-rays feeling / Central Illumination */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,hsla(var(--primary)/0.06)_0%,transparent_65%)]" />
       
-      {/* Monastic Archway Vignette - Framing the entrance */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsla(var(--background)/0.8)_60%,hsl(var(--background))_100%)]" />
+      {/* Monastic Archway Vignette - Framing the entrance (Softer for less "black screen" feel) */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,hsla(var(--background)/0.4)_70%,hsl(var(--background))_100%)]" />
       
       {/* Atmospheric Depth - Soft Cinematic Glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background/90 opacity-70" />
