@@ -22,10 +22,10 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
     };
 
     const variantStyles = {
-      default: 'premium-card dark:bg-primary/[0.01] dark:border-transparent hover:dark:border-primary/[0.05]',
-      interactive: 'premium-card-interactive dark:bg-primary/[0.005] dark:hover:bg-primary/[0.02] dark:border-transparent dark:hover:border-primary/[0.05]',
-      outline: 'bg-transparent border border-primary/[0.02] dark:border-primary/[0.03] rounded-premium',
-      glass: 'bg-background/20 backdrop-blur-2xl border border-primary/[0.02] dark:border-primary/[0.04] rounded-premium shadow-none',
+      default: 'premium-card dark:bg-primary/[0.01] dark:border-transparent hover:dark:border-primary/[0.05] will-change-[transform,opacity]',
+      interactive: 'premium-card-interactive dark:bg-primary/[0.005] dark:hover:bg-primary/[0.02] dark:border-transparent dark:hover:border-primary/[0.05] will-change-[transform,opacity]',
+      outline: 'bg-transparent border border-primary/[0.01] dark:border-primary/[0.02] rounded-premium will-change-[transform,opacity]',
+      glass: 'bg-background/5 backdrop-blur-md border border-primary/[0.005] dark:border-primary/[0.01] rounded-premium shadow-none will-change-[transform,opacity]',
     };
 
     return (
@@ -40,7 +40,7 @@ const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
         initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.995, y: 10, filter: 'blur(5px)' })}
         animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
         transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.8, ease: [0.16, 1, 0.3, 1] })}
-        whileHover={settings.reduceAnimations ? {} : { y: -2, scale: 1, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+        whileHover={settings.reduceAnimations ? {} : { y: -2, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
         {...props}
       >
         {children}

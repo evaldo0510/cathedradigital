@@ -15,7 +15,7 @@ const SEOHead = lazy(() => import("@/components/SEOHead"));
 
 const Index = () => {
   const navigate = useNavigate();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, authenticated } = useAuth();
   const { t } = useContext(LangContext);
 
   const websiteSchema = useMemo(() => ({
@@ -55,7 +55,7 @@ const Index = () => {
         {t('skip_to_content') || 'Pular para o conteúdo'}
       </a>
       
-      <LandingHeader />
+      {!authenticated && <LandingHeader />}
       
       <SEOHead
         title="Portal Premium de Espiritualidade & Teologia"

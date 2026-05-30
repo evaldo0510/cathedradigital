@@ -49,6 +49,7 @@ interface AuthContextValue {
   isPremium: boolean;
   userLevel: UserLevelClass;
   refreshProfile: () => Promise<void>;
+  authenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);
@@ -332,6 +333,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isPremium: true, // Unlocked for everyone
     userLevel,
     refreshProfile,
+    authenticated: !!user,
   }), [user, profile, loading, signOut, userLevel, refreshProfile]);
 
   return createElement(AuthContext.Provider, { value }, children);

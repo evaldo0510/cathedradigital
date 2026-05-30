@@ -75,7 +75,7 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
   };
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
+    <div className={cn("grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-16 lg:gap-24 w-full max-w-7xl mx-auto", className)}>
       {doors.map((door, idx) => (
         <CathedraCard
           key={idx}
@@ -92,16 +92,19 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-5 md:p-32 lg:p-48 flex flex-col items-center text-center gap-4 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-primary/[0.001] hover:bg-primary/[0.005] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[2.5rem] md:rounded-[6rem]"
+          className="p-4 md:p-32 lg:p-48 flex flex-col items-center text-center gap-3 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-primary/[0.005] dark:bg-white/[0.005] hover:bg-primary/[0.01] shadow-none hover:shadow-premium transition-all duration-1000 rounded-[2rem] md:rounded-[6rem]"
         >
-          <div className="w-11 h-11 md:w-40 md:h-40 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/10 group-hover:scale-110 group-hover:text-primary/60 group-hover:bg-primary/[0.015] transition-all duration-1500 ease-in-out">
+          <div className="w-10 h-10 md:w-40 md:h-40 rounded-full bg-primary/[0.003] flex items-center justify-center text-primary/10 group-hover:scale-110 group-hover:text-primary/60 group-hover:bg-primary/[0.015] transition-all duration-1500 ease-in-out">
             <door.icon className="w-6 h-6 md:w-12 md:h-12" strokeWidth={1} />
           </div>
-          <div className="space-y-6 md:space-y-10">
+          <div className="space-y-4 md:space-y-10">
             <h4 className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/20 group-hover:text-primary/80 transition-colors duration-1000">
               {door.label}
             </h4>
-            <p className="text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
+            <p className="hidden md:block text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
+              {door.description}
+            </p>
+            <p className="md:hidden text-[10px] text-muted-foreground/30 font-serif italic tracking-wider leading-relaxed">
               {door.description}
             </p>
           </div>

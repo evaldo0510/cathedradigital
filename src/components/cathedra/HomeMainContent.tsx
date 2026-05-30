@@ -13,6 +13,8 @@ import { SpiritualContinuity } from './SpiritualContinuity';
 import { CathedraButton } from './CathedraButton';
 import { CathedraCard } from './CathedraCard';
 
+import { useAuth } from '@/hooks/useAuth';
+
 interface HomeMainContentProps {
   user: any;
   profile: any;
@@ -64,7 +66,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-12 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-12 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
@@ -97,10 +99,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         </CathedraCard>
       </section>
 
-      {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-48 md:py-96 flex flex-col items-center gap-8 opacity-5 select-none pointer-events-none">
-        <div className="w-px h-32 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
-        <Sparkles className="w-4 h-4 text-primary/20" strokeWidth={0.2} />
+      {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT - Reduced for mobile */}
+      <div className="py-24 md:py-96 flex flex-col items-center gap-4 md:gap-8 opacity-5 select-none pointer-events-none">
+        <div className="w-px h-16 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
+        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/20" strokeWidth={0.2} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
@@ -113,7 +115,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             subtitle="Onde a alma parou para contemplar."
             className="header-margin-rhythm"
           />
-          <CathedraCard variant="outline" padding="none" className="flex-1 p-4 md:p-24 lg:p-32 border-primary/[0.002] bg-transparent">
+          <CathedraCard variant="outline" padding="none" className="flex-1 p-3 md:p-24 lg:p-32 border-primary/[0.002] bg-transparent">
             <ReadingProgressSection />
           </CathedraCard>
         </section>
@@ -131,7 +133,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <HomeCard
             ref={logosCardRef}
             variant="glass"
-            className="flex-1 p-5 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-6 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
+            className="flex-1 p-4 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-5 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
           >
             <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
               <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
@@ -168,8 +170,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-48 md:py-[32rem] flex justify-center opacity-1">
-        <div className="w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+      <div className="py-24 md:py-[32rem] flex justify-center opacity-1">
+        <div className="w-16 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
       {/* 4. BIBLIOTECA - THE CORE SOURCES */}
@@ -180,7 +182,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           subtitle="As fontes imutáveis da Sabedoria e da Tradição."
           className="header-margin-rhythm"
         />
-        <div className="p-1 md:p-40 lg:p-64">
+        <div className="p-0.5 md:p-40 lg:p-64">
           <HomeMainDoors t={t} />
         </div>
       </section>
