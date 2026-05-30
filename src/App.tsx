@@ -363,6 +363,7 @@ const AppLayout: React.FC = () => {
           onChangeLang={setLang}
           onSignOut={signOut}
           onOpenSidebar={handleOpenSidebar}
+          isLanding={location.pathname === '/'}
         />
         
         <CathedralSidebar 
