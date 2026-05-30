@@ -11,7 +11,7 @@ import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
-import { HomeCard } from './HomeCard';
+import { CathedraCard } from './CathedraCard';
 import { HomeButton } from './HomeButton';
 import { SpiritualContinuity } from './SpiritualContinuity';
 
@@ -161,14 +161,9 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
       </FadeUp>
 
       <FadeUp delay={0.05}>
-        <HomeCard 
-          onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="padding-rhythm flex items-center justify-between cursor-pointer group"
-          role="button"
-          tabIndex={0}
-          aria-label="Ver Guia dos Módulos"
-          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
-        >
+        <CathedraCard 
+          variant="interactive"
+          padding="none"
           <div className="flex items-center gap-5">
             <div className="w-12 h-12 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/40 group-hover:scale-110 group-hover:bg-primary/[0.03] transition-all border border-primary/10">
               <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
@@ -179,21 +174,16 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
             </div>
           </div>
           <Icons.ChevronRight className="w-5 h-5 text-primary/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-        </HomeCard>
+        </CathedraCard>
       </FadeUp>
 
       <FadeUp delay={0.1}>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[var(--space-mobile-padding)] md:gap-6">
           {MAIN_DOORS.map((door, idx) => (
-            <HomeCard
+            <CathedraCard
               key={idx}
-              onClick={() => goTo(door.route)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Abrir ${door.label}`}
-              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden padding-rhythm cursor-pointer group flex flex-col items-center text-center gap-6"
-            >
+              variant="interactive"
+              padding="none"
               {door.suggested && (
                 <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
                   <Icons.Star className="w-3 h-3 fill-current" />
@@ -206,7 +196,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
                 <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
               </div>
-            </HomeCard>
+            </CathedraCard>
           ))}
         </div>
       </FadeUp>
