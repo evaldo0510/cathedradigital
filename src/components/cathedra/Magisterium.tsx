@@ -358,8 +358,8 @@ const Magisterium: React.FC = () => {
         </div>
 
         {filteredDocs.length === 0 && (
-          <div className="text-center py-32 border border-dashed border-border/10 rounded-premium">
-            <p className="text-muted-foreground/40 font-serif italic">Nenhum documento encontrado no silêncio da busca.</p>
+          <div className="text-center py-20 border border-dashed border-primary/5 rounded-premium bg-primary/[0.01]">
+            <p className="text-muted-foreground/30 font-serif italic text-sm">Nenhum documento encontrado no silêncio da busca.</p>
           </div>
         )}
       </div>

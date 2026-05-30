@@ -810,7 +810,7 @@ const Bible: React.FC = memo(() => {
       <ContemplativeLayout
         subtitle={`${selectedBook.name}`}
         title={`Capítulo ${selectedChapter}`}
-        maxW="max-w-[1200px]"
+        icon={Icons.Bible}
       >
         <SEOHead 
           title={`${selectedBook.name} ${selectedChapter} | Bíblia Sagrada`}
@@ -1473,7 +1473,7 @@ const Bible: React.FC = memo(() => {
       <ContemplativeLayout
         subtitle={`${selectedBook.name}`}
         title="Capítulos"
-        maxW="max-w-6xl"
+        icon={Icons.Bible}
       >
         <div className="stack-rhythm">
 
