@@ -64,14 +64,14 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   };
 
   return (
-    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-16 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
+    <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-12 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center sm:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
       <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
         <SpiritualContinuity 
           profile={profile} 
           variant="glass"
         />
-        <div className="flex justify-center -mt-6 md:-mt-10 mb-8 md:mb-20">
+        <div className="flex justify-center -mt-4 md:-mt-10 mb-6 md:mb-20">
           <CathedraButton 
             variant="ghost" 
             size="sm"
@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT */}
-      <div className="py-12 md:py-32 flex flex-col items-center gap-4 opacity-10 select-none pointer-events-none">
+      <div className="py-16 md:py-32 flex flex-col items-center gap-4 opacity-5 select-none pointer-events-none">
         <div className="w-px h-16 md:h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
         <Sparkles className="w-3 h-3 text-primary/30" strokeWidth={0.5} />
       </div>
@@ -168,7 +168,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-16 md:py-48 flex justify-center opacity-5">
+      <div className="py-20 md:py-48 flex justify-center opacity-3">
         <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
