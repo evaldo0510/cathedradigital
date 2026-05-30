@@ -220,14 +220,26 @@ npm run reports:tree -- --since=2026-05-01 --until=2026-05-31
 Para validar se a estrutura atual de `./reports` corresponde exatamente à árvore documentada acima:
 ```bash
 npm run reports:verify
+```
 
-Para rodar sem falhar (apenas reportar) em CI, você pode definir a variável de ambiente `REPORTS_FAIL_ON_DIVERGENCES=false` nas configurações do GitHub Actions.
+#### Comportamento de Exit Code e Flags:
+
+| Cenário | `--fail-on-divergence` | `--update` | `--dry-run` | Divergência Detectada? | Exit Code | Ação |
+|---------|-----------------------|------------|-------------|-------------------------|-----------|------|
+| **CI (Padrão)** | Ativa (default) | Não | Não | Sim | `1` | Falha o build / PR |
+| **Local Check** | Ativa (default) | Não | Não | Não | `0` | Sucesso (Alinhado) |
+| **Report Only** | Desativada | Não | Não | Sim | `0` | Apenas loga no terminal |
+| **Sync README** | - | Sim | Não | Sim | `0` | Atualiza o README.md |
+| **Simulação** | - | Sim | Sim | Sim | `0` | Loga mudanças sem salvar |
+
+> **Dica**: Em CI, você pode forçar o sucesso mesmo com divergências definindo a variável de ambiente `REPORTS_FAIL_ON_DIVERGENCES=false`.
+
+Para rodar sem falhar (apenas reportar):
 ```bash
-# Localmente sem falhar
-npm run reports:verify -- --no-fail-on-divergence
+# Localmente sem falhar (omitindo a flag via variável de ambiente)
+REPORTS_FAIL_ON_DIVERGENCES=false npm run reports:verify
 ```
 
-```
 
 Para limpar relatórios antigos mantendo o histórico organizado:
 ```bash
