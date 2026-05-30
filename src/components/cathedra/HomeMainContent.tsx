@@ -113,9 +113,9 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT - Reduced for mobile */}
-      <div className="py-8 md:py-96 flex flex-col items-center gap-3 md:gap-8 opacity-5 select-none pointer-events-none">
-        <div className="w-px h-8 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
-        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/20" strokeWidth={0.2} />
+      <div className="py-8 md:py-96 flex flex-col items-center gap-3 md:gap-8 opacity-[0.03] select-none pointer-events-none">
+        <div className="w-px h-8 md:h-64 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/10" strokeWidth={0.2} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-48 lg:gap-64 w-full">
@@ -149,8 +149,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             padding="none"
             className="flex-1 p-4 md:p-24 lg:p-32 flex flex-col items-center justify-center gap-5 md:gap-16 group border-primary/[0.002] shadow-none bg-transparent"
           >
-            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.01] border border-primary/[0.03] flex items-center justify-center text-primary/60 group-hover:scale-105 group-hover:bg-primary/[0.03] group-hover:text-primary/60 transition-all duration-1000">
-              <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
+            <div className="relative z-10 w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/[0.005] border border-primary/[0.02] flex items-center justify-center text-primary/30 group-hover:scale-105 group-hover:bg-primary/[0.01] group-hover:text-primary/40 transition-all duration-1000">
+              <Sparkles className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.3} />
             </div>
             
             <div className="relative z-10 space-y-5 text-center">
@@ -167,7 +167,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                   value={logosQuery}
                   onChange={(e) => setLogosQuery(e.target.value)}
                   placeholder="Pergunte sobre a fé..."
-                  className="h-12 md:h-16 pl-10 md:pl-14 pr-10 md:pr-14 rounded-full border-primary/5 bg-background/20 focus:bg-background/40 transition-all text-sm md:text-lg placeholder:text-muted-foreground/40 font-serif italic focus:ring-1 focus:ring-primary/20"
+                  className="h-12 md:h-16 pl-10 md:pl-14 pr-10 md:pr-14 rounded-full border-primary/[0.03] bg-background/20 focus:bg-background/40 transition-all text-sm md:text-lg placeholder:text-muted-foreground/30 font-serif italic focus:ring-1 focus:ring-primary/10"
                   aria-label="Logos IA: Pergunte sobre a fé"
                 />
                 <MessageSquare className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-5 md:h-5 text-primary/40 group-hover/input:text-primary/60 transition-colors" />
@@ -184,8 +184,8 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-8 md:py-[32rem] flex justify-center opacity-1">
-        <div className="w-12 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+      <div className="py-8 md:py-[32rem] flex justify-center opacity-[0.05]">
+        <div className="w-12 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/3 to-transparent" />
       </div>
 
       {/* 4. BIBLIOTECA - REMOVED FROM ORIGINAL POSITION (ALREADY MOVED UP) */}
