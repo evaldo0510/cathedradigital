@@ -18,6 +18,7 @@ import { useSwipeNavigation } from '@/hooks/useSwipeNavigation';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import { useIsMobile } from '@/hooks/use-mobile';
+import DOMPurify from 'dompurify';
 
 const ItinerariumStepPage: React.FC = () => {
   const { id: itinerariumId } = useParams<{ id: string }>();
@@ -369,7 +370,7 @@ const ItinerariumStepPage: React.FC = () => {
           </header>
 
           <article className="prose prose-premium dark:prose-invert max-w-none font-serif text-lg md:text-xl leading-[1.8] text-foreground/90 selection:bg-primary/10">
-             <div className="space-y-6" dangerouslySetInnerHTML={{ __html: step.content.html || '' }} />
+             <div className="space-y-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(step.content.html || '') }} />
              {!step.content.html && (
                <div className="flex flex-col items-center justify-center py-20 space-y-6 opacity-30">
                  <Icons.Sparkles className="w-12 h-12 animate-pulse" />
