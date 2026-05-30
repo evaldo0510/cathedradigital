@@ -34,8 +34,9 @@ function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: 
 }
 
 function writeSummary(content: string) {
-  if (process.env.GITHUB_STEP_SUMMARY) {
-    appendFileSync(process.env.GITHUB_STEP_SUMMARY, content + "\n");
+  const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (summaryPath) {
+    appendFileSync(summaryPath, content + "\n");
   }
 }
 
