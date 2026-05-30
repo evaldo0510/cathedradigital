@@ -243,14 +243,14 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-2 left-2 bottom-2 w-[min(280px,85vw)] sm:w-[320px] md:w-[380px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.05] flex flex-col p-5 md:p-12 z-[170] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.25rem+env(safe-area-inset-top,0px))] pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-2 left-2 bottom-2 w-[min(280px,85vw)] sm:w-[320px] md:w-[380px] bg-white/80 dark:bg-background/80 backdrop-blur-3xl border border-black/[0.02] dark:border-white/[0.03] flex flex-col p-5 md:p-12 z-[170] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.4)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.25rem+env(safe-area-inset-top,0px))] pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
-            {/* Mobile Header - More dedicated and sophisticated */}
-            <header className="flex items-center justify-between mb-8 pb-4 border-b border-primary/[0.01] dark:border-white/[0.01]">
+            {/* Mobile Header - Refined and cinematic */}
+            <header className="flex items-center justify-between mb-10 pb-6 border-b border-primary/[0.005] dark:border-white/[0.005]">
               <div 
                 className="flex items-center gap-4 cursor-pointer group outline-none" 
                 onClick={() => handleNav('/')}
@@ -258,12 +258,12 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/')}
               >
-                <div className="w-10 h-10 rounded-2xl bg-primary/[0.03] dark:bg-white/[0.03] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-1000">
-                  <Icons.Logo className="w-full h-full opacity-60 dark:opacity-40" variant={isDark ? "light" : "dark"} />
+                <div className="w-10 h-10 rounded-2xl bg-primary/[0.02] dark:bg-white/[0.02] flex items-center justify-center p-2.5 group-hover:scale-105 transition-transform duration-[1500ms]">
+                  <Icons.Logo className="w-full h-full opacity-40 dark:opacity-20" variant={isDark ? "light" : "dark"} />
                 </div>
-                <div className="space-y-1">
-                  <h1 className="text-[11px] font-display font-light tracking-[0.4em] text-primary leading-none uppercase">CATHEDRA</h1>
-                  <p className="text-[7px] font-bold uppercase text-primary/30 tracking-[0.5em]">
+                <div className="space-y-0.5">
+                  <h1 className="text-[10px] font-display font-light tracking-[0.5em] text-primary/40 leading-none uppercase">CATHEDRA</h1>
+                  <p className="text-[6.5px] font-bold uppercase text-primary/10 tracking-[0.6em]">
                     Sacrum Archivum
                   </p>
                 </div>
@@ -274,10 +274,10 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-full w-9 h-9 text-muted-foreground/20 hover:text-primary hover:bg-primary/5 transition-all focus-visible:ring-1"
+                className="rounded-full w-9 h-9 text-muted-foreground/10 hover:text-primary hover:bg-primary/[0.02] transition-all focus-visible:ring-1"
                 aria-label="Fechar menu"
               >
-                <Icons.X className="w-4 h-4" />
+                <Icons.X className="w-3.5 h-3.5" />
               </Button>
             </header>
 
@@ -294,8 +294,8 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                   }}
                   className="mb-6"
                 >
-                  <h3 className="text-[7.5px] font-black uppercase tracking-[0.4em] text-primary/20 dark:text-primary/30 mb-3 px-4">/ {section.label}</h3>
-                  <ul className="space-y-1.5">
+                  <h3 className="text-[7px] font-black uppercase tracking-[0.5em] text-primary/[0.08] dark:text-primary/10 mb-4 px-4 select-none">/ {section.label}</h3>
+                  <ul className="space-y-1">
                     {section.items.map((item, idx) => {
                       const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                       return (
@@ -307,22 +307,22 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
                             onTouchStart={() => prefetchRoute(item.path)}
                              aria-current={isActive ? 'page' : undefined}
                              aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-xl text-[9px] font-bold transition-all duration-700 outline-none h-auto min-h-[52px]
+                            className={`w-full flex items-center justify-start gap-4 px-4 py-3 rounded-xl text-[9px] font-bold transition-all duration-1000 outline-none h-auto min-h-[48px]
                               ${isActive
-                                ? 'bg-primary/[0.04] dark:bg-white/[0.04] text-primary'
-                                : 'text-muted-foreground/30 dark:text-muted-foreground/40 hover:bg-primary/[0.02] dark:hover:bg-white/[0.02] hover:text-primary'}`}
+                                ? 'bg-primary/[0.02] dark:bg-white/[0.02] text-primary shadow-[0_4px_20px_-2px_rgba(0,0,0,0.05)]'
+                                : 'text-muted-foreground/20 dark:text-muted-foreground/20 hover:bg-primary/[0.005] dark:hover:bg-white/[0.005] hover:text-primary'}`}
                           >
-                            <span className={`transition-all duration-500 transform ${isActive ? 'opacity-100 scale-110' : 'opacity-40'}`}>
-                              {React.cloneElement(item.icon as React.ReactElement, { size: 18, strokeWidth: isActive ? 1.5 : 1.1 })}
+                            <span className={`transition-all duration-700 transform ${isActive ? 'opacity-80 scale-105' : 'opacity-20'}`}>
+                              {React.cloneElement(item.icon as React.ReactElement, { size: 16, strokeWidth: isActive ? 1.4 : 0.8 })}
                             </span>
-                            <span className="tracking-[0.05em] uppercase truncate opacity-90">{item.label}</span>
+                            <span className={`tracking-[0.1em] uppercase truncate transition-opacity duration-700 ${isActive ? 'opacity-100' : 'opacity-60'}`}>{item.label}</span>
                             {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                              <span className="ml-auto bg-primary/20 text-primary text-[8px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
+                              <span className="ml-auto bg-primary/10 text-primary text-[7px] font-black px-1.5 py-0.5 rounded-full flex-shrink-0">
                                 {cacheCount}
                               </span>
                             )}
-                            {(item as any).pro && <span className="ml-auto text-[7px] font-black uppercase tracking-widest text-primary bg-primary/10 px-1.5 py-0.5 rounded-md flex-shrink-0">PRO</span>}
-                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 rounded-full bg-primary flex-shrink-0" />}
+                            {(item as any).pro && <span className="ml-auto text-[6px] font-black uppercase tracking-widest text-primary/40 bg-primary/[0.03] px-1 py-0.5 rounded flex-shrink-0">PRO</span>}
+                            {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-0.5 h-0.5 rounded-full bg-primary/40 flex-shrink-0" />}
                           </Button>
                         </li>
                       );
