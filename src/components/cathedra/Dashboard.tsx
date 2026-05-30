@@ -8,11 +8,9 @@ import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 import NexusBubbles from './NexusBubbles';
 import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
-import QuickDonation from './QuickDonation';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { CathedraCard } from './CathedraCard';
-import { HomeButton } from './HomeButton';
 import { SpiritualContinuity } from './SpiritualContinuity';
 
 interface DashboardProps {
@@ -21,24 +19,14 @@ interface DashboardProps {
 
 const FadeUp: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({ children, delay = 0, className }) => (
   <motion.div
-    initial={{ opacity: 0, y: 18 }}
+    initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+    transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
     className={className}
   >
     {children}
   </motion.div>
 );
-
-const QUOTES = [
-  { text: '"Tarde te amei, beleza tão antiga e tão nova."', author: 'Santo Agostinho' },
-  { text: '"Nada te perturbe, nada te espante. Só Deus basta."', author: 'Santa Teresa de Ávila' },
-  { text: '"Fazei tudo por amor. Nada por força."', author: 'São Francisco de Sales' },
-  { text: '"A oração é a elevação da alma a Deus."', author: 'São João Damasceno' },
-  { text: '"Sê quem Deus quis que fosses e incendiarás o mundo."', author: 'Santa Catarina de Sena' },
-  { text: '"Onde não há amor, ponha amor e recolherás amor."', author: 'São João da Cruz' },
-  { text: '"Tudo posso naquele que me fortalece."', author: 'Filipenses 4,13' },
-];
 
 const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const navigate = useNavigate();
@@ -46,230 +34,83 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
   const { t } = useLang();
   const goTo = useCallback((route: string) => navigate(route), [navigate]);
 
-  const { spiritualProfile, activeJourneys, nextUp, weeklyStats, isLoading } = useDashboardData(user);
+  const { spiritualProfile, isLoading } = useDashboardData(user);
 
-  const streak = profile?.streak || 0;
-  const hour = new Date().getHours();
-  const greeting = useMemo(() => {
-    if (hour < 12) return t('good_morning') || 'Bom dia';
-    if (hour < 18) return t('good_afternoon') || 'Boa tarde';
-    return t('good_evening') || 'Boa noite';
-  }, [hour, t]);
-  
-  const dailyQuote = QUOTES[Math.floor((Date.now() / 86400000)) % QUOTES.length];
-  const spProfile = spiritualProfile ? PROFILES[spiritualProfile as ProfileId] : null;
-
-  const MAIN_DOORS = useMemo(() => [
-    {
-      label: t('bible'),
-      description: t('bible_sub'),
-      icon: Icons.Bible,
-      route: (nextUp as any)?.lastBible 
-        ? `${AppRoute.BIBLE}?book=${(nextUp as any).lastBible.book_abbr}&ch=${(nextUp as any).lastBible.chapter}` 
-        : AppRoute.BIBLE,
-      gradient: 'from-primary/5 to-transparent',
-      iconColor: 'text-primary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: spiritualProfile === 'ferido_em_busca' || spiritualProfile === 'sedento_de_sentido',
-    },
-    {
-      label: t('saints_label'),
-      description: t('saints_desc') || 'Vidas e ensinamentos dos heróis da fé',
-      icon: Icons.Saints,
-      route: AppRoute.SAINTS,
-      gradient: 'from-secondary/5 to-transparent',
-      iconColor: 'text-secondary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: true,
-    },
-    {
-      label: t('liturgy'),
-      description: t('liturgy_sub') || 'Leituras do dia',
-      icon: Icons.Liturgy,
-      route: AppRoute.LITURGIA,
-      gradient: 'from-primary/5 to-transparent',
-      iconColor: 'text-primary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: spiritualProfile === 'ansioso_buscador',
-    },
-    {
-      label: t('journeys'),
-      description: t('journeys_sub') || 'Trilhas de formação',
-      icon: Icons.Journeys,
-      route: AppRoute.JORNADAS,
-      gradient: 'from-primary/5 to-transparent',
-      iconColor: 'text-primary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: spiritualProfile === 'firme_aprofundando',
-    },
-    {
-      label: t('catechism'),
-      description: t('catechism_sub') || 'Doutrina e ensinamentos da Igreja',
-      icon: Icons.Catechism,
-      route: AppRoute.CATECHISM,
-      gradient: 'from-secondary/5 to-transparent',
-      iconColor: 'text-secondary',
-      borderColor: 'border-border hover:border-secondary/50',
-      suggested: true,
-    },
-  ], [nextUp, t, spiritualProfile]);
-
-  if (isLoading && !spiritualProfile && activeJourneys.length === 0) {
+  if (isLoading && !spiritualProfile) {
     return <DashboardSkeleton />;
   }
 
   return (
-    <div className="app-container desktop-layout py-10 md:py-32">
-      <div className="desktop-main stack-spacing">
-      <FadeUp>
-        <div className="text-center space-y-6 md:space-y-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="flex justify-center"
-          >
-            <div className="relative">
-              <Icons.Logo className="w-20 h-20 text-primary" variant="blue" />
-            </div>
-          </motion.div>
-          <div className="space-y-4 md:space-y-6">
-            <p className="text-premium-tiny font-bold uppercase tracking-[0.6em] text-secondary">
-              Cathedra {t('digital')}
-            </p>
-            <h1 className="text-4xl md:text-8xl font-display font-medium text-primary leading-[1.1] tracking-tighter">
-              {profile?.name ? `${greeting}, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
-            </h1>
-            {spProfile && (
-              <p className="text-xl text-primary/60 italic font-serif mt-6 max-w-2xl mx-auto leading-relaxed">{spProfile.greeting}</p>
-            )}
-          </div>
-
-          <div className="flex items-center justify-center gap-6 md:gap-10 flex-wrap pt-4 md:pt-8">
-            {streak > 0 && (
-              <div className="flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-secondary/[0.03] border border-secondary/10 transition-all hover:bg-secondary/[0.06] hover:-translate-y-1">
-                <Icons.Zap className="w-4 h-4 md:w-5 md:h-5 text-secondary" />
-                <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.2em]">{streak} {streak === 1 ? t('day') : t('days')}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full bg-primary/[0.01] border border-primary/10 transition-all hover:bg-primary/[0.03] hover:-translate-y-1">
-              <Icons.Star className="w-4 h-4 md:w-5 md:h-5 text-primary" />
-              <span className="text-[10px] md:text-xs font-bold text-primary uppercase tracking-[0.2em]">{profile?.xp || 0} XP</span>
-            </div>
-          </div>
-        </div>
-      </FadeUp>
-
-      <FadeUp delay={0.05}>
-        <CathedraCard 
-          variant="interactive"
-          padding="none"
-          onClick={() => goTo(AppRoute.MODULES_GUIDE)}
-          className="padding-rhythm flex items-center justify-between cursor-pointer group"
-          role="button"
-          tabIndex={0}
-          aria-label="Ver Guia dos Módulos"
-          onKeyDown={(e) => e.key === 'Enter' && goTo(AppRoute.MODULES_GUIDE)}
-        >
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-full bg-primary/[0.01] flex items-center justify-center text-primary/40 group-hover:scale-110 group-hover:bg-primary/[0.03] transition-all border border-primary/10">
-              <Icons.HelpCircle className="w-6 h-6" strokeWidth={1.5} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-foreground leading-tight">Guia dos Módulos</p>
-              <p className="text-premium-tiny text-muted-foreground mt-1 group-hover:opacity-100 transition-opacity">Entenda como navegar e usar a plataforma</p>
-            </div>
-          </div>
-          <Icons.ChevronRight className="w-5 h-5 text-primary/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-        </CathedraCard>
-      </FadeUp>
-
-      <FadeUp delay={0.1}>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-[var(--space-mobile-padding)] md:gap-6">
-          {MAIN_DOORS.map((door, idx) => (
-            <CathedraCard
-              key={idx}
-              variant="interactive"
-              padding="none"
-              onClick={() => goTo(door.route)}
-              role="button"
-              tabIndex={0}
-              aria-label={`Abrir ${door.label}`}
-              onKeyDown={(e) => e.key === 'Enter' && goTo(door.route)}
-              className="relative overflow-hidden padding-rhythm cursor-pointer group flex flex-col items-center text-center gap-6"
-            >
-              {door.suggested && (
-                <div className="absolute top-4 right-4 flex items-center gap-1 p-1.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20 shadow-soft">
-                  <Icons.Star className="w-3 h-3 fill-current" />
-                </div>
-              )}
-              <div className={`w-14 h-14 rounded-full bg-primary/[0.01] flex items-center justify-center ${door.iconColor} group-hover:scale-105 group-hover:bg-primary/[0.03] transition-transform border border-primary/10`}>
-                <door.icon className="w-7 h-7" strokeWidth={1.25} />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-xs font-bold text-foreground uppercase tracking-[0.25em] group-hover:text-primary transition-colors">{door.label}</h3>
-                <p className="text-premium-tiny text-muted-foreground line-clamp-2 leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity px-1">{door.description}</p>
-              </div>
-            </CathedraCard>
-          ))}
-        </div>
-      </FadeUp>
-
-      <FadeUp delay={0.15}>
-        <div className="max-w-4xl mx-auto w-full">
-          <RitualDoDia />
-        </div>
-      </FadeUp>
-
-      <FadeUp delay={0.18}>
-        <SpiritualContinuity data={nextUp} isLoading={isLoading} profile={profile} />
-      </FadeUp>
-
-      {!spiritualProfile && (
-        <FadeUp delay={0.15}>
-          <SpiritualQuiz />
-        </FadeUp>
-      )}
-
-      <FadeUp delay={0.2}>
-        <NexusBubbles profileId={spiritualProfile as ProfileId} />
-      </FadeUp>
-
-      </div>
-
-      <aside className="desktop-aside space-y-6 hidden xl:block">
-        <div className="desktop-card space-y-6">
-          <h3 className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-secondary opacity-60">Estatísticas Semanais</h3>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="space-y-1">
-              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.chaptersRead}</p>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('bible')}</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.catechismParagraphs}</p>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">CIC</p>
-            </div>
-            <div className="space-y-1">
-              <p className="text-2xl font-medium text-primary tracking-tighter">{weeklyStats.journeySteps}</p>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{t('journeys')}</p>
-            </div>
-          </div>
-        </div>
+    <div className="app-container py-8 md:py-32 max-w-4xl mx-auto">
+      <div className="stack-spacing-lg">
         
-        <FadeUp delay={0.3}>
-          <QuickDonation />
+        {/* Welcome Section - Reduced Height */}
+        <FadeUp>
+          <header className="text-center space-y-4 mb-12">
+            <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30">
+              Cathedra Digital
+            </p>
+            <h1 className="text-3xl md:text-6xl font-display font-light text-primary tracking-tight">
+              {profile?.name ? `Salve, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}
+            </h1>
+          </header>
         </FadeUp>
 
-        <div className="desktop-card space-y-6 border-secondary/10 bg-secondary/[0.02]">
-          <div className="w-10 h-0.5 bg-secondary/30 rounded-full" />
-          <p className="text-lg font-serif italic text-primary/90 leading-relaxed">
-            {dailyQuote.text}
-          </p>
-          <p className="text-premium-tiny font-bold uppercase tracking-[0.3em] text-secondary/80">
-            — {dailyQuote.author}
-          </p>
-        </div>
-      </aside>
+        {/* Essential Continuity */}
+        <FadeUp delay={0.1}>
+          <SpiritualContinuity profile={profile} />
+        </FadeUp>
+
+        {/* Heart of the Experience: Daily Ritual */}
+        <FadeUp delay={0.2}>
+          <section className="space-y-8">
+            <div className="flex items-center gap-4 opacity-20 px-4">
+              <div className="h-px flex-1 bg-primary/20" />
+              <span className="text-[9px] font-black uppercase tracking-[0.3em]">Ritual do Dia</span>
+              <div className="h-px flex-1 bg-primary/20" />
+            </div>
+            <RitualDoDia />
+          </section>
+        </FadeUp>
+
+        {/* Sacred Library Access - Simplified Doors */}
+        <FadeUp delay={0.3}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+            {[
+              { label: t('bible'), icon: Icons.Bible, route: AppRoute.BIBLE },
+              { label: t('catechism'), icon: Icons.Catechism, route: AppRoute.CATECHISM },
+              { label: 'Magistério', icon: Icons.ScrollText, route: AppRoute.MAGISTERIUM },
+              { label: 'Logos IA', icon: Icons.Sparkles, route: '/logos' },
+            ].map((item) => (
+              <CathedraCard
+                key={item.label}
+                variant="interactive"
+                padding="sm"
+                onClick={() => goTo(item.route)}
+                className="flex flex-col items-center justify-center gap-4 py-8 group border-primary/[0.02] bg-primary/[0.005]"
+              >
+                <item.icon className="w-6 h-6 text-primary/20 group-hover:text-primary/60 transition-colors" strokeWidth={1} />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary/40 group-hover:text-primary transition-colors">
+                  {item.label}
+                </span>
+              </CathedraCard>
+            ))}
+          </div>
+        </FadeUp>
+
+        {/* Secondary Content - Subdued */}
+        <FadeUp delay={0.4}>
+          <div className="opacity-40 hover:opacity-100 transition-opacity duration-1000">
+            <NexusBubbles profileId={spiritualProfile as ProfileId} />
+          </div>
+        </FadeUp>
+
+        {!spiritualProfile && (
+          <FadeUp delay={0.5}>
+            <SpiritualQuiz />
+          </FadeUp>
+        )}
+      </div>
     </div>
   );
 };
