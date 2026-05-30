@@ -68,30 +68,43 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   return (
     <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
       {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
-      <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
+      <section className="animate-in fade-in slide-in-from-top-8 duration-1000 w-full">
         <SpiritualContinuity 
           profile={profile} 
           variant="glass"
         />
-        <div className="flex justify-center -mt-4 md:-mt-10 mb-6 md:mb-20">
+        <div className="flex justify-center -mt-2 md:-mt-10 mb-4 md:mb-20">
           <CathedraButton 
             variant="ghost" 
             size="sm"
             onClick={() => navigate('/spiritual-profile')}
-            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60 hover:text-primary transition-all duration-700"
+            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60 hover:text-primary transition-all duration-700 h-10 px-6"
             icon={<User className="w-3 h-3 mr-2" />}
           >
-            Ver Perfil Espiritual
+            Perfil
           </CathedraButton>
         </div>
       </section>
 
+      {/* 4. BIBLIOTECA - THE CORE SOURCES (MOVED UP FOR BETTER ACCESS) */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both w-full">
+        <h2 className="sr-only">Fontes de Sabedoria</h2>
+        <SectionHeader 
+          title="Biblioteca Sagrada" 
+          subtitle="As fontes imutáveis da Sabedoria."
+          className="header-margin-rhythm"
+        />
+        <div className="p-0.5 md:p-40 lg:p-64">
+          <HomeMainDoors t={t} />
+        </div>
+      </section>
+
       {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both w-full">
         <h2 className="sr-only">Destaques e Ritual</h2>
         <SectionHeader 
           title="Ritual do Dia" 
-          subtitle="Um momento de pausa e conexão espiritual no coração do seu dia."
+          subtitle="Um momento de pausa e conexão espiritual."
           className="header-margin-rhythm"
         />
         <CathedraCard padding="none" className="p-1 md:p-32 lg:p-40 border-transparent shadow-none bg-transparent">
@@ -100,12 +113,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </section>
 
       {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT - Reduced for mobile */}
-      <div className="py-12 md:py-96 flex flex-col items-center gap-3 md:gap-8 opacity-5 select-none pointer-events-none">
-        <div className="w-px h-10 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
+      <div className="py-8 md:py-96 flex flex-col items-center gap-3 md:gap-8 opacity-5 select-none pointer-events-none">
+        <div className="w-px h-8 md:h-64 bg-gradient-to-b from-transparent via-primary/10 to-transparent" />
         <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/20" strokeWidth={0.2} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-[var(--space-mobile-stack-lg)] md:gap-48 lg:gap-64">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-48 lg:gap-64 w-full">
         {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS */}
         <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both flex flex-col">
           <h2 className="sr-only">Sua Jornada de Leitura</h2>
@@ -170,22 +183,12 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
       </div>
 
       {/* VISUAL PAUSE - SECONDARY CADENCE */}
-      <div className="py-12 md:py-[32rem] flex justify-center opacity-1">
-        <div className="w-16 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+      <div className="py-8 md:py-[32rem] flex justify-center opacity-1">
+        <div className="w-12 md:w-32 h-px bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
       </div>
 
-      {/* 4. BIBLIOTECA - THE CORE SOURCES */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both">
-        <h2 className="sr-only">Fontes de Sabedoria</h2>
-        <SectionHeader 
-          title="Biblioteca Sagrada" 
-          subtitle="As fontes imutáveis da Sabedoria e da Tradição."
-          className="header-margin-rhythm"
-        />
-        <div className="p-0.5 md:p-40 lg:p-64">
-          <HomeMainDoors t={t} />
-        </div>
-      </section>
+      {/* 4. BIBLIOTECA - REMOVED FROM ORIGINAL POSITION (ALREADY MOVED UP) */}
+      
 
       {/* 5. EM BREVE - FUTURE EXPANSIONS */}
       <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-600 fill-mode-both opacity-30 hover:opacity-100 transition-opacity duration-1500">
