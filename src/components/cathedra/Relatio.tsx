@@ -195,7 +195,7 @@ const Relatio: React.FC<RelatioProps> = ({
   if (!relatioConfig.enabled || !hasAnyConnections) return null;
 
   return (
-    <section ref={containerRef} className={cn("mt-16 pt-16 border-t border-primary/[0.03] space-y-8 mb-20", className)} aria-labelledby="relatio-heading">
+    <section ref={containerRef} className={cn("mt-24 pt-24 border-t border-primary/[0.01] space-y-8 mb-20", className)} aria-labelledby="relatio-heading">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-6 h-6 rounded-full bg-primary/[0.03] flex items-center justify-center">
@@ -305,7 +305,7 @@ const Relatio: React.FC<RelatioProps> = ({
                       className="group relative"
                     >
                       <Card 
-                        className="h-full p-5 bg-primary/[0.005] dark:bg-white/[0.002] backdrop-blur-3xl border border-primary/[0.03] group-hover:border-primary/10 transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
+                        className="h-full p-5 bg-transparent border-none group-hover:bg-primary/[0.005] transition-all duration-700 rounded-premium shadow-none cursor-pointer overflow-hidden flex flex-col"
 
 
                         onClick={() => {
