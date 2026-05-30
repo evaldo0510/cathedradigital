@@ -4,7 +4,9 @@
 
 @layer base {
   :root {
-    /* Core Visual Tokens - Cathedra Premium System */
+    /* --- Core Visual Tokens: Cathedra Premium System --- */
+    
+    /* 1. Colors (HSL) */
     --background: 45 35% 99.4%;
     --foreground: 220 25% 10%;
     
@@ -20,18 +22,70 @@
     --muted: 45 20% 97%;
     --muted-foreground: 220 10% 50%; 
     
-    --border: 220 30% 4% / 0.05;
-    --radius: 2rem;
-    --radius-premium: 2.5rem;
+    --accent: 42 20% 95%;
+    --accent-foreground: 220 20% 12%;
     
+    --border: 220 30% 4% / 0.05;
+    --input: 220 30% 4% / 0.05;
+    --ring: 220 20% 12%;
+    
+    /* 2. Spacing Scale (8pt-based) */
+    --spacing-3xs: 0.125rem; /* 2px */
+    --spacing-2xs: 0.25rem;  /* 4px */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 0.75rem;  /* 12px */
+    --spacing-md: 1rem;     /* 16px */
+    --spacing-lg: 1.5rem;   /* 24px */
+    --spacing-xl: 2rem;     /* 32px */
+    --spacing-2xl: 3rem;    /* 48px */
+    --spacing-3xl: 4rem;    /* 64px */
+    --spacing-4xl: 6rem;    /* 96px */
+    
+    /* 3. Borders & Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 2rem;
+    --radius-xl: 2.5rem;
+    --radius-premium: var(--radius-xl);
+    --radius: var(--radius-lg);
+    
+    --border-thin: 1px;
+    --border-medium: 2px;
+    
+    /* 4. Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
     --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.02);
     --shadow-premium-hover: 0 30px 80px -20px rgba(0, 0, 0, 0.04);
     
-    --layout-max-width: 1400px;
-    --layout-padding: 2rem;
-    --layout-padding-mobile: 1rem;
+    /* 5. Typography Scale */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
     
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-wide: 0.05em;
+    --letter-spacing-widest: 0.25em;
+
+    /* 6. Layout Constants */
+    --layout-max-width: 1400px;
+    --layout-padding: var(--spacing-xl);
+    --layout-padding-mobile: var(--spacing-md);
+    
+    /* 7. Transitions */
     --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 200ms ease;
   }
 
   .dark, [data-theme='dark'] {
