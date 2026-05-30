@@ -403,7 +403,7 @@ const ProfilePage: React.FC = () => {
               animate={{ opacity: 1, height: 'auto' }}
               className="space-y-2 pt-2"
             >
-              <label className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
+              <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground pl-1">Número do WhatsApp (com DDD)</label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-bold">+55</span>
                 <input
@@ -417,13 +417,13 @@ const ProfilePage: React.FC = () => {
               </div>
             </motion.div>
           )}
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Clock className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">Horário do Ritual</p>
               </div>
-              <p className="text-premium-tiny text-muted-foreground">Sua jornada diária começa aqui.</p>
+              <p className="text-[10px] text-muted-foreground">Sua jornada diária começa aqui.</p>
             </div>
             <input 
               type="time" 
@@ -433,13 +433,13 @@ const ProfilePage: React.FC = () => {
             />
           </div>
           
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Star className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">Meta Semanal</p>
               </div>
-              <p className="text-premium-tiny text-muted-foreground">Dias de leitura por semana.</p>
+              <p className="text-[10px] text-muted-foreground">Dias de leitura por semana.</p>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-primary">{weeklyGoal} dias</span>
@@ -454,7 +454,7 @@ const ProfilePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </CathedraCard>
 
       {!profile.is_premium && (
         <motion.div
