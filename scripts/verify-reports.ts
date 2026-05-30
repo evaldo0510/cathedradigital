@@ -47,7 +47,8 @@ function validateJsonFiles(files: string[]) {
   const corrupted: string[] = [];
   
   jsonFiles.forEach(file => {
-    const content = readFileSync(join(REPORTS_DIR, file), 'utf8');
+    const filePath = join(REPORTS_DIR, file);
+    const content = readFileSync(filePath, 'utf8');
     try {
       const data = JSON.parse(content);
       // Basic schema check
@@ -56,8 +57,9 @@ function validateJsonFiles(files: string[]) {
       } else if (file.startsWith('token-audit')) {
         if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
       }
-    } catch (e) {
+    } catch (e: any) {
       corrupted.push(file);
+      annotate('error', `Relatório JSON corrompido ou inválido: ${e.message}`, filePath);
     }
   });
   return corrupted;
