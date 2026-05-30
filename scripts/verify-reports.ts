@@ -119,6 +119,7 @@ if (updateMode) {
   const corrupted = validateJsonFiles(actualFiles);
   if (corrupted.length > 0) {
     console.log(`${RED}✗ Relatórios JSON corrompidos detectados: ${corrupted.join(', ')}${RESET}`);
+    // Update mode also fails on corruption to avoid documenting bad data
     process.exit(1);
   }
 
@@ -140,7 +141,7 @@ if (updateMode) {
       console.log(`${YELLOW}${BOLD}⚠ Modo DRY RUN: Nenhuma alteração será feita.${RESET}`);
       console.log(`${BOLD}Divergências detectadas que seriam aplicadas:${RESET}\n`);
       console.log(treeStr);
-      process.exit(0);
+      process.exit(0); // dry-run always exits 0 unless there's an internal error
     }
 
     const newContent = readmeContent.replace(treeRegex, (match, p1) => {
