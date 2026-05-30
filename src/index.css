@@ -79,8 +79,8 @@
     --card-shadow-hover: none;
     --btn-radius: 9999px;
     --layout-max-width: 1800px;
-    --transition-premium: 3200ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 1500ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-premium: 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-subtle: 600ms cubic-bezier(0.16, 1, 0.3, 1);
     
     /* Global Spacing Rhythm Tokens */
     --space-mobile-base: 0.4rem;
@@ -127,7 +127,7 @@
     --input: 220 20% 10% / 0.0005;
     --ring: 42 15% 45% / 0.02;
     
-    --shadow-premium: 0 200px 600px -120px rgba(0, 0, 0, 1);
+    --shadow-premium: 0 40px 120px -20px rgba(0, 0, 0, 0.85);
   }
 
   .high-contrast {
