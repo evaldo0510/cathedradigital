@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-30T15:51:16.364Z",
+  "timestamp": "2026-05-30T15:54:29.294Z",
   "totalIssues": 0,
   "categories": [
     {
@@ -23,7 +23,7 @@
     {
       "name": "Direct Spacing",
       "id": "spacing",
-      "regex": "\\b(p|m|gap|space|w|h)-[0-9.]+\\b",
+      "regex": "\\b(p|m|gap|space|w|h)-([0-9.]+)\\b",
       "exclude": [
         "w-full",
         "h-full",
@@ -225,6 +225,28 @@
     },
     {
       "timestamp": "2026-05-30T15:51:16.364Z",
+      "totalIssues": 0,
+      "categories": [
+        {
+          "id": "spacing",
+          "count": 0
+        },
+        {
+          "id": "typography",
+          "count": 0
+        },
+        {
+          "id": "rounding",
+          "count": 0
+        },
+        {
+          "id": "shadows",
+          "count": 0
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-05-30T15:54:29.294Z",
       "totalIssues": 0,
       "categories": [
         {
