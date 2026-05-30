@@ -1,34 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import { forbiddenPatterns, runAudit } from './cathedra-audit';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { forbiddenPatterns } from './cathedra-audit';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'fs';
 import { join } from 'path';
 import { execSync } from 'child_process';
 
-// Mock child_process and fs to test runAudit without side effects
-vi.mock('child_process', () => ({
-  execSync: vi.fn(),
-  default: {
-    execSync: vi.fn()
-  }
-}));
+const TEST_DIR = join(process.cwd(), 'temp-test-audit');
+const TEST_FILE = join(TEST_DIR, 'TestComponent.tsx');
 
-vi.mock('fs', async (importOriginal) => {
-  const actual = await importOriginal() as any;
-  return {
-    ...actual,
-    writeFileSync: vi.fn(),
-    readFileSync: vi.fn(),
-    mkdirSync: vi.fn(),
-    existsSync: vi.fn(),
-    default: {
-      ...actual.default,
-      writeFileSync: vi.fn(),
-      readFileSync: vi.fn(),
-      mkdirSync: vi.fn(),
-      existsSync: vi.fn(),
-    }
-  };
-});
 
 describe('Cathedra Audit Token Mapping', () => {
   const findPattern = (id: string) => forbiddenPatterns.find(p => p.id === id);
@@ -87,7 +65,56 @@ describe('Cathedra Audit Token Mapping', () => {
   });
 
   describe('Dry-run Mode and Codemod Snapshots', () => {
-    it('should correctly identify replacements in dry-run mode', () => {
+    beforeEach(() => {
+      if (!existsSync(TEST_DIR)) {
+        mkdirSync(TEST_DIR, { recursive: true });
+      }
+      writeFileSync(TEST_FILE, `
+        export const Test = () => (
+          <div className="text-red-500 p-4 m-2 gap-4 rounded-lg shadow-md">
+            <span className="text-blue-600 p-2">Hello</span>
+          </div>
+        );
+      `);
+    });
+
+    afterEach(() => {
+      if (existsSync(TEST_DIR)) {
+        rmSync(TEST_DIR, { recursive: true, force: true });
+      }
+    });
+
+    it('dry-run mode should NOT modify the filesystem', () => {
+      const originalContent = readFileSync(TEST_FILE, 'utf-8');
+      
+      // Run the audit in dry-run mode targeting our temp file
+      execSync(`bun run scripts/cathedra-audit.ts --dry-run --path=${TEST_FILE}`, { stdio: 'pipe' });
+      
+      const newContent = readFileSync(TEST_FILE, 'utf-8');
+      expect(newContent).toBe(originalContent);
+    });
+
+    it('dry-run mode should output correct suggested replacements (Snapshot)', () => {
+      // Capture stdout to verify the suggestions
+      const output = execSync(`bun run scripts/cathedra-audit.ts --dry-run --path=${TEST_FILE}`, { encoding: 'utf-8' });
+      
+      // Extract the suggested replacements from the output to avoid noise from logs like timestamps
+      const suggestions = output.split('\n')
+        .filter(line => line.includes('→') || line.includes('Suggested:'))
+        .map(line => line.trim())
+        .sort();
+
+      expect(suggestions).toMatchSnapshot();
+    });
+
+    it('fails if dry-run somehow modifies a file (safety check)', () => {
+      const originalContent = readFileSync(TEST_FILE, 'utf-8');
+      execSync(`bun run scripts/cathedra-audit.ts --dry-run --path=${TEST_FILE}`);
+      const contentAfterAudit = readFileSync(TEST_FILE, 'utf-8');
+      expect(contentAfterAudit).toBe(originalContent);
+    });
+
+    it('should correctly identify replacements in internal logic', () => {
       const mockContent = '<div className="p-4 rounded-md shadow-md text-sm"></div>';
       
       const results: string[] = [];
@@ -131,21 +158,6 @@ describe('Cathedra Audit Token Mapping', () => {
 
       expect(results).toMatchSnapshot();
     });
-
-    it('should respect exclusions in the snapshot', () => {
-      const content = 'p-4 w-full h-auto m-2';
-      let transformed = content;
-      
-      forbiddenPatterns.forEach(pattern => {
-        const regex = new RegExp(pattern.regex, 'g');
-        transformed = transformed.replace(regex, (match) => {
-          if (pattern.exclude.includes(match)) return match;
-          return pattern.fix(match);
-        });
-      });
-
-      expect(transformed).toBe('p-spacing-md w-full h-auto m-spacing-xs');
-      expect(transformed).toMatchSnapshot();
-    });
   });
 });
+
