@@ -53,14 +53,14 @@ const AnimatedStat = ({ value, label, index }: { value: string; label: string; i
         delay: index * 0.15,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       }}
-      className="text-center space-y-sm group"
+      className="text-center space-y-spacing-sm group"
     >
       <motion.div
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.3 + index * 0.15 }}
-        className="w-2xl h-3xs bg-primary/30 mx-auto mb-md origin-left"
+        className="w-spacing-2xl h-spacing-3xs bg-primary/30 mx-auto mb-spacing-md origin-left"
       />
       <motion.p
         className="text-5xl md:text-6xl font-display font-bold text-primary"
@@ -118,14 +118,14 @@ const StatsSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="w-full py-4xl px-lg border-y border-border/10 bg-transparent relative overflow-hidden">
+    <section ref={sectionRef} className="w-full py-spacing-4xl px-spacing-lg border-y border-border/10 bg-transparent relative overflow-hidden">
       {/* Parallax decorative elements */}
       <motion.div
         style={{ y: bgY }}
         className="absolute inset-0 pointer-events-none opacity-20"
       >
-        <div className="absolute top-xl left-xl w-4xl h-4xl rounded-premium bg-primary/5" />
-        <div className="absolute bottom-xl right-xl w-4xl h-4xl rounded-premium bg-primary/5" />
+        <div className="absolute top-spacing-xl left-spacing-xl w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5" />
+        <div className="absolute bottom-spacing-xl right-spacing-xl w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5" />
       </motion.div>
 
       {/* Section header */}
@@ -134,13 +134,13 @@ const StatsSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-3xl"
+        className="text-center mb-spacing-3xl"
       >
         <span className="text-xs font-black uppercase tracking-[0.4em] text-primary/60">Impacto Espiritual & Conhecimento</span>
-        <h2 className="mt-md text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
+        <h2 className="mt-spacing-md text-3xl md:text-4xl font-display font-bold text-foreground">Transformação através do estudo e oração</h2>
       </motion.div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-xl relative z-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-spacing-xl relative z-10">
         {stats.map((stat, i) => (
           <AnimatedStat key={stat.label} value={stat.value} label={stat.label} index={i} />
         ))}

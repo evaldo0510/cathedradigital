@@ -97,21 +97,21 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
   if (settings.totalSilence) return null;
 
   return (
-    <div className={`rounded-full border p-md space-y-sm ${bgClass}`}>
+    <div className={`rounded-full border p-spacing-md space-y-spacing-sm ${bgClass}`}>
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-xs">
-          <Icons.Audio className={`w-md h-md ${mutedClass}`} />
+        <div className="flex items-center gap-spacing-xs">
+          <Icons.Audio className={`w-spacing-md h-spacing-md ${mutedClass}`} />
           <span className={`text-xs font-black uppercase tracking-widest ${mutedClass}`}>
             Áudio das Orações
           </span>
         </div>
-        <div className="flex items-center gap-xs">
+        <div className="flex items-center gap-spacing-xs">
           <span className={`text-xs font-bold ${mutedClass}`}>Vel:</span>
           {[0.7, 0.85, 1.0].map(r => (
             <Button
               key={r}
               onClick={() => setRate(r)}
-              className={`w-lg h-lg rounded-full text-xs font-bold transition-all ${
+              className={`w-spacing-lg h-spacing-lg rounded-full text-xs font-bold transition-all ${
                 rate === r
                   ? (isDark ? 'bg-secondary/30 text-secondary' : 'bg-primary text-primary-foreground')
                   : (isDark ? 'bg-card/50 text-secondary/40' : 'bg-card text-muted-foreground')
@@ -125,9 +125,9 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
 
       {/* Progress indicators */}
       {isPlaying && (
-        <div className="flex gap-2xs">
+        <div className="flex gap-spacing-2xs">
           {prayers.map((_, i) => (
-            <div key={i} className={`flex-1 h-2xs rounded-full transition-all ${
+            <div key={i} className={`flex-1 h-spacing-2xs rounded-full transition-all ${
               i <= currentIdx
                 ? (isDark ? 'bg-secondary/60' : 'bg-primary')
                 : (isDark ? 'bg-white/10' : 'bg-border')
@@ -144,16 +144,16 @@ const PrayerAudioPlayer: React.FC<PrayerAudioPlayerProps> = ({ prayers, variant 
 
       <Button
         onClick={togglePlay}
-        className={`w-full py-sm rounded-full border font-bold text-sm transition-all flex items-center justify-center gap-xs ${btnClass}`}
+        className={`w-full py-spacing-sm rounded-full border font-bold text-sm transition-all flex items-center justify-center gap-spacing-xs ${btnClass}`}
       >
         {isPlaying ? (
           <>
-            <Icons.Stop className="w-md h-md" />
+            <Icons.Stop className="w-spacing-md h-spacing-md" />
             Parar Áudio
           </>
         ) : (
           <>
-            <Icons.Audio className="w-md h-md" />
+            <Icons.Audio className="w-spacing-md h-spacing-md" />
             Ouvir Orações
           </>
         )}

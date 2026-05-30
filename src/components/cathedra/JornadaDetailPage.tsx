@@ -13,10 +13,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
-  reading: <BookOpen className="w-md h-md" />,
-  prayer: <Hand className="w-md h-md" />,
-  reflection: <PenLine className="w-md h-md" />,
-  quiz: <HelpCircle className="w-md h-md" />,
+  reading: <BookOpen className="w-spacing-md h-spacing-md" />,
+  prayer: <Hand className="w-spacing-md h-spacing-md" />,
+  reflection: <PenLine className="w-spacing-md h-spacing-md" />,
+  quiz: <HelpCircle className="w-spacing-md h-spacing-md" />,
 };
 
 const JornadaDetailPage: React.FC = () => {
@@ -75,17 +75,17 @@ const JornadaDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
-        <div className="w-xl h-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
+        <div className="w-spacing-xl h-spacing-xl border-2 border-secondary border-t-transparent rounded-premium animate-spin" />
       </div>
     );
   }
 
   if (!journey) {
     return (
-      <div className="text-center space-y-md py-2xl">
+      <div className="text-center space-y-spacing-md py-spacing-2xl">
         <p className="text-muted-foreground">Jornada não encontrada.</p>
         <Button variant="outline" onClick={() => navigate(AppRoute.JORNADAS)}>
-          <ArrowLeft className="w-md h-md mr-xs" /> Voltar
+          <ArrowLeft className="w-spacing-md h-spacing-md mr-spacing-xs" /> Voltar
         </Button>
       </div>
     );
@@ -98,31 +98,31 @@ const JornadaDetailPage: React.FC = () => {
   const isJourneyComplete = totalSteps > 0 && completedCount === totalSteps;
 
   return (
-    <div className="space-y-lg max-w-2xl mx-auto">
+    <div className="space-y-spacing-lg max-w-spacing-2xl mx-auto">
       {/* Header */}
-      <div className="flex items-center gap-sm">
+      <div className="flex items-center gap-spacing-sm">
         <div className="flex-1">
           <h1 className="text-xl font-bold font-serif text-foreground">{journey.title}</h1>
           {journey.subtitle && <p className="text-sm text-muted-foreground">{journey.subtitle}</p>}
         </div>
         {journey.is_premium && (
           <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-            <Sparkles className="w-sm h-sm mr-2xs" /> PRO
+            <Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-2xs" /> PRO
           </Badge>
         )}
       </div>
 
       {/* Progress */}
-      <CathedraCard padding="md" className="border-primary/10 shadow-premium space-y-md">
+      <CathedraCard padding="md" className="border-primary/10 shadow-premium space-y-spacing-md">
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground font-medium">Progresso da Jornada</span>
             <span className="font-bold text-primary">{completedCount}/{totalSteps} etapas</span>
           </div>
-          <Progress value={progressPercent} className="h-2xs" />
+          <Progress value={progressPercent} className="h-spacing-2xs" />
           <div className="flex items-center justify-between">
-            <div className="flex gap-md text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
-              <span className="flex items-center gap-2xs"><Clock className="w-sm h-sm" /> ~{journey.estimated_days} dias</span>
-              <span className="px-xs py-3xs rounded-full bg-muted border border-border/40">{journey.difficulty}</span>
+            <div className="flex gap-spacing-md text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+              <span className="flex items-center gap-spacing-2xs"><Clock className="w-spacing-sm h-spacing-sm" /> ~{journey.estimated_days} dias</span>
+              <span className="px-spacing-xs py-spacing-3xs rounded-full bg-muted border border-border/40">{journey.difficulty}</span>
             </div>
             {isJourneyComplete && (
               <Badge className="bg-emerald-500 text-white border-none text-[8px]">FINALIZADA</Badge>
@@ -138,23 +138,23 @@ const JornadaDetailPage: React.FC = () => {
       {/* Completion Banner */}
       {isJourneyComplete && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <CathedraCard padding="md" className="premium-card border-primary/10 bg-gradient-to-r from-primary/5 to-transparent shadow-premium flex items-center gap-md">
-              <div className="w-2xl h-2xl rounded-premium bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Award className="w-lg h-lg text-primary" />
+          <CathedraCard padding="md" className="premium-card border-primary/10 bg-gradient-to-r from-primary/5 to-transparent shadow-premium flex items-center gap-spacing-md">
+              <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Award className="w-spacing-lg h-spacing-lg text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-md h-md inline mr-xs text-primary" /> Jornada Concluída!</p>
+                <p className="font-bold text-sm text-foreground"><Icons.PartyPopper className="w-spacing-md h-spacing-md inline mr-spacing-xs text-primary" /> Jornada Concluída!</p>
                 <p className="text-xs text-muted-foreground">Parabéns! Veja seu certificado e reflexões.</p>
               </div>
               <Button size="sm" onClick={() => navigate(`/jornadas/${id}/complete`)}>
-                Ver <ChevronRight className="w-md h-md ml-2xs" />
+                Ver <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
               </Button>
           </CathedraCard>
         </motion.div>
       )}
 
       {/* Steps */}
-      <div className="space-y-sm">
+      <div className="space-y-spacing-sm">
         <h2 className="text-lg font-semibold text-foreground">Etapas</h2>
         {steps.map((step, index) => {
           const isCompleted = completedStepIds.has(step.id);
@@ -171,27 +171,27 @@ const JornadaDetailPage: React.FC = () => {
               <CathedraCard 
                 padding="md"
                 variant="interactive"
-                className={`transition-all border-primary/5 ${isNext ? 'border-primary/20 ring-1 ring-primary/10' : ''} ${isCompleted ? 'bg-primary/[0.02] shadow-sm' : ''} ${isStepLocked ? 'opacity-40 grayscale' : ''} flex items-center gap-md`}>
+                className={`transition-all border-primary/5 ${isNext ? 'border-primary/20 ring-1 ring-primary/10' : ''} ${isCompleted ? 'bg-primary/[0.02] shadow-sm' : ''} ${isStepLocked ? 'opacity-40 grayscale' : ''} flex items-center gap-spacing-md`}>
                   {/* Step number / status */}
-                  <div className={`w-xl h-xl rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
+                  <div className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold ${
                     isCompleted
                       ? 'bg-primary text-primary-foreground'
                       : isStepLocked
                         ? 'bg-muted text-muted-foreground'
                         : 'bg-primary/10 text-primary'
                   }`}>
-                    {isCompleted ? <Check className="w-md h-md" /> : isStepLocked ? <Lock className="w-md h-md" /> : index + 1}
+                    {isCompleted ? <Check className="w-spacing-md h-spacing-md" /> : isStepLocked ? <Lock className="w-spacing-md h-spacing-md" /> : index + 1}
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-xs">
+                    <div className="flex items-center gap-spacing-xs">
                       <h3 className="font-semibold text-sm text-foreground truncate">{step.title}</h3>
                       {isStepLocked && (
-                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-xs uppercase font-black px-2xs py-0">PRO</Badge>
+                        <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10 text-xs uppercase font-black px-spacing-2xs py-0">PRO</Badge>
                       )}
                     </div>
-                    <div className="flex items-center gap-xs text-xs text-muted-foreground mt-3xs">
+                    <div className="flex items-center gap-spacing-xs text-xs text-muted-foreground mt-spacing-3xs">
                       {STEP_ICONS[step.step_type] || STEP_ICONS.reading}
                       <span className="capitalize">{step.step_type === 'reading' ? 'Leitura' : step.step_type === 'prayer' ? 'Oração' : step.step_type === 'reflection' ? 'Reflexão' : 'Quiz'}</span>
                       <span>• {step.duration_minutes}min</span>
@@ -206,7 +206,7 @@ const JornadaDetailPage: React.FC = () => {
                       onClick={() => navigate(`/jornadas/${id}/step?step=${step.id}`)}
                     >
                       {isCompleted ? 'Rever' : isNext ? 'Iniciar' : 'Abrir'}
-                      <ChevronRight className="w-md h-md ml-2xs" />
+                      <ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
                     </Button>
                   )}
               </CathedraCard>
@@ -216,8 +216,8 @@ const JornadaDetailPage: React.FC = () => {
       </div>
 
       {isLocked && (
-        <CathedraCard padding="md" className="premium-card border-primary/10 bg-primary/[0.01] shadow-premium text-center space-y-sm">
-            <Sparkles className="w-xl h-xl mx-auto text-primary" />
+        <CathedraCard padding="md" className="premium-card border-primary/10 bg-primary/[0.01] shadow-premium text-center space-y-spacing-sm">
+            <Sparkles className="w-spacing-xl h-spacing-xl mx-auto text-primary" />
             <p className="text-sm text-foreground font-medium">Esta jornada é exclusiva para assinantes PRO</p>
             <Button onClick={() => navigate(AppRoute.PRICING)} size="sm">
               Ver Planos

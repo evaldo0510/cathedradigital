@@ -9,13 +9,13 @@ const ReadingModeToggle: React.FC = () => {
   return (
     <Button
       onClick={toggle}
-      className="fixed bottom-4xl right-md lg:bottom-lg lg:right-lg z-50 p-sm rounded-full bg-card border border-border shadow-premium hover:shadow-premium-hover transition-all group"
+      className="fixed bottom-spacing-4xl right-spacing-md lg:bottom-spacing-lg lg:right-spacing-lg z-50 p-spacing-sm rounded-full bg-card border border-border shadow-premium hover:shadow-premium-hover transition-all group"
       title={isNight ? 'Modo diurno' : 'Modo leitura noturna'}
     >
       {isNight ? (
-        <Icons.Sun className="w-md h-md text-primary group-hover:scale-110 transition-transform" />
+        <Icons.Sun className="w-spacing-md h-spacing-md text-primary group-hover:scale-110 transition-transform" />
       ) : (
-        <Icons.Moon className="w-md h-md text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all" />
+        <Icons.Moon className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:scale-110 transition-all" />
       )}
     </Button>
   );

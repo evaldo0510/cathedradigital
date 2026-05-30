@@ -29,27 +29,27 @@ const ProShowcase: React.FC = () => {
       className="relative overflow-hidden rounded-full border border-secondary/30 bg-gradient-to-br from-secondary/10 via-card to-primary/5 shadow-premium"
     >
       {/* Decorative glows */}
-      <div className="absolute -top-4xl -right-4xl w-4xl h-4xl bg-secondary/15 rounded-premium  pointer-events-none" />
-      <div className="absolute -bottom-3xl -left-3xl w-4xl h-4xl bg-primary/10 rounded-premium  pointer-events-none" />
+      <div className="absolute -top-spacing-4xl -right-spacing-4xl w-spacing-4xl h-spacing-4xl bg-secondary/15 rounded-premium  pointer-events-none" />
+      <div className="absolute -bottom-spacing-3xl -left-spacing-3xl w-spacing-4xl h-spacing-4xl bg-primary/10 rounded-premium  pointer-events-none" />
 
-      <div className="relative z-10 p-lg md:p-xl space-y-lg">
+      <div className="relative z-10 p-spacing-lg md:p-spacing-xl space-y-spacing-lg">
         {/* Header */}
-        <div className="text-center space-y-xs">
-          <div className="inline-flex items-center gap-xs px-sm py-2xs rounded-premium bg-secondary/20 border border-secondary/30">
-            <Crown className="w-sm h-sm text-secondary" />
+        <div className="text-center space-y-spacing-xs">
+          <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-secondary/20 border border-secondary/30">
+            <Crown className="w-spacing-sm h-spacing-sm text-secondary" />
             <span className="text-xs font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
           </div>
           <h2 className="text-xl md:text-2xl font-black text-foreground leading-tight">
             Desbloqueie a experiência <br className="hidden md:block" />
             <span className="text-secondary">completa da fé</span>
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground max-w-spacing-md mx-auto">
             Aprofunde-se sem limites. Conteúdos exclusivos, IA teológica e formação espiritual completa.
           </p>
         </div>
 
         {/* Benefits grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-sm">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-spacing-sm">
           {BENEFITS.map((b, i) => {
             const Icon = b.icon;
             return (
@@ -58,9 +58,9 @@ const ProShowcase: React.FC = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.05 }}
-                className="p-sm rounded-full bg-background/60 border border-border/60 space-y-2xs"
+                className="p-spacing-sm rounded-full bg-background/60 border border-border/60 space-y-spacing-2xs"
               >
-                <Icon className="w-md h-md text-secondary" />
+                <Icon className="w-spacing-md h-spacing-md text-secondary" />
                 <p className="text-xs font-bold text-foreground leading-tight">{b.label}</p>
                 <p className="text-xs text-muted-foreground leading-snug">{b.desc}</p>
               </motion.div>
@@ -69,13 +69,13 @@ const ProShowcase: React.FC = () => {
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col items-center gap-sm pt-xs">
+        <div className="flex flex-col items-center gap-spacing-sm pt-spacing-xs">
           <Button
             onClick={() => navigate(AppRoute.PRICING)}
-            className="w-full max-w-sm rounded-full h-2xl gap-xs font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
+            className="w-full max-w-spacing-sm rounded-full h-spacing-2xl gap-spacing-xs font-bold text-xs uppercase tracking-widest bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-premium hover:shadow-premium transition-all"
           >
-            <Crown className="w-md h-md" /> Conheça o PRO
-            <ArrowRight className="w-md h-md" />
+            <Crown className="w-spacing-md h-spacing-md" /> Conheça o PRO
+            <ArrowRight className="w-spacing-md h-spacing-md" />
           </Button>
           <p className="text-xs text-muted-foreground">
             Planos a partir de <span className="font-bold text-foreground">R$ 9,90/mês</span> · Cancele quando quiser

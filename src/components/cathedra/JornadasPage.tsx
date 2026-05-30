@@ -43,13 +43,13 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 };
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  fundamentos: <Icons.Sparkles className="w-md h-md" />,
-  formacao: <Icons.BookOpen className="w-md h-md" />,
-  rotina: <Icons.Calendar className="w-md h-md" />,
-  oracao: <Icons.Heart className="w-md h-md" />,
-  mistico: <Icons.Sun className="w-md h-md" />,
-  cura: <Icons.Stethoscope className="w-md h-md" />,
-  transformacao: <Icons.Zap className="w-md h-md" />,
+  fundamentos: <Icons.Sparkles className="w-spacing-md h-spacing-md" />,
+  formacao: <Icons.BookOpen className="w-spacing-md h-spacing-md" />,
+  rotina: <Icons.Calendar className="w-spacing-md h-spacing-md" />,
+  oracao: <Icons.Heart className="w-spacing-md h-spacing-md" />,
+  mistico: <Icons.Sun className="w-spacing-md h-spacing-md" />,
+  cura: <Icons.Stethoscope className="w-spacing-md h-spacing-md" />,
+  transformacao: <Icons.Zap className="w-spacing-md h-spacing-md" />,
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -215,15 +215,15 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
   if (loading) {
     return (
-      <div className="space-y-lg max-w-2xl mx-auto pb-4xl">
-        <div className="text-center space-y-sm pt-md">
-          <div className="w-xl h-xl mx-auto rounded-premium bg-primary/20 animate-pulse" />
-          <div className="h-lg w-4xl mx-auto bg-muted/60 rounded-premium animate-pulse" />
-          <div className="h-md w-4xl mx-auto bg-muted/40 rounded-premium animate-pulse" />
+      <div className="space-y-spacing-lg max-w-spacing-2xl mx-auto pb-spacing-4xl">
+        <div className="text-center space-y-spacing-sm pt-spacing-md">
+          <div className="w-spacing-xl h-spacing-xl mx-auto rounded-premium bg-primary/20 animate-pulse" />
+          <div className="h-spacing-lg w-spacing-4xl mx-auto bg-muted/60 rounded-premium animate-pulse" />
+          <div className="h-spacing-md w-spacing-4xl mx-auto bg-muted/40 rounded-premium animate-pulse" />
         </div>
-        <div className="space-y-md">
+        <div className="space-y-spacing-md">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
+            <div key={i} className="h-spacing-4xl rounded-premium bg-muted/40 animate-pulse" style={{ animationDelay: `${i * 150}ms` }} />
           ))}
         </div>
       </div>
@@ -240,25 +240,25 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
     >
       <SEOHead title="Jornadas Espirituais" description="Percorra jornadas de transformação espiritual com conteúdos guiados de formação católica." path="/jornadas" keywords="jornada espiritual, formação católica, crescimento espiritual" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Jornadas", path: "/jornadas" }]} />
       <div ref={ref} className="desktop-layout">
-        <div className="desktop-main space-y-xl md:space-y-2xl">
+        <div className="desktop-main space-y-spacing-xl md:space-y-spacing-2xl">
           
           {/* Journey Reminder Settings */}
           {user && (
-            <div className="flex justify-end mb-md">
+            <div className="flex justify-end mb-spacing-md">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="rounded-full gap-xs text-[10px] font-black uppercase tracking-widest border-primary/20 hover:bg-primary/5">
-                    <Icons.Bell className="w-sm h-sm" /> Lembrete
+                  <Button variant="outline" size="sm" className="rounded-full gap-spacing-xs text-[10px] font-black uppercase tracking-widest border-primary/20 hover:bg-primary/5">
+                    <Icons.Bell className="w-spacing-sm h-spacing-sm" /> Lembrete
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle className="font-display text-2xl text-primary">Lembrete de Jornada</DialogTitle>
                   </DialogHeader>
-                  <div className="py-md space-y-lg">
-                    <div className="space-y-sm">
+                  <div className="py-spacing-md space-y-spacing-lg">
+                    <div className="space-y-spacing-sm">
                       <label className="text-xs font-bold uppercase tracking-widest text-primary/60">Horário Preferencial</label>
-                      <div className="flex gap-xs">
+                      <div className="flex gap-spacing-xs">
                         <Input 
                           type="time" 
                           defaultValue={profile?.journey_reminder_time || "07:00"}
@@ -296,7 +296,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Quote */}
       <motion.div 
-        className="text-center space-y-md max-w-3xl mx-auto mb-2xl"
+        className="text-center space-y-spacing-md max-w-spacing-3xl mx-auto mb-spacing-2xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2 }}
@@ -309,7 +309,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {/* Stats bar */}
       {stats.started > 0 && (
         <motion.div 
-          className="flex items-center justify-center gap-md sm:gap-lg py-xs sm:py-sm px-sm sm:px-md bg-muted/30 rounded-full"
+          className="flex items-center justify-center gap-spacing-md sm:gap-spacing-lg py-spacing-xs sm:py-spacing-sm px-spacing-sm sm:px-spacing-md bg-muted/30 rounded-full"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
@@ -318,12 +318,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <p className="text-base sm:text-lg font-black text-foreground">{stats.total}</p>
             <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Jornadas</p>
           </div>
-          <div className="w-px h-xl bg-border" />
+          <div className="w-px h-spacing-xl bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-primary">{stats.started}</p>
             <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Iniciadas</p>
           </div>
-          <div className="w-px h-xl bg-border" />
+          <div className="w-px h-spacing-xl bg-border" />
           <div className="text-center">
             <p className="text-base sm:text-lg font-black text-emerald-500">{stats.completed}</p>
             <p className="text-xs sm:text-xs font-black uppercase tracking-widest text-muted-foreground">Concluídas</p>
@@ -335,13 +335,13 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       <AnimatePresence>
         {activeJourneys.length > 0 && (
           <motion.div 
-            className="space-y-sm"
+            className="space-y-spacing-sm"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
           >
-            <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary/60">
-              <Icons.Flame className="w-sm h-sm" /> Continuar Jornada
+            <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-primary/60">
+              <Icons.Flame className="w-spacing-sm h-spacing-sm" /> Continuar Jornada
             </div>
             {activeJourneys.slice(0, 1).map(journey => {
               const total = stepsCountMap[journey.id] || 1;
@@ -364,19 +364,19 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     aria-label={`Continuar jornada ${journey.title}, ${pct}% concluída`}
                   >
 
-                    <div className="absolute top-0 right-0 p-md opacity-5 pointer-events-none">
-                      <Icons.Flame className="w-3xl h-3xl text-primary" />
+                    <div className="absolute top-0 right-0 p-spacing-md opacity-5 pointer-events-none">
+                      <Icons.Flame className="w-spacing-3xl h-spacing-3xl text-primary" />
                     </div>
-                    <div className="p-sm sm:p-md space-y-xs sm:space-y-sm">
-                      <div className="flex items-center justify-between gap-sm">
+                    <div className="p-spacing-sm sm:p-spacing-md space-y-spacing-xs sm:space-y-spacing-sm">
+                      <div className="flex items-center justify-between gap-spacing-sm">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-foreground text-base sm:text-lg">{journey.title}</h3>
                           {journey.subtitle && (
-                            <p className="text-xs text-muted-foreground font-serif italic mt-3xs">{journey.subtitle}</p>
+                            <p className="text-xs text-muted-foreground font-serif italic mt-spacing-3xs">{journey.subtitle}</p>
                           )}
                         </div>
-                        <div className="relative w-xl h-xl sm:w-2xl sm:h-2xl flex-shrink-0">
-                          <svg className="w-xl h-xl sm:w-2xl sm:h-2xl -rotate-90" viewBox="0 0 36 36">
+                        <div className="relative w-spacing-xl h-spacing-xl sm:w-spacing-2xl sm:h-spacing-2xl flex-shrink-0">
+                          <svg className="w-spacing-xl h-spacing-xl sm:w-spacing-2xl sm:h-spacing-2xl -rotate-90" viewBox="0 0 36 36">
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-muted" strokeWidth="3" />
                             <circle cx="18" cy="18" r="15.5" fill="none" className="stroke-primary" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round" />
                           </svg>
@@ -387,9 +387,9 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         <p className="text-xs text-muted-foreground font-medium">{done} de {total} etapas</p>
                         <Button 
                           size="sm" 
-                          className="bg-primary hover:bg-primary/90 text-white font-black text-xs sm:text-xs uppercase tracking-[0.15em] px-sm sm:px-md h-xl sm:h-xl rounded-full sm:rounded-full shadow-premium shadow-primary/20 group"
+                          className="bg-primary hover:bg-primary/90 text-white font-black text-xs sm:text-xs uppercase tracking-[0.15em] px-spacing-sm sm:px-spacing-md h-spacing-xl sm:h-spacing-xl rounded-full sm:rounded-full shadow-premium shadow-primary/20 group"
                         >
-                          Continuar <Icons.ChevronRight className="w-sm h-sm ml-2xs group-hover:translate-x-0.5 transition-transform" />
+                          Continuar <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs group-hover:translate-x-0.5 transition-transform" />
                         </Button>
                       </div>
                     </div>
@@ -408,16 +408,16 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <CathedraCard padding="md" className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden flex items-center gap-md sm:gap-lg">
-              <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Icons.Brain className="w-md h-md text-primary" />
+          <CathedraCard padding="md" className="premium-card bg-gradient-to-r from-primary/5 to-transparent overflow-hidden flex items-center gap-spacing-md sm:gap-spacing-lg">
+              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Icons.Brain className="w-spacing-md h-spacing-md text-primary" />
               </div>
               <div className="flex-1">
                 <p className="text-sm font-semibold text-foreground">Inicie sua caminhada</p>
                 <p className="text-xs text-muted-foreground">O Logos pode recomendar a melhor jornada para sua alma.</p>
               </div>
               <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="flex-shrink-0">
-                Diagnóstico <Icons.ArrowRight className="w-md h-md ml-2xs" />
+                Diagnóstico <Icons.ArrowRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
               </Button>
           </CathedraCard>
         </motion.div>
@@ -425,7 +425,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Search & Filters */}
       <motion.div 
-        className="space-y-md"
+        className="space-y-spacing-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
@@ -437,13 +437,13 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
           isSearching={fuzzySearch.isPending}
         />
 
-        <div className="space-y-sm">
-          <div className="flex items-center gap-xs text-sm text-muted-foreground">
-            <Icons.Filter className="w-md h-md" />
+        <div className="space-y-spacing-sm">
+          <div className="flex items-center gap-spacing-xs text-sm text-muted-foreground">
+            <Icons.Filter className="w-spacing-md h-spacing-md" />
             <span className="font-medium">Filtrar</span>
           </div>
 
-          <div className="flex flex-wrap gap-xs" role="list">
+          <div className="flex flex-wrap gap-spacing-xs" role="list">
             <div role="listitem">
               <BubbleTag
                 label="Todas"
@@ -465,10 +465,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               </div>
             ))}
           </div>
-        <div className="flex flex-wrap gap-2xs sm:gap-xs">
+        <div className="flex flex-wrap gap-spacing-2xs sm:gap-spacing-xs">
           <Button
             onClick={() => setFilterDifficulty('all')}
-            className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            className={`px-spacing-xs sm:px-spacing-sm py-spacing-2xs sm:py-spacing-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               filterDifficulty === 'all' ? 'bg-foreground text-background shadow-premium' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
             aria-pressed={filterDifficulty === 'all'}
@@ -480,7 +480,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <Button
               key={diff}
               onClick={() => setFilterDifficulty(diff)}
-              className={`px-xs sm:px-sm py-2xs sm:py-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+              className={`px-spacing-xs sm:px-spacing-sm py-spacing-2xs sm:py-spacing-2xs rounded-full text-xs sm:text-xs font-semibold transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary outline-none ${
                 filterDifficulty === diff ? 'bg-foreground text-background shadow-premium' : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
               aria-pressed={filterDifficulty === diff}
@@ -496,7 +496,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       {/* Search Results as SearchResultCards */}
       {searchQuery.trim().length >= 2 && fuzzySearch.results && fuzzySearch.results.length > 0 && (
         <AnimatePresence mode="popLayout">
-        <div className="space-y-xs">
+        <div className="space-y-spacing-xs">
           <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Resultados da busca</p>
           {fuzzySearch.results.map((j, i) => (
             <SearchResultCard
@@ -504,7 +504,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               title={j.title}
               subtitle={j.subtitle || j.description}
               score={(j as any).similarityScore}
-              icon={<Icons.Compass className="w-md h-md" />}
+              icon={<Icons.Compass className="w-spacing-md h-spacing-md" />}
               onClick={() => navigate(`/jornadas/${j.id}`)}
               index={i}
             />
@@ -515,7 +515,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {/* Journey Cards */}
       <motion.div 
-        className="space-y-sm sm:space-y-md"
+        className="space-y-spacing-sm sm:space-y-spacing-md"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -563,7 +563,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-60 pointer-events-none`} />
                     
                     {journey.cover_url && (
-                      <div className="relative w-full h-4xl sm:h-4xl overflow-hidden">
+                      <div className="relative w-full h-spacing-4xl sm:h-spacing-4xl overflow-hidden">
                         <img
                           src={journey.cover_url}
                           alt={journey.title}
@@ -572,20 +572,20 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
                         {isComplete && (
-                          <div className="absolute top-sm right-sm bg-emerald-500 text-white px-xs py-2xs rounded-premium text-xs font-black uppercase tracking-widest flex items-center gap-2xs shadow-premium">
-                            <Icons.Check className="w-sm h-sm" /> Concluída
+                          <div className="absolute top-spacing-sm right-spacing-sm bg-emerald-500 text-white px-spacing-xs py-spacing-2xs rounded-premium text-xs font-black uppercase tracking-widest flex items-center gap-spacing-2xs shadow-premium">
+                            <Icons.Check className="w-spacing-sm h-spacing-sm" /> Concluída
                           </div>
                         )}
                       </div>
                     )}
 
-                    <div className="p-sm sm:p-md space-y-xs sm:space-y-sm relative">
+                    <div className="p-spacing-sm sm:p-spacing-md space-y-spacing-xs sm:space-y-spacing-sm relative">
                       {/* Title row */}
-                      <div className="flex items-start justify-between gap-sm">
+                      <div className="flex items-start justify-between gap-spacing-sm">
                         <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2xs sm:gap-xs flex-wrap mb-2xs">
-                              <div className="w-lg h-lg sm:w-xl sm:h-xl rounded-full sm:rounded-premium bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
-                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-md h-md" />}
+                            <div className="flex items-center gap-spacing-2xs sm:gap-spacing-xs flex-wrap mb-spacing-2xs">
+                              <div className="w-spacing-lg h-spacing-lg sm:w-spacing-xl sm:h-spacing-xl rounded-full sm:rounded-premium bg-muted/80 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+                              {CATEGORY_ICONS[journey.category] || <Icons.BookOpen className="w-spacing-md h-spacing-md" />}
                             </div>
                             <div className="flex-1 min-w-0">
                               <h2 className="text-sm sm:text-base font-bold font-serif text-foreground truncate">{journey.title}</h2>
@@ -595,16 +595,16 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-xs flex-shrink-0">
+                        <div className="flex items-center gap-spacing-xs flex-shrink-0">
                           {searchQuery.trim().length >= 2 && (
                             <RelevanceBadge score={fuzzyScoreMap[journey.id]} size="xs" />
                           )}
                           {journey.is_premium && (
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs px-xs">
-                              <Icons.Sparkles className="w-sm h-sm mr-3xs" /> PRO
+                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 text-xs px-spacing-xs">
+                              <Icons.Sparkles className="w-spacing-sm h-spacing-sm mr-spacing-3xs" /> PRO
                             </Badge>
                           )}
-                          <Icons.ChevronRight className="w-md h-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                          <Icons.ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all flex-shrink-0" />
                         </div>
                       </div>
 
@@ -615,14 +615,14 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
                       {/* Tags */}
                       {journey.tags && journey.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2xs">
+                        <div className="flex flex-wrap gap-spacing-2xs">
                           {journey.tags.slice(0, 3).map((tag: string) => (
-                            <span key={tag} className="text-xs px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
+                            <span key={tag} className="text-xs px-spacing-xs py-spacing-3xs rounded-full bg-muted text-muted-foreground font-medium">
                               {tag}
                             </span>
                           ))}
                           {journey.tags.length > 3 && (
-                            <span className="text-xs px-xs py-3xs rounded-full bg-muted text-muted-foreground font-medium">
+                            <span className="text-xs px-spacing-xs py-spacing-3xs rounded-full bg-muted text-muted-foreground font-medium">
                               +{journey.tags.length - 3}
                             </span>
                           )}
@@ -630,23 +630,23 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       )}
 
                       {/* Meta */}
-                      <div className="flex items-center gap-xs sm:gap-sm text-xs sm:text-xs text-muted-foreground flex-wrap">
-                        <span className="flex items-center gap-2xs">
-                          <Icons.Clock className="w-sm h-sm" /> ~{journey.estimated_days}d
+                      <div className="flex items-center gap-spacing-xs sm:gap-spacing-sm text-xs sm:text-xs text-muted-foreground flex-wrap">
+                        <span className="flex items-center gap-spacing-2xs">
+                          <Icons.Clock className="w-spacing-sm h-spacing-sm" /> ~{journey.estimated_days}d
                         </span>
-                        <span className={`px-xs py-3xs rounded-full text-xs font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
+                        <span className={`px-spacing-xs py-spacing-3xs rounded-full text-xs font-bold ${DIFFICULTY_COLORS[journey.difficulty] || 'bg-muted text-muted-foreground'}`}>
                           {DIFFICULTY_LABELS[journey.difficulty] || journey.difficulty}
                         </span>
-                        <span className="flex items-center gap-2xs">
-                          <Icons.Layout className="w-sm h-sm" /> {totalSteps} etapas
+                        <span className="flex items-center gap-spacing-2xs">
+                          <Icons.Layout className="w-spacing-sm h-spacing-sm" /> {totalSteps} etapas
                         </span>
                       </div>
 
                       {/* Progress */}
                       {totalSteps > 0 && (
-                        <div className="space-y-2xs pt-2xs">
+                        <div className="space-y-spacing-2xs pt-spacing-2xs">
                           <div className="relative">
-                            <Progress value={progressPercent} className="h-xs" />
+                            <Progress value={progressPercent} className="h-spacing-xs" />
                           </div>
                           <div className="flex justify-between text-xs text-muted-foreground">
                             <span className="font-medium">
@@ -658,8 +658,8 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                               <span className="text-primary font-bold">{Math.round(progressPercent)}%</span>
                             )}
                             {isComplete && !journey.cover_url && (
-                              <span className="text-emerald-500 font-bold flex items-center gap-2xs">
-                                <Icons.Check className="w-sm h-sm" /> Concluída
+                              <span className="text-emerald-500 font-bold flex items-center gap-spacing-2xs">
+                                <Icons.Check className="w-spacing-sm h-spacing-sm" /> Concluída
                               </span>
                             )}
                           </div>
@@ -676,12 +676,12 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
 
       {filteredJourneys.length === 0 && (
         <motion.div 
-          className="text-center py-2xl space-y-sm"
+          className="text-center py-spacing-2xl space-y-spacing-sm"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="w-3xl h-3xl mx-auto rounded-premium bg-muted/50 flex items-center justify-center mb-md">
-            <Icons.Search className="w-lg h-lg text-muted-foreground" />
+          <div className="w-spacing-3xl h-spacing-3xl mx-auto rounded-premium bg-muted/50 flex items-center justify-center mb-spacing-md">
+            <Icons.Search className="w-spacing-lg h-spacing-lg text-muted-foreground" />
           </div>
           <p className="text-muted-foreground">
             {journeys.length === 0
@@ -693,7 +693,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               size="sm"
               variant="ghost"
               onClick={() => { setFilterCategory('all'); setFilterDifficulty('all'); }}
-              className="mt-xs"
+              className="mt-spacing-xs"
             >
               Limpar filtros
             </Button>
@@ -701,19 +701,19 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
         </motion.div>
       )}
         </div>
-        <aside className="desktop-aside space-y-lg hidden xl:block">
+        <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
           <div className="desktop-card bg-primary/5 border-primary/20">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Sua Formação</h3>
+            <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Sua Formação</h3>
             <p className="text-xs text-muted-foreground leading-relaxed italic">
               Percorra trilhas guiadas pela tradição da Igreja. Cada passo aproxima você da verdade que liberta.
             </p>
           </div>
           <div className="desktop-card">
-            <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-sm">Mais Populares</h3>
-            <div className="space-y-sm">
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">1. O Caminho da Perfeição</div>
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">2. Catecismo Explicado</div>
-              <div className="p-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">3. Mistérios Gloriosos</div>
+            <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Mais Populares</h3>
+            <div className="space-y-spacing-sm">
+              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">1. O Caminho da Perfeição</div>
+              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">2. Catecismo Explicado</div>
+              <div className="p-spacing-sm rounded-premium bg-muted/20 border border-border/40 text-xs font-bold text-foreground">3. Mistérios Gloriosos</div>
             </div>
           </div>
         </aside>

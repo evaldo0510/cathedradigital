@@ -55,12 +55,12 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [users]);
 
   const segments: { key: Segment; label: string; icon: React.ReactNode; color: string }[] = [
-    { key: 'all', label: 'Todos', icon: <Users className="w-md h-md" />, color: 'text-foreground' },
-    { key: 'new', label: 'Novo', icon: <UserCheck className="w-md h-md" />, color: 'text-primary' },
-    { key: 'active', label: 'Ativo', icon: <Flame className="w-md h-md" />, color: 'text-primary' },
-    { key: 'engaged', label: 'Engajado', icon: <Star className="w-md h-md" />, color: 'text-orange-500' },
-    { key: 'deep', label: 'Profundo', icon: <Crown className="w-md h-md" />, color: 'text-primary' },
-    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-md h-md" />, color: 'text-destructive' },
+    { key: 'all', label: 'Todos', icon: <Users className="w-spacing-md h-spacing-md" />, color: 'text-foreground' },
+    { key: 'new', label: 'Novo', icon: <UserCheck className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'active', label: 'Ativo', icon: <Flame className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'engaged', label: 'Engajado', icon: <Star className="w-spacing-md h-spacing-md" />, color: 'text-orange-500' },
+    { key: 'deep', label: 'Profundo', icon: <Crown className="w-spacing-md h-spacing-md" />, color: 'text-primary' },
+    { key: 'inactive', label: 'Inativo', icon: <Clock className="w-spacing-md h-spacing-md" />, color: 'text-destructive' },
   ];
 
   const filtered = segmentedUsers[segment]
@@ -111,41 +111,41 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
   }, [filtered, segment]);
 
   return (
-    <div className="space-y-md">
+    <div className="space-y-spacing-md">
       {/* Segment Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-xs">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-spacing-xs">
         {segments.map(s => (
           <Button
             key={s.key}
             onClick={() => setSegment(s.key)}
-            className={`p-sm rounded-full border text-left transition-all ${
+            className={`p-spacing-sm rounded-full border text-left transition-all ${
               segment === s.key 
                 ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
                 : 'border-border/50 bg-card hover:border-primary/30'
             }`}
           >
-            <div className={`flex items-center gap-2xs ${s.color}`}>
+            <div className={`flex items-center gap-spacing-2xs ${s.color}`}>
               {s.icon}
               <span className="text-xs font-black uppercase tracking-wider">{s.label}</span>
             </div>
-            <p className="text-xl font-bold mt-2xs">{segmentedUsers[s.key].length}</p>
+            <p className="text-xl font-bold mt-spacing-2xs">{segmentedUsers[s.key].length}</p>
           </Button>
         ))}
       </div>
 
       {/* User List */}
       <Card>
-        <CardHeader className="pb-sm">
+        <CardHeader className="pb-spacing-sm">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm">
               {segments.find(s => s.key === segment)?.label} — {filtered.length} usuário{filtered.length !== 1 ? 's' : ''}
             </CardTitle>
-            <div className="flex items-center gap-xs">
-              <Button size="sm" variant="outline" className="h-xl text-xs gap-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
-                <Download className="w-sm h-sm" /> CSV
+            <div className="flex items-center gap-spacing-xs">
+              <Button size="sm" variant="outline" className="h-spacing-xl text-xs gap-spacing-2xs" onClick={exportCsv} disabled={filtered.length === 0}>
+                <Download className="w-spacing-sm h-spacing-sm" /> CSV
               </Button>
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as typeof sortBy)}>
-              <SelectTrigger className="w-[160px] h-xl text-xs">
+              <SelectTrigger className="w-[160px] h-spacing-xl text-xs">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -162,21 +162,21 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-card z-10">
                 <tr className="border-b border-border">
-                  <th className="text-left p-sm font-semibold">Usuário</th>
-                  <th className="text-center p-sm font-semibold">Plano</th>
-                  <th className="text-center p-sm font-semibold">Segmento</th>
-                  <th className="text-center p-sm font-semibold hidden md:table-cell">Reflexões</th>
-                  <th className="text-center p-sm font-semibold hidden lg:table-cell">Jornada</th>
-                  <th className="text-center p-sm font-semibold hidden md:table-cell">Última Ativ.</th>
-                  <th className="text-center p-sm font-semibold">Ações</th>
+                  <th className="text-left p-spacing-sm font-semibold">Usuário</th>
+                  <th className="text-center p-spacing-sm font-semibold">Plano</th>
+                  <th className="text-center p-spacing-sm font-semibold">Segmento</th>
+                  <th className="text-center p-spacing-sm font-semibold hidden md:table-cell">Reflexões</th>
+                  <th className="text-center p-spacing-sm font-semibold hidden lg:table-cell">Jornada</th>
+                  <th className="text-center p-spacing-sm font-semibold hidden md:table-cell">Última Ativ.</th>
+                  <th className="text-center p-spacing-sm font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(u => (
                   <tr key={u.id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
-                    <td className="p-sm">
-                      <div className="flex items-center gap-xs">
-                        <div className="w-xl h-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
+                    <td className="p-spacing-sm">
+                      <div className="flex items-center gap-spacing-xs">
+                        <div className="w-spacing-xl h-spacing-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-xs shrink-0">
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                         <div className="min-w-0">
@@ -185,32 +185,32 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="p-sm text-center">
+                    <td className="p-spacing-sm text-center">
                       <Badge variant={u.is_premium ? "default" : "outline"} className="text-xs">
                         {u.is_premium ? 'PRO' : 'Free'}
                       </Badge>
                     </td>
-                    <td className="p-sm text-center">{getStatusBadge(u)}</td>
-                    <td className="p-sm text-center hidden md:table-cell">
+                    <td className="p-spacing-sm text-center">{getStatusBadge(u)}</td>
+                    <td className="p-spacing-sm text-center hidden md:table-cell">
                       <span className="text-xs font-medium">{u.reflections_count || 0}</span>
                     </td>
-                    <td className="p-sm text-center hidden lg:table-cell">
+                    <td className="p-spacing-sm text-center hidden lg:table-cell">
                       <span className="text-xs text-muted-foreground truncate max-w-[150px] block mx-auto">
                         {u.current_journey || 'Nenhuma'}
                       </span>
                     </td>
-                    <td className="p-sm text-center hidden md:table-cell text-xs text-muted-foreground">
+                    <td className="p-spacing-sm text-center hidden md:table-cell text-xs text-muted-foreground">
                       {u.last_visit ? (hoursSince(u.last_visit) < 24 ? 'Hoje' : `${Math.floor(hoursSince(u.last_visit) / 24)}d atrás`) : '—'}
                     </td>
-                    <td className="p-sm text-center">
-                      <Button size="sm" variant="ghost" className="h-lg px-xs text-xs gap-2xs" onClick={() => onSelectUser(u)}>
-                        <Eye className="w-sm h-sm" /> Ver
+                    <td className="p-spacing-sm text-center">
+                      <Button size="sm" variant="ghost" className="h-spacing-lg px-spacing-xs text-xs gap-spacing-2xs" onClick={() => onSelectUser(u)}>
+                        <Eye className="w-spacing-sm h-spacing-sm" /> Ver
                       </Button>
                     </td>
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={7} className="p-xl text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
+                  <tr><td colSpan={7} className="p-spacing-xl text-center text-muted-foreground">Nenhum usuário neste segmento.</td></tr>
                 )}
               </tbody>
             </table>

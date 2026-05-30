@@ -299,155 +299,155 @@ const CatechismDebug: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-xl">
-        <Icons.Lock className="w-3xl h-3xl text-destructive mb-md opacity-20" />
-        <h2 className="text-xl font-bold mb-xs">Acesso Restrito</h2>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-spacing-xl">
+        <Icons.Lock className="w-spacing-3xl h-spacing-3xl text-destructive mb-spacing-md opacity-20" />
+        <h2 className="text-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
         <p className="text-muted-foreground">Esta área é exclusiva para administradores.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-lg space-y-xl animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
+    <div className="max-w-spacing-4xl mx-auto p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
         <div>
           <h1 className="text-2xl font-serif font-bold text-foreground">Depuração do Catecismo</h1>
           <p className="text-sm text-muted-foreground">Monitore o estado da geração automática via IA</p>
         </div>
-        <div className="flex flex-wrap items-center gap-xs">
+        <div className="flex flex-wrap items-center gap-spacing-xs">
           <Button 
             onClick={loadData}
             disabled={loading}
-            className="p-xs rounded-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
+            className="p-spacing-xs rounded-full bg-card border border-border hover:bg-primary/10 transition-all disabled:opacity-50"
             title="Atualizar"
           >
-            <Icons.RotateCcw className={`w-md h-md ${loading ? 'animate-spin' : ''}`} />
+            <Icons.RotateCcw className={`w-spacing-md h-spacing-md ${loading ? 'animate-spin' : ''}`} />
           </Button>
           <Button 
             onClick={reprocessAllErrors}
             disabled={isReprocessing || stats.pending === 0}
-            className="px-md py-xs rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-xs"
+            className="px-spacing-md py-spacing-xs rounded-full bg-primary text-primary-foreground text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-spacing-xs"
           >
-            <Icons.Zap className="w-sm h-sm" /> Reprocessar Erros
+            <Icons.Zap className="w-spacing-sm h-spacing-sm" /> Reprocessar Erros
           </Button>
           <Button 
             onClick={reprocessIncomplete}
             disabled={isReprocessing}
-            className="px-md py-xs rounded-full bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-xs shadow-md"
+            className="px-spacing-md py-spacing-xs rounded-full bg-orange-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-spacing-xs shadow-md"
           >
-            <Icons.PenTool className="w-sm h-sm" /> Reparar Incompletos
+            <Icons.PenTool className="w-spacing-sm h-spacing-sm" /> Reparar Incompletos
           </Button>
           <Button 
             onClick={() => window.location.href = '/catechism/integrity'}
-            className="px-md py-xs rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-xs shadow-md"
+            className="px-spacing-md py-spacing-xs rounded-full bg-blue-500 text-white text-xs font-black uppercase tracking-widest hover:brightness-110 transition-all flex items-center gap-spacing-xs shadow-md"
           >
-            <Icons.Activity className="w-sm h-sm" /> Painel de Integridade
+            <Icons.Activity className="w-spacing-sm h-spacing-sm" /> Painel de Integridade
           </Button>
           <Button 
             onClick={clearInvalidCache}
-            className="px-md py-xs rounded-full bg-destructive/10 text-destructive text-xs font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-xs"
+            className="px-spacing-md py-spacing-xs rounded-full bg-destructive/10 text-destructive text-xs font-black uppercase tracking-widest hover:bg-destructive/20 transition-all flex items-center gap-spacing-xs"
           >
-            <Icons.Trash2 className="w-sm h-sm" /> Limpar Inválidos
+            <Icons.Trash2 className="w-spacing-sm h-spacing-sm" /> Limpar Inválidos
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-md">
-        <div className="bg-card border border-border rounded-premium p-md">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-md">
+        <div className="bg-card border border-border rounded-premium p-spacing-md">
           <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Total no Banco</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.total}</div>
         </div>
-        <div className="bg-card border border-border rounded-premium p-md">
+        <div className="bg-card border border-border rounded-premium p-spacing-md">
           <span className="text-xs font-black uppercase tracking-widest text-success text-green-500">Gerados OK</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.generated}</div>
         </div>
-        <div className="bg-card border border-border rounded-premium p-md">
+        <div className="bg-card border border-border rounded-premium p-spacing-md">
           <span className="text-xs font-black uppercase tracking-widest text-primary">Pendentes (402)</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.pending}</div>
         </div>
-        <div className="bg-card border border-border rounded-premium p-md">
+        <div className="bg-card border border-border rounded-premium p-spacing-md">
           <span className="text-xs font-black uppercase tracking-widest text-destructive">Inválidos/Curtos</span>
           <div className="text-2xl font-serif font-bold text-foreground">{stats.invalid}</div>
         </div>
       </div>
 
       <div className="bg-card border border-border rounded-premium overflow-hidden shadow-md">
-        <div className="p-md border-b border-border bg-muted/30 flex items-center justify-between">
-          <div className="flex items-center gap-md">
-            <div className="flex items-center gap-xs bg-background/50 border border-border rounded-premium p-2xs">
+        <div className="p-spacing-md border-b border-border bg-muted/30 flex items-center justify-between">
+          <div className="flex items-center gap-spacing-md">
+            <div className="flex items-center gap-spacing-xs bg-background/50 border border-border rounded-premium p-spacing-2xs">
               <Button 
                 onClick={() => setView('cache')}
-                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'cache' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Cache
               </Button>
               <Button 
                 onClick={() => setView('logs')}
-                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'logs' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Logs
               </Button>
               <Button 
                 onClick={() => setView('integrity')}
-                className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+                className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${view === 'integrity' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Integridade
               </Button>
             </div>
             {view === 'cache' && (
-              <div className="flex items-center gap-xs bg-background/50 border border-border rounded-premium p-2xs">
-                <Button onClick={() => setFilter('all')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
-                <Button onClick={() => setFilter('generated')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
-                <Button onClick={() => setFilter('error')} className={`px-sm py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
+              <div className="flex items-center gap-spacing-xs bg-background/50 border border-border rounded-premium p-spacing-2xs">
+                <Button onClick={() => setFilter('all')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Todos</Button>
+                <Button onClick={() => setFilter('generated')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'generated' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Sucesso</Button>
+                <Button onClick={() => setFilter('error')} className={`px-spacing-sm py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'error' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}>Erros</Button>
               </div>
             )}
             {view === 'integrity' && (
-              <div className="flex items-center gap-xs">
+              <div className="flex items-center gap-spacing-xs">
                 <Button 
                   onClick={exportIntegrityToCSV}
-                  className="p-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                  className="p-spacing-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
                 >
-                  <Icons.FileText className="w-sm h-sm" />
+                  <Icons.FileText className="w-spacing-sm h-spacing-sm" />
                 </Button>
                 <Button 
                   onClick={exportIntegrityToPDF}
-                  className="p-xs rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  className="p-spacing-xs rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
                   title="Exportar PDF"
                 >
-                  <Icons.Download className="w-sm h-sm" />
+                  <Icons.Download className="w-spacing-sm h-spacing-sm" />
                 </Button>
               </div>
             )}
           </div>
-          <div className="flex items-center gap-md">
+          <div className="flex items-center gap-spacing-md">
             {view === 'logs' && (
-              <div className="flex items-center gap-xs">
+              <div className="flex items-center gap-spacing-xs">
                 <input 
                   type="date" 
                   value={dateRange.start} 
                   onChange={e => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                  className="bg-background border border-border rounded px-xs py-2xs text-xs"
+                  className="bg-background border border-border rounded px-spacing-xs py-spacing-2xs text-xs"
                 />
                 <input 
                   type="date" 
                   value={dateRange.end} 
                   onChange={e => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                  className="bg-background border border-border rounded px-xs py-2xs text-xs"
+                  className="bg-background border border-border rounded px-spacing-xs py-spacing-2xs text-xs"
                 />
                 <Button 
                   onClick={exportLogsToCSV}
-                  className="p-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
+                  className="p-spacing-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all"
                   title="Exportar CSV"
                 >
-                  <Icons.FileText className="w-sm h-sm" />
+                  <Icons.FileText className="w-spacing-sm h-spacing-sm" />
                 </Button>
                 <Button 
                   onClick={exportLogsToPDF}
-                  className="p-xs rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
+                  className="p-spacing-xs rounded-full bg-red-500/10 text-red-600 hover:bg-red-500/20 transition-all"
                   title="Exportar PDF"
                 >
-                  <Icons.Download className="w-sm h-sm" />
+                  <Icons.Download className="w-spacing-sm h-spacing-sm" />
                 </Button>
               </div>
             )}
@@ -462,48 +462,48 @@ const CatechismDebug: React.FC = () => {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
-                  <th className="px-lg py-md">§</th>
-                  <th className="px-lg py-md">Status</th>
-                  <th className="px-lg py-md">Retentativas</th>
-                  <th className="px-lg py-md">Prévia / Erro</th>
-                  <th className="px-lg py-md text-right">Ações</th>
+                  <th className="px-spacing-lg py-spacing-md">§</th>
+                  <th className="px-spacing-lg py-spacing-md">Status</th>
+                  <th className="px-spacing-lg py-spacing-md">Retentativas</th>
+                  <th className="px-spacing-lg py-spacing-md">Prévia / Erro</th>
+                  <th className="px-spacing-lg py-spacing-md text-right">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredCache.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-lg py-2xl text-center text-muted-foreground italic">Nenhum registro encontrado com este filtro</td>
+                    <td colSpan={5} className="px-spacing-lg py-spacing-2xl text-center text-muted-foreground italic">Nenhum registro encontrado com este filtro</td>
                   </tr>
                 ) : (
                   filteredCache.map(item => (
                     <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                      <td className="px-lg py-md font-bold text-primary font-serif">§{item.paragraph}</td>
-                      <td className="px-lg py-md">
+                      <td className="px-spacing-lg py-spacing-md font-bold text-primary font-serif">§{item.paragraph}</td>
+                      <td className="px-spacing-lg py-spacing-md">
                         {item.status === 'generated' ? (
-                          <span className="flex items-center gap-2xs text-xs text-green-600 dark:text-green-400 font-bold">
-                            <Icons.CheckCircle className="w-sm h-sm" /> Gerado
+                          <span className="flex items-center gap-spacing-2xs text-xs text-green-600 dark:text-green-400 font-bold">
+                            <Icons.CheckCircle className="w-spacing-sm h-spacing-sm" /> Gerado
                           </span>
                         ) : item.status === 'official' ? (
-                          <span className="flex items-center gap-2xs text-xs text-blue-500 font-bold">
-                            <Icons.CheckCircle className="w-sm h-sm" /> Oficial
+                          <span className="flex items-center gap-spacing-2xs text-xs text-blue-500 font-bold">
+                            <Icons.CheckCircle className="w-spacing-sm h-spacing-sm" /> Oficial
                           </span>
                         ) : item.status === 'error_402' ? (
-                          <span className="flex items-center gap-2xs text-xs text-orange-500 font-bold">
-                            <Icons.AlertTriangle className="w-sm h-sm" /> Créditos (402)
+                          <span className="flex items-center gap-spacing-2xs text-xs text-orange-500 font-bold">
+                            <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm" /> Créditos (402)
                           </span>
                         ) : (
-                          <span className="flex items-center gap-2xs text-xs text-destructive font-bold">
-                            <Icons.XCircle className="w-sm h-sm" /> Falha
+                          <span className="flex items-center gap-spacing-2xs text-xs text-destructive font-bold">
+                            <Icons.XCircle className="w-spacing-sm h-spacing-sm" /> Falha
                           </span>
                         )}
                       </td>
-                      <td className="px-lg py-md font-mono text-xs">{item.retry_count} / 3</td>
-                      <td className="px-lg py-md max-w-xs md:max-w-sm">
+                      <td className="px-spacing-lg py-spacing-md font-mono text-xs">{item.retry_count} / 3</td>
+                      <td className="px-spacing-lg py-spacing-md max-w-spacing-xs md:max-w-spacing-sm">
                         <p className="text-xs truncate text-muted-foreground">
                           {item.status === 'generated' || item.status === 'official' ? item.content : (item.last_error || 'Erro desconhecido')}
                         </p>
                       </td>
-                      <td className="px-lg py-md text-right">
+                      <td className="px-spacing-lg py-spacing-md text-right">
                         <Button 
                           disabled={isReprocessing}
                           onClick={async () => {
@@ -517,9 +517,9 @@ const CatechismDebug: React.FC = () => {
                               toast.error(`Falha ao reprocessar §${item.paragraph}`);
                             }
                           }}
-                          className="p-xs rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
+                          className="p-spacing-xs rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all disabled:opacity-30"
                         >
-                          <Icons.RotateCcw className="w-sm h-sm" />
+                          <Icons.RotateCcw className="w-spacing-sm h-spacing-sm" />
                         </Button>
                       </td>
                     </tr>
@@ -531,24 +531,24 @@ const CatechismDebug: React.FC = () => {
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs font-black uppercase tracking-widest text-muted-foreground">
-                  <th className="px-lg py-md">§</th>
-                  <th className="px-lg py-md">Status</th>
-                  <th className="px-lg py-md">Duração</th>
-                  <th className="px-lg py-md">Mensagem</th>
-                  <th className="px-lg py-md text-right">Data</th>
+                  <th className="px-spacing-lg py-spacing-md">§</th>
+                  <th className="px-spacing-lg py-spacing-md">Status</th>
+                  <th className="px-spacing-lg py-spacing-md">Duração</th>
+                  <th className="px-spacing-lg py-spacing-md">Mensagem</th>
+                  <th className="px-spacing-lg py-spacing-md text-right">Data</th>
                 </tr>
               </thead>
               <tbody>
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-lg py-2xl text-center text-muted-foreground italic">Nenhum log de execução encontrado</td>
+                    <td colSpan={5} className="px-spacing-lg py-spacing-2xl text-center text-muted-foreground italic">Nenhum log de execução encontrado</td>
                   </tr>
                 ) : (
                   logs.map(log => (
                     <tr key={log.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                      <td className="px-lg py-md font-bold text-primary font-serif">§{log.paragraph}</td>
-                      <td className="px-lg py-md">
-                        <span className={`text-xs font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
+                      <td className="px-spacing-lg py-spacing-md font-bold text-primary font-serif">§{log.paragraph}</td>
+                      <td className="px-spacing-lg py-spacing-md">
+                        <span className={`text-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-full ${
                           log.status === 'generated' || log.status === 'official' || log.status === 'static' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                           log.status === 'error_402' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
                           'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
@@ -556,9 +556,9 @@ const CatechismDebug: React.FC = () => {
                           {log.status}
                         </span>
                       </td>
-                      <td className="px-lg py-md font-mono text-xs text-muted-foreground">{log.duration_ms}ms</td>
-                      <td className="px-lg py-md text-xs text-muted-foreground truncate max-w-xs">{log.error_message || '-'}</td>
-                      <td className="px-lg py-md text-right text-xs text-muted-foreground font-medium">
+                      <td className="px-spacing-lg py-spacing-md font-mono text-xs text-muted-foreground">{log.duration_ms}ms</td>
+                      <td className="px-spacing-lg py-spacing-md text-xs text-muted-foreground truncate max-w-spacing-xs">{log.error_message || '-'}</td>
+                      <td className="px-spacing-lg py-spacing-md text-right text-xs text-muted-foreground font-medium">
                         {new Date(log.created_at).toLocaleString('pt-BR')}
                       </td>
                     </tr>
@@ -567,8 +567,8 @@ const CatechismDebug: React.FC = () => {
               </tbody>
             </table>
           ) : (
-            <div className="p-xl space-y-lg">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+            <div className="p-spacing-xl space-y-spacing-lg">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
                 {[
                   { label: 'Texto Oficial', field: 'content' },
                   { label: 'Explicação', field: 'explicacao' },
@@ -577,12 +577,12 @@ const CatechismDebug: React.FC = () => {
                   const filled = cache.filter(c => c[item.field as keyof CacheEntry] && (c[item.field as keyof CacheEntry] as string).length > 20).length;
                   const percent = Math.round((filled / 2865) * 100);
                   return (
-                    <div key={item.field} className="space-y-xs">
+                    <div key={item.field} className="space-y-spacing-xs">
                       <div className="flex justify-between text-xs font-black uppercase tracking-widest">
                         <span>{item.label}</span>
                         <span>{percent}%</span>
                       </div>
-                      <div className="h-xs bg-muted rounded-premium overflow-hidden">
+                      <div className="h-spacing-xs bg-muted rounded-premium overflow-hidden">
                         <div className="h-full bg-primary transition-all" style={{ width: `${percent}%` }} />
                       </div>
                     </div>
@@ -594,23 +594,23 @@ const CatechismDebug: React.FC = () => {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-muted/50 border-b border-border">
                     <tr className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                      <th className="px-md py-sm">Parágrafo</th>
-                      <th className="px-md py-sm">Texto</th>
-                      <th className="px-md py-sm">Explicação</th>
-                      <th className="px-md py-sm">Profundo</th>
-                      <th className="px-md py-sm">Aplicação</th>
-                      <th className="px-md py-sm">Exercício</th>
+                      <th className="px-spacing-md py-spacing-sm">Parágrafo</th>
+                      <th className="px-spacing-md py-spacing-sm">Texto</th>
+                      <th className="px-spacing-md py-spacing-sm">Explicação</th>
+                      <th className="px-spacing-md py-spacing-sm">Profundo</th>
+                      <th className="px-spacing-md py-spacing-sm">Aplicação</th>
+                      <th className="px-spacing-md py-spacing-sm">Exercício</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cache.slice(0, 50).map(item => (
                       <tr key={item.id} className="border-b border-border last:border-0">
-                        <td className="px-md py-sm font-bold">§{item.paragraph}</td>
-                        <td className="px-md py-sm text-center">{item.content?.length > 50 ? '✅' : '❌'}</td>
-                        <td className="px-md py-sm text-center">{item.explicacao?.length > 10 ? '✅' : '❌'}</td>
-                        <td className="px-md py-sm text-center">{item.interpretacao_profunda?.length > 10 ? '✅' : '❌'}</td>
-                        <td className="px-md py-sm text-center">{item.aplicacao_pratica?.length > 10 ? '✅' : '❌'}</td>
-                        <td className="px-md py-sm text-center">{item.exercicio?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-spacing-md py-spacing-sm font-bold">§{item.paragraph}</td>
+                        <td className="px-spacing-md py-spacing-sm text-center">{item.content?.length > 50 ? '✅' : '❌'}</td>
+                        <td className="px-spacing-md py-spacing-sm text-center">{item.explicacao?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-spacing-md py-spacing-sm text-center">{item.interpretacao_profunda?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-spacing-md py-spacing-sm text-center">{item.aplicacao_pratica?.length > 10 ? '✅' : '❌'}</td>
+                        <td className="px-spacing-md py-spacing-sm text-center">{item.exercicio?.length > 10 ? '✅' : '❌'}</td>
                       </tr>
                     ))}
                   </tbody>

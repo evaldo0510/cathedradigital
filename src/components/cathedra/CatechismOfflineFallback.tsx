@@ -146,48 +146,48 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-xl text-center space-y-lg my-xl"
+      className="reader-text bg-muted/30 border border-border rounded-[2rem] p-spacing-xl text-center space-y-spacing-lg my-spacing-xl"
     >
-      <div className="mx-auto w-3xl h-3xl rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
-        <Icons.WifiOff className="w-xl h-xl text-primary/40" />
+      <div className="mx-auto w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">
+        <Icons.WifiOff className="w-spacing-xl h-spacing-xl text-primary/40" />
       </div>
 
       {downloading && (
-        <div className="space-y-sm animate-in fade-in slide-in-from-top-xs">
+        <div className="space-y-spacing-sm animate-in fade-in slide-in-from-top-spacing-xs">
           <div className="flex justify-between text-xs font-black uppercase tracking-widest text-primary">
             <span>{retryAttempt > 1 ? `Re-tentando (${retryAttempt}/${MAX_RETRIES})...` : 'Baixando conteúdo...'}</span>
             <span>{progress}%</span>
           </div>
-          <Progress value={progress} className="h-2xs" />
+          <Progress value={progress} className="h-spacing-2xs" />
         </div>
       )}
 
 
-      <div className="space-y-xs">
+      <div className="space-y-spacing-xs">
         <h3 className="text-xl font-serif font-bold text-foreground">
           {paragraph ? `Parágrafo §${paragraph} Offline` : 'Catecismo Offline'}
         </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto">
+        <p className="text-sm text-muted-foreground leading-relaxed max-w-spacing-sm mx-auto">
           {isForcedOffline 
             ? 'Você está no modo somente-cache. Este parágrafo ainda não foi baixado para o seu dispositivo.'
             : 'Parece que você está sem conexão. Este parágrafo não está disponível no cache local.'}
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-sm">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-spacing-sm">
         {paragraph && isOnline && (
           <Button 
             onClick={downloading ? handleCancel : () => handleDownload()}
             variant={downloading ? "destructive" : "default"}
-            className="rounded-full h-xl px-lg font-bold w-full sm:w-auto transition-all"
+            className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto transition-all"
           >
             {downloading ? (
               <>
-                <Icons.X className="w-md h-md mr-xs" /> Cancelar
+                <Icons.X className="w-spacing-md h-spacing-md mr-spacing-xs" /> Cancelar
               </>
             ) : (
               <>
-                <Icons.Download className="w-md h-md mr-xs" /> Baixar Agora
+                <Icons.Download className="w-spacing-md h-spacing-md mr-spacing-xs" /> Baixar Agora
               </>
             )}
           </Button>
@@ -197,21 +197,21 @@ const CatechismOfflineFallback: React.FC<CatechismOfflineFallbackProps> = ({ par
           <Button 
             onClick={onRetry}
             variant="secondary"
-            className="rounded-full h-xl px-lg font-bold w-full sm:w-auto"
+            className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
           >
-            <Icons.RotateCcw className="w-md h-md mr-xs" /> Tentar Carregar
+            <Icons.RotateCcw className="w-spacing-md h-spacing-md mr-spacing-xs" /> Tentar Carregar
           </Button>
         )}
         <Button 
           onClick={() => navigate('/cache-manager')}
           variant="outline"
-          className="rounded-full h-xl px-lg font-bold w-full sm:w-auto"
+          className="rounded-full h-spacing-xl px-spacing-lg font-bold w-full sm:w-auto"
         >
-          <Icons.Library className="w-md h-md mr-xs" /> Gerenciar Cache
+          <Icons.Library className="w-spacing-md h-spacing-md mr-spacing-xs" /> Gerenciar Cache
         </Button>
       </div>
 
-      <div className="pt-md border-t border-border/40">
+      <div className="pt-spacing-md border-t border-border/40">
         <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">
           Dica: Vá em "Gerenciar Cache" para baixar seções completas para uso offline.
         </p>

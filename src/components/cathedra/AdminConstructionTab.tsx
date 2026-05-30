@@ -196,41 +196,41 @@ const AdminConstructionTab: React.FC = () => {
   );
 
   return (
-    <div className="space-y-lg">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-md">
+    <div className="space-y-spacing-lg">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-spacing-md">
         <div>
           <h2 className="text-xl font-bold">Gestão de Obras</h2>
           <p className="text-sm text-muted-foreground">Gerencie orçamentos e cronogramas de construção.</p>
         </div>
-        <div className="flex gap-xs">
+        <div className="flex gap-spacing-xs">
           <div className="relative">
-            <Search className="absolute left-xs top-xs h-md w-md text-muted-foreground" />
+            <Search className="absolute left-spacing-xs top-spacing-xs h-spacing-md w-spacing-md text-muted-foreground" />
             <Input
               placeholder="Buscar obra..."
-              className="pl-xl w-full sm:w-[250px]"
+              className="pl-spacing-xl w-full sm:w-[250px]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button className="gap-xs" onClick={() => setIsAddProjectDialogOpen(true)}>
-            <Plus className="w-md h-md" /> Nova Obra
+          <Button className="gap-spacing-xs" onClick={() => setIsAddProjectDialogOpen(true)}>
+            <Plus className="w-spacing-md h-spacing-md" /> Nova Obra
           </Button>
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
+            <div key={i} className="h-spacing-4xl rounded-premium bg-muted/40 animate-pulse border border-border" />
           ))}
         </div>
       ) : filteredProjects.length === 0 ? (
-        <Card className="border-dashed border-2 py-2xl">
-          <CardContent className="flex flex-col items-center text-center space-y-md">
-            <div className="w-3xl h-3xl rounded-premium bg-muted flex items-center justify-center">
-              <Building2 className="w-xl h-xl text-muted-foreground" />
+        <Card className="border-dashed border-2 py-spacing-2xl">
+          <CardContent className="flex flex-col items-center text-center space-y-spacing-md">
+            <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-muted flex items-center justify-center">
+              <Building2 className="w-spacing-xl h-spacing-xl text-muted-foreground" />
             </div>
-            <div className="space-y-2xs">
+            <div className="space-y-spacing-2xs">
               <p className="font-semibold">Nenhuma obra cadastrada</p>
               <p className="text-sm text-muted-foreground">Comece criando uma nova obra paroquial.</p>
             </div>
@@ -238,10 +238,10 @@ const AdminConstructionTab: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
           {filteredProjects.map((project) => (
             <Card key={project.id} className="overflow-hidden group hover:border-primary/50 transition-all">
-              <CardHeader className="pb-sm flex flex-row items-start justify-between">
+              <CardHeader className="pb-spacing-sm flex flex-row items-start justify-between">
                 <div>
                   <CardTitle className="text-lg">{project.name}</CardTitle>
                   <CardDescription className="line-clamp-1">{project.description || 'Sem descrição'}</CardDescription>
@@ -250,48 +250,48 @@ const AdminConstructionTab: React.FC = () => {
                   {project.status === 'concluida' ? 'Concluída' : 'Em Andamento'}
                 </Badge>
               </CardHeader>
-              <CardContent className="pb-sm space-y-md">
-                <div className="grid grid-cols-2 gap-md">
-                  <div className="p-sm rounded-premium bg-muted/50 border space-y-2xs">
-                    <div className="flex items-center gap-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                      <DollarSign className="w-sm h-sm" /> Orçamento
+              <CardContent className="pb-spacing-sm space-y-spacing-md">
+                <div className="grid grid-cols-2 gap-spacing-md">
+                  <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
+                    <div className="flex items-center gap-spacing-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                      <DollarSign className="w-spacing-sm h-spacing-sm" /> Orçamento
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-xl gap-xs text-xs font-black uppercase tracking-widest"
+                      className="w-full h-spacing-xl gap-spacing-xs text-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('budget');
                         setIsUploadDialogOpen(true);
                       }}
                     >
-                      <Upload className="w-sm h-sm" /> Subir Planilha
+                      <Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
                     </Button>
                   </div>
-                  <div className="p-sm rounded-premium bg-muted/50 border space-y-2xs">
-                    <div className="flex items-center gap-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                      <Calendar className="w-sm h-sm" /> Cronograma
+                  <div className="p-spacing-sm rounded-premium bg-muted/50 border space-y-spacing-2xs">
+                    <div className="flex items-center gap-spacing-xs text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                      <Calendar className="w-spacing-sm h-spacing-sm" /> Cronograma
                     </div>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full h-xl gap-xs text-xs font-black uppercase tracking-widest"
+                      className="w-full h-spacing-xl gap-spacing-xs text-xs font-black uppercase tracking-widest"
                       onClick={() => {
                         setSelectedProjectId(project.id);
                         setUploadType('schedule');
                         setIsUploadDialogOpen(true);
                       }}
                     >
-                      <Upload className="w-sm h-sm" /> Subir Planilha
+                      <Upload className="w-spacing-sm h-spacing-sm" /> Subir Planilha
                     </Button>
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="bg-muted/10 py-sm flex justify-between">
+              <CardFooter className="bg-muted/10 py-spacing-sm flex justify-between">
                 <span className="text-xs text-muted-foreground">Criada em: {new Date(project.created_at).toLocaleDateString()}</span>
-                <Button variant="ghost" size="sm" className="h-lg text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
-                  <Trash2 className="w-sm h-sm" />
+                <Button variant="ghost" size="sm" className="h-spacing-lg text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => handleDeleteProject(project.id)}>
+                  <Trash2 className="w-spacing-sm h-spacing-sm" />
                 </Button>
               </CardFooter>
             </Card>
@@ -306,8 +306,8 @@ const AdminConstructionTab: React.FC = () => {
             <DialogTitle>Nova Obra</DialogTitle>
             <DialogDescription>Cadastre uma nova obra ou reforma paroquial.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-md py-xs">
-            <div className="space-y-xs">
+          <div className="space-y-spacing-md py-spacing-xs">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="project-name">Nome da Obra</Label>
               <Input 
                 id="project-name" 
@@ -316,7 +316,7 @@ const AdminConstructionTab: React.FC = () => {
                 onChange={e => setNewProject({...newProject, name: e.target.value})}
               />
             </div>
-            <div className="space-y-xs">
+            <div className="space-y-spacing-xs">
               <Label htmlFor="project-desc">Descrição</Label>
               <Input 
                 id="project-desc" 
@@ -343,17 +343,17 @@ const AdminConstructionTab: React.FC = () => {
               {uploadType === 'budget' ? ' "Item", "Previsto", "Real"' : ' "Tarefa", "Início Previsto", "Fim Previsto", "Progresso"'}
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col items-center justify-center py-xl border-2 border-dashed rounded-premium gap-md bg-muted/5">
-            <div className="w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center">
-              <FileSpreadsheet className="w-lg h-lg text-primary" />
+          <div className="flex flex-col items-center justify-center py-spacing-xl border-2 border-dashed rounded-premium gap-spacing-md bg-muted/5">
+            <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center">
+              <FileSpreadsheet className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
-            <div className="text-center px-md">
+            <div className="text-center px-spacing-md">
               <p className="text-sm font-medium">Arraste sua planilha aqui ou clique no botão</p>
-              <p className="text-xs text-muted-foreground mt-2xs">Formato suportado: XLSX, XLS, CSV</p>
+              <p className="text-xs text-muted-foreground mt-spacing-2xs">Formato suportado: XLSX, XLS, CSV</p>
             </div>
             <div className="relative">
               <Button disabled={uploading} className="relative z-10">
-                {uploading ? <Loader2 className="w-md h-md animate-spin mr-xs" /> : <Upload className="w-md h-md mr-xs" />}
+                {uploading ? <Loader2 className="w-spacing-md h-spacing-md animate-spin mr-spacing-xs" /> : <Upload className="w-spacing-md h-spacing-md mr-spacing-xs" />}
                 Selecionar Arquivo
               </Button>
               <input 
@@ -365,8 +365,8 @@ const AdminConstructionTab: React.FC = () => {
               />
             </div>
           </div>
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium p-sm flex gap-sm">
-            <AlertCircle className="w-md h-md text-amber-500 shrink-0" />
+          <div className="bg-amber-500/10 border border-amber-500/20 rounded-premium p-spacing-sm flex gap-spacing-sm">
+            <AlertCircle className="w-spacing-md h-spacing-md text-amber-500 shrink-0" />
             <div className="text-xs text-amber-800">
               <p className="font-bold">Atenção!</p>
               <p>Ao subir uma nova planilha, os dados serão adicionados aos já existentes. Para atualizar um dado real, certifique-se que o nome do item é idêntico.</p>

@@ -78,29 +78,29 @@ const MissalPage: React.FC = () => {
   const [expandedSection, setExpandedSection] = useState<string | null>('entrance');
 
   return (
-    <div className="max-w-4xl mx-auto space-y-xl">
-      <div className="text-center space-y-sm">
-        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
-          <Icons.Cross className="w-md h-md text-primary" />
+    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl">
+      <div className="text-center space-y-spacing-sm">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
+          <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Ordo Missæ</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Missal Romano</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
+        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">O Ordinário da Santa Missa — 3ª edição típica do Missal Romano.</p>
       </div>
 
-      <div className="flex justify-center gap-xs flex-wrap">
+      <div className="flex justify-center gap-spacing-xs flex-wrap">
         <Button onClick={() => setShowLatin(!showLatin)}
-          className={`px-md py-xs rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${showLatin ? 'bg-foreground text-background' : 'bg-card border border-border text-foreground'}`}>
           {showLatin ? '🔤 Latim ativado' : '🔤 Mostrar Latim'}
         </Button>
         <Button onClick={() => setShowRubrics(!showRubrics)}
-          className={`px-md py-xs rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
+          className={`px-spacing-md py-spacing-xs rounded-full text-xs font-bold transition-all ${showRubrics ? 'bg-primary text-secondary border border-secondary/20' : 'bg-card border border-border text-foreground'}`}>
           {showRubrics ? '📕 Rubricas ativadas' : '📕 Mostrar Rubricas'}
         </Button>
       </div>
 
       {/* Quick navigation */}
-      <div className="flex flex-wrap gap-xs justify-center">
+      <div className="flex flex-wrap gap-spacing-xs justify-center">
         {MISSAL_SECTIONS.map(section => (
           <Button
             key={section.id}
@@ -108,7 +108,7 @@ const MissalPage: React.FC = () => {
               setExpandedSection(section.id);
               document.getElementById(`missal-${section.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }}
-            className={`px-sm py-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
+            className={`px-spacing-sm py-spacing-2xs rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
               expandedSection === section.id ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground hover:text-primary border border-border'
             }`}
           >
@@ -117,32 +117,32 @@ const MissalPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="space-y-md">
+      <div className="space-y-spacing-md">
         {MISSAL_SECTIONS.map(section => (
           <div key={section.id} id={`missal-${section.id}`} className="bg-card border border-border rounded-premium overflow-hidden">
             <Button
               onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
-              className="w-full p-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
+              className="w-full p-spacing-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
             >
               <div>
                 <h3 className="text-lg font-serif font-bold text-foreground">{section.title}</h3>
-                {section.subtitle && <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-3xs">{section.subtitle}</p>}
+                {section.subtitle && <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground mt-spacing-3xs">{section.subtitle}</p>}
               </div>
-              <ChevronDown className={`w-md h-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedSection === section.id ? 'rotate-180' : ''}`} />
             </Button>
 
             {expandedSection === section.id && (
               <div className="border-t border-border divide-y divide-border">
                 {section.parts.map((part, i) => (
-                  <div key={i} className="p-md space-y-sm">
+                  <div key={i} className="p-spacing-md space-y-spacing-sm">
                     <h4 className="text-sm font-black uppercase tracking-widest text-primary">{part.label}</h4>
                     {showRubrics && part.rubric && (
-                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-md py-xs border border-secondary/10">
+                      <p className="text-xs text-primary font-medium italic bg-secondary/5 rounded-full px-spacing-md py-spacing-xs border border-secondary/10">
                         ✠ {part.rubric}
                       </p>
                     )}
                     {showLatin && part.latin && (
-                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-md whitespace-pre-line">{part.latin}</p>
+                      <p className="text-sm text-muted-foreground font-serif italic bg-muted rounded-full p-spacing-md whitespace-pre-line">{part.latin}</p>
                     )}
                     <p className="text-sm text-foreground/90 font-serif leading-relaxed whitespace-pre-line">{part.text}</p>
                   </div>

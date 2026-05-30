@@ -80,7 +80,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0 }}
-    className="fixed inset-0 bg-background z-[100] flex items-center justify-center p-xs md:p-xl "
+    className="fixed inset-0 bg-background z-[100] flex items-center justify-center p-spacing-xs md:p-spacing-xl "
     onClick={onClose}
   >
     <motion.div
@@ -92,18 +92,18 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
     >
       <Button 
         onClick={onClose} 
-        className="absolute top-lg right-lg p-sm bg-foreground/10 hover:bg-foreground/20 rounded-full  text-foreground transition-all z-20"
+        className="absolute top-spacing-lg right-spacing-lg p-spacing-sm bg-foreground/10 hover:bg-foreground/20 rounded-full  text-foreground transition-all z-20"
       >
-        <Icons.X className="w-md h-md" />
+        <Icons.X className="w-spacing-md h-spacing-md" />
       </Button>
 
       {/* Image Sidebar */}
-      <div className="w-full md:w-xs/5 h-4xl md:h-auto relative overflow-hidden flex-shrink-0">
+      <div className="w-full md:w-spacing-xs/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
         <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
         
-        <div className="absolute bottom-xl left-xl right-xl text-white space-y-xs">
-          <span className="text-xs font-black uppercase tracking-widest bg-primary px-sm py-2xs rounded-full mb-md inline-block">
+        <div className="absolute bottom-spacing-xl left-spacing-xl right-spacing-xl text-white space-y-spacing-xs">
+          <span className="text-xs font-black uppercase tracking-widest bg-primary px-spacing-sm py-spacing-2xs rounded-full mb-spacing-md inline-block">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
           <h2 className="text-4xl font-serif font-bold leading-tight">{saint.name}</h2>
@@ -112,13 +112,13 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 p-lg md:p-2xl overflow-y-auto no-scrollbar space-y-xl">
+      <div className="flex-1 p-spacing-lg md:p-spacing-2xl overflow-y-auto no-scrollbar space-y-spacing-xl">
         
         {/* Top Info Strip */}
-        <div className="flex flex-wrap items-center gap-lg">
-          <div className="flex items-center gap-sm">
-            <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.Calendar className="w-md h-md" />
+        <div className="flex flex-wrap items-center gap-spacing-lg">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+              <Icons.Calendar className="w-spacing-md h-spacing-md" />
             </div>
             <div>
               <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Dia de Festa</span>
@@ -127,9 +127,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
 
           {saint.born && (
-            <div className="flex items-center gap-sm">
-              <div className="w-xl h-xl rounded-premium bg-secondary/30 flex items-center justify-center text-primary">
-                <Icons.User className="w-md h-md" />
+            <div className="flex items-center gap-spacing-sm">
+              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary/30 flex items-center justify-center text-primary">
+                <Icons.User className="w-spacing-md h-spacing-md" />
               </div>
               <div>
                 <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
@@ -139,9 +139,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           )}
 
           {saint.died && (
-            <div className="flex items-center gap-sm">
-              <div className="w-xl h-xl rounded-premium bg-destructive/10 flex items-center justify-center text-destructive">
-                <Icons.XCircle className="w-md h-md" />
+            <div className="flex items-center gap-spacing-sm">
+              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-destructive/10 flex items-center justify-center text-destructive">
+                <Icons.XCircle className="w-spacing-md h-spacing-md" />
               </div>
               <div>
                 <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
@@ -150,9 +150,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           )}
 
-          <div className="flex items-center gap-sm">
-            <div className="w-xl h-xl rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
-              <Shield className="w-md h-md" />
+          <div className="flex items-center gap-spacing-sm">
+            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
+              <Shield className="w-spacing-md h-spacing-md" />
             </div>
             <div>
               <span className="text-xs font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
@@ -160,22 +160,22 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </div>
 
-          <div className="flex-1 flex justify-end items-center gap-sm">
+          <div className="flex-1 flex justify-end items-center gap-spacing-sm">
             <AudioContentPlayer 
               text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
               title="Ouvir conteúdo"
-              className="h-xl"
+              className="h-spacing-xl"
             />
           </div>
 
-          <div className="flex-1 flex justify-end items-center gap-xs">
+          <div className="flex-1 flex justify-end items-center gap-spacing-xs">
             {(saint as any).url && (
               <Button 
                 onClick={() => window.open((saint as any).url, '_blank')}
                 variant="outline"
-                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-xs font-black uppercase tracking-widest h-xl px-md rounded-full flex items-center gap-xs transition-all"
+                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-xs font-black uppercase tracking-widest h-spacing-xl px-spacing-md rounded-full flex items-center gap-spacing-xs transition-all"
               >
-                <Icons.Globe className="w-sm h-sm" />
+                <Icons.Globe className="w-spacing-sm h-spacing-sm" />
                 Fonte Oficial
               </Button>
             )}
@@ -185,20 +185,20 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               text={`${saint.name} — ${saint.title}. ${saint.quotes?.[0] || ''}`}
               variant="default"
               size="sm"
-              className="!px-md !py-xs !text-premium-small !rounded-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
+              className="!px-spacing-md !py-spacing-xs !text-premium-small !rounded-full !bg-foreground !text-background !font-black !uppercase !tracking-widest"
             />
           </div>
 
         </div>
 
         {/* Short Biography */}
-        <section className="space-y-md">
-          <div className="flex items-center gap-xs text-primary">
-            <Info className="w-md h-md" />
+        <section className="space-y-spacing-md">
+          <div className="flex items-center gap-spacing-xs text-primary">
+            <Info className="w-spacing-md h-spacing-md" />
             <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Sua História</h3>
           </div>
           <div className="prose prose-sm dark:prose-invert max-w-none">
-            <p className="text-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-lg py-2xs">
+            <p className="text-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-spacing-lg py-spacing-2xs">
               {parseTheologicalReferences(saint.bio).map((seg, i) => {
                 if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
                 if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
@@ -206,7 +206,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               })}
             </p>
             {saint.fullBio && (
-              <div className="mt-lg text-muted-foreground leading-relaxed text-sm space-y-md">
+              <div className="mt-spacing-lg text-muted-foreground leading-relaxed text-sm space-y-spacing-md">
                 {saint.fullBio.split('\n\n').map((paragraph, pIdx) => (
                   <p key={pIdx}>
                     {parseTheologicalReferences(paragraph).map((seg, sIdx) => {
@@ -228,15 +228,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         />
 
         {/* Quote & Practical Application */}
-        <div className="grid md:grid-cols-2 gap-xl">
+        <div className="grid md:grid-cols-2 gap-spacing-xl">
           {/* Quote Section */}
-          <div className="space-y-md">
-            <div className="flex items-center gap-xs text-primary">
-              <Quote className="w-md h-md" />
+          <div className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-xs text-primary">
+              <Quote className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
             </div>
-            <div className="bg-secondary/30 p-xl rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
-              <Quote className="absolute top-md right-md w-2xl h-2xl text-primary/5 group-hover:text-primary/60 transition-colors" />
+            <div className="bg-secondary/30 p-spacing-xl rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
+              <Quote className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/5 group-hover:text-primary/60 transition-colors" />
               <p className="text-xl font-serif italic text-foreground relative z-10 leading-relaxed">
                 {parseTheologicalReferences(saint.quotes?.[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -248,13 +248,13 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           </div>
 
           {/* Practical Application */}
-          <div className="space-y-md">
-            <div className="flex items-center gap-xs text-primary">
-              <Heart className="w-md h-md" />
+          <div className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-xs text-primary">
+              <Heart className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
             </div>
-            <div className="bg-primary/5 p-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
-              <Lightbulb className="absolute top-md right-md w-2xl h-2xl text-primary/60 group-hover:scale-110 transition-all" />
+            <div className="bg-primary/5 p-spacing-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
+              <Lightbulb className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/60 group-hover:scale-110 transition-all" />
               <p className="text-sm font-medium text-foreground relative z-10 leading-relaxed italic">
                 {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
                   if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
@@ -268,17 +268,17 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
         {/* Writings Section */}
         {saint.works && saint.works.length > 0 && (
-          <section className="space-y-md">
-            <div className="flex items-center gap-xs text-primary">
-              <BookOpen className="w-md h-md" />
+          <section className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-xs text-primary">
+              <BookOpen className="w-spacing-md h-spacing-md" />
               <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-md">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
               {saint.works.map((work, idx) => (
-                <div key={idx} className="p-md bg-card border border-border rounded-premium flex items-center justify-between group hover:border-primary/30 transition-all">
-                  <div className="flex items-center gap-sm">
-                    <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                      <Icons.Book className="w-md h-md" />
+                <div key={idx} className="p-spacing-md bg-card border border-border rounded-premium flex items-center justify-between group hover:border-primary/30 transition-all">
+                  <div className="flex items-center gap-spacing-sm">
+                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                      <Icons.Book className="w-spacing-md h-spacing-md" />
                     </div>
                     <div>
                       <p className="text-sm font-bold text-foreground">{work.title}</p>
@@ -292,7 +292,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                       onClick={() => setViewingDoc({ url: work.url!, title: work.title })}
                       className="text-primary hover:bg-primary/10"
                     >
-                      Ler <Icons.ArrowRight className="w-sm h-sm ml-2xs" />
+                      Ler <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
                     </Button>
                   )}
                 </div>
@@ -327,16 +327,16 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-primary/5 rounded-[2rem] p-lg md:p-xl border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-lg group hover:bg-primary/10 transition-all shadow-md"
+          className="bg-primary/5 rounded-[2rem] p-spacing-lg md:p-spacing-xl border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-spacing-lg group hover:bg-primary/10 transition-all shadow-md"
         >
-          <div className="flex items-center gap-md">
-            <div className="w-2xl h-2xl rounded-premium bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
-              <Icons.Route className="w-lg h-lg" />
+          <div className="flex items-center gap-spacing-md">
+            <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-inner">
+              <Icons.Route className="w-spacing-lg h-spacing-lg" />
             </div>
             <div>
-              <p className="text-xs font-black uppercase tracking-widest text-primary/60 mb-2xs">Transformar Inspiração em Prática</p>
+              <p className="text-xs font-black uppercase tracking-widest text-primary/60 mb-spacing-2xs">Transformar Inspiração em Prática</p>
               <h4 className="text-lg font-bold text-foreground font-serif leading-tight">Jornada {suggestedJourney.name}</h4>
-              <p className="text-xs text-muted-foreground font-serif italic max-w-sm">
+              <p className="text-xs text-muted-foreground font-serif italic max-w-spacing-sm">
                 Inspirada pela virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span>.
               </p>
             </div>
@@ -346,9 +346,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               navigate(`/jornadas/${suggestedJourney.id}`);
               onClose();
             }}
-            className="h-2xl px-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-full shadow-premium shadow-primary/20 group/btn transition-all"
+            className="h-spacing-2xl px-spacing-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-xs tracking-[0.2em] rounded-full shadow-premium shadow-primary/20 group/btn transition-all"
           >
-            Começar Jornada <Icons.ChevronRight className="w-md h-md ml-xs group-hover/btn:translate-x-1 transition-transform" />
+            Começar Jornada <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs group-hover/btn:translate-x-1 transition-transform" />
           </Button>
         </motion.div>
 

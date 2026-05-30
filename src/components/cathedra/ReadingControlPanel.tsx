@@ -34,15 +34,15 @@ const ReadingControlPanel: React.FC = memo(() => {
   ];
 
   const SettingsContent = () => (
-    <div className="space-y-xl py-lg">
-      <div className="text-center space-y-xs">
+    <div className="space-y-spacing-xl py-spacing-lg">
+      <div className="text-center space-y-spacing-xs">
         <p className="text-[8px] text-primary/30 uppercase tracking-[0.5em] font-bold">Atmosphæra</p>
         <h2 className="text-2xl font-display font-light text-primary uppercase tracking-[0.25em] leading-tight">Leitura</h2>
       </div>
       
-      <div className="space-y-md">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Tons da Alma</p>
-        <div className="grid grid-cols-4 gap-md">
+      <div className="space-y-spacing-md">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Tons da Alma</p>
+        <div className="grid grid-cols-4 gap-spacing-md">
           {themes.map((t) => (
             <button
               key={t.id}
@@ -52,20 +52,20 @@ const ReadingControlPanel: React.FC = memo(() => {
               }`}
               title={t.label}
             >
-               {settings.theme === t.id && <Check className={`w-md h-md mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
+               {settings.theme === t.id && <Check className={`w-spacing-md h-spacing-md mx-auto ${t.id === 'dark' || t.id === 'night' ? 'text-white' : 'text-primary'}`} />}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="space-y-md">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Escala Tipográfica</p>
-        <div className="flex bg-primary/[0.01] rounded-full p-2xs gap-2xs">
+      <div className="space-y-spacing-md">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Escala Tipográfica</p>
+        <div className="flex bg-primary/[0.01] rounded-full p-spacing-2xs gap-spacing-2xs">
           {(['small', 'medium', 'large', 'extra-large'] as const).map((s) => (
             <button
               key={s}
               onClick={() => updateSettings({ fontSize: s })}
-              className={`flex-1 py-sm text-xs font-bold rounded-xl transition-all duration-500 ${
+              className={`flex-1 py-spacing-sm text-xs font-bold rounded-xl transition-all duration-500 ${
                 settings.fontSize === s ? 'bg-background text-primary shadow-premium scale-105' : 'text-muted-foreground/40 hover:text-primary'
               }`}
             >
@@ -75,36 +75,36 @@ const ReadingControlPanel: React.FC = memo(() => {
         </div>
       </div>
 
-      <div className="space-y-lg">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Estilo & Ritmo</p>
-        <div className="grid grid-cols-2 gap-sm">
+      <div className="space-y-spacing-lg">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Estilo & Ritmo</p>
+        <div className="grid grid-cols-2 gap-spacing-sm">
           <button
             onClick={() => updateSettings({ fontFamily: 'serif' })}
-            className={`flex items-center justify-center gap-xs py-md rounded-full transition-all duration-700 font-serif ${
+            className={`flex items-center justify-center gap-spacing-xs py-spacing-md rounded-full transition-all duration-700 font-serif ${
               settings.fontFamily === 'serif' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
-            <Feather className="w-md h-md" /> Serifada
+            <Feather className="w-spacing-md h-spacing-md" /> Serifada
           </button>
           <button
             onClick={() => updateSettings({ fontFamily: 'sans' })}
-            className={`flex items-center justify-center gap-xs py-md rounded-full transition-all duration-700 ${
+            className={`flex items-center justify-center gap-spacing-xs py-spacing-md rounded-full transition-all duration-700 ${
               settings.fontFamily === 'sans' ? 'bg-primary text-primary-foreground shadow-premium scale-[1.02]' : 'bg-primary/[0.01] text-primary/40 hover:bg-primary/[0.03]'
             }`}
           >
-            <Type className="w-md h-md" /> Sans
+            <Type className="w-spacing-md h-spacing-md" /> Sans
           </button>
         </div>
         
-        <div className="grid grid-cols-1 gap-lg">
-          <div className="space-y-sm">
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 px-2xs">Espaçamento Entre Linhas</p>
-            <div className="flex bg-muted/20 rounded-full p-2xs border border-primary/5">
+        <div className="grid grid-cols-1 gap-spacing-lg">
+          <div className="space-y-spacing-sm">
+            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 px-spacing-2xs">Espaçamento Entre Linhas</p>
+            <div className="flex bg-muted/20 rounded-full p-spacing-2xs border border-primary/5">
               {(['tight', 'normal', 'wide'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => updateSettings({ lineSpacing: l })}
-                  className={`flex-1 py-xs text-[9px] font-black uppercase tracking-widest rounded-full transition-all duration-500 ${
+                  className={`flex-1 py-spacing-xs text-[9px] font-black uppercase tracking-widest rounded-full transition-all duration-500 ${
                     settings.lineSpacing === l ? 'bg-background text-primary shadow-md' : 'text-muted-foreground/40 hover:text-primary'
                   }`}
                 >
@@ -116,11 +116,11 @@ const ReadingControlPanel: React.FC = memo(() => {
         </div>
       </div>
 
-      <div className="space-y-md pt-md border-t border-primary/5">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Foco Contemplativo</p>
-        <div className="grid grid-cols-1 gap-xs">
-          <div className="flex items-center justify-between p-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
-            <div className="space-y-3xs">
+      <div className="space-y-spacing-md pt-spacing-md border-t border-primary/5">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Foco Contemplativo</p>
+        <div className="grid grid-cols-1 gap-spacing-xs">
+          <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-spacing-3xs">
               <p className="text-xs font-bold">Silêncio Visual</p>
               <p className="text-[10px] text-muted-foreground italic leading-none">Oculta distrações ao rolar</p>
             </div>
@@ -128,12 +128,12 @@ const ReadingControlPanel: React.FC = memo(() => {
               type="checkbox"
               checked={settings.visualSilence}
               onChange={(e) => updateSettings({ visualSilence: e.target.checked })}
-              className="w-md h-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+              className="w-spacing-md h-spacing-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-between p-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
-            <div className="space-y-3xs">
+          <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-spacing-3xs">
               <p className="text-xs font-bold">Modo Contemplativo</p>
               <p className="text-[10px] text-muted-foreground italic leading-none">Tons quentes e suaves</p>
             </div>
@@ -141,12 +141,12 @@ const ReadingControlPanel: React.FC = memo(() => {
               type="checkbox"
               checked={settings.contemplativeMode}
               onChange={(e) => updateSettings({ contemplativeMode: e.target.checked })}
-              className="w-md h-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+              className="w-spacing-md h-spacing-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
             />
           </div>
 
-          <div className="flex items-center justify-between p-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
-            <div className="space-y-3xs">
+          <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/20 border border-transparent hover:border-primary/10 transition-all duration-500">
+            <div className="space-y-spacing-3xs">
               <p className="text-xs font-bold">Auto-ocultar Interface</p>
               <p className="text-[10px] text-muted-foreground italic leading-none">Mobile: toque para revelar</p>
             </div>
@@ -154,16 +154,16 @@ const ReadingControlPanel: React.FC = memo(() => {
               type="checkbox"
               checked={settings.autoHideUI}
               onChange={(e) => updateSettings({ autoHideUI: e.target.checked })}
-              className="w-md h-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+              className="w-spacing-md h-spacing-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
             />
           </div>
         </div>
       </div>
 
       {/* Largura da Coluna */}
-      <div className="space-y-sm pt-md border-t border-primary/5">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Largura da Coluna</p>
-        <div className="px-xs">
+      <div className="space-y-spacing-sm pt-spacing-md border-t border-primary/5">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Largura da Coluna</p>
+        <div className="px-spacing-xs">
           <input
             type="range"
             min={45}
@@ -173,7 +173,7 @@ const ReadingControlPanel: React.FC = memo(() => {
             onChange={(e) => updateSettings({ columnWidth: Number(e.target.value) })}
             className="w-full accent-primary"
           />
-          <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/60 mt-xs">
+          <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/60 mt-spacing-xs">
             <span>Estreita</span>
             <span className="text-primary font-bold">{settings.columnWidth}ch</span>
             <span>Larga</span>
@@ -182,10 +182,10 @@ const ReadingControlPanel: React.FC = memo(() => {
       </div>
 
       {/* Modo Noturno Agendado */}
-      <div className="space-y-sm pt-md border-t border-primary/5">
-        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-2xs text-center">Noite Contemplativa</p>
-        <div className="flex items-center justify-between p-md rounded-premium bg-muted/20">
-          <div className="space-y-3xs">
+      <div className="space-y-spacing-sm pt-spacing-md border-t border-primary/5">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 px-spacing-2xs text-center">Noite Contemplativa</p>
+        <div className="flex items-center justify-between p-spacing-md rounded-premium bg-muted/20">
+          <div className="space-y-spacing-3xs">
             <p className="text-xs font-bold">Ativar por Horário</p>
             <p className="text-[10px] text-muted-foreground italic leading-none">Transição gradual</p>
           </div>
@@ -193,40 +193,40 @@ const ReadingControlPanel: React.FC = memo(() => {
             type="checkbox"
             checked={settings.nightSchedule.enabled}
             onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, enabled: e.target.checked } })}
-            className="w-md h-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
+            className="w-spacing-md h-spacing-md rounded-full border-primary/20 text-primary focus:ring-primary cursor-pointer"
           />
         </div>
         {settings.nightSchedule.enabled && (
-          <div className="grid grid-cols-2 gap-sm">
-            <label className="flex flex-col gap-2xs">
+          <div className="grid grid-cols-2 gap-spacing-sm">
+            <label className="flex flex-col gap-spacing-2xs">
               <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Início</span>
               <input
                 type="time"
                 value={settings.nightSchedule.start}
                 onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, start: e.target.value } })}
-                className="bg-muted/30 border border-primary/10 rounded-xl px-sm py-xs text-sm"
+                className="bg-muted/30 border border-primary/10 rounded-xl px-spacing-sm py-spacing-xs text-sm"
               />
             </label>
-            <label className="flex flex-col gap-2xs">
+            <label className="flex flex-col gap-spacing-2xs">
               <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Fim</span>
               <input
                 type="time"
                 value={settings.nightSchedule.end}
                 onChange={(e) => updateSettings({ nightSchedule: { ...settings.nightSchedule, end: e.target.value } })}
-                className="bg-muted/30 border border-primary/10 rounded-xl px-sm py-xs text-sm"
+                className="bg-muted/30 border border-primary/10 rounded-xl px-spacing-sm py-spacing-xs text-sm"
               />
             </label>
           </div>
         )}
       </div>
 
-      <div className="space-y-md pt-md">
+      <div className="space-y-spacing-md pt-spacing-md">
         <Button 
           onClick={() => window.print()}
           variant="outline"
-          className="w-full rounded-premium flex items-center justify-center gap-sm py-xl border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-700"
+          className="w-full rounded-premium flex items-center justify-center gap-spacing-sm py-spacing-xl border-dashed border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all duration-700"
         >
-          <Printer className="w-md h-md text-primary/40" />
+          <Printer className="w-spacing-md h-spacing-md text-primary/40" />
           <div className="text-left">
             <p className="text-xs font-bold uppercase tracking-widest">Gerar PDF Premium</p>
             <p className="text-[10px] text-muted-foreground italic">Otimizado para arquivo</p>
@@ -236,9 +236,9 @@ const ReadingControlPanel: React.FC = memo(() => {
         <Button 
           onClick={resetSettings}
           variant="ghost"
-          className="w-full rounded-full py-md text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all"
+          className="w-full rounded-full py-spacing-md text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all"
         >
-          <RotateCcw className="w-sm h-sm mr-xs" /> Restaurar Padrões
+          <RotateCcw className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Restaurar Padrões
         </Button>
       </div>
     </div>
@@ -250,11 +250,11 @@ const ReadingControlPanel: React.FC = memo(() => {
       <div className="sm:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full h-xl w-xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all">
-              <Settings2 className="w-md h-md" />
+            <Button variant="ghost" size="icon" className="rounded-full h-spacing-xl w-spacing-xl text-primary/40 hover:text-primary hover:bg-primary/5 transition-all">
+              <Settings2 className="w-spacing-md h-spacing-md" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl px-lg">
+          <SheetContent side="bottom" className="h-[80vh] rounded-t-[2.5rem] border-t-primary/10 bg-background/95 backdrop-blur-2xl px-spacing-lg">
             <ScrollArea className="h-full pr-0">
               <SettingsContent />
             </ScrollArea>
@@ -266,13 +266,13 @@ const ReadingControlPanel: React.FC = memo(() => {
       <div className="hidden sm:block">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="rounded-full h-xl px-md flex items-center gap-xs border-primary/10 hover:border-primary/30 transition-all bg-card/40 backdrop-blur-md shadow-md">
-              <Settings2 className="w-sm h-sm" />
+            <Button variant="outline" size="sm" className="rounded-full h-spacing-xl px-spacing-md flex items-center gap-spacing-xs border-primary/10 hover:border-primary/30 transition-all bg-card/40 backdrop-blur-md shadow-md">
+              <Settings2 className="w-spacing-sm h-spacing-sm" />
               <span className="text-[10px] font-black uppercase tracking-widest">Estética</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[400px] p-xl space-y-xl rounded-[3rem] shadow-premium-hover border-primary/5 bg-background/95 backdrop-blur-2xl" align="end">
-            <ScrollArea className="max-h-[70vh] pr-md">
+          <DropdownMenuContent className="w-[400px] p-spacing-xl space-y-spacing-xl rounded-[3rem] shadow-premium-hover border-primary/5 bg-background/95 backdrop-blur-2xl" align="end">
+            <ScrollArea className="max-h-[70vh] pr-spacing-md">
               <SettingsContent />
             </ScrollArea>
           </DropdownMenuContent>

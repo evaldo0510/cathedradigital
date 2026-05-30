@@ -63,24 +63,24 @@ const CatechismHealthCheck: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto p-xl space-y-xl">
+    <div className="max-w-spacing-3xl mx-auto p-spacing-xl space-y-spacing-xl">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-serif font-bold">Validação do Catecismo</h1>
           <p className="text-muted-foreground">Verificação automática de tipos e consistência de dados.</p>
         </div>
         <Button onClick={runTests} disabled={isRunning} variant="outline" size="sm">
-          {isRunning ? <Icons.Loader className="w-md h-md animate-spin" /> : <Icons.RotateCcw className="w-md h-md" />}
-          <span className="ml-xs">Recomeçar</span>
+          {isRunning ? <Icons.Loader className="w-spacing-md h-spacing-md animate-spin" /> : <Icons.RotateCcw className="w-spacing-md h-spacing-md" />}
+          <span className="ml-spacing-xs">Recomeçar</span>
         </Button>
       </div>
 
-      <div className="space-y-md">
+      <div className="space-y-spacing-md">
         {results.map((res, i) => (
-          <Card key={i} className="p-md flex items-center justify-between border-l-4 overflow-hidden" style={{ borderLeftColor: res.status === 'pass' ? '#10b981' : '#ef4444' }}>
-            <div className="flex items-center gap-md">
-              <div className={`p-xs rounded-full ${res.status === 'pass' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-destructive/10 text-destructive'}`}>
-                {res.status === 'pass' ? <Icons.Check className="w-md h-md" /> : <Icons.X className="w-md h-md" />}
+          <Card key={i} className="p-spacing-md flex items-center justify-between border-l-4 overflow-hidden" style={{ borderLeftColor: res.status === 'pass' ? '#10b981' : '#ef4444' }}>
+            <div className="flex items-center gap-spacing-md">
+              <div className={`p-spacing-xs rounded-full ${res.status === 'pass' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-destructive/10 text-destructive'}`}>
+                {res.status === 'pass' ? <Icons.Check className="w-spacing-md h-spacing-md" /> : <Icons.X className="w-spacing-md h-spacing-md" />}
               </div>
               <div>
                 <h3 className="font-bold text-sm">{res.name}</h3>
@@ -94,23 +94,23 @@ const CatechismHealthCheck: React.FC = () => {
         ))}
       </div>
 
-      <div className="pt-xl border-t border-border">
-        <h2 className="text-sm font-bold uppercase tracking-widest mb-md">Fluxo de Navegação Sugerido</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-md">
-          <Button variant="ghost" className="h-auto p-md flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM)}>
-            <span className="text-primary font-black text-xs mb-2xs">Passo 1</span>
+      <div className="pt-spacing-xl border-t border-border">
+        <h2 className="text-sm font-bold uppercase tracking-widest mb-spacing-md">Fluxo de Navegação Sugerido</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+          <Button variant="ghost" className="h-auto p-spacing-md flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM)}>
+            <span className="text-primary font-black text-xs mb-spacing-2xs">Passo 1</span>
             <span className="text-xs font-bold">Leitor do Catecismo</span>
-            <span className="text-xs text-muted-foreground mt-2xs">Verifique o botão "Explorar"</span>
+            <span className="text-xs text-muted-foreground mt-spacing-2xs">Verifique o botão "Explorar"</span>
           </Button>
-          <Button variant="ghost" className="h-auto p-md flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM_EXPLORER)}>
-            <span className="text-primary font-black text-xs mb-2xs">Passo 2</span>
+          <Button variant="ghost" className="h-auto p-spacing-md flex flex-col items-start text-left border border-border" onClick={() => navigate(AppRoute.CATECHISM_EXPLORER)}>
+            <span className="text-primary font-black text-xs mb-spacing-2xs">Passo 2</span>
             <span className="text-xs font-bold">Explorer do Catecismo</span>
-            <span className="text-xs text-muted-foreground mt-2xs">Teste busca e tags multi-select</span>
+            <span className="text-xs text-muted-foreground mt-spacing-2xs">Teste busca e tags multi-select</span>
           </Button>
-          <Button variant="ghost" className="h-auto p-md flex flex-col items-start text-left border border-border" onClick={() => navigate(`${AppRoute.CATECHISM_EXPLORER}?tags=fe&sort=number-desc`)}>
-            <span className="text-primary font-black text-xs mb-2xs">Passo 3</span>
+          <Button variant="ghost" className="h-auto p-spacing-md flex flex-col items-start text-left border border-border" onClick={() => navigate(`${AppRoute.CATECHISM_EXPLORER}?tags=fe&sort=number-desc`)}>
+            <span className="text-primary font-black text-xs mb-spacing-2xs">Passo 3</span>
             <span className="text-xs font-bold">Filtros Persistentes</span>
-            <span className="text-xs text-muted-foreground mt-2xs">Recarregue a página e veja se mantém</span>
+            <span className="text-xs text-muted-foreground mt-spacing-2xs">Recarregue a página e veja se mantém</span>
           </Button>
         </div>
       </div>

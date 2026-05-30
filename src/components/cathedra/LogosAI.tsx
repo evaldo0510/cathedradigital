@@ -253,47 +253,47 @@ const LogosAI: React.FC<LogosAIProps> = ({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="my-3xl overflow-hidden"
+            className="my-spacing-3xl overflow-hidden"
           >
-            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-lg md:p-2xl lg:p-3xl space-y-md md:space-y-xl relative overflow-hidden shadow-premium rounded-[3rem]">
-              <div className="absolute top-0 left-0 w-full h-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
+            <CathedraCard padding="none" className="bg-card/40 backdrop-blur-3xl border-primary/[0.05] p-spacing-lg md:p-spacing-2xl lg:p-spacing-3xl space-y-spacing-md md:space-y-spacing-xl relative overflow-hidden shadow-premium rounded-[3rem]">
+              <div className="absolute top-0 left-0 w-full h-spacing-2xs bg-gradient-to-r from-transparent via-primary/5 to-transparent" />
               
-              <div className="absolute top-md right-md md:top-lg md:right-lg flex items-center gap-xs">
+              <div className="absolute top-spacing-md right-spacing-md md:top-spacing-lg md:right-spacing-lg flex items-center gap-spacing-xs">
                 {history.length > 0 && (
                   <>
                     <CathedraButton 
                       variant="ghost" 
                       size="sm"
                       onClick={exportHistory} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0"
                       title="Exportar histórico"
-                      icon={<Icons.Download className="w-sm h-sm" />}
+                      icon={<Icons.Download className="w-spacing-sm h-spacing-sm" />}
                     />
                     <CathedraButton 
                       variant="ghost" 
                       size="sm"
                       onClick={() => clearHistory()} 
-                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0"
+                      className="rounded-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0"
                       title="Limpar histórico"
-                      icon={<Icons.RotateCcw className="w-sm h-sm" />}
+                      icon={<Icons.RotateCcw className="w-spacing-sm h-spacing-sm" />}
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0" icon={<Icons.X className="w-sm h-sm" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0" icon={<Icons.X className="w-spacing-sm h-spacing-sm" />} />
               </div>
 
-              <div className="flex items-center justify-between mb-lg md:mb-xl opacity-30">
-                <div className="flex items-center gap-sm md:gap-md">
-                  <div className="w-xl h-xl rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
-                    <Icons.Sparkles className="w-sm h-sm" strokeWidth={0.5} />
+              <div className="flex items-center justify-between mb-spacing-lg md:mb-spacing-xl opacity-30">
+                <div className="flex items-center gap-spacing-sm md:gap-spacing-md">
+                  <div className="w-spacing-xl h-spacing-xl rounded-full bg-primary/[0.02] flex items-center justify-center text-primary/40 border border-primary/[0.05]">
+                    <Icons.Sparkles className="w-spacing-sm h-spacing-sm" strokeWidth={0.5} />
                   </div>
                   <div>
                     <h4 className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2xs">
-                  <div className={`w-2xs h-2xs rounded-full ${
+                <div className="flex items-center gap-spacing-2xs">
+                  <div className={`w-spacing-2xs h-spacing-2xs rounded-full ${
                     settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                   }`} />
                   <span className="text-[6px] font-black uppercase tracking-widest text-primary/60">
@@ -302,9 +302,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
               </div>
 
-              <div className="space-y-md md:space-y-xl max-w-3xl mx-auto">
+              <div className="space-y-spacing-md md:space-y-spacing-xl max-w-spacing-3xl mx-auto">
                 {history.length > visibleMessages && (
-                  <div className="flex justify-center pb-xs">
+                  <div className="flex justify-center pb-spacing-xs">
                     <Button 
                       variant="ghost" 
                       size="sm" 
@@ -321,16 +321,16 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.2, delay: i * 0.1 }}
-                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-sm`}
+                    className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-spacing-sm`}
                   >
                     <div className={`max-w-full text-sm md:text-lg leading-[1.7] md:leading-[1.8] tracking-wide ${
                       msg.role === 'user' 
-                        ? 'text-primary/60 font-serif italic border-r border-primary/10 pr-md md:pr-lg text-right' 
+                        ? 'text-primary/60 font-serif italic border-r border-primary/10 pr-spacing-md md:pr-spacing-lg text-right' 
                         : 'text-foreground/80 font-serif font-light'
                     }`}>
                       {msg.role === 'assistant' && (
-                        <div className="flex items-center gap-xs mb-sm md:mb-md opacity-20">
-                          <div className="w-md h-px bg-primary" />
+                        <div className="flex items-center gap-spacing-xs mb-spacing-sm md:mb-spacing-md opacity-20">
+                          <div className="w-spacing-md h-px bg-primary" />
                           <span className="text-[7px] font-black uppercase tracking-[0.4em]">Logos</span>
                         </div>
                       )}
@@ -341,13 +341,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
                 {(isLoading || isTyping) && (
                   <div className="flex justify-start">
-                    <div className="flex gap-sm opacity-10 py-lg">
+                    <div className="flex gap-spacing-sm opacity-10 py-spacing-lg">
                       {[0, 1, 2].map((i) => (
                         <motion.div 
                           key={i}
                           animate={{ opacity: [0.2, 0.5, 0.2], y: [0, -2, 0] }}
                           transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
-                          className="w-2xs h-2xs bg-primary rounded-full" 
+                          className="w-spacing-2xs h-spacing-2xs bg-primary rounded-full" 
                         />
                       ))}
                     </div>
@@ -356,7 +356,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div ref={chatEndRef} />
               </div>
 
-              <div className="max-w-xl mx-auto pt-lg md:pt-xl border-t border-primary/5">
+              <div className="max-w-spacing-xl mx-auto pt-spacing-lg md:pt-spacing-xl border-t border-primary/5">
                 <form onSubmit={handleQuery} className="relative group flex items-center justify-center">
                   <input
                     type="text"
@@ -364,18 +364,18 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Reflexão..."}
                     disabled={settings.totalSilence}
-                    className="w-full bg-transparent border-none text-sm md:text-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-sm md:py-md transition-all text-primary"
+                    className="w-full bg-transparent border-none text-sm md:text-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-spacing-sm md:py-spacing-md transition-all text-primary"
                   />
                   <button 
                     type="submit" 
                     disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
-                    className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-xs"
+                    className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-spacing-xs"
                   >
-                    <Icons.ArrowRight className="w-md h-md stroke-[1]" />
+                    <Icons.ArrowRight className="w-spacing-md h-spacing-md stroke-[1]" />
                   </button>
                 </form>
-                <div className="flex flex-col items-center gap-xs mt-lg">
-                  <div className="w-3xs h-3xs bg-primary/10 rounded-full" />
+                <div className="flex flex-col items-center gap-spacing-xs mt-spacing-lg">
+                  <div className="w-spacing-3xs h-spacing-3xs bg-primary/10 rounded-full" />
                   <p className="text-[7px] text-center text-primary/40 uppercase tracking-[0.5em] font-black">
                     {settings.totalSilence ? "O silêncio é a oração perfeita" : "Silêncio é entendimento"}
                   </p>
@@ -407,44 +407,44 @@ const LogosAI: React.FC<LogosAIProps> = ({
             transition={springConfig}
             className="fixed right-0 top-0 bottom-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
           >
-            <div className="p-lg md:p-xl border-b border-border/5 flex items-center justify-between">
-              <div className="flex items-center gap-md">
-                <div className="w-xl h-xl rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/60">
-                  <Icons.Sparkles className="w-md h-md" strokeWidth={0.5} />
+            <div className="p-spacing-lg md:p-spacing-xl border-b border-border/5 flex items-center justify-between">
+              <div className="flex items-center gap-spacing-md">
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-border/10 flex items-center justify-center text-primary/60">
+                  <Icons.Sparkles className="w-spacing-md h-spacing-md" strokeWidth={0.5} />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
-                  <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-2xs">Mentor Espiritual</p>
+                  <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-spacing-2xs">Mentor Espiritual</p>
                 </div>
               </div>
-              <div className="flex items-center gap-xs">
+              <div className="flex items-center gap-spacing-xs">
                 {history.length > 0 && (
                   <>
                     <CathedraButton 
                       variant="ghost" 
                       size="sm" 
                       onClick={exportHistory} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0"
                       title="Exportar histórico"
-                      icon={<Icons.Download className="w-md h-md" />}
+                      icon={<Icons.Download className="w-spacing-md h-spacing-md" />}
                     />
                     <CathedraButton 
                       variant="ghost" 
                       size="sm" 
                       onClick={() => clearHistory()} 
-                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0"
+                      className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0"
                       title="Limpar histórico"
-                      icon={<Icons.RotateCcw className="w-md h-md" />}
+                      icon={<Icons.RotateCcw className="w-spacing-md h-spacing-md" />}
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-xl w-xl px-0" icon={<Icons.X className="w-md h-md" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} className="rounded-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-0" icon={<Icons.X className="w-spacing-md h-spacing-md" />} />
               </div>
             </div>
 
-            <div className="px-lg md:px-xl py-sm bg-primary/[0.02] border-b border-border/5 flex items-center justify-between">
-              <div className="flex items-center gap-xs">
-                <div className={`w-2xs h-2xs rounded-full ${
+            <div className="px-spacing-lg md:px-spacing-xl py-spacing-sm bg-primary/[0.02] border-b border-border/5 flex items-center justify-between">
+              <div className="flex items-center gap-spacing-xs">
+                <div className={`w-spacing-2xs h-spacing-2xs rounded-full ${
                   settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                 }`} />
                 <span className="text-[7px] font-black uppercase tracking-widest text-primary/60">
@@ -456,16 +456,16 @@ const LogosAI: React.FC<LogosAIProps> = ({
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-lg md:p-xl space-y-xl md:space-y-xl scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-spacing-lg md:p-spacing-xl space-y-spacing-xl md:space-y-spacing-xl scrollbar-hide">
               {history.length === 0 && !selectedText && (
-                <div className="text-center py-3xl space-y-xl">
-                  <div className="w-2xs h-2xs rounded-full bg-primary/10 mx-auto animate-pulse" />
+                <div className="text-center py-spacing-3xl space-y-spacing-xl">
+                  <div className="w-spacing-2xs h-spacing-2xs rounded-full bg-primary/10 mx-auto animate-pulse" />
                   <p className="text-lg text-muted-foreground/40 font-serif italic leading-relaxed max-w-[280px] mx-auto">
                     {settings.totalSilence 
                       ? '"No silêncio, Deus fala ao coração."' 
                       : '"O silêncio é a primeira língua de Deus."'}
                     <br/>
-                    <span className="text-sm uppercase tracking-widest font-black mt-md block">
+                    <span className="text-sm uppercase tracking-widest font-black mt-spacing-md block">
                       {settings.totalSilence ? 'Modo Silêncio Ativo' : 'Como posso iluminar sua jornada?'}
                     </span>
                   </p>
@@ -473,27 +473,27 @@ const LogosAI: React.FC<LogosAIProps> = ({
               )}
 
               {history.length > visibleMessages && (
-                <div className="flex justify-center pb-xl">
+                <div className="flex justify-center pb-spacing-xl">
                   <CathedraButton 
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setVisibleMessages(prev => prev + 10)}
-                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-xs"
+                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-spacing-xs"
                   >
                     Ver histórico anterior
                   </CathedraButton>
                 </div>
               )}
               {history.slice(-visibleMessages).map((msg, i) => (
-                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-sm animate-in fade-in slide-in-from-bottom-xs duration-500`}>
-                  <div className={`max-w-[90%] p-lg md:p-xl rounded-lg text-sm md:text-base leading-relaxed ${
+                <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} gap-spacing-sm animate-in fade-in slide-in-from-bottom-spacing-xs duration-500`}>
+                  <div className={`max-w-[90%] p-spacing-lg md:p-spacing-xl rounded-lg text-sm md:text-base leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-primary text-primary-foreground shadow-premium' 
                       : 'bg-card border border-border/5 font-serif italic text-foreground/80'
                   }`}>
                     {msg.content}
                   </div>
-                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-md">
+                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-spacing-md">
                     {msg.role === 'user' ? 'Peregrino' : 'Logos'}
                   </span>
                 </div>
@@ -501,17 +501,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
               {(isLoading || isTyping) && (
                 <div className="flex justify-start animate-in fade-in duration-500">
-                  <div className="bg-muted/10 p-md md:p-lg rounded-lg flex gap-sm">
-                    <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce" />
-                    <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <div className="w-2xs h-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
+                  <div className="bg-muted/10 p-spacing-md md:p-spacing-lg rounded-lg flex gap-spacing-sm">
+                    <div className="w-spacing-2xs h-spacing-2xs bg-primary/20 rounded-full animate-bounce" />
+                    <div className="w-spacing-2xs h-spacing-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.2s]" />
+                    <div className="w-spacing-2xs h-spacing-2xs bg-primary/20 rounded-full animate-bounce [animation-delay:0.4s]" />
                   </div>
                 </div>
               )}
               <div ref={chatEndRef} />
             </div>
 
-            <div className="p-lg md:p-xl border-t border-border/5 bg-background/30">
+            <div className="p-spacing-lg md:p-spacing-xl border-t border-border/5 bg-background/30">
               <form onSubmit={handleQuery} className="relative group">
                 <input
                   type="text"
@@ -519,17 +519,17 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Busque por luz e entendimento..."}
                   disabled={settings.totalSilence}
-                  className="w-full bg-transparent border-b border-border/10 py-md px-0 text-base md:text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/60 font-serif italic"
+                  className="w-full bg-transparent border-b border-border/10 py-spacing-md px-0 text-base md:text-lg focus:border-primary/40 outline-none transition-all placeholder:text-muted-foreground/60 font-serif italic"
                 />
                 <button 
                   type="submit"
                   disabled={isLoading || isTyping || settings.totalSilence}
-                  className="absolute right-0 top-2xs/2 -translate-y-1/2 w-xl h-xl rounded-full flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all disabled:opacity-30"
+                  className="absolute right-0 top-spacing-2xs/2 -translate-y-1/2 w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center text-primary hover:scale-110 active:scale-95 transition-all disabled:opacity-30"
                 >
-                  <Icons.ArrowRight className="w-md h-md" />
+                  <Icons.ArrowRight className="w-spacing-md h-spacing-md" />
                 </button>
               </form>
-              <div className="mt-xl">
+              <div className="mt-spacing-xl">
                 <p className="text-[8px] text-muted-foreground/60 uppercase tracking-[0.4em] text-center font-bold">
                   {settings.totalSilence ? "Silêncio em Adoração" : "Sempre em comunhão com o Magistério"}
                 </p>

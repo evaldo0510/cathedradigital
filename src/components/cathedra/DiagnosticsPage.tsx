@@ -46,25 +46,25 @@ const DiagnosticsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-xl py-xl">
-      <div className="text-center space-y-sm">
-        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium text-primary">
-          <Icons.Zap className="w-md h-md" />
+    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl py-spacing-xl">
+      <div className="text-center space-y-spacing-sm">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium text-primary">
+          <Icons.Zap className="w-spacing-md h-spacing-md" />
           <span className="text-xs font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
+        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
         {/* Status Cards */}
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-md">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Supabase Core</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-md">
-            <div className="flex items-center gap-sm">
-              <div className={`w-sm h-sm rounded-full animate-pulse ${
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <div className={`w-spacing-sm h-spacing-sm rounded-full animate-pulse ${
                 supabaseStatus === 'ok' ? 'bg-primary' : supabaseStatus === 'error' ? 'bg-secondary' : 'bg-secondary/50'
               }`} />
               <span className="text-lg font-bold text-foreground">
@@ -76,12 +76,12 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-md">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Banco de Dados</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-md">
-            <div className="flex items-center gap-sm">
-              <Icons.History className="w-md h-md text-primary" />
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <Icons.History className="w-spacing-md h-spacing-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.table_count || 0} Tabelas</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Integridade: 100% (Normal)</p>
@@ -89,12 +89,12 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
 
         <Card className="border-border/50 bg-card rounded-[2rem] overflow-hidden">
-          <CardHeader className="pb-md">
+          <CardHeader className="pb-spacing-md">
             <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground">Comunidade</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-md">
-            <div className="flex items-center gap-sm">
-              <Icons.Message className="w-md h-md text-primary" />
+          <CardContent className="space-y-spacing-md">
+            <div className="flex items-center gap-spacing-sm">
+              <Icons.Message className="w-spacing-md h-spacing-md text-primary" />
               <span className="text-lg font-bold text-foreground">{dbStats?.post_count || 0} Discussões</span>
             </div>
             <p className="text-xs text-muted-foreground italic">Atividade: Alta (Últimas 24h)</p>
@@ -102,11 +102,11 @@ const DiagnosticsPage: React.FC = () => {
         </Card>
       </div>
 
-      <div className="bg-card border border-border rounded-premium p-xl space-y-lg">
-        <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-sm">
-          <Icons.Zap className="w-md h-md text-primary" /> Relatório de Serviços
+      <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg">
+        <h2 className="text-xl font-serif font-bold text-foreground flex items-center gap-spacing-sm">
+          <Icons.Zap className="w-spacing-md h-spacing-md text-primary" /> Relatório de Serviços
         </h2>
-        <div className="grid gap-md">
+        <div className="grid gap-spacing-md">
           {[
             { label: 'Autenticação (Magic Link)', status: 'Online' },
             { label: 'Edge Functions (AI Study)', status: 'Online' },
@@ -114,9 +114,9 @@ const DiagnosticsPage: React.FC = () => {
             { label: 'Realtime (Notificações)', status: 'Avisos' },
             { label: 'Analytics API', status: 'Online' },
           ].map((service, i) => (
-            <div key={i} className="flex items-center justify-between py-sm border-b border-border/50 last:border-0">
+            <div key={i} className="flex items-center justify-between py-spacing-sm border-b border-border/50 last:border-0">
               <span className="text-sm font-bold text-foreground/80">{service.label}</span>
-              <span className={`text-xs font-black uppercase tracking-widest px-sm py-2xs rounded-full ${
+              <span className={`text-xs font-black uppercase tracking-widest px-spacing-sm py-spacing-2xs rounded-full ${
                 service.status === 'Online' ? 'bg-primary/10 text-primary' : 'bg-secondary/10 text-secondary'
               }`}>
                 {service.status}
@@ -124,7 +124,7 @@ const DiagnosticsPage: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="pt-md flex flex-col sm:flex-row justify-center gap-sm">
+        <div className="pt-spacing-md flex flex-col sm:flex-row justify-center gap-spacing-sm">
           <Button onClick={checkStatus} disabled={loading} variant="outline" className="rounded-full font-black uppercase tracking-widest text-xs">
             {loading ? 'Sincronizando...' : 'Recarregar Diagnóstico'}
           </Button>

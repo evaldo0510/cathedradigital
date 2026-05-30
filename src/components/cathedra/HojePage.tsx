@@ -136,7 +136,7 @@ const HojePage: React.FC = () => {
       
       {import.meta.env.DEV && <DevDataInspector data={{ officialSaint, allSaintsToday: allSaintsToday || [], activeJourney: activeJourney || null, profile: profile?._sensitive || null }} />}
       
-      <div className="w-full space-y-4xl md:space-y-4xl">
+      <div className="w-full space-y-spacing-4xl md:space-y-spacing-4xl">
         {/* CONTINUIDADE ESPIRITUAL - RETOMADA DINÂMICA */}
         <motion.section 
           initial={{ opacity: 0, y: 10 }}
@@ -147,59 +147,59 @@ const HojePage: React.FC = () => {
           <SpiritualContinuity data={nextUp} isLoading={loadingStats} profile={profile} />
         </motion.section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-2xl md:gap-4xl">
-          <div className="lg:col-span-8 space-y-3xl md:space-y-4xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl">
+          <div className="lg:col-span-8 space-y-spacing-3xl md:space-y-spacing-4xl">
             {/* NÚCLEO SAGRADO - PORTAS PRINCIPAIS */}
-            <section className="space-y-xl md:space-y-3xl">
-              <div className="flex items-center gap-lg">
+            <section className="space-y-spacing-xl md:space-y-spacing-3xl">
+              <div className="flex items-center gap-spacing-lg">
                 <h2 className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.6em] text-primary/40 whitespace-nowrap">
                   Núcleo Sagrado
                 </h2>
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-xl w-full max-w-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl w-full max-w-spacing-4xl">
                  <CathedraButton 
                     variant="outline" 
-                    className="h-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-md group"
+                    className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.BIBLE)}
                  >
-                    <Icons.Bible className="w-xl h-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <Icons.Bible className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Bíblia</span>
                  </CathedraButton>
                  <CathedraButton 
                     variant="outline" 
-                    className="h-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-md group"
+                    className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.CATECHISM)}
                  >
-                    <Icons.Catechism className="w-xl h-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
+                    <Icons.Catechism className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={0.5} />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Catecismo</span>
                  </CathedraButton>
               </div>
             </section>
           </div>
 
-          <aside className="lg:col-span-4 space-y-3xl">
+          <aside className="lg:col-span-4 space-y-spacing-3xl">
             {/* FRASES DO DIA - CONTEMPLAÇÃO */}
-            <div className="py-2xl px-xl text-center bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] transition-all hover:bg-primary/[0.02] duration-1000">
-               <Icons.Quote className="w-lg h-lg text-primary/10 mx-auto mb-xl" />
+            <div className="py-spacing-2xl px-spacing-xl text-center bg-primary/[0.01] rounded-[2rem] border border-primary/[0.03] transition-all hover:bg-primary/[0.02] duration-1000">
+               <Icons.Quote className="w-spacing-lg h-spacing-lg text-primary/10 mx-auto mb-spacing-xl" />
                <p className="text-lg md:text-xl text-primary/40 font-serif italic leading-relaxed selection:bg-primary/5">
                 {todayQuote}
               </p>
             </div>
 
             {/* EM BREVE - DISCRETO */}
-            <section className="pt-2xl opacity-30 hover:opacity-100 transition-opacity duration-1000">
-              <div className="flex items-center gap-lg mb-xl">
+            <section className="pt-spacing-2xl opacity-30 hover:opacity-100 transition-opacity duration-1000">
+              <div className="flex items-center gap-spacing-lg mb-spacing-xl">
                 <span className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">Futuro</span>
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
-              <div className="space-y-lg">
+              <div className="space-y-spacing-lg">
                 {[
-                  { title: 'Jornadas de Fé', icon: <Icons.Journeys className="w-md h-md" /> },
-                  { title: 'Comunidade Contemplativa', icon: <Icons.Users className="w-md h-md" /> },
-                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity className="w-md h-md" /> },
+                  { title: 'Jornadas de Fé', icon: <Icons.Journeys className="w-spacing-md h-spacing-md" /> },
+                  { title: 'Comunidade Contemplativa', icon: <Icons.Users className="w-spacing-md h-spacing-md" /> },
+                  { title: 'Dashboard do Peregrino', icon: <Icons.Activity className="w-spacing-md h-spacing-md" /> },
                 ].map((item) => (
-                  <div key={item.title} className="flex items-center gap-md group cursor-default">
+                  <div key={item.title} className="flex items-center gap-spacing-md group cursor-default">
                     <div className="text-primary/30 group-hover:text-primary/50 transition-colors">
                       {item.icon}
                     </div>

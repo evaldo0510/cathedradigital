@@ -275,49 +275,49 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="max-w-3xl mx-auto space-y-lg py-xl px-md">
+      <div className="max-w-spacing-3xl mx-auto space-y-spacing-lg py-spacing-xl px-spacing-md">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
-          className="flex items-center gap-xs text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-xs py-2xs"
+          className="flex items-center gap-spacing-xs text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-spacing-xs py-spacing-2xs"
           aria-label="Voltar para a lista de discussões"
         >
-          <Icons.ChevronLeft className="w-md h-md" /> Voltar
+          <Icons.ChevronLeft className="w-spacing-md h-spacing-md" /> Voltar
         </Button>
 
-        <div className="bg-card border border-border rounded-premium p-lg space-y-md">
-          <div className="flex items-center gap-sm">
-            <div className="w-xl h-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-sm">
+        <div className="bg-card border border-border rounded-premium p-spacing-lg space-y-spacing-md">
+          <div className="flex items-center gap-spacing-sm">
+            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-foreground text-background flex items-center justify-center font-black text-sm">
               {(selectedPost.author_name || 'A').charAt(0).toUpperCase()}
             </div>
             <div>
               <p className="text-sm font-bold text-foreground">{selectedPost.author_name}</p>
               <p className="text-xs text-muted-foreground">{timeAgo(selectedPost.created_at)}</p>
             </div>
-            <span className="ml-auto text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-xs py-2xs rounded-full">
+            <span className="ml-auto text-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-spacing-xs py-spacing-2xs rounded-full">
               {CATEGORIES.find(c => c.id === selectedPost.category)?.label || selectedPost.category}
             </span>
           </div>
           <h2 className="text-xl font-serif font-bold text-foreground">{selectedPost.title}</h2>
           <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">{selectedPost.content}</p>
-          <div className="flex items-center gap-md pt-xs border-t border-border">
+          <div className="flex items-center gap-spacing-md pt-spacing-xs border-t border-border">
             <Button 
               onClick={() => toggleLike(selectedPost)} 
-              className="flex items-center gap-2xs text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-xs py-2xs"
+              className="flex items-center gap-spacing-2xs text-sm text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-full px-spacing-xs py-spacing-2xs"
               aria-label={selectedPost.user_liked ? "Remover curtida" : "Curtir discussão"}
               aria-pressed={selectedPost.user_liked}
             >
-              <Icons.Heart className={`w-md h-md ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
+              <Icons.Heart className={`w-spacing-md h-spacing-md ${selectedPost.user_liked ? 'fill-primary text-primary' : ''}`} />
               {selectedPost.likes_count}
             </Button>
             <span className="text-sm text-muted-foreground">{replies.length} respostas</span>
           </div>
         </div>
 
-        <div className="space-y-sm">
+        <div className="space-y-spacing-sm">
           {replies.map(r => (
-            <div key={r.id} className="bg-card border border-border rounded-premium p-md ml-lg">
-              <div className="flex items-center gap-xs mb-xs">
-                <div className="w-lg h-lg rounded-premium bg-muted flex items-center justify-center text-xs font-bold text-foreground">
+            <div key={r.id} className="bg-card border border-border rounded-premium p-spacing-md ml-spacing-lg">
+              <div className="flex items-center gap-spacing-xs mb-spacing-xs">
+                <div className="w-spacing-lg h-spacing-lg rounded-premium bg-muted flex items-center justify-center text-xs font-bold text-foreground">
                   {(r.author_name || 'A').charAt(0).toUpperCase()}
                 </div>
                 <span className="text-xs font-bold text-foreground">{r.author_name}</span>
@@ -329,21 +329,21 @@ const CommunityPage: React.FC = () => {
         </div>
 
         {user ? (
-          <div className="bg-card border border-border rounded-premium p-md space-y-sm">
+          <div className="bg-card border border-border rounded-premium p-spacing-md space-y-spacing-sm">
             <textarea
               value={replyContent}
               onChange={e => setReplyContent(e.target.value)}
               placeholder="Escreva sua resposta..."
               rows={3}
-              className="w-full bg-background border border-border rounded-full p-sm text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full bg-background border border-border rounded-full p-spacing-sm text-sm text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
             <Button onClick={submitReply} disabled={submitting || !replyContent.trim()}
-              className="px-md py-xs rounded-full bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
+              className="px-spacing-md py-spacing-xs rounded-full bg-foreground text-background text-xs font-black uppercase tracking-widest disabled:opacity-40 hover:bg-primary hover:text-primary-foreground transition-all">
               {submitting ? 'Enviando...' : 'Responder'}
             </Button>
           </div>
         ) : (
-          <Button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-sm bg-foreground text-background rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
+          <Button onClick={() => navigate(AppRoute.LOGIN)} className="w-full py-spacing-sm bg-foreground text-background rounded-full text-sm font-bold hover:bg-primary hover:text-primary-foreground transition-all">
             Faça login para responder
           </Button>
         )}
@@ -352,51 +352,51 @@ const CommunityPage: React.FC = () => {
   }
 
   return (
-    <div className="desktop-layout py-xl">
-      <div className="desktop-main px-md">
+    <div className="desktop-layout py-spacing-xl">
+      <div className="desktop-main px-spacing-md">
         {loading && posts.length === 0 ? (
-          <div className="space-y-xl">
+          <div className="space-y-spacing-xl">
             <PageHeaderSkeleton />
             <ListSkeleton count={6} />
           </div>
         ) : (
           <>
-            <div className="text-center space-y-md pt-md mb-xl">
-              <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 rounded-premium border border-primary/10 shadow-inner mb-xs">
-                <Icons.Message className="w-md h-md text-primary" aria-hidden="true" />
+            <div className="text-center space-y-spacing-md pt-spacing-md mb-spacing-xl">
+              <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 rounded-premium border border-primary/10 shadow-inner mb-spacing-xs">
+                <Icons.Message className="w-spacing-md h-spacing-md text-primary" aria-hidden="true" />
                 <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
               <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
-              <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-base sm:text-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
+              <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-base sm:text-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
               <p className="text-xs text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
             </div>
           </>
         )}
 
-        <div className="flex gap-xs justify-center mb-xl" role="tablist" aria-label="Abas da comunidade">
+        <div className="flex gap-spacing-xs justify-center mb-spacing-xl" role="tablist" aria-label="Abas da comunidade">
           <Button 
-            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-0', 'panel-forum', tab === 'forum', `px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'forum' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('forum')}
             onKeyDown={(e) => handleTabKeyDown(e, 0, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
           >
-            <Icons.Message className="w-sm h-sm inline mr-2xs" />Fórum
+            <Icons.Message className="w-spacing-sm h-spacing-sm inline mr-spacing-2xs" />Fórum
           </Button>
           <Button 
-            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-md py-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+            {...getTabProps('tab-1', 'panel-ranking', tab === 'ranking', `px-spacing-md py-spacing-xs rounded-full text-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
               tab === 'ranking' ? 'bg-foreground text-background' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`)}
             onClick={() => setTab('ranking')}
             onKeyDown={(e) => handleTabKeyDown(e, 1, 2, (idx) => setTab(idx === 0 ? 'forum' : 'ranking'), 'tab-')}
           >
-            <Icons.Star className="w-sm h-sm inline mr-2xs" />Ranking
+            <Icons.Star className="w-spacing-sm h-spacing-sm inline mr-spacing-2xs" />Ranking
           </Button>
         </div>
 
         {tab === 'forum' ? (
-          <div className="space-y-lg" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
-            <div className="flex flex-col sm:flex-row gap-md mb-lg">
+          <div className="space-y-spacing-lg" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
+            <div className="flex flex-col sm:flex-row gap-spacing-md mb-spacing-lg">
               <FuzzySearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
@@ -404,17 +404,17 @@ const CommunityPage: React.FC = () => {
                 isSearching={isSearchPending}
                 className="flex-1"
               />
-              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-2xl px-lg font-black uppercase tracking-widest gap-xs bg-primary shadow-premium shadow-primary/20">
-                <Icons.Plus className="w-md h-md" /> Nova Discussão
+              <Button onClick={() => setShowNewPost(true)} className="rounded-full h-spacing-2xl px-spacing-lg font-black uppercase tracking-widest gap-spacing-xs bg-primary shadow-premium shadow-primary/20">
+                <Icons.Plus className="w-spacing-md h-spacing-md" /> Nova Discussão
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-md">
+            <div className="grid grid-cols-1 gap-spacing-md">
               {posts.map(post => (
                 <Card key={post.id} className="premium-card-interactive" onClick={() => openPost(post)}>
-                  <CardContent className="p-lg">
-                    <div className="flex items-center gap-sm mb-md">
-                      <div className="w-xl h-xl rounded-premium bg-muted flex items-center justify-center font-black text-sm text-primary">
+                  <CardContent className="p-spacing-lg">
+                    <div className="flex items-center gap-spacing-sm mb-spacing-md">
+                      <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-sm text-primary">
                         {(post.author_name || 'A').charAt(0).toUpperCase()}
                       </div>
                       <div className="flex-1">
@@ -425,14 +425,14 @@ const CommunityPage: React.FC = () => {
                         {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                       </Badge>
                     </div>
-                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-xs">{post.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 italic mb-md">{post.content}</p>
-                    <div className="flex items-center gap-md pt-md border-t border-border/40">
-                      <div className="flex items-center gap-2xs text-xs font-bold text-muted-foreground">
-                        <Icons.Heart className="w-sm h-sm" /> {post.likes_count}
+                    <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-spacing-xs">{post.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-2 italic mb-spacing-md">{post.content}</p>
+                    <div className="flex items-center gap-spacing-md pt-spacing-md border-t border-border/40">
+                      <div className="flex items-center gap-spacing-2xs text-xs font-bold text-muted-foreground">
+                        <Icons.Heart className="w-spacing-sm h-spacing-sm" /> {post.likes_count}
                       </div>
-                      <div className="flex items-center gap-2xs text-xs font-bold text-muted-foreground">
-                        <Icons.MessageSquare className="w-sm h-sm" /> {post.replies_count || 0}
+                      <div className="flex items-center gap-spacing-2xs text-xs font-bold text-muted-foreground">
+                        <Icons.MessageSquare className="w-spacing-sm h-spacing-sm" /> {post.replies_count || 0}
                       </div>
                     </div>
                   </CardContent>
@@ -441,12 +441,12 @@ const CommunityPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="space-y-md" {...getTabPanelProps('panel-ranking', 'tab-1', true)}>
+          <div className="space-y-spacing-md" {...getTabPanelProps('panel-ranking', 'tab-1', true)}>
             {lbLoading ? <ListSkeleton count={5} /> : (
-              <div className="grid grid-cols-1 gap-sm">
+              <div className="grid grid-cols-1 gap-spacing-sm">
                 {leaderboard.map((entry, idx) => (
-                  <div key={entry.id} className="flex items-center gap-md p-md bg-card border border-border/50 rounded-[2rem]">
-                    <div className="w-xl h-xl rounded-premium bg-muted flex items-center justify-center font-black text-sm">
+                  <div key={entry.id} className="flex items-center gap-spacing-md p-spacing-md bg-card border border-border/50 rounded-[2rem]">
+                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-sm">
                       {idx + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -465,19 +465,19 @@ const CommunityPage: React.FC = () => {
         )}
       </div>
 
-      <aside className="desktop-aside space-y-lg hidden xl:block">
+      <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Comunhão de Santos</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Comunhão de Santos</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             Participar da comunidade é viver a comunhão cristã. Compartilhe suas graças e edifique seus irmãos.
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-md">Líderes de Engajamento</h3>
-          <div className="space-y-md">
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-md">Líderes de Engajamento</h3>
+          <div className="space-y-spacing-md">
             {leaderboard.slice(0, 3).map((entry, i) => (
-              <div key={entry.id} className="flex items-center gap-sm">
-                <div className="w-xl h-xl rounded-premium bg-muted flex items-center justify-center font-black text-xs">
+              <div key={entry.id} className="flex items-center gap-spacing-sm">
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-xs">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">

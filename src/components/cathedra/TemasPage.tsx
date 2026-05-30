@@ -129,22 +129,22 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div className="desktop-layout section-rhythm animate-in fade-in slide-in-from-bottom-md duration-700">
-      <div className="desktop-main px-md stack-rhythm">
-        <header className="space-y-md text-center header-margin-rhythm">
-          <div className="flex justify-center mb-md">
-            <div className="w-3xl h-2xs bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
+    <div className="desktop-layout section-rhythm animate-in fade-in slide-in-from-bottom-spacing-md duration-700">
+      <div className="desktop-main px-spacing-md stack-rhythm">
+        <header className="space-y-spacing-md text-center header-margin-rhythm">
+          <div className="flex justify-center mb-spacing-md">
+            <div className="w-spacing-3xl h-spacing-2xs bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
           </div>
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
             <span>Nexus</span> <span className="text-primary/90">Temas</span>
           </h1>
-          <p className="text-muted-foreground text-base sm:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
+          <p className="text-muted-foreground text-base sm:text-xl max-w-spacing-2xl mx-auto font-serif italic leading-relaxed">
             "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
           </p>
         </header>
 
         <div className="stack-rhythm">
-          <div className="flex flex-col sm:flex-row items-center gap-xs sm:gap-md bg-card/60 p-xs sm:p-sm rounded-premium border border-border/40 shadow-premium-hover sticky top-xs sm:top-md z-20 transition-all duration-500 hover:shadow-premium-hover hover:border-primary/20 group/nav">
+          <div className="flex flex-col sm:flex-row items-center gap-spacing-xs sm:gap-spacing-md bg-card/60 p-spacing-xs sm:p-spacing-sm rounded-premium border border-border/40 shadow-premium-hover sticky top-spacing-xs sm:top-spacing-md z-20 transition-all duration-500 hover:shadow-premium-hover hover:border-primary/20 group/nav">
             <FuzzySearchInput
               className="flex-1 w-full"
               value={searchQuery}
@@ -153,12 +153,12 @@ const TemasPage = () => {
               isSearching={isSearchPending}
             />
             
-            <div className="flex items-center gap-2xs overflow-x-auto w-full sm:w-auto px-xs pb-xs sm:pb-0 scrollbar-none scroll-smooth">
+            <div className="flex items-center gap-spacing-2xs overflow-x-auto w-full sm:w-auto px-spacing-xs pb-spacing-xs sm:pb-0 scrollbar-none scroll-smooth">
               {categories.map((cat, idx) => (
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-sm sm:px-md py-xs sm:py-xs rounded-full sm:rounded-full text-xs sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
+                    whitespace-nowrap px-spacing-sm sm:px-spacing-md py-spacing-xs sm:py-spacing-xs rounded-full sm:rounded-full text-xs sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
                     ${activeCategory === cat 
                       ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-105' 
                       : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
@@ -181,26 +181,26 @@ const TemasPage = () => {
             
             <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-premium border border-border/30 bg-card/20 outline-none")}>
               {loadingTags ? (
-                <div className="flex flex-col items-center gap-md py-2xl w-full justify-center">
+                <div className="flex flex-col items-center gap-spacing-md py-spacing-2xl w-full justify-center">
                   <div className="relative">
-                    <Loader2 className="h-xl w-xl animate-spin text-primary/60" />
+                    <Loader2 className="h-spacing-xl w-spacing-xl animate-spin text-primary/60" />
                     <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-premium" />
                   </div>
                   <span className="text-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
                 </div>
               ) : filteredTags.length === 0 ? (
-                <div className="py-3xl px-xl text-center w-full space-y-md">
-                  <div className="w-3xl h-3xl bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
-                    <Search className="w-lg h-lg text-muted-foreground/60" />
+                <div className="py-spacing-3xl px-spacing-xl text-center w-full space-y-spacing-md">
+                  <div className="w-spacing-3xl h-spacing-3xl bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
+                    <Search className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
                   </div>
                   <p className="text-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
                 </div>
               ) : (
                 <>
                   {isSearchActive && activeCategory !== 'all' && (
-                    <div className="px-lg pt-lg flex items-center justify-between">
-                      <div className="flex items-center gap-xs px-sm py-2xs rounded-premium bg-primary/5 border border-primary/10">
-                        <Sparkles className="w-sm h-sm text-primary/40" />
+                    <div className="px-spacing-lg pt-spacing-lg flex items-center justify-between">
+                      <div className="flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-primary/5 border border-primary/10">
+                        <Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
                         <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
                       <Button 
@@ -211,8 +211,8 @@ const TemasPage = () => {
                       </Button>
                     </div>
                   )}
-                  <div className="relative p-lg sm:p-xl">
-                    <div className="flex flex-wrap justify-center gap-xs sm:gap-sm max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
+                  <div className="relative p-spacing-lg sm:p-spacing-xl">
+                    <div className="flex flex-wrap justify-center gap-spacing-xs sm:gap-spacing-sm max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
                       {filteredTags.map((tag, idx) => (
                         <div key={tag.id} role="listitem">
                           <TagBubble
@@ -221,20 +221,20 @@ const TemasPage = () => {
                             isSuggested={suggestedSlugs.has(tag.slug)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            className="px-md py-xs text-xs sm:text-premium-small uppercase tracking-widest"
+                            className="px-spacing-md py-spacing-xs text-xs sm:text-premium-small uppercase tracking-widest"
                             profileId={profileId as ProfileId}
                           />
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-sm px-xl pb-lg pt-xs">
-                    <div className="flex items-center gap-xs bg-muted/20 px-md py-2xs rounded-premium border border-border/20">
+                  <div className="flex items-center justify-center gap-spacing-sm px-spacing-xl pb-spacing-lg pt-spacing-xs">
+                    <div className="flex items-center gap-spacing-xs bg-muted/20 px-spacing-md py-spacing-2xs rounded-premium border border-border/20">
                       <span className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
-                      <div className="w-2xs h-2xs rounded-premium bg-primary/30" />
-                      <Sparkles className="w-sm h-sm text-primary/40 animate-pulse" />
+                      <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-primary/30" />
+                      <Sparkles className="w-spacing-sm h-spacing-sm text-primary/40 animate-pulse" />
                     </div>
                   </div>
                 </>
@@ -243,33 +243,33 @@ const TemasPage = () => {
           </div>
         </div>
         
-        <div className="min-h-[400px] mt-2xl">
+        <div className="min-h-[400px] mt-spacing-2xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="h-[300px] flex flex-col items-center justify-center text-center p-2xl bg-muted/10 rounded-premium border border-dashed border-border/40 relative overflow-hidden group"
+            className="h-[300px] flex flex-col items-center justify-center text-center p-spacing-2xl bg-muted/10 rounded-premium border border-dashed border-border/40 relative overflow-hidden group"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
-            <div className="w-4xl h-4xl rounded-premium bg-primary/5 flex items-center justify-center mb-xl border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
-              <TagIcon className="h-2xl w-2xl text-primary/60" />
+            <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5 flex items-center justify-center mb-spacing-xl border border-primary/10 shadow-inner group-hover:scale-110 transition-transform duration-500">
+              <TagIcon className="h-spacing-2xl w-spacing-2xl text-primary/60" />
             </div>
-            <h3 className="text-3xl font-black mb-md text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
-            <p className="text-muted-foreground text-lg max-w-md font-serif italic">
+            <h3 className="text-3xl font-black mb-spacing-md text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
+            <p className="text-muted-foreground text-lg max-w-spacing-md font-serif italic">
               Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
             </p>
           </motion.div>
         </div>
       </div>
 
-      <aside className="desktop-aside space-y-lg hidden xl:block">
+      <aside className="desktop-aside space-y-spacing-lg hidden xl:block">
         <div className="desktop-card bg-primary/5 border-primary/20">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-sm">Conexões Nexus</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-primary mb-spacing-sm">Conexões Nexus</h3>
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             O Nexus utiliza inteligência teológica para conectar temas da Escritura, Magistério e Tradição. Clique em uma bolha para iniciar o mergulho.
           </p>
         </div>
         <div className="desktop-card">
-          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-sm">Dica de Estudo</h3>
+          <h3 className="text-premium-small font-black uppercase tracking-widest text-secondary mb-spacing-sm">Dica de Estudo</h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Use as setas do teclado para navegar rapidamente entre os temas e "Home" para voltar ao início.
           </p>

@@ -23,8 +23,8 @@ export interface RelevanceBadgeProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<RelevanceBadgeProps['size']>, string> = {
-  xs: 'px-2xs py-3xs text-xs',
-  sm: 'px-xs py-3xs text-xs',
+  xs: 'px-spacing-2xs py-spacing-3xs text-xs',
+  sm: 'px-spacing-xs py-spacing-3xs text-xs',
 };
 
 export const RelevanceBadge: React.FC<RelevanceBadgeProps> = ({
@@ -40,13 +40,13 @@ export const RelevanceBadge: React.FC<RelevanceBadgeProps> = ({
       title={`Relevância: ${tone.pct}%`}
       aria-label={`Relevância da busca: ${tone.pct} por cento`}
       className={cn(
-        'inline-flex items-center gap-2xs rounded-full border font-black uppercase tracking-widest',
+        'inline-flex items-center gap-spacing-2xs rounded-full border font-black uppercase tracking-widest',
         SIZE_CLASSES[size],
         tone.classes,
         className,
       )}
     >
-      <Target className="w-xs h-xs" />
+      <Target className="w-spacing-xs h-spacing-xs" />
       {tone.pct}%
     </span>
   );

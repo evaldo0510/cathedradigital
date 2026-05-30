@@ -15,7 +15,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
   onLetterClick,
 }) => {
   return (
-    <div className="flex justify-center gap-2xs flex-wrap mb-xl px-xs">
+    <div className="flex justify-center gap-spacing-2xs flex-wrap mb-spacing-xl px-spacing-xs">
       {alphabet.map(letter => {
         const has = letterStatus[letter];
         const isActive = selectedLetter === letter;
@@ -26,7 +26,7 @@ const AlphabetBar: React.FC<AlphabetBarProps> = ({
             disabled={!has}
             aria-label={`Letra ${letter}${!has ? ' (sem termos)' : ''}`}
             aria-pressed={isActive}
-            className={`w-xl h-xl rounded-full text-xs font-black transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
+            className={`w-spacing-xl h-spacing-xl rounded-full text-xs font-black transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none
               ${isActive
                 ? 'bg-primary text-primary-foreground shadow-premium'
                 : has

@@ -34,14 +34,14 @@ class AppErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-xl text-center bg-background/50 backdrop-blur-sm rounded-[2.5rem] border border-border/10 space-y-xl animate-in fade-in duration-700">
+        <div className="flex flex-col items-center justify-center min-h-[60dvh] w-full p-spacing-xl text-center bg-background/50 backdrop-blur-sm rounded-[2.5rem] border border-border/10 space-y-spacing-xl animate-in fade-in duration-700">
           <div className="relative">
-            <div className="w-3xl h-3xl rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
-              <Icons.History className="w-lg h-lg text-primary/60" />
+            <div className="w-spacing-3xl h-spacing-3xl rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center animate-pulse">
+              <Icons.History className="w-spacing-lg h-spacing-lg text-primary/60" />
             </div>
           </div>
 
-          <div className="space-y-md max-w-md mx-auto">
+          <div className="space-y-spacing-md max-w-spacing-md mx-auto">
             <h1 className="text-2xl md:text-3xl font-display text-primary tracking-tight">
               Santuário em <span className="italic font-serif text-secondary/60">Manutenção</span>
             </h1>
@@ -51,13 +51,13 @@ class AppErrorBoundary extends Component<Props, State> {
             </p>
           </div>
 
-          <div className="flex flex-col gap-sm w-full max-w-xs pt-md">
+          <div className="flex flex-col gap-spacing-sm w-full max-w-spacing-xs pt-spacing-md">
             <Button
               onClick={() => {
                 this.setState({ hasError: false });
                 window.location.reload();
               }}
-              className="rounded-full bg-primary/90 hover:bg-primary text-white h-xl text-[9px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+              className="rounded-full bg-primary/90 hover:bg-primary text-white h-spacing-xl text-[9px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
             >
               Tentar Novamente
             </Button>

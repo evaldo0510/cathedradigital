@@ -108,17 +108,17 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="w-full mb-xl md:mb-3xl"
+      className="w-full mb-spacing-xl md:mb-spacing-3xl"
     >
-      <CathedraCard variant={variant} padding="none" className="p-md md:p-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-none">
-        <div className="absolute top-0 right-0 w-4xl h-4xl bg-primary/[0.01] rounded-full -mr-4xl -mt-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
+      <CathedraCard variant={variant} padding="none" className="p-spacing-md md:p-spacing-2xl border-primary/5 bg-primary/[0.005] hover:border-primary/20 transition-all duration-700 relative overflow-hidden group shadow-none">
+        <div className="absolute top-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/[0.01] rounded-full -mr-spacing-4xl -mt-spacing-4xl blur-3xl group-hover:bg-primary/[0.03] transition-all duration-1000" />
         
-        <div className="flex flex-col md:flex-row items-center justify-between gap-md md:gap-xl relative z-10">
-          <div className="flex items-center gap-sm md:gap-lg">
-            <div className="w-2xl h-2xl md:w-2xl md:h-2xl rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
-              <Icons.Compass className="w-lg h-lg" strokeWidth={1} />
+        <div className="flex flex-col md:flex-row items-center justify-between gap-spacing-md md:gap-spacing-xl relative z-10">
+          <div className="flex items-center gap-spacing-sm md:gap-spacing-lg">
+            <div className="w-spacing-2xl h-spacing-2xl md:w-spacing-2xl md:h-spacing-2xl rounded-full bg-primary/5 flex items-center justify-center text-primary/60 border border-primary/5">
+              <Icons.Compass className="w-spacing-lg h-spacing-lg" strokeWidth={1} />
             </div>
-            <div className="space-y-2xs text-center md:text-left">
+            <div className="space-y-spacing-2xs text-center md:text-left">
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/40">
                 {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
               </p>
@@ -129,10 +129,10 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center gap-md w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-spacing-md w-full md:w-auto">
             <Button 
               variant="ghost" 
-              className="rounded-full px-xl md:px-2xl h-2xl md:h-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-700 w-full md:w-auto"
+              className="rounded-full px-spacing-xl md:px-spacing-2xl h-spacing-2xl md:h-spacing-2xl border border-primary/10 hover:bg-primary/5 text-primary/60 font-bold uppercase tracking-widest text-[9px] md:text-[10px] transition-all duration-700 w-full md:w-auto"
               onClick={() => navigate(route)}
             >
               Retomar Contemplação

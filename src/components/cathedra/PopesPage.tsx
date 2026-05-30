@@ -168,33 +168,33 @@ const PopesPage: React.FC = () => {
   }, [search]);
 
   return (
-    <div className="max-w-4xl mx-auto space-y-xl pb-3xl px-md">
+    <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-3xl px-spacing-md">
       <SEOHead 
         title="Os Papas - Sucessores de Pedro" 
         description="Conheça a história e as contribuições dos principais Papas da Igreja Católica, de São Pedro aos dias atuais." 
         path="/papas"
       />
 
-      <div className="text-center space-y-md">
-        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
-          <Icons.ShieldCheck className="w-md h-md text-primary" />
+      <div className="text-center space-y-spacing-md">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
+          <Icons.ShieldCheck className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Vicarius Christi</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground">Os Papas</h1>
-        <p className="text-muted-foreground font-serif italic max-w-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
+        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja."</p>
       </div>
 
-      <div className="relative max-w-md mx-auto">
-        <Search className="absolute left-sm top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
+      <div className="relative max-w-spacing-md mx-auto">
+        <Search className="absolute left-spacing-sm top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
         <Input
           placeholder="Buscar Papa..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="pl-xl bg-muted/50 border-border/50 rounded-full"
+          className="pl-spacing-xl bg-muted/50 border-border/50 rounded-full"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
         {filteredPopes.map((pope, idx) => (
           <motion.div
             key={pope.id}
@@ -204,15 +204,15 @@ const PopesPage: React.FC = () => {
           >
             <Card className="overflow-hidden bg-card border-border hover:border-primary/30 transition-all h-full group">
               <div className="flex flex-col h-full">
-                <div className="relative h-4xl overflow-hidden">
+                <div className="relative h-spacing-4xl overflow-hidden">
                   <SacredImage 
                     src={pope.image} 
                     alt={pope.name} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                  <div className="absolute bottom-md left-md right-md">
-                    <div className="flex items-center justify-between mb-2xs">
+                  <div className="absolute bottom-spacing-md left-spacing-md right-spacing-md">
+                    <div className="flex items-center justify-between mb-spacing-2xs">
                       <h3 className="text-xl font-serif font-bold text-white">{pope.name}</h3>
                       {pope.isSaint && (
                         <Badge variant="outline" className="text-xs bg-primary/20 text-white border-primary/40 uppercase">Santo</Badge>
@@ -222,23 +222,23 @@ const PopesPage: React.FC = () => {
                   </div>
                 </div>
 
-                <CardContent className="p-md flex-1 flex flex-col space-y-md">
-                  <div className="flex items-center gap-xs text-xs font-black uppercase tracking-widest text-primary">
-                    <Calendar className="w-sm h-sm" /> {pope.reign}
+                <CardContent className="p-spacing-md flex-1 flex flex-col space-y-spacing-md">
+                  <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-widest text-primary">
+                    <Calendar className="w-spacing-sm h-spacing-sm" /> {pope.reign}
                   </div>
 
                   <p className="text-sm text-muted-foreground leading-relaxed font-serif">
                     {pope.bio}
                   </p>
 
-                  <div className="space-y-xs flex-1">
-                    <div className="flex items-center gap-xs text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
-                      <Scroll className="w-sm h-sm" /> Legado Principal
+                  <div className="space-y-spacing-xs flex-1">
+                    <div className="flex items-center gap-spacing-xs text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                      <Scroll className="w-spacing-sm h-spacing-sm" /> Legado Principal
                     </div>
-                    <ul className="space-y-2xs">
+                    <ul className="space-y-spacing-2xs">
                       {pope.contributions.map((item, i) => (
-                        <li key={i} className="flex items-start gap-xs text-premium-small text-foreground font-bold">
-                          <ChevronRight className="w-sm h-sm text-primary mt-3xs shrink-0" />
+                        <li key={i} className="flex items-start gap-spacing-xs text-premium-small text-foreground font-bold">
+                          <ChevronRight className="w-spacing-sm h-spacing-sm text-primary mt-spacing-3xs shrink-0" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -246,8 +246,8 @@ const PopesPage: React.FC = () => {
                   </div>
 
                   {pope.motto && (
-                    <div className="pt-md border-t border-border/50 text-center">
-                      <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-2xs">Lema</p>
+                    <div className="pt-spacing-md border-t border-border/50 text-center">
+                      <p className="text-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-2xs">Lema</p>
                       <p className="text-xs font-serif font-bold text-primary italic">"{pope.motto}"</p>
                     </div>
                   )}

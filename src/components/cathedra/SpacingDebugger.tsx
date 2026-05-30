@@ -25,7 +25,7 @@ export const SpacingDebugger: React.FC = () => {
     <>
       {/* Floating Toggle Button - Visible only on mobile/dev */}
       {isVisible && (
-        <div className="fixed bottom-3xl right-md z-[99999] md:hidden">
+        <div className="fixed bottom-spacing-3xl right-spacing-md z-[99999] md:hidden">
           <Button
             variant={isEnabled ? "destructive" : "secondary"}
             size="icon"
@@ -33,7 +33,7 @@ export const SpacingDebugger: React.FC = () => {
             className="rounded-full shadow-premium border border-white/20 backdrop-blur-sm"
             title="Alternar Debug de Espaçamentos (Alt+D)"
           >
-            {isEnabled ? <EyeOff className="h-md w-md" /> : <Layout className="h-md w-md" />}
+            {isEnabled ? <EyeOff className="h-spacing-md w-spacing-md" /> : <Layout className="h-spacing-md w-spacing-md" />}
           </Button>
         </div>
       )}

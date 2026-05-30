@@ -32,46 +32,46 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
   }, [user?.id, allNotesText]);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-xl pb-3xl animate-in fade-in duration-700">
+    <div className="max-w-spacing-3xl mx-auto space-y-spacing-xl pb-spacing-3xl animate-in fade-in duration-700">
       {/* Celebration */}
       <motion.div 
-        className="text-center space-y-lg pt-xl"
+        className="text-center space-y-spacing-lg pt-spacing-xl"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
       >
         <motion.div 
-          className="w-4xl h-4xl rounded-full bg-primary/10 flex items-center justify-center mx-auto"
+          className="w-spacing-4xl h-spacing-4xl rounded-full bg-primary/10 flex items-center justify-center mx-auto"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: 'spring', stiffness: 200 }}
         >
-          <CheckCircle2 className="w-2xl h-2xl text-primary" />
+          <CheckCircle2 className="w-spacing-2xl h-spacing-2xl text-primary" />
         </motion.div>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground tracking-tight">
           Amém.
         </h1>
-        <p className="text-lg text-muted-foreground font-serif italic max-w-xl mx-auto leading-relaxed">
+        <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
           Você completou a Lectio Divina de hoje. A Palavra de Deus agora habita mais profundamente em seu coração.
         </p>
       </motion.div>
 
       {/* Stats */}
       <motion.div 
-        className="flex justify-center gap-lg"
+        className="flex justify-center gap-spacing-lg"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <div className="flex items-center gap-sm px-lg py-md rounded-premium bg-card border border-border">
-          <Clock className="w-md h-md text-primary/60" />
+        <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
+          <Clock className="w-spacing-md h-spacing-md text-primary/60" />
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
-        <div className="flex items-center gap-sm px-lg py-md rounded-premium bg-card border border-border">
-          <PenTool className="w-md h-md text-primary/60" />
+        <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
+          <PenTool className="w-spacing-md h-spacing-md text-primary/60" />
           <div>
             <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
             <p className="font-mono text-xl font-bold text-foreground">{notesWritten.length}/{STEPS.length}</p>
@@ -82,22 +82,22 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
       {/* Reflections summary */}
       {notesWritten.length > 0 && (
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-xl md:p-2xl space-y-xl shadow-premium-hover shadow-black/[0.02]"
+          className="bg-card border border-border rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl space-y-spacing-xl shadow-premium-hover shadow-black/[0.02]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
           <h3 className="text-center text-xs font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
-          <div className="space-y-lg">
+          <div className="space-y-spacing-lg">
             {notesWritten.map(step => (
-              <div key={step.id} className="space-y-xs">
-                <div className="flex items-center gap-xs">
-                  <div className={`w-xl h-xl rounded-full flex items-center justify-center ${step.color}`}>
-                    <step.icon className="w-md h-md" />
+              <div key={step.id} className="space-y-spacing-xs">
+                <div className="flex items-center gap-spacing-xs">
+                  <div className={`w-spacing-xl h-spacing-xl rounded-full flex items-center justify-center ${step.color}`}>
+                    <step.icon className="w-spacing-md h-spacing-md" />
                   </div>
                   <span className="text-xs font-black uppercase tracking-widest text-foreground/70">{step.latin}</span>
                 </div>
-                <p className="text-base font-serif text-foreground/80 leading-relaxed pl-xl italic">
+                <p className="text-base font-serif text-foreground/80 leading-relaxed pl-spacing-xl italic">
                   "{notes[step.id]}"
                 </p>
               </div>
@@ -108,17 +108,17 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
 
       {/* Encouragement */}
       <motion.div 
-        className="text-center space-y-lg bg-primary/5 rounded-[2.5rem] p-xl border border-primary/10"
+        className="text-center space-y-spacing-lg bg-primary/5 rounded-[2.5rem] p-spacing-xl border border-primary/10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
       >
-        <Heart className="w-xl h-xl text-primary mx-auto" />
-        <p className="text-lg font-serif text-foreground leading-relaxed max-w-lg mx-auto">
+        <Heart className="w-spacing-xl h-spacing-xl text-primary mx-auto" />
+        <p className="text-lg font-serif text-foreground leading-relaxed max-w-spacing-lg mx-auto">
           "A fidelidade à oração diária transforma a alma silenciosamente."
         </p>
-        <div className="flex items-center justify-center gap-xs text-primary">
-          <Calendar className="w-md h-md" />
+        <div className="flex items-center justify-center gap-spacing-xs text-primary">
+          <Calendar className="w-spacing-md h-spacing-md" />
           <span className="text-sm font-bold">Volte amanhã para uma nova Lectio</span>
         </div>
       </motion.div>
@@ -134,16 +134,16 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
       />
 
 
-      <div className="flex gap-md justify-center">
+      <div className="flex gap-spacing-md justify-center">
         <ShareButton
           title={`Lectio Divina — ${selectedPassage}`}
           text={`Completei a Lectio Divina sobre ${selectedPassage}. ${formatTime(seconds)} de oração.`}
         />
         <Button
           onClick={onRestart}
-          className="flex items-center gap-xs px-xl py-md rounded-full bg-card border border-border text-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-md"
+          className="flex items-center gap-spacing-xs px-spacing-xl py-spacing-md rounded-full bg-card border border-border text-xs font-black uppercase tracking-widest hover:bg-primary/5 transition-all shadow-md"
         >
-          <RotateCcw className="w-md h-md" /> Nova Lectio
+          <RotateCcw className="w-spacing-md h-spacing-md" /> Nova Lectio
         </Button>
       </div>
     </div>

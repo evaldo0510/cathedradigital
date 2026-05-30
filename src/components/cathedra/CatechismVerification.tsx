@@ -146,9 +146,9 @@ const CatechismVerification: React.FC = () => {
 
   if (!isAdmin) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-xl">
-        <Icons.Lock className="w-3xl h-3xl text-destructive mb-md opacity-20" />
-        <h2 className="text-xl font-bold mb-xs">Acesso Restrito</h2>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-spacing-xl">
+        <Icons.Lock className="w-spacing-3xl h-spacing-3xl text-destructive mb-spacing-md opacity-20" />
+        <h2 className="text-xl font-bold mb-spacing-xs">Acesso Restrito</h2>
         <p className="text-muted-foreground">Esta página é para administradores.</p>
       </div>
     );
@@ -160,19 +160,19 @@ const CatechismVerification: React.FC = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto p-lg space-y-xl animate-in fade-in duration-500 pb-3xl">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md">
+    <div className="max-w-5xl mx-auto p-spacing-lg space-y-spacing-xl animate-in fade-in duration-500 pb-spacing-3xl">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-md">
         <div>
           <h1 className="text-2xl font-serif font-bold text-foreground">Verificação de Conteúdo</h1>
           <p className="text-sm text-muted-foreground">Comparação entre seções do site e banco de dados oficial</p>
         </div>
         
-        <div className="flex items-center gap-sm">
+        <div className="flex items-center gap-spacing-sm">
           {(stats.missing > 0 || stats.divergent > 0) && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button variant="default" className="rounded-full bg-emerald-600 hover:bg-emerald-700">
-                  <Icons.CheckCircle className="w-md h-md mr-xs" />
+                  <Icons.CheckCircle className="w-spacing-md h-spacing-md mr-spacing-xs" />
                   Sincronizar {stats.missing + stats.divergent} Divergências
                 </Button>
               </AlertDialogTrigger>
@@ -201,49 +201,49 @@ const CatechismVerification: React.FC = () => {
             size="sm"
             className="rounded-full"
           >
-            <Icons.RotateCcw className={`w-md h-md mr-xs ${loading ? 'animate-spin' : ''}`} />
+            <Icons.RotateCcw className={`w-spacing-md h-spacing-md mr-spacing-xs ${loading ? 'animate-spin' : ''}`} />
             Recarregar
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-md">
-        <Card className="p-md bg-muted/30 border-border/50">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-spacing-md">
+        <Card className="p-spacing-md bg-muted/30 border-border/50">
           <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">Total Mapeado</span>
           <div className="text-2xl font-serif font-bold">{stats.total}</div>
         </Card>
-        <Card className="p-md bg-emerald-500/5 border-emerald-500/20">
+        <Card className="p-spacing-md bg-emerald-500/5 border-emerald-500/20">
           <span className="text-xs font-black uppercase tracking-widest text-emerald-600">Sincronizados</span>
           <div className="text-2xl font-serif font-bold text-emerald-600">{stats.ok}</div>
         </Card>
-        <Card className="p-md bg-destructive/5 border-destructive/20">
+        <Card className="p-spacing-md bg-destructive/5 border-destructive/20">
           <span className="text-xs font-black uppercase tracking-widest text-destructive">Ausentes</span>
           <div className="text-2xl font-serif font-bold text-destructive">{stats.missing}</div>
         </Card>
-        <Card className="p-md bg-amber-500/5 border-amber-500/20">
+        <Card className="p-spacing-md bg-amber-500/5 border-amber-500/20">
           <span className="text-xs font-black uppercase tracking-widest text-amber-600">Divergentes</span>
           <div className="text-2xl font-serif font-bold text-amber-600">{stats.divergent}</div>
         </Card>
       </div>
 
-      <div className="space-y-md">
+      <div className="space-y-spacing-md">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-xs bg-muted/50 p-2xs rounded-premium border border-border">
+          <div className="flex items-center gap-spacing-xs bg-muted/50 p-spacing-2xs rounded-premium border border-border">
             <Button 
               onClick={() => setFilter('all')} 
-              className={`px-md py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'all' ? 'bg-primary text-primary-foreground shadow-md' : 'text-muted-foreground hover:text-foreground'}`}
             >
               Todos
             </Button>
             <Button 
               onClick={() => setFilter('missing')} 
-              className={`px-md py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-md' : 'text-muted-foreground hover:text-destructive'}`}
+              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'missing' ? 'bg-destructive text-destructive-foreground shadow-md' : 'text-muted-foreground hover:text-destructive'}`}
             >
               Ausentes
             </Button>
             <Button 
               onClick={() => setFilter('divergent')} 
-              className={`px-md py-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-md' : 'text-muted-foreground hover:text-amber-600'}`}
+              className={`px-spacing-md py-spacing-2xs text-xs font-black uppercase tracking-widest rounded-full transition-all ${filter === 'divergent' ? 'bg-amber-500 text-white shadow-md' : 'text-muted-foreground hover:text-amber-600'}`}
             >
               Divergentes
             </Button>
@@ -257,34 +257,34 @@ const CatechismVerification: React.FC = () => {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30 text-xs font-black uppercase tracking-widest text-muted-foreground">
-                <th className="px-lg py-md">§ Parágrafo</th>
-                <th className="px-lg py-md">Seção</th>
-                <th className="px-lg py-md">Status</th>
-                <th className="px-lg py-md">Detalhes</th>
+                <th className="px-spacing-lg py-spacing-md">§ Parágrafo</th>
+                <th className="px-spacing-lg py-spacing-md">Seção</th>
+                <th className="px-spacing-lg py-spacing-md">Status</th>
+                <th className="px-spacing-lg py-spacing-md">Detalhes</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-lg py-2xl text-center">
-                    <div className="flex flex-col items-center gap-md">
-                      <Icons.Loader className="w-xl h-xl animate-spin text-primary/40" />
+                  <td colSpan={4} className="px-spacing-lg py-spacing-2xl text-center">
+                    <div className="flex flex-col items-center gap-spacing-md">
+                      <Icons.Loader className="w-spacing-xl h-spacing-xl animate-spin text-primary/40" />
                       <span className="text-muted-foreground animate-pulse">Analisando base de dados...</span>
                     </div>
                   </td>
                 </tr>
               ) : filteredResults.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-lg py-2xl text-center text-muted-foreground italic">
+                  <td colSpan={4} className="px-spacing-lg py-spacing-2xl text-center text-muted-foreground italic">
                     Nenhum item encontrado com este filtro.
                   </td>
                 </tr>
               ) : (
                 filteredResults.map((res, i) => (
                   <tr key={`${res.paragraph}-${i}`} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                    <td className="px-lg py-md font-bold font-serif text-primary">§{res.paragraph}</td>
-                    <td className="px-lg py-md text-xs font-medium text-muted-foreground">{res.section}</td>
-                    <td className="px-lg py-md">
+                    <td className="px-spacing-lg py-spacing-md font-bold font-serif text-primary">§{res.paragraph}</td>
+                    <td className="px-spacing-lg py-spacing-md text-xs font-medium text-muted-foreground">{res.section}</td>
+                    <td className="px-spacing-lg py-spacing-md">
                       {res.status === 'ok' ? (
                         <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-xs font-black">OK</Badge>
                       ) : res.status === 'missing' ? (
@@ -293,7 +293,7 @@ const CatechismVerification: React.FC = () => {
                         <Badge className="bg-amber-500 text-white border-0 uppercase text-xs font-black">Divergente</Badge>
                       )}
                     </td>
-                    <td className="px-lg py-md text-premium-small text-muted-foreground italic">
+                    <td className="px-spacing-lg py-spacing-md text-premium-small text-muted-foreground italic">
                       {res.details || 'Conteúdo sincronizado'}
                     </td>
                   </tr>

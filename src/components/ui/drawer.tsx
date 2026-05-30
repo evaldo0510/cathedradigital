@@ -31,12 +31,12 @@ const DrawerContent = React.forwardRef<
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-xl flex h-auto flex-col rounded-t-lg border bg-background",
+        "fixed inset-x-0 bottom-0 z-50 mt-spacing-xl flex h-auto flex-col rounded-t-lg border bg-background",
         className,
       )}
       {...props}
     >
-      <div className="mx-auto mt-md h-xs w-4xl rounded-full bg-muted" />
+      <div className="mx-auto mt-spacing-md h-spacing-xs w-spacing-4xl rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -44,12 +44,12 @@ const DrawerContent = React.forwardRef<
 DrawerContent.displayName = "DrawerContent";
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("grid gap-2xs p-md text-center sm:text-left", className)} {...props} />
+  <div className={cn("grid gap-spacing-2xs p-spacing-md text-center sm:text-left", className)} {...props} />
 );
 DrawerHeader.displayName = "DrawerHeader";
 
 const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("mt-auto flex flex-col gap-xs p-md", className)} {...props} />
+  <div className={cn("mt-auto flex flex-col gap-spacing-xs p-spacing-md", className)} {...props} />
 );
 DrawerFooter.displayName = "DrawerFooter";
 

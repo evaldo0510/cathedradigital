@@ -107,26 +107,26 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-background p-md overflow-y-auto">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-background p-spacing-md overflow-y-auto">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative w-full max-w-2xl bg-card border border-border shadow-premium-hover rounded-[2rem] p-xl md:p-2xl"
+        className="relative w-full max-w-spacing-2xl bg-card border border-border shadow-premium-hover rounded-[2rem] p-spacing-xl md:p-spacing-2xl"
       >
         <Button 
           onClick={onClose}
-          className="absolute top-lg right-lg text-muted-foreground hover:text-foreground p-xs rounded-full hover:bg-muted transition-colors"
+          className="absolute top-spacing-lg right-spacing-lg text-muted-foreground hover:text-foreground p-spacing-xs rounded-full hover:bg-muted transition-colors"
         >
-          <X className="w-lg h-lg" />
+          <X className="w-spacing-lg h-spacing-lg" />
         </Button>
 
         {!showResult ? (
-          <div className="space-y-xl">
+          <div className="space-y-spacing-xl">
             {currentStep <= steps.length - 1 ? (
               <>
-                <div className="space-y-xs">
-                  <div className="flex items-center gap-xs text-secondary">
-                    <Sparkles className="w-md h-md" />
+                <div className="space-y-spacing-xs">
+                  <div className="flex items-center gap-spacing-xs text-secondary">
+                    <Sparkles className="w-spacing-md h-spacing-md" />
                     <span className="text-xs font-black uppercase tracking-[0.2em]">{steps[currentStep].title}</span>
                   </div>
                   <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary leading-tight">
@@ -134,44 +134,44 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   </h2>
                 </div>
 
-                <div className="grid gap-sm">
+                <div className="grid gap-spacing-sm">
                   {steps[currentStep].options?.map((opt) => (
                     <Button
                       key={opt.value}
                       onClick={() => handleOptionSelect(opt.value)}
-                      className="group flex items-center justify-between p-lg rounded-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
+                      className="group flex items-center justify-between p-spacing-lg rounded-full border border-border bg-background hover:border-secondary hover:bg-secondary/5 transition-all text-left"
                     >
                       <span className="text-lg font-serif">{opt.label}</span>
-                      <ArrowRight className="w-md h-md opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
+                      <ArrowRight className="w-spacing-md h-spacing-md opacity-0 group-hover:opacity-100 transition-opacity text-secondary" />
                     </Button>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between pt-md">
-                  <div className="flex gap-xs">
+                <div className="flex items-center justify-between pt-spacing-md">
+                  <div className="flex gap-spacing-xs">
                     {steps.map((_, i) => (
                       <div 
                         key={i} 
-                        className={`h-2xs rounded-full transition-all ${i === currentStep ? 'w-xl bg-secondary' : 'w-xs bg-border'}`} 
+                        className={`h-spacing-2xs rounded-full transition-all ${i === currentStep ? 'w-spacing-xl bg-secondary' : 'w-spacing-xs bg-border'}`} 
                       />
                     ))}
-                    <div className={`h-2xs rounded-full transition-all ${currentStep === steps.length ? 'w-xl bg-secondary' : 'w-xs bg-border'}`} />
+                    <div className={`h-spacing-2xs rounded-full transition-all ${currentStep === steps.length ? 'w-spacing-xl bg-secondary' : 'w-spacing-xs bg-border'}`} />
                   </div>
                   {currentStep > 0 && (
                     <Button 
                       onClick={() => setCurrentStep(currentStep - 1)}
-                      className="flex items-center gap-xs text-sm text-muted-foreground hover:text-foreground font-serif"
+                      className="flex items-center gap-spacing-xs text-sm text-muted-foreground hover:text-foreground font-serif"
                     >
-                      <ArrowLeft className="w-md h-md" /> Voltar
+                      <ArrowLeft className="w-spacing-md h-spacing-md" /> Voltar
                     </Button>
                   )}
                 </div>
               </>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-xl py-md">
-                <div className="space-y-xs">
-                  <div className="flex items-center gap-xs text-secondary">
-                    <Mail className="w-md h-md" />
+              <form onSubmit={handleSubmit} className="space-y-spacing-xl py-spacing-md">
+                <div className="space-y-spacing-xs">
+                  <div className="flex items-center gap-spacing-xs text-secondary">
+                    <Mail className="w-spacing-md h-spacing-md" />
                     <span className="text-xs font-black uppercase tracking-[0.2em]">Quase lá</span>
                   </div>
                   <h2 className="text-3xl font-serif font-bold text-primary">
@@ -182,25 +182,25 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                   </p>
                 </div>
 
-                <div className="space-y-md">
+                <div className="space-y-spacing-md">
                   <div className="relative">
-                    <User className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
+                    <User className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
                     <Input
                       placeholder="Seu nome"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="pl-2xl h-2xl rounded-full border-border bg-background font-serif"
+                      className="pl-spacing-2xl h-spacing-2xl rounded-full border-border bg-background font-serif"
                       required
                     />
                   </div>
                   <div className="relative">
-                    <Mail className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
+                    <Mail className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
                     <Input
                       type="email"
                       placeholder="Seu melhor e-mail"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-2xl h-2xl rounded-full border-border bg-background font-serif"
+                      className="pl-spacing-2xl h-spacing-2xl rounded-full border-border bg-background font-serif"
                       required
                     />
                   </div>
@@ -209,7 +209,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full h-2xl rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover"
+                  className="w-full h-spacing-2xl rounded-full text-xs font-black uppercase tracking-[0.2em] shadow-premium-hover"
                 >
                   {isSubmitting ? 'Gerando seu roteiro...' : 'Começar a Jornada'}
                 </Button>
@@ -217,9 +217,9 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 <Button 
                   type="button"
                   onClick={() => setCurrentStep(steps.length - 1)}
-                  className="w-full flex items-center justify-center gap-xs text-sm text-muted-foreground hover:text-foreground font-serif"
+                  className="w-full flex items-center justify-center gap-spacing-xs text-sm text-muted-foreground hover:text-foreground font-serif"
                 >
-                  <ArrowLeft className="w-md h-md" /> Revisar respostas
+                  <ArrowLeft className="w-spacing-md h-spacing-md" /> Revisar respostas
                 </Button>
               </form>
             )}
@@ -228,11 +228,11 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-xl"
+            className="space-y-spacing-xl"
           >
-            <div className="text-center space-y-xs">
-              <div className="w-3xl h-3xl bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-md text-secondary">
-                <Sparkles className="w-xl h-xl" />
+            <div className="text-center space-y-spacing-xs">
+              <div className="w-spacing-3xl h-spacing-3xl bg-secondary/10 rounded-premium flex items-center justify-center mx-auto mb-spacing-md text-secondary">
+                <Sparkles className="w-spacing-xl h-spacing-xl" />
               </div>
               <h2 className="text-3xl font-serif font-bold text-primary">Seu Roteiro está pronto!</h2>
               <p className="text-muted-foreground font-serif italic">
@@ -240,10 +240,10 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               </p>
             </div>
 
-            <div className="grid gap-lg">
-              <div className="p-lg rounded-premium bg-secondary/5 border border-secondary/20 space-y-sm">
-                <div className="flex items-center gap-xs text-secondary">
-                  <Book className="w-md h-md" />
+            <div className="grid gap-spacing-lg">
+              <div className="p-spacing-lg rounded-premium bg-secondary/5 border border-secondary/20 space-y-spacing-sm">
+                <div className="flex items-center gap-spacing-xs text-secondary">
+                  <Book className="w-spacing-md h-spacing-md" />
                   <span className="text-xs font-black uppercase tracking-widest">A Palavra de Deus</span>
                 </div>
                 <p className="text-lg font-serif italic text-primary">
@@ -251,9 +251,9 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-lg rounded-premium bg-primary/5 border border-primary/10 space-y-sm">
-                <div className="flex items-center gap-xs text-primary">
-                  <Cross className="w-md h-md" />
+              <div className="p-spacing-lg rounded-premium bg-primary/5 border border-primary/10 space-y-spacing-sm">
+                <div className="flex items-center gap-spacing-xs text-primary">
+                  <Cross className="w-spacing-md h-spacing-md" />
                   <span className="text-xs font-black uppercase tracking-widest">Catecismo</span>
                 </div>
                 <p className="text-sm font-serif text-muted-foreground">
@@ -261,9 +261,9 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 </p>
               </div>
 
-              <div className="p-lg rounded-premium bg-muted/30 border border-border space-y-sm">
-                <div className="flex items-center gap-xs text-muted-foreground">
-                  <MessageSquare className="w-md h-md" />
+              <div className="p-spacing-lg rounded-premium bg-muted/30 border border-border space-y-spacing-sm">
+                <div className="flex items-center gap-spacing-xs text-muted-foreground">
+                  <MessageSquare className="w-spacing-md h-spacing-md" />
                   <span className="text-xs font-black uppercase tracking-widest">Logos IA: Apoio Contemplativo</span>
                 </div>
                 <p className="text-sm font-serif italic leading-relaxed">
@@ -272,10 +272,10 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-sm">
+            <div className="flex flex-col sm:flex-row gap-spacing-sm">
               <Button 
                 asChild
-                className="flex-1 h-2xl rounded-full text-xs font-black uppercase tracking-[0.1em]"
+                className="flex-1 h-spacing-2xl rounded-full text-xs font-black uppercase tracking-[0.1em]"
               >
                 <a 
                   href={getWhatsAppLink()} 
@@ -289,7 +289,7 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               <Button 
                 variant="outline"
                 onClick={onClose}
-                className="h-2xl rounded-full text-xs font-black uppercase tracking-[0.1em] px-xl"
+                className="h-spacing-2xl rounded-full text-xs font-black uppercase tracking-[0.1em] px-spacing-xl"
               >
                 Concluir
               </Button>

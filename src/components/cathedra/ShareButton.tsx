@@ -32,7 +32,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       className={className}
       title="Compartilhar"
     >
-      <Share2 className="w-md h-md" />
+      <Share2 className="w-spacing-md h-spacing-md" />
       {!isIcon && "Compartilhar"}
     </Button>
   );

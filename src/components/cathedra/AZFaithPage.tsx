@@ -103,7 +103,7 @@ const AZFaithPage: React.FC = () => {
   if (isLoading && allTerms.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="animate-spin rounded-premium h-2xl w-2xl border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-premium h-spacing-2xl w-spacing-2xl border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -117,9 +117,9 @@ const AZFaithPage: React.FC = () => {
         <Button
           variant={quizMode ? 'default' : 'outline'}
           onClick={() => setQuizMode(!quizMode)}
-          className="rounded-full gap-xs font-bold text-xs uppercase tracking-widest"
+          className="rounded-full gap-spacing-xs font-bold text-xs uppercase tracking-widest"
         >
-          <Brain className="w-md h-md" />
+          <Brain className="w-spacing-md h-spacing-md" />
           {quizMode ? 'Voltar ao Índice' : '🧠 Testar Conhecimento'}
         </Button>
       }
@@ -134,8 +134,8 @@ const AZFaithPage: React.FC = () => {
           <AZFaithQuiz terms={allTerms} onClose={() => setQuizMode(false)} />
         ) : (
           <>
-            <div className="relative max-w-lg mx-auto mb-lg">
-              <Search className="absolute left-md top-2xs/2 -translate-y-1/2 w-md h-md text-muted-foreground" />
+            <div className="relative max-w-spacing-lg mx-auto mb-spacing-lg">
+              <Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Buscar..."
@@ -144,16 +144,16 @@ const AZFaithPage: React.FC = () => {
                   setSearchQuery(e.target.value);
                   if (e.target.value) setSelectedLetter(null);
                 }}
-                className="w-full pl-xl pr-xl py-sm bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+                className="w-full pl-spacing-xl pr-spacing-xl py-spacing-sm bg-card border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
               />
               {searchQuery && (
-                <Button onClick={() => setSearchQuery('')} className="absolute right-md top-2xs/2 -translate-y-1/2">
-                  <X className="w-md h-md text-muted-foreground" />
+                <Button onClick={() => setSearchQuery('')} className="absolute right-spacing-md top-spacing-2xs/2 -translate-y-1/2">
+                  <X className="w-spacing-md h-spacing-md text-muted-foreground" />
                 </Button>
               )}
             </div>
 
-            <div className="flex justify-center gap-md mb-2xl flex-wrap max-w-4xl mx-auto px-md">
+            <div className="flex justify-center gap-spacing-md mb-spacing-2xl flex-wrap max-w-spacing-4xl mx-auto px-spacing-md">
               {FEATURED_TERMS.map((name, idx) => {
                 const term = allTerms.find(t => t.term === name);
                 if (!term) return null;
@@ -167,13 +167,13 @@ const AZFaithPage: React.FC = () => {
                     whileHover={{ scale: 1.05, y: -2 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => handleTermClick(term)}
-                    className={`px-xl py-md rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-md
+                    className={`px-spacing-xl py-spacing-md rounded-full text-xs font-bold uppercase tracking-[0.2em] border transition-all relative overflow-hidden group focus-visible:ring-4 focus-visible:ring-primary/20 outline-none shadow-md
                       ${isActive
                         ? 'bg-primary text-primary-foreground border-primary shadow-premium ring-4 ring-primary/10'
                         : 'bg-card  text-primary border-primary/20 hover:border-primary/50 hover:shadow-premium'
                       }`}
                   >
-                    <div className="flex items-center gap-xs relative z-10">
+                    <div className="flex items-center gap-spacing-xs relative z-10">
                       <span className="opacity-80 group-hover:scale-125 transition-transform duration-500">🫧</span>
                       {name}
                     </div>
@@ -189,7 +189,7 @@ const AZFaithPage: React.FC = () => {
               onLetterClick={handleLetterClick}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-lg min-h-[400px]">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-lg min-h-[400px]">
               <EncyclopediaTermList
                 terms={filteredTerms}
                 selectedTerm={selectedTerm}

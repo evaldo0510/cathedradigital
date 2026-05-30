@@ -120,15 +120,15 @@ const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 
 
 const SkeletonBar = React.forwardRef<HTMLDivElement, { w?: string; h?: string; className?: string }>(
-  ({ w = 'w-full', h = 'h-md', className = '' }, ref) => (
+  ({ w = 'w-full', h = 'h-spacing-md', className = '' }, ref) => (
     <div ref={ref} className={`${w} ${h} rounded-full bg-muted/60 animate-pulse ${className}`} />
   )
 );
 SkeletonBar.displayName = 'SkeletonBar';
 
 const LoadingFallback = () => (
-  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-xl animate-in fade-in duration-[2000ms] ease-out">
-    <div className="relative mb-4xl">
+  <div className="flex flex-col items-center justify-center min-h-[70dvh] w-full p-spacing-xl animate-in fade-in duration-[2000ms] ease-out">
+    <div className="relative mb-spacing-4xl">
       <motion.div 
         animate={{ 
           scale: [1, 1.2, 1],
@@ -136,23 +136,23 @@ const LoadingFallback = () => (
           filter: ["blur(30px)", "blur(60px)", "blur(30px)"]
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0 w-4xl h-4xl -left-md -top-md rounded-full bg-primary/5" 
+        className="absolute inset-0 w-spacing-4xl h-spacing-4xl -left-spacing-md -top-spacing-md rounded-full bg-primary/5" 
       />
-      <div className="w-3xl h-3xl rounded-full bg-primary/[0.01] border border-primary/[0.03] relative z-10 flex items-center justify-center">
+      <div className="w-spacing-3xl h-spacing-3xl rounded-full bg-primary/[0.01] border border-primary/[0.03] relative z-10 flex items-center justify-center">
          <motion.div 
           animate={{ opacity: [0.1, 0.3, 0.1], scale: [0.95, 1, 0.95] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="w-xl h-xl rounded-full border border-primary/10"
+          className="w-spacing-xl h-spacing-xl rounded-full border border-primary/10"
         />
       </div>
       <motion.div 
         animate={{ rotate: 360 }}
         transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 w-3xl h-3xl rounded-full border-t border-primary/[0.05] z-20" 
+        className="absolute inset-0 w-spacing-3xl h-spacing-3xl rounded-full border-t border-primary/[0.05] z-20" 
       />
     </div>
-    <div className="space-y-2xl w-full max-w-sm flex flex-col items-center">
-      <div className="h-[0.5px] w-4xl bg-primary/[0.03] rounded-full overflow-hidden">
+    <div className="space-y-spacing-2xl w-full max-w-spacing-sm flex flex-col items-center">
+      <div className="h-[0.5px] w-spacing-4xl bg-primary/[0.03] rounded-full overflow-hidden">
         <motion.div 
           className="h-full bg-primary/[0.08]"
           initial={{ width: "0%", x: "-100%" }}
@@ -348,7 +348,7 @@ const AppLayout: React.FC = () => {
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
-          className="sr-only focus:not-sr-only focus:fixed focus:top-lg focus:left-lg focus:z-[250] focus:px-lg focus:py-sm focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-spacing-lg focus:left-spacing-lg focus:z-[250] focus:px-spacing-lg focus:py-spacing-sm focus:bg-primary focus:text-primary-foreground focus:rounded-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
         >
           {t('skip_to_content')}
         </a>

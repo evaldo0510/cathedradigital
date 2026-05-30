@@ -13,16 +13,16 @@ const BackToThemeBanner: React.FC = () => {
   if (from !== 'temas' || !tema) return null;
 
   return (
-    <div className="fixed top-3xl left-0 right-0 z-50 px-md py-xs bg-background  border-b border-primary/20 shadow-md animate-in fade-in slide-in-from-top-xs duration-300 back-to-theme-banner">
-      <div className="max-w-3xl mx-auto">
+    <div className="fixed top-spacing-3xl left-0 right-0 z-50 px-spacing-md py-spacing-xs bg-background  border-b border-primary/20 shadow-md animate-in fade-in slide-in-from-top-spacing-xs duration-300 back-to-theme-banner">
+      <div className="max-w-spacing-3xl mx-auto">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate(`${AppRoute.TEMAS}/${tema}`)}
-          className="rounded-full h-xl sm:h-xl px-sm text-primary hover:bg-primary/5 font-bold text-xs sm:text-xs uppercase tracking-widest gap-2xs"
+          className="rounded-full h-spacing-xl sm:h-spacing-xl px-spacing-sm text-primary hover:bg-primary/5 font-bold text-xs sm:text-xs uppercase tracking-widest gap-spacing-2xs"
         >
-          <ArrowLeft className="w-sm h-sm" />
-          <Tag className="w-sm h-sm" />
+          <ArrowLeft className="w-spacing-sm h-spacing-sm" />
+          <Tag className="w-spacing-sm h-spacing-sm" />
           Voltar ao tema: {tema.replace(/-/g, ' ')}
         </Button>
       </div>

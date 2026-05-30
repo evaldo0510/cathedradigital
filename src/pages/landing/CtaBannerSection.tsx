@@ -9,23 +9,23 @@ interface CtaBannerSectionProps {
 const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
   <section className="w-full section-spacing">
     <div className="app-container">
-      <CathedraCard className="text-center space-y-xl py-3xl md:py-4xl relative overflow-hidden group border-primary/10">
+      <CathedraCard className="text-center space-y-spacing-xl py-spacing-3xl md:py-spacing-4xl relative overflow-hidden group border-primary/10">
         {/* Subtle background glow */}
         <div className="absolute inset-0 bg-primary/[0.02] pointer-events-none" />
         
-        <div className="relative z-10 space-y-xl">
+        <div className="relative z-10 space-y-spacing-xl">
           <div className="relative inline-flex items-center justify-center">
-            <Church className="w-3xl h-3xl text-primary" />
+            <Church className="w-spacing-3xl h-spacing-3xl text-primary" />
           </div>
-          <div className="space-y-md">
+          <div className="space-y-spacing-md">
             <h2 className="font-display font-bold leading-tight text-foreground">
               Sua jornada de <span className="text-primary italic">fé</span> começa aqui.
             </h2>
-            <p className="text-lg text-muted-foreground/90 max-w-lg mx-auto font-serif">
+            <p className="text-lg text-muted-foreground/90 max-w-spacing-lg mx-auto font-serif">
               "Não tenhas medo, pois Eu estou contigo."
             </p>
           </div>
-          <div className="flex flex-col items-center gap-lg">
+          <div className="flex flex-col items-center gap-spacing-lg">
             <HomeButton 
               size="lg" 
               onClick={onStart}

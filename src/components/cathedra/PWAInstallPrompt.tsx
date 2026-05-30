@@ -66,27 +66,27 @@ export const PWAInstallPrompt = () => {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-3xl left-md right-md md:left-auto md:right-xl md:bottom-xl md:w-4xl bg-background border border-primary/20 p-md rounded-premium shadow-premium-hover z-50 animate-in fade-in slide-in-from-bottom-md duration-300">
+    <div className="fixed bottom-spacing-3xl left-spacing-md right-spacing-md md:left-auto md:right-spacing-xl md:bottom-spacing-xl md:w-spacing-4xl bg-background border border-primary/20 p-spacing-md rounded-premium shadow-premium-hover z-50 animate-in fade-in slide-in-from-bottom-spacing-md duration-300">
       <Button 
         onClick={handleDismiss}
-        className="absolute top-xs right-xs text-muted-foreground hover:text-foreground"
+        className="absolute top-spacing-xs right-spacing-xs text-muted-foreground hover:text-foreground"
       >
-        <X className="h-md w-md" />
+        <X className="h-spacing-md w-spacing-md" />
       </Button>
-      <div className="flex items-start gap-md">
-        <div className="h-2xl w-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
-          <Download className="h-lg w-lg text-primary" />
+      <div className="flex items-start gap-spacing-md">
+        <div className="h-spacing-2xl w-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center flex-shrink-0">
+          <Download className="h-spacing-lg w-spacing-lg text-primary" />
         </div>
         <div>
-          <h3 className="text-sm font-bold text-primary leading-none mb-2xs">Instalar Cathedra</h3>
-          <p className="text-xs text-muted-foreground mb-sm">
+          <h3 className="text-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h3>
+          <p className="text-xs text-muted-foreground mb-spacing-sm">
             Acesse a Bíblia e suas orações com um toque, mesmo offline.
           </p>
-          <div className="flex gap-xs">
-            <Button size="sm" onClick={handleInstallClick} className="h-xl text-xs px-md">
+          <div className="flex gap-spacing-xs">
+            <Button size="sm" onClick={handleInstallClick} className="h-spacing-xl text-xs px-spacing-md">
               Instalar agora
             </Button>
-            <Button size="sm" variant="ghost" onClick={handleDismiss} className="h-xl text-xs">
+            <Button size="sm" variant="ghost" onClick={handleDismiss} className="h-spacing-xl text-xs">
               Agora não
             </Button>
           </div>

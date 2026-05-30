@@ -6,13 +6,13 @@ const PrivacyPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full pb-4xl">
+    <div className="w-full pb-spacing-4xl">
       {/* Redundant back button removed */}
 
-      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-xs">Política de Privacidade</h1>
-      <p className="text-xs font-black uppercase tracking-widest text-primary mb-xl">Última atualização: Abril de 2026</p>
+      <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-spacing-xs">Política de Privacidade</h1>
+      <p className="text-xs font-black uppercase tracking-widest text-primary mb-spacing-xl">Última atualização: Abril de 2026</p>
 
-      <div className="prose prose-sm dark:prose-invert max-w-none space-y-xl text-muted-foreground">
+      <div className="prose prose-sm dark:prose-invert max-w-none space-y-spacing-xl text-muted-foreground">
         <section>
           <h2 className="text-lg font-bold text-foreground">1. Informações Coletadas</h2>
           <p>
@@ -25,7 +25,7 @@ const PrivacyPage: React.FC = () => {
         <section>
           <h2 className="text-lg font-bold text-foreground">2. Uso das Informações</h2>
           <p>Utilizamos suas informações para:</p>
-          <ul className="list-disc pl-lg space-y-2xs">
+          <ul className="list-disc pl-spacing-lg space-y-spacing-2xs">
             <li>Fornecer e manter a plataforma funcionando</li>
             <li>Personalizar sua experiência de leitura e oração</li>
             <li>Acompanhar seu progresso e conquistas</li>
@@ -76,7 +76,7 @@ const PrivacyPage: React.FC = () => {
         <section>
           <h2 className="text-lg font-bold text-foreground">7. Seus Direitos</h2>
           <p>Você tem direito a:</p>
-          <ul className="list-disc pl-lg space-y-2xs">
+          <ul className="list-disc pl-spacing-lg space-y-spacing-2xs">
             <li>Acessar seus dados pessoais armazenados</li>
             <li>Solicitar a correção de dados incorretos</li>
             <li>Solicitar a exclusão de sua conta e dados associados</li>
@@ -114,7 +114,7 @@ const PrivacyPage: React.FC = () => {
         </section>
       </div>
 
-      <div className="mt-2xl pt-lg border-t border-border">
+      <div className="mt-spacing-2xl pt-spacing-lg border-t border-border">
         <p className="text-xs text-muted-foreground italic text-center">
           "O Senhor é meu pastor, nada me faltará." — Sl 23,1
         </p>

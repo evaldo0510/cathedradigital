@@ -6,7 +6,7 @@ const HeroScrollIndicator = () => (
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ delay: 2, duration: 1 }}
-    className="absolute bottom-2xl left-2xs/2 -translate-x-1/2 z-10 flex flex-col items-center gap-md"
+    className="absolute bottom-spacing-2xl left-spacing-2xs/2 -translate-x-1/2 z-10 flex flex-col items-center gap-spacing-md"
   >
     <motion.div
       animate={{ 
@@ -18,9 +18,9 @@ const HeroScrollIndicator = () => (
         duration: 4, 
         ease: "easeInOut" 
       }}
-      className="flex flex-col items-center gap-xs"
+      className="flex flex-col items-center gap-spacing-xs"
     >
-      <div className="w-px h-2xl bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0" />
+      <div className="w-px h-spacing-2xl bg-gradient-to-b from-primary/0 via-primary/40 to-primary/0" />
     </motion.div>
   </motion.div>
 );

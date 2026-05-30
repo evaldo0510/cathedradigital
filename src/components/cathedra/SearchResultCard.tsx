@@ -72,9 +72,9 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-    <CardContent className="p-sm flex items-center gap-sm">
+    <CardContent className="p-spacing-sm flex items-center gap-spacing-sm">
       {icon && (
-        <div className="flex-shrink-0 w-xl h-xl rounded-premium bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
+        <div className="flex-shrink-0 w-spacing-xl h-spacing-xl rounded-premium bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
           {icon}
         </div>
       )}
@@ -84,10 +84,10 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           <p className="text-xs text-muted-foreground line-clamp-1">{subtitle}</p>
         )}
       </div>
-      <div className="flex items-center gap-xs flex-shrink-0">
+      <div className="flex items-center gap-spacing-xs flex-shrink-0">
         <RelevanceBadge score={score} size="xs" />
         {showArrow && (
-          <ChevronRight className="w-md h-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+          <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
     </CardContent>

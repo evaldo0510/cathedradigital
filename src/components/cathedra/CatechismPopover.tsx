@@ -28,8 +28,8 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
       <PopoverTrigger asChild>
         <Button
           className={variant === 'mini' 
-            ? "ml-2xs inline-flex h-md w-md items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
-            : "px-xs py-2xs rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
+            ? "ml-spacing-2xs inline-flex h-spacing-md w-spacing-md items-center justify-center rounded-full bg-primary/10 text-xs font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
+            : "px-spacing-xs py-spacing-2xs rounded-full bg-card border border-border text-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
         >
           {variant === 'mini' ? '§' : `§${paragraph}`}
         </Button>
@@ -37,11 +37,11 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
       <PopoverContent
         side="top"
         align="start"
-        className="w-4xl max-h-4xl overflow-y-auto p-0 rounded-premium border-primary/20 bg-card shadow-premium"
+        className="w-spacing-4xl max-h-spacing-4xl overflow-y-auto p-0 rounded-premium border-primary/20 bg-card shadow-premium"
       >
-        <div className="p-sm border-b border-border bg-primary/5 flex items-center justify-between">
-          <div className="flex items-center gap-xs">
-            <Icons.Cross className="w-sm h-sm text-primary" />
+        <div className="p-spacing-sm border-b border-border bg-primary/5 flex items-center justify-between">
+          <div className="flex items-center gap-spacing-xs">
+            <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
             <span className="text-xs font-black uppercase tracking-wider text-primary">
               CIC §{paragraph}
             </span>
@@ -49,18 +49,18 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
           {onNavigate && (
             <Button
               onClick={() => onNavigate(paragraph)}
-              className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-2xs"
+              className="text-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
             >
               Abrir completo
-              <Icons.ArrowDown className="w-sm h-sm -rotate-90" />
+              <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
             </Button>
           )}
         </div>
-        <div className="p-sm">
+        <div className="p-spacing-sm">
           {isLoading && (
-            <div className="space-y-xs py-xs">
+            <div className="space-y-spacing-xs py-spacing-xs">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
+                <div key={i} className="h-spacing-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
               ))}
             </div>
           )}

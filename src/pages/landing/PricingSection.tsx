@@ -17,7 +17,7 @@ const PricingSection = () => {
       ],
       button: "Começar Agora",
       popular: false,
-      icon: <Heart className="w-md h-md text-primary" />
+      icon: <Heart className="w-spacing-md h-spacing-md text-primary" />
     },
     {
       name: "Irmandade Premium",
@@ -34,7 +34,7 @@ const PricingSection = () => {
       ],
       button: "Ser Premium",
       popular: true,
-      icon: <Sparkles className="w-md h-md text-primary" />
+      icon: <Sparkles className="w-spacing-md h-spacing-md text-primary" />
     },
     {
       name: "Benfeitor Anual",
@@ -50,45 +50,45 @@ const PricingSection = () => {
       ],
       button: "Apoiar a Missão",
       popular: false,
-      icon: <Zap className="w-md h-md text-primary" />
+      icon: <Zap className="w-spacing-md h-spacing-md text-primary" />
     }
   ];
 
   return (
     <section className="w-full section-spacing bg-background relative overflow-hidden">
-      <div className="app-container space-y-3xl">
-        <div className="text-center space-y-lg max-w-3xl mx-auto">
+      <div className="app-container space-y-spacing-3xl">
+        <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-[0.4em] text-primary/70 block italic">Investimento Espiritual</span>
           <h2 className="font-display font-bold text-foreground">Escolha seu Caminho de <span className="text-primary italic font-serif">Crescimento</span></h2>
-          <p className="text-muted-foreground/90 font-serif max-w-2xl mx-auto">
+          <p className="text-muted-foreground/90 font-serif max-w-spacing-2xl mx-auto">
             Buscai primeiro o Reino de Deus e a sua justiça, e todas estas coisas vos serão acrescentadas. (Mt 6,33)
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-xl md:gap-xl">
+        <div className="grid md:grid-cols-3 gap-spacing-xl md:gap-spacing-xl">
           {tiers.map((tier) => (
             <CathedraCard
               key={tier.name}
-              className={`p-xl relative flex flex-col h-full ${
+              className={`p-spacing-xl relative flex flex-col h-full ${
                 tier.popular ? "border-secondary/20 bg-secondary/[0.02]" : ""
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-sm left-2xs/2 -translate-x-1/2 bg-secondary text-primary-foreground text-xs font-bold uppercase tracking-[0.3em] px-md py-2xs rounded-premium">
+                <div className="absolute -top-spacing-sm left-spacing-2xs/2 -translate-x-1/2 bg-secondary text-primary-foreground text-xs font-bold uppercase tracking-[0.3em] px-spacing-md py-spacing-2xs rounded-premium">
                   Mais Escolhido
                 </div>
               )}
 
-              <div className="space-y-lg flex-1">
+              <div className="space-y-spacing-lg flex-1">
                 <div className="flex justify-between items-center">
-                  <div className="w-2xl h-2xl rounded-premium bg-primary/5 flex items-center justify-center">
+                  <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center">
                     {tier.icon}
                   </div>
                   <h3 className="font-bold font-serif">{tier.name}</h3>
                 </div>
 
-                <div className="space-y-xs">
-                  <div className="flex items-baseline gap-2xs">
+                <div className="space-y-spacing-xs">
+                  <div className="flex items-baseline gap-spacing-2xs">
                     <span className="text-3xl font-bold">{tier.price}</span>
                     {tier.period && <span className="text-muted-foreground text-premium-small">{tier.period}</span>}
                   </div>
@@ -97,17 +97,17 @@ const PricingSection = () => {
                   </p>
                 </div>
 
-                <ul className="space-y-md py-lg border-t border-border/10">
+                <ul className="space-y-spacing-md py-spacing-lg border-t border-border/10">
                   {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-sm text-premium-small">
-                      <Check className="w-md h-md text-secondary mt-3xs flex-shrink-0" />
+                    <li key={feature} className="flex items-start gap-spacing-sm text-premium-small">
+                      <Check className="w-spacing-md h-spacing-md text-secondary mt-spacing-3xs flex-shrink-0" />
                       <span className="text-muted-foreground leading-snug">{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="mt-xl">
+              <div className="mt-spacing-xl">
                 <HomeButton 
                   variant={tier.popular ? "primary" : "outline"}
                   className="w-full"

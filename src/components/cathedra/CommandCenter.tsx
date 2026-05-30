@@ -17,35 +17,35 @@ interface CommandItem {
 }
 
 const PAGE_COMMANDS: CommandItem[] = [
-  { label: 'Hoje', description: 'Liturgia e jornada diária', path: AppRoute.HOJE, icon: <Icons.Home className="w-md h-md" />, keywords: ['início', 'home', 'painel', 'hoje'], type: 'page' },
-  { label: 'Bíblia Sagrada', description: 'Leitura bíblica', path: AppRoute.BIBLE, icon: <Icons.Book className="w-md h-md" />, keywords: ['biblia', 'escritura', 'evangelho', 'genesis', 'salmos'], type: 'page' },
-  { label: 'Catecismo (CIC)', description: 'Catecismo da Igreja Católica', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-md h-md" />, keywords: ['catecismo', 'cic', 'doutrina', 'fé'], type: 'page' },
-  { label: 'Explorar Catecismo', description: 'Busca e temas do Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-md h-md" />, keywords: ['catecismo', 'explorar', 'tags', 'temas'], type: 'page' },
-  { label: 'Santos', description: 'Hagiografia', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-md h-md" />, keywords: ['santos', 'santo', 'santa', 'hagiografia', 'mártir'], type: 'page' },
-  { label: 'Magistério', description: 'Encíclicas e documentos', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-md h-md" />, keywords: ['magistério', 'encíclica', 'concílio', 'papa', 'vaticano'], type: 'page' },
-  { label: 'Dogmas', description: 'Dogmas da fé católica', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-md h-md" />, keywords: ['dogma', 'doutrina', 'verdade', 'fé'], type: 'page' },
-  { label: 'Enciclopédia', description: 'Glossário completo da fé', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-md h-md" />, keywords: ['enciclopédia', 'glossário', 'termos', 'fé'], type: 'page' },
-  { label: 'Aparições', description: 'Manifestações de Nossa Senhora', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-md h-md" />, keywords: ['aparição', 'nossa senhora', 'maria', 'milagre'], type: 'page' },
-  { label: 'Liturgia Diária', description: 'Leituras do dia', path: `${AppRoute.LITURGIA}?tab=liturgia`, icon: <Icons.Star className="w-md h-md" />, keywords: ['liturgia', 'leitura', 'missa', 'evangelho do dia'], type: 'page' },
-  { label: 'Santo Rosário', description: 'Oração do terço', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-md h-md" />, keywords: ['rosário', 'terço', 'ave maria', 'mistérios'], type: 'page' },
-  { label: 'Via Crucis', description: 'Caminho da Cruz', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-md h-md" />, keywords: ['via crucis', 'cruz', 'estações', 'paixão'], type: 'page' },
-  { label: 'Oração e Devoção', description: 'Orações tradicionais', path: AppRoute.ORACAO, icon: <Icons.Heart className="w-md h-md" />, keywords: ['oração', 'rezar', 'devoção', 'pai nosso'], type: 'page' },
-  { label: 'Confissão', description: 'Guia e exame de consciência', path: AppRoute.POENITENTIA, icon: <Icons.Cross className="w-md h-md" />, keywords: ['confissão', 'pecado', 'exame', 'consciência', 'penitência'], type: 'page' },
-  { label: 'Suma Teológica', description: 'Opera Omnia de São Tomás', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-md h-md" />, keywords: ['aquinas', 'tomás', 'suma', 'teológica', 'escolástica'], type: 'page' },
-  { label: 'Certamen (Quiz)', description: 'Teste seus conhecimentos', path: AppRoute.CERTAMEN, icon: <Icons.Certamen className="w-md h-md" />, keywords: ['quiz', 'certamen', 'teste', 'perguntas'], type: 'page' },
-  { label: 'Missal', description: 'Ordo Missae', path: `${AppRoute.LITURGIA}?tab=missal`, icon: <Icons.Book className="w-md h-md" />, keywords: ['missal', 'missa', 'ordo', 'eucaristia'], type: 'page' },
-  { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-md h-md" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
-  { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-md h-md" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
-  { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-md h-md" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
-  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-md h-md" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
-  { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-md h-md" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
-  { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-md h-md" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
-  { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-md h-md" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
-  { label: 'Login', description: 'Acessar conta', path: AppRoute.LOGIN, icon: <Icons.Users className="w-md h-md" />, keywords: ['login', 'conta', 'entrar', 'cadastro'], type: 'page' },
-  { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-md h-md" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'], type: 'page' },
-  { label: 'Calendário Litúrgico', description: 'Festas e cores litúrgicas', path: `${AppRoute.LITURGIA}?tab=calendario`, icon: <Icons.History className="w-md h-md" />, keywords: ['calendário', 'litúrgico', 'festas', 'solenidade', 'cores'], type: 'page' },
-  { label: 'Comunidade', description: 'Discussões teológicas', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-md h-md" />, keywords: ['comunidade', 'discussão', 'pergunta', 'fórum', 'teologia'], type: 'page' },
-  { label: 'Busca Global', description: 'Pesquisar em todos os módulos', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-md h-md" />, keywords: ['buscar', 'pesquisar', 'procurar', 'busca', 'global', 'search'], type: 'page' },
+  { label: 'Hoje', description: 'Liturgia e jornada diária', path: AppRoute.HOJE, icon: <Icons.Home className="w-spacing-md h-spacing-md" />, keywords: ['início', 'home', 'painel', 'hoje'], type: 'page' },
+  { label: 'Bíblia Sagrada', description: 'Leitura bíblica', path: AppRoute.BIBLE, icon: <Icons.Book className="w-spacing-md h-spacing-md" />, keywords: ['biblia', 'escritura', 'evangelho', 'genesis', 'salmos'], type: 'page' },
+  { label: 'Catecismo (CIC)', description: 'Catecismo da Igreja Católica', path: AppRoute.CATECHISM, icon: <Icons.Cross className="w-spacing-md h-spacing-md" />, keywords: ['catecismo', 'cic', 'doutrina', 'fé'], type: 'page' },
+  { label: 'Explorar Catecismo', description: 'Busca e temas do Catecismo', path: AppRoute.CATECHISM_EXPLORER, icon: <Icons.Search className="w-spacing-md h-spacing-md" />, keywords: ['catecismo', 'explorar', 'tags', 'temas'], type: 'page' },
+  { label: 'Santos', description: 'Hagiografia', path: AppRoute.SAINTS, icon: <Icons.SaintHalo className="w-spacing-md h-spacing-md" />, keywords: ['santos', 'santo', 'santa', 'hagiografia', 'mártir'], type: 'page' },
+  { label: 'Magistério', description: 'Encíclicas e documentos', path: AppRoute.MAGISTERIUM, icon: <Icons.ScrollText className="w-spacing-md h-spacing-md" />, keywords: ['magistério', 'encíclica', 'concílio', 'papa', 'vaticano'], type: 'page' },
+  { label: 'Dogmas', description: 'Dogmas da fé católica', path: AppRoute.DOGMAS, icon: <Icons.Star className="w-spacing-md h-spacing-md" />, keywords: ['dogma', 'doutrina', 'verdade', 'fé'], type: 'page' },
+  { label: 'Enciclopédia', description: 'Glossário completo da fé', path: AppRoute.ENCYCLOPEDIA, icon: <Icons.Library className="w-spacing-md h-spacing-md" />, keywords: ['enciclopédia', 'glossário', 'termos', 'fé'], type: 'page' },
+  { label: 'Aparições', description: 'Manifestações de Nossa Senhora', path: AppRoute.APARICOES, icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, keywords: ['aparição', 'nossa senhora', 'maria', 'milagre'], type: 'page' },
+  { label: 'Liturgia Diária', description: 'Leituras do dia', path: `${AppRoute.LITURGIA}?tab=liturgia`, icon: <Icons.Star className="w-spacing-md h-spacing-md" />, keywords: ['liturgia', 'leitura', 'missa', 'evangelho do dia'], type: 'page' },
+  { label: 'Santo Rosário', description: 'Oração do terço', path: AppRoute.ROSARY, icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, keywords: ['rosário', 'terço', 'ave maria', 'mistérios'], type: 'page' },
+  { label: 'Via Crucis', description: 'Caminho da Cruz', path: AppRoute.VIA_CRUCIS, icon: <Icons.Cross className="w-spacing-md h-spacing-md" />, keywords: ['via crucis', 'cruz', 'estações', 'paixão'], type: 'page' },
+  { label: 'Oração e Devoção', description: 'Orações tradicionais', path: AppRoute.ORACAO, icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, keywords: ['oração', 'rezar', 'devoção', 'pai nosso'], type: 'page' },
+  { label: 'Confissão', description: 'Guia e exame de consciência', path: AppRoute.POENITENTIA, icon: <Icons.Cross className="w-spacing-md h-spacing-md" />, keywords: ['confissão', 'pecado', 'exame', 'consciência', 'penitência'], type: 'page' },
+  { label: 'Suma Teológica', description: 'Opera Omnia de São Tomás', path: AppRoute.AQUINAS_OPERA, icon: <Icons.Aquinas className="w-spacing-md h-spacing-md" />, keywords: ['aquinas', 'tomás', 'suma', 'teológica', 'escolástica'], type: 'page' },
+  { label: 'Certamen (Quiz)', description: 'Teste seus conhecimentos', path: AppRoute.CERTAMEN, icon: <Icons.Certamen className="w-spacing-md h-spacing-md" />, keywords: ['quiz', 'certamen', 'teste', 'perguntas'], type: 'page' },
+  { label: 'Missal', description: 'Ordo Missae', path: `${AppRoute.LITURGIA}?tab=missal`, icon: <Icons.Book className="w-spacing-md h-spacing-md" />, keywords: ['missal', 'missa', 'ordo', 'eucaristia'], type: 'page' },
+  { label: 'Lectio Divina', description: 'Leitura orante', path: AppRoute.LECTIO_DIVINA, icon: <Icons.Feather className="w-spacing-md h-spacing-md" />, keywords: ['lectio', 'divina', 'meditação', 'contemplação'], type: 'page' },
+  { label: 'Breviário', description: 'Liturgia das Horas', path: AppRoute.BREVIARY, icon: <Icons.History className="w-spacing-md h-spacing-md" />, keywords: ['breviário', 'horas', 'laudes', 'vésperas', 'ofício'], type: 'page' },
+  { label: 'Trilhas de Estudo', description: 'Formação estruturada', path: AppRoute.TRILHAS, icon: <Icons.Layout className="w-spacing-md h-spacing-md" />, keywords: ['trilha', 'estudo', 'formação', 'curso'], type: 'page' },
+  { label: 'Logos IA', description: 'Sua dúvida iluminada pela fé', path: AppRoute.STUDY_MODE, icon: <Icons.Search className="w-spacing-md h-spacing-md" />, keywords: ['ia', 'logos', 'perguntar', 'ajuda', 'estudo'], type: 'page' },
+  { label: 'Favoritos', description: 'Itens salvos', path: AppRoute.FAVORITES, icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, keywords: ['favoritos', 'salvos', 'bookmark'], type: 'page' },
+  { label: 'Jornadas', description: 'Jornadas espirituais guiadas', path: AppRoute.JORNADAS, icon: <Icons.Compass className="w-spacing-md h-spacing-md" />, keywords: ['jornadas', 'jornada', 'espiritual', 'caminhada'], type: 'page' },
+  { label: 'Sobre', description: 'Sobre o Cathedra', path: AppRoute.ABOUT, icon: <Icons.Globe className="w-spacing-md h-spacing-md" />, keywords: ['sobre', 'manifesto', 'about'], type: 'page' },
+  { label: 'Login', description: 'Acessar conta', path: AppRoute.LOGIN, icon: <Icons.Users className="w-spacing-md h-spacing-md" />, keywords: ['login', 'conta', 'entrar', 'cadastro'], type: 'page' },
+  { label: 'Litanias', description: 'Orações de invocação', path: AppRoute.LITANIES, icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, keywords: ['litania', 'invocação', 'sagrado coração', 'nossa senhora'], type: 'page' },
+  { label: 'Calendário Litúrgico', description: 'Festas e cores litúrgicas', path: `${AppRoute.LITURGIA}?tab=calendario`, icon: <Icons.History className="w-spacing-md h-spacing-md" />, keywords: ['calendário', 'litúrgico', 'festas', 'solenidade', 'cores'], type: 'page' },
+  { label: 'Comunidade', description: 'Discussões teológicas', path: AppRoute.COMMUNITY, icon: <Icons.Message className="w-spacing-md h-spacing-md" />, keywords: ['comunidade', 'discussão', 'pergunta', 'fórum', 'teologia'], type: 'page' },
+  { label: 'Busca Global', description: 'Pesquisar em todos os módulos', path: AppRoute.BUSCAR, icon: <Icons.Search className="w-spacing-md h-spacing-md" />, keywords: ['buscar', 'pesquisar', 'procurar', 'busca', 'global', 'search'], type: 'page' },
 ];
 
 interface UnifiedResult {
@@ -140,9 +140,9 @@ const CommandCenter: React.FC = () => {
       description: `${s.title} • Festa: ${s.feastDay}`,
       path: `${AppRoute.SAINTS}?saint=${s.id}`,
       icon: s.image ? (
-        <img src={s.image} alt={s.name} className="w-md h-md rounded-full object-cover" />
+        <img src={s.image} alt={s.name} className="w-spacing-md h-spacing-md rounded-full object-cover" />
       ) : (
-        <Icons.SaintHalo className="w-md h-md" />
+        <Icons.SaintHalo className="w-spacing-md h-spacing-md" />
       ),
     }));
 
@@ -166,7 +166,7 @@ const CommandCenter: React.FC = () => {
                 label: `${v.bookAbbrev} ${v.chapter},${v.verse}`,
                 description: v.text?.substring(0, 80) + '...',
                 path: `/bible?book=${v.bookAbbrev}&ch=${v.chapter}`,
-                icon: <Icons.Book className="w-md h-md" />,
+                icon: <Icons.Book className="w-spacing-md h-spacing-md" />,
               });
             });
           }
@@ -183,7 +183,7 @@ const CommandCenter: React.FC = () => {
             label: `§${p.paragraph} (Local)`,
             description: p.conteudo.substring(0, 80) + '...',
             path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-            icon: <Icons.Cross className="w-md h-md" />,
+            icon: <Icons.Cross className="w-spacing-md h-spacing-md" />,
           }));
         
         results.push(...localMatches);
@@ -203,7 +203,7 @@ const CommandCenter: React.FC = () => {
                 label: `§${p.paragraph}`,
                 description: p.content.substring(0, 80) + '...',
                 path: `${AppRoute.CATECHISM}?p=${p.paragraph}`,
-                icon: <Icons.Cross className="w-md h-md" />,
+                icon: <Icons.Cross className="w-spacing-md h-spacing-md" />,
               });
             }
           });
@@ -224,7 +224,7 @@ const CommandCenter: React.FC = () => {
               label: j.title,
               description: j.description?.substring(0, 80) + '...',
               path: `/jornadas/${j.id}`,
-              icon: <Icons.Compass className="w-md h-md" />,
+              icon: <Icons.Compass className="w-spacing-md h-spacing-md" />,
             });
           });
         }).catch(() => {}),
@@ -242,7 +242,7 @@ const CommandCenter: React.FC = () => {
               label: g.term,
               description: g.definition.substring(0, 80) + '...',
               path: `${AppRoute.GLOSSARY}?q=${encodeURIComponent(g.term)}`,
-              icon: <Icons.Glossary className="w-md h-md" />,
+              icon: <Icons.Glossary className="w-spacing-md h-spacing-md" />,
             });
           });
         }).catch(() => {}),
@@ -260,7 +260,7 @@ const CommandCenter: React.FC = () => {
               label: t.name,
               description: t.description?.substring(0, 80) + '...',
               path: `${AppRoute.TEMAS}/${t.slug}`,
-              icon: <Icons.Tag className="w-md h-md" />,
+              icon: <Icons.Tag className="w-spacing-md h-spacing-md" />,
             });
           });
         }).catch(() => {}),
@@ -279,7 +279,7 @@ const CommandCenter: React.FC = () => {
               label: p.title || 'Discussão',
               description: p.content.substring(0, 80) + '...',
               path: AppRoute.COMMUNITY,
-              icon: <Icons.Message className="w-md h-md" />,
+              icon: <Icons.Message className="w-spacing-md h-spacing-md" />,
             });
           });
         }).catch(() => {}),
@@ -371,12 +371,12 @@ const CommandCenter: React.FC = () => {
     >
       <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
       <div
-        className="relative w-full max-w-xl bg-card border border-border rounded-[2rem] shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-md duration-200"
+        className="relative w-full max-w-spacing-xl bg-card border border-border rounded-[2rem] shadow-premium overflow-hidden animate-in fade-in slide-in-from-top-spacing-md duration-200"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-sm px-md py-md border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
-          <Icons.Search className="w-md h-md text-primary shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-spacing-sm px-spacing-md py-spacing-md border-b border-border" role="combobox" aria-haspopup="listbox" aria-expanded={isOpen} aria-owns="command-list">
+          <Icons.Search className="w-spacing-md h-spacing-md text-primary shrink-0" aria-hidden="true" />
           <input
             ref={inputRef}
             value={query}
@@ -391,31 +391,31 @@ const CommandCenter: React.FC = () => {
 
           {query && (
             <Button onClick={() => setQuery('')} className="text-muted-foreground hover:text-foreground transition-colors">
-              <Icons.X className="w-md h-md" />
+              <Icons.X className="w-spacing-md h-spacing-md" />
             </Button>
           )}
-          <kbd className="hidden sm:inline-flex items-center px-xs py-3xs rounded bg-muted text-muted-foreground text-xs font-mono font-bold">ESC</kbd>
+          <kbd className="hidden sm:inline-flex items-center px-spacing-xs py-spacing-3xs rounded bg-muted text-muted-foreground text-xs font-mono font-bold">ESC</kbd>
         </div>
 
         {/* Loading indicator */}
         {globalLoading && (
-          <div className="h-3xs w-full bg-muted overflow-hidden">
-            <div className="h-full w-2xs/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium" 
+          <div className="h-spacing-3xs w-full bg-muted overflow-hidden">
+            <div className="h-full w-spacing-2xs/3 bg-primary animate-[shimmer_1s_ease-in-out_infinite] rounded-premium" 
                  style={{ animation: 'shimmer 1s ease-in-out infinite', animationName: 'none' }} />
             <div className="h-full bg-primary/60 animate-pulse rounded-premium" />
           </div>
         )}
 
         {/* Results */}
-        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-2xs">
+        <div ref={listRef} id="command-list" role="listbox" className="max-h-[55vh] overflow-y-auto py-spacing-2xs">
           {query.length >= 2 && !globalLoading && resultCount > 0 && (
-            <div className="px-md py-xs text-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
+            <div className="px-spacing-md py-spacing-xs text-xs font-black uppercase tracking-widest text-muted-foreground" aria-live="polite">
               {resultCount} resultado{resultCount !== 1 ? 's' : ''} encontrado{resultCount !== 1 ? 's' : ''}
             </div>
           )}
 
           {allItems.length === 0 && !globalLoading && (
-            <p className="text-center text-sm text-muted-foreground py-xl italic">
+            <p className="text-center text-sm text-muted-foreground py-spacing-xl italic">
               {query.length < 2
                 ? 'Digite para buscar em todos os módulos...'
                 : 'Nenhum resultado encontrado.'}
@@ -430,8 +430,8 @@ const CommandCenter: React.FC = () => {
             return (
               <React.Fragment key={`${item.type}-${item.label}-${i}`}>
                 {showGroupHeader && (
-                  <div className="px-md pt-sm pb-2xs text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-xs" role="presentation">
-                    <div className="w-md h-px bg-border" />
+                  <div className="px-spacing-md pt-spacing-sm pb-spacing-2xs text-xs font-black uppercase tracking-widest text-muted-foreground/60 flex items-center gap-spacing-xs" role="presentation">
+                    <div className="w-spacing-md h-px bg-border" />
                     {TYPE_LABELS[item.type] || item.type}
                   </div>
                 )}
@@ -441,20 +441,20 @@ const CommandCenter: React.FC = () => {
                   aria-selected={i === selectedIndex}
                   onClick={() => go(item.path)}
                   onMouseEnter={() => setSelectedIndex(i)}
-                  className={`w-full flex items-center gap-sm px-md py-xs text-left transition-all outline-none focus:ring-0 ${
+                  className={`w-full flex items-center gap-spacing-sm px-spacing-md py-spacing-xs text-left transition-all outline-none focus:ring-0 ${
                     i === selectedIndex 
                       ? 'bg-primary/10 text-primary' 
                       : 'text-foreground hover:bg-muted/50'
                   }`}
                 >
-                  <span className={`p-2xs rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
+                  <span className={`p-spacing-2xs rounded-full ${i === selectedIndex ? 'bg-primary/20' : 'bg-muted'}`}>
                     {item.icon}
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold truncate">{item.label}</p>
                     <p className="text-xs text-muted-foreground truncate">{item.description}</p>
                   </div>
-                  <span className={`text-xs font-black uppercase tracking-widest px-xs py-3xs rounded-full ${
+                  <span className={`text-xs font-black uppercase tracking-widest px-spacing-xs py-spacing-3xs rounded-full ${
                     TYPE_STYLES[item.type] || 'bg-muted text-muted-foreground'
                   }`}>
                     {TYPE_LABELS[item.type] || item.type}
@@ -467,12 +467,12 @@ const CommandCenter: React.FC = () => {
 
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-md py-xs border-t border-border bg-muted/30">
-          <div className="flex items-center gap-sm">
+        <div className="flex items-center justify-between px-spacing-md py-spacing-xs border-t border-border bg-muted/30">
+          <div className="flex items-center gap-spacing-sm">
             <span className="text-xs text-muted-foreground">↑↓ navegar</span>
             <span className="text-xs text-muted-foreground">↵ abrir</span>
           </div>
-          <div className="flex items-center gap-xs">
+          <div className="flex items-center gap-spacing-xs">
             {hasGlobalResults && (
               <span className="text-xs text-primary font-medium">
                 Buscando em {new Set(globalResults.map(r => r.type)).size} módulos

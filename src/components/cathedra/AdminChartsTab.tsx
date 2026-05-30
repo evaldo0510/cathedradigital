@@ -15,8 +15,8 @@ const ChartSkeleton = React.forwardRef<HTMLDivElement, any>((props, ref) => (
   <div ref={ref}>
     <Card>
       <CardHeader>
-        <Skeleton className="h-md w-4xl" />
-        <Skeleton className="h-md w-4xl mt-2xs" />
+        <Skeleton className="h-spacing-md w-spacing-4xl" />
+        <Skeleton className="h-spacing-md w-spacing-4xl mt-spacing-2xs" />
       </CardHeader>
       <CardContent className="h-[300px] flex items-center justify-center">
         <Skeleton className="h-full w-full rounded" />
@@ -29,7 +29,7 @@ ChartSkeleton.displayName = 'ChartSkeleton';
 
 const AdminChartsTab: React.FC<AdminChartsTabProps> = ({ userGrowth, revenueData }) => (
   <Suspense fallback={
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-lg">
       <ChartSkeleton />
       <ChartSkeleton />
     </div>

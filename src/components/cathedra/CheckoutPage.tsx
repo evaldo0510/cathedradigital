@@ -149,40 +149,40 @@ const CheckoutPage: React.FC = () => {
   const finalChargePrice = getDiscountedPrice(plan.chargePrice);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-2xl py-xl">
+    <div className="max-w-5xl mx-auto space-y-spacing-2xl py-spacing-xl">
       {/* Hero */}
-      <div className="text-center space-y-md">
-        <div className="inline-flex items-center gap-xs px-sm py-2xs bg-primary/10 rounded-premium">
-          <Icons.Zap className="w-md h-md text-primary" />
+      <div className="text-center space-y-spacing-md">
+        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
+          <Icons.Zap className="w-spacing-md h-spacing-md text-primary" />
           <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
         </div>
         <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
           Eleve sua experiência <br />
           <span className="text-primary italic">espiritual.</span>
         </h1>
-        <p className="text-muted-foreground font-serif italic max-w-2xl mx-auto text-lg">
+        <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-lg">
           Acesse ferramentas exclusivas de estudo e oração para aprofundar sua vida interior.
         </p>
       </div>
 
       {/* Plans + Benefits */}
-      <div className="grid md:grid-cols-2 gap-xl items-start">
+      <div className="grid md:grid-cols-2 gap-spacing-xl items-start">
         <BenefitsSection />
 
-        <div className="space-y-md">
+        <div className="space-y-spacing-md">
           {/* Plan selector */}
-          <div className="flex gap-xs p-2xs bg-muted rounded-premium">
+          <div className="flex gap-spacing-xs p-spacing-2xs bg-muted rounded-premium">
             {PLANS.map(p => (
               <Button
                 key={p.id}
                 onClick={() => setSelectedPlan(p.id)}
-                className={`flex-1 py-sm px-md rounded-full text-sm font-bold transition-all ${
+                className={`flex-1 py-spacing-sm px-spacing-md rounded-full text-sm font-bold transition-all ${
                   selectedPlan === p.id ? 'bg-background text-foreground shadow-premium' : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {p.label}
                 {p.badge && selectedPlan === p.id && (
-                  <Badge className="ml-xs bg-primary/15 text-primary border-primary/30 text-xs">{p.badge}</Badge>
+                  <Badge className="ml-spacing-xs bg-primary/15 text-primary border-primary/30 text-xs">{p.badge}</Badge>
                 )}
               </Button>
             ))}
@@ -190,13 +190,13 @@ const CheckoutPage: React.FC = () => {
 
           {/* Plan card */}
           <Card className="border-2 border-primary shadow-premium-hover rounded-[2.5rem] overflow-hidden">
-            <CardHeader className="text-center bg-primary/5 pb-xl pt-2xl space-y-md">
+            <CardHeader className="text-center bg-primary/5 pb-spacing-xl pt-spacing-2xl space-y-spacing-md">
               <CardTitle className="text-xl font-black uppercase tracking-[0.3em] text-primary">
                 {plan.label === 'Anual' ? 'Plano Anual' : 'Plano Mensal'}
               </CardTitle>
               <div className="flex flex-col items-center justify-center">
                 {appliedCoupon && (
-                  <span className="text-xl text-muted-foreground line-through mb-2xs">
+                  <span className="text-xl text-muted-foreground line-through mb-spacing-2xs">
                     {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(plan.price)}
                   </span>
                 )}
@@ -205,19 +205,19 @@ const CheckoutPage: React.FC = () => {
                     getDiscountedPrice(plan.price)
                   )}
                 </span>
-                <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-xs">
+                <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest mt-spacing-xs">
                   {plan.period}
                 </span>
               </div>
               {plan.totalLabel && (
-                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-md py-2xs rounded-premium inline-block font-serif">
+                <CardDescription className="text-xs font-medium bg-primary/10 text-primary px-spacing-md py-spacing-2xs rounded-premium inline-block font-serif">
                   {appliedCoupon
                     ? `${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(finalChargePrice)}/ano · ${appliedCoupon.discount_percent}% off`
                     : `${plan.totalLabel} · ${plan.badge}`}
                 </CardDescription>
               )}
               {appliedCoupon && (
-                <div className="flex items-center justify-center gap-xs">
+                <div className="flex items-center justify-center gap-spacing-xs">
                   <Badge className="bg-primary/15 text-primary border-primary/30 text-xs">
                     Cupom {appliedCoupon.code} · -{appliedCoupon.discount_percent}%
                   </Badge>
@@ -227,10 +227,10 @@ const CheckoutPage: React.FC = () => {
                 </div>
               )}
             </CardHeader>
-            <CardContent className="p-xl md:p-xl space-y-lg">
+            <CardContent className="p-spacing-xl md:p-spacing-xl space-y-spacing-lg">
               {/* Coupon input */}
               {!appliedCoupon && (
-                <div className="flex gap-xs">
+                <div className="flex gap-spacing-xs">
                   <Input
                     placeholder="Código do cupom"
                     value={couponCode}
@@ -248,25 +248,25 @@ const CheckoutPage: React.FC = () => {
                 </div>
               )}
 
-              <ul className="space-y-md">
+              <ul className="space-y-spacing-md">
                 {['Acesso a todas as trilhas de estudo', 'IA Teológica sem limites', 'Download para uso offline', 'Suporte prioritário', 'Sem anúncios', 'Badges exclusivos no perfil'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-sm text-sm font-serif">
-                    <Icons.Star className="w-md h-md text-primary shrink-0" />
+                  <li key={i} className="flex items-center gap-spacing-sm text-sm font-serif">
+                    <Icons.Star className="w-spacing-md h-spacing-md text-primary shrink-0" />
                     <span className="text-foreground/80">{item}</span>
                   </li>
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="p-xl md:p-xl pt-0 flex flex-col gap-md">
+            <CardFooter className="p-spacing-xl md:p-spacing-xl pt-0 flex flex-col gap-spacing-md">
               <Button
                 onClick={() => handleCheckout(plan.id, plan.chargePrice, plan.title)}
                 disabled={loading || isPremium}
-                className="w-full h-2xl rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-premium-hover shadow-primary/20"
+                className="w-full h-spacing-2xl rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-[1.02] shadow-premium-hover shadow-primary/20"
               >
                 {loading ? 'Redirecionando...' : isPremium ? '✓ Plano já ativo' : `Assinar ${plan.label}`}
               </Button>
-              <p className="text-xs text-center text-muted-foreground italic flex items-center justify-center gap-2xs">
-                <Icons.Heart className="w-sm h-sm text-primary shrink-0" />
+              <p className="text-xs text-center text-muted-foreground italic flex items-center justify-center gap-spacing-2xs">
+                <Icons.Heart className="w-spacing-sm h-spacing-sm text-primary shrink-0" />
                 Parte do valor da sua assinatura é destinada a projetos de evangelização.
               </p>
             </CardFooter>
@@ -275,30 +275,30 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Plan Comparison */}
-      <div className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-serif font-bold text-center mb-xl">Gratuito vs PRO</h2>
+      <div className="max-w-spacing-3xl mx-auto">
+        <h2 className="text-2xl font-serif font-bold text-center mb-spacing-xl">Gratuito vs PRO</h2>
         <Card className="rounded-premium overflow-hidden border border-border/50">
           <CardContent className="p-0">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
-                  <th className="text-left p-md font-bold">Recurso</th>
-                  <th className="text-center p-md font-bold w-4xl">Gratuito</th>
-                  <th className="text-center p-md font-bold w-4xl text-primary">PRO</th>
+                  <th className="text-left p-spacing-md font-bold">Recurso</th>
+                  <th className="text-center p-spacing-md font-bold w-spacing-4xl">Gratuito</th>
+                  <th className="text-center p-spacing-md font-bold w-spacing-4xl text-primary">PRO</th>
                 </tr>
               </thead>
               <tbody>
                 {FREE_VS_PRO.map((row, i) => (
                   <tr key={i} className="border-b border-border/30 last:border-0">
-                    <td className="p-md font-medium">{row.feature}</td>
-                    <td className="p-md text-center">
+                    <td className="p-spacing-md font-medium">{row.feature}</td>
+                    <td className="p-spacing-md text-center">
                       {row.free ? (
                         <span className="text-primary text-lg">✓</span>
                       ) : (
                         <span className="text-muted-foreground text-lg">—</span>
                       )}
                     </td>
-                    <td className="p-md text-center">
+                    <td className="p-spacing-md text-center">
                       <span className="text-primary text-lg font-bold">✓</span>
                     </td>
                   </tr>
@@ -310,25 +310,25 @@ const CheckoutPage: React.FC = () => {
       </div>
 
       {/* Donation */}
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-spacing-2xl mx-auto">
         <Card className="border border-border/50 rounded-premium overflow-hidden bg-muted/30">
-          <CardHeader className="text-center space-y-sm pb-md">
-            <div className="mx-auto w-2xl h-2xl rounded-premium bg-primary/10 flex items-center justify-center">
-              <Icons.Heart className="w-lg h-lg text-primary" />
+          <CardHeader className="text-center space-y-spacing-sm pb-spacing-md">
+            <div className="mx-auto w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center">
+              <Icons.Heart className="w-spacing-lg h-spacing-lg text-primary" />
             </div>
             <CardTitle className="text-xl font-serif font-bold">Doação Voluntária</CardTitle>
-            <CardDescription className="text-sm max-w-md mx-auto">
+            <CardDescription className="text-sm max-w-spacing-md mx-auto">
               Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-xl pb-xs space-y-md">
-            <div className="flex flex-wrap gap-xs justify-center">
+          <CardContent className="px-spacing-xl pb-spacing-xs space-y-spacing-md">
+            <div className="flex flex-wrap gap-spacing-xs justify-center">
               {DONATION_PRESETS.map(val => (
                 <Button
                   key={val}
                   onClick={() => setDonationAmount(val)}
-                  className={`px-md py-xs rounded-full text-sm font-bold border transition-all ${
+                  className={`px-spacing-md py-spacing-xs rounded-full text-sm font-bold border transition-all ${
                     donationAmount === val
                       ? 'bg-primary text-primary-foreground border-primary shadow-premium shadow-primary/20'
                       : 'bg-background text-foreground border-border hover:border-primary/50'
@@ -338,7 +338,7 @@ const CheckoutPage: React.FC = () => {
                 </Button>
               ))}
             </div>
-            <div className="flex gap-sm items-center">
+            <div className="flex gap-spacing-sm items-center">
               <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">Outro valor:</span>
               <Input
                 type="number"
@@ -350,16 +350,16 @@ const CheckoutPage: React.FC = () => {
               />
             </div>
           </CardContent>
-          <CardFooter className="px-xl pb-xl pt-md">
+          <CardFooter className="px-spacing-xl pb-spacing-xl pt-spacing-md">
             <Button
               variant="outline"
               onClick={handleDonation}
               disabled={donationLoading || !donationAmount || donationAmount < 1}
-              className="w-full h-2xl rounded-full font-bold gap-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+              className="w-full h-spacing-2xl rounded-full font-bold gap-spacing-xs border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all"
             >
               {donationLoading ? 'Processando...' : (
                 <>
-                  <Icons.Heart className="w-md h-md" /> Doar {donationAmount ? `R$ ${donationAmount}` : ''}
+                  <Icons.Heart className="w-spacing-md h-spacing-md" /> Doar {donationAmount ? `R$ ${donationAmount}` : ''}
                 </>
               )}
             </Button>
@@ -380,20 +380,20 @@ const CheckoutPage: React.FC = () => {
 };
 
 const BenefitsSection: React.FC = () => (
-  <div className="space-y-xl pr-0 md:pr-xl">
+  <div className="space-y-spacing-xl pr-0 md:pr-spacing-xl">
     <h2 className="text-2xl font-serif font-bold text-foreground">Por que ser PRO?</h2>
-    <div className="grid gap-lg">
+    <div className="grid gap-spacing-lg">
       {[
-        { icon: <Icons.Search className="w-md h-md" />, title: 'Colloquium IA Ilimitado', desc: 'Pergunte qualquer coisa sobre teologia e receba respostas baseadas na tradição.' },
-        { icon: <Icons.Book className="w-md h-md" />, title: 'Biblioteca Estendida', desc: 'Acesso a documentos raros e edições comentadas da Patrística.' },
-        { icon: <Icons.Heart className="w-md h-md" />, title: 'Modo de Oração Imersivo', desc: 'Trilhas de áudio exclusivas e meditações guiadas por grandes santos.' },
-        { icon: <Icons.Globe className="w-md h-md" />, title: 'Offline total', desc: 'Baixe toda a Bíblia e o Catecismo para ler onde quer que esteja.' },
+        { icon: <Icons.Search className="w-spacing-md h-spacing-md" />, title: 'Colloquium IA Ilimitado', desc: 'Pergunte qualquer coisa sobre teologia e receba respostas baseadas na tradição.' },
+        { icon: <Icons.Book className="w-spacing-md h-spacing-md" />, title: 'Biblioteca Estendida', desc: 'Acesso a documentos raros e edições comentadas da Patrística.' },
+        { icon: <Icons.Heart className="w-spacing-md h-spacing-md" />, title: 'Modo de Oração Imersivo', desc: 'Trilhas de áudio exclusivas e meditações guiadas por grandes santos.' },
+        { icon: <Icons.Globe className="w-spacing-md h-spacing-md" />, title: 'Offline total', desc: 'Baixe toda a Bíblia e o Catecismo para ler onde quer que esteja.' },
       ].map((benefit, i) => (
-        <div key={i} className="flex gap-md group">
-          <div className="w-2xl h-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+        <div key={i} className="flex gap-spacing-md group">
+          <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             {benefit.icon}
           </div>
-          <div className="space-y-2xs">
+          <div className="space-y-spacing-2xs">
             <h3 className="font-bold text-foreground">{benefit.title}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{benefit.desc}</p>
           </div>

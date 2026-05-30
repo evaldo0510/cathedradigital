@@ -139,7 +139,7 @@ const CarouselContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HT
       <div ref={carouselRef} className="overflow-hidden">
         <div
           ref={ref}
-          className={cn("flex", orientation === "horizontal" ? "-ml-md" : "-mt-md flex-col", className)}
+          className={cn("flex", orientation === "horizontal" ? "-ml-spacing-md" : "-mt-spacing-md flex-col", className)}
           {...props}
         />
       </div>
@@ -157,7 +157,7 @@ const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
         ref={ref}
         role="group"
         aria-roledescription="slide"
-        className={cn("min-w-0 shrink-0 grow-0 basis-full", orientation === "horizontal" ? "pl-md" : "pt-md", className)}
+        className={cn("min-w-0 shrink-0 grow-0 basis-full", orientation === "horizontal" ? "pl-spacing-md" : "pt-spacing-md", className)}
         {...props}
       />
     );
@@ -175,17 +175,17 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, React.ComponentProp
         variant={variant}
         size={size}
         className={cn(
-          "absolute h-xl w-xl rounded-full",
+          "absolute h-spacing-xl w-spacing-xl rounded-full",
           orientation === "horizontal"
-            ? "-left-2xl top-2xs/2 -translate-y-1/2"
-            : "-top-2xl left-2xs/2 -translate-x-1/2 rotate-90",
+            ? "-left-spacing-2xl top-spacing-2xs/2 -translate-y-1/2"
+            : "-top-spacing-2xl left-spacing-2xs/2 -translate-x-1/2 rotate-90",
           className,
         )}
         disabled={!canScrollPrev}
         onClick={scrollPrev}
         {...props}
       >
-        <ArrowLeft className="h-md w-md" />
+        <ArrowLeft className="h-spacing-md w-spacing-md" />
         <span className="sr-only">Previous slide</span>
       </Button>
     );
@@ -203,17 +203,17 @@ const CarouselNext = React.forwardRef<HTMLButtonElement, React.ComponentProps<ty
         variant={variant}
         size={size}
         className={cn(
-          "absolute h-xl w-xl rounded-full",
+          "absolute h-spacing-xl w-spacing-xl rounded-full",
           orientation === "horizontal"
-            ? "-right-2xl top-2xs/2 -translate-y-1/2"
-            : "-bottom-2xl left-2xs/2 -translate-x-1/2 rotate-90",
+            ? "-right-spacing-2xl top-spacing-2xs/2 -translate-y-1/2"
+            : "-bottom-spacing-2xl left-spacing-2xs/2 -translate-x-1/2 rotate-90",
           className,
         )}
         disabled={!canScrollNext}
         onClick={scrollNext}
         {...props}
       >
-        <ArrowRight className="h-md w-md" />
+        <ArrowRight className="h-spacing-md w-spacing-md" />
         <span className="sr-only">Next slide</span>
       </Button>
     );

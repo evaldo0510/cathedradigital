@@ -60,7 +60,7 @@ const tagIconMap: Record<string, React.ReactNode> = {
   '📢': <Megaphone className="w-inherit h-inherit" />,
 };
 
-export const getTagIcon = (emoji: string, className = "w-sm h-sm") => {
+export const getTagIcon = (emoji: string, className = "w-spacing-sm h-spacing-sm") => {
   const icon = tagIconMap[emoji] || <Hash className="w-inherit h-inherit" />;
   return React.cloneElement(icon as React.ReactElement, { className });
 };
@@ -119,15 +119,15 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
   ...props
 }, ref) => {
   const sizeClasses = {
-    xs: 'px-xs py-3xs text-xs gap-2xs',
-    sm: 'px-xs py-2xs text-xs gap-2xs',
-    md: 'px-sm py-xs text-premium-small gap-2xs'
+    xs: 'px-spacing-xs py-spacing-3xs text-xs gap-spacing-2xs',
+    sm: 'px-spacing-xs py-spacing-2xs text-xs gap-spacing-2xs',
+    md: 'px-spacing-sm py-spacing-xs text-premium-small gap-spacing-2xs'
   };
 
   const iconSizes = {
-    xs: 'w-xs h-xs',
-    sm: 'w-sm h-sm',
-    md: 'w-sm h-sm'
+    xs: 'w-spacing-xs h-spacing-xs',
+    sm: 'w-spacing-sm h-spacing-sm',
+    md: 'w-spacing-sm h-spacing-sm'
   };
 
   return (
@@ -162,8 +162,8 @@ export const BubbleTag = React.forwardRef<HTMLButtonElement, BubbleTagProps>(({
       `}
     >
       {isSuggested && !isSelected && (
-        <div className="absolute -top-2xs -right-2xs">
-          <Sparkles className={`text-secondary animate-pulse ${size === 'xs' ? 'w-xs h-xs' : 'w-xs h-xs'}`} />
+        <div className="absolute -top-spacing-2xs -right-spacing-2xs">
+          <Sparkles className={`text-secondary animate-pulse ${size === 'xs' ? 'w-spacing-xs h-spacing-xs' : 'w-spacing-xs h-spacing-xs'}`} />
         </div>
       )}
       <span className="group-hover/tag:scale-110 transition-transform opacity-80 group-hover/tag:opacity-100">

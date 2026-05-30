@@ -11,25 +11,25 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-sm", className)}
+      className={cn("p-spacing-sm", className)}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-md sm:space-x-md sm:space-y-0",
-        month: "space-y-md",
-        caption: "flex justify-center pt-2xs relative items-center",
+        months: "flex flex-col sm:flex-row space-y-spacing-md sm:space-x-spacing-md sm:space-y-0",
+        month: "space-y-spacing-md",
+        caption: "flex justify-center pt-spacing-2xs relative items-center",
         caption_label: "text-sm font-medium",
-        nav: "space-x-2xs flex items-center",
+        nav: "space-x-spacing-2xs flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-lg w-lg bg-transparent p-0 opacity-50 hover:opacity-100",
+          "h-spacing-lg w-spacing-lg bg-transparent p-0 opacity-50 hover:opacity-100",
         ),
-        nav_button_previous: "absolute left-2xs",
-        nav_button_next: "absolute right-2xs",
-        table: "w-full border-collapse space-y-2xs",
+        nav_button_previous: "absolute left-spacing-2xs",
+        nav_button_next: "absolute right-spacing-2xs",
+        table: "w-full border-collapse space-y-spacing-2xs",
         head_row: "flex",
-        head_cell: "text-muted-foreground rounded-full w-xl font-normal text-[0.8rem]",
-        row: "flex w-full mt-xs",
-        cell: "h-xl w-xl text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-        day: cn(buttonVariants({ variant: "ghost" }), "h-xl w-xl p-0 font-normal aria-selected:opacity-100"),
+        head_cell: "text-muted-foreground rounded-full w-spacing-xl font-normal text-[0.8rem]",
+        row: "flex w-full mt-spacing-xs",
+        cell: "h-spacing-xl w-spacing-xl text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: cn(buttonVariants({ variant: "ghost" }), "h-spacing-xl w-spacing-xl p-0 font-normal aria-selected:opacity-100"),
         day_range_end: "day-range-end",
         day_selected:
           "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
@@ -42,8 +42,8 @@ function Calendar({ className, classNames, showOutsideDays = true, ...props }: C
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ..._props }) => <ChevronLeft className="h-md w-md" />,
-        IconRight: ({ ..._props }) => <ChevronRight className="h-md w-md" />,
+        IconLeft: ({ ..._props }) => <ChevronLeft className="h-spacing-md w-spacing-md" />,
+        IconRight: ({ ..._props }) => <ChevronRight className="h-spacing-md w-spacing-md" />,
       }}
       {...props}
     />

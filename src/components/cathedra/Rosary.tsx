@@ -130,33 +130,33 @@ const Rosary: React.FC = () => {
 
   if (!selectedSet) {
     return (
-      <motion.div className="max-w-5xl mx-auto space-y-2xl pb-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
-        <motion.div className="text-center space-y-md pt-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
-          <div className="inline-flex items-center gap-xs px-md py-2xs bg-primary/5 border border-primary/10 rounded-premium">
-            <Heart className="w-md h-md text-primary" />
+      <motion.div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
+        <motion.div className="text-center space-y-spacing-md pt-spacing-md" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
+          <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 border border-primary/10 rounded-premium">
+            <Heart className="w-spacing-md h-spacing-md text-primary" />
             <span className="text-xs font-black uppercase tracking-[0.2em] text-primary">Rosarium</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-serif font-bold text-foreground tracking-tight">Santo Rosário</h1>
-          <p className="text-lg text-muted-foreground font-serif italic max-w-2xl mx-auto">Reze os 20 mistérios com meditações profundas e guia passo a passo para sua jornada de fé.</p>
+          <p className="text-lg text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto">Reze os 20 mistérios com meditações profundas e guia passo a passo para sua jornada de fé.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
           {(Object.entries(MYSTERIES) as [MysterySet, typeof MYSTERIES[MysterySet]][]).map(([key, val]) => (
             <Button key={key} onClick={() => setSelectedSet(key)}
-              className="text-left p-xl md:p-xl rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
-              <div className={`absolute top-0 right-0 p-xl opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
-                <val.icon className="w-4xl h-4xl -mr-2xl -mt-2xl rotate-12" />
+              className="text-left p-spacing-xl md:p-spacing-xl rounded-[2.5rem] bg-card border border-border hover:border-primary/40 hover:shadow-premium-hover hover:-translate-y-1 transition-all group relative overflow-hidden">
+              <div className={`absolute top-0 right-0 p-spacing-xl opacity-[0.03] group-hover:opacity-[0.06] transition-opacity`}>
+                <val.icon className="w-spacing-4xl h-spacing-4xl -mr-spacing-2xl -mt-spacing-2xl rotate-12" />
               </div>
               <div className="relative z-10">
-                <div className={`w-2xl h-2xl rounded-full flex items-center justify-center mb-lg transition-transform group-hover:scale-110 ${val.color}`}>
-                  <val.icon className="w-lg h-lg" />
+                <div className={`w-spacing-2xl h-spacing-2xl rounded-full flex items-center justify-center mb-spacing-lg transition-transform group-hover:scale-110 ${val.color}`}>
+                  <val.icon className="w-spacing-lg h-spacing-lg" />
                 </div>
                 <span className="text-xs font-black text-primary/60 uppercase tracking-[0.2em]">{val.day}</span>
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground mt-xs group-hover:text-primary transition-colors">{val.name}</h2>
-                <div className="mt-lg space-y-xs">
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground mt-spacing-xs group-hover:text-primary transition-colors">{val.name}</h2>
+                <div className="mt-spacing-lg space-y-spacing-xs">
                   {val.mysteries.map((m, i) => (
-                    <div key={i} className="flex items-center gap-sm">
-                      <div className="w-2xs h-2xs rounded-premium bg-primary/20" />
+                    <div key={i} className="flex items-center gap-spacing-sm">
+                      <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-primary/20" />
                       <p className="text-xs text-muted-foreground font-serif italic opacity-70">{m.title}</p>
                     </div>
                   ))}
@@ -167,25 +167,25 @@ const Rosary: React.FC = () => {
         </div>
 
         <motion.div 
-          className="bg-card border border-border rounded-[2.5rem] p-xl md:p-2xl text-center space-y-lg"
+          className="bg-card border border-border rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <div className="w-3xl h-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mx-auto mb-md">
-            <BookOpen className="w-xl h-xl" />
+          <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary mx-auto mb-spacing-md">
+            <BookOpen className="w-spacing-xl h-spacing-xl" />
           </div>
-          <div className="space-y-xs">
+          <div className="space-y-spacing-xs">
             <h2 className="text-2xl font-serif font-bold text-foreground">Outras Orações e Devoções</h2>
-            <p className="text-muted-foreground font-serif italic max-w-xl mx-auto">
+            <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
               Encontre o Pai Nosso, Ave Maria, Salve Rainha, Via-Sacra e outras orações tradicionais da Igreja.
             </p>
           </div>
           <Button 
             onClick={() => window.location.href = '/oracao'}
-            className="inline-flex items-center gap-xs px-xl py-md bg-muted hover:bg-muted/80 text-foreground rounded-full font-bold text-xs uppercase tracking-widest transition-all"
+            className="inline-flex items-center gap-spacing-xs px-spacing-xl py-spacing-md bg-muted hover:bg-muted/80 text-foreground rounded-full font-bold text-xs uppercase tracking-widest transition-all"
           >
-            Explorar Devoções <ChevronRight className="w-md h-md" />
+            Explorar Devoções <ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </motion.div>
       </motion.div>
@@ -196,34 +196,34 @@ const Rosary: React.FC = () => {
 
   if (!isPraying) {
     return (
-      <div className="max-w-4xl mx-auto space-y-xl pb-2xl">
-        <div className="flex flex-col md:flex-row md:items-center gap-lg justify-between">
-          <div className="flex items-center gap-lg">
-            <Button onClick={() => setSelectedSet(null)} className="p-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-md">
-              <ArrowLeft className="w-lg h-lg text-foreground" />
+      <div className="max-w-spacing-4xl mx-auto space-y-spacing-xl pb-spacing-2xl">
+        <div className="flex flex-col md:flex-row md:items-center gap-spacing-lg justify-between">
+          <div className="flex items-center gap-spacing-lg">
+            <Button onClick={() => setSelectedSet(null)} className="p-spacing-sm rounded-full bg-card border border-border hover:bg-primary/5 transition-all active:scale-95 shadow-md">
+              <ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
             </Button>
-            <div className="space-y-2xs">
+            <div className="space-y-spacing-2xs">
               <span className="text-xs font-black uppercase tracking-[0.2em] text-primary/60">{set.day}</span>
               <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground">{set.name}</h1>
             </div>
           </div>
           <Button onClick={() => { setIsPraying(true); setCurrentMystery(0); setStep('intro'); }}
-            className="px-xl py-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95">
+            className="px-spacing-xl py-spacing-md bg-foreground text-background rounded-full font-black uppercase text-xs tracking-[0.2em] shadow-premium-hover hover:bg-primary hover:text-primary-foreground transition-all active:scale-95">
             Iniciar Oração
           </Button>
         </div>
 
         <YouTubePlayer videoId={YOUTUBE_IDS[selectedSet]} title={set.name} />
 
-        <div className="grid md:grid-cols-3 gap-xl">
-          <div className="md:col-span-2 grid gap-md">
-            <h3 className="text-xl font-serif font-bold px-xs">Mistérios e Meditações</h3>
+        <div className="grid md:grid-cols-3 gap-spacing-xl">
+          <div className="md:col-span-2 grid gap-spacing-md">
+            <h3 className="text-xl font-serif font-bold px-spacing-xs">Mistérios e Meditações</h3>
             {set.mysteries.map((m, i) => (
-              <div key={i} className="p-lg md:p-xl rounded-premium bg-card border border-border shadow-md hover:shadow-premium transition-shadow">
-                <div className="flex items-start gap-lg">
-                  <div className="w-2xl h-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
-                  <div className="space-y-sm">
-                    <div className="space-y-2xs">
+              <div key={i} className="p-spacing-lg md:p-spacing-xl rounded-premium bg-card border border-border shadow-md hover:shadow-premium transition-shadow">
+                <div className="flex items-start gap-spacing-lg">
+                  <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-primary flex items-center justify-center font-black text-lg shrink-0 border border-primary/10">{i + 1}</div>
+                  <div className="space-y-spacing-sm">
+                    <div className="space-y-spacing-2xs">
                       <p className="font-serif font-bold text-xl text-foreground">{m.title}</p>
                       <p className="text-xs text-primary font-bold uppercase tracking-widest">{m.scripture}</p>
                     </div>
@@ -234,11 +234,11 @@ const Rosary: React.FC = () => {
             ))}
           </div>
           
-          <div className="space-y-lg">
-            <div className="p-xl rounded-[2rem] bg-card border border-border shadow-md space-y-md">
-              <div className="flex items-center gap-sm">
-                <div className="w-xl h-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                  <Activity className="w-md h-md" />
+          <div className="space-y-spacing-lg">
+            <div className="p-spacing-xl rounded-[2rem] bg-card border border-border shadow-md space-y-spacing-md">
+              <div className="flex items-center gap-spacing-sm">
+                <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                  <Activity className="w-spacing-md h-spacing-md" />
                 </div>
                 <h3 className="text-lg font-serif font-bold">Suas Intenções</h3>
               </div>
@@ -249,11 +249,11 @@ const Rosary: React.FC = () => {
                 value={intention}
                 onChange={e => setIntention(e.target.value)}
                 placeholder="Ex: Pela minha família, pela paz no mundo..."
-                className="w-full px-md py-md rounded-full bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-4xl"
+                className="w-full px-spacing-md py-spacing-md rounded-full bg-muted/50 border border-border text-sm font-serif text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all resize-none h-spacing-4xl"
               />
             </div>
             
-            <div className="p-xl rounded-[2rem] bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20 space-y-md">
+            <div className="p-spacing-xl rounded-[2rem] bg-primary text-primary-foreground shadow-premium-hover shadow-primary/20 space-y-spacing-md">
               <p className="text-sm font-serif italic opacity-90 leading-relaxed">
                 "O Rosário é a minha oração predileta. Oração maravilhosa! Maravilhosa na sua simplicidade e na sua profundidade."
               </p>
@@ -271,31 +271,31 @@ const Rosary: React.FC = () => {
   const renderStep = () => {
     if (step === 'intro') {
       return (
-        <div className="space-y-xl animate-in fade-in duration-500">
-          <div className="text-center space-y-xs">
+        <div className="space-y-spacing-xl animate-in fade-in duration-500">
+          <div className="text-center space-y-spacing-xs">
             <h3 className="text-2xl font-serif font-bold text-secondary">Orações Iniciais</h3>
             <p className="text-xs text-secondary/40 font-serif italic">Sinal da Cruz + Credo + 3 Ave-Marias + Glória</p>
           </div>
           
           {intention && (
-            <div className="mx-auto p-md bg-secondary/5 border border-secondary/10 rounded-premium text-center max-w-sm animate-in fade-in slide-in-from-top-xs duration-700">
-              <p className="text-xs font-black uppercase tracking-widest text-secondary/50 mb-2xs">Intenção</p>
+            <div className="mx-auto p-spacing-md bg-secondary/5 border border-secondary/10 rounded-premium text-center max-w-spacing-sm animate-in fade-in slide-in-from-top-spacing-xs duration-700">
+              <p className="text-xs font-black uppercase tracking-widest text-secondary/50 mb-spacing-2xs">Intenção</p>
               <p className="text-base font-serif text-secondary/70 italic leading-relaxed">"{intention}"</p>
             </div>
           )}
-          <div className="space-y-sm">
+          <div className="space-y-spacing-sm">
             {['signOfCross', 'creed', 'ourFather'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-sm text-secondary/90">{PRAYERS[k as keyof typeof PRAYERS].title}</p>
-                  <ChevronRight className={`w-md h-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                  <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
                 </div>
-                {showPrayer === k && <p className="text-lg md:text-xl text-secondary/60 mt-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+                {showPrayer === k && <p className="text-lg md:text-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
               </div>
             ))}
           </div>
-          <p className="text-xs text-secondary/40 text-center font-serif italic max-w-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
-          <Button onClick={() => setStep('mystery')} className="w-full py-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
+          <p className="text-xs text-secondary/40 text-center font-serif italic max-w-spacing-xs mx-auto leading-relaxed">Reze 3 Ave-Marias pelas virtudes da Fé, Esperança e Caridade, seguidas do Glória.</p>
+          <Button onClick={() => setStep('mystery')} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Iniciar 1º Mistério
           </Button>
         </div>
@@ -304,14 +304,14 @@ const Rosary: React.FC = () => {
 
     if (step === 'mystery') {
       return (
-        <div className="space-y-xl animate-in fade-in zoom-in-95 duration-500">
-          <div className="text-center space-y-sm">
+        <div className="space-y-spacing-xl animate-in fade-in zoom-in-95 duration-500">
+          <div className="text-center space-y-spacing-sm">
             <span className="text-xs font-black uppercase tracking-widest text-secondary/50">{currentMystery + 1}º Mistério</span>
             <h3 className="text-3xl font-serif font-bold text-secondary leading-tight">{mystery.title}</h3>
             <p className="text-sm text-secondary/60 font-bold tracking-wide">{mystery.scripture}</p>
           </div>
-          <div className="bg-white/[0.04] rounded-[2.5rem] p-xl border border-white/[0.06] relative shadow-premium-hover">
-            <Icons.Feather className="absolute -top-sm -right-sm w-xl h-xl text-secondary/10 rotate-12" />
+          <div className="bg-white/[0.04] rounded-[2.5rem] p-spacing-xl border border-white/[0.06] relative shadow-premium-hover">
+            <Icons.Feather className="absolute -top-spacing-sm -right-spacing-sm w-spacing-xl h-spacing-xl text-secondary/10 rotate-12" />
             <p className="text-xl text-secondary/70 font-serif leading-relaxed text-center italic">"{mystery.meditation}"</p>
           </div>
           <div className="flex justify-center">
@@ -323,7 +323,7 @@ const Rosary: React.FC = () => {
               size="sm"
             />
           </div>
-          <Button onClick={() => setStep('decade')} className="w-full py-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
+          <Button onClick={() => setStep('decade')} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             Rezar a Dezena
           </Button>
         </div>
@@ -332,18 +332,18 @@ const Rosary: React.FC = () => {
 
     if (step === 'decade') {
       return (
-        <div className="space-y-xl animate-in fade-in duration-500">
+        <div className="space-y-spacing-xl animate-in fade-in duration-500">
           <div className="text-center">
-            <p className="text-xs font-black uppercase tracking-widest text-secondary/30 mb-lg">{currentMystery + 1}º Mistério — Dezena</p>
+            <p className="text-xs font-black uppercase tracking-widest text-secondary/30 mb-spacing-lg">{currentMystery + 1}º Mistério — Dezena</p>
             
             {/* Bead Counter */}
-            <div className="flex flex-col items-center gap-lg py-md">
-              <div className="grid grid-cols-5 gap-md md:flex md:items-center md:gap-md">
+            <div className="flex flex-col items-center gap-spacing-lg py-spacing-md">
+              <div className="grid grid-cols-5 gap-spacing-md md:flex md:items-center md:gap-spacing-md">
                 {Array.from({ length: 10 }).map((_, i) => (
                   <Button
                     key={i}
                     onClick={() => setAveCount(i + 1)}
-                    className={`w-lg h-lg rounded-full border-2 transition-all duration-300 ${
+                    className={`w-spacing-lg h-spacing-lg rounded-full border-2 transition-all duration-300 ${
                       i < aveCount
                         ? 'bg-secondary border-secondary shadow-[0_0_15px_rgba(200,169,106,0.6)] scale-110'
                         : 'bg-transparent border-secondary/25 hover:border-secondary/50'
@@ -355,17 +355,17 @@ const Rosary: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-sm">
+          <div className="space-y-spacing-sm">
             {['ourFather', 'hailMary', 'glory', 'fatima'].map(k => (
-              <div key={k} className="group bg-white/[0.04] rounded-premium p-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
+              <div key={k} className="group bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === k ? null : k)}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-sm text-secondary/90">
                     {PRAYERS[k as keyof typeof PRAYERS].title}
-                    {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-xs tracking-widest opacity-50"> (×10)</span>}
+                    {k === 'hailMary' && <span className="text-secondary/40 font-normal ml-spacing-xs tracking-widest opacity-50"> (×10)</span>}
                   </p>
-                  <ChevronRight className={`w-md h-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
+                  <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === k ? 'rotate-90' : ''}`} />
                 </div>
-                {showPrayer === k && <p className="text-lg md:text-xl text-secondary/60 mt-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
+                {showPrayer === k && <p className="text-lg md:text-xl text-secondary/60 mt-spacing-md font-serif leading-relaxed animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS[k as keyof typeof PRAYERS].text}</p>}
               </div>
             ))}
           </div>
@@ -378,7 +378,7 @@ const Rosary: React.FC = () => {
             } else {
               setStep('closing');
             }
-          }} className="w-full py-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
+          }} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
             {currentMystery < 4 ? `Próximo Mistério` : 'Concluir Rosário'}
           </Button>
         </div>
@@ -387,31 +387,31 @@ const Rosary: React.FC = () => {
 
     // closing
     return (
-      <div className="space-y-xl animate-in fade-in zoom-in-95 duration-700">
-        <div className="text-center space-y-xs">
+      <div className="space-y-spacing-xl animate-in fade-in zoom-in-95 duration-700">
+        <div className="text-center space-y-spacing-xs">
           <h3 className="text-2xl font-serif font-bold text-secondary">Oração Final</h3>
           <p className="text-xs font-black uppercase tracking-[0.2em] text-secondary/50">Salve Rainha</p>
         </div>
-        <div className="bg-white/[0.04] rounded-premium p-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
-          <div className="flex items-center justify-between mb-xs">
+        <div className="bg-white/[0.04] rounded-premium p-spacing-xl cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setShowPrayer(showPrayer === 'salve' ? null : 'salve')}>
+          <div className="flex items-center justify-between mb-spacing-xs">
             <p className="font-bold text-sm text-secondary/90">{PRAYERS.salveRainha.title}</p>
-            <ChevronRight className={`w-md h-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
+            <ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${showPrayer === 'salve' ? 'rotate-90' : ''}`} />
           </div>
-          {showPrayer === 'salve' && <p className="text-lg text-secondary/60 mt-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-xs duration-300">{PRAYERS.salveRainha.text}</p>}
+          {showPrayer === 'salve' && <p className="text-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha.text}</p>}
         </div>
-        <div className="text-center space-y-md py-xl">
+        <div className="text-center space-y-spacing-md py-spacing-xl">
           <div className="relative inline-block font-serif">
-            <Heart className="w-3xl h-3xl text-secondary/20 mx-auto" />
-            <Sparkles className="absolute -top-2xs -right-2xs w-xl h-xl text-secondary/40 animate-pulse" />
+            <Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
+            <Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-xl h-spacing-xl text-secondary/40 animate-pulse" />
           </div>
-          <div className="space-y-sm">
+          <div className="space-y-spacing-sm">
             <p className="text-secondary font-serif font-bold text-3xl tracking-tight">Rosário Completo!</p>
-            <p className="text-base text-secondary/40 font-serif italic max-w-xs mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e vossas intenções. Amém.</p>
+            <p className="text-base text-secondary/40 font-serif italic max-w-spacing-xs mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e vossas intenções. Amém.</p>
           </div>
         </div>
         <Button onClick={() => { setIsPraying(false); setSelectedSet(null); }}
-          className="w-full py-md bg-secondary text-primary rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary transition-all shadow-premium-hover shadow-secondary/20">
-          <Icons.Cross className="w-md h-md inline mr-xs" /> Amém — Finalizar
+          className="w-full py-spacing-md bg-secondary text-primary rounded-full font-black uppercase text-xs tracking-[0.2em] hover:bg-secondary transition-all shadow-premium-hover shadow-secondary/20">
+          <Icons.Cross className="w-spacing-md h-spacing-md inline mr-spacing-xs" /> Amém — Finalizar
         </Button>
       </div>
     );
@@ -420,25 +420,25 @@ const Rosary: React.FC = () => {
   return createPortal(
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
-      <div className="flex items-center justify-between p-lg sticky top-0 z-10 bg-inherit/80 ">
-        <Button onClick={() => { setIsPraying(false); }} className="p-sm rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
-          <ArrowLeft className="w-md h-md text-secondary/70" />
+      <div className="flex items-center justify-between p-spacing-lg sticky top-0 z-10 bg-inherit/80 ">
+        <Button onClick={() => { setIsPraying(false); }} className="p-spacing-sm rounded-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
+          <ArrowLeft className="w-spacing-md h-spacing-md text-secondary/70" />
         </Button>
         <span className="text-xs font-black uppercase tracking-widest text-secondary/40">{set.name}</span>
-        <div className="w-xl" />
+        <div className="w-spacing-xl" />
       </div>
 
-      <div className="flex-1 flex items-start justify-center p-lg md:p-2xl">
-        <div className="w-full max-w-xl">
+      <div className="flex-1 flex items-start justify-center p-spacing-lg md:p-spacing-2xl">
+        <div className="w-full max-w-spacing-xl">
           {step !== 'intro' && step !== 'closing' && (
-            <div className="flex gap-2xs mb-xl">
+            <div className="flex gap-spacing-2xs mb-spacing-xl">
               {[0, 1, 2, 3, 4].map(i => (
-                <div key={i} className={`flex-1 h-2xs rounded-full transition-all duration-500 ${i <= currentMystery ? 'bg-secondary shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'bg-white/10'}`} />
+                <div key={i} className={`flex-1 h-spacing-2xs rounded-full transition-all duration-500 ${i <= currentMystery ? 'bg-secondary shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'bg-white/10'}`} />
               ))}
             </div>
           )}
           
-          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-xl md:p-2xl  shadow-premium-hover shadow-black/50">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-[3rem] p-spacing-xl md:p-spacing-2xl  shadow-premium-hover shadow-black/50">
             {renderStep()}
           </div>
         </div>

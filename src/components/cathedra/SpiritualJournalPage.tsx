@@ -93,12 +93,12 @@ const SpiritualJournalPage = () => {
   };
 
   return (
-    <div className="app-container py-2xl md:py-4xl space-y-3xl md:space-y-4xl">
+    <div className="app-container py-spacing-2xl md:py-spacing-4xl space-y-spacing-3xl md:space-y-spacing-4xl">
       <SEOHead title="Diário Espiritual - Reflexão e Oração" description="Guarde suas reflexões diárias e acompanhe seu crescimento espiritual." path="/diario" />
       
-      <header className="text-center space-y-xl max-w-3xl mx-auto">
+      <header className="text-center space-y-spacing-xl max-w-spacing-3xl mx-auto">
         <div className="premium-tag mx-auto">
-          <Icons.PenLine className="w-md h-md text-secondary" />
+          <Icons.PenLine className="w-spacing-md h-spacing-md text-secondary" />
           <span>Diarium Spirituale</span>
         </div>
         <h1 className="text-4xl md:text-7xl font-display font-bold text-primary tracking-tight">
@@ -110,27 +110,27 @@ const SpiritualJournalPage = () => {
       </header>
 
       <div className="flex justify-center">
-        <div className="inline-flex bg-muted/20 p-xs rounded-full border border-border/10 backdrop-blur-sm">
+        <div className="inline-flex bg-muted/20 p-spacing-xs rounded-full border border-border/10 backdrop-blur-sm">
           <Button
             variant={activeTab === 'reflection' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('reflection')}
-            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'reflection' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.Sun className="w-md h-md mr-xs" /> Reflexão Diária
+            <Icons.Sun className="w-spacing-md h-spacing-md mr-spacing-xs" /> Reflexão Diária
           </Button>
           <Button
             variant={activeTab === 'study' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('study')}
-            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'study' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.BookOpen className="w-md h-md mr-xs" /> Estudo e Leitura
+            <Icons.BookOpen className="w-spacing-md h-spacing-md mr-spacing-xs" /> Estudo e Leitura
           </Button>
           <Button
             variant={activeTab === 'relatio' ? 'primary' : 'ghost'}
             onClick={() => setActiveTab('relatio')}
-            className={`rounded-full px-xl py-lg h-2xl text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
+            className={`rounded-full px-spacing-xl py-spacing-lg h-spacing-2xl text-sm font-bold transition-all ${activeTab === 'relatio' ? 'shadow-premium scale-105' : ''}`}
           >
-            <Icons.Sparkles className="w-md h-md mr-xs" /> Conexões Salvas
+            <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" /> Conexões Salvas
           </Button>
         </div>
       </div>
@@ -142,44 +142,44 @@ const SpiritualJournalPage = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
-            className="space-y-3xl md:space-y-4xl"
+            className="space-y-spacing-3xl md:space-y-spacing-4xl"
           >
             {/* Entry Form */}
-            <section className="max-w-4xl mx-auto w-full">
-              <CathedraCard padding="lg" className="space-y-3xl">
-                <div className="space-y-xl">
+            <section className="max-w-spacing-4xl mx-auto w-full">
+              <CathedraCard padding="lg" className="space-y-spacing-3xl">
+                <div className="space-y-spacing-xl">
                   <h3 className="text-2xl font-display font-bold text-primary text-center">Como está sua alma hoje?</h3>
-                  <div className="flex flex-wrap justify-center gap-lg">
+                  <div className="flex flex-wrap justify-center gap-spacing-lg">
                     {MOODS.map((m) => (
                       <button
                         key={m.id}
                         onClick={() => setMood(m.id)}
-                        className={`flex flex-col items-center gap-md p-lg rounded-premium border transition-all duration-700 ${
+                        className={`flex flex-col items-center gap-spacing-md p-spacing-lg rounded-premium border transition-all duration-700 ${
                           mood === m.id 
                             ? 'bg-primary border-primary text-primary-foreground shadow-premium scale-105' 
                             : 'bg-muted/30 border-border/10 text-foreground/40 hover:border-primary/20 hover:bg-muted/50'
                         }`}
                       >
-                        <m.icon className="w-xl h-xl" />
+                        <m.icon className="w-spacing-xl h-spacing-xl" />
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{m.label}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="space-y-xl">
+                <div className="space-y-spacing-xl">
                   <Textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Escreva sua reflexão, gratidão ou pedido de perdão..."
-                    className="min-h-[300px] rounded-premium border-border/20 p-xl md:p-2xl font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
+                    className="min-h-[300px] rounded-premium border-border/20 p-spacing-xl md:p-spacing-2xl font-serif text-xl md:text-2xl leading-relaxed focus-visible:ring-primary/10 bg-muted/10 border-none shadow-inner resize-none placeholder:italic placeholder:opacity-30"
                   />
                   <div className="flex justify-center">
                     <HomeButton 
                       onClick={saveEntry}
                       disabled={isLoading || !content.trim()}
                       variant="primary"
-                      className="px-3xl h-2xl"
+                      className="px-spacing-3xl h-spacing-2xl"
                     >
                       {isLoading ? 'Guardando...' : 'Guardar Reflexão'}
                     </HomeButton>
@@ -189,8 +189,8 @@ const SpiritualJournalPage = () => {
             </section>
 
             {/* History */}
-            <section className="space-y-2xl max-w-4xl mx-auto w-full">
-              <div className="flex items-center gap-xl">
+            <section className="space-y-spacing-2xl max-w-spacing-4xl mx-auto w-full">
+              <div className="flex items-center gap-spacing-xl">
                 <div className="h-px flex-1 bg-border/40" />
                 <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap uppercase">
                   Memória da Alma
@@ -199,43 +199,43 @@ const SpiritualJournalPage = () => {
               </div>
 
               {isFetching ? (
-                <div className="space-y-xl">
+                <div className="space-y-spacing-xl">
                   {[1, 2].map((i) => (
-                    <div key={i} className="h-4xl bg-muted/10 animate-pulse rounded-premium border border-border/10" />
+                    <div key={i} className="h-spacing-4xl bg-muted/10 animate-pulse rounded-premium border border-border/10" />
                   ))}
                 </div>
               ) : entries.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-2xl">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-spacing-2xl">
                   {entries.map((entry) => (
                     <motion.div
                       key={entry.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="bg-card p-xl md:p-2xl rounded-premium border border-border/40 shadow-premium space-y-xl relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
+                      className="bg-card p-spacing-xl md:p-spacing-2xl rounded-premium border border-border/40 shadow-premium space-y-spacing-xl relative overflow-hidden group hover:border-primary/20 transition-all duration-700 h-full"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-md">
-                          <div className="w-2xl h-2xl rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
-                            {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-lg h-lg" }) || <Icons.Sun className="w-lg h-lg" />}
+                        <div className="flex items-center gap-spacing-md">
+                          <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/5 text-secondary flex items-center justify-center">
+                            {MOODS.find(m => m.id === entry.mood)?.icon({ className: "w-spacing-lg h-spacing-lg" }) || <Icons.Sun className="w-spacing-lg h-spacing-lg" />}
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-2xs">Registro de Graça</p>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-spacing-2xs">Registro de Graça</p>
                             <span className="text-sm font-serif font-bold text-primary">
                               {format(new Date(entry.entry_date + 'T12:00:00'), "d 'de' MMMM, yyyy", { locale: ptBR })}
                             </span>
                           </div>
                         </div>
-                        <Icons.Quote className="w-xl h-xl text-primary/5" />
+                        <Icons.Quote className="w-spacing-xl h-spacing-xl text-primary/5" />
                       </div>
-                      <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-lg border-l-2 border-secondary/20">
+                      <p className="text-xl md:text-2xl text-primary/80 font-serif italic leading-relaxed whitespace-pre-wrap pl-spacing-lg border-l-2 border-secondary/20">
                         "{entry.content}"
                       </p>
                     </motion.div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-4xl opacity-20 hover:opacity-40 transition-opacity duration-1000">
-                  <Icons.PenLine className="w-3xl h-3xl mx-auto mb-lg stroke-1" />
+                <div className="text-center py-spacing-4xl opacity-20 hover:opacity-40 transition-opacity duration-1000">
+                  <Icons.PenLine className="w-spacing-3xl h-spacing-3xl mx-auto mb-spacing-lg stroke-1" />
                   <p className="font-serif italic text-xl">Nenhuma reflexão guardada ainda.</p>
                 </div>
               )}
@@ -261,9 +261,9 @@ const SpiritualJournalPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="max-w-4xl mx-auto w-full space-y-2xl"
+            className="max-w-spacing-4xl mx-auto w-full space-y-spacing-2xl"
           >
-            <div className="flex items-center gap-xl">
+            <div className="flex items-center gap-spacing-xl">
               <div className="h-px flex-1 bg-border/40" />
               <h2 className="text-[10px] font-bold uppercase tracking-[0.6em] text-primary/60 whitespace-nowrap">
                 Relatio Favoritos
@@ -285,28 +285,28 @@ const RelatioFavoritesList = () => {
 
   if (relatioFavs.length === 0) {
     return (
-      <div className="text-center py-3xl opacity-30">
-        <Icons.Sparkles className="w-2xl h-2xl mx-auto mb-md stroke-1" />
+      <div className="text-center py-spacing-3xl opacity-30">
+        <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl mx-auto mb-spacing-md stroke-1" />
         <p className="font-serif italic text-lg">Nenhuma conexão salva ainda.</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-lg">
+    <div className="grid grid-cols-1 gap-spacing-lg">
       {relatioFavs.map((fav) => (
         <motion.div
           key={fav.id}
           layout
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-card p-lg rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
+          className="bg-card p-spacing-lg rounded-premium border border-border/40 hover:border-primary/20 transition-all group relative"
         >
           <div className="flex items-start justify-between">
-            <div className="space-y-xs">
-              <div className="flex items-center gap-xs">
-                <div className="w-lg h-lg rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icons.Sparkles className="w-sm h-sm text-primary" />
+            <div className="space-y-spacing-xs">
+              <div className="flex items-center gap-spacing-xs">
+                <div className="w-spacing-lg h-spacing-lg rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary" />
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Relatio</span>
                 <span className="text-[10px] text-muted-foreground opacity-40">
@@ -322,7 +322,7 @@ const RelatioFavoritesList = () => {
               onClick={() => removeFavorite(fav.id)}
               className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
             >
-              <Icons.Trash className="w-md h-md" />
+              <Icons.Trash className="w-spacing-md h-spacing-md" />
             </Button>
           </div>
         </motion.div>

@@ -11,13 +11,13 @@ interface Props {
 }
 
 const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-md">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-md">
     <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
-      <CardHeader className="pb-xs pt-md px-md">
+      <CardHeader className="pb-spacing-xs pt-spacing-md px-spacing-md">
         <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
         <CardDescription className="text-xs uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
       </CardHeader>
-      <CardContent className="h-[240px] w-full p-xs sm:p-md">
+      <CardContent className="h-[240px] w-full p-spacing-xs sm:p-spacing-md">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={userGrowth} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>
@@ -64,11 +64,11 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
     </Card>
 
     <Card className="border-border/40 shadow-none overflow-hidden bg-card ">
-      <CardHeader className="pb-xs pt-md px-md">
+      <CardHeader className="pb-spacing-xs pt-spacing-md px-spacing-md">
         <CardTitle className="text-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
         <CardDescription className="text-xs uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>
       </CardHeader>
-      <CardContent className="h-[240px] w-full p-xs sm:p-md">
+      <CardContent className="h-[240px] w-full p-spacing-xs sm:p-spacing-md">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={revenueData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--muted-foreground) / 0.1)" />

@@ -34,10 +34,10 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
   if (!hasRefs) return null;
 
   return (
-    <div className="bg-primary/5 border border-primary/20 rounded-premium p-md space-y-sm">
-      <div className="flex items-center gap-xs">
-        <div className="w-lg h-lg rounded-premium bg-primary/10 flex items-center justify-center">
-          <Icons.Cross className="w-sm h-sm text-primary" />
+    <div className="bg-primary/5 border border-primary/20 rounded-premium p-spacing-md space-y-spacing-sm">
+      <div className="flex items-center gap-spacing-xs">
+        <div className="w-spacing-lg h-spacing-lg rounded-premium bg-primary/10 flex items-center justify-center">
+          <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
         </div>
         <span className="text-xs font-black uppercase tracking-[0.15em] text-primary">
           Nexus Theologicus
@@ -45,9 +45,9 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       </div>
 
       {type === 'bible' && cicParagraphs.length > 0 && (
-        <div className="space-y-2xs">
+        <div className="space-y-spacing-2xs">
           <p className="text-xs text-muted-foreground">Parágrafos do Catecismo relacionados:</p>
-          <div className="flex flex-wrap gap-2xs">
+          <div className="flex flex-wrap gap-spacing-2xs">
             {cicParagraphs.map(p => (
               <CatechismPopover
                 key={p}
@@ -60,9 +60,9 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'bible' && documents.length > 0 && (
-        <div className="space-y-2xs">
+        <div className="space-y-spacing-2xs">
           <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
-          <div className="flex flex-wrap gap-2xs">
+          <div className="flex flex-wrap gap-spacing-2xs">
             {documents.map((doc, i) => (
               <MagisteriumPopover
                 key={i}
@@ -76,9 +76,9 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'catechism' && documents.length > 0 && (
-        <div className="space-y-2xs">
+        <div className="space-y-spacing-2xs">
           <p className="text-xs text-muted-foreground">Documentos do Magistério relacionados:</p>
-          <div className="flex flex-wrap gap-2xs">
+          <div className="flex flex-wrap gap-spacing-2xs">
             {documents.map((doc, i) => (
               <MagisteriumPopover
                 key={i}
@@ -92,9 +92,9 @@ const CrossReferencePanel: React.FC<CrossReferencePanelProps> = ({
       )}
 
       {type === 'catechism' && bibleRefs.length > 0 && (
-        <div className="space-y-2xs">
+        <div className="space-y-spacing-2xs">
           <p className="text-xs text-muted-foreground">Referências bíblicas:</p>
-          <div className="flex flex-wrap gap-2xs">
+          <div className="flex flex-wrap gap-spacing-2xs">
             {bibleRefs.map((ref, i) => (
               <BibleVersePopover
                 key={i}
