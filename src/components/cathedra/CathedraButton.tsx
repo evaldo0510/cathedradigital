@@ -14,10 +14,10 @@ const CathedraButton = React.forwardRef<HTMLButtonElement, CathedraButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, icon, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
     const sizeMap = {
-      sm: 'px-8 h-12 text-[10px] md:text-[11px]',
-      md: 'px-10 h-14 text-[11px] md:text-[12px]',
-      lg: 'px-14 h-16 text-[12px] md:text-[14px]',
-      xl: 'px-20 h-20 text-[14px] md:text-[18px]',
+      sm: 'px-6 h-10 text-[9px] md:text-[10px]',
+      md: 'px-8 h-12 text-[10px] md:text-[11px]',
+      lg: 'px-12 h-14 text-[11px] md:text-[12px]',
+      xl: 'px-16 h-18 text-[12px] md:text-[16px]',
     };
 
     const variantStyles = {
