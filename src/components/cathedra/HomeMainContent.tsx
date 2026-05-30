@@ -79,29 +79,29 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 w-full max-w-4xl mx-auto">
             <CathedraButton 
               variant="outline" 
-              className="group h-auto p-8 md:p-10 rounded-[2.5rem] border-primary/[0.03] hover:border-primary/20 hover:bg-primary/[0.01] transition-all duration-1000 flex flex-col items-center gap-6 shadow-none"
+              className="group h-auto p-8 md:p-12 rounded-[3.5rem] border-primary/[0.03] hover:border-primary/20 hover:bg-primary/[0.01] transition-all duration-1000 flex flex-col items-center gap-8 shadow-none"
               onClick={() => onNavigate(AppRoute.BIBLE)}
             >
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01]">
-                <Icons.Bible className="w-7 h-7 md:w-8 md:h-8" strokeWidth={0.5} />
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+                <Icons.Bible className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.3} />
               </div>
-              <div className="space-y-2">
-                <span className="block text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary transition-colors">Bíblia</span>
-                <span className="block text-[10px] text-muted-foreground/30 font-serif italic">A Palavra de Deus</span>
+              <div className="space-y-3">
+                <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Bíblia</span>
+                <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">A Palavra de Deus</span>
               </div>
             </CathedraButton>
 
             <CathedraButton 
               variant="outline" 
-              className="group h-auto p-8 md:p-10 rounded-[2.5rem] border-primary/[0.03] hover:border-primary/20 hover:bg-primary/[0.01] transition-all duration-1000 flex flex-col items-center gap-6 shadow-none"
+              className="group h-auto p-8 md:p-12 rounded-[3.5rem] border-primary/[0.03] hover:border-primary/20 hover:bg-primary/[0.01] transition-all duration-1000 flex flex-col items-center gap-8 shadow-none"
               onClick={() => onNavigate(AppRoute.CATECHISM)}
             >
-              <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01]">
-                <Icons.Catechism className="w-7 h-7 md:w-8 md:h-8" strokeWidth={0.5} />
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-110">
+                <Icons.Catechism className="w-8 h-8 md:w-10 md:h-10" strokeWidth={0.3} />
               </div>
-              <div className="space-y-2">
-                <span className="block text-[10px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary transition-colors">Catecismo</span>
-                <span className="block text-[10px] text-muted-foreground/30 font-serif italic">Doutrina e Fé</span>
+              <div className="space-y-3">
+                <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Catecismo</span>
+                <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">Doutrina e Fé</span>
               </div>
             </CathedraButton>
           </div>
@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="flex flex-col items-center justify-center gap-4 group border-none shadow-none bg-primary/[0.003] rounded-[2rem] p-4 md:p-6"
+          className="flex flex-col items-center justify-center gap-4 group border-none shadow-none bg-primary/[0.004] rounded-[3rem] p-6 md:p-10"
         >
           <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
             <div className="relative group/input">
@@ -130,16 +130,16 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
                 ref={logosInputRef}
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
-                placeholder="Busca Inteligente Logos..."
-                className="h-12 md:h-14 pl-12 pr-16 rounded-full border-primary/[0.05] bg-background/10 focus:bg-background/80 transition-all text-xs md:text-sm placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/10 shadow-none"
+                placeholder="Logos IA: Pergunte sobre a Fé..."
+                className="h-14 md:h-20 pl-16 pr-20 rounded-full border-primary/[0.05] bg-background/5 focus:bg-background/90 transition-all duration-700 text-sm md:text-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-1 focus:ring-primary/10 shadow-none"
                 aria-label="Logos IA: Pergunte sobre a fé"
               />
-              <Icons.Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/20 transition-colors" />
+              <Icons.Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-700" />
               <button 
                 type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/[0.02] text-primary/30 hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center group/btn outline-none"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-500 flex items-center justify-center group/btn outline-none"
               >
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover/btn:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           </form>
