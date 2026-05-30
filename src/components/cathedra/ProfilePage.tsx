@@ -284,43 +284,43 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      <div className="premium-card p-8 space-y-4">
+      <CathedraCard className="p-8 space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-premium-tiny font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nível {currentLevelIdx + 1}</p>
             <p className="text-lg font-black text-foreground">{levelName}</p>
           </div>
           <div className="text-right">
             <p className="text-2xl font-black text-primary">{totalXp}</p>
-            <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">XP Total</p>
           </div>
         </div>
-        <div className="relative h-3 bg-muted rounded-premium overflow-hidden">
+        <div className="relative h-3 bg-muted rounded-full overflow-hidden">
           <div
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-700"
             style={{ width: `${Math.min(xpProgress, 100)}%` }}
           />
         </div>
-        <div className="flex justify-between text-premium-tiny text-muted-foreground">
+        <div className="flex justify-between text-[10px] text-muted-foreground">
           <span>{levelName}</span>
           <span>{nextLevel ? `${nextLevel.minXp - totalXp} XP para ${nextLevel.name}` : 'Nível máximo!'}</span>
         </div>
-      </div>
+      </CathedraCard>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {statCards.map(s => (
-          <div key={s.label} className="bg-card border border-border rounded-premium p-4 text-center space-y-1">
+          <CathedraCard key={s.label} className="p-4 text-center space-y-1">
             <div className="text-primary mx-auto w-fit">{s.icon}</div>
             <p className="text-2xl font-black text-foreground">{s.value}</p>
-            <p className="text-premium-tiny font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
-          </div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
+          </CathedraCard>
         ))}
       </div>
 
-      <div className="premium-card p-8 space-y-6">
+      <CathedraCard className="p-8 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Conquistas</h2>
-          <span className="text-premium-tiny font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
+          <span className="text-[10px] font-bold text-primary">{unlockedCount}/{badges.length} desbloqueadas</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           {badges.map(b => (
@@ -336,19 +336,19 @@ const ProfilePage: React.FC = () => {
               <div className="flex justify-center mb-1 text-primary">
                 {b.icon}
               </div>
-              <p className="text-premium-tiny font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
-              <p className="text-premium-tiny text-muted-foreground mt-0.5">{b.description}</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-foreground leading-tight">{b.label}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{b.description}</p>
               {b.unlocked && (
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-premium flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
                   <Icons.Star className="w-2.5 h-2.5 text-primary-foreground fill-current" />
                 </div>
               )}
             </div>
           ))}
         </div>
-      </div>
+      </CathedraCard>
 
-      <div className="premium-card p-8 space-y-6">
+      <CathedraCard className="p-8 space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Minhas Doações & Apoio</h2>
         </div>
@@ -356,43 +356,43 @@ const ProfilePage: React.FC = () => {
           <p className="text-xs text-muted-foreground leading-relaxed italic">
             "Sua contribuição é o que nos permite continuar levando a Luz da Verdade a milhares de corações."
           </p>
-          <Button 
+          <CathedraButton 
             variant="outline" 
-            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-premium-tiny focus-visible:ring-4 focus-visible:ring-secondary outline-none"
+            className="w-full h-12 rounded-full border-secondary/20 hover:bg-secondary/5 text-secondary gap-2 font-bold uppercase tracking-widest text-[10px] focus-visible:ring-4 focus-visible:ring-secondary outline-none"
             onClick={() => navigate('/transactions/my')}
           >
             <Icons.History className="w-4 h-4" />
             Ver Histórico de Doações
-          </Button>
+          </CathedraButton>
 
         </div>
-      </div>
+      </CathedraCard>
 
-      <div className="premium-card p-8 space-y-8">
+      <CathedraCard className="p-8 space-y-8">
         <div className="flex items-center justify-between">
           <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground">Notificações</h2>
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-premium border border-border/50">
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-2xl border border-border/50">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Bell className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">Push Notifications</p>
               </div>
-              <p className="text-premium-tiny text-muted-foreground">Lembretes diários de oração.</p>
+              <p className="text-[10px] text-muted-foreground">Lembretes diários de oração.</p>
             </div>
             <Switch checked={pushEnabled} onCheckedChange={setPushEnabled} />
           </div>
 
-          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-premium border border-primary/20 shadow-soft">
+          <div className="flex items-center justify-between p-3 bg-primary/5 rounded-2xl border border-primary/20 shadow-soft">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Icons.Whatsapp className="w-4 h-4 text-primary" />
                 <p className="text-sm font-bold text-foreground">WhatsApp Oficial</p>
-                <div className="px-1.5 py-0.5 rounded-premium bg-primary text-primary-foreground text-premium-tiny font-black uppercase tracking-wider">Novo</div>
+                <div className="px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground text-[8px] font-black uppercase tracking-wider">Novo</div>
               </div>
-              <p className="text-premium-tiny text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
+              <p className="text-[10px] text-muted-foreground font-medium">Receba meditações e avisos diretamente no seu WhatsApp.</p>
             </div>
             <Switch checked={whatsappEnabled} onCheckedChange={setWhatsappEnabled} />
           </div>
