@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -113,7 +113,7 @@ const defaultSettings: ReadingSettings = {
 
 const ReadingSettingsContext = createContext<ReadingSettingsContextType | undefined>(undefined);
 
-import { useRef } from 'react';
+
 
 const SettingsSideEffects: React.FC = () => {
   const { settings } = useReadingSettings();
