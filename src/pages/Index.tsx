@@ -6,6 +6,8 @@ import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 import { LangContext } from "@/contexts/LangContext";
+import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
+import { Icons } from "@/constants";
 const HomeMainContent = lazy(() => import("@/components/cathedra/HomeMainContent"));
 
 // Lazy-load secondary components
