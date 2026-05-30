@@ -20,8 +20,8 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
-      <div className="w-px h-8 md:h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-60" />
-      <h2 className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary opacity-60">
+      <div className="w-px h-6 md:h-24 bg-gradient-to-b from-transparent via-primary/10 to-transparent opacity-40" />
+      <h2 className="text-[8px] md:text-[11px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary opacity-30">
         {title}
       </h2>
       {subtitle && (

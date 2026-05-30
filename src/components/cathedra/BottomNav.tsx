@@ -69,7 +69,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       "flex flex-col items-center justify-center gap-1.5 flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-700 shadow-none border-none hover:bg-transparent px-0 rounded-none tap-premium group focus-visible:bg-primary/[0.05] outline-none",
-      isActive ? 'text-primary' : 'text-muted-foreground/30 hover:text-primary'
+      isActive ? 'text-primary' : 'text-muted-foreground/20 hover:text-primary'
     )}
   >
     {isActive && (
@@ -94,7 +94,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = ({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-700",
-          isActive ? "text-primary opacity-100" : "text-muted-foreground/30 group-hover:text-primary/60"
+          isActive ? "text-primary opacity-80" : "text-muted-foreground/20 group-hover:text-primary/60"
         )}
         size={20}
         strokeWidth={isActive ? 2 : 1.2}
@@ -154,7 +154,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-14 bg-background/20 backdrop-blur-3xl rounded-full shadow-[0_32px_80px_-20px_rgba(0,0,0,0.3)] border border-primary/[0.03] dark:border-white/[0.05] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
+        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-12 bg-background/5 backdrop-blur-2xl rounded-full shadow-none border border-primary/[0.01] dark:border-white/[0.02] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}

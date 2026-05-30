@@ -228,7 +228,7 @@ const RitualDoDia: React.FC = () => {
         {/* Header Actions */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-12 pb-4 md:pb-24">
           <div className="flex flex-col gap-4 md:gap-6">
-            <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.5em] text-primary/60 leading-none">
+            <span className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/30 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
             <div className="flex items-center gap-6 md:gap-8">
@@ -333,10 +333,10 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-lg md:text-5xl lg:text-7xl font-serif italic leading-[1.3] text-primary/80 selection:bg-primary/5 tracking-tighter px-4 md:px-2 transition-all duration-1000 group-hover:text-primary">
+              <blockquote className="text-[17px] md:text-5xl lg:text-7xl font-serif italic leading-[1.3] text-primary/70 selection:bg-primary/5 tracking-tighter px-4 md:px-2 transition-all duration-1000 group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
-              <p className="mt-6 md:mt-12 text-[8px] md:text-[10px] font-bold text-primary/40 uppercase tracking-[0.6em]">
+              <p className="mt-6 md:mt-12 text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
                 — {ritual?.verse?.ref || ''}
               </p>
             </button>
