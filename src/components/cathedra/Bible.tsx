@@ -23,7 +23,8 @@ import { checkNewBadges, getBadgeById } from '@/lib/badges';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+// CathedraCard is already imported above
+// import { Card, CardContent } from '@/components/ui/card';
 import AudioButton from './AudioButton';
 import { BibleChapterSkeleton } from './SacredSkeleton';
 import { buildBibleAbsoluteUrl, parseVerseParam } from '@/lib/bibleUrl';
@@ -1420,8 +1421,7 @@ const Bible: React.FC = memo(() => {
                       <h3 className="text-lg font-bold font-serif">{selectedBook.name} {selectedChapter + 1}</h3>
                     </div>
                     <Icons.ChevronRight className="w-6 h-6 text-primary" />
-                  </CardContent>
-                </Card>
+              </CathedraCard>
               </motion.div>
             )}
 
