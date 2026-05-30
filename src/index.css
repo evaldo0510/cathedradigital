@@ -100,10 +100,10 @@
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 15% 8%;      /* Very soft dark graphite, not black */
+    --background: 220 12% 12%;      /* Slightly lighter, more sophisticated graphite */
     --foreground: 45 10% 90%;      /* Slightly dimmed for less eye strain */
     
-    --card: 220 15% 9%;            /* Slightly lighter than background for subtle depth */
+    --card: 220 12% 13%;            /* Subtle depth */
     --card-foreground: 45 10% 90%;
     
     --popover: 220 15% 10%;
@@ -113,10 +113,10 @@
     --primary: 42 15% 70%;         /* Dimmed Gold for dark mode */
     --primary-foreground: 220 15% 5%;
     
-    --secondary: 220 15% 12%;      
+    --secondary: 220 12% 16%;      
     --secondary-foreground: 42 15% 70%;
     
-    --muted: 220 15% 10%;           
+    --muted: 220 12% 14%;           
     --muted-foreground: 220 10% 50%; 
     
     --accent: 42 15% 70% / 0.05;
@@ -258,8 +258,8 @@
   /* Atmosphere & Theme Depth - Variable Surface Levels */
   .reading-theme-paper { background-color: #FEFDFB; }
   .reading-theme-sepia { background-color: #E8E2D2; }
-  .reading-theme-dark { background-color: hsl(220 20% 7%); }
-  .reading-theme-night { background-color: hsl(220 25% 4%); }
+  .reading-theme-dark { background-color: hsl(220 12% 12%); }
+  .reading-theme-night { background-color: hsl(220 15% 8%); }
 }
 
 @layer components {
@@ -289,7 +289,7 @@
   }
 
   .premium-card {
-    @apply transition-all relative overflow-hidden bg-card/10 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.01];
+    @apply transition-all relative overflow-hidden bg-transparent border border-primary/[0.05] dark:border-white/[0.03];
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-subtle);
   }
