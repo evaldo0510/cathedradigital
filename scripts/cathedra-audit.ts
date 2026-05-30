@@ -78,7 +78,7 @@ export const forbiddenPatterns = [
   { 
     name: 'Direct Rounding', 
     id: 'rounding',
-    regex: 'rounded-(none|sm|md|lg|xl|2xl|3xl|full)',
+    regex: '\\brounded-(none|sm|md|lg|xl|2xl|3xl|full)\\b',
     exclude: [],
     suggestion: 'Use rounded-premium-sm to full (e.g., rounded-premium-md)',
     fix: (match: string) => {
