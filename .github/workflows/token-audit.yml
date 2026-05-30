@@ -19,8 +19,8 @@ jobs:
       - name: Run Token Audit
         id: audit
         run: |
-          # Run audit and capture output
-          bun run token-audit --threshold=0 > audit-output.txt 2>&1 || echo "audit_failed=true" >> $GITHUB_ENV
+          # Set threshold to 0 to strictly enforce tokens on CI
+          bun run token-audit --threshold=0 || (echo "audit_failed=true" >> $GITHUB_ENV && exit 1)
         
       - name: Generate PR Comment
         if: github.event_name == 'pull_request'

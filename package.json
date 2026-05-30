@@ -29,7 +29,8 @@
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --playwright",
     "generate:seo": "bun run scripts/generate-sitemap.ts",
     "token-audit": "bun run scripts/cathedra-audit.ts",
-    "token-audit:ci": "CI=true bun run scripts/cathedra-audit.ts"
+    "token-audit:ci": "CI=true bun run scripts/cathedra-audit.ts",
+    "token-audit:fix": "bun run scripts/cathedra-audit.ts --fix --threshold=0"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
