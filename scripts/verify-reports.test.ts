@@ -81,20 +81,26 @@ reports/
     expect(existsSync('divergences.md')).toBe(true);
     
     const updatedReadme = readFileSync(TEST_README, 'utf8');
-    expect(updatedReadme).toContain(filename);
+    expect(updatedReadme).toMatchSnapshot();
+    
+    const divergenceContent = readFileSync('divergences.md', 'utf8');
+    // Normalize date for snapshot
+    const normalizedDivergence = divergenceContent.replace(/Data: .*/, 'Data: [NORMALIZED]');
+    expect(normalizedDivergence).toMatchSnapshot();
   });
 
   it('should NOT update README in --update --dry-run mode', () => {
     const filename = 'token-audit-dry-run-2026-05-30T10-00-00.json';
     writeFileSync(join(TEST_DIR, filename), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
     
+    const initialReadme = readFileSync(TEST_README, 'utf8');
     const result = runVerify(['--update', '--dry-run']);
     expect(result.status).toBe(0);
     expect(result.output).toContain('Modo DRY RUN: Nenhuma alteração será feita');
     expect(existsSync('divergences.md')).toBe(false);
     
-    const updatedReadme = readFileSync(TEST_README, 'utf8');
-    expect(updatedReadme).not.toContain(filename);
+    const currentReadme = readFileSync(TEST_README, 'utf8');
+    expect(currentReadme).toBe(initialReadme);
   });
 
   it('should detect corrupted JSON files', () => {
