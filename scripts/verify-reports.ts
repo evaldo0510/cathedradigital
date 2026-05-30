@@ -12,6 +12,14 @@
 import { readdirSync, existsSync, statSync, readFileSync, writeFileSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
+// Helper to write GitHub Actions annotations
+function annotate(type: 'error' | 'warning' | 'notice', message: string, file?: string) {
+  if (process.env.GITHUB_ACTIONS) {
+    const filePart = file ? `,file=${file}` : '';
+    console.log(`::${type}${filePart}::${message}`);
+  }
+}
+
 const REPORTS_DIR = "reports";
 const README_PATH = "README.md";
 const args = process.argv.slice(2);
@@ -39,7 +47,8 @@ function validateJsonFiles(files: string[]) {
   const corrupted: string[] = [];
   
   jsonFiles.forEach(file => {
-    const content = readFileSync(join(REPORTS_DIR, file), 'utf8');
+    const filePath = join(REPORTS_DIR, file);
+    const content = readFileSync(filePath, 'utf8');
     try {
       const data = JSON.parse(content);
       // Basic schema check
@@ -48,8 +57,9 @@ function validateJsonFiles(files: string[]) {
       } else if (file.startsWith('token-audit')) {
         if (!data.timestamp || typeof data.totalIssues !== 'number') throw new Error("Invalid audit report structure");
       }
-    } catch (e) {
+    } catch (e: any) {
       corrupted.push(file);
+      annotate('error', `Relatório JSON corrompido ou inválido: ${e.message}`, filePath);
     }
   });
   return corrupted;
@@ -171,13 +181,19 @@ let hasDivergence = false;
 if (missing.length > 0) {
   hasDivergence = true;
   console.log(`${RED}${BOLD}✗ Arquivos faltando:${RESET}`);
-  missing.forEach(f => console.log(`  ${RED}- ${f}${RESET}`));
+  missing.forEach(f => {
+    console.log(`  ${RED}- ${f}${RESET}`);
+    annotate('error', `Arquivo documentado no README mas ausente em ./${REPORTS_DIR}: ${f}`, README_PATH);
+  });
 }
 
 if (unexpected.length > 0) {
   hasDivergence = true;
   console.log(`${YELLOW}${BOLD}⚠ Arquivos inesperados:${RESET}`);
-  unexpected.forEach(f => console.log(`  ${YELLOW}- ${f}${RESET}`));
+  unexpected.forEach(f => {
+    console.log(`  ${YELLOW}- ${f}${RESET}`);
+    annotate('warning', `Arquivo presente em ./${REPORTS_DIR} mas não documentado no README: ${f}`, README_PATH);
+  });
   console.log(`\n  ${BOLD}Dica:${RESET} Rode ${BOLD}npm run reports:verify -- --update${RESET} para sincronizar.`);
 }
 
