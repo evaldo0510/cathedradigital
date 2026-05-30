@@ -120,7 +120,12 @@ forbiddenPatterns.forEach(pattern => {
   const patternIssues: any[] = [];
   try {
     const command = `rg -n "${pattern.regex}" src -g "!**/__snapshots__/**" -g "!scripts/**" -g "!src/components/cathedra/layout/**" --color=never`;
-    const rawOutput = execSync(command, { encoding: 'utf8' }).trim();
+    let rawOutput = '';
+    try {
+      rawOutput = execSync(command, { encoding: 'utf8' }).trim();
+    } catch (e: any) {
+      if (e.stdout) rawOutput = e.stdout.toString().trim();
+    }
     
     if (rawOutput) {
       const lines = rawOutput.split('\n');
@@ -189,10 +194,6 @@ forbiddenPatterns.forEach(pattern => {
     }
 
   } catch (error) {
-    // Re-throw during tests so we can diagnose why it's falling through to Compliant
-    if (process.env.NODE_ENV === 'test') {
-       // console.error(error);
-    }
     results.push({ ...pattern, issuesCount: 0, details: [] });
     console.log(`✅ ${pattern.name}: Compliant`);
   }
