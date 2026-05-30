@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
-import LandingHeader from "@/components/landing/LandingHeader";
+// import LandingHeader from "@/components/landing/LandingHeader";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 import { LangContext } from "@/contexts/LangContext";
 import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
@@ -57,7 +57,7 @@ const Index = () => {
         {t('skip_to_content') || 'Pular para o conteúdo'}
       </a>
       
-      {!authenticated && <LandingHeader />}
+      {/* Unified header managed by App.tsx */}
       
       <SEOHead
         title="Portal Premium de Espiritualidade & Teologia"
