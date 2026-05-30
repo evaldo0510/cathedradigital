@@ -241,9 +241,9 @@ const Sidebar = React.memo(({ isOpen, onClose, user, isDark, onToggleDark, isHig
             exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
             transition={{ 
               duration: settings.reduceAnimations ? 0.4 : 0.8, 
-              ease: [0.19, 1, 0.22, 1] 
+              ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-2 left-2 bottom-2 w-[calc(100vw-16px)] sm:w-[320px] md:w-[380px] bg-white/95 dark:bg-background/95 backdrop-blur-[60px] border border-black/[0.02] dark:border-white/[0.04] flex flex-col p-6 md:p-12 z-[170] shadow-[0_64px_128px_-32px_rgba(0,0,0,0.4)] rounded-[2rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.5rem+env(safe-area-inset-top,0px))] pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]"
+            className="fixed top-2 left-2 bottom-2 w-[280px] sm:w-[320px] md:w-[380px] bg-white/90 dark:bg-black/90 backdrop-blur-3xl border border-black/[0.03] dark:border-white/[0.05] flex flex-col p-5 md:p-12 z-[170] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.3)] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden admin-hide touch-none pt-[calc(1.25rem+env(safe-area-inset-top,0px))] pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
