@@ -383,7 +383,7 @@ const AppLayout: React.FC = () => {
         <GlobalLogosAI />
         <SpacingDebugger />
 
-        <main id="main-content" ref={mainContentRef} tabIndex={-1} className={cn("outline-none transition-all duration-1000", location.pathname === '/' ? "p-0" : "min-h-screen")}>
+        <main id="main-content" ref={mainContentRef} tabIndex={-1} className="outline-none">
           <SwipeNavigation>
             <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>

@@ -25,120 +25,61 @@
   }
 
   :root {
-    /* Base Colors - Premium Off-White (More refined, less paper-like) */
-    --background: 45 35% 99.4%;   /* #FFFEFD Pure clarity */
-    --foreground: 220 25% 10%;     /* #13171B Deeper, sharper Graphite */
+    /* Core Visual Tokens - Cathedra Premium System */
+    --background: 45 35% 99.4%;
+    --foreground: 220 25% 10%;
     
-    --card: 45 35% 99.4%;         /* Seamless surface */
+    --card: 45 35% 99.4%;
     --card-foreground: 220 25% 10%;
     
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
-    --popover-blur: 24px;
-    
-    /* Brand Colors - Sovereign Authority (Refined to be less aggressive) */
-    --primary: 220 20% 12%;       /* #1B1E23 Elegant Charcoal Blue instead of Near-Black */
+    --primary: 220 20% 12%;
     --primary-foreground: 45 40% 99%;
     
-    --secondary: 42 30% 45%;     /* More sophisticated Gold */
+    --secondary: 42 30% 45%;
     --secondary-foreground: 220 20% 8%;
     
-    /* Interface Colors - Subdued Contrast */
-    --muted: 45 20% 97%;         /* Even softer surface */
+    --muted: 45 20% 97%;
     --muted-foreground: 220 10% 50%; 
     
-    --accent: 42 30% 40% / 0.03;
-    --accent-foreground: 220 20% 10%;
-    
-    --destructive: 0 65% 48%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 220 30% 4% / 0.01; /* Even more invisible */
-    --input: 220 30% 4% / 0.03;
-    --ring: 42 30% 40% / 0.1;
-    
-    /* Design Tokens */
+    --border: 220 30% 4% / 0.02;
     --radius: 2rem;
-    --radius-lg: 2.5rem;
-    --radius-sm: 1.25rem;
+    --radius-premium: 2.5rem;
     
     --shadow-premium: 0 10px 40px -15px rgba(0, 0, 0, 0.02);
     --shadow-premium-hover: 0 30px 80px -20px rgba(0, 0, 0, 0.04);
     
-    /* Spacing Scale - Premium & Efficient */
-    --spacing-xs: 0.25rem;  /* 4px */
-    --spacing-sm: 0.75rem;  /* 12px */
-    --spacing-md: 1.5rem;   /* 24px */
-    --spacing-lg: 3rem;     /* 48px */
-    --spacing-xl: 6rem;     /* 96px */
-    --spacing-2xl: 8rem;    /* 128px */
+    --layout-max-width: 1400px;
+    --layout-padding: 2rem;
+    --layout-padding-mobile: 1rem;
     
-    /* Design System Tokens */
-    --card-radius: 4rem;
-    --card-radius-mobile: 1rem;
-    --card-shadow: none;
-    --card-shadow-hover: none;
-    --btn-radius: 9999px;
-    --layout-max-width: 1600px;
-    --transition-premium: 400ms cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-subtle: 300ms cubic-bezier(0.16, 1, 0.3, 1);
-    
-    /* Global Spacing Rhythm Tokens - Optimized for Mobile Reading */
-    --space-mobile-base: 0.15rem;
-    --space-mobile-section: 0.4rem;
-    --space-mobile-section-sm: 0.2rem;
-    --space-mobile-stack: 0.15rem;
-    --space-mobile-stack-lg: 0.3rem;
-    --space-mobile-padding: 0.6rem;
-    --space-mobile-header-mb: 0.3rem;
-    
-    --space-desktop-base: 1rem;
-    --space-desktop-section: 4rem;
-    --space-desktop-stack: 2rem;
-    --space-desktop-padding: 2rem;
-    --space-desktop-header-mb: 3rem;
+    --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .dark, [data-theme='dark'] {
-    --background: 220 15% 9%;      /* Deeper, more contemplative graphite */
-    --foreground: 45 10% 88%;      /* Slightly dimmed for less eye strain */
+    --background: 220 15% 9%;
+    --foreground: 45 10% 88%;
     
-    --card: 220 15% 10%;            /* Subtle depth */
+    --card: 220 15% 10%;
     --card-foreground: 45 10% 88%;
     
-    --popover: 220 20% 8%;
-    --popover-foreground: 45 10% 88%;
-    --popover-blur: 32px;
-    
-    --primary: 42 15% 70%;         /* Dimmed Gold for dark mode */
+    --primary: 42 15% 70%;
     --primary-foreground: 220 15% 5%;
     
-    --secondary: 220 12% 16%;      
-    --secondary-foreground: 42 15% 70%;
-    
-    --muted: 220 12% 14%;           
-    --muted-foreground: 220 10% 50%; 
-    
-    --accent: 42 15% 70% / 0.05;
-    --accent-foreground: 42 15% 70%;
-    
-    --destructive: 0 45% 40%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 45 15% 90% / 0.05;   
-    --input: 45 15% 90% / 0.06;
-    --ring: 42 15% 70% / 0.15;
-    
+    --border: 45 15% 90% / 0.05;
     --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.5);
   }
+
+  /* Theme Overrides from ReadingSettingsContext */
+  .reading-theme-paper { --background: 45 35% 99.4%; }
+  .reading-theme-sepia { --background: 38 35% 92%; --foreground: 25 20% 20%; }
+  .reading-theme-dark { --background: 220 15% 12%; --foreground: 45 10% 88%; }
+  .reading-theme-night { --background: 220 20% 7%; --foreground: 45 10% 70%; }
 
   .high-contrast {
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
     --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
-    --muted-foreground: 0 0% 0% !important;
-    --border: 0 0% 0% / 0.3;
+    --border: 0 0% 0% / 0.2;
   }
 
   /* Typography System */
@@ -289,23 +230,6 @@
     @apply mb-4 md:mb-10;
   }
 
-  .premium-card {
-    @apply transition-all relative overflow-hidden bg-transparent border-none;
-    border-radius: 1.5rem;
-    transition: all var(--transition-subtle);
-  }
-
-  .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-card/60 hover:border-primary/10 active:scale-[0.985] focus-visible:ring-1 focus-visible:ring-primary/10 focus-visible:ring-offset-1 focus-visible:outline-none;
-  }
-
-  .premium-card-interactive:hover {
-    @apply -translate-y-1 shadow-premium;
-  }
-
-  .dark .premium-card-interactive:hover {
-    @apply shadow-[0_20px_60px_-10px_rgba(0,0,0,0.3)] border-white/10;
-  }
 
   /* Unified Search Input Utility */
   .search-input-premium {

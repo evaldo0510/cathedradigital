@@ -6,6 +6,8 @@ import HeroSection from "./landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 import { LangContext } from "@/contexts/LangContext";
+import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
+import { Icons } from "@/constants";
 const HomeMainContent = lazy(() => import("@/components/cathedra/HomeMainContent"));
 
 // Lazy-load secondary components
@@ -74,25 +76,26 @@ const Index = () => {
       {!authenticated && <HeroSection onStart={handleStart} />}
       
       {authenticated && (
-        <div className="w-full pt-12 md:pt-24 pb-8 text-center animate-in fade-in duration-1000">
-           <span className="text-[10px] font-black uppercase tracking-[0.8em] text-primary/20">Cathedra</span>
-        </div>
+        <ContemplativeLayout
+          title="Ecclesia"
+          subtitle="Domus Dei"
+          icon={Icons.Cross}
+          className="pb-32"
+        >
+          <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
+            <HomeMainContent 
+              user={user} 
+              profile={profile} 
+              onNavigate={handleNavigate} 
+              t={t} 
+            />
+          </Suspense>
+          
+          <Suspense fallback={null}>
+            <CookieConsent />
+          </Suspense>
+        </ContemplativeLayout>
       )}
-
-      <main id="main-content" className="w-full flex flex-col items-center outline-none" tabIndex={-1}>
-        <Suspense fallback={<div className="w-full py-12"><SectionSkeleton /></div>}>
-          <HomeMainContent 
-            user={user} 
-            profile={profile} 
-            onNavigate={handleNavigate} 
-            t={t} 
-          />
-        </Suspense>
-
-        <Suspense fallback={null}>
-          <CookieConsent />
-        </Suspense>
-      </main>
     </div>
   );
 };

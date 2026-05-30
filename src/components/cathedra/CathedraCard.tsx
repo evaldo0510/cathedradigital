@@ -13,38 +13,37 @@ interface CathedraCardProps extends HTMLMotionProps<"div"> {
 const CathedraCard = React.forwardRef<HTMLDivElement, CathedraCardProps>(
   ({ className, variant = 'default', padding = 'md', hover = false, as: Component = motion.div, children, ...props }, ref) => {
     const { settings } = useReadingSettings();
+    
     const paddingMap = {
       none: '',
       sm: 'p-3 md:p-6',
-      md: 'padding-rhythm',
+      md: 'p-6 md:p-10',
       lg: 'p-8 md:p-16',
       xl: 'p-10 md:p-24',
       '2xl': 'p-12 md:p-32 lg:p-40',
     };
 
     const variantStyles = {
-      default: 'premium-card bg-transparent border-none will-change-[transform,opacity]',
-      interactive: 'premium-card-interactive bg-transparent hover:bg-primary/[0.01] border-transparent will-change-[transform,opacity]',
-      outline: 'bg-transparent border border-primary/[0.02] dark:border-white/[0.005] rounded-premium will-change-[transform,opacity] transition-all duration-1000',
-      glass: 'bg-primary/[0.004] backdrop-blur-2xl border border-white/[0.005] dark:border-white/[0.002] rounded-premium shadow-none will-change-[transform,opacity] transition-all duration-1000',
+      default: 'bg-card/30 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.005] shadow-premium',
+      interactive: 'bg-card/30 backdrop-blur-sm border border-primary/[0.02] dark:border-white/[0.005] shadow-premium hover:shadow-premium-hover hover:border-primary/5 hover:bg-primary/[0.005] active:scale-[0.995] cursor-pointer',
+      outline: 'bg-transparent border border-primary/[0.05] dark:border-white/[0.01]',
+      glass: 'bg-white/[0.01] dark:bg-black/[0.01] backdrop-blur-2xl border border-white/[0.02] dark:border-white/[0.005] shadow-none',
     };
-
-    const isClickable = props.onClick || variant === 'interactive';
 
     return (
       <Component
         ref={ref as any}
         className={cn(
+          "relative overflow-hidden transition-all duration-500 rounded-premium",
           variantStyles[variant],
           paddingMap[padding],
-          hover && variant === 'default' && 'hover:shadow-premium-hover hover:border-primary/10 hover:-translate-y-1 transition-premium',
-          "focus-within:ring-2 focus-within:ring-primary/20 focus-within:ring-offset-2 focus-within:border-primary/20 outline-none focus-visible:ring-primary/40 focus-visible:ring-offset-2",
+          (hover || variant === 'interactive') && "transition-all duration-500",
+          "focus-within:ring-2 focus-within:ring-primary/10 focus-within:ring-offset-1 outline-none",
           className
         )}
-        initial={settings.reduceAnimations ? { opacity: 1, scale: 1 } : (props.initial || { opacity: 0, scale: 0.998, y: 5, filter: 'blur(4px)' })}
-        animate={props.animate || { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.4, ease: "easeOut" })}
-        whileHover={settings.reduceAnimations ? {} : { y: -1, transition: { duration: 0.2, ease: "easeOut" } }}
+        initial={settings.reduceAnimations ? { opacity: 1 } : (props.initial || { opacity: 0, y: 10 })}
+        animate={props.animate || { opacity: 1, y: 0 }}
+        transition={settings.reduceAnimations ? { duration: 0.1 } : (props.transition || { duration: 0.6, ease: [0.16, 1, 0.3, 1] })}
         {...props}
       >
         {children}
