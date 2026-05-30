@@ -249,7 +249,16 @@ const htmlContent = `
                 </td>
               </tr>
             `)).join('')}
-            ${totalIssues === 0 ? '<tr><td colspan="4" class="px-8 py-20 text-center"><div class="text-5xl mb-6">🏆</div><div class="text-2xl font-black text-slate-900 uppercase tracking-tight">System Fully Tokenized</div><div class="text-slate-400 font-medium text-sm mt-2">Zero technical debt in Cathedra visual layer.</div></td></tr>' : ''}
+            ${totalIssues === 0 ? `
+              <tr>
+                <td colspan="4" class="px-8 py-20 text-center">
+                  <div class="text-5xl mb-6">🏆</div>
+                  <div class="text-2xl font-black text-slate-900 uppercase tracking-tight">System Fully Tokenized</div>
+                  <div class="text-slate-400 font-medium text-sm mt-2">Zero technical debt in Cathedra visual layer.</div>
+                </td>
+              </tr>
+            ` : ''}
+
           </tbody>
         </table>
       </div>
