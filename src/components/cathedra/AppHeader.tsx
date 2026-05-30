@@ -45,7 +45,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             onKeyDown={(e) => e.key === 'Enter' && navigate('/')} 
             onClick={() => navigate('/')}
           >
-            <Icons.Logo className="w-4 h-4 md:w-6 md:h-6 transition-all group-hover:scale-105 opacity-60" variant={isDark ? "light" : "dark"} />
+            <Icons.Logo className="w-5 h-5 md:w-6 md:h-6 transition-all group-hover:scale-105 opacity-80" variant={isDark ? "light" : "dark"} />
             <div className="flex flex-col items-start min-w-0">
               <span className="text-[9px] md:text-[11px] font-display font-light uppercase tracking-[0.3em] text-primary/40 leading-none transition-all group-hover:text-primary">
                 {pathname === '/' ? 'Cathedra' : (pathname.split('/')[1]?.charAt(0).toUpperCase() + pathname.split('/')[1]?.slice(1).replace('magisterium', 'Magistério')) || 'Cathedra'}
@@ -77,7 +77,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   className="w-7 h-7 md:w-12 md:h-12 rounded-full hover:bg-primary/[0.03] transition-all duration-500 group tap-premium"
                   aria-label={t('search') || 'Buscar'}
                 >
-                  <Icons.Search className="w-3 h-3 md:w-5 md:h-5 opacity-40 group-hover:opacity-100 transition-opacity" />
+                  <Icons.Search className="w-4 h-4 md:w-5 md:h-5 opacity-60 group-hover:opacity-100 transition-opacity" />
                 </Button>
 
                 <Button
