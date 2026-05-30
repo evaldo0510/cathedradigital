@@ -224,10 +224,10 @@ const RitualDoDia: React.FC = () => {
       )}
     >
       
-      <div className="relative z-10 p-2 md:padding-rhythm stack-rhythm max-w-7xl mx-auto pt-2 md:pt-0">
+      <div className="relative z-10 p-1 md:padding-rhythm stack-rhythm-sm max-w-7xl mx-auto pt-1 md:pt-0">
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-12 pb-4 md:pb-24">
-          <div className="flex flex-col gap-4 md:gap-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-12 pb-2 md:pb-24">
+          <div className="flex flex-col gap-2 md:gap-6">
             <span className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.5em] text-primary/30 leading-none">
               {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
@@ -323,7 +323,7 @@ const RitualDoDia: React.FC = () => {
         <div className="grid grid-cols-1 gap-4 md:gap-32">
           
           {/* 1. Bible Reading */}
-          <section className="space-y-3 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
+          <section className="space-y-2 md:space-y-12 max-w-4xl mx-auto text-center" aria-labelledby="lectio-heading">
             <h4 id="lectio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/15 md:text-primary/60">I. Lectio</h4>
             <button 
               className={cn(
@@ -333,7 +333,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(25)}
               aria-label={`Ler versículo: ${ritual?.verse?.text}. Clique para marcar como lido.`}
             >
-              <blockquote className="text-[18px] md:text-5xl lg:text-7xl font-serif italic leading-[1.4] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-4 md:px-2 transition-all duration-[2000ms] group-hover:text-primary">
+              <blockquote className="text-[16px] md:text-5xl lg:text-7xl font-serif italic leading-[1.3] text-primary/80 dark:text-foreground/90 selection:bg-primary/5 tracking-tight px-4 md:px-2 transition-all duration-[2000ms] group-hover:text-primary">
                 "{ritual?.verse?.text || ''}"
               </blockquote>
               <p className="mt-6 md:mt-12 text-[7.5px] md:text-[10px] font-bold text-primary/20 uppercase tracking-[0.4em]">
@@ -343,7 +343,7 @@ const RitualDoDia: React.FC = () => {
           </section>
 
           {/* 2. Reflection */}
-          <section className="space-y-3 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
+          <section className="space-y-2 md:space-y-12 max-w-3xl mx-auto text-center" aria-labelledby="meditatio-heading">
             <h4 id="meditatio-heading" className="text-[6.5px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/10 md:text-primary/60">II. Meditatio</h4>
             <button 
               className={cn(
@@ -353,7 +353,7 @@ const RitualDoDia: React.FC = () => {
               onClick={() => handleProgress(50)}
               aria-label={`Reflexão do dia. Clique para marcar como lido.`}
             >
-              <p className="text-[15px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-4 transition-colors duration-[2000ms]">
+              <p className="text-[14px] md:text-2xl lg:text-3xl leading-relaxed text-foreground/80 dark:text-foreground/85 font-serif italic selection:bg-primary/5 px-4 transition-colors duration-[2000ms]">
                 {ritual.reflection}
               </p>
             </button>

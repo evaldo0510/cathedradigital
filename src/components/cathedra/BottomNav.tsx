@@ -131,7 +131,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       <motion.div 
         layoutId="bottom-nav-dot"
         data-testid="bottom-nav-dot"
-        className="absolute bottom-2.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
+        className="absolute bottom-1.5 w-0.5 h-0.5 bg-primary rounded-full z-10" 
         transition={shouldReduceMotion ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 35 }}
       />
     )}
@@ -163,7 +163,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-4 left-4 right-4 z-[160] lg:hidden h-10 bg-background/5 rounded-full shadow-none border border-primary/[0.0001] dark:border-white/[0.0005] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all backdrop-blur-md will-change-transform",
+        "fixed bottom-2 left-4 right-4 z-[160] lg:hidden h-9 bg-background/5 rounded-full shadow-none border border-primary/[0.01] dark:border-white/[0.01] bottom-nav bottom-nav-reading-auto-hide px-3 overflow-hidden transition-all backdrop-blur-sm will-change-transform",
         shouldReduceMotion ? "duration-0" : "duration-1000"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
