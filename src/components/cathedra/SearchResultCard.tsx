@@ -7,7 +7,7 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
+import { CathedraCard } from './CathedraCard';
 import { RelevanceBadge } from './RelevanceBadge';
 import { cn } from '@/lib/utils';
 
@@ -30,7 +30,7 @@ export interface SearchResultCardProps {
   index?: number;
 }
 
-const MotionCard = motion.create(Card);
+
 
 export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCardProps>(({
   title,
@@ -50,8 +50,10 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
   };
 
   return (
-    <MotionCard
+    <CathedraCard
       ref={ref}
+      variant="interactive"
+      padding="none"
       initial={{ opacity: 0, y: 12, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -8, scale: 0.97 }}
@@ -61,18 +63,17 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         damping: 30,
         delay: Math.min(index * 0.03, 0.3),
       }}
-      layout="position"
       role="button"
       tabIndex={0}
       aria-label={`${title}${subtitle ? `. ${subtitle}` : ''}. Clique para ver detalhes.`}
       className={cn(
-        'premium-card bg-card border border-border/20 cursor-pointer hover:shadow-premium-hover transition-all group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-premium-sm',
+        'border border-border/20 group',
         className,
       )}
       onClick={onClick}
       onKeyDown={handleKeyDown}
     >
-    <CardContent className="p-spacing-sm flex items-center gap-spacing-sm">
+    <div className="p-spacing-sm flex items-center gap-spacing-sm">
       {icon && (
         <div className="flex-shrink-0 w-spacing-xl h-spacing-xl rounded-premium bg-muted/60 flex items-center justify-center text-muted-foreground group-hover:text-primary transition-colors">
           {icon}
@@ -90,8 +91,8 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
           <ChevronRight className="w-spacing-md h-spacing-md text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
-    </CardContent>
-    </MotionCard>
+    </div>
+    </CathedraCard>
   );
 });
 

@@ -36,9 +36,9 @@ const AudioButton: React.FC<AudioButtonProps> = ({ className = '', variant = 'ou
       title={isSpeaking ? t('audio_stop') : t('audio_read')}
     >
       {isSpeaking ? (
-        <Icons.Stop className="w-4.5 h-4.5 animate-pulse" />
+        <Icons.Stop className="w-spacing-md h-spacing-md animate-pulse" />
       ) : (
-        <Icons.Volume2 className="w-4.5 h-4.5 group-hover:scale-110 transition-transform" />
+        <Icons.Volume2 className="w-spacing-md h-spacing-md group-hover:scale-110 transition-transform" />
       )}
       <span className="hidden md:inline-block">
         {isSpeaking ? t('audio_stop') : t('audio_read')}

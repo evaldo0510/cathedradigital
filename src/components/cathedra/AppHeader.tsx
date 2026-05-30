@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
 
 import { cn } from '@/lib/utils';
+import { NAV_ITEMS } from '@/constants';
 
 interface AppHeaderProps {
   user: any;
@@ -130,17 +131,12 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             {/* Desktop Navigation Links - Hidden on Mobile and Tablet to avoid duplication with BottomNav */}
             {isDashboard && (
               <nav className="hidden lg:flex items-center gap-spacing-xs border-l border-primary/10 pl-spacing-xl ml-spacing-md" aria-label="Navegação principal">
-                {[
-                  { label: t('bible'), route: AppRoute.BIBLE },
-                  { label: t('catechism'), route: AppRoute.CATECHISM },
-                  { label: 'Magistério', route: AppRoute.MAGISTERIUM },
-                  { label: 'Logos IA', route: '/logos' },
-                ].map(item => (
+                {NAV_ITEMS(t, lang).filter(item => !item.isMenu).map(item => (
                   <Button 
                     key={item.route} 
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate(item.route)}
+                    onClick={() => navigate(item.route!)}
                     className={`px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
                       pathname === item.route ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
                     }`}
