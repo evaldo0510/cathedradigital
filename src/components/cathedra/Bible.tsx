@@ -1061,6 +1061,19 @@ const Bible: React.FC = memo(() => {
                               ))}
                             </div>
                             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity invisible md:visible">
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="w-6 h-6 rounded-full hover:bg-primary/5 text-primary/40 hover:text-primary transition-all"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setHighlightedVerse(v.number);
+                                  setShowLogosAI(true);
+                                  setLogosAIContext(`${selectedBook.name} ${selectedChapter}:${v.number} - ${v.text}`);
+                                }}
+                              >
+                                <Icons.Sparkles className="w-3 h-3" />
+                              </Button>
                               <ReadingMark contentType="bible" contentId={`${selectedBook.abbr}:${selectedChapter}:${v.number}`} label={`${selectedBook.name} ${selectedChapter}:${v.number}`} chapter={selectedChapter} position={v.number} />
                             </div>
                           </div>
