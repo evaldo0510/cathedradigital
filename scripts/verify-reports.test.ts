@@ -26,9 +26,12 @@ reports/
 \`\`\`
 `;
     writeFileSync(TEST_README, initialReadme);
+
+    // Create the files documented in the README to ensure alignment by default
+    writeFileSync(join(TEST_DIR, 'compliance-history.json'), JSON.stringify([]));
+    writeFileSync(join(TEST_DIR, 'token-audit.json'), JSON.stringify({ timestamp: '2026-05-30T10:00:00Z', totalIssues: 0 }));
     
     // Set environment variables for the script to use our test paths
-    // Note: We'll need to modify the script slightly to accept custom paths or use these env vars
     process.env.REPORTS_DIR_OVERRIDE = TEST_DIR;
     process.env.README_PATH_OVERRIDE = TEST_README;
   });
@@ -43,15 +46,33 @@ reports/
   });
 
   const runVerify = (args: string[] = [], env: any = {}) => {
+    // Use a file OUTSIDE the reports directory for the summary
+    const summaryPath = 'github_step_summary_test.md';
+    const githubEnv = { 
+      ...process.env, 
+      ...env,
+      REPORTS_DIR_OVERRIDE: TEST_DIR,
+      README_PATH_OVERRIDE: TEST_README,
+    };
+    
+    if (env.GITHUB_ACTIONS) {
+      githubEnv.GITHUB_STEP_SUMMARY = summaryPath;
+      writeFileSync(summaryPath, ''); // Reset summary
+    }
+
     try {
       const command = `bun run ${SCRIPT_PATH} ${args.join(' ')}`;
       const output = execSync(command, { 
-        env: { ...process.env, ...env },
+        env: githubEnv,
         encoding: 'utf8' 
       });
-      return { status: 0, output };
+      const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      if (existsSync(summaryPath)) rmSync(summaryPath);
+      return { status: 0, output, summary };
     } catch (error: any) {
-      return { status: error.status, output: error.stdout };
+      const summary = env.GITHUB_ACTIONS && existsSync(summaryPath) ? readFileSync(summaryPath, 'utf8') : '';
+      if (existsSync(summaryPath)) rmSync(summaryPath);
+      return { status: error.status, output: error.stdout, summary };
     }
   };
 
@@ -109,5 +130,42 @@ reports/
     const result = runVerify(['--fail-on-divergence']);
     expect(result.status).toBe(1);
     expect(result.output).toContain('Relatórios JSON corrompidos detectados');
+  });
+
+  describe('GitHub Step Summary - Motivo do Exit Code', () => {
+    it('should show "Nenhuma divergência detectada" on success', () => {
+      // Structure already aligned in beforeEach
+      const result = runVerify([], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Nenhuma divergência detectada.');
+    });
+
+    it('should show "Divergências encontradas com `--fail-on-divergence` ativo" on failure', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--fail-on-divergence'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(1);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas com `--fail-on-divergence` ativo.');
+    });
+
+    it('should show "Modo Dry Run ativo" in dry-run mode', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--update', '--dry-run'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Modo Dry Run ativo; nenhuma alteração persistida.');
+    });
+
+    it('should show "README atualizado automaticamente" in update mode', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify(['--update'], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** README atualizado automaticamente.');
+    });
+
+    it('should show "modo de falha está desativado" when divergence exists but fail is off', () => {
+      writeFileSync(join(TEST_DIR, 'extra.json'), JSON.stringify({ timestamp: '2026-05-30T10-00-00', totalIssues: 0 }));
+      const result = runVerify([], { GITHUB_ACTIONS: 'true' });
+      expect(result.status).toBe(0);
+      expect(result.summary).toContain('📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.');
+    });
   });
 });
