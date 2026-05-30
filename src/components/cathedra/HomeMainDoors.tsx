@@ -92,16 +92,16 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="p-4 md:p-32 lg:p-48 flex flex-col items-center text-center gap-3 md:gap-24 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-none bg-transparent shadow-none transition-all duration-1000 rounded-[2rem] md:rounded-[6rem]"
+          className="p-4 md:p-8 flex flex-col items-center text-center gap-3 md:gap-8 focus-visible:ring-primary/40 focus-visible:ring-offset-2 group border-primary/[0.005] bg-card/10 shadow-none transition-all duration-1000 rounded-3xl"
         >
-          <div className="w-10 h-10 md:w-40 md:h-40 rounded-full bg-primary/[0.015] dark:bg-white/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/40 group-hover:bg-primary/[0.02] transition-all duration-1500 ease-in-out">
-            <door.icon className="w-6 h-6 md:w-12 md:h-12" strokeWidth={0.5} />
+          <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-primary/[0.015] dark:bg-white/[0.01] flex items-center justify-center text-primary/10 group-hover:scale-105 group-hover:text-primary/40 group-hover:bg-primary/[0.02] transition-all duration-1500 ease-in-out">
+            <door.icon className="w-5 h-5 md:w-8 md:h-8" strokeWidth={0.5} />
           </div>
-          <div className="space-y-4 md:space-y-10">
-            <h4 className="text-[7.5px] md:text-[9px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/20 group-hover:text-primary/80 transition-colors duration-1000">
+          <div className="space-y-2 md:space-y-4">
+            <h4 className="text-[7.5px] md:text-[8px] font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/20 group-hover:text-primary/80 transition-colors duration-1000">
               {door.label}
             </h4>
-            <p className="hidden md:block text-[12px] md:text-[14px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
+            <p className="hidden md:block text-[11px] md:text-[12px] text-muted-foreground/40 font-serif italic tracking-widest group-hover:text-muted-foreground/80 transition-colors duration-1000 leading-relaxed max-w-[200px] mx-auto">
               {door.description}
             </p>
             <p className="md:hidden text-[10px] text-muted-foreground/30 font-serif italic tracking-wider leading-relaxed">
