@@ -17,6 +17,9 @@ const SwipeNavigation: React.FC<SwipeNavigationProps> = ({ children }) => {
     '/', // Hoje
     AppRoute.BIBLE,
     AppRoute.CATECHISM,
+    AppRoute.MAGISTERIUM,
+    AppRoute.LITURGIA,
+    AppRoute.BIBLIOTECA,
   ];
 
   const currentIndex = routes.findIndex(route => 

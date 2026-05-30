@@ -1572,7 +1572,7 @@ const Bible: React.FC = memo(() => {
             <input
               type="text"
               placeholder="Buscar livro..."
-              className="w-full pl-12 pr-6 py-4 bg-primary/[0.01] border border-border/10 rounded-full focus:outline-none focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/60"
+              className="search-input-premium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -1599,15 +1599,17 @@ const Bible: React.FC = memo(() => {
                       whileHover={{ y: -4 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => selectBook(book)}
-                      className={`flex flex-col items-center justify-center p-8 rounded-premium border transition-all relative group
-                        ${isRead 
-                          ? 'bg-primary text-primary-foreground border-primary' 
-                          : 'bg-card border-primary/[0.04] text-primary hover:border-primary/10'}`}
+                      className={`text-left p-6 md:p-8 premium-card-interactive group flex flex-col gap-4 relative
+                        ${isRead ? 'border-primary/20 bg-primary/[0.02]' : ''}`}
                     >
-                      <span className="text-2xl font-display font-medium leading-none mb-2">{book.abbr}</span>
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-center leading-tight truncate w-full opacity-40 group-hover:opacity-100 transition-opacity">
-                        {book.name}
-                      </span>
+                      <div className="flex justify-between items-start">
+                        <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">{book.abbr}</span>
+                        {isRead && <Icons.CheckCircle2 className="w-3.5 h-3.5 text-primary/60" />}
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="font-display font-medium text-lg text-primary group-hover:text-secondary transition-colors leading-tight">{book.name}</h3>
+                        <p className="text-[9px] text-muted-foreground uppercase tracking-widest">{book.chapters} Capítulos</p>
+                      </div>
                     </motion.button>
                   );
                 })}

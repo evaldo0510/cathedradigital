@@ -267,6 +267,11 @@
     @apply w-full max-w-[var(--layout-max-width)] mx-auto px-4 sm:px-12 md:px-20 lg:px-32;
   }
 
+  /* Shared Module Header Style */
+  .module-header {
+    @apply text-center mb-12 md:mb-24 space-y-4 md:space-y-8;
+  }
+
   .section-rhythm {
     @apply py-[var(--space-mobile-section)] md:py-[var(--space-desktop-section)];
   }
@@ -284,21 +289,26 @@
   }
 
   .premium-card {
-    @apply transition-all relative overflow-hidden;
+    @apply transition-all relative overflow-hidden bg-card/20 backdrop-blur-sm border border-primary/[0.03] dark:border-white/[0.01];
     border-radius: var(--card-radius-mobile);
     transition: all var(--transition-subtle);
   }
 
   .premium-card-interactive {
-    @apply premium-card cursor-pointer hover:bg-muted/20 focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
+    @apply premium-card cursor-pointer hover:bg-muted/10 focus-visible:ring-1 focus-visible:ring-primary/20 focus-visible:ring-offset-1 focus-visible:outline-none;
   }
 
   .premium-card-interactive:hover {
-    @apply -translate-y-1;
+    @apply -translate-y-1 border-primary/10 shadow-premium;
   }
 
   .dark .premium-card-interactive:hover {
-    @apply shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)];
+    @apply shadow-[0_40px_100px_-20px_rgba(0,0,0,0.3)] border-white/10;
+  }
+
+  /* Unified Search Input Utility */
+  .search-input-premium {
+    @apply w-full pl-14 pr-6 py-5 rounded-full border border-border/10 bg-primary/[0.01] focus:bg-background focus:ring-1 focus:ring-primary/10 transition-all font-serif italic text-lg placeholder:text-primary/30;
   }
 
   /* Mobile Presence - Auto-hide non-essential UI on scroll */
@@ -324,7 +334,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, transparent 40%, hsl(var(--background) / 0.15) 100%);
+      background: radial-gradient(circle at center, transparent 40%, hsl(var(--background) / 0.1) 100%);
       pointer-events: none;
       z-index: 10;
     }

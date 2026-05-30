@@ -15,6 +15,7 @@ import { useSaintsToday } from '@/hooks/useSaints';
 import { getCachedLiturgy, cacheLiturgy } from '@/lib/offlineCache';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
+import ContemplativeLayout from './ContemplativeLayout';
 
 const MissalPage = lazy(() => import('./MissalPage'));
 const LiturgicalCalendarPage = lazy(() => import('./LiturgicalCalendarPage'));
@@ -191,40 +192,42 @@ const LiturgiaPage: React.FC = () => {
   const formatDate = () => today.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <>
-      <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
-      <div className="desktop-layout py-10">
-        <div className="desktop-main px-4">
-        <div className="flex justify-center mb-12">
-          <div className="bg-muted/40 p-1.5 rounded-[2.5rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full shadow-inner" role="tablist" aria-label="Navegação da Liturgia">
-            {[
-              { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
-              { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
-              { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
-            ].map((tab, idx) => (
-              <Button
-                key={tab.id}
-                {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
-                }`)}
-                onClick={() => setSearchParams({ tab: tab.id })}
-                onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
-              >
-                {tab.icon} {tab.label}
-              </Button>
-            ))}
-          </div>
+    <ContemplativeLayout
+      title="Liturgia"
+      subtitle="Lex Orandi, Lex Credendi"
+      icon={Icons.Liturgy}
+      headerActions={
+        <div className="bg-muted/40 p-1.5 rounded-[2.5rem] border border-border/40 flex gap-1 overflow-x-auto max-w-full shadow-inner" role="tablist" aria-label="Navegação da Liturgia">
+          {[
+            { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-4 h-4" /> },
+            { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-4 h-4" /> },
+            { id: 'calendario', label: 'Calendário', icon: <Icons.Calendar className="w-4 h-4" /> }
+          ].map((tab, idx) => (
+            <Button
+              key={tab.id}
+              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex items-center gap-2 px-10 py-3 rounded-full text-sm font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
+                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary scale-105' : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
+              }`)}
+              onClick={() => setSearchParams({ tab: tab.id })}
+              onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
+            >
+              {tab.icon} {tab.label}
+            </Button>
+          ))}
         </div>
-
+      }
+    >
+      <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
+      <div className="desktop-layout">
+        <div className="desktop-main px-4">
         <Suspense fallback={<div className="flex justify-center py-20"><Icons.Loader2 className="w-10 h-10 text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
             <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "max-w-2xl mx-auto space-y-10 animate-in fade-in duration-500 outline-none")}>
               <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 text-center">
-                <h1 className="text-3xl md:text-5xl font-display font-black text-primary tracking-tight">Liturgia do Dia</h1>
                 <div className="flex items-center justify-center gap-4">
-                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior"><Icons.ChevronLeft className="w-4 h-4" /></Button>
+                  <Button variant="outline" size="icon" onClick={goToPrevDay} aria-label="Dia anterior" className="rounded-full"><Icons.ChevronLeft className="w-4 h-4" /></Button>
                   <p className="text-sm font-bold text-primary capitalize min-w-[200px]">{formatDate()}{isToday && <span className="ml-2 text-secondary">(Hoje)</span>}</p>
-                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia"><Icons.ChevronRight className="w-4 h-4" /></Button>
+                  <Button variant="outline" size="icon" onClick={goToNextDay} disabled={isToday} aria-label="Próximo dia" className="rounded-full"><Icons.ChevronRight className="w-4 h-4" /></Button>
                 </div>
                 {isOfflineData && <div className="flex items-center justify-center gap-2 text-premium-tiny font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-4 py-2 mt-4 mx-auto w-fit"><Icons.WifiOff className="w-3.5 h-3.5" /> <span>Modo Offline</span></div>}
               </motion.div>
@@ -289,7 +292,7 @@ const LiturgiaPage: React.FC = () => {
           )}
         </aside>
       </div>
-    </>
+    </ContemplativeLayout>
   );
 };
 
