@@ -13,6 +13,24 @@ reports/
 "
 `;
 
+exports[`reports:verify integration tests > Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE > should include override information in GitHub Step Summary > summary-with-overrides 1`] = `
+"### 📊 Relatório de Verificação de Estrutura
+
+⚠️ **Status:** Aviso (Divergência Detectada)
+📝 **Motivo do Exit Code:** Divergências encontradas, mas o modo de falha está desativado.
+
+#### 🔍 Detalhes das Divergências
+
+#### Missing Files (1)
+- \`placeholder.json\` (Documentado no README mas não encontrado)
+#### ⚙️ Configuração Customizada (Overrides)
+- 📁 **Diretório de Relatórios:** \`custom-reports-isolated\` (via \`REPORTS_DIR_OVERRIDE\`)
+- 📖 **Caminho do README:** \`CUSTOM-README-isolated.md\` (via \`README_PATH_OVERRIDE\`)
+
+
+"
+`;
+
 exports[`reports:verify integration tests > Isolamento com REPORTS_DIR_OVERRIDE e README_PATH_OVERRIDE > should write updated content ONLY to the custom README via overrides > custom-readme-updated 1`] = `
 "
 #### Estrutura de Relatórios e Logs (Exemplo Real)
