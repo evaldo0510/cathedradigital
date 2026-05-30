@@ -67,55 +67,44 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
 
   return (
     <div id="main-content" className="w-full max-w-[var(--layout-max-width)] mx-auto stack-rhythm-lg pb-10 md:pb-[32rem] px-[var(--space-mobile-padding)] md:px-14 lg:px-24 xl:px-32 outline-none flex flex-col items-center lg:items-stretch" tabIndex={-1}>
-      {/* 0. SPIRITUAL CONTINUITY - WELCOME BACK */}
-      <section className="animate-in fade-in slide-in-from-top-8 duration-1000 w-full">
-        <SpiritualContinuity 
-          profile={profile} 
-          variant="glass"
+      {/* 2. CONTINUAR LEITURA - PERSONAL PROGRESS (MOVED TO TOP FOR PRIORITY) */}
+      <section className="animate-in fade-in slide-in-from-top-8 duration-1000 delay-150 fill-mode-both w-full">
+        <h2 className="sr-only">Sua Jornada de Leitura</h2>
+        <SectionHeader 
+          align="left"
+          title="Sua Jornada" 
+          subtitle="Continue de onde a alma parou."
+          className="header-margin-rhythm"
         />
-        <div className="flex justify-center -mt-2 md:-mt-10 mb-4 md:mb-20">
-          <CathedraButton 
-            variant="ghost" 
-            size="sm"
-            onClick={() => navigate('/spiritual-profile')}
-            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/60 hover:text-primary transition-all duration-700 h-10 px-6"
-            icon={<User className="w-3 h-3 mr-2" />}
-          >
-            Perfil
-          </CathedraButton>
-        </div>
+        <CathedraCard variant="outline" padding="none" className="p-2 md:p-12 border-primary/[0.005] bg-transparent">
+          <ReadingProgressSection />
+        </CathedraCard>
       </section>
 
-      {/* 4. BIBLIOTECA - THE CORE SOURCES (MOVED UP FOR BETTER ACCESS) */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150 fill-mode-both w-full">
+      {/* 4. BIBLIOTECA - THE CORE SOURCES */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both w-full">
         <h2 className="sr-only">Fontes de Sabedoria</h2>
         <SectionHeader 
           title="Biblioteca Sagrada" 
-          subtitle="As fontes imutáveis da Sabedoria."
+          subtitle="Bíblia, Catecismo e Magistério."
           className="header-margin-rhythm"
         />
-        <div className="p-0.5 md:p-40 lg:p-64">
+        <div className="p-0.5 md:p-20">
           <HomeMainDoors t={t} />
         </div>
       </section>
 
-      {/* 1. RITUAL DO DIA - THE HEART OF THE EXPERIENCE */}
-      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both w-full">
-        <h2 className="sr-only">Destaques e Ritual</h2>
-        <SectionHeader 
-          title="Ritual do Dia" 
-          subtitle="Um momento de pausa e conexão espiritual."
-          className="header-margin-rhythm"
-        />
-        <CathedraCard padding="none" className="p-1 md:p-32 lg:p-40 border-transparent shadow-none bg-transparent">
+      {/* 1. RITUAL DO DIA */}
+      <section className="animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-450 fill-mode-both w-full">
+        <h2 className="sr-only">Ritual</h2>
+        <CathedraCard padding="none" className="p-1 md:p-12 border-transparent shadow-none bg-transparent">
           <RitualDoDia />
         </CathedraCard>
       </section>
 
-      {/* VISUAL PAUSE - CONTEMPLATIVE MOMENT - Reduced for mobile */}
-      <div className="py-8 md:py-96 flex flex-col items-center gap-3 md:gap-8 opacity-[0.03] select-none pointer-events-none">
-        <div className="w-px h-8 md:h-64 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
-        <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/10" strokeWidth={0.2} />
+      {/* VISUAL PAUSE */}
+      <div className="py-4 md:py-48 flex flex-col items-center gap-2 opacity-[0.02] select-none pointer-events-none">
+        <Sparkles className="w-3 h-3 text-primary/10" strokeWidth={0.2} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-48 lg:gap-64 w-full">

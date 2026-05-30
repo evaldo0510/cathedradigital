@@ -222,7 +222,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-neutral-950/10 backdrop-blur-md z-[165] will-change-opacity"
+            className="fixed inset-0 bg-background/20 backdrop-blur-md z-[165] will-change-opacity"
             aria-hidden="true"
           />
 
@@ -237,14 +237,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 onClose();
               }
             }}
-            initial={{ x: '-110%', opacity: 0, scale: 0.98 }}
-            animate={{ x: 0, opacity: 1, scale: 1 }}
-            exit={{ x: '-110%', opacity: 0, scale: 0.98 }}
+            initial={{ x: '-100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '-100%', opacity: 0 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.4 : 0.8, 
+              duration: settings.reduceAnimations ? 0.3 : 0.6, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[min(240px,80vw)] sm:w-[320px] md:w-[380px] bg-background/95 backdrop-blur-xl border-r border-primary/[0.02] dark:border-white/[0.01] flex flex-col p-4 md:p-12 z-[170] shadow-2xl overflow-hidden admin-hide touch-none pt-[calc(0.5rem+env(safe-area-inset-top,0px))] pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-0 left-0 bottom-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-6 z-[170] shadow-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
